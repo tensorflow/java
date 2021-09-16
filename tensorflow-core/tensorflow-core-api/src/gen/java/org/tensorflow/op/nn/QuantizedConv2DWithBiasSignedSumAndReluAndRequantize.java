@@ -88,7 +88,7 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X extend
       Operand<TFloat32> maxFreezedOutput, Operand<? extends TNumber> summand,
       Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, Class<X> outType,
       List<Long> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedConv2DWithBiasSignedSumAndReluAndRequantize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedConv2DWithBiasSignedSumAndReluAndRequantize");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(bias.asOutput());
@@ -101,7 +101,6 @@ public final class QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X extend
     opBuilder.addInput(summand.asOutput());
     opBuilder.addInput(minSummand.asOutput());
     opBuilder.addInput(maxSummand.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {

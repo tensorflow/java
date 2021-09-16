@@ -55,9 +55,8 @@ public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
       describeByClass = true
   )
   public static ComputeBatchSize create(Scope scope, Operand<? extends TType> inputDataset) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ComputeBatchSize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ComputeBatchSize");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ComputeBatchSize(opBuilder.build());
   }
 

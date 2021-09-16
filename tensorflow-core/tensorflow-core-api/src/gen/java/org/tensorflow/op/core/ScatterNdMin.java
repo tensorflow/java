@@ -64,11 +64,10 @@ public final class ScatterNdMin<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType> ScatterNdMin<T> create(Scope scope, Operand<T> ref,
       Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterNdMin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ScatterNdMin");
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

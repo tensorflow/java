@@ -75,6 +75,11 @@ private static final long serialVersionUID = 0L;
             disableSessionConnectionSharing_ = input.readBool();
             break;
           }
+          case 48: {
+
+            numChannelsPerTarget_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -210,6 +215,24 @@ private static final long serialVersionUID = 0L;
     return disableSessionConnectionSharing_;
   }
 
+  public static final int NUM_CHANNELS_PER_TARGET_FIELD_NUMBER = 6;
+  private int numChannelsPerTarget_;
+  /**
+   * <pre>
+   * Setting num_channels_per_target &gt; 0 allows uses of multiple channels to
+   * communicate to the same target. This can be used to improve the aggregate
+   * throughput on high speed links (e.g 100G) where single connection is not
+   * sufficient to maximize link utilization. Note that a single RPC only goes
+   * on a single channel, this only helps in situations where there are multiple
+   * transfers to the same target overlapping in time.
+   * </pre>
+   *
+   * <code>int32 num_channels_per_target = 6;</code>
+   */
+  public int getNumChannelsPerTarget() {
+    return numChannelsPerTarget_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -239,6 +262,9 @@ private static final long serialVersionUID = 0L;
     if (disableSessionConnectionSharing_ != false) {
       output.writeBool(5, disableSessionConnectionSharing_);
     }
+    if (numChannelsPerTarget_ != 0) {
+      output.writeInt32(6, numChannelsPerTarget_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -267,6 +293,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(5, disableSessionConnectionSharing_);
     }
+    if (numChannelsPerTarget_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(6, numChannelsPerTarget_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -292,6 +322,8 @@ private static final long serialVersionUID = 0L;
         != other.getCacheRpcResponse()) return false;
     if (getDisableSessionConnectionSharing()
         != other.getDisableSessionConnectionSharing()) return false;
+    if (getNumChannelsPerTarget()
+        != other.getNumChannelsPerTarget()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -316,6 +348,8 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + DISABLE_SESSION_CONNECTION_SHARING_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getDisableSessionConnectionSharing());
+    hash = (37 * hash) + NUM_CHANNELS_PER_TARGET_FIELD_NUMBER;
+    hash = (53 * hash) + getNumChannelsPerTarget();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -459,6 +493,8 @@ private static final long serialVersionUID = 0L;
 
       disableSessionConnectionSharing_ = false;
 
+      numChannelsPerTarget_ = 0;
+
       return this;
     }
 
@@ -490,6 +526,7 @@ private static final long serialVersionUID = 0L;
       result.compressionLevel_ = compressionLevel_;
       result.cacheRpcResponse_ = cacheRpcResponse_;
       result.disableSessionConnectionSharing_ = disableSessionConnectionSharing_;
+      result.numChannelsPerTarget_ = numChannelsPerTarget_;
       onBuilt();
       return result;
     }
@@ -553,6 +590,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getDisableSessionConnectionSharing() != false) {
         setDisableSessionConnectionSharing(other.getDisableSessionConnectionSharing());
+      }
+      if (other.getNumChannelsPerTarget() != 0) {
+        setNumChannelsPerTarget(other.getNumChannelsPerTarget());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -847,6 +887,59 @@ private static final long serialVersionUID = 0L;
     public Builder clearDisableSessionConnectionSharing() {
       
       disableSessionConnectionSharing_ = false;
+      onChanged();
+      return this;
+    }
+
+    private int numChannelsPerTarget_ ;
+    /**
+     * <pre>
+     * Setting num_channels_per_target &gt; 0 allows uses of multiple channels to
+     * communicate to the same target. This can be used to improve the aggregate
+     * throughput on high speed links (e.g 100G) where single connection is not
+     * sufficient to maximize link utilization. Note that a single RPC only goes
+     * on a single channel, this only helps in situations where there are multiple
+     * transfers to the same target overlapping in time.
+     * </pre>
+     *
+     * <code>int32 num_channels_per_target = 6;</code>
+     */
+    public int getNumChannelsPerTarget() {
+      return numChannelsPerTarget_;
+    }
+    /**
+     * <pre>
+     * Setting num_channels_per_target &gt; 0 allows uses of multiple channels to
+     * communicate to the same target. This can be used to improve the aggregate
+     * throughput on high speed links (e.g 100G) where single connection is not
+     * sufficient to maximize link utilization. Note that a single RPC only goes
+     * on a single channel, this only helps in situations where there are multiple
+     * transfers to the same target overlapping in time.
+     * </pre>
+     *
+     * <code>int32 num_channels_per_target = 6;</code>
+     */
+    public Builder setNumChannelsPerTarget(int value) {
+      
+      numChannelsPerTarget_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Setting num_channels_per_target &gt; 0 allows uses of multiple channels to
+     * communicate to the same target. This can be used to improve the aggregate
+     * throughput on high speed links (e.g 100G) where single connection is not
+     * sufficient to maximize link utilization. Note that a single RPC only goes
+     * on a single channel, this only helps in situations where there are multiple
+     * transfers to the same target overlapping in time.
+     * </pre>
+     *
+     * <code>int32 num_channels_per_target = 6;</code>
+     */
+    public Builder clearNumChannelsPerTarget() {
+      
+      numChannelsPerTarget_ = 0;
       onChanged();
       return this;
     }

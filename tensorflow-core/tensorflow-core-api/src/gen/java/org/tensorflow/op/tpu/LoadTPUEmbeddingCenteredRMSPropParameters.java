@@ -62,12 +62,11 @@ public final class LoadTPUEmbeddingCenteredRMSPropParameters extends RawOp {
   public static LoadTPUEmbeddingCenteredRMSPropParameters create(Scope scope,
       Operand<TFloat32> parameters, Operand<TFloat32> ms, Operand<TFloat32> mom,
       Operand<TFloat32> mg, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingCenteredRMSPropParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingCenteredRMSPropParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(ms.asOutput());
     opBuilder.addInput(mom.asOutput());
     opBuilder.addInput(mg.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

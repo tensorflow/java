@@ -8,35 +8,14 @@ public interface SavedConcreteFunctionOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * Bound inputs to the function. The SavedObjects identified by the node ids
-   * given here are appended as extra inputs to the caller-supplied inputs.
-   * The only types of SavedObjects valid here are SavedVariable, SavedResource
-   * and SavedAsset.
-   * </pre>
-   *
    * <code>repeated int32 bound_inputs = 2;</code>
    */
   java.util.List<java.lang.Integer> getBoundInputsList();
   /**
-   * <pre>
-   * Bound inputs to the function. The SavedObjects identified by the node ids
-   * given here are appended as extra inputs to the caller-supplied inputs.
-   * The only types of SavedObjects valid here are SavedVariable, SavedResource
-   * and SavedAsset.
-   * </pre>
-   *
    * <code>repeated int32 bound_inputs = 2;</code>
    */
   int getBoundInputsCount();
   /**
-   * <pre>
-   * Bound inputs to the function. The SavedObjects identified by the node ids
-   * given here are appended as extra inputs to the caller-supplied inputs.
-   * The only types of SavedObjects valid here are SavedVariable, SavedResource
-   * and SavedAsset.
-   * </pre>
-   *
    * <code>repeated int32 bound_inputs = 2;</code>
    */
   int getBoundInputs(int index);

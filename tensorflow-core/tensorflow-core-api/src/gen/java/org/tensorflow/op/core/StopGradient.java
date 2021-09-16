@@ -109,9 +109,8 @@ public final class StopGradient<T extends TType> extends RawOp implements Operan
       describeByClass = true
   )
   public static <T extends TType> StopGradient<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StopGradient"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StopGradient");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new StopGradient<>(opBuilder.build());
   }
 

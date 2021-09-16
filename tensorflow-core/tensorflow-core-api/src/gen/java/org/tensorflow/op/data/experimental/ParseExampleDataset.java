@@ -84,11 +84,10 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
       Operand<TInt64> numParallelCalls, Iterable<Operand<?>> denseDefaults, List<String> sparseKeys,
       List<String> denseKeys, List<Class<? extends TType>> sparseTypes, List<Shape> denseShapes,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseExampleDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ParseExampleDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
-    opBuilder = scope.apply(opBuilder);
     String[] sparseKeysArray = new String[sparseKeys.size()];
     for (int i = 0 ; i < sparseKeysArray.length ; i++) {
       sparseKeysArray[i] = sparseKeys.get(i);

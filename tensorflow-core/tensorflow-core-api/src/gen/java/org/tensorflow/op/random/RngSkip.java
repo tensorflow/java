@@ -57,11 +57,10 @@ public final class RngSkip extends RawOp {
   )
   public static RngSkip create(Scope scope, Operand<? extends TType> resource,
       Operand<TInt64> algorithm, Operand<TInt64> delta) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RngSkip"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RngSkip");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RngSkip(opBuilder.build());
   }
 }

@@ -63,11 +63,10 @@ public final class AnonymousSeedGenerator extends RawOp {
   )
   public static AnonymousSeedGenerator create(Scope scope, Operand<TInt64> seed,
       Operand<TInt64> seed2, Operand<TBool> reshuffle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AnonymousSeedGenerator"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AnonymousSeedGenerator");
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder.addInput(reshuffle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new AnonymousSeedGenerator(opBuilder.build());
   }
 

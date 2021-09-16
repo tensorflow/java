@@ -59,13 +59,12 @@ public final class ResourceApplyAdagrad extends RawOp {
   public static <T extends TType> ResourceApplyAdagrad create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr,
       Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyAdagrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyAdagrad");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

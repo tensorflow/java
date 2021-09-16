@@ -88,10 +88,9 @@ public final class StatelessIf extends RawOp implements If {
   public static StatelessIf create(Scope scope, Operand<? extends TType> cond,
       Iterable<Operand<?>> input, List<Class<? extends TType>> Tout, ConcreteFunction thenBranch,
       ConcreteFunction elseBranch, If.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessIf"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessIf");
     opBuilder.addInput(cond.asOutput());
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
     opBuilder.setAttr("then_branch", thenBranch);
     opBuilder.setAttr("else_branch", elseBranch);

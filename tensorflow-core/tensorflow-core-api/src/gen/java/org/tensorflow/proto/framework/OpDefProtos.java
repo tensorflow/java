@@ -50,55 +50,59 @@ public final class OpDefProtos {
     java.lang.String[] descriptorData = {
       "\n&tensorflow/core/framework/op_def.proto" +
       "\022\ntensorflow\032*tensorflow/core/framework/" +
-      "attr_value.proto\032%tensorflow/core/framew" +
-      "ork/types.proto\032/tensorflow/core/framewo" +
-      "rk/resource_handle.proto\"\224\006\n\005OpDef\022\014\n\004na" +
-      "me\030\001 \001(\t\022+\n\tinput_arg\030\002 \003(\0132\030.tensorflow" +
-      ".OpDef.ArgDef\022,\n\noutput_arg\030\003 \003(\0132\030.tens" +
-      "orflow.OpDef.ArgDef\022\026\n\016control_output\030\024 " +
-      "\003(\t\022\'\n\004attr\030\004 \003(\0132\031.tensorflow.OpDef.Att" +
-      "rDef\022.\n\013deprecation\030\010 \001(\0132\031.tensorflow.O" +
-      "pDeprecation\022\017\n\007summary\030\005 \001(\t\022\023\n\013descrip" +
-      "tion\030\006 \001(\t\022\026\n\016is_commutative\030\022 \001(\010\022\024\n\014is" +
-      "_aggregate\030\020 \001(\010\022\023\n\013is_stateful\030\021 \001(\010\022\"\n" +
-      "\032allows_uninitialized_input\030\023 \001(\010\032\343\001\n\006Ar" +
-      "gDef\022\014\n\004name\030\001 \001(\t\022\023\n\013description\030\002 \001(\t\022" +
-      "\"\n\004type\030\003 \001(\0162\024.tensorflow.DataType\022\021\n\tt" +
-      "ype_attr\030\004 \001(\t\022\023\n\013number_attr\030\005 \001(\t\022\026\n\016t" +
-      "ype_list_attr\030\006 \001(\t\022B\n\013handle_data\030\007 \003(\013" +
-      "2-.tensorflow.ResourceHandleProto.DtypeA" +
-      "ndShape\022\016\n\006is_ref\030\020 \001(\010\032\275\001\n\007AttrDef\022\014\n\004n" +
-      "ame\030\001 \001(\t\022\014\n\004type\030\002 \001(\t\022,\n\rdefault_value" +
-      "\030\003 \001(\0132\025.tensorflow.AttrValue\022\023\n\013descrip" +
-      "tion\030\004 \001(\t\022\023\n\013has_minimum\030\005 \001(\010\022\017\n\007minim" +
-      "um\030\006 \001(\003\022-\n\016allowed_values\030\007 \001(\0132\025.tenso" +
-      "rflow.AttrValue\"5\n\rOpDeprecation\022\017\n\007vers" +
-      "ion\030\001 \001(\005\022\023\n\013explanation\030\002 \001(\t\"\'\n\006OpList" +
-      "\022\035\n\002op\030\001 \003(\0132\021.tensorflow.OpDefB\201\001\n\036org." +
-      "tensorflow.proto.frameworkB\013OpDefProtosP" +
-      "\001ZMgithub.com/tensorflow/tensorflow/tens" +
-      "orflow/go/core/framework/op_def_go_proto" +
-      "\370\001\001b\006proto3"
+      "attr_value.proto\032)tensorflow/core/framew" +
+      "ork/full_type.proto\032/tensorflow/core/fra" +
+      "mework/resource_handle.proto\032%tensorflow" +
+      "/core/framework/types.proto\"\363\006\n\005OpDef\022\014\n" +
+      "\004name\030\001 \001(\t\022+\n\tinput_arg\030\002 \003(\0132\030.tensorf" +
+      "low.OpDef.ArgDef\022,\n\noutput_arg\030\003 \003(\0132\030.t" +
+      "ensorflow.OpDef.ArgDef\022\026\n\016control_output" +
+      "\030\024 \003(\t\022\'\n\004attr\030\004 \003(\0132\031.tensorflow.OpDef." +
+      "AttrDef\022.\n\013deprecation\030\010 \001(\0132\031.tensorflo" +
+      "w.OpDeprecation\022\017\n\007summary\030\005 \001(\t\022\023\n\013desc" +
+      "ription\030\006 \001(\t\022\026\n\016is_commutative\030\022 \001(\010\022\024\n" +
+      "\014is_aggregate\030\020 \001(\010\022\023\n\013is_stateful\030\021 \001(\010" +
+      "\022\"\n\032allows_uninitialized_input\030\023 \001(\010\022$\n\034" +
+      "is_distributed_communication\030\025 \001(\010\032\234\002\n\006A" +
+      "rgDef\022\014\n\004name\030\001 \001(\t\022\023\n\013description\030\002 \001(\t" +
+      "\022\"\n\004type\030\003 \001(\0162\024.tensorflow.DataType\022\021\n\t" +
+      "type_attr\030\004 \001(\t\022\023\n\013number_attr\030\005 \001(\t\022\026\n\016" +
+      "type_list_attr\030\006 \001(\t\022B\n\013handle_data\030\007 \003(" +
+      "\0132-.tensorflow.ResourceHandleProto.Dtype" +
+      "AndShape\022\016\n\006is_ref\030\020 \001(\010\0227\n\026experimental" +
+      "_full_type\030\021 \001(\0132\027.tensorflow.FullTypeDe" +
+      "f\032\275\001\n\007AttrDef\022\014\n\004name\030\001 \001(\t\022\014\n\004type\030\002 \001(" +
+      "\t\022,\n\rdefault_value\030\003 \001(\0132\025.tensorflow.At" +
+      "trValue\022\023\n\013description\030\004 \001(\t\022\023\n\013has_mini" +
+      "mum\030\005 \001(\010\022\017\n\007minimum\030\006 \001(\003\022-\n\016allowed_va" +
+      "lues\030\007 \001(\0132\025.tensorflow.AttrValue\"5\n\rOpD" +
+      "eprecation\022\017\n\007version\030\001 \001(\005\022\023\n\013explanati" +
+      "on\030\002 \001(\t\"\'\n\006OpList\022\035\n\002op\030\001 \003(\0132\021.tensorf" +
+      "low.OpDefB\201\001\n\036org.tensorflow.proto.frame" +
+      "workB\013OpDefProtosP\001ZMgithub.com/tensorfl" +
+      "ow/tensorflow/tensorflow/go/core/framewo" +
+      "rk/op_def_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           org.tensorflow.proto.framework.AttrValueProtos.getDescriptor(),
-          org.tensorflow.proto.framework.TypesProtos.getDescriptor(),
+          org.tensorflow.proto.framework.FullTypeProtos.getDescriptor(),
           org.tensorflow.proto.framework.ResourceHandle.getDescriptor(),
+          org.tensorflow.proto.framework.TypesProtos.getDescriptor(),
         });
     internal_static_tensorflow_OpDef_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tensorflow_OpDef_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_OpDef_descriptor,
-        new java.lang.String[] { "Name", "InputArg", "OutputArg", "ControlOutput", "Attr", "Deprecation", "Summary", "Description", "IsCommutative", "IsAggregate", "IsStateful", "AllowsUninitializedInput", });
+        new java.lang.String[] { "Name", "InputArg", "OutputArg", "ControlOutput", "Attr", "Deprecation", "Summary", "Description", "IsCommutative", "IsAggregate", "IsStateful", "AllowsUninitializedInput", "IsDistributedCommunication", });
     internal_static_tensorflow_OpDef_ArgDef_descriptor =
       internal_static_tensorflow_OpDef_descriptor.getNestedTypes().get(0);
     internal_static_tensorflow_OpDef_ArgDef_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_OpDef_ArgDef_descriptor,
-        new java.lang.String[] { "Name", "Description", "Type", "TypeAttr", "NumberAttr", "TypeListAttr", "HandleData", "IsRef", });
+        new java.lang.String[] { "Name", "Description", "Type", "TypeAttr", "NumberAttr", "TypeListAttr", "HandleData", "IsRef", "ExperimentalFullType", });
     internal_static_tensorflow_OpDef_AttrDef_descriptor =
       internal_static_tensorflow_OpDef_descriptor.getNestedTypes().get(1);
     internal_static_tensorflow_OpDef_AttrDef_fieldAccessorTable = new
@@ -118,8 +122,9 @@ public final class OpDefProtos {
         internal_static_tensorflow_OpList_descriptor,
         new java.lang.String[] { "Op", });
     org.tensorflow.proto.framework.AttrValueProtos.getDescriptor();
-    org.tensorflow.proto.framework.TypesProtos.getDescriptor();
+    org.tensorflow.proto.framework.FullTypeProtos.getDescriptor();
     org.tensorflow.proto.framework.ResourceHandle.getDescriptor();
+    org.tensorflow.proto.framework.TypesProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -79,10 +79,9 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
   )
   public static <V extends TNumber> ArgMax<V> create(Scope scope, Operand<? extends TType> input,
       Operand<? extends TNumber> dimension, Class<V> outputType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ArgMax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ArgMax");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_type", Operands.toDataType(outputType));
     return new ArgMax<>(opBuilder.build());
   }

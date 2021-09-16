@@ -212,6 +212,19 @@ public interface SavedObjectOrBuilder extends
   org.tensorflow.proto.framework.SavedResourceOrBuilder getResourceOrBuilder();
 
   /**
+   * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+   */
+  boolean hasCapturedTensor();
+  /**
+   * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+   */
+  org.tensorflow.proto.framework.CapturedTensor getCapturedTensor();
+  /**
+   * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+   */
+  org.tensorflow.proto.framework.CapturedTensorOrBuilder getCapturedTensorOrBuilder();
+
+  /**
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
   int getSaveableObjectsCount();

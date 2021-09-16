@@ -71,10 +71,9 @@ public final class DenseCountSparseOutput<U extends TNumber> extends RawOp {
   public static <U extends TNumber> DenseCountSparseOutput<U> create(Scope scope,
       Operand<? extends TNumber> values, Operand<U> weights, Boolean binaryOutput,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DenseCountSparseOutput"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DenseCountSparseOutput");
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("binary_output", binaryOutput);
     if (options != null) {
       for (Options opts : options) {

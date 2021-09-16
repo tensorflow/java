@@ -93,10 +93,9 @@ public final class TensorArrayGrad extends RawOp {
   )
   public static TensorArrayGrad create(Scope scope, Operand<? extends TType> handle,
       Operand<TFloat32> flowIn, String source) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArrayGrad");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("source", source);
     return new TensorArrayGrad(opBuilder.build());
   }

@@ -59,8 +59,7 @@ public final class TextLineReader extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static TextLineReader create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TextLineReader"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TextLineReader");
     if (options != null) {
       for (Options opts : options) {
         if (opts.skipHeaderLines != null) {

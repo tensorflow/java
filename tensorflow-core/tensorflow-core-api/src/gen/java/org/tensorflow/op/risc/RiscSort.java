@@ -60,10 +60,9 @@ public final class RiscSort<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> RiscSort<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, String direction) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscSort"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscSort");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("direction", direction);
     return new RiscSort<>(opBuilder.build());
   }

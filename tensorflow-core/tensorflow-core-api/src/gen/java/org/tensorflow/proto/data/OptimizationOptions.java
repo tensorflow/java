@@ -70,22 +70,12 @@ private static final long serialVersionUID = 0L;
           }
           case 40: {
             optionalAutotuneRamBudgetCase_ = 5;
-            optionalAutotuneRamBudget_ = input.readInt32();
+            optionalAutotuneRamBudget_ = input.readInt64();
             break;
           }
           case 48: {
             optionalFilterFusionCase_ = 6;
             optionalFilterFusion_ = input.readBool();
-            break;
-          }
-          case 56: {
-            optionalFilterWithRandomUniformFusionCase_ = 7;
-            optionalFilterWithRandomUniformFusion_ = input.readBool();
-            break;
-          }
-          case 64: {
-            optionalHoistRandomUniformCase_ = 8;
-            optionalHoistRandomUniform_ = input.readBool();
             break;
           }
           case 72: {
@@ -108,19 +98,6 @@ private static final long serialVersionUID = 0L;
             optionalMapParallelization_ = input.readBool();
             break;
           }
-          case 106: {
-            org.tensorflow.proto.data.MapVectorization.Builder subBuilder = null;
-            if (mapVectorization_ != null) {
-              subBuilder = mapVectorization_.toBuilder();
-            }
-            mapVectorization_ = input.readMessage(org.tensorflow.proto.data.MapVectorization.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(mapVectorization_);
-              mapVectorization_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
           case 112: {
             optionalNoopEliminationCase_ = 14;
             optionalNoopElimination_ = input.readBool();
@@ -129,11 +106,6 @@ private static final long serialVersionUID = 0L;
           case 120: {
             optionalParallelBatchCase_ = 15;
             optionalParallelBatch_ = input.readBool();
-            break;
-          }
-          case 128: {
-            optionalReorderDataDiscardingOpsCase_ = 16;
-            optionalReorderDataDiscardingOps_ = input.readBool();
             break;
           }
           case 136: {
@@ -389,78 +361,6 @@ private static final long serialVersionUID = 0L;
         optionalFilterFusionCase_);
   }
 
-  private int optionalFilterWithRandomUniformFusionCase_ = 0;
-  private java.lang.Object optionalFilterWithRandomUniformFusion_;
-  public enum OptionalFilterWithRandomUniformFusionCase
-      implements com.google.protobuf.Internal.EnumLite {
-    FILTER_WITH_RANDOM_UNIFORM_FUSION(7),
-    OPTIONALFILTERWITHRANDOMUNIFORMFUSION_NOT_SET(0);
-    private final int value;
-    private OptionalFilterWithRandomUniformFusionCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalFilterWithRandomUniformFusionCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalFilterWithRandomUniformFusionCase forNumber(int value) {
-      switch (value) {
-        case 7: return FILTER_WITH_RANDOM_UNIFORM_FUSION;
-        case 0: return OPTIONALFILTERWITHRANDOMUNIFORMFUSION_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalFilterWithRandomUniformFusionCase
-  getOptionalFilterWithRandomUniformFusionCase() {
-    return OptionalFilterWithRandomUniformFusionCase.forNumber(
-        optionalFilterWithRandomUniformFusionCase_);
-  }
-
-  private int optionalHoistRandomUniformCase_ = 0;
-  private java.lang.Object optionalHoistRandomUniform_;
-  public enum OptionalHoistRandomUniformCase
-      implements com.google.protobuf.Internal.EnumLite {
-    HOIST_RANDOM_UNIFORM(8),
-    OPTIONALHOISTRANDOMUNIFORM_NOT_SET(0);
-    private final int value;
-    private OptionalHoistRandomUniformCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalHoistRandomUniformCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalHoistRandomUniformCase forNumber(int value) {
-      switch (value) {
-        case 8: return HOIST_RANDOM_UNIFORM;
-        case 0: return OPTIONALHOISTRANDOMUNIFORM_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalHoistRandomUniformCase
-  getOptionalHoistRandomUniformCase() {
-    return OptionalHoistRandomUniformCase.forNumber(
-        optionalHoistRandomUniformCase_);
-  }
-
   private int optionalMapAndBatchFusionCase_ = 0;
   private java.lang.Object optionalMapAndBatchFusion_;
   public enum OptionalMapAndBatchFusionCase
@@ -677,42 +577,6 @@ private static final long serialVersionUID = 0L;
         optionalParallelBatchCase_);
   }
 
-  private int optionalReorderDataDiscardingOpsCase_ = 0;
-  private java.lang.Object optionalReorderDataDiscardingOps_;
-  public enum OptionalReorderDataDiscardingOpsCase
-      implements com.google.protobuf.Internal.EnumLite {
-    REORDER_DATA_DISCARDING_OPS(16),
-    OPTIONALREORDERDATADISCARDINGOPS_NOT_SET(0);
-    private final int value;
-    private OptionalReorderDataDiscardingOpsCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalReorderDataDiscardingOpsCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalReorderDataDiscardingOpsCase forNumber(int value) {
-      switch (value) {
-        case 16: return REORDER_DATA_DISCARDING_OPS;
-        case 0: return OPTIONALREORDERDATADISCARDINGOPS_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalReorderDataDiscardingOpsCase
-  getOptionalReorderDataDiscardingOpsCase() {
-    return OptionalReorderDataDiscardingOpsCase.forNumber(
-        optionalReorderDataDiscardingOpsCase_);
-  }
-
   private int optionalShuffleAndRepeatFusionCase_ = 0;
   private java.lang.Object optionalShuffleAndRepeatFusion_;
   public enum OptionalShuffleAndRepeatFusionCase
@@ -795,13 +659,13 @@ private static final long serialVersionUID = 0L;
 
   public static final int AUTOTUNE_RAM_BUDGET_FIELD_NUMBER = 5;
   /**
-   * <code>int32 autotune_ram_budget = 5;</code>
+   * <code>int64 autotune_ram_budget = 5;</code>
    */
-  public int getAutotuneRamBudget() {
+  public long getAutotuneRamBudget() {
     if (optionalAutotuneRamBudgetCase_ == 5) {
-      return (java.lang.Integer) optionalAutotuneRamBudget_;
+      return (java.lang.Long) optionalAutotuneRamBudget_;
     }
-    return 0;
+    return 0L;
   }
 
   public static final int FILTER_FUSION_FIELD_NUMBER = 6;
@@ -811,28 +675,6 @@ private static final long serialVersionUID = 0L;
   public boolean getFilterFusion() {
     if (optionalFilterFusionCase_ == 6) {
       return (java.lang.Boolean) optionalFilterFusion_;
-    }
-    return false;
-  }
-
-  public static final int FILTER_WITH_RANDOM_UNIFORM_FUSION_FIELD_NUMBER = 7;
-  /**
-   * <code>bool filter_with_random_uniform_fusion = 7;</code>
-   */
-  public boolean getFilterWithRandomUniformFusion() {
-    if (optionalFilterWithRandomUniformFusionCase_ == 7) {
-      return (java.lang.Boolean) optionalFilterWithRandomUniformFusion_;
-    }
-    return false;
-  }
-
-  public static final int HOIST_RANDOM_UNIFORM_FIELD_NUMBER = 8;
-  /**
-   * <code>bool hoist_random_uniform = 8;</code>
-   */
-  public boolean getHoistRandomUniform() {
-    if (optionalHoistRandomUniformCase_ == 8) {
-      return (java.lang.Boolean) optionalHoistRandomUniform_;
     }
     return false;
   }
@@ -881,39 +723,6 @@ private static final long serialVersionUID = 0L;
     return false;
   }
 
-  public static final int MAP_VECTORIZATION_FIELD_NUMBER = 13;
-  private org.tensorflow.proto.data.MapVectorization mapVectorization_;
-  /**
-   * <pre>
-   * The map vectorization options associated with the dataset.
-   * </pre>
-   *
-   * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-   */
-  public boolean hasMapVectorization() {
-    return mapVectorization_ != null;
-  }
-  /**
-   * <pre>
-   * The map vectorization options associated with the dataset.
-   * </pre>
-   *
-   * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-   */
-  public org.tensorflow.proto.data.MapVectorization getMapVectorization() {
-    return mapVectorization_ == null ? org.tensorflow.proto.data.MapVectorization.getDefaultInstance() : mapVectorization_;
-  }
-  /**
-   * <pre>
-   * The map vectorization options associated with the dataset.
-   * </pre>
-   *
-   * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-   */
-  public org.tensorflow.proto.data.MapVectorizationOrBuilder getMapVectorizationOrBuilder() {
-    return getMapVectorization();
-  }
-
   public static final int NOOP_ELIMINATION_FIELD_NUMBER = 14;
   /**
    * <code>bool noop_elimination = 14;</code>
@@ -932,17 +741,6 @@ private static final long serialVersionUID = 0L;
   public boolean getParallelBatch() {
     if (optionalParallelBatchCase_ == 15) {
       return (java.lang.Boolean) optionalParallelBatch_;
-    }
-    return false;
-  }
-
-  public static final int REORDER_DATA_DISCARDING_OPS_FIELD_NUMBER = 16;
-  /**
-   * <code>bool reorder_data_discarding_ops = 16;</code>
-   */
-  public boolean getReorderDataDiscardingOps() {
-    if (optionalReorderDataDiscardingOpsCase_ == 16) {
-      return (java.lang.Boolean) optionalReorderDataDiscardingOps_;
     }
     return false;
   }
@@ -989,20 +787,12 @@ private static final long serialVersionUID = 0L;
           4, (int)((java.lang.Integer) optionalAutotuneCpuBudget_));
     }
     if (optionalAutotuneRamBudgetCase_ == 5) {
-      output.writeInt32(
-          5, (int)((java.lang.Integer) optionalAutotuneRamBudget_));
+      output.writeInt64(
+          5, (long)((java.lang.Long) optionalAutotuneRamBudget_));
     }
     if (optionalFilterFusionCase_ == 6) {
       output.writeBool(
           6, (boolean)((java.lang.Boolean) optionalFilterFusion_));
-    }
-    if (optionalFilterWithRandomUniformFusionCase_ == 7) {
-      output.writeBool(
-          7, (boolean)((java.lang.Boolean) optionalFilterWithRandomUniformFusion_));
-    }
-    if (optionalHoistRandomUniformCase_ == 8) {
-      output.writeBool(
-          8, (boolean)((java.lang.Boolean) optionalHoistRandomUniform_));
     }
     if (optionalMapAndBatchFusionCase_ == 9) {
       output.writeBool(
@@ -1020,9 +810,6 @@ private static final long serialVersionUID = 0L;
       output.writeBool(
           12, (boolean)((java.lang.Boolean) optionalMapParallelization_));
     }
-    if (mapVectorization_ != null) {
-      output.writeMessage(13, getMapVectorization());
-    }
     if (optionalNoopEliminationCase_ == 14) {
       output.writeBool(
           14, (boolean)((java.lang.Boolean) optionalNoopElimination_));
@@ -1030,10 +817,6 @@ private static final long serialVersionUID = 0L;
     if (optionalParallelBatchCase_ == 15) {
       output.writeBool(
           15, (boolean)((java.lang.Boolean) optionalParallelBatch_));
-    }
-    if (optionalReorderDataDiscardingOpsCase_ == 16) {
-      output.writeBool(
-          16, (boolean)((java.lang.Boolean) optionalReorderDataDiscardingOps_));
     }
     if (optionalShuffleAndRepeatFusionCase_ == 17) {
       output.writeBool(
@@ -1070,23 +853,13 @@ private static final long serialVersionUID = 0L;
     }
     if (optionalAutotuneRamBudgetCase_ == 5) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(
-            5, (int)((java.lang.Integer) optionalAutotuneRamBudget_));
+        .computeInt64Size(
+            5, (long)((java.lang.Long) optionalAutotuneRamBudget_));
     }
     if (optionalFilterFusionCase_ == 6) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(
             6, (boolean)((java.lang.Boolean) optionalFilterFusion_));
-    }
-    if (optionalFilterWithRandomUniformFusionCase_ == 7) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(
-            7, (boolean)((java.lang.Boolean) optionalFilterWithRandomUniformFusion_));
-    }
-    if (optionalHoistRandomUniformCase_ == 8) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(
-            8, (boolean)((java.lang.Boolean) optionalHoistRandomUniform_));
     }
     if (optionalMapAndBatchFusionCase_ == 9) {
       size += com.google.protobuf.CodedOutputStream
@@ -1108,10 +881,6 @@ private static final long serialVersionUID = 0L;
         .computeBoolSize(
             12, (boolean)((java.lang.Boolean) optionalMapParallelization_));
     }
-    if (mapVectorization_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(13, getMapVectorization());
-    }
     if (optionalNoopEliminationCase_ == 14) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(
@@ -1121,11 +890,6 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(
             15, (boolean)((java.lang.Boolean) optionalParallelBatch_));
-    }
-    if (optionalReorderDataDiscardingOpsCase_ == 16) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(
-            16, (boolean)((java.lang.Boolean) optionalReorderDataDiscardingOps_));
     }
     if (optionalShuffleAndRepeatFusionCase_ == 17) {
       size += com.google.protobuf.CodedOutputStream
@@ -1147,11 +911,6 @@ private static final long serialVersionUID = 0L;
     }
     org.tensorflow.proto.data.OptimizationOptions other = (org.tensorflow.proto.data.OptimizationOptions) obj;
 
-    if (hasMapVectorization() != other.hasMapVectorization()) return false;
-    if (hasMapVectorization()) {
-      if (!getMapVectorization()
-          .equals(other.getMapVectorization())) return false;
-    }
     if (!getOptionalApplyDefaultOptimizationsCase().equals(other.getOptionalApplyDefaultOptimizationsCase())) return false;
     switch (optionalApplyDefaultOptimizationsCase_) {
       case 1:
@@ -1202,24 +961,6 @@ private static final long serialVersionUID = 0L;
       case 6:
         if (getFilterFusion()
             != other.getFilterFusion()) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!getOptionalFilterWithRandomUniformFusionCase().equals(other.getOptionalFilterWithRandomUniformFusionCase())) return false;
-    switch (optionalFilterWithRandomUniformFusionCase_) {
-      case 7:
-        if (getFilterWithRandomUniformFusion()
-            != other.getFilterWithRandomUniformFusion()) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!getOptionalHoistRandomUniformCase().equals(other.getOptionalHoistRandomUniformCase())) return false;
-    switch (optionalHoistRandomUniformCase_) {
-      case 8:
-        if (getHoistRandomUniform()
-            != other.getHoistRandomUniform()) return false;
         break;
       case 0:
       default:
@@ -1278,15 +1019,6 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
-    if (!getOptionalReorderDataDiscardingOpsCase().equals(other.getOptionalReorderDataDiscardingOpsCase())) return false;
-    switch (optionalReorderDataDiscardingOpsCase_) {
-      case 16:
-        if (getReorderDataDiscardingOps()
-            != other.getReorderDataDiscardingOps()) return false;
-        break;
-      case 0:
-      default:
-    }
     if (!getOptionalShuffleAndRepeatFusionCase().equals(other.getOptionalShuffleAndRepeatFusionCase())) return false;
     switch (optionalShuffleAndRepeatFusionCase_) {
       case 17:
@@ -1307,10 +1039,6 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (hasMapVectorization()) {
-      hash = (37 * hash) + MAP_VECTORIZATION_FIELD_NUMBER;
-      hash = (53 * hash) + getMapVectorization().hashCode();
-    }
     switch (optionalApplyDefaultOptimizationsCase_) {
       case 1:
         hash = (37 * hash) + APPLY_DEFAULT_OPTIMIZATIONS_FIELD_NUMBER;
@@ -1349,7 +1077,8 @@ private static final long serialVersionUID = 0L;
     switch (optionalAutotuneRamBudgetCase_) {
       case 5:
         hash = (37 * hash) + AUTOTUNE_RAM_BUDGET_FIELD_NUMBER;
-        hash = (53 * hash) + getAutotuneRamBudget();
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getAutotuneRamBudget());
         break;
       case 0:
       default:
@@ -1359,24 +1088,6 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + FILTER_FUSION_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
             getFilterFusion());
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalFilterWithRandomUniformFusionCase_) {
-      case 7:
-        hash = (37 * hash) + FILTER_WITH_RANDOM_UNIFORM_FUSION_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getFilterWithRandomUniformFusion());
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalHoistRandomUniformCase_) {
-      case 8:
-        hash = (37 * hash) + HOIST_RANDOM_UNIFORM_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getHoistRandomUniform());
         break;
       case 0:
       default:
@@ -1431,15 +1142,6 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + PARALLEL_BATCH_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
             getParallelBatch());
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalReorderDataDiscardingOpsCase_) {
-      case 16:
-        hash = (37 * hash) + REORDER_DATA_DISCARDING_OPS_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getReorderDataDiscardingOps());
         break;
       case 0:
       default:
@@ -1586,12 +1288,6 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (mapVectorizationBuilder_ == null) {
-        mapVectorization_ = null;
-      } else {
-        mapVectorization_ = null;
-        mapVectorizationBuilder_ = null;
-      }
       optionalApplyDefaultOptimizationsCase_ = 0;
       optionalApplyDefaultOptimizations_ = null;
       optionalAutotuneCase_ = 0;
@@ -1604,10 +1300,6 @@ private static final long serialVersionUID = 0L;
       optionalAutotuneRamBudget_ = null;
       optionalFilterFusionCase_ = 0;
       optionalFilterFusion_ = null;
-      optionalFilterWithRandomUniformFusionCase_ = 0;
-      optionalFilterWithRandomUniformFusion_ = null;
-      optionalHoistRandomUniformCase_ = 0;
-      optionalHoistRandomUniform_ = null;
       optionalMapAndBatchFusionCase_ = 0;
       optionalMapAndBatchFusion_ = null;
       optionalMapAndFilterFusionCase_ = 0;
@@ -1620,8 +1312,6 @@ private static final long serialVersionUID = 0L;
       optionalNoopElimination_ = null;
       optionalParallelBatchCase_ = 0;
       optionalParallelBatch_ = null;
-      optionalReorderDataDiscardingOpsCase_ = 0;
-      optionalReorderDataDiscardingOps_ = null;
       optionalShuffleAndRepeatFusionCase_ = 0;
       optionalShuffleAndRepeatFusion_ = null;
       return this;
@@ -1668,12 +1358,6 @@ private static final long serialVersionUID = 0L;
       if (optionalFilterFusionCase_ == 6) {
         result.optionalFilterFusion_ = optionalFilterFusion_;
       }
-      if (optionalFilterWithRandomUniformFusionCase_ == 7) {
-        result.optionalFilterWithRandomUniformFusion_ = optionalFilterWithRandomUniformFusion_;
-      }
-      if (optionalHoistRandomUniformCase_ == 8) {
-        result.optionalHoistRandomUniform_ = optionalHoistRandomUniform_;
-      }
       if (optionalMapAndBatchFusionCase_ == 9) {
         result.optionalMapAndBatchFusion_ = optionalMapAndBatchFusion_;
       }
@@ -1686,19 +1370,11 @@ private static final long serialVersionUID = 0L;
       if (optionalMapParallelizationCase_ == 12) {
         result.optionalMapParallelization_ = optionalMapParallelization_;
       }
-      if (mapVectorizationBuilder_ == null) {
-        result.mapVectorization_ = mapVectorization_;
-      } else {
-        result.mapVectorization_ = mapVectorizationBuilder_.build();
-      }
       if (optionalNoopEliminationCase_ == 14) {
         result.optionalNoopElimination_ = optionalNoopElimination_;
       }
       if (optionalParallelBatchCase_ == 15) {
         result.optionalParallelBatch_ = optionalParallelBatch_;
-      }
-      if (optionalReorderDataDiscardingOpsCase_ == 16) {
-        result.optionalReorderDataDiscardingOps_ = optionalReorderDataDiscardingOps_;
       }
       if (optionalShuffleAndRepeatFusionCase_ == 17) {
         result.optionalShuffleAndRepeatFusion_ = optionalShuffleAndRepeatFusion_;
@@ -1709,15 +1385,12 @@ private static final long serialVersionUID = 0L;
       result.optionalAutotuneCpuBudgetCase_ = optionalAutotuneCpuBudgetCase_;
       result.optionalAutotuneRamBudgetCase_ = optionalAutotuneRamBudgetCase_;
       result.optionalFilterFusionCase_ = optionalFilterFusionCase_;
-      result.optionalFilterWithRandomUniformFusionCase_ = optionalFilterWithRandomUniformFusionCase_;
-      result.optionalHoistRandomUniformCase_ = optionalHoistRandomUniformCase_;
       result.optionalMapAndBatchFusionCase_ = optionalMapAndBatchFusionCase_;
       result.optionalMapAndFilterFusionCase_ = optionalMapAndFilterFusionCase_;
       result.optionalMapFusionCase_ = optionalMapFusionCase_;
       result.optionalMapParallelizationCase_ = optionalMapParallelizationCase_;
       result.optionalNoopEliminationCase_ = optionalNoopEliminationCase_;
       result.optionalParallelBatchCase_ = optionalParallelBatchCase_;
-      result.optionalReorderDataDiscardingOpsCase_ = optionalReorderDataDiscardingOpsCase_;
       result.optionalShuffleAndRepeatFusionCase_ = optionalShuffleAndRepeatFusionCase_;
       onBuilt();
       return result;
@@ -1767,9 +1440,6 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.tensorflow.proto.data.OptimizationOptions other) {
       if (other == org.tensorflow.proto.data.OptimizationOptions.getDefaultInstance()) return this;
-      if (other.hasMapVectorization()) {
-        mergeMapVectorization(other.getMapVectorization());
-      }
       switch (other.getOptionalApplyDefaultOptimizationsCase()) {
         case APPLY_DEFAULT_OPTIMIZATIONS: {
           setApplyDefaultOptimizations(other.getApplyDefaultOptimizations());
@@ -1824,24 +1494,6 @@ private static final long serialVersionUID = 0L;
           break;
         }
       }
-      switch (other.getOptionalFilterWithRandomUniformFusionCase()) {
-        case FILTER_WITH_RANDOM_UNIFORM_FUSION: {
-          setFilterWithRandomUniformFusion(other.getFilterWithRandomUniformFusion());
-          break;
-        }
-        case OPTIONALFILTERWITHRANDOMUNIFORMFUSION_NOT_SET: {
-          break;
-        }
-      }
-      switch (other.getOptionalHoistRandomUniformCase()) {
-        case HOIST_RANDOM_UNIFORM: {
-          setHoistRandomUniform(other.getHoistRandomUniform());
-          break;
-        }
-        case OPTIONALHOISTRANDOMUNIFORM_NOT_SET: {
-          break;
-        }
-      }
       switch (other.getOptionalMapAndBatchFusionCase()) {
         case MAP_AND_BATCH_FUSION: {
           setMapAndBatchFusion(other.getMapAndBatchFusion());
@@ -1893,15 +1545,6 @@ private static final long serialVersionUID = 0L;
           break;
         }
         case OPTIONALPARALLELBATCH_NOT_SET: {
-          break;
-        }
-      }
-      switch (other.getOptionalReorderDataDiscardingOpsCase()) {
-        case REORDER_DATA_DISCARDING_OPS: {
-          setReorderDataDiscardingOps(other.getReorderDataDiscardingOps());
-          break;
-        }
-        case OPTIONALREORDERDATADISCARDINGOPS_NOT_SET: {
           break;
         }
       }
@@ -2032,36 +1675,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int optionalFilterWithRandomUniformFusionCase_ = 0;
-    private java.lang.Object optionalFilterWithRandomUniformFusion_;
-    public OptionalFilterWithRandomUniformFusionCase
-        getOptionalFilterWithRandomUniformFusionCase() {
-      return OptionalFilterWithRandomUniformFusionCase.forNumber(
-          optionalFilterWithRandomUniformFusionCase_);
-    }
-
-    public Builder clearOptionalFilterWithRandomUniformFusion() {
-      optionalFilterWithRandomUniformFusionCase_ = 0;
-      optionalFilterWithRandomUniformFusion_ = null;
-      onChanged();
-      return this;
-    }
-
-    private int optionalHoistRandomUniformCase_ = 0;
-    private java.lang.Object optionalHoistRandomUniform_;
-    public OptionalHoistRandomUniformCase
-        getOptionalHoistRandomUniformCase() {
-      return OptionalHoistRandomUniformCase.forNumber(
-          optionalHoistRandomUniformCase_);
-    }
-
-    public Builder clearOptionalHoistRandomUniform() {
-      optionalHoistRandomUniformCase_ = 0;
-      optionalHoistRandomUniform_ = null;
-      onChanged();
-      return this;
-    }
-
     private int optionalMapAndBatchFusionCase_ = 0;
     private java.lang.Object optionalMapAndBatchFusion_;
     public OptionalMapAndBatchFusionCase
@@ -2148,21 +1761,6 @@ private static final long serialVersionUID = 0L;
     public Builder clearOptionalParallelBatch() {
       optionalParallelBatchCase_ = 0;
       optionalParallelBatch_ = null;
-      onChanged();
-      return this;
-    }
-
-    private int optionalReorderDataDiscardingOpsCase_ = 0;
-    private java.lang.Object optionalReorderDataDiscardingOps_;
-    public OptionalReorderDataDiscardingOpsCase
-        getOptionalReorderDataDiscardingOpsCase() {
-      return OptionalReorderDataDiscardingOpsCase.forNumber(
-          optionalReorderDataDiscardingOpsCase_);
-    }
-
-    public Builder clearOptionalReorderDataDiscardingOps() {
-      optionalReorderDataDiscardingOpsCase_ = 0;
-      optionalReorderDataDiscardingOps_ = null;
       onChanged();
       return this;
     }
@@ -2304,25 +1902,25 @@ private static final long serialVersionUID = 0L;
     }
 
     /**
-     * <code>int32 autotune_ram_budget = 5;</code>
+     * <code>int64 autotune_ram_budget = 5;</code>
      */
-    public int getAutotuneRamBudget() {
+    public long getAutotuneRamBudget() {
       if (optionalAutotuneRamBudgetCase_ == 5) {
-        return (java.lang.Integer) optionalAutotuneRamBudget_;
+        return (java.lang.Long) optionalAutotuneRamBudget_;
       }
-      return 0;
+      return 0L;
     }
     /**
-     * <code>int32 autotune_ram_budget = 5;</code>
+     * <code>int64 autotune_ram_budget = 5;</code>
      */
-    public Builder setAutotuneRamBudget(int value) {
+    public Builder setAutotuneRamBudget(long value) {
       optionalAutotuneRamBudgetCase_ = 5;
       optionalAutotuneRamBudget_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 autotune_ram_budget = 5;</code>
+     * <code>int64 autotune_ram_budget = 5;</code>
      */
     public Builder clearAutotuneRamBudget() {
       if (optionalAutotuneRamBudgetCase_ == 5) {
@@ -2358,66 +1956,6 @@ private static final long serialVersionUID = 0L;
       if (optionalFilterFusionCase_ == 6) {
         optionalFilterFusionCase_ = 0;
         optionalFilterFusion_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>bool filter_with_random_uniform_fusion = 7;</code>
-     */
-    public boolean getFilterWithRandomUniformFusion() {
-      if (optionalFilterWithRandomUniformFusionCase_ == 7) {
-        return (java.lang.Boolean) optionalFilterWithRandomUniformFusion_;
-      }
-      return false;
-    }
-    /**
-     * <code>bool filter_with_random_uniform_fusion = 7;</code>
-     */
-    public Builder setFilterWithRandomUniformFusion(boolean value) {
-      optionalFilterWithRandomUniformFusionCase_ = 7;
-      optionalFilterWithRandomUniformFusion_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool filter_with_random_uniform_fusion = 7;</code>
-     */
-    public Builder clearFilterWithRandomUniformFusion() {
-      if (optionalFilterWithRandomUniformFusionCase_ == 7) {
-        optionalFilterWithRandomUniformFusionCase_ = 0;
-        optionalFilterWithRandomUniformFusion_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>bool hoist_random_uniform = 8;</code>
-     */
-    public boolean getHoistRandomUniform() {
-      if (optionalHoistRandomUniformCase_ == 8) {
-        return (java.lang.Boolean) optionalHoistRandomUniform_;
-      }
-      return false;
-    }
-    /**
-     * <code>bool hoist_random_uniform = 8;</code>
-     */
-    public Builder setHoistRandomUniform(boolean value) {
-      optionalHoistRandomUniformCase_ = 8;
-      optionalHoistRandomUniform_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool hoist_random_uniform = 8;</code>
-     */
-    public Builder clearHoistRandomUniform() {
-      if (optionalHoistRandomUniformCase_ == 8) {
-        optionalHoistRandomUniformCase_ = 0;
-        optionalHoistRandomUniform_ = null;
         onChanged();
       }
       return this;
@@ -2543,159 +2081,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private org.tensorflow.proto.data.MapVectorization mapVectorization_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.tensorflow.proto.data.MapVectorization, org.tensorflow.proto.data.MapVectorization.Builder, org.tensorflow.proto.data.MapVectorizationOrBuilder> mapVectorizationBuilder_;
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public boolean hasMapVectorization() {
-      return mapVectorizationBuilder_ != null || mapVectorization_ != null;
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public org.tensorflow.proto.data.MapVectorization getMapVectorization() {
-      if (mapVectorizationBuilder_ == null) {
-        return mapVectorization_ == null ? org.tensorflow.proto.data.MapVectorization.getDefaultInstance() : mapVectorization_;
-      } else {
-        return mapVectorizationBuilder_.getMessage();
-      }
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public Builder setMapVectorization(org.tensorflow.proto.data.MapVectorization value) {
-      if (mapVectorizationBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        mapVectorization_ = value;
-        onChanged();
-      } else {
-        mapVectorizationBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public Builder setMapVectorization(
-        org.tensorflow.proto.data.MapVectorization.Builder builderForValue) {
-      if (mapVectorizationBuilder_ == null) {
-        mapVectorization_ = builderForValue.build();
-        onChanged();
-      } else {
-        mapVectorizationBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public Builder mergeMapVectorization(org.tensorflow.proto.data.MapVectorization value) {
-      if (mapVectorizationBuilder_ == null) {
-        if (mapVectorization_ != null) {
-          mapVectorization_ =
-            org.tensorflow.proto.data.MapVectorization.newBuilder(mapVectorization_).mergeFrom(value).buildPartial();
-        } else {
-          mapVectorization_ = value;
-        }
-        onChanged();
-      } else {
-        mapVectorizationBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public Builder clearMapVectorization() {
-      if (mapVectorizationBuilder_ == null) {
-        mapVectorization_ = null;
-        onChanged();
-      } else {
-        mapVectorization_ = null;
-        mapVectorizationBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public org.tensorflow.proto.data.MapVectorization.Builder getMapVectorizationBuilder() {
-      
-      onChanged();
-      return getMapVectorizationFieldBuilder().getBuilder();
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    public org.tensorflow.proto.data.MapVectorizationOrBuilder getMapVectorizationOrBuilder() {
-      if (mapVectorizationBuilder_ != null) {
-        return mapVectorizationBuilder_.getMessageOrBuilder();
-      } else {
-        return mapVectorization_ == null ?
-            org.tensorflow.proto.data.MapVectorization.getDefaultInstance() : mapVectorization_;
-      }
-    }
-    /**
-     * <pre>
-     * The map vectorization options associated with the dataset.
-     * </pre>
-     *
-     * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.tensorflow.proto.data.MapVectorization, org.tensorflow.proto.data.MapVectorization.Builder, org.tensorflow.proto.data.MapVectorizationOrBuilder> 
-        getMapVectorizationFieldBuilder() {
-      if (mapVectorizationBuilder_ == null) {
-        mapVectorizationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            org.tensorflow.proto.data.MapVectorization, org.tensorflow.proto.data.MapVectorization.Builder, org.tensorflow.proto.data.MapVectorizationOrBuilder>(
-                getMapVectorization(),
-                getParentForChildren(),
-                isClean());
-        mapVectorization_ = null;
-      }
-      return mapVectorizationBuilder_;
-    }
-
     /**
      * <code>bool noop_elimination = 14;</code>
      */
@@ -2751,36 +2136,6 @@ private static final long serialVersionUID = 0L;
       if (optionalParallelBatchCase_ == 15) {
         optionalParallelBatchCase_ = 0;
         optionalParallelBatch_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>bool reorder_data_discarding_ops = 16;</code>
-     */
-    public boolean getReorderDataDiscardingOps() {
-      if (optionalReorderDataDiscardingOpsCase_ == 16) {
-        return (java.lang.Boolean) optionalReorderDataDiscardingOps_;
-      }
-      return false;
-    }
-    /**
-     * <code>bool reorder_data_discarding_ops = 16;</code>
-     */
-    public Builder setReorderDataDiscardingOps(boolean value) {
-      optionalReorderDataDiscardingOpsCase_ = 16;
-      optionalReorderDataDiscardingOps_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool reorder_data_discarding_ops = 16;</code>
-     */
-    public Builder clearReorderDataDiscardingOps() {
-      if (optionalReorderDataDiscardingOpsCase_ == 16) {
-        optionalReorderDataDiscardingOpsCase_ = 0;
-        optionalReorderDataDiscardingOps_ = null;
         onChanged();
       }
       return this;

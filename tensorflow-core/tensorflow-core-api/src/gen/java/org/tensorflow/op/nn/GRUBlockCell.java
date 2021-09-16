@@ -110,14 +110,13 @@ public final class GRUBlockCell<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> GRUBlockCell<T> create(Scope scope, Operand<T> x,
       Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GRUBlockCell"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GRUBlockCell");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(hPrev.asOutput());
     opBuilder.addInput(wRu.asOutput());
     opBuilder.addInput(wC.asOutput());
     opBuilder.addInput(bRu.asOutput());
     opBuilder.addInput(bC.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new GRUBlockCell<>(opBuilder.build());
   }
 

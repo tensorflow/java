@@ -54,8 +54,7 @@ public final class MapClear extends RawOp {
   )
   public static MapClear create(Scope scope, List<Class<? extends TType>> dtypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapClear"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MapClear");
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {
       for (Options opts : options) {

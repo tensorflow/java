@@ -65,11 +65,10 @@ public final class StatefulUniformFullInt<U extends TType> extends RawOp impleme
   public static <U extends TType> StatefulUniformFullInt<U> create(Scope scope,
       Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
       Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulUniformFullInt"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatefulUniformFullInt");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatefulUniformFullInt<>(opBuilder.build());
   }

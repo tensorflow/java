@@ -81,9 +81,8 @@ public final class StatefulWhile extends RawOp implements While {
   )
   public static StatefulWhile create(Scope scope, Iterable<Operand<?>> input, ConcreteFunction cond,
       ConcreteFunction body, While.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulWhile"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatefulWhile");
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("cond", cond);
     opBuilder.setAttr("body", body);
     if (options != null) {

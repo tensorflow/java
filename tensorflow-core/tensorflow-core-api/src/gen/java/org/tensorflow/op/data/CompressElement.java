@@ -56,9 +56,8 @@ public final class CompressElement extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static CompressElement create(Scope scope, Iterable<Operand<?>> components) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CompressElement"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CompressElement");
     opBuilder.addInputList(Operands.asOutputs(components));
-    opBuilder = scope.apply(opBuilder);
     return new CompressElement(opBuilder.build());
   }
 

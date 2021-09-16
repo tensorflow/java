@@ -73,9 +73,11 @@ public final class ModelProtos {
       "NY\020\001\022\031\n\025ASYNC_INTERLEAVE_MANY\020\002\022\017\n\013KNOWN" +
       "_RATIO\020\003\022\025\n\021ASYNC_KNOWN_RATIO\020\004\022\021\n\rUNKNO" +
       "WN_RATIO\020\005*9\n\021AutotuneAlgorithm\022\016\n\nHILL_" +
-      "CLIMB\020\000\022\024\n\020GRADIENT_DESCENT\020\001B3\n\037org.ten" +
-      "sorflow.proto.data.modelB\013ModelProtosP\001\370" +
-      "\001\001b\006proto3"
+      "CLIMB\020\000\022\024\n\020GRADIENT_DESCENT\020\001B\201\001\n\037org.te" +
+      "nsorflow.proto.data.modelB\013ModelProtosP\001" +
+      "ZLgithub.com/tensorflow/tensorflow/tenso" +
+      "rflow/go/core/framework/model_go_proto\370\001" +
+      "\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

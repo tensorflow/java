@@ -66,9 +66,8 @@ public final class FinalizeDataset extends RawOp implements Operand<TType> {
   )
   public static FinalizeDataset create(Scope scope, Operand<? extends TType> inputDataset,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FinalizeDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FinalizeDataset");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

@@ -83,14 +83,16 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> CtcGreedyDecoder<T> create(Scope scope, Operand<T> inputs,
       Operand<TInt32> sequenceLength, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CtcGreedyDecoder"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CtcGreedyDecoder");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.mergeRepeated != null) {
           opBuilder.setAttr("merge_repeated", opts.mergeRepeated);
+        }
+        if (opts.blankIndex != null) {
+          opBuilder.setAttr("blank_index", opts.blankIndex);
         }
       }
     }
@@ -105,6 +107,16 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
    */
   public static Options mergeRepeated(Boolean mergeRepeated) {
     return new Options().mergeRepeated(mergeRepeated);
+  }
+
+  /**
+   * Sets the blankIndex option.
+   *
+   * @param blankIndex the blankIndex option
+   * @return this Options instance.
+   */
+  public static Options blankIndex(Long blankIndex) {
+    return new Options().blankIndex(blankIndex);
   }
 
   /**
@@ -153,6 +165,8 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
   public static class Options {
     private Boolean mergeRepeated;
 
+    private Long blankIndex;
+
     private Options() {
     }
 
@@ -164,6 +178,17 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
      */
     public Options mergeRepeated(Boolean mergeRepeated) {
       this.mergeRepeated = mergeRepeated;
+      return this;
+    }
+
+    /**
+     * Sets the blankIndex option.
+     *
+     * @param blankIndex the blankIndex option
+     * @return this Options instance.
+     */
+    public Options blankIndex(Long blankIndex) {
+      this.blankIndex = blankIndex;
       return this;
     }
   }

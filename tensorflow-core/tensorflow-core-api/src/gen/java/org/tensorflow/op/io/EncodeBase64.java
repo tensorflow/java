@@ -64,9 +64,8 @@ public final class EncodeBase64 extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static EncodeBase64 create(Scope scope, Operand<TString> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EncodeBase64"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EncodeBase64");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.pad != null) {

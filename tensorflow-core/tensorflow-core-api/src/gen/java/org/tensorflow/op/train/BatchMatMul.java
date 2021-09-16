@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -50,18 +51,18 @@ import org.tensorflow.types.family.TType;
  * about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
  *
- * @param <T> data type for {@code output} output
+ * @param <V> data type for {@code output} output
  */
 @Operator(
     group = "train"
 )
-public final class BatchMatMul<T extends TType> extends RawOp implements Operand<T> {
+public final class BatchMatMul<V extends TType> extends RawOp implements Operand<V> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "BatchMatMulV2";
+  public static final String OP_NAME = "BatchMatMulV3";
 
-  private Output<T> output;
+  private Output<V> output;
 
   private BatchMatMul(Operation operation) {
     super(operation);
@@ -70,24 +71,25 @@ public final class BatchMatMul<T extends TType> extends RawOp implements Operand
   }
 
   /**
-   * Factory method to create a class wrapping a new BatchMatMulV2 operation.
+   * Factory method to create a class wrapping a new BatchMatMulV3 operation.
    *
    * @param scope current scope
    * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
    * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
+   * @param Tout If not spcified, Tout is the same type to input type.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code BatchMatMulV2} output and operands
+   * @param <V> data type for {@code BatchMatMulV3} output and operands
    * @return a new instance of BatchMatMul
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> BatchMatMul<T> create(Scope scope, Operand<T> x, Operand<T> y,
-      Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatMul"));
+  public static <V extends TType> BatchMatMul<V> create(Scope scope, Operand<? extends TType> x,
+      Operand<? extends TType> y, Class<V> Tout, Options... options) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BatchMatMul");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjX != null) {
@@ -126,12 +128,12 @@ public final class BatchMatMul<T extends TType> extends RawOp implements Operand
    * 3-D or higher with shape {@code [..., r_o, c_o]}
    * @return output.
    */
-  public Output<T> output() {
+  public Output<V> output() {
     return output;
   }
 
   @Override
-  public Output<T> asOutput() {
+  public Output<V> asOutput() {
     return output;
   }
 

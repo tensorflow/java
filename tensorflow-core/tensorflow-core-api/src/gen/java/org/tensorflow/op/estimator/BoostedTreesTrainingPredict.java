@@ -77,12 +77,11 @@ public final class BoostedTreesTrainingPredict extends RawOp {
       Operand<? extends TType> treeEnsembleHandle, Operand<TInt32> cachedTreeIds,
       Operand<TInt32> cachedNodeIds, Iterable<Operand<TInt32>> bucketizedFeatures,
       Long logitsDimension) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesTrainingPredict"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesTrainingPredict");
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(cachedTreeIds.asOutput());
     opBuilder.addInput(cachedNodeIds.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesTrainingPredict(opBuilder.build());
   }

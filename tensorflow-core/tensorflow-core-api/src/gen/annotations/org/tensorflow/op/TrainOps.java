@@ -510,16 +510,17 @@ public final class TrainOps {
    *  about broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
    *
-   * @param <T> data type for {@code output} output
+   * @param <V> data type for {@code output} output
    * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
    * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
+   * @param Tout If not spcified, Tout is the same type to input type.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code BatchMatMulV2} output and operands
+   * @param <V> data type for {@code BatchMatMulV3} output and operands
    * @return a new instance of BatchMatMul
    */
-  public <T extends TType> BatchMatMul<T> batchMatMul(Operand<T> x, Operand<T> y,
-      BatchMatMul.Options... options) {
-    return BatchMatMul.create(scope, x, y, options);
+  public <V extends TType> BatchMatMul<V> batchMatMul(Operand<? extends TType> x,
+      Operand<? extends TType> y, Class<V> Tout, BatchMatMul.Options... options) {
+    return BatchMatMul.create(scope, x, y, Tout, options);
   }
 
   /**
@@ -809,8 +810,8 @@ public final class TrainOps {
 
   /**
    * Update '*var' according to the Ftrl-proximal scheme.
+   *  accum_new = accum + grad * grad
    *  grad_with_shrinkage = grad + 2 * l2_shrinkage * var
-   *  accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
    *  linear += grad_with_shrinkage +
    *  (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
    *  quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2

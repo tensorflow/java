@@ -100,10 +100,9 @@ public final class DynamicPartition<T extends TType> extends RawOp implements It
   )
   public static <T extends TType> DynamicPartition<T> create(Scope scope, Operand<T> data,
       Operand<TInt32> partitions, Long numPartitions) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DynamicPartition"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DynamicPartition");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(partitions.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_partitions", numPartitions);
     return new DynamicPartition<>(opBuilder.build());
   }

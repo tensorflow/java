@@ -58,11 +58,10 @@ public final class ResourceApplyGradientDescent extends RawOp {
   )
   public static <T extends TType> ResourceApplyGradientDescent create(Scope scope,
       Operand<? extends TType> var, Operand<T> alpha, Operand<T> delta, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyGradientDescent"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyGradientDescent");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

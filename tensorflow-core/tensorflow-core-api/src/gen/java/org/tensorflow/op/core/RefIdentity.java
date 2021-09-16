@@ -57,9 +57,8 @@ public final class RefIdentity<T extends TType> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TType> RefIdentity<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RefIdentity"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RefIdentity");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RefIdentity<>(opBuilder.build());
   }
 

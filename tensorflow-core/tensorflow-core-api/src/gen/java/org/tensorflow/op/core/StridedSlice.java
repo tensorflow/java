@@ -172,12 +172,11 @@ public final class StridedSlice<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType, U extends TNumber> StridedSlice<T> create(Scope scope,
       Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StridedSlice"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StridedSlice");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(end.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.beginMask != null) {

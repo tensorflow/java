@@ -58,8 +58,7 @@ public final class LmdbReader extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static LmdbReader create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LmdbReader"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LmdbReader");
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

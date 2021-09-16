@@ -66,7 +66,7 @@ public final class ResourceApplyPowerSign extends RawOp {
   public static <T extends TType> ResourceApplyPowerSign create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> m, Operand<T> lr, Operand<T> logbase,
       Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyPowerSign"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyPowerSign");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(lr.asOutput());
@@ -74,7 +74,6 @@ public final class ResourceApplyPowerSign extends RawOp {
     opBuilder.addInput(signDecay.asOutput());
     opBuilder.addInput(beta.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

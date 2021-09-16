@@ -80,9 +80,8 @@ public final class FakeQuantWithMinMaxArgs extends RawOp implements Operand<TFlo
   )
   public static FakeQuantWithMinMaxArgs create(Scope scope, Operand<TFloat32> inputs,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FakeQuantWithMinMaxArgs"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FakeQuantWithMinMaxArgs");
     opBuilder.addInput(inputs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.min != null) {

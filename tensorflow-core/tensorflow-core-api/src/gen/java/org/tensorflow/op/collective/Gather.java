@@ -64,9 +64,8 @@ public final class Gather<T extends TNumber> extends RawOp implements Operand<T>
   )
   public static <T extends TNumber> Gather<T> create(Scope scope, Operand<T> input, Long groupSize,
       Long groupKey, Long instanceKey, Shape shape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Gather"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Gather");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("group_size", groupSize);
     opBuilder.setAttr("group_key", groupKey);
     opBuilder.setAttr("instance_key", instanceKey);

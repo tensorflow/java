@@ -68,10 +68,9 @@ public final class ReduceProd<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> ReduceProd<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceProd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReduceProd");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

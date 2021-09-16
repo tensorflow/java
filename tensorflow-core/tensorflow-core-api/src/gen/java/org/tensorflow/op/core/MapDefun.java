@@ -85,10 +85,9 @@ public final class MapDefun extends RawOp implements Iterable<Operand<TType>> {
   public static MapDefun create(Scope scope, Iterable<Operand<?>> arguments,
       Iterable<Operand<?>> capturedInputs, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, ConcreteFunction f, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapDefun"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MapDefun");
     opBuilder.addInputList(Operands.asOutputs(arguments));
     opBuilder.addInputList(Operands.asOutputs(capturedInputs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

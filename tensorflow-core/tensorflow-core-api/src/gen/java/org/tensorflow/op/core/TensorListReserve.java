@@ -68,10 +68,9 @@ public final class TensorListReserve extends RawOp implements Operand<TType> {
   )
   public static <U extends TType> TensorListReserve create(Scope scope,
       Operand<? extends TNumber> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListReserve"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListReserve");
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(numElements.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListReserve(opBuilder.build());
   }

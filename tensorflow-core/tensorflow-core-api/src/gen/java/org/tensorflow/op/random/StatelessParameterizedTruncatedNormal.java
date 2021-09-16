@@ -65,14 +65,13 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
   public static <V extends TNumber> StatelessParameterizedTruncatedNormal<V> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> means,
       Operand<V> stddevs, Operand<V> minvals, Operand<V> maxvals) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessParameterizedTruncatedNormal"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessParameterizedTruncatedNormal");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(means.asOutput());
     opBuilder.addInput(stddevs.asOutput());
     opBuilder.addInput(minvals.asOutput());
     opBuilder.addInput(maxvals.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new StatelessParameterizedTruncatedNormal<>(opBuilder.build());
   }
 

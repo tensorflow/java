@@ -94,7 +94,7 @@ public final class StringsOps {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param input the input value
+   * @param input The input to be lower-cased.
    * @param options carries optional attribute values
    * @return a new instance of Lower
    */
@@ -283,6 +283,15 @@ public final class StringsOps {
 
   /**
    * Strip leading and trailing whitespaces from the Tensor.
+   *  Examples:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>tf.strings.strip([&quot;\nTensorFlow&quot;, &quot;     The python library    &quot;]).numpy()
+   *  array([b'TensorFlow', b'The python library'], dtype=object)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param input A string {@code Tensor} of any shape.
    * @return a new instance of Strip
@@ -629,7 +638,7 @@ public final class StringsOps {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param input the input value
+   * @param input The input to be upper-cased.
    * @param options carries optional attribute values
    * @return a new instance of Upper
    */

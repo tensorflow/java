@@ -29,11 +29,22 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes arctangent of {@code y/x} element-wise, respecting signs of the arguments.
- * This is the angle ( \theta \in [-\pi, \pi] ) such that
- * [ x = r \cos(\theta) ]
+ * This is the angle \( \theta \in [-\pi, \pi] \) such that
+ * \[ x = r \cos(\theta) \]
  * and
- * [ y = r \sin(\theta) ]
- * where (r = \sqrt(x^2 + y^2) ).
+ * \[ y = r \sin(\theta) \]
+ * where \(r = \sqrt{x^2 + y^2} \).
+ * <p>For example:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>x = [1., 1.]
+ * y = [1., -1.]
+ * print((tf.math.atan2(y,x) * (180 / np.pi)).numpy())
+ * [ 45. -45.]
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  *
  * @param <T> data type for {@code z} output
  */
@@ -67,10 +78,9 @@ public final class Atan2<T extends TNumber> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TNumber> Atan2<T> create(Scope scope, Operand<T> y, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Atan2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Atan2");
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Atan2<>(opBuilder.build());
   }
 

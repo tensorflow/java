@@ -63,10 +63,9 @@ public final class RefSelect<T extends TType> extends RawOp implements Operand<T
   )
   public static <T extends TType> RefSelect<T> create(Scope scope, Operand<TInt32> index,
       Iterable<Operand<T>> inputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RefSelect"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RefSelect");
     opBuilder.addInput(index.asOutput());
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     return new RefSelect<>(opBuilder.build());
   }
 

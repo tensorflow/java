@@ -59,9 +59,8 @@ public final class Identity<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Identity"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Identity");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Identity<>(opBuilder.build());
   }
 

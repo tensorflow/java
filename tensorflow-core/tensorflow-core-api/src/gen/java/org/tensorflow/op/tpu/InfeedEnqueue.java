@@ -54,9 +54,8 @@ public final class InfeedEnqueue extends RawOp {
   )
   public static InfeedEnqueue create(Scope scope, Operand<? extends TType> input,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InfeedEnqueue"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InfeedEnqueue");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.shape != null) {

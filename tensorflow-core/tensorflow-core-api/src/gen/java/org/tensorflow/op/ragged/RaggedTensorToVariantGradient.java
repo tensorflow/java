@@ -70,11 +70,10 @@ public final class RaggedTensorToVariantGradient<U extends TType> extends RawOp 
   public static <U extends TType> RaggedTensorToVariantGradient<U> create(Scope scope,
       Operand<? extends TType> encodedRaggedGrad, Operand<? extends TNumber> rowSplits,
       Operand<TInt32> denseValuesShape, Class<U> Tvalues) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedTensorToVariantGradient"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RaggedTensorToVariantGradient");
     opBuilder.addInput(encodedRaggedGrad.asOutput());
     opBuilder.addInput(rowSplits.asOutput());
     opBuilder.addInput(denseValuesShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tvalues", Operands.toDataType(Tvalues));
     return new RaggedTensorToVariantGradient<>(opBuilder.build());
   }

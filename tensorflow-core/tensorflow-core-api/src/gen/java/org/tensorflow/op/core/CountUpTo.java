@@ -61,9 +61,8 @@ public final class CountUpTo<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CountUpTo"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CountUpTo");
     opBuilder.addInput(ref.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("limit", limit);
     return new CountUpTo<>(opBuilder.build());
   }

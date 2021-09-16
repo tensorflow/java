@@ -57,9 +57,8 @@ public final class Expint<T extends TNumber> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TNumber> Expint<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Expint"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Expint");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Expint<>(opBuilder.build());
   }
 

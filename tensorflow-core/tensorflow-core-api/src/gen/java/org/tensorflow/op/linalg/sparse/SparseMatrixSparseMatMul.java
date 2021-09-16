@@ -127,10 +127,9 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
   )
   public static <T extends TType> SparseMatrixSparseMatMul create(Scope scope,
       Operand<? extends TType> a, Operand<? extends TType> b, Class<T> type, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixSparseMatMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseMatrixSparseMatMul");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));
     if (options != null) {
       for (Options opts : options) {

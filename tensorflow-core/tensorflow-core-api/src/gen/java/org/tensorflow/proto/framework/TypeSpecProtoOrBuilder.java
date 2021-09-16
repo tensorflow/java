@@ -43,10 +43,14 @@ public interface TypeSpecProtoOrBuilder extends
 
   /**
    * <pre>
-   * This is currently redundant with the type_spec_class enum, and is only
-   * used for error reporting.  In particular, if you use an older binary to
-   * load a newer model, and the model uses a TypeSpecClass that the older
-   * binary doesn't support, then this lets us display a useful error message.
+   * The name of the TypeSpec class.
+   *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+   *    the one registered under this name. For types registered outside
+   *    core TensorFlow by an add-on library, that library must be loaded
+   *    before this value can be deserialized by StructureCoder.
+   *  * If type_spec_class specifies a particular TypeSpec class, this field is
+   *    redundant with the type_spec_class enum, and is only used for error
+   *    reporting in older binaries that do not know the tupe_spec_class enum.
    * </pre>
    *
    * <code>string type_spec_class_name = 3;</code>
@@ -54,10 +58,14 @@ public interface TypeSpecProtoOrBuilder extends
   java.lang.String getTypeSpecClassName();
   /**
    * <pre>
-   * This is currently redundant with the type_spec_class enum, and is only
-   * used for error reporting.  In particular, if you use an older binary to
-   * load a newer model, and the model uses a TypeSpecClass that the older
-   * binary doesn't support, then this lets us display a useful error message.
+   * The name of the TypeSpec class.
+   *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+   *    the one registered under this name. For types registered outside
+   *    core TensorFlow by an add-on library, that library must be loaded
+   *    before this value can be deserialized by StructureCoder.
+   *  * If type_spec_class specifies a particular TypeSpec class, this field is
+   *    redundant with the type_spec_class enum, and is only used for error
+   *    reporting in older binaries that do not know the tupe_spec_class enum.
    * </pre>
    *
    * <code>string type_spec_class_name = 3;</code>

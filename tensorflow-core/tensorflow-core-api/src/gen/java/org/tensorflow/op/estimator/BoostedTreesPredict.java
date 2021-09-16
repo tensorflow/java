@@ -64,10 +64,9 @@ public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32
   )
   public static BoostedTreesPredict create(Scope scope, Operand<? extends TType> treeEnsembleHandle,
       Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesPredict"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesPredict");
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketizedFeatures));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesPredict(opBuilder.build());
   }

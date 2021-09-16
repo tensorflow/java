@@ -75,12 +75,11 @@ public final class SparseAddGrad<T extends TType> extends RawOp {
   )
   public static <T extends TType> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad,
       Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseAddGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseAddGrad");
     opBuilder.addInput(backpropValGrad.asOutput());
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(sumIndices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseAddGrad<>(opBuilder.build());
   }
 

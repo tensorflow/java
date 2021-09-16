@@ -28,7 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Returns the gradient of {@code quantization.QuantizeAndDequantizeV4}.
+ * Quantizes then dequantizes a tensor.
  * This is almost identical to QuantizeAndDequantizeV2, except that it returns a
  * gradient of 1 for inputs that are within the quantization range, or 0 otherwise.
  *
@@ -55,9 +55,13 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
    * Factory method to create a class wrapping a new QuantizeAndDequantizeV4 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param inputMin the inputMin value
-   * @param inputMax the inputMax value
+   * @param input Tensor to quantize and then dequantize.
+   * @param inputMin If {@code range_given == True}, this specifies the minimum input value that needs to
+   * be represented, otherwise it is determined from the min value of the {@code input}
+   * tensor.
+   * @param inputMax If {@code range_given == True}, this specifies the maximum input value that needs to
+   * be represented, otherwise it is determined from the max value of the {@code input}
+   * tensor.
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeAndDequantizeV4} output and operands
    * @return a new instance of QuantizeAndDequantizeV4
@@ -67,11 +71,10 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   )
   public static <T extends TNumber> QuantizeAndDequantizeV4<T> create(Scope scope, Operand<T> input,
       Operand<T> inputMin, Operand<T> inputMax, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizeAndDequantizeV4"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizeAndDequantizeV4");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.signedInput != null) {
@@ -100,7 +103,8 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   /**
    * Sets the signedInput option.
    *
-   * @param signedInput the signedInput option
+   * @param signedInput Whether the quantization is signed or unsigned. (actually this parameter should
+   * have been called <b>{@code signed_output}&lt;/b&gt;)
    * @return this Options instance.
    */
   public static Options signedInput(Boolean signedInput) {
@@ -110,7 +114,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   /**
    * Sets the numBits option.
    *
-   * @param numBits the numBits option
+   * @param numBits The bitwidth of the quantization.
    * @return this Options instance.
    */
   public static Options numBits(Long numBits) {
@@ -120,7 +124,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   /**
    * Sets the rangeGiven option.
    *
-   * @param rangeGiven the rangeGiven option
+   * @param rangeGiven Whether the range is given or should be determined from the {@code input} tensor.
    * @return this Options instance.
    */
   public static Options rangeGiven(Boolean rangeGiven) {
@@ -130,7 +134,14 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   /**
    * Sets the roundMode option.
    *
-   * @param roundMode the roundMode option
+   * @param roundMode The 'round_mode' attribute controls which rounding tie-breaking algorithm is
+   * used when rounding float values to their quantized equivalents. The following
+   * rounding modes are currently supported:
+   * <ul>
+   * <li>HALF_TO_EVEN: this is the default round_mode.</li>
+   * <li>HALF_UP: round towards positive. In this mode 7.5 rounds up to 8 and -7.5
+   * rounds up to -7.</li>
+   * </ul>
    * @return this Options instance.
    */
   public static Options roundMode(String roundMode) {
@@ -140,7 +151,9 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   /**
    * Sets the narrowRange option.
    *
-   * @param narrowRange the narrowRange option
+   * @param narrowRange If True, then the absolute value of the quantized minimum value is the same as
+   * the quantized maximum value, instead of 1 greater.
+   * i.e. for 8 bit quantization, the minimum value is -127 instead of -128.
    * @return this Options instance.
    */
   public static Options narrowRange(Boolean narrowRange) {
@@ -150,7 +163,8 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
   /**
    * Sets the axis option.
    *
-   * @param axis the axis option
+   * @param axis If specified, this axis is treated as a channel or slice axis, and a separate
+   * quantization range is used for each channel or slice along this axis.
    * @return this Options instance.
    */
   public static Options axis(Long axis) {
@@ -193,7 +207,8 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     /**
      * Sets the signedInput option.
      *
-     * @param signedInput the signedInput option
+     * @param signedInput Whether the quantization is signed or unsigned. (actually this parameter should
+     * have been called <b>{@code signed_output}&lt;/b&gt;)
      * @return this Options instance.
      */
     public Options signedInput(Boolean signedInput) {
@@ -204,7 +219,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     /**
      * Sets the numBits option.
      *
-     * @param numBits the numBits option
+     * @param numBits The bitwidth of the quantization.
      * @return this Options instance.
      */
     public Options numBits(Long numBits) {
@@ -215,7 +230,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     /**
      * Sets the rangeGiven option.
      *
-     * @param rangeGiven the rangeGiven option
+     * @param rangeGiven Whether the range is given or should be determined from the {@code input} tensor.
      * @return this Options instance.
      */
     public Options rangeGiven(Boolean rangeGiven) {
@@ -226,7 +241,14 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     /**
      * Sets the roundMode option.
      *
-     * @param roundMode the roundMode option
+     * @param roundMode The 'round_mode' attribute controls which rounding tie-breaking algorithm is
+     * used when rounding float values to their quantized equivalents. The following
+     * rounding modes are currently supported:
+     * <ul>
+     * <li>HALF_TO_EVEN: this is the default round_mode.</li>
+     * <li>HALF_UP: round towards positive. In this mode 7.5 rounds up to 8 and -7.5
+     * rounds up to -7.</li>
+     * </ul>
      * @return this Options instance.
      */
     public Options roundMode(String roundMode) {
@@ -237,7 +259,9 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     /**
      * Sets the narrowRange option.
      *
-     * @param narrowRange the narrowRange option
+     * @param narrowRange If True, then the absolute value of the quantized minimum value is the same as
+     * the quantized maximum value, instead of 1 greater.
+     * i.e. for 8 bit quantization, the minimum value is -127 instead of -128.
      * @return this Options instance.
      */
     public Options narrowRange(Boolean narrowRange) {
@@ -248,7 +272,8 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     /**
      * Sets the axis option.
      *
-     * @param axis the axis option
+     * @param axis If specified, this axis is treated as a channel or slice axis, and a separate
+     * quantization range is used for each channel or slice along this axis.
      * @return this Options instance.
      */
     public Options axis(Long axis) {

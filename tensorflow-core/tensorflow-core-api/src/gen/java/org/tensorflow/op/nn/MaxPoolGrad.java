@@ -71,13 +71,12 @@ public final class MaxPoolGrad<T extends TNumber> extends RawOp implements Opera
   public static <T extends TNumber> MaxPoolGrad<T> create(Scope scope, Operand<T> origInput,
       Operand<T> origOutput, Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides,
       String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPoolGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MaxPoolGrad");
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(ksize.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {

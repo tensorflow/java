@@ -76,11 +76,10 @@ public final class DynamicSlice<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType, U extends TNumber> DynamicSlice<T> create(Scope scope,
       Operand<T> input, Operand<U> startIndices, Operand<U> sizeIndices) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DynamicSlice"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DynamicSlice");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(startIndices.asOutput());
     opBuilder.addInput(sizeIndices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DynamicSlice<>(opBuilder.build());
   }
 

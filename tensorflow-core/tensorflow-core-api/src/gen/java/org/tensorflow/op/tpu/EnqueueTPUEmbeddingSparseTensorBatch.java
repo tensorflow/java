@@ -81,12 +81,11 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
       Iterable<Operand<? extends TNumber>> embeddingIndices,
       Iterable<Operand<? extends TNumber>> aggregationWeights, Operand<TString> modeOverride,
       List<Long> tableIds, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EnqueueTPUEmbeddingSparseTensorBatch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EnqueueTPUEmbeddingSparseTensorBatch");
     opBuilder.addInputList(Operands.asOutputs(sampleIndices));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] tableIdsArray = new long[tableIds.size()];
     for (int i = 0 ; i < tableIdsArray.length ; i++) {
       tableIdsArray[i] = tableIds.get(i);

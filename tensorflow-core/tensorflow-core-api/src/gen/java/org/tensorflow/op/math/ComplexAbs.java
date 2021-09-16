@@ -36,6 +36,16 @@ import org.tensorflow.types.family.TType;
  * {@code float} or {@code double} that is the absolute value of each element in {@code x}. All
  * elements in {@code x} must be complex numbers of the form \(a + bj\). The absolute
  * value is computed as \( \sqrt{a^2 + b^2}\).
+ * <p>For example:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>x = tf.complex(3.0, 4.0)
+ * print((tf.raw_ops.ComplexAbs(x=x, Tout=tf.dtypes.float32, name=None)).numpy())
+ * 5.0
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  *
  * @param <U> data type for {@code y} output
  */
@@ -70,9 +80,8 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
   )
   public static <U extends TNumber> ComplexAbs<U> create(Scope scope, Operand<? extends TType> x,
       Class<U> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ComplexAbs"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ComplexAbs");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     return new ComplexAbs<>(opBuilder.build());
   }

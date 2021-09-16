@@ -70,13 +70,12 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
   public static <U extends TType> StatefulUniformInt<U> create(Scope scope,
       Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
       Operand<U> minval, Operand<U> maxval) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulUniformInt"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatefulUniformInt");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new StatefulUniformInt<>(opBuilder.build());
   }
 

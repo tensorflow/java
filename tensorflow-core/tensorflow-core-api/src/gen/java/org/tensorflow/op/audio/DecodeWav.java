@@ -75,9 +75,8 @@ public final class DecodeWav extends RawOp {
       describeByClass = true
   )
   public static DecodeWav create(Scope scope, Operand<TString> contents, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DecodeWav"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DecodeWav");
     opBuilder.addInput(contents.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.desiredChannels != null) {

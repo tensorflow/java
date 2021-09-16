@@ -1864,19 +1864,6 @@ public final class NnOps {
    *  the {@code height} and {@code width} dimensions are moved to the {@code batch} dimension. After
    *  the zero-padding, both {@code height} and {@code width} of the input must be divisible by the
    *  block size.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input 4-D with shape {@code [batch, height, width, depth]}.
-   * @param paddings 2-D tensor of non-negative integers with shape {@code [2, 2]}. It specifies
-   *  the padding of the input with zeros across the spatial dimensions as follows:
-   *  <pre>
-   *    paddings = [[pad_top, pad_bottom], [pad_left, pad_right]]
-   *  </pre>
-   *  <p>The effective spatial dimensions of the zero-padded input tensor will be:
-   *  <pre>
-   *    height_pad = pad_top + height + pad_bottom
-   *    width_pad = pad_left + width + pad_right
-   *  </pre>
    *  <p>The attr {@code block_size} must be greater than one. It indicates the block size.
    *  <ul>
    *  <li>Non-overlapping blocks of size {@code block_size x block size} in the height and
@@ -1935,6 +1922,19 @@ public final class NnOps {
    *  </pre>
    *  <p>Among others, this operation is useful for reducing atrous convolution into
    *  regular convolution.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input 4-D with shape {@code [batch, height, width, depth]}.
+   * @param paddings 2-D tensor of non-negative integers with shape {@code [2, 2]}. It specifies
+   *  the padding of the input with zeros across the spatial dimensions as follows:
+   *  <pre>
+   *    paddings = [[pad_top, pad_bottom], [pad_left, pad_right]]
+   *  </pre>
+   *  <p>The effective spatial dimensions of the zero-padded input tensor will be:
+   *  <pre>
+   *    height_pad = pad_top + height + pad_bottom
+   *    width_pad = pad_left + width + pad_right
+   *  </pre>
    * @param blockSize the value of the blockSize property
    * @param <T> data type for {@code SpaceToBatch} output and operands
    * @return a new instance of SpaceToBatch

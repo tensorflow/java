@@ -70,11 +70,10 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
   public static ShardDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> numShards, Operand<TInt64> index, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ShardDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ShardDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numShards.asOutput());
     opBuilder.addInput(index.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

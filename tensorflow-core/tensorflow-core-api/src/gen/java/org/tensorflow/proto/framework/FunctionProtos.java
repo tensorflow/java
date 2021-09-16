@@ -64,6 +64,11 @@ public final class FunctionProtos {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tensorflow_GradientDef_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tensorflow_RegisteredGradient_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tensorflow_RegisteredGradient_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -77,36 +82,39 @@ public final class FunctionProtos {
       "to\022\ntensorflow\032*tensorflow/core/framewor" +
       "k/attr_value.proto\032(tensorflow/core/fram" +
       "ework/node_def.proto\032&tensorflow/core/fr" +
-      "amework/op_def.proto\"j\n\022FunctionDefLibra" +
-      "ry\022)\n\010function\030\001 \003(\0132\027.tensorflow.Functi" +
-      "onDef\022)\n\010gradient\030\002 \003(\0132\027.tensorflow.Gra" +
-      "dientDef\"\304\006\n\013FunctionDef\022$\n\tsignature\030\001 " +
-      "\001(\0132\021.tensorflow.OpDef\022/\n\004attr\030\005 \003(\0132!.t" +
-      "ensorflow.FunctionDef.AttrEntry\0226\n\010arg_a" +
-      "ttr\030\007 \003(\0132$.tensorflow.FunctionDef.ArgAt" +
-      "trEntry\022P\n\026resource_arg_unique_id\030\010 \003(\0132" +
-      "0.tensorflow.FunctionDef.ResourceArgUniq" +
-      "ueIdEntry\022%\n\010node_def\030\003 \003(\0132\023.tensorflow" +
-      ".NodeDef\022-\n\003ret\030\004 \003(\0132 .tensorflow.Funct" +
-      "ionDef.RetEntry\022<\n\013control_ret\030\006 \003(\0132\'.t" +
-      "ensorflow.FunctionDef.ControlRetEntry\032B\n" +
-      "\tAttrEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025" +
-      ".tensorflow.AttrValue:\0028\001\032\210\001\n\010ArgAttrs\0228" +
-      "\n\004attr\030\001 \003(\0132*.tensorflow.FunctionDef.Ar" +
-      "gAttrs.AttrEntry\032B\n\tAttrEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022$\n\005value\030\002 \001(\0132\025.tensorflow.AttrValue" +
-      ":\0028\001\032P\n\014ArgAttrEntry\022\013\n\003key\030\001 \001(\r\022/\n\005val" +
-      "ue\030\002 \001(\0132 .tensorflow.FunctionDef.ArgAtt" +
-      "rs:\0028\001\032:\n\030ResourceArgUniqueIdEntry\022\013\n\003ke" +
-      "y\030\001 \001(\r\022\r\n\005value\030\002 \001(\r:\0028\001\032*\n\010RetEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\0321\n\017Contro" +
-      "lRetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028" +
-      "\001J\004\010\002\020\003\";\n\013GradientDef\022\025\n\rfunction_name\030" +
-      "\001 \001(\t\022\025\n\rgradient_func\030\002 \001(\tB\206\001\n\036org.ten" +
-      "sorflow.proto.frameworkB\016FunctionProtosP" +
-      "\001ZOgithub.com/tensorflow/tensorflow/tens" +
-      "orflow/go/core/framework/function_go_pro" +
-      "to\370\001\001b\006proto3"
+      "amework/op_def.proto\"\250\001\n\022FunctionDefLibr" +
+      "ary\022)\n\010function\030\001 \003(\0132\027.tensorflow.Funct" +
+      "ionDef\022)\n\010gradient\030\002 \003(\0132\027.tensorflow.Gr" +
+      "adientDef\022<\n\024registered_gradients\030\003 \003(\0132" +
+      "\036.tensorflow.RegisteredGradient\"\304\006\n\013Func" +
+      "tionDef\022$\n\tsignature\030\001 \001(\0132\021.tensorflow." +
+      "OpDef\022/\n\004attr\030\005 \003(\0132!.tensorflow.Functio" +
+      "nDef.AttrEntry\0226\n\010arg_attr\030\007 \003(\0132$.tenso" +
+      "rflow.FunctionDef.ArgAttrEntry\022P\n\026resour" +
+      "ce_arg_unique_id\030\010 \003(\01320.tensorflow.Func" +
+      "tionDef.ResourceArgUniqueIdEntry\022%\n\010node" +
+      "_def\030\003 \003(\0132\023.tensorflow.NodeDef\022-\n\003ret\030\004" +
+      " \003(\0132 .tensorflow.FunctionDef.RetEntry\022<" +
+      "\n\013control_ret\030\006 \003(\0132\'.tensorflow.Functio" +
+      "nDef.ControlRetEntry\032B\n\tAttrEntry\022\013\n\003key" +
+      "\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.tensorflow.AttrV" +
+      "alue:\0028\001\032\210\001\n\010ArgAttrs\0228\n\004attr\030\001 \003(\0132*.te" +
+      "nsorflow.FunctionDef.ArgAttrs.AttrEntry\032" +
+      "B\n\tAttrEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\013" +
+      "2\025.tensorflow.AttrValue:\0028\001\032P\n\014ArgAttrEn" +
+      "try\022\013\n\003key\030\001 \001(\r\022/\n\005value\030\002 \001(\0132 .tensor" +
+      "flow.FunctionDef.ArgAttrs:\0028\001\032:\n\030Resourc" +
+      "eArgUniqueIdEntry\022\013\n\003key\030\001 \001(\r\022\r\n\005value\030" +
+      "\002 \001(\r:\0028\001\032*\n\010RetEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
+      "lue\030\002 \001(\t:\0028\001\0321\n\017ControlRetEntry\022\013\n\003key\030" +
+      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001J\004\010\002\020\003\";\n\013Gradie" +
+      "ntDef\022\025\n\rfunction_name\030\001 \001(\t\022\025\n\rgradient" +
+      "_func\030\002 \001(\t\"G\n\022RegisteredGradient\022\025\n\rgra" +
+      "dient_func\030\001 \001(\t\022\032\n\022registered_op_type\030\002" +
+      " \001(\tB\206\001\n\036org.tensorflow.proto.frameworkB" +
+      "\016FunctionProtosP\001ZOgithub.com/tensorflow" +
+      "/tensorflow/tensorflow/go/core/framework" +
+      "/function_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -120,7 +128,7 @@ public final class FunctionProtos {
     internal_static_tensorflow_FunctionDefLibrary_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_FunctionDefLibrary_descriptor,
-        new java.lang.String[] { "Function", "Gradient", });
+        new java.lang.String[] { "Function", "Gradient", "RegisteredGradients", });
     internal_static_tensorflow_FunctionDef_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_tensorflow_FunctionDef_fieldAccessorTable = new
@@ -175,6 +183,12 @@ public final class FunctionProtos {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_GradientDef_descriptor,
         new java.lang.String[] { "FunctionName", "GradientFunc", });
+    internal_static_tensorflow_RegisteredGradient_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_tensorflow_RegisteredGradient_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tensorflow_RegisteredGradient_descriptor,
+        new java.lang.String[] { "GradientFunc", "RegisteredOpType", });
     org.tensorflow.proto.framework.AttrValueProtos.getDescriptor();
     org.tensorflow.proto.framework.NodeProto.getDescriptor();
     org.tensorflow.proto.framework.OpDefProtos.getDescriptor();

@@ -73,9 +73,8 @@ public final class Asin<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Asin<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Asin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Asin");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Asin<>(opBuilder.build());
   }
 

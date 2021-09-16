@@ -83,12 +83,11 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
       Iterable<Operand<? extends TNumber>> embeddingIndices,
       Iterable<Operand<? extends TNumber>> aggregationWeights, Operand<TString> modeOverride,
       List<Long> tableIds, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EnqueueTPUEmbeddingRaggedTensorBatch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EnqueueTPUEmbeddingRaggedTensorBatch");
     opBuilder.addInputList(Operands.asOutputs(sampleSplits));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] tableIdsArray = new long[tableIds.size()];
     for (int i = 0 ; i < tableIdsArray.length ; i++) {
       tableIdsArray[i] = tableIds.get(i);

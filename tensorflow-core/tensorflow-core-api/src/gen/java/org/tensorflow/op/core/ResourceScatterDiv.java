@@ -72,11 +72,10 @@ public final class ResourceScatterDiv extends RawOp {
   )
   public static ResourceScatterDiv create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceScatterDiv"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceScatterDiv");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ResourceScatterDiv(opBuilder.build());
   }
 }

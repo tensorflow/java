@@ -73,9 +73,8 @@ public final class Expm1<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Expm1<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Expm1"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Expm1");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Expm1<>(opBuilder.build());
   }
 

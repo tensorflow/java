@@ -70,10 +70,9 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> MatMul<T> create(Scope scope, Operand<T> a, Operand<T> b,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MatMul");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.transposeA != null) {

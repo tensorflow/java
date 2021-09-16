@@ -59,9 +59,8 @@ public final class BatchFft2d extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static BatchFft2d create(Scope scope, Operand<? extends TType> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchFft2d"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BatchFft2d");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new BatchFft2d(opBuilder.build());
   }
 

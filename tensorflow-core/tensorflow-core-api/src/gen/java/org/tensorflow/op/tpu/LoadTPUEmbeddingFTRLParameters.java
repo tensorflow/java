@@ -61,11 +61,10 @@ public final class LoadTPUEmbeddingFTRLParameters extends RawOp {
   public static LoadTPUEmbeddingFTRLParameters create(Scope scope, Operand<TFloat32> parameters,
       Operand<TFloat32> accumulators, Operand<TFloat32> linears, Long numShards, Long shardId,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingFTRLParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingFTRLParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());
     opBuilder.addInput(linears.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

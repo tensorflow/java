@@ -103,9 +103,8 @@ public final class FractionalMaxPool<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> FractionalMaxPool<T> create(Scope scope, Operand<T> value,
       List<Float> poolingRatio, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FractionalMaxPool"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FractionalMaxPool");
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.apply(opBuilder);
     float[] poolingRatioArray = new float[poolingRatio.size()];
     for (int i = 0 ; i < poolingRatioArray.length ; i++) {
       poolingRatioArray[i] = poolingRatio.get(i);

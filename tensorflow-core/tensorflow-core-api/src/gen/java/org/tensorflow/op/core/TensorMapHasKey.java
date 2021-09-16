@@ -62,10 +62,9 @@ public final class TensorMapHasKey extends RawOp implements Operand<TBool> {
   )
   public static TensorMapHasKey create(Scope scope, Operand<? extends TType> inputHandle,
       Operand<? extends TType> key) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorMapHasKey"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorMapHasKey");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorMapHasKey(opBuilder.build());
   }
 

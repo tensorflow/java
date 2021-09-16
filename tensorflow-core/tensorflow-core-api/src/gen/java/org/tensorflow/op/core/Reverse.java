@@ -105,10 +105,9 @@ public final class Reverse<T extends TType> extends RawOp implements Operand<T> 
   )
   public static <T extends TType> Reverse<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> axis) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Reverse"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Reverse");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Reverse<>(opBuilder.build());
   }
 

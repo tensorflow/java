@@ -194,15 +194,15 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object metadata_;
   /**
    * <pre>
+   * Metadata for deserializing this object.
    * Deprecated! At the time of deprecation, Keras was the only user of this
    * field, and its saving and loading code will be updated shortly.
-   * Please save your application-specific metadata to separate file
-   * Initialization-related metadata.
+   * Please save your application-specific metadata to a separate file.
    * </pre>
    *
-   * <code>string metadata = 3;</code>
+   * <code>string metadata = 3 [deprecated = true];</code>
    */
-  public java.lang.String getMetadata() {
+  @java.lang.Deprecated public java.lang.String getMetadata() {
     java.lang.Object ref = metadata_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -216,15 +216,15 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
+   * Metadata for deserializing this object.
    * Deprecated! At the time of deprecation, Keras was the only user of this
    * field, and its saving and loading code will be updated shortly.
-   * Please save your application-specific metadata to separate file
-   * Initialization-related metadata.
+   * Please save your application-specific metadata to a separate file.
    * </pre>
    *
-   * <code>string metadata = 3;</code>
+   * <code>string metadata = 3 [deprecated = true];</code>
    */
-  public com.google.protobuf.ByteString
+  @java.lang.Deprecated public com.google.protobuf.ByteString
       getMetadataBytes() {
     java.lang.Object ref = metadata_;
     if (ref instanceof java.lang.String) {
@@ -840,15 +840,15 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object metadata_ = "";
     /**
      * <pre>
+     * Metadata for deserializing this object.
      * Deprecated! At the time of deprecation, Keras was the only user of this
      * field, and its saving and loading code will be updated shortly.
-     * Please save your application-specific metadata to separate file
-     * Initialization-related metadata.
+     * Please save your application-specific metadata to a separate file.
      * </pre>
      *
-     * <code>string metadata = 3;</code>
+     * <code>string metadata = 3 [deprecated = true];</code>
      */
-    public java.lang.String getMetadata() {
+    @java.lang.Deprecated public java.lang.String getMetadata() {
       java.lang.Object ref = metadata_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
@@ -862,15 +862,15 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Metadata for deserializing this object.
      * Deprecated! At the time of deprecation, Keras was the only user of this
      * field, and its saving and loading code will be updated shortly.
-     * Please save your application-specific metadata to separate file
-     * Initialization-related metadata.
+     * Please save your application-specific metadata to a separate file.
      * </pre>
      *
-     * <code>string metadata = 3;</code>
+     * <code>string metadata = 3 [deprecated = true];</code>
      */
-    public com.google.protobuf.ByteString
+    @java.lang.Deprecated public com.google.protobuf.ByteString
         getMetadataBytes() {
       java.lang.Object ref = metadata_;
       if (ref instanceof String) {
@@ -885,15 +885,15 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Metadata for deserializing this object.
      * Deprecated! At the time of deprecation, Keras was the only user of this
      * field, and its saving and loading code will be updated shortly.
-     * Please save your application-specific metadata to separate file
-     * Initialization-related metadata.
+     * Please save your application-specific metadata to a separate file.
      * </pre>
      *
-     * <code>string metadata = 3;</code>
+     * <code>string metadata = 3 [deprecated = true];</code>
      */
-    public Builder setMetadata(
+    @java.lang.Deprecated public Builder setMetadata(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
@@ -905,15 +905,15 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Metadata for deserializing this object.
      * Deprecated! At the time of deprecation, Keras was the only user of this
      * field, and its saving and loading code will be updated shortly.
-     * Please save your application-specific metadata to separate file
-     * Initialization-related metadata.
+     * Please save your application-specific metadata to a separate file.
      * </pre>
      *
-     * <code>string metadata = 3;</code>
+     * <code>string metadata = 3 [deprecated = true];</code>
      */
-    public Builder clearMetadata() {
+    @java.lang.Deprecated public Builder clearMetadata() {
       
       metadata_ = getDefaultInstance().getMetadata();
       onChanged();
@@ -921,15 +921,15 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Metadata for deserializing this object.
      * Deprecated! At the time of deprecation, Keras was the only user of this
      * field, and its saving and loading code will be updated shortly.
-     * Please save your application-specific metadata to separate file
-     * Initialization-related metadata.
+     * Please save your application-specific metadata to a separate file.
      * </pre>
      *
-     * <code>string metadata = 3;</code>
+     * <code>string metadata = 3 [deprecated = true];</code>
      */
-    public Builder setMetadataBytes(
+    @java.lang.Deprecated public Builder setMetadataBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();

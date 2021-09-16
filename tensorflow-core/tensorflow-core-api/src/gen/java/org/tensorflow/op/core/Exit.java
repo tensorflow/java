@@ -58,9 +58,8 @@ public final class Exit<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Exit<T> create(Scope scope, Operand<T> data) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Exit"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Exit");
     opBuilder.addInput(data.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Exit<>(opBuilder.build());
   }
 

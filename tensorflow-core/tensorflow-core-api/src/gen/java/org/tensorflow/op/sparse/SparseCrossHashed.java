@@ -112,7 +112,7 @@ public final class SparseCrossHashed extends RawOp {
       Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes,
       Iterable<Operand<?>> denseInputs, Operand<TInt64> numBuckets, Operand<TBool> strongHash,
       Operand<TInt64> salt) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseCrossHashed"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseCrossHashed");
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(shapes));
@@ -120,7 +120,6 @@ public final class SparseCrossHashed extends RawOp {
     opBuilder.addInput(numBuckets.asOutput());
     opBuilder.addInput(strongHash.asOutput());
     opBuilder.addInput(salt.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseCrossHashed(opBuilder.build());
   }
 

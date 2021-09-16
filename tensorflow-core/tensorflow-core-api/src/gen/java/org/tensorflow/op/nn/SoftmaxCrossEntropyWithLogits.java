@@ -50,7 +50,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
     super(operation);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
-    backprop = operation.output(outputIdx);
+    backprop = operation.output(outputIdx++);
   }
 
   /**
@@ -69,10 +69,9 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
   )
   public static <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> create(Scope scope,
       Operand<T> features, Operand<T> labels) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SoftmaxCrossEntropyWithLogits");
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SoftmaxCrossEntropyWithLogits<>(opBuilder.build());
   }
 

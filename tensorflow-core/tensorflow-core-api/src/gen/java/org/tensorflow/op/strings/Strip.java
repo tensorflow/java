@@ -29,6 +29,15 @@ import org.tensorflow.types.TString;
 
 /**
  * Strip leading and trailing whitespaces from the Tensor.
+ * Examples:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.strings.strip([&quot;\nTensorFlow&quot;, &quot;     The python library    &quot;]).numpy()
+ * array([b'TensorFlow', b'The python library'], dtype=object)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
 @Operator(
     group = "strings"
@@ -58,24 +67,14 @@ public final class Strip extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static Strip create(Scope scope, Operand<TString> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Strip"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Strip");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Strip(opBuilder.build());
   }
 
   /**
    * Gets output.
    * A string {@code Tensor} of the same shape as the input.
-   * <p>Examples:
-   * <blockquote>
-   * <blockquote>
-   * <blockquote>
-   * <p>tf.strings.strip([&quot;\nTensorFlow&quot;, &quot;     The python library    &quot;]).numpy()
-   * array([b'TensorFlow', b'The python library'], dtype=object)
-   * </blockquote>
-   * </blockquote>
-   * </blockquote>
    * @return output.
    */
   public Output<TString> output() {

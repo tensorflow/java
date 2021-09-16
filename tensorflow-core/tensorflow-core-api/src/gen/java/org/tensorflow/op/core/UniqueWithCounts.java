@@ -115,10 +115,9 @@ public final class UniqueWithCounts<T extends TType, V extends TNumber> extends 
   )
   public static <T extends TType, V extends TNumber> UniqueWithCounts<T, V> create(Scope scope,
       Operand<T> x, Operand<? extends TNumber> axis, Class<V> outIdx) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UniqueWithCounts"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UniqueWithCounts");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_idx", Operands.toDataType(outIdx));
     return new UniqueWithCounts<>(opBuilder.build());
   }

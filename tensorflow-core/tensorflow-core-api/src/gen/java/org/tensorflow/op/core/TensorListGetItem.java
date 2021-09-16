@@ -66,11 +66,10 @@ public final class TensorListGetItem<T extends TType> extends RawOp implements O
   public static <T extends TType> TensorListGetItem<T> create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape,
       Class<T> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListGetItem"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListGetItem");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListGetItem<>(opBuilder.build());
   }

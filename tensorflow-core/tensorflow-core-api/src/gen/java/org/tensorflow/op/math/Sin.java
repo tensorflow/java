@@ -68,9 +68,8 @@ public final class Sin<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Sin<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Sin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Sin");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Sin<>(opBuilder.build());
   }
 

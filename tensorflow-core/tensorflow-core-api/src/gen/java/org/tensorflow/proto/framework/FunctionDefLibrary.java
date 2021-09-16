@@ -22,6 +22,7 @@ private static final long serialVersionUID = 0L;
   private FunctionDefLibrary() {
     function_ = java.util.Collections.emptyList();
     gradient_ = java.util.Collections.emptyList();
+    registeredGradients_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -73,6 +74,15 @@ private static final long serialVersionUID = 0L;
                 input.readMessage(org.tensorflow.proto.framework.GradientDef.parser(), extensionRegistry));
             break;
           }
+          case 26: {
+            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+              registeredGradients_ = new java.util.ArrayList<org.tensorflow.proto.framework.RegisteredGradient>();
+              mutable_bitField0_ |= 0x00000004;
+            }
+            registeredGradients_.add(
+                input.readMessage(org.tensorflow.proto.framework.RegisteredGradient.parser(), extensionRegistry));
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -93,6 +103,9 @@ private static final long serialVersionUID = 0L;
       }
       if (((mutable_bitField0_ & 0x00000002) != 0)) {
         gradient_ = java.util.Collections.unmodifiableList(gradient_);
+      }
+      if (((mutable_bitField0_ & 0x00000004) != 0)) {
+        registeredGradients_ = java.util.Collections.unmodifiableList(registeredGradients_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -181,6 +194,41 @@ private static final long serialVersionUID = 0L;
     return gradient_.get(index);
   }
 
+  public static final int REGISTERED_GRADIENTS_FIELD_NUMBER = 3;
+  private java.util.List<org.tensorflow.proto.framework.RegisteredGradient> registeredGradients_;
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  public java.util.List<org.tensorflow.proto.framework.RegisteredGradient> getRegisteredGradientsList() {
+    return registeredGradients_;
+  }
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  public java.util.List<? extends org.tensorflow.proto.framework.RegisteredGradientOrBuilder> 
+      getRegisteredGradientsOrBuilderList() {
+    return registeredGradients_;
+  }
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  public int getRegisteredGradientsCount() {
+    return registeredGradients_.size();
+  }
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  public org.tensorflow.proto.framework.RegisteredGradient getRegisteredGradients(int index) {
+    return registeredGradients_.get(index);
+  }
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  public org.tensorflow.proto.framework.RegisteredGradientOrBuilder getRegisteredGradientsOrBuilder(
+      int index) {
+    return registeredGradients_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -201,6 +249,9 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < gradient_.size(); i++) {
       output.writeMessage(2, gradient_.get(i));
     }
+    for (int i = 0; i < registeredGradients_.size(); i++) {
+      output.writeMessage(3, registeredGradients_.get(i));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -217,6 +268,10 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < gradient_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, gradient_.get(i));
+    }
+    for (int i = 0; i < registeredGradients_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, registeredGradients_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -237,6 +292,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getFunctionList())) return false;
     if (!getGradientList()
         .equals(other.getGradientList())) return false;
+    if (!getRegisteredGradientsList()
+        .equals(other.getRegisteredGradientsList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -255,6 +312,10 @@ private static final long serialVersionUID = 0L;
     if (getGradientCount() > 0) {
       hash = (37 * hash) + GRADIENT_FIELD_NUMBER;
       hash = (53 * hash) + getGradientList().hashCode();
+    }
+    if (getRegisteredGradientsCount() > 0) {
+      hash = (37 * hash) + REGISTERED_GRADIENTS_FIELD_NUMBER;
+      hash = (53 * hash) + getRegisteredGradientsList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -390,6 +451,7 @@ private static final long serialVersionUID = 0L;
               .alwaysUseFieldBuilders) {
         getFunctionFieldBuilder();
         getGradientFieldBuilder();
+        getRegisteredGradientsFieldBuilder();
       }
     }
     @java.lang.Override
@@ -406,6 +468,12 @@ private static final long serialVersionUID = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
       } else {
         gradientBuilder_.clear();
+      }
+      if (registeredGradientsBuilder_ == null) {
+        registeredGradients_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+      } else {
+        registeredGradientsBuilder_.clear();
       }
       return this;
     }
@@ -451,6 +519,15 @@ private static final long serialVersionUID = 0L;
         result.gradient_ = gradient_;
       } else {
         result.gradient_ = gradientBuilder_.build();
+      }
+      if (registeredGradientsBuilder_ == null) {
+        if (((bitField0_ & 0x00000004) != 0)) {
+          registeredGradients_ = java.util.Collections.unmodifiableList(registeredGradients_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.registeredGradients_ = registeredGradients_;
+      } else {
+        result.registeredGradients_ = registeredGradientsBuilder_.build();
       }
       onBuilt();
       return result;
@@ -549,6 +626,32 @@ private static final long serialVersionUID = 0L;
                  getGradientFieldBuilder() : null;
           } else {
             gradientBuilder_.addAllMessages(other.gradient_);
+          }
+        }
+      }
+      if (registeredGradientsBuilder_ == null) {
+        if (!other.registeredGradients_.isEmpty()) {
+          if (registeredGradients_.isEmpty()) {
+            registeredGradients_ = other.registeredGradients_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureRegisteredGradientsIsMutable();
+            registeredGradients_.addAll(other.registeredGradients_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.registeredGradients_.isEmpty()) {
+          if (registeredGradientsBuilder_.isEmpty()) {
+            registeredGradientsBuilder_.dispose();
+            registeredGradientsBuilder_ = null;
+            registeredGradients_ = other.registeredGradients_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+            registeredGradientsBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getRegisteredGradientsFieldBuilder() : null;
+          } else {
+            registeredGradientsBuilder_.addAllMessages(other.registeredGradients_);
           }
         }
       }
@@ -1060,6 +1163,246 @@ private static final long serialVersionUID = 0L;
         gradient_ = null;
       }
       return gradientBuilder_;
+    }
+
+    private java.util.List<org.tensorflow.proto.framework.RegisteredGradient> registeredGradients_ =
+      java.util.Collections.emptyList();
+    private void ensureRegisteredGradientsIsMutable() {
+      if (!((bitField0_ & 0x00000004) != 0)) {
+        registeredGradients_ = new java.util.ArrayList<org.tensorflow.proto.framework.RegisteredGradient>(registeredGradients_);
+        bitField0_ |= 0x00000004;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.RegisteredGradient, org.tensorflow.proto.framework.RegisteredGradient.Builder, org.tensorflow.proto.framework.RegisteredGradientOrBuilder> registeredGradientsBuilder_;
+
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.RegisteredGradient> getRegisteredGradientsList() {
+      if (registeredGradientsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(registeredGradients_);
+      } else {
+        return registeredGradientsBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public int getRegisteredGradientsCount() {
+      if (registeredGradientsBuilder_ == null) {
+        return registeredGradients_.size();
+      } else {
+        return registeredGradientsBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredGradient getRegisteredGradients(int index) {
+      if (registeredGradientsBuilder_ == null) {
+        return registeredGradients_.get(index);
+      } else {
+        return registeredGradientsBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder setRegisteredGradients(
+        int index, org.tensorflow.proto.framework.RegisteredGradient value) {
+      if (registeredGradientsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.set(index, value);
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder setRegisteredGradients(
+        int index, org.tensorflow.proto.framework.RegisteredGradient.Builder builderForValue) {
+      if (registeredGradientsBuilder_ == null) {
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder addRegisteredGradients(org.tensorflow.proto.framework.RegisteredGradient value) {
+      if (registeredGradientsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.add(value);
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder addRegisteredGradients(
+        int index, org.tensorflow.proto.framework.RegisteredGradient value) {
+      if (registeredGradientsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.add(index, value);
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder addRegisteredGradients(
+        org.tensorflow.proto.framework.RegisteredGradient.Builder builderForValue) {
+      if (registeredGradientsBuilder_ == null) {
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.add(builderForValue.build());
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder addRegisteredGradients(
+        int index, org.tensorflow.proto.framework.RegisteredGradient.Builder builderForValue) {
+      if (registeredGradientsBuilder_ == null) {
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder addAllRegisteredGradients(
+        java.lang.Iterable<? extends org.tensorflow.proto.framework.RegisteredGradient> values) {
+      if (registeredGradientsBuilder_ == null) {
+        ensureRegisteredGradientsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, registeredGradients_);
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder clearRegisteredGradients() {
+      if (registeredGradientsBuilder_ == null) {
+        registeredGradients_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public Builder removeRegisteredGradients(int index) {
+      if (registeredGradientsBuilder_ == null) {
+        ensureRegisteredGradientsIsMutable();
+        registeredGradients_.remove(index);
+        onChanged();
+      } else {
+        registeredGradientsBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredGradient.Builder getRegisteredGradientsBuilder(
+        int index) {
+      return getRegisteredGradientsFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredGradientOrBuilder getRegisteredGradientsOrBuilder(
+        int index) {
+      if (registeredGradientsBuilder_ == null) {
+        return registeredGradients_.get(index);  } else {
+        return registeredGradientsBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public java.util.List<? extends org.tensorflow.proto.framework.RegisteredGradientOrBuilder> 
+         getRegisteredGradientsOrBuilderList() {
+      if (registeredGradientsBuilder_ != null) {
+        return registeredGradientsBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(registeredGradients_);
+      }
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredGradient.Builder addRegisteredGradientsBuilder() {
+      return getRegisteredGradientsFieldBuilder().addBuilder(
+          org.tensorflow.proto.framework.RegisteredGradient.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredGradient.Builder addRegisteredGradientsBuilder(
+        int index) {
+      return getRegisteredGradientsFieldBuilder().addBuilder(
+          index, org.tensorflow.proto.framework.RegisteredGradient.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.RegisteredGradient.Builder> 
+         getRegisteredGradientsBuilderList() {
+      return getRegisteredGradientsFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.RegisteredGradient, org.tensorflow.proto.framework.RegisteredGradient.Builder, org.tensorflow.proto.framework.RegisteredGradientOrBuilder> 
+        getRegisteredGradientsFieldBuilder() {
+      if (registeredGradientsBuilder_ == null) {
+        registeredGradientsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.tensorflow.proto.framework.RegisteredGradient, org.tensorflow.proto.framework.RegisteredGradient.Builder, org.tensorflow.proto.framework.RegisteredGradientOrBuilder>(
+                registeredGradients_,
+                ((bitField0_ & 0x00000004) != 0),
+                getParentForChildren(),
+                isClean());
+        registeredGradients_ = null;
+      }
+      return registeredGradientsBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

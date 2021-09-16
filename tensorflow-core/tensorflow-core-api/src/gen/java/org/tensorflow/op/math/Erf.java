@@ -28,7 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the Gauss error function of {@code x} element-wise.
+ * Computes the  <a href="https://en.wikipedia.org/wiki/Error_function">Gauss error function</a>  of {@code x} element-wise. In statistics, for non-negative values of $x$, the error function has the following interpretation: for a random variable $Y$ that is normally distributed with mean 0 and variance $1/\sqrt{2}$, $erf(x)$ is the probability that $Y$ falls in the range $[−x, x]$.
  *
  * @param <T> data type for {@code y} output
  */
@@ -61,9 +61,8 @@ public final class Erf<T extends TNumber> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TNumber> Erf<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Erf"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Erf");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Erf<>(opBuilder.build());
   }
 

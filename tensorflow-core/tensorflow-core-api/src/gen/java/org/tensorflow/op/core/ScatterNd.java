@@ -132,11 +132,10 @@ public final class ScatterNd<U extends TType> extends RawOp implements Operand<U
   )
   public static <U extends TType, T extends TNumber> ScatterNd<U> create(Scope scope,
       Operand<T> indices, Operand<U> updates, Operand<T> shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterNd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ScatterNd");
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ScatterNd<>(opBuilder.build());
   }
 

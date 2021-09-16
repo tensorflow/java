@@ -62,11 +62,10 @@ public final class LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug ex
   public static LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug create(Scope scope,
       Operand<TFloat32> parameters, Operand<TFloat32> lastHitStep,
       Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(lastHitStep.asOutput());
     opBuilder.addInput(gradientAccumulators.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

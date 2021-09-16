@@ -60,7 +60,7 @@ public final class Lower extends RawOp implements Operand<TString> {
    * Factory method to create a class wrapping a new StringLower operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input to be lower-cased.
    * @param options carries optional attribute values
    * @return a new instance of Lower
    */
@@ -68,9 +68,8 @@ public final class Lower extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static Lower create(Scope scope, Operand<TString> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Lower"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Lower");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.encoding != null) {
@@ -84,7 +83,8 @@ public final class Lower extends RawOp implements Operand<TString> {
   /**
    * Sets the encoding option.
    *
-   * @param encoding the encoding option
+   * @param encoding Character encoding of {@code input}. Allowed values are '' and 'utf-8'.
+   * Value '' is interpreted as ASCII.
    * @return this Options instance.
    */
   public static Options encoding(String encoding) {
@@ -117,7 +117,8 @@ public final class Lower extends RawOp implements Operand<TString> {
     /**
      * Sets the encoding option.
      *
-     * @param encoding the encoding option
+     * @param encoding Character encoding of {@code input}. Allowed values are '' and 'utf-8'.
+     * Value '' is interpreted as ASCII.
      * @return this Options instance.
      */
     public Options encoding(String encoding) {

@@ -241,7 +241,7 @@ public class MatMul {
         adjointB = true;
       }
       return BatchMatMul.create(
-          lscope, a, b, BatchMatMul.adjX(adjointA), BatchMatMul.adjY(adjointB));
+          lscope, a, b, a.type(), BatchMatMul.adjX(adjointA), BatchMatMul.adjY(adjointB));
     }
 
     // Neither matmul nor sparse_matmul support adjoint, so we conjugate

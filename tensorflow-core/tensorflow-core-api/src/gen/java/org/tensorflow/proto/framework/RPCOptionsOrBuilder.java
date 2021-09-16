@@ -69,4 +69,18 @@ public interface RPCOptionsOrBuilder extends
    * <code>bool disable_session_connection_sharing = 5;</code>
    */
   boolean getDisableSessionConnectionSharing();
+
+  /**
+   * <pre>
+   * Setting num_channels_per_target &gt; 0 allows uses of multiple channels to
+   * communicate to the same target. This can be used to improve the aggregate
+   * throughput on high speed links (e.g 100G) where single connection is not
+   * sufficient to maximize link utilization. Note that a single RPC only goes
+   * on a single channel, this only helps in situations where there are multiple
+   * transfers to the same target overlapping in time.
+   * </pre>
+   *
+   * <code>int32 num_channels_per_target = 6;</code>
+   */
+  int getNumChannelsPerTarget();
 }

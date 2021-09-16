@@ -60,10 +60,9 @@ public final class RiscDot<T extends TNumber> extends RawOp implements Operand<T
   )
   public static <T extends TNumber> RiscDot<T> create(Scope scope, Operand<T> a, Operand<T> b,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscDot"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscDot");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.transposeA != null) {

@@ -73,12 +73,11 @@ public final class GroupByWindowDataset extends RawOp implements Operand<TType> 
       Iterable<Operand<?>> windowSizeFuncOtherArguments, ConcreteFunction keyFunc,
       ConcreteFunction reduceFunc, ConcreteFunction windowSizeFunc,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GroupByWindowDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GroupByWindowDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(keyFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(reduceFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(windowSizeFuncOtherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_func", keyFunc);
     opBuilder.setAttr("reduce_func", reduceFunc);
     opBuilder.setAttr("window_size_func", windowSizeFunc);

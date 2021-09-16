@@ -67,9 +67,8 @@ public final class RiscWhile extends RawOp implements Iterable<Operand<TType>> {
   )
   public static RiscWhile create(Scope scope, Iterable<Operand<?>> input, ConcreteFunction cond,
       ConcreteFunction body, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscWhile"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscWhile");
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("cond", cond);
     opBuilder.setAttr("body", body);
     if (options != null) {

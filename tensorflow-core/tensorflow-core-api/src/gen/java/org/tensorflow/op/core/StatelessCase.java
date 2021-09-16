@@ -93,10 +93,9 @@ public final class StatelessCase extends RawOp implements Case {
   public static StatelessCase create(Scope scope, Operand<TInt32> branchIndex,
       Iterable<Operand<?>> input, List<Class<? extends TType>> Tout,
       List<ConcreteFunction> branches, Case.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessCase"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessCase");
     opBuilder.addInput(branchIndex.asOutput());
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
     ConcreteFunction[] branchesArray = new ConcreteFunction[branches.size()];
     for (int i = 0 ; i < branchesArray.length ; i++) {

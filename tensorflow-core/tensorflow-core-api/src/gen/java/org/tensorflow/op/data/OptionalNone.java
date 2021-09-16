@@ -58,8 +58,7 @@ public final class OptionalNone extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static OptionalNone create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptionalNone"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OptionalNone");
     return new OptionalNone(opBuilder.build());
   }
 

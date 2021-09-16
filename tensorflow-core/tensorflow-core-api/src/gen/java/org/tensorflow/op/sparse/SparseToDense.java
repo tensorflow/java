@@ -88,12 +88,11 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
   public static <U extends TType, T extends TNumber> SparseToDense<U> create(Scope scope,
       Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues,
       Operand<U> defaultValue, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseToDense"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseToDense");
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(outputShape.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.validateIndices != null) {

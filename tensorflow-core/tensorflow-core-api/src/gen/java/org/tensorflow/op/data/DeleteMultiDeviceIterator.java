@@ -54,11 +54,10 @@ public final class DeleteMultiDeviceIterator extends RawOp {
   public static DeleteMultiDeviceIterator create(Scope scope,
       Operand<? extends TType> multiDeviceIterator, Iterable<Operand<? extends TType>> iterators,
       Operand<? extends TType> deleter) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DeleteMultiDeviceIterator"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DeleteMultiDeviceIterator");
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInputList(Operands.asOutputs(iterators));
     opBuilder.addInput(deleter.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DeleteMultiDeviceIterator(opBuilder.build());
   }
 }

@@ -68,9 +68,8 @@ public final class TruncatedNormal<U extends TNumber> extends RawOp implements O
   )
   public static <U extends TNumber> TruncatedNormal<U> create(Scope scope,
       Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TruncatedNormal"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TruncatedNormal");
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {

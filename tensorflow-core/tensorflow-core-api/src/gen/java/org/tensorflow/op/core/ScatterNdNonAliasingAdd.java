@@ -92,11 +92,10 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
   )
   public static <T extends TType> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> indices, Operand<T> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterNdNonAliasingAdd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ScatterNdNonAliasingAdd");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ScatterNdNonAliasingAdd<>(opBuilder.build());
   }
 

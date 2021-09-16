@@ -135,6 +135,9 @@ public static native @Cast("char*") BytePointer TF_TString_GetMutableDataPointer
 
 public static native void TF_TString_Reserve(TF_TString str, @Cast("size_t") long new_cap);
 
+public static native void TF_TString_ReserveAmortized(TF_TString str,
+                                               @Cast("size_t") long new_cap);
+
 public static native @Cast("char*") BytePointer TF_TString_Resize(TF_TString str, @Cast("size_t") long new_size,
                                       @Cast("char") byte c);
 
@@ -199,11 +202,13 @@ limitations under the License.
 // regions immediately after allocation; doing so will elide a superfluous
 // initialization of the new buffer.
 // Reserves a string buffer with a capacity of at least `new_cap'.
-// ResizeUninitialized will not change the size, or the contents of the existing
+// Reserve will not change the size, or the contents of the existing
 // string.  This is useful if you have a rough idea of `str's upperbound in
 // size, and want to avoid allocations as you append to `str'. It should not be
 // considered safe to write in the region between size and capacity; explicitly
 // resize before doing so.
+// Similar to TF_TString_Reserve, except that we ensure amortized growth, i.e.
+// that we grow the capacity by at least a constant factor >1.
 
 // Returns the size of the string.
 // Returns the capacity of the string buffer.  It should not be considered safe

@@ -79,12 +79,11 @@ public final class CropAndResizeGradImage<T extends TNumber> extends RawOp imple
   public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope,
       Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
       Operand<TInt32> imageSize, Class<T> T, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CropAndResizeGradImage"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CropAndResizeGradImage");
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(boxInd.asOutput());
     opBuilder.addInput(imageSize.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("T", Operands.toDataType(T));
     if (options != null) {
       for (Options opts : options) {

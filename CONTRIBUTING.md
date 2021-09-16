@@ -21,7 +21,7 @@ the `dev` profile in your Maven command to use those artifacts instead of buildi
 Modifying the native op generation code (not the annotation processor) or the JavaCPP configuration (not the abstract Pointers) will require a
 complete build could be required to reflect the changes, otherwise `-Pdev` should be fine.
 
-## JDK 16+
+### JDK 16+
 
 If you're using JDK 16+, you need to add some exports for the formatter plugin:
 
@@ -97,6 +97,63 @@ Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.0:tes
 
 This is because the native code crashed (i.e. because of a segfault), and it should have created a dump file somewhere in the project that you can use
 to tell what caused the issue.
+
+## Upgrading TensorFlow Version
+
+To upgrade the version of TensorFlow that is embedded within TensorFlow Java, please follow carefully these steps.
+
+### Upgrading TensorFlow Runtime Library
+
+You can upgrade the version of the TensorFlow library by updating the archive downloadeded in the Bazel
+[workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/WORKSPACE#L19) at build time. Make sure to
+update the `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule to reflect the values for the new version.
+
+### Ops Classification
+
+After building with the version of TensorFlow, you might notice that a lot of new operations appeared in the `org.tensorflow.ops.core`
+package of the [generated sources](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow/op/core) of
+the `tensorflow-core-api` module. Many of these ops must be reclassified manually after running this initial build.
+
+The actual classification process is a bit arbitrary and based on the good jugement of the developer. The reason is that most ops in Python
+are being wrapped by a higher-level API and therefore are left unclassified, while in Java they are exposed and can be used directly by
+the users.
+
+For classifying an op, a `api_def` proto must be added to the `tensorflow-core-api` [folder](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/bazel/api_def)
+for this purpose, redefining optionally its endpoints or its visibility.
+
+Writing these protos and trying the guess the right location for each new operation can become a tedious job so an utility program called `java_api_import`
+has been created to help you with this task. This utility is available under the `bazel-bin` folder of `tensorflow-core-api` after the
+initial build. Here is how to invoke it:
+
+```
+cd tensorflow-core/tensorflow-core-api
+./bazel-bin/java_api_import \
+  --java_api_dir=src/bazel/api_def \
+  --tf_src_dir=bazel-tensorflow-core-api/external/org_tensorflow \
+  --tf_lib_path=bazel-bin/external/org_tensorflow/tensorflow/libtensorflow_cc.<version>.<ext>
+```
+
+For each new operation detected (i.e. any operation that does not have a valid `api_def` proto yet), the utility will suggest you some possible
+package names that can be a good match for its classification (unless a "perfect match" has been found in the Python code, in which case the utility
+will automatically classify the op). It is also possible to enter manually the name of the package to use, and the package can have multiple levels (e.g. `linalg.sparse`). The utility
+application will then take care to write the `api_def` proto for each operation classified.
+
+Make sure to erase completely the generated source folder of the `tensorflow-core-api` module before rerunning the build so you can see
+if your ops have been classified properly.
+
+#### Ops Kernel Upgrade
+
+Some operations might be just an upgrade of another existing operations. For instance, there are many version of the `BatchMatMul` kernel (V1, V2, V3...).
+When you see that a new op is just an upgrade from another other one, make sure that the latest version has a valid endpoint and that all other
+previous versions of this operation are marked as `VISIBILITY: SKIP`.
+
+### Java Protos Classification
+
+TensorFlow Java distributes a large number proto definitions found in the TensorFlow Runtime Library as Java classes. Again, new protos might not
+be classified properly since they may be lacking the `option java_*` statements at the beginning of their definition. If you notice in the
+[generated protos](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow/proto) of the `tensorflow-core-api`
+that some new proto classes seems to be in the wrong package, create a Bazel patch at this effect to add the missing options.
+See [existing patches](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/external/tensorflow-proto.patch) for examples.
 
 ## Contributing
 

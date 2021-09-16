@@ -78,14 +78,13 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
       Operand<TInt64> hypothesisIndices, Operand<T> hypothesisValues,
       Operand<TInt64> hypothesisShape, Operand<TInt64> truthIndices, Operand<T> truthValues,
       Operand<TInt64> truthShape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EditDistance"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EditDistance");
     opBuilder.addInput(hypothesisIndices.asOutput());
     opBuilder.addInput(hypothesisValues.asOutput());
     opBuilder.addInput(hypothesisShape.asOutput());
     opBuilder.addInput(truthIndices.asOutput());
     opBuilder.addInput(truthValues.asOutput());
     opBuilder.addInput(truthShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.normalize != null) {

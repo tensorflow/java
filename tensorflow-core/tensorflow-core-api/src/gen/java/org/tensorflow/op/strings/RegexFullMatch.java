@@ -77,10 +77,9 @@ public final class RegexFullMatch extends RawOp implements Operand<TBool> {
   )
   public static RegexFullMatch create(Scope scope, Operand<TString> input,
       Operand<TString> pattern) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RegexFullMatch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RegexFullMatch");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RegexFullMatch(opBuilder.build());
   }
 

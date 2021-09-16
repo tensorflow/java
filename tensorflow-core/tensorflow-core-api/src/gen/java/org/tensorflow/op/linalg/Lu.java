@@ -86,9 +86,8 @@ public final class Lu<T extends TType, U extends TNumber> extends RawOp {
   )
   public static <T extends TType, U extends TNumber> Lu<T, U> create(Scope scope, Operand<T> input,
       Class<U> outputIdxType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Lu"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Lu");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_idx_type", Operands.toDataType(outputIdxType));
     return new Lu<>(opBuilder.build());
   }

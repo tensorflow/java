@@ -58,9 +58,11 @@ public final class SnapshotProtos {
       "(\0132\034.tensorflow.TensorShapeProto\022\031\n\021tens" +
       "or_size_bytes\030\003 \001(\003\"_\n\026SnapshotTensorMet" +
       "adata\022E\n\017tensor_metadata\030\001 \003(\0132,.tensorf" +
-      "low.data.experimental.TensorMetadataB:\n&" +
-      "org.tensorflow.proto.data.experimentalB\016" +
-      "SnapshotProtosP\001b\006proto3"
+      "low.data.experimental.TensorMetadataB\221\001\n" +
+      "&org.tensorflow.proto.data.experimentalB" +
+      "\016SnapshotProtosP\001ZUgithub.com/tensorflow" +
+      "/tensorflow/tensorflow/go/core/protobuf/" +
+      "for_core_protos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

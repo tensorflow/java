@@ -60,10 +60,9 @@ public final class LoadTPUEmbeddingFrequencyEstimatorParameters extends RawOp {
   public static LoadTPUEmbeddingFrequencyEstimatorParameters create(Scope scope,
       Operand<TFloat32> parameters, Operand<TFloat32> lastHitStep, Long numShards, Long shardId,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingFrequencyEstimatorParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingFrequencyEstimatorParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(lastHitStep.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

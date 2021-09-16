@@ -1,18 +1,18 @@
-diff -ruN tensorflow-2.5.0-rc1/tensorflow/BUILD tensorflow-2.5.0-rc1-visibility/tensorflow/BUILD
---- tensorflow-2.5.0-rc1/tensorflow/BUILD	2021-04-13 01:43:40.000000000 +0900
-+++ tensorflow-2.5.0-rc1-visibility/tensorflow/BUILD	2021-04-27 10:26:14.196211286 +0900
-@@ -38,7 +38,7 @@
+diff -ruN tensorflow-2.6.0/tensorflow/BUILD tensorflow-2.6.0-visibility/tensorflow/BUILD
+--- tensorflow-2.6.0/tensorflow/BUILD	2021-08-10 04:10:27.000000000 +0900
++++ tensorflow-2.6.0-visibility/tensorflow/BUILD	2021-08-30 11:18:31.089781754 +0900
+@@ -37,7 +37,7 @@
+ )
  load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
  
- package(
--    default_visibility = [":internal"],
-+    default_visibility = ["//visibility:public"],
-     licenses = ["notice"],  # Apache 2.0
- )
+-package(default_visibility = [":internal"])
++package(default_visibility = ["//visibility:public"])
  
-diff -ruN tensorflow-2.5.0-rc1/tensorflow/core/api_def/BUILD tensorflow-2.5.0-rc1-visibility/tensorflow/core/api_def/BUILD
---- tensorflow-2.5.0-rc1/tensorflow/core/api_def/BUILD	2021-04-13 01:43:40.000000000 +0900
-+++ tensorflow-2.5.0-rc1-visibility/tensorflow/core/api_def/BUILD	2021-04-27 10:29:38.712785268 +0900
+ licenses(["notice"])
+ 
+diff -ruN tensorflow-2.6.0/tensorflow/core/api_def/BUILD tensorflow-2.6.0-visibility/tensorflow/core/api_def/BUILD
+--- tensorflow-2.6.0/tensorflow/core/api_def/BUILD	2021-08-10 04:10:27.000000000 +0900
++++ tensorflow-2.6.0-visibility/tensorflow/core/api_def/BUILD	2021-08-30 11:17:56.392705484 +0900
 @@ -29,7 +29,7 @@
  alias(
      name = "base_api_def",
@@ -22,9 +22,9 @@ diff -ruN tensorflow-2.5.0-rc1/tensorflow/core/api_def/BUILD tensorflow-2.5.0-rc
  )
  
  alias(
-diff -ruN tensorflow-2.5.0-rc1/tensorflow/tools/api/lib/BUILD tensorflow-2.5.0-rc1-visibility/tensorflow/tools/api/lib/BUILD
---- tensorflow-2.5.0-rc1/tensorflow/tools/api/lib/BUILD	2021-04-13 01:43:40.000000000 +0900
-+++ tensorflow-2.5.0-rc1-visibility/tensorflow/tools/api/lib/BUILD	2021-04-27 10:26:14.196211286 +0900
+diff -ruN tensorflow-2.6.0/tensorflow/tools/api/lib/BUILD tensorflow-2.6.0-visibility/tensorflow/tools/api/lib/BUILD
+--- tensorflow-2.6.0/tensorflow/tools/api/lib/BUILD	2021-08-10 04:10:27.000000000 +0900
++++ tensorflow-2.6.0-visibility/tensorflow/tools/api/lib/BUILD	2021-08-30 11:17:56.392705484 +0900
 @@ -16,6 +16,7 @@
  tf_proto_library(
      name = "api_objects_proto",

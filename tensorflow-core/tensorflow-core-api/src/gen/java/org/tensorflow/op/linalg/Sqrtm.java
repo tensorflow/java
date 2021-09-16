@@ -73,9 +73,8 @@ public final class Sqrtm<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Sqrtm<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Sqrtm"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Sqrtm");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Sqrtm<>(opBuilder.build());
   }
 

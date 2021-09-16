@@ -55,9 +55,8 @@ public final class DestroyResourceOp extends RawOp {
   )
   public static DestroyResourceOp create(Scope scope, Operand<? extends TType> resource,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DestroyResourceOp"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DestroyResourceOp");
     opBuilder.addInput(resource.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.ignoreLookupError != null) {

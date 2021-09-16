@@ -69,12 +69,11 @@ public final class StatelessRandomNormalV2<U extends TNumber> extends RawOp impl
   public static <U extends TNumber> StatelessRandomNormalV2<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TType> key,
       Operand<? extends TType> counter, Operand<TInt32> alg, Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomNormalV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessRandomNormalV2");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(counter.asOutput());
     opBuilder.addInput(alg.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomNormalV2<>(opBuilder.build());
   }

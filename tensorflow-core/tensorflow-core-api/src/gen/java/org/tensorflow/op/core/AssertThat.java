@@ -57,10 +57,9 @@ public final class AssertThat extends RawOp {
   )
   public static AssertThat create(Scope scope, Operand<TBool> condition, Iterable<Operand<?>> data,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssertThat"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssertThat");
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInputList(Operands.asOutputs(data));
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.summarize != null) {

@@ -36,7 +36,7 @@
   </modules>
 
   <properties>
-    <project.build.sourceEncoding>ASCII</project.build.sourceEncoding>
+    <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <junit.version>5.6.2</junit.version>

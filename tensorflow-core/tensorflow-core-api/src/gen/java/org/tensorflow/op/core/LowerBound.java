@@ -78,10 +78,9 @@ public final class LowerBound<U extends TNumber> extends RawOp implements Operan
   )
   public static <U extends TNumber, T extends TType> LowerBound<U> create(Scope scope,
       Operand<T> sortedInputs, Operand<T> values, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LowerBound"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LowerBound");
     opBuilder.addInput(sortedInputs.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new LowerBound<>(opBuilder.build());
   }

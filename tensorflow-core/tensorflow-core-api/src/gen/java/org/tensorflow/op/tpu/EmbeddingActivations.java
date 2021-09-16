@@ -65,10 +65,9 @@ public final class EmbeddingActivations extends RawOp implements Operand<TFloat3
   )
   public static EmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable,
       Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EmbeddingActivations"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EmbeddingActivations");
     opBuilder.addInput(embeddingVariable.asOutput());
     opBuilder.addInput(slicedActivations.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("table_id", tableId);
     opBuilder.setAttr("lookup_id", lookupId);
     return new EmbeddingActivations(opBuilder.build());

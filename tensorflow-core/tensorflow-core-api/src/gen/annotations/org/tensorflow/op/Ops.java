@@ -294,12 +294,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
-import org.tensorflow.op.core.XlaConvV2;
-import org.tensorflow.op.core.XlaDotV2;
-import org.tensorflow.op.core.XlaSetDynamicDimensionSize;
-import org.tensorflow.op.core.XlaSpmdFullToShardShape;
-import org.tensorflow.op.core.XlaSpmdShardToFullShape;
-import org.tensorflow.op.core.XlaVariadicSort;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -371,9 +365,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final BitwiseOps bitwise;
-
   public final TpuOps tpu;
+
+  public final BitwiseOps bitwise;
 
   public final MathOps math;
 
@@ -402,8 +396,8 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    bitwise = new BitwiseOps(this);
     tpu = new TpuOps(this);
+    bitwise = new BitwiseOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
@@ -5716,17 +5710,8 @@ public final class Ops {
    *  {@code [1, ..., M]} correspond to the position within the grid, and the batch
    *  dimension combines both the position within a spatial block and the original
    *  batch position.  Prior to division into blocks, the spatial dimensions of the
-   *  input are optionally zero padded according to {@code paddings}.  See below for a
+   *  input are optionally zero padded according to {@code paddings}. See below for a
    *  precise description.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
-   *  where spatial_shape has {@code M} dimensions.
-   * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
-   * @param paddings 2-D with shape {@code [M, 2]}, all values must be &gt;= 0.
-   *  {@code paddings[i] = [pad_start, pad_end]} specifies the padding for input dimension
-   *  {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is required that
-   *  {@code block_shape[i]} divides {@code input_shape[i + 1] + pad_start + pad_end}.
    *  <p>This operation is equivalent to the following steps:
    *  <ol>
    *  <li>
@@ -5815,6 +5800,15 @@ public final class Ops {
    *  </pre>
    *  <p>Among others, this operation is useful for reducing atrous convolution into
    *  regular convolution.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
+   *  where spatial_shape has {@code M} dimensions.
+   * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
+   * @param paddings 2-D with shape {@code [M, 2]}, all values must be &gt;= 0.
+   *  {@code paddings[i] = [pad_start, pad_end]} specifies the padding for input dimension
+   *  {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is required that
+   *  {@code block_shape[i]} divides {@code input_shape[i + 1] + pad_start + pad_end}.
    * @param <T> data type for {@code SpaceToBatchND} output and operands
    * @return a new instance of SpaceToBatchNd
    */
@@ -6112,6 +6106,9 @@ public final class Ops {
 
   /**
    * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+   *  Asynchronously executes a function, potentially across multiple devices but
+   *  within a single process. The kernel places and partitions a given function's
+   *  underlying graph, and executes each of the partitioned subgraphs as a function.
    *
    * @param args A list of input tensors.
    * @param Tout A list of output types.
@@ -7170,7 +7167,7 @@ public final class Ops {
    * Adds sparse {@code updates} to an existing tensor according to {@code indices}.
    *  This operation creates a new tensor by adding sparse {@code updates} to the passed
    *  in {@code tensor}.
-   *  This operation is very similar to {@code tf.scatter_nd_add}, except that the updates
+   *  This operation is very similar to {@code tf.compat.v1.scatter_nd_add}, except that the updates
    *  are added onto an existing tensor (as opposed to a variable). If the memory
    *  for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>{@code indices} is an integer tensor containing indices into a new tensor of shape

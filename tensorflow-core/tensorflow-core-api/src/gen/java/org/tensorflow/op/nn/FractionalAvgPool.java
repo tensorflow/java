@@ -81,9 +81,8 @@ public final class FractionalAvgPool<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> FractionalAvgPool<T> create(Scope scope, Operand<T> value,
       List<Float> poolingRatio, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FractionalAvgPool"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FractionalAvgPool");
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.apply(opBuilder);
     float[] poolingRatioArray = new float[poolingRatio.size()];
     for (int i = 0 ; i < poolingRatioArray.length ; i++) {
       poolingRatioArray[i] = poolingRatio.get(i);

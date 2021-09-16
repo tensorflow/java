@@ -61,8 +61,7 @@ public final class IdentityReader extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static IdentityReader create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IdentityReader"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "IdentityReader");
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

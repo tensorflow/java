@@ -62,11 +62,10 @@ public final class SaveDataset extends RawOp {
   public static SaveDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> path, Iterable<Operand<?>> shardFuncOtherArgs, ConcreteFunction shardFunc,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SaveDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SaveDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(path.asOutput());
     opBuilder.addInputList(Operands.asOutputs(shardFuncOtherArgs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shard_func", shardFunc);
     if (options != null) {
       for (Options opts : options) {

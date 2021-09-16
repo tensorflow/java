@@ -32,8 +32,8 @@ import org.tensorflow.types.family.TNumber;
  * The upper regularized incomplete Gamma function is defined as:
  * <p>\(Q(a, x) = Gamma(a, x) / Gamma(a) = 1 - P(a, x)\)
  * <p>where
- * <p>\(Gamma(a, x) = int_{x}^{\infty} t^{a-1} exp(-t) dt\)
- * <p>is the upper incomplete Gama function.
+ * <p>\(Gamma(a, x) = \int_{x}^{\infty} t^{a-1} exp(-t) dt\)
+ * <p>is the upper incomplete Gamma function.
  * <p>Note, above {@code P(a, x)} ({@code Igamma}) is the lower regularized complete
  * Gamma function.
  *
@@ -69,10 +69,9 @@ public final class Igammac<T extends TNumber> extends RawOp implements Operand<T
       describeByClass = true
   )
   public static <T extends TNumber> Igammac<T> create(Scope scope, Operand<T> a, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Igammac"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Igammac");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Igammac<>(opBuilder.build());
   }
 

@@ -66,11 +66,10 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
   )
   public static TextLineDataset create(Scope scope, Operand<TString> filenames,
       Operand<TString> compressionType, Operand<TInt64> bufferSize) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TextLineDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TextLineDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TextLineDataset(opBuilder.build());
   }
 

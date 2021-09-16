@@ -62,11 +62,10 @@ public final class RiscGather<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> RiscGather<T> create(Scope scope, Operand<T> params,
       Operand<? extends TNumber> indices, Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscGather"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscGather");
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.batchDims != null) {

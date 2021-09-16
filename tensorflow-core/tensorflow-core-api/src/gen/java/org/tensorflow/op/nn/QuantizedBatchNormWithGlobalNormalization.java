@@ -102,7 +102,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TNumber> 
       Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax,
       Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, Class<U> outType,
       Float varianceEpsilon, Boolean scaleAfterNormalization) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedBatchNormWithGlobalNormalization"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedBatchNormWithGlobalNormalization");
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(tMin.asOutput());
     opBuilder.addInput(tMax.asOutput());
@@ -118,7 +118,6 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TNumber> 
     opBuilder.addInput(gamma.asOutput());
     opBuilder.addInput(gammaMin.asOutput());
     opBuilder.addInput(gammaMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);

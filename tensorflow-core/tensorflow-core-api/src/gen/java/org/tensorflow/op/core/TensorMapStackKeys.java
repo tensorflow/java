@@ -64,9 +64,8 @@ public final class TensorMapStackKeys<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> TensorMapStackKeys<T> create(Scope scope,
       Operand<? extends TType> inputHandle, Class<T> keyDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorMapStackKeys"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorMapStackKeys");
     opBuilder.addInput(inputHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_dtype", Operands.toDataType(keyDtype));
     return new TensorMapStackKeys<>(opBuilder.build());
   }

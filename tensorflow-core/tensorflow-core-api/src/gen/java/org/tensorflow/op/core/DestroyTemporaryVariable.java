@@ -68,9 +68,8 @@ public final class DestroyTemporaryVariable<T extends TType> extends RawOp imple
   )
   public static <T extends TType> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref,
       String varName) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DestroyTemporaryVariable"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DestroyTemporaryVariable");
     opBuilder.addInput(ref.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("var_name", varName);
     return new DestroyTemporaryVariable<>(opBuilder.build());
   }

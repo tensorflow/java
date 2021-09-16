@@ -55,8 +55,7 @@ public final class StatsAggregatorHandle extends RawOp implements Operand<TType>
       describeByClass = true
   )
   public static StatsAggregatorHandle create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatsAggregatorHandle"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatsAggregatorHandle");
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

@@ -82,10 +82,9 @@ public final class SegmentProd<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> SegmentProd<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SegmentProd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SegmentProd");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SegmentProd<>(opBuilder.build());
   }
 

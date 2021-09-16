@@ -57,9 +57,8 @@ public final class RiscRandomUniform extends RawOp implements Operand<TFloat32> 
   )
   public static RiscRandomUniform create(Scope scope, Operand<? extends TNumber> shape,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscRandomUniform"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscRandomUniform");
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.seed != null) {

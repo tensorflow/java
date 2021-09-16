@@ -37,7 +37,6 @@ import org.tensorflow.op.math.Atanh;
 import org.tensorflow.op.math.Betainc;
 import org.tensorflow.op.math.Bincount;
 import org.tensorflow.op.math.Ceil;
-import org.tensorflow.op.math.CompareAndBitpack;
 import org.tensorflow.op.math.ComplexAbs;
 import org.tensorflow.op.math.Conj;
 import org.tensorflow.op.math.Cos;
@@ -481,11 +480,22 @@ public final class MathOps {
 
   /**
    * Computes arctangent of {@code y/x} element-wise, respecting signs of the arguments.
-   *  This is the angle ( \theta \in [-\pi, \pi] ) such that
-   *  [ x = r \cos(\theta) ]
+   *  This is the angle \( \theta \in [-\pi, \pi] \) such that
+   *  \[ x = r \cos(\theta) \]
    *  and
-   *  [ y = r \sin(\theta) ]
-   *  where (r = \sqrt(x^2 + y^2) ).
+   *  \[ y = r \sin(\theta) \]
+   *  where \(r = \sqrt{x^2 + y^2} \).
+   *  <p>For example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>x = [1., 1.]
+   *  y = [1., -1.]
+   *  print((tf.math.atan2(y,x) * (180 / np.pi)).numpy())
+   *  [ 45. -45.]
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code z} output
    * @param y the y value
@@ -574,43 +584,21 @@ public final class MathOps {
   }
 
   /**
-   * Compare values of {@code input} to {@code threshold} and pack resulting bits into a {@code uint8}.
-   *  Each comparison returns a boolean {@code true} (if {@code input_value > threshold})
-   *  or and {@code false} otherwise.
-   *  <p>This operation is useful for Locality-Sensitive-Hashing (LSH) and other
-   *  algorithms that use hashing approximations of cosine and {@code L2} distances;
-   *  codes can be generated from an input via:
-   *  <pre>
-   *  codebook_size = 50
-   *  codebook_bits = codebook_size * 32
-   *  codebook = tf.get_variable('codebook', [x.shape[-1].value, codebook_bits],
-   *                             dtype=x.dtype,
-   *                             initializer=tf.orthogonal_initializer())
-   *  codes = compare_and_threshold(tf.matmul(x, codebook), threshold=0.)
-   *  codes = tf.bitcast(codes, tf.int32)  # go from uint8 to int32
-   *  # now codes has shape x.shape[:-1] + [codebook_size]
-   *  </pre>
-   *  <p><strong>NOTE</strong>: Currently, the innermost dimension of the tensor must be divisible
-   *  by 8.
-   *  <p>Given an {@code input} shaped {@code [s0, s1, ..., s_n]}, the output is
-   *  a {@code uint8} tensor shaped {@code [s0, s1, ..., s_n / 8]}.
-   *
-   * @param input Values to compare against {@code threshold} and bitpack.
-   * @param threshold Threshold to compare against.
-   * @param <T> data type for {@code CompareAndBitpack} output and operands
-   * @return a new instance of CompareAndBitpack
-   */
-  public <T extends TType> CompareAndBitpack compareAndBitpack(Operand<T> input,
-      Operand<T> threshold) {
-    return CompareAndBitpack.create(scope, input, threshold);
-  }
-
-  /**
    * Computes the complex absolute value of a tensor.
    *  Given a tensor {@code x} of complex numbers, this operation returns a tensor of type
    *  {@code float} or {@code double} that is the absolute value of each element in {@code x}. All
    *  elements in {@code x} must be complex numbers of the form \(a + bj\). The absolute
    *  value is computed as \( \sqrt{a^2 + b^2}\).
+   *  <p>For example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>x = tf.complex(3.0, 4.0)
+   *  print((tf.raw_ops.ComplexAbs(x=x, Tout=tf.dtypes.float32, name=None)).numpy())
+   *  5.0
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <U> data type for {@code y} output
    * @param x the x value
@@ -626,6 +614,16 @@ public final class MathOps {
    *  {@code float} or {@code double} that is the absolute value of each element in {@code x}. All
    *  elements in {@code x} must be complex numbers of the form \(a + bj\). The absolute
    *  value is computed as \( \sqrt{a^2 + b^2}\).
+   *  <p>For example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>x = tf.complex(3.0, 4.0)
+   *  print((tf.raw_ops.ComplexAbs(x=x, Tout=tf.dtypes.float32, name=None)).numpy())
+   *  5.0
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <U> data type for {@code y} output
    * @param x the x value
@@ -867,7 +865,7 @@ public final class MathOps {
   }
 
   /**
-   * Computes the Gauss error function of {@code x} element-wise.
+   * Computes the  <a href="https://en.wikipedia.org/wiki/Error_function">Gauss error function</a>  of {@code x} element-wise. In statistics, for non-negative values of $x$, the error function has the following interpretation: for a random variable $Y$ that is normally distributed with mean 0 and variance $1/\sqrt{2}$, $erf(x)$ is the probability that $Y$ falls in the range $[−x, x]$.
    *
    * @param <T> data type for {@code y} output
    * @param x the x value
@@ -1085,8 +1083,8 @@ public final class MathOps {
    *  The upper regularized incomplete Gamma function is defined as:
    *  <p>\(Q(a, x) = Gamma(a, x) / Gamma(a) = 1 - P(a, x)\)
    *  <p>where
-   *  <p>\(Gamma(a, x) = int_{x}^{\infty} t^{a-1} exp(-t) dt\)
-   *  <p>is the upper incomplete Gama function.
+   *  <p>\(Gamma(a, x) = \int_{x}^{\infty} t^{a-1} exp(-t) dt\)
+   *  <p>is the upper incomplete Gamma function.
    *  <p>Note, above {@code P(a, x)} ({@code Igamma}) is the lower regularized complete
    *  Gamma function.
    *
@@ -2234,9 +2232,9 @@ public final class MathOps {
    *  </div>
    *  <pre>
    *  c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
-   *  tf.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
-   *  # ==&gt; [[ 5,  5, 5, 5],
-   *  #       [5,  6, 7, 8]]
+   *  tf.math.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
+   *  # ==&gt; [[ 5, 5, 5, 5],
+   *  #       [5, 6, 7, 8]]
    *  </pre>
    *
    * @param <T> data type for {@code output} output

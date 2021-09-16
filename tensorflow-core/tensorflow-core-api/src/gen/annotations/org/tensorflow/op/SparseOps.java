@@ -52,6 +52,7 @@ import org.tensorflow.op.sparse.SparseSegmentSqrtN;
 import org.tensorflow.op.sparse.SparseSegmentSqrtNGrad;
 import org.tensorflow.op.sparse.SparseSegmentSqrtNWithNumSegments;
 import org.tensorflow.op.sparse.SparseSegmentSum;
+import org.tensorflow.op.sparse.SparseSegmentSumGrad;
 import org.tensorflow.op.sparse.SparseSegmentSumWithNumSegments;
 import org.tensorflow.op.sparse.SparseSlice;
 import org.tensorflow.op.sparse.SparseSliceGrad;
@@ -1051,6 +1052,25 @@ public final class SparseOps {
   public <T extends TNumber> SparseSegmentSum<T> sparseSegmentSum(Operand<T> data,
       Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
     return SparseSegmentSum.create(scope, data, indices, segmentIds);
+  }
+
+  /**
+   * Computes gradients for SparseSegmentSum.
+   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
+   *  value is output_dim0.
+   *
+   * @param <T> data type for {@code output} output
+   * @param grad gradient propagated to the SparseSegmentSum op.
+   * @param indices indices passed to the corresponding SparseSegmentSum op.
+   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
+   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
+   * @param <T> data type for {@code SparseSegmentSumGrad} output and operands
+   * @return a new instance of SparseSegmentSumGrad
+   */
+  public <T extends TNumber> SparseSegmentSumGrad<T> sparseSegmentSumGrad(Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> outputDim0) {
+    return SparseSegmentSumGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
 
   /**

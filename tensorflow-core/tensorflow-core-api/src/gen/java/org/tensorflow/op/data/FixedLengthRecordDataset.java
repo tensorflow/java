@@ -68,14 +68,13 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
   public static FixedLengthRecordDataset create(Scope scope, Operand<TString> filenames,
       Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes,
       Operand<TInt64> bufferSize, Operand<TString> compressionType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FixedLengthRecordDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FixedLengthRecordDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(headerBytes.asOutput());
     opBuilder.addInput(recordBytes.asOutput());
     opBuilder.addInput(footerBytes.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder.addInput(compressionType.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new FixedLengthRecordDataset(opBuilder.build());
   }
 

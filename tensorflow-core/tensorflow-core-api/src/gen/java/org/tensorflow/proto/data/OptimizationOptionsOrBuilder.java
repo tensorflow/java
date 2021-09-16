@@ -28,24 +28,14 @@ public interface OptimizationOptionsOrBuilder extends
   int getAutotuneCpuBudget();
 
   /**
-   * <code>int32 autotune_ram_budget = 5;</code>
+   * <code>int64 autotune_ram_budget = 5;</code>
    */
-  int getAutotuneRamBudget();
+  long getAutotuneRamBudget();
 
   /**
    * <code>bool filter_fusion = 6;</code>
    */
   boolean getFilterFusion();
-
-  /**
-   * <code>bool filter_with_random_uniform_fusion = 7;</code>
-   */
-  boolean getFilterWithRandomUniformFusion();
-
-  /**
-   * <code>bool hoist_random_uniform = 8;</code>
-   */
-  boolean getHoistRandomUniform();
 
   /**
    * <code>bool map_and_batch_fusion = 9;</code>
@@ -68,31 +58,6 @@ public interface OptimizationOptionsOrBuilder extends
   boolean getMapParallelization();
 
   /**
-   * <pre>
-   * The map vectorization options associated with the dataset.
-   * </pre>
-   *
-   * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-   */
-  boolean hasMapVectorization();
-  /**
-   * <pre>
-   * The map vectorization options associated with the dataset.
-   * </pre>
-   *
-   * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-   */
-  org.tensorflow.proto.data.MapVectorization getMapVectorization();
-  /**
-   * <pre>
-   * The map vectorization options associated with the dataset.
-   * </pre>
-   *
-   * <code>.tensorflow.data.MapVectorization map_vectorization = 13;</code>
-   */
-  org.tensorflow.proto.data.MapVectorizationOrBuilder getMapVectorizationOrBuilder();
-
-  /**
    * <code>bool noop_elimination = 14;</code>
    */
   boolean getNoopElimination();
@@ -101,11 +66,6 @@ public interface OptimizationOptionsOrBuilder extends
    * <code>bool parallel_batch = 15;</code>
    */
   boolean getParallelBatch();
-
-  /**
-   * <code>bool reorder_data_discarding_ops = 16;</code>
-   */
-  boolean getReorderDataDiscardingOps();
 
   /**
    * <code>bool shuffle_and_repeat_fusion = 17;</code>
@@ -124,10 +84,6 @@ public interface OptimizationOptionsOrBuilder extends
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterFusionCase getOptionalFilterFusionCase();
 
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterWithRandomUniformFusionCase getOptionalFilterWithRandomUniformFusionCase();
-
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalHoistRandomUniformCase getOptionalHoistRandomUniformCase();
-
   public org.tensorflow.proto.data.OptimizationOptions.OptionalMapAndBatchFusionCase getOptionalMapAndBatchFusionCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalMapAndFilterFusionCase getOptionalMapAndFilterFusionCase();
@@ -139,8 +95,6 @@ public interface OptimizationOptionsOrBuilder extends
   public org.tensorflow.proto.data.OptimizationOptions.OptionalNoopEliminationCase getOptionalNoopEliminationCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalParallelBatchCase getOptionalParallelBatchCase();
-
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalReorderDataDiscardingOpsCase getOptionalReorderDataDiscardingOpsCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalShuffleAndRepeatFusionCase getOptionalShuffleAndRepeatFusionCase();
 }

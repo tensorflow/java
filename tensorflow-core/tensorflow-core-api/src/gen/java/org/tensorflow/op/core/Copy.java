@@ -68,9 +68,8 @@ public final class Copy<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Copy<T> create(Scope scope, Operand<T> input,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Copy"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Copy");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.tensorName != null) {

@@ -89,11 +89,10 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
   public static UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs,
       Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnsortedSegmentJoin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnsortedSegmentJoin");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.separator != null) {

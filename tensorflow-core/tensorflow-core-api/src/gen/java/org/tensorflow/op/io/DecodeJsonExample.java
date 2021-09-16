@@ -66,9 +66,8 @@ public final class DecodeJsonExample extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static DecodeJsonExample create(Scope scope, Operand<TString> jsonExamples) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DecodeJsonExample"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DecodeJsonExample");
     opBuilder.addInput(jsonExamples.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DecodeJsonExample(opBuilder.build());
   }
 

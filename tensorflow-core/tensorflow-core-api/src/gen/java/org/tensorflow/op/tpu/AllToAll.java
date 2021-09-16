@@ -79,10 +79,9 @@ public final class AllToAll<T extends TType> extends RawOp implements Operand<T>
   )
   public static <T extends TType> AllToAll<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> groupAssignment, Long concatDimension, Long splitDimension, Long splitCount) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AllToAll"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AllToAll");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("concat_dimension", concatDimension);
     opBuilder.setAttr("split_dimension", splitDimension);
     opBuilder.setAttr("split_count", splitCount);

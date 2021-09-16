@@ -393,6 +393,32 @@ private static final long serialVersionUID = 0L;
      * <code>int32 kernel_tracker_max_pending = 9;</code>
      */
     int getKernelTrackerMaxPending();
+
+    /**
+     * <pre>
+     * BFC Allocator can return an allocated chunk of memory upto 2x the
+     * requested size. For virtual devices with tight memory constraints, and
+     * proportionately large allocation requests, this can lead to a significant
+     * reduction in available memory. The threshold below controls when a chunk
+     * should be split if the chunk size exceeds requested memory size. It is
+     * expressed as a fraction of total available memory for the tf device. For
+     * example setting it to 0.05 would imply a chunk needs to be split if its
+     * size exceeds the requested memory by 5% of the total virtual device/gpu
+     * memory size.
+     * </pre>
+     *
+     * <code>double internal_fragmentation_fraction = 10;</code>
+     */
+    double getInternalFragmentationFraction();
+
+    /**
+     * <pre>
+     * When true, use CUDA cudaMallocAsync API instead of TF gpu allocator.
+     * </pre>
+     *
+     * <code>bool use_cuda_malloc_async = 11;</code>
+     */
+    boolean getUseCudaMallocAsync();
   }
   /**
    * Protobuf type {@code tensorflow.GPUOptions.Experimental}
@@ -485,6 +511,16 @@ private static final long serialVersionUID = 0L;
             case 72: {
 
               kernelTrackerMaxPending_ = input.readInt32();
+              break;
+            }
+            case 81: {
+
+              internalFragmentationFraction_ = input.readDouble();
+              break;
+            }
+            case 88: {
+
+              useCudaMallocAsync_ = input.readBool();
               break;
             }
             default: {
@@ -1880,6 +1916,40 @@ private static final long serialVersionUID = 0L;
       return kernelTrackerMaxPending_;
     }
 
+    public static final int INTERNAL_FRAGMENTATION_FRACTION_FIELD_NUMBER = 10;
+    private double internalFragmentationFraction_;
+    /**
+     * <pre>
+     * BFC Allocator can return an allocated chunk of memory upto 2x the
+     * requested size. For virtual devices with tight memory constraints, and
+     * proportionately large allocation requests, this can lead to a significant
+     * reduction in available memory. The threshold below controls when a chunk
+     * should be split if the chunk size exceeds requested memory size. It is
+     * expressed as a fraction of total available memory for the tf device. For
+     * example setting it to 0.05 would imply a chunk needs to be split if its
+     * size exceeds the requested memory by 5% of the total virtual device/gpu
+     * memory size.
+     * </pre>
+     *
+     * <code>double internal_fragmentation_fraction = 10;</code>
+     */
+    public double getInternalFragmentationFraction() {
+      return internalFragmentationFraction_;
+    }
+
+    public static final int USE_CUDA_MALLOC_ASYNC_FIELD_NUMBER = 11;
+    private boolean useCudaMallocAsync_;
+    /**
+     * <pre>
+     * When true, use CUDA cudaMallocAsync API instead of TF gpu allocator.
+     * </pre>
+     *
+     * <code>bool use_cuda_malloc_async = 11;</code>
+     */
+    public boolean getUseCudaMallocAsync() {
+      return useCudaMallocAsync_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1917,6 +1987,12 @@ private static final long serialVersionUID = 0L;
       }
       if (kernelTrackerMaxPending_ != 0) {
         output.writeInt32(9, kernelTrackerMaxPending_);
+      }
+      if (internalFragmentationFraction_ != 0D) {
+        output.writeDouble(10, internalFragmentationFraction_);
+      }
+      if (useCudaMallocAsync_ != false) {
+        output.writeBool(11, useCudaMallocAsync_);
       }
       unknownFields.writeTo(output);
     }
@@ -1958,6 +2034,14 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(9, kernelTrackerMaxPending_);
       }
+      if (internalFragmentationFraction_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(10, internalFragmentationFraction_);
+      }
+      if (useCudaMallocAsync_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(11, useCudaMallocAsync_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1989,6 +2073,11 @@ private static final long serialVersionUID = 0L;
           != other.getKernelTrackerMaxBytes()) return false;
       if (getKernelTrackerMaxPending()
           != other.getKernelTrackerMaxPending()) return false;
+      if (java.lang.Double.doubleToLongBits(getInternalFragmentationFraction())
+          != java.lang.Double.doubleToLongBits(
+              other.getInternalFragmentationFraction())) return false;
+      if (getUseCudaMallocAsync()
+          != other.getUseCudaMallocAsync()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2020,6 +2109,12 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getKernelTrackerMaxBytes();
       hash = (37 * hash) + KERNEL_TRACKER_MAX_PENDING_FIELD_NUMBER;
       hash = (53 * hash) + getKernelTrackerMaxPending();
+      hash = (37 * hash) + INTERNAL_FRAGMENTATION_FRACTION_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getInternalFragmentationFraction()));
+      hash = (37 * hash) + USE_CUDA_MALLOC_ASYNC_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getUseCudaMallocAsync());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2174,6 +2269,10 @@ private static final long serialVersionUID = 0L;
 
         kernelTrackerMaxPending_ = 0;
 
+        internalFragmentationFraction_ = 0D;
+
+        useCudaMallocAsync_ = false;
+
         return this;
       }
 
@@ -2217,6 +2316,8 @@ private static final long serialVersionUID = 0L;
         result.kernelTrackerMaxInterval_ = kernelTrackerMaxInterval_;
         result.kernelTrackerMaxBytes_ = kernelTrackerMaxBytes_;
         result.kernelTrackerMaxPending_ = kernelTrackerMaxPending_;
+        result.internalFragmentationFraction_ = internalFragmentationFraction_;
+        result.useCudaMallocAsync_ = useCudaMallocAsync_;
         onBuilt();
         return result;
       }
@@ -2312,6 +2413,12 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getKernelTrackerMaxPending() != 0) {
           setKernelTrackerMaxPending(other.getKernelTrackerMaxPending());
+        }
+        if (other.getInternalFragmentationFraction() != 0D) {
+          setInternalFragmentationFraction(other.getInternalFragmentationFraction());
+        }
+        if (other.getUseCudaMallocAsync() != false) {
+          setUseCudaMallocAsync(other.getUseCudaMallocAsync());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3437,6 +3544,106 @@ private static final long serialVersionUID = 0L;
       public Builder clearKernelTrackerMaxPending() {
         
         kernelTrackerMaxPending_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private double internalFragmentationFraction_ ;
+      /**
+       * <pre>
+       * BFC Allocator can return an allocated chunk of memory upto 2x the
+       * requested size. For virtual devices with tight memory constraints, and
+       * proportionately large allocation requests, this can lead to a significant
+       * reduction in available memory. The threshold below controls when a chunk
+       * should be split if the chunk size exceeds requested memory size. It is
+       * expressed as a fraction of total available memory for the tf device. For
+       * example setting it to 0.05 would imply a chunk needs to be split if its
+       * size exceeds the requested memory by 5% of the total virtual device/gpu
+       * memory size.
+       * </pre>
+       *
+       * <code>double internal_fragmentation_fraction = 10;</code>
+       */
+      public double getInternalFragmentationFraction() {
+        return internalFragmentationFraction_;
+      }
+      /**
+       * <pre>
+       * BFC Allocator can return an allocated chunk of memory upto 2x the
+       * requested size. For virtual devices with tight memory constraints, and
+       * proportionately large allocation requests, this can lead to a significant
+       * reduction in available memory. The threshold below controls when a chunk
+       * should be split if the chunk size exceeds requested memory size. It is
+       * expressed as a fraction of total available memory for the tf device. For
+       * example setting it to 0.05 would imply a chunk needs to be split if its
+       * size exceeds the requested memory by 5% of the total virtual device/gpu
+       * memory size.
+       * </pre>
+       *
+       * <code>double internal_fragmentation_fraction = 10;</code>
+       */
+      public Builder setInternalFragmentationFraction(double value) {
+        
+        internalFragmentationFraction_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * BFC Allocator can return an allocated chunk of memory upto 2x the
+       * requested size. For virtual devices with tight memory constraints, and
+       * proportionately large allocation requests, this can lead to a significant
+       * reduction in available memory. The threshold below controls when a chunk
+       * should be split if the chunk size exceeds requested memory size. It is
+       * expressed as a fraction of total available memory for the tf device. For
+       * example setting it to 0.05 would imply a chunk needs to be split if its
+       * size exceeds the requested memory by 5% of the total virtual device/gpu
+       * memory size.
+       * </pre>
+       *
+       * <code>double internal_fragmentation_fraction = 10;</code>
+       */
+      public Builder clearInternalFragmentationFraction() {
+        
+        internalFragmentationFraction_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      private boolean useCudaMallocAsync_ ;
+      /**
+       * <pre>
+       * When true, use CUDA cudaMallocAsync API instead of TF gpu allocator.
+       * </pre>
+       *
+       * <code>bool use_cuda_malloc_async = 11;</code>
+       */
+      public boolean getUseCudaMallocAsync() {
+        return useCudaMallocAsync_;
+      }
+      /**
+       * <pre>
+       * When true, use CUDA cudaMallocAsync API instead of TF gpu allocator.
+       * </pre>
+       *
+       * <code>bool use_cuda_malloc_async = 11;</code>
+       */
+      public Builder setUseCudaMallocAsync(boolean value) {
+        
+        useCudaMallocAsync_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * When true, use CUDA cudaMallocAsync API instead of TF gpu allocator.
+       * </pre>
+       *
+       * <code>bool use_cuda_malloc_async = 11;</code>
+       */
+      public Builder clearUseCudaMallocAsync() {
+        
+        useCudaMallocAsync_ = false;
         onChanged();
         return this;
       }

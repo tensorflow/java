@@ -64,10 +64,9 @@ public final class Mul<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Mul<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Mul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Mul");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Mul<>(opBuilder.build());
   }
 

@@ -57,9 +57,8 @@ public final class RiscFft<T extends TType> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TType> RiscFft<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscFft"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscFft");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscFft<>(opBuilder.build());
   }
 

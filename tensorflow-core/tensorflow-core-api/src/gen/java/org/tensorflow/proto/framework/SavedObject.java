@@ -180,6 +180,20 @@ private static final long serialVersionUID = 0L;
                 saveableObjects__.getKey(), saveableObjects__.getValue());
             break;
           }
+          case 98: {
+            org.tensorflow.proto.framework.CapturedTensor.Builder subBuilder = null;
+            if (kindCase_ == 12) {
+              subBuilder = ((org.tensorflow.proto.framework.CapturedTensor) kind_).toBuilder();
+            }
+            kind_ =
+                input.readMessage(org.tensorflow.proto.framework.CapturedTensor.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((org.tensorflow.proto.framework.CapturedTensor) kind_);
+              kind_ = subBuilder.buildPartial();
+            }
+            kindCase_ = 12;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -241,6 +255,7 @@ private static final long serialVersionUID = 0L;
     BARE_CONCRETE_FUNCTION(8),
     CONSTANT(9),
     RESOURCE(10),
+    CAPTURED_TENSOR(12),
     KIND_NOT_SET(0);
     private final int value;
     private KindCase(int value) {
@@ -263,6 +278,7 @@ private static final long serialVersionUID = 0L;
         case 8: return BARE_CONCRETE_FUNCTION;
         case 9: return CONSTANT;
         case 10: return RESOURCE;
+        case 12: return CAPTURED_TENSOR;
         case 0: return KIND_NOT_SET;
         default: return null;
       }
@@ -595,6 +611,32 @@ private static final long serialVersionUID = 0L;
     return org.tensorflow.proto.framework.SavedResource.getDefaultInstance();
   }
 
+  public static final int CAPTURED_TENSOR_FIELD_NUMBER = 12;
+  /**
+   * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+   */
+  public boolean hasCapturedTensor() {
+    return kindCase_ == 12;
+  }
+  /**
+   * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+   */
+  public org.tensorflow.proto.framework.CapturedTensor getCapturedTensor() {
+    if (kindCase_ == 12) {
+       return (org.tensorflow.proto.framework.CapturedTensor) kind_;
+    }
+    return org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance();
+  }
+  /**
+   * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+   */
+  public org.tensorflow.proto.framework.CapturedTensorOrBuilder getCapturedTensorOrBuilder() {
+    if (kindCase_ == 12) {
+       return (org.tensorflow.proto.framework.CapturedTensor) kind_;
+    }
+    return org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance();
+  }
+
   public static final int SAVEABLE_OBJECTS_FIELD_NUMBER = 11;
   private static final class SaveableObjectsDefaultEntryHolder {
     static final com.google.protobuf.MapEntry<
@@ -718,6 +760,9 @@ private static final long serialVersionUID = 0L;
         internalGetSaveableObjects(),
         SaveableObjectsDefaultEntryHolder.defaultEntry,
         11);
+    if (kindCase_ == 12) {
+      output.writeMessage(12, (org.tensorflow.proto.framework.CapturedTensor) kind_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -773,6 +818,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, saveableObjects__);
     }
+    if (kindCase_ == 12) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(12, (org.tensorflow.proto.framework.CapturedTensor) kind_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -823,6 +872,10 @@ private static final long serialVersionUID = 0L;
       case 10:
         if (!getResource()
             .equals(other.getResource())) return false;
+        break;
+      case 12:
+        if (!getCapturedTensor()
+            .equals(other.getCapturedTensor())) return false;
         break;
       case 0:
       default:
@@ -878,6 +931,10 @@ private static final long serialVersionUID = 0L;
       case 10:
         hash = (37 * hash) + RESOURCE_FIELD_NUMBER;
         hash = (53 * hash) + getResource().hashCode();
+        break;
+      case 12:
+        hash = (37 * hash) + CAPTURED_TENSOR_FIELD_NUMBER;
+        hash = (53 * hash) + getCapturedTensor().hashCode();
         break;
       case 0:
       default:
@@ -1148,6 +1205,13 @@ private static final long serialVersionUID = 0L;
           result.kind_ = resourceBuilder_.build();
         }
       }
+      if (kindCase_ == 12) {
+        if (capturedTensorBuilder_ == null) {
+          result.kind_ = kind_;
+        } else {
+          result.kind_ = capturedTensorBuilder_.build();
+        }
+      }
       result.saveableObjects_ = internalGetSaveableObjects();
       result.saveableObjects_.makeImmutable();
       result.kindCase_ = kindCase_;
@@ -1280,6 +1344,10 @@ private static final long serialVersionUID = 0L;
         }
         case RESOURCE: {
           mergeResource(other.getResource());
+          break;
+        }
+        case CAPTURED_TENSOR: {
+          mergeCapturedTensor(other.getCapturedTensor());
           break;
         }
         case KIND_NOT_SET: {
@@ -2995,6 +3063,142 @@ private static final long serialVersionUID = 0L;
       kindCase_ = 10;
       onChanged();;
       return resourceBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.CapturedTensor, org.tensorflow.proto.framework.CapturedTensor.Builder, org.tensorflow.proto.framework.CapturedTensorOrBuilder> capturedTensorBuilder_;
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public boolean hasCapturedTensor() {
+      return kindCase_ == 12;
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public org.tensorflow.proto.framework.CapturedTensor getCapturedTensor() {
+      if (capturedTensorBuilder_ == null) {
+        if (kindCase_ == 12) {
+          return (org.tensorflow.proto.framework.CapturedTensor) kind_;
+        }
+        return org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance();
+      } else {
+        if (kindCase_ == 12) {
+          return capturedTensorBuilder_.getMessage();
+        }
+        return org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public Builder setCapturedTensor(org.tensorflow.proto.framework.CapturedTensor value) {
+      if (capturedTensorBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        kind_ = value;
+        onChanged();
+      } else {
+        capturedTensorBuilder_.setMessage(value);
+      }
+      kindCase_ = 12;
+      return this;
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public Builder setCapturedTensor(
+        org.tensorflow.proto.framework.CapturedTensor.Builder builderForValue) {
+      if (capturedTensorBuilder_ == null) {
+        kind_ = builderForValue.build();
+        onChanged();
+      } else {
+        capturedTensorBuilder_.setMessage(builderForValue.build());
+      }
+      kindCase_ = 12;
+      return this;
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public Builder mergeCapturedTensor(org.tensorflow.proto.framework.CapturedTensor value) {
+      if (capturedTensorBuilder_ == null) {
+        if (kindCase_ == 12 &&
+            kind_ != org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance()) {
+          kind_ = org.tensorflow.proto.framework.CapturedTensor.newBuilder((org.tensorflow.proto.framework.CapturedTensor) kind_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          kind_ = value;
+        }
+        onChanged();
+      } else {
+        if (kindCase_ == 12) {
+          capturedTensorBuilder_.mergeFrom(value);
+        }
+        capturedTensorBuilder_.setMessage(value);
+      }
+      kindCase_ = 12;
+      return this;
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public Builder clearCapturedTensor() {
+      if (capturedTensorBuilder_ == null) {
+        if (kindCase_ == 12) {
+          kindCase_ = 0;
+          kind_ = null;
+          onChanged();
+        }
+      } else {
+        if (kindCase_ == 12) {
+          kindCase_ = 0;
+          kind_ = null;
+        }
+        capturedTensorBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public org.tensorflow.proto.framework.CapturedTensor.Builder getCapturedTensorBuilder() {
+      return getCapturedTensorFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    public org.tensorflow.proto.framework.CapturedTensorOrBuilder getCapturedTensorOrBuilder() {
+      if ((kindCase_ == 12) && (capturedTensorBuilder_ != null)) {
+        return capturedTensorBuilder_.getMessageOrBuilder();
+      } else {
+        if (kindCase_ == 12) {
+          return (org.tensorflow.proto.framework.CapturedTensor) kind_;
+        }
+        return org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.tensorflow.CapturedTensor captured_tensor = 12;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.CapturedTensor, org.tensorflow.proto.framework.CapturedTensor.Builder, org.tensorflow.proto.framework.CapturedTensorOrBuilder> 
+        getCapturedTensorFieldBuilder() {
+      if (capturedTensorBuilder_ == null) {
+        if (!(kindCase_ == 12)) {
+          kind_ = org.tensorflow.proto.framework.CapturedTensor.getDefaultInstance();
+        }
+        capturedTensorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.framework.CapturedTensor, org.tensorflow.proto.framework.CapturedTensor.Builder, org.tensorflow.proto.framework.CapturedTensorOrBuilder>(
+                (org.tensorflow.proto.framework.CapturedTensor) kind_,
+                getParentForChildren(),
+                isClean());
+        kind_ = null;
+      }
+      kindCase_ = 12;
+      onChanged();;
+      return capturedTensorBuilder_;
     }
 
     private com.google.protobuf.MapField<

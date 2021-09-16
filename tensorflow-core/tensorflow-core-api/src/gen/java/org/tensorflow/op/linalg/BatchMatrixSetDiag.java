@@ -63,10 +63,9 @@ public final class BatchMatrixSetDiag<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> BatchMatrixSetDiag<T> create(Scope scope, Operand<T> input,
       Operand<T> diagonal) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatrixSetDiag"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BatchMatrixSetDiag");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(diagonal.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new BatchMatrixSetDiag<>(opBuilder.build());
   }
 

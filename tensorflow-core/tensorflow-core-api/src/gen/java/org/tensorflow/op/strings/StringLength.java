@@ -72,9 +72,8 @@ public final class StringLength extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static StringLength create(Scope scope, Operand<TString> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StringLength"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StringLength");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.unit != null) {

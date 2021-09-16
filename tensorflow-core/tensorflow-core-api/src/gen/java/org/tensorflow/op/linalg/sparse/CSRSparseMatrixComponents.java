@@ -70,10 +70,9 @@ public final class CSRSparseMatrixComponents<T extends TType> extends RawOp {
   )
   public static <T extends TType> CSRSparseMatrixComponents<T> create(Scope scope,
       Operand<? extends TType> csrSparseMatrix, Operand<TInt32> index, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CSRSparseMatrixComponents"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CSRSparseMatrixComponents");
     opBuilder.addInput(csrSparseMatrix.asOutput());
     opBuilder.addInput(index.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));
     return new CSRSparseMatrixComponents<>(opBuilder.build());
   }

@@ -200,6 +200,22 @@ private static final long serialVersionUID = 0L;
      * <code>ROW_PARTITION_SPEC = 10;</code>
      */
     ROW_PARTITION_SPEC(10),
+    /**
+     * <pre>
+     * The type registered as type_spec_class_name.
+     * </pre>
+     *
+     * <code>REGISTERED_TYPE_SPEC = 12;</code>
+     */
+    REGISTERED_TYPE_SPEC(12),
+    /**
+     * <pre>
+     * Subclasses of tf.ExtensionType
+     * </pre>
+     *
+     * <code>EXTENSION_TYPE_SPEC = 13;</code>
+     */
+    EXTENSION_TYPE_SPEC(13),
     UNRECOGNIZED(-1),
     ;
 
@@ -287,6 +303,22 @@ private static final long serialVersionUID = 0L;
      * <code>ROW_PARTITION_SPEC = 10;</code>
      */
     public static final int ROW_PARTITION_SPEC_VALUE = 10;
+    /**
+     * <pre>
+     * The type registered as type_spec_class_name.
+     * </pre>
+     *
+     * <code>REGISTERED_TYPE_SPEC = 12;</code>
+     */
+    public static final int REGISTERED_TYPE_SPEC_VALUE = 12;
+    /**
+     * <pre>
+     * Subclasses of tf.ExtensionType
+     * </pre>
+     *
+     * <code>EXTENSION_TYPE_SPEC = 13;</code>
+     */
+    public static final int EXTENSION_TYPE_SPEC_VALUE = 13;
 
 
     public final int getNumber() {
@@ -318,6 +350,8 @@ private static final long serialVersionUID = 0L;
         case 8: return PER_REPLICA_SPEC;
         case 9: return VARIABLE_SPEC;
         case 10: return ROW_PARTITION_SPEC;
+        case 12: return REGISTERED_TYPE_SPEC;
+        case 13: return EXTENSION_TYPE_SPEC;
         default: return null;
       }
     }
@@ -424,10 +458,14 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object typeSpecClassName_;
   /**
    * <pre>
-   * This is currently redundant with the type_spec_class enum, and is only
-   * used for error reporting.  In particular, if you use an older binary to
-   * load a newer model, and the model uses a TypeSpecClass that the older
-   * binary doesn't support, then this lets us display a useful error message.
+   * The name of the TypeSpec class.
+   *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+   *    the one registered under this name. For types registered outside
+   *    core TensorFlow by an add-on library, that library must be loaded
+   *    before this value can be deserialized by StructureCoder.
+   *  * If type_spec_class specifies a particular TypeSpec class, this field is
+   *    redundant with the type_spec_class enum, and is only used for error
+   *    reporting in older binaries that do not know the tupe_spec_class enum.
    * </pre>
    *
    * <code>string type_spec_class_name = 3;</code>
@@ -446,10 +484,14 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * This is currently redundant with the type_spec_class enum, and is only
-   * used for error reporting.  In particular, if you use an older binary to
-   * load a newer model, and the model uses a TypeSpecClass that the older
-   * binary doesn't support, then this lets us display a useful error message.
+   * The name of the TypeSpec class.
+   *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+   *    the one registered under this name. For types registered outside
+   *    core TensorFlow by an add-on library, that library must be loaded
+   *    before this value can be deserialized by StructureCoder.
+   *  * If type_spec_class specifies a particular TypeSpec class, this field is
+   *    redundant with the type_spec_class enum, and is only used for error
+   *    reporting in older binaries that do not know the tupe_spec_class enum.
    * </pre>
    *
    * <code>string type_spec_class_name = 3;</code>
@@ -1021,10 +1063,14 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object typeSpecClassName_ = "";
     /**
      * <pre>
-     * This is currently redundant with the type_spec_class enum, and is only
-     * used for error reporting.  In particular, if you use an older binary to
-     * load a newer model, and the model uses a TypeSpecClass that the older
-     * binary doesn't support, then this lets us display a useful error message.
+     * The name of the TypeSpec class.
+     *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+     *    the one registered under this name. For types registered outside
+     *    core TensorFlow by an add-on library, that library must be loaded
+     *    before this value can be deserialized by StructureCoder.
+     *  * If type_spec_class specifies a particular TypeSpec class, this field is
+     *    redundant with the type_spec_class enum, and is only used for error
+     *    reporting in older binaries that do not know the tupe_spec_class enum.
      * </pre>
      *
      * <code>string type_spec_class_name = 3;</code>
@@ -1043,10 +1089,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * This is currently redundant with the type_spec_class enum, and is only
-     * used for error reporting.  In particular, if you use an older binary to
-     * load a newer model, and the model uses a TypeSpecClass that the older
-     * binary doesn't support, then this lets us display a useful error message.
+     * The name of the TypeSpec class.
+     *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+     *    the one registered under this name. For types registered outside
+     *    core TensorFlow by an add-on library, that library must be loaded
+     *    before this value can be deserialized by StructureCoder.
+     *  * If type_spec_class specifies a particular TypeSpec class, this field is
+     *    redundant with the type_spec_class enum, and is only used for error
+     *    reporting in older binaries that do not know the tupe_spec_class enum.
      * </pre>
      *
      * <code>string type_spec_class_name = 3;</code>
@@ -1066,10 +1116,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * This is currently redundant with the type_spec_class enum, and is only
-     * used for error reporting.  In particular, if you use an older binary to
-     * load a newer model, and the model uses a TypeSpecClass that the older
-     * binary doesn't support, then this lets us display a useful error message.
+     * The name of the TypeSpec class.
+     *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+     *    the one registered under this name. For types registered outside
+     *    core TensorFlow by an add-on library, that library must be loaded
+     *    before this value can be deserialized by StructureCoder.
+     *  * If type_spec_class specifies a particular TypeSpec class, this field is
+     *    redundant with the type_spec_class enum, and is only used for error
+     *    reporting in older binaries that do not know the tupe_spec_class enum.
      * </pre>
      *
      * <code>string type_spec_class_name = 3;</code>
@@ -1086,10 +1140,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * This is currently redundant with the type_spec_class enum, and is only
-     * used for error reporting.  In particular, if you use an older binary to
-     * load a newer model, and the model uses a TypeSpecClass that the older
-     * binary doesn't support, then this lets us display a useful error message.
+     * The name of the TypeSpec class.
+     *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+     *    the one registered under this name. For types registered outside
+     *    core TensorFlow by an add-on library, that library must be loaded
+     *    before this value can be deserialized by StructureCoder.
+     *  * If type_spec_class specifies a particular TypeSpec class, this field is
+     *    redundant with the type_spec_class enum, and is only used for error
+     *    reporting in older binaries that do not know the tupe_spec_class enum.
      * </pre>
      *
      * <code>string type_spec_class_name = 3;</code>
@@ -1102,10 +1160,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * This is currently redundant with the type_spec_class enum, and is only
-     * used for error reporting.  In particular, if you use an older binary to
-     * load a newer model, and the model uses a TypeSpecClass that the older
-     * binary doesn't support, then this lets us display a useful error message.
+     * The name of the TypeSpec class.
+     *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
+     *    the one registered under this name. For types registered outside
+     *    core TensorFlow by an add-on library, that library must be loaded
+     *    before this value can be deserialized by StructureCoder.
+     *  * If type_spec_class specifies a particular TypeSpec class, this field is
+     *    redundant with the type_spec_class enum, and is only used for error
+     *    reporting in older binaries that do not know the tupe_spec_class enum.
      * </pre>
      *
      * <code>string type_spec_class_name = 3;</code>

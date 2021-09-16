@@ -69,9 +69,8 @@ public final class Inv<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Inv<T> create(Scope scope, Operand<T> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Inv"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Inv");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjoint != null) {

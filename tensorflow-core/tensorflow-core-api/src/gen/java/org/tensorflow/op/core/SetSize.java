@@ -67,11 +67,10 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
   )
   public static SetSize create(Scope scope, Operand<TInt64> setIndices,
       Operand<? extends TType> setValues, Operand<TInt64> setShape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SetSize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SetSize");
     opBuilder.addInput(setIndices.asOutput());
     opBuilder.addInput(setValues.asOutput());
     opBuilder.addInput(setShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.validateIndices != null) {

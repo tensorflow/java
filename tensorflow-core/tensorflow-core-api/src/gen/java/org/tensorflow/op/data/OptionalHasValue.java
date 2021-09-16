@@ -59,9 +59,8 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static OptionalHasValue create(Scope scope, Operand<? extends TType> optional) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptionalHasValue"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OptionalHasValue");
     opBuilder.addInput(optional.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new OptionalHasValue(opBuilder.build());
   }
 

@@ -510,6 +510,38 @@ private static final long serialVersionUID = 0L;
      * <code>bool use_tfrt = 18;</code>
      */
     boolean getUseTfrt();
+
+    /**
+     * <pre>
+     * Distributed coordination service to be enabled if set.
+     * Currently only effective in multi-client setup.
+     * </pre>
+     *
+     * <code>string coordination_service = 19;</code>
+     */
+    java.lang.String getCoordinationService();
+    /**
+     * <pre>
+     * Distributed coordination service to be enabled if set.
+     * Currently only effective in multi-client setup.
+     * </pre>
+     *
+     * <code>string coordination_service = 19;</code>
+     */
+    com.google.protobuf.ByteString
+        getCoordinationServiceBytes();
+
+    /**
+     * <pre>
+     * Whether the remote devices in the cluster should be fetched during setup
+     * of multi-client cluster. If enabled, the workers will run an extra device
+     * information exchange step during startup and the workers' EagerContexts
+     * will become aware of remote devices in the cluster as well.
+     * </pre>
+     *
+     * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+     */
+    boolean getFetchRemoteDevicesInMultiClient();
   }
   /**
    * <pre>
@@ -533,6 +565,7 @@ private static final long serialVersionUID = 0L;
       collectiveGroupLeader_ = "";
       executorType_ = "";
       mlirBridgeRollout_ = 0;
+      coordinationService_ = "";
     }
 
     @java.lang.Override
@@ -659,6 +692,17 @@ private static final long serialVersionUID = 0L;
             case 144: {
 
               useTfrt_ = input.readBool();
+              break;
+            }
+            case 154: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              coordinationService_ = s;
+              break;
+            }
+            case 160: {
+
+              fetchRemoteDevicesInMultiClient_ = input.readBool();
               break;
             }
             default: {
@@ -1256,6 +1300,66 @@ private static final long serialVersionUID = 0L;
       return useTfrt_;
     }
 
+    public static final int COORDINATION_SERVICE_FIELD_NUMBER = 19;
+    private volatile java.lang.Object coordinationService_;
+    /**
+     * <pre>
+     * Distributed coordination service to be enabled if set.
+     * Currently only effective in multi-client setup.
+     * </pre>
+     *
+     * <code>string coordination_service = 19;</code>
+     */
+    public java.lang.String getCoordinationService() {
+      java.lang.Object ref = coordinationService_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        coordinationService_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Distributed coordination service to be enabled if set.
+     * Currently only effective in multi-client setup.
+     * </pre>
+     *
+     * <code>string coordination_service = 19;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCoordinationServiceBytes() {
+      java.lang.Object ref = coordinationService_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        coordinationService_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int FETCH_REMOTE_DEVICES_IN_MULTI_CLIENT_FIELD_NUMBER = 20;
+    private boolean fetchRemoteDevicesInMultiClient_;
+    /**
+     * <pre>
+     * Whether the remote devices in the cluster should be fetched during setup
+     * of multi-client cluster. If enabled, the workers will run an extra device
+     * information exchange step during startup and the workers' EagerContexts
+     * will become aware of remote devices in the cluster as well.
+     * </pre>
+     *
+     * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+     */
+    public boolean getFetchRemoteDevicesInMultiClient() {
+      return fetchRemoteDevicesInMultiClient_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1320,6 +1424,12 @@ private static final long serialVersionUID = 0L;
       }
       if (useTfrt_ != false) {
         output.writeBool(18, useTfrt_);
+      }
+      if (!getCoordinationServiceBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 19, coordinationService_);
+      }
+      if (fetchRemoteDevicesInMultiClient_ != false) {
+        output.writeBool(20, fetchRemoteDevicesInMultiClient_);
       }
       unknownFields.writeTo(output);
     }
@@ -1396,6 +1506,13 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(18, useTfrt_);
       }
+      if (!getCoordinationServiceBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(19, coordinationService_);
+      }
+      if (fetchRemoteDevicesInMultiClient_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(20, fetchRemoteDevicesInMultiClient_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1447,6 +1564,10 @@ private static final long serialVersionUID = 0L;
           != other.getXlaFusionAutotunerThresh()) return false;
       if (getUseTfrt()
           != other.getUseTfrt()) return false;
+      if (!getCoordinationService()
+          .equals(other.getCoordinationService())) return false;
+      if (getFetchRemoteDevicesInMultiClient()
+          != other.getFetchRemoteDevicesInMultiClient()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1506,6 +1627,11 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + USE_TFRT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getUseTfrt());
+      hash = (37 * hash) + COORDINATION_SERVICE_FIELD_NUMBER;
+      hash = (53 * hash) + getCoordinationService().hashCode();
+      hash = (37 * hash) + FETCH_REMOTE_DEVICES_IN_MULTI_CLIENT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getFetchRemoteDevicesInMultiClient());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1683,6 +1809,10 @@ private static final long serialVersionUID = 0L;
 
         useTfrt_ = false;
 
+        coordinationService_ = "";
+
+        fetchRemoteDevicesInMultiClient_ = false;
+
         return this;
       }
 
@@ -1730,6 +1860,8 @@ private static final long serialVersionUID = 0L;
         result.disableOutputPartitionGraphs_ = disableOutputPartitionGraphs_;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
         result.useTfrt_ = useTfrt_;
+        result.coordinationService_ = coordinationService_;
+        result.fetchRemoteDevicesInMultiClient_ = fetchRemoteDevicesInMultiClient_;
         onBuilt();
         return result;
       }
@@ -1830,6 +1962,13 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getUseTfrt() != false) {
           setUseTfrt(other.getUseTfrt());
+        }
+        if (!other.getCoordinationService().isEmpty()) {
+          coordinationService_ = other.coordinationService_;
+          onChanged();
+        }
+        if (other.getFetchRemoteDevicesInMultiClient() != false) {
+          setFetchRemoteDevicesInMultiClient(other.getFetchRemoteDevicesInMultiClient());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2941,6 +3080,147 @@ private static final long serialVersionUID = 0L;
         onChanged();
         return this;
       }
+
+      private java.lang.Object coordinationService_ = "";
+      /**
+       * <pre>
+       * Distributed coordination service to be enabled if set.
+       * Currently only effective in multi-client setup.
+       * </pre>
+       *
+       * <code>string coordination_service = 19;</code>
+       */
+      public java.lang.String getCoordinationService() {
+        java.lang.Object ref = coordinationService_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          coordinationService_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Distributed coordination service to be enabled if set.
+       * Currently only effective in multi-client setup.
+       * </pre>
+       *
+       * <code>string coordination_service = 19;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCoordinationServiceBytes() {
+        java.lang.Object ref = coordinationService_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          coordinationService_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Distributed coordination service to be enabled if set.
+       * Currently only effective in multi-client setup.
+       * </pre>
+       *
+       * <code>string coordination_service = 19;</code>
+       */
+      public Builder setCoordinationService(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        coordinationService_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service to be enabled if set.
+       * Currently only effective in multi-client setup.
+       * </pre>
+       *
+       * <code>string coordination_service = 19;</code>
+       */
+      public Builder clearCoordinationService() {
+        
+        coordinationService_ = getDefaultInstance().getCoordinationService();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service to be enabled if set.
+       * Currently only effective in multi-client setup.
+       * </pre>
+       *
+       * <code>string coordination_service = 19;</code>
+       */
+      public Builder setCoordinationServiceBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        coordinationService_ = value;
+        onChanged();
+        return this;
+      }
+
+      private boolean fetchRemoteDevicesInMultiClient_ ;
+      /**
+       * <pre>
+       * Whether the remote devices in the cluster should be fetched during setup
+       * of multi-client cluster. If enabled, the workers will run an extra device
+       * information exchange step during startup and the workers' EagerContexts
+       * will become aware of remote devices in the cluster as well.
+       * </pre>
+       *
+       * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+       */
+      public boolean getFetchRemoteDevicesInMultiClient() {
+        return fetchRemoteDevicesInMultiClient_;
+      }
+      /**
+       * <pre>
+       * Whether the remote devices in the cluster should be fetched during setup
+       * of multi-client cluster. If enabled, the workers will run an extra device
+       * information exchange step during startup and the workers' EagerContexts
+       * will become aware of remote devices in the cluster as well.
+       * </pre>
+       *
+       * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+       */
+      public Builder setFetchRemoteDevicesInMultiClient(boolean value) {
+        
+        fetchRemoteDevicesInMultiClient_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether the remote devices in the cluster should be fetched during setup
+       * of multi-client cluster. If enabled, the workers will run an extra device
+       * information exchange step during startup and the workers' EagerContexts
+       * will become aware of remote devices in the cluster as well.
+       * </pre>
+       *
+       * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+       */
+      public Builder clearFetchRemoteDevicesInMultiClient() {
+        
+        fetchRemoteDevicesInMultiClient_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -3109,7 +3389,7 @@ private static final long serialVersionUID = 0L;
    * then there is exactly one intra op thread pool per process.
    * The first session created determines the number of threads in this pool.
    * All subsequent sessions reuse/share this one global pool.
-   * There are notable exceptions to the default behavior describe above:
+   * There are notable exceptions to the default behavior described above:
    * 1. There is an environment variable  for overriding this thread pool,
    *    named TF_OVERRIDE_GLOBAL_THREADPOOL.
    * 2. When connecting to a server, such as a remote `tf.train.Server`
@@ -4515,7 +4795,7 @@ private static final long serialVersionUID = 0L;
      * then there is exactly one intra op thread pool per process.
      * The first session created determines the number of threads in this pool.
      * All subsequent sessions reuse/share this one global pool.
-     * There are notable exceptions to the default behavior describe above:
+     * There are notable exceptions to the default behavior described above:
      * 1. There is an environment variable  for overriding this thread pool,
      *    named TF_OVERRIDE_GLOBAL_THREADPOOL.
      * 2. When connecting to a server, such as a remote `tf.train.Server`
@@ -4536,7 +4816,7 @@ private static final long serialVersionUID = 0L;
      * then there is exactly one intra op thread pool per process.
      * The first session created determines the number of threads in this pool.
      * All subsequent sessions reuse/share this one global pool.
-     * There are notable exceptions to the default behavior describe above:
+     * There are notable exceptions to the default behavior described above:
      * 1. There is an environment variable  for overriding this thread pool,
      *    named TF_OVERRIDE_GLOBAL_THREADPOOL.
      * 2. When connecting to a server, such as a remote `tf.train.Server`
@@ -4560,7 +4840,7 @@ private static final long serialVersionUID = 0L;
      * then there is exactly one intra op thread pool per process.
      * The first session created determines the number of threads in this pool.
      * All subsequent sessions reuse/share this one global pool.
-     * There are notable exceptions to the default behavior describe above:
+     * There are notable exceptions to the default behavior described above:
      * 1. There is an environment variable  for overriding this thread pool,
      *    named TF_OVERRIDE_GLOBAL_THREADPOOL.
      * 2. When connecting to a server, such as a remote `tf.train.Server`

@@ -64,9 +64,8 @@ public final class SparseMatrixSoftmax extends RawOp implements Operand<TType> {
   )
   public static <T extends TNumber> SparseMatrixSoftmax create(Scope scope,
       Operand<? extends TType> logits, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixSoftmax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseMatrixSoftmax");
     opBuilder.addInput(logits.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));
     return new SparseMatrixSoftmax(opBuilder.build());
   }

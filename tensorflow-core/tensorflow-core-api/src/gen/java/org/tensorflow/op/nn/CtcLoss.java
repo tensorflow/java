@@ -76,12 +76,11 @@ public final class CtcLoss<T extends TNumber> extends RawOp {
   public static <T extends TNumber> CtcLoss<T> create(Scope scope, Operand<T> inputs,
       Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CtcLoss"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CtcLoss");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
     opBuilder.addInput(labelsValues.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.preprocessCollapseRepeated != null) {

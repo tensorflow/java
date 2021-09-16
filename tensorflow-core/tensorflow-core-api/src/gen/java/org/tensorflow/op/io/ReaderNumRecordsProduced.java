@@ -62,9 +62,8 @@ public final class ReaderNumRecordsProduced extends RawOp implements Operand<TIn
   )
   public static ReaderNumRecordsProduced create(Scope scope,
       Operand<? extends TType> readerHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReaderNumRecordsProduced"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReaderNumRecordsProduced");
     opBuilder.addInput(readerHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ReaderNumRecordsProduced(opBuilder.build());
   }
 
