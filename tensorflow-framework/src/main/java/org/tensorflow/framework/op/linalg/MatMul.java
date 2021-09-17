@@ -238,9 +238,11 @@ public class MatMul {
         b = Conj.create(scope, b);
       }
       return org.tensorflow.op.linalg.MatMul.create(
-          lscope, a, b,
-              org.tensorflow.op.linalg.MatMul.transposeA(transposeA),
-              org.tensorflow.op.linalg.MatMul.transposeB(transposeB));
+          lscope,
+          a,
+          b,
+          org.tensorflow.op.linalg.MatMul.transposeA(transposeA),
+          org.tensorflow.op.linalg.MatMul.transposeB(transposeB));
     }
 
     // Neither matmul nor sparse_matmul support adjoint, so we conjugate
