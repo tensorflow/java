@@ -551,8 +551,13 @@ public class SavedModelBundle implements AutoCloseable {
     // Technically, init ops should be ran first, then variable restore, but that is not possible
     // since TF_Session.loadSessionFromSavedModel does it in reverse order, so we just mark them as
     // ran.
-    if(functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)){
-      String initOpName = functions.get(JAVA_INIT_OP_SIGNATURE_KEY).getOutputs().get(JAVA_INIT_OP_SIGNATURE_KEY).name;
+    if (functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
+      String initOpName =
+          functions
+              .get(JAVA_INIT_OP_SIGNATURE_KEY)
+              .getOutputs()
+              .get(JAVA_INIT_OP_SIGNATURE_KEY)
+              .name;
       graph.registerInitOp(graph.outputOrThrow(initOpName).op());
     }
 

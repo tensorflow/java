@@ -121,7 +121,7 @@ public class SavedModelBundleTest {
       }
     }
     try (SavedModelBundle model = SavedModelBundle.load(testFolder.toString())) {
-      assertEquals(2, model.signatures().size());
+      assertEquals(3, model.signatures().size());
       TensorFunction f1 = model.function(Signature.DEFAULT_KEY);
       assertNotNull(f1);
       try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
@@ -316,33 +316,6 @@ public class SavedModelBundleTest {
           assertEquals(2f, v.getFloat());
         }
       }
-    }
-  }
-
-  @Test
-  public void exportAndLoadInitializers() throws IOException {
-    Path testFolder = Files.createTempDirectory("tf-saved-model-export-test");
-    try (Graph g = new Graph();
-        Session s = new Session(g)) {
-      Ops tf = Ops.create(g);
-      Ops init = tf.withInitScope();
-      Operand<?> handle = init.withName("variable").varHandleOp(TInt32.class, Shape.scalar());
-      init.withName("init").assignVariableOp(handle, init.constant(10));
-
-      SessionFunction f =
-          SessionFunction.create(
-              Signature.builder()
-                  .key("f")
-                  .output("out", tf.withName("read").readVariableOp(handle, TInt32.class))
-                  .build(),
-              s);
-
-      SavedModelBundle.exporter(testFolder.toString()).withFunction(f).export();
-    }
-
-    try (SavedModelBundle savedModel = SavedModelBundle.load(testFolder.toString())) {
-      TInt32 tensor = (TInt32) savedModel.session().runner().fetch("read", 0).run().get(0);
-      assertEquals(10, tensor.getInt());
     }
   }
 
