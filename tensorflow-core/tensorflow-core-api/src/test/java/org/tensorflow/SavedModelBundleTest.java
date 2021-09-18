@@ -45,7 +45,6 @@ import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
 public class SavedModelBundleTest {
