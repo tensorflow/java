@@ -67,6 +67,7 @@ import org.tensorflow.proto.util.SaverDef;
 public class SavedModelBundle implements AutoCloseable {
 
   public static final String DEFAULT_TAG = "serve";
+  private static final String JAVA_INIT_OP_SIGNATURE_KEY = "__saved_model_java_init_op_tracker";
   private static final String INIT_OP_SIGNATURE_KEY = "__saved_model_init_op";
   private static final String MAIN_OP_COLLECTION_KEY = "saved_model_main_op";
   private static final String LEGACY_INIT_OP_COLLECTION_KEY = "legacy_init_op";
@@ -269,7 +270,7 @@ public class SavedModelBundle implements AutoCloseable {
       SaverDef saverDef = graph.saverDef();
 
       GraphOperation initOp = null;
-      if (!functions.containsKey(INIT_OP_SIGNATURE_KEY)) {
+      if (!functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
         initOp = graph.addInitOp(true);
       }
 
@@ -280,13 +281,13 @@ public class SavedModelBundle implements AutoCloseable {
               .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
-      if (!functions.containsKey(INIT_OP_SIGNATURE_KEY)) {
+      if (!functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
 
         metaGraphDef.putSignatureDef(
-            INIT_OP_SIGNATURE_KEY,
+            JAVA_INIT_OP_SIGNATURE_KEY,
             SignatureDef.newBuilder()
                 .putOutputs(
-                    INIT_OP_SIGNATURE_KEY,
+                    JAVA_INIT_OP_SIGNATURE_KEY,
                     TensorInfo.newBuilder().setName(initOp.name() + ":0").build())
                 .build());
       }
@@ -544,6 +545,17 @@ public class SavedModelBundle implements AutoCloseable {
     if (initOp != null) {
       graph.registerInitOp(initOp);
     }
+
+    // java init ops are marked as ran, since the variable restore will restore any state
+    // they mutated.
+    // Technically, init ops should be ran first, then variable restore, but that is not possible
+    // since TF_Session.loadSessionFromSavedModel does it in reverse order, so we just mark them as
+    // ran.
+    if(functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)){
+      String initOpName = functions.get(JAVA_INIT_OP_SIGNATURE_KEY).getOutputs().get(JAVA_INIT_OP_SIGNATURE_KEY).name;
+      graph.registerInitOp(graph.outputOrThrow(initOpName).op());
+    }
+
     session.setInitialized();
 
     if (metaGraphDef.containsCollectionDef(TABLE_INITIALIZERS_COLLECTION_KEY)) {
@@ -598,8 +610,6 @@ public class SavedModelBundle implements AutoCloseable {
       }
     }
     bundle.session.initialize();
-
-    //    bundle.session.restore(exportDir + "/variables/variables");
 
     return bundle;
   }
