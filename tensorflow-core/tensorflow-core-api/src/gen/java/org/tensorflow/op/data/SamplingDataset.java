@@ -27,6 +27,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -39,6 +40,9 @@ import org.tensorflow.types.family.TType;
  * {@code experimental_optimization.filter_with_random_uniform_fusion} option of
  * {@code tf.data.Options}.
  */
+@Operator(
+    group = "data"
+)
 public final class SamplingDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

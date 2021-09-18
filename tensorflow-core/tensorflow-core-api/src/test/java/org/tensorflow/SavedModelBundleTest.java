@@ -268,18 +268,15 @@ public class SavedModelBundleTest {
 
   @Test
   public void cannotExportOrImportInvalidTags() {
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.loader("/").withTags(null)
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.loader("/").withTags(new String[]{"tag", null})
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.exporter("/").withTags(null)
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.exporter("/").withTags(new String[]{"tag", null})
-    );
+    assertThrows(IllegalArgumentException.class, () -> SavedModelBundle.loader("/").withTags(null));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SavedModelBundle.loader("/").withTags(new String[] {"tag", null}));
+    assertThrows(
+        IllegalArgumentException.class, () -> SavedModelBundle.exporter("/").withTags(null));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SavedModelBundle.exporter("/").withTags(new String[] {"tag", null}));
   }
 
   @Test

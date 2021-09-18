@@ -42,8 +42,11 @@ import org.tensorflow.op.xla.Scatter;
 import org.tensorflow.op.xla.SelectAndScatter;
 import org.tensorflow.op.xla.SelfAdjointEig;
 import org.tensorflow.op.xla.Send;
+import org.tensorflow.op.xla.SetDynamicDimensionSize;
 import org.tensorflow.op.xla.Sharding;
 import org.tensorflow.op.xla.Sort;
+import org.tensorflow.op.xla.SpmdFullToShardShape;
+import org.tensorflow.op.xla.SpmdShardToFullShape;
 import org.tensorflow.op.xla.Svd;
 import org.tensorflow.op.xla.While;
 import org.tensorflow.op.xla.XlaHostCompute;
@@ -52,6 +55,7 @@ import org.tensorflow.op.xla.XlaRecvFromHost;
 import org.tensorflow.op.xla.XlaSendToHost;
 import org.tensorflow.op.xla.XlaSetBound;
 import org.tensorflow.op.xla.XlaVariadicReduce;
+import org.tensorflow.op.xla.XlaVariadicSort;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -106,7 +110,7 @@ public final class XlaOps {
    *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
    *  .
    *
-   * @param <T> data type for {@code output} output
+   * @param <W> data type for {@code output} output
    * @param lhs the input tensor
    * @param rhs the kernel tensor
    * @param windowStrides the inter-window strides
@@ -116,14 +120,16 @@ public final class XlaOps {
    * @param featureGroupCount number of feature groups for grouped convolution.
    * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
-   * @param <T> data type for {@code XlaConv} output and operands
-   * @param <U> data type for {@code XlaConv} output and operands
+   * @param preferredElementType The type of the tensor.
+   * @param <W> data type for {@code XlaConvV2} output and operands
+   * @param <V> data type for {@code XlaConvV2} output and operands
    * @return a new instance of Conv
    */
-  public <T extends TType, U extends TNumber> Conv<T> conv(Operand<T> lhs, Operand<T> rhs,
-      Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation, Operand<U> rhsDilation,
-      Operand<U> featureGroupCount, String dimensionNumbers, String precisionConfig) {
-    return Conv.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig);
+  public <W extends TType, V extends TNumber> Conv<W> conv(Operand<? extends TType> lhs,
+      Operand<? extends TType> rhs, Operand<V> windowStrides, Operand<V> padding,
+      Operand<V> lhsDilation, Operand<V> rhsDilation, Operand<V> featureGroupCount,
+      String dimensionNumbers, String precisionConfig, Class<W> preferredElementType) {
+    return Conv.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig, preferredElementType);
   }
 
   /**
@@ -148,17 +154,18 @@ public final class XlaOps {
    *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
    *  .
    *
-   * @param <T> data type for {@code output} output
+   * @param <V> data type for {@code output} output
    * @param lhs the LHS tensor
    * @param rhs the RHS tensor
    * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
-   * @param <T> data type for {@code XlaDot} output and operands
+   * @param preferredElementType The type of the tensor.
+   * @param <V> data type for {@code XlaDotV2} output and operands
    * @return a new instance of Dot
    */
-  public <T extends TType> Dot<T> dot(Operand<T> lhs, Operand<T> rhs, String dimensionNumbers,
-      String precisionConfig) {
-    return Dot.create(scope, lhs, rhs, dimensionNumbers, precisionConfig);
+  public <V extends TType> Dot<V> dot(Operand<? extends TType> lhs, Operand<? extends TType> rhs,
+      String dimensionNumbers, String precisionConfig, Class<V> preferredElementType) {
+    return Dot.create(scope, lhs, rhs, dimensionNumbers, precisionConfig, preferredElementType);
   }
 
   /**
@@ -474,6 +481,25 @@ public final class XlaOps {
   }
 
   /**
+   * Make a static dimension into a xla bounded dynamic dimension.
+   *  <pre>
+   *      The current static dimension size will become the bound and the second
+   *      operand becomes the dynamic size of the dimension.
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param dimIndex the dimIndex value
+   * @param sizeOutput the sizeOutput value
+   * @param <T> data type for {@code XlaSetDynamicDimensionSize} output and operands
+   * @return a new instance of SetDynamicDimensionSize
+   */
+  public <T extends TType> SetDynamicDimensionSize<T> setDynamicDimensionSize(Operand<T> input,
+      Operand<TInt32> dimIndex, Operand<TInt32> sizeOutput) {
+    return SetDynamicDimensionSize.create(scope, input, dimIndex, sizeOutput);
+  }
+
+  /**
    * An op which shards the input based on the given sharding attribute.
    *
    * @param <T> data type for {@code output} output
@@ -499,6 +525,42 @@ public final class XlaOps {
    */
   public <T extends TType> Sort<T> sort(Operand<T> input) {
     return Sort.create(scope, input);
+  }
+
+  /**
+   * An op used by XLA SPMD partitioner to switch from automatic partitioning to
+   *  manual partitioning. It annotates the input (full-shape, to be automatically
+   *  partitioned) with the same sharding used by manual partitioning, and outputs a
+   *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
+   *  shape is not evenly partitionable, the padding region will be masked with 0s.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param manualSharding the value of the manualSharding property
+   * @param <T> data type for {@code XlaSpmdFullToShardShape} output and operands
+   * @return a new instance of SpmdFullToShardShape
+   */
+  public <T extends TType> SpmdFullToShardShape<T> spmdFullToShardShape(Operand<T> input,
+      String manualSharding) {
+    return SpmdFullToShardShape.create(scope, input, manualSharding);
+  }
+
+  /**
+   * An op used by XLA SPMD partitioner to switch from manual partitioning to
+   *  automatic partitioning. It converts the shard-shaped, manually partitioned input
+   *  into full-shaped tensor to be partitioned automatically with the same sharding
+   *  used by manual partitioning.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param manualSharding the value of the manualSharding property
+   * @param fullShape the value of the fullShape property
+   * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
+   * @return a new instance of SpmdShardToFullShape
+   */
+  public <T extends TType> SpmdShardToFullShape<T> spmdShardToFullShape(Operand<T> input,
+      String manualSharding, Shape fullShape) {
+    return SpmdShardToFullShape.create(scope, input, manualSharding, fullShape);
   }
 
   /**
@@ -641,6 +703,26 @@ public final class XlaOps {
   public <T extends TType> XlaVariadicReduce<T> xlaVariadicReduce(Iterable<Operand<T>> input,
       Iterable<Operand<T>> initValue, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
     return XlaVariadicReduce.create(scope, input, initValue, dimensionsToReduce, reducer);
+  }
+
+  /**
+   * Wraps the XLA Sort operator, documented at
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
+   *  .
+   *  <p>Sorts one or more tensors, with support for custom comparator, dimension, and
+   *  is_stable attributes.
+   *
+   * @param inputs A list of {@code Tensor} of identical shape but possibly different types.
+   * @param dimension The dimension along which to sort. Must be a compile-time constant.
+   * @param comparator A comparator function to apply to 2*N scalars and returning a
+   *  boolean. N is the number of sort inputs. If you want to sort in ascending
+   *  order then the comparator should perform a less-than comparison.
+   * @param isStable Whether to use stable sort.
+   * @return a new instance of XlaVariadicSort
+   */
+  public XlaVariadicSort xlaVariadicSort(Iterable<Operand<?>> inputs, Operand<TInt32> dimension,
+      ConcreteFunction comparator, Boolean isStable) {
+    return XlaVariadicSort.create(scope, inputs, dimension, comparator, isStable);
   }
 
   /**

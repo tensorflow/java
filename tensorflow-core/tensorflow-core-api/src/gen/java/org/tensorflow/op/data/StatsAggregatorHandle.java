@@ -27,13 +27,13 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a statistics manager resource.
+ * The StatsAggregatorHandleV2 operation
  */
 public final class StatsAggregatorHandle extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "StatsAggregatorHandle";
+  public static final String OP_NAME = "StatsAggregatorHandleV2";
 
   private Output<? extends TType> handle;
 
@@ -45,7 +45,7 @@ public final class StatsAggregatorHandle extends RawOp implements Operand<TType>
   }
 
   /**
-   * Factory method to create a class wrapping a new StatsAggregatorHandle operation.
+   * Factory method to create a class wrapping a new StatsAggregatorHandleV2 operation.
    *
    * @param scope current scope
    * @param options carries optional attribute values

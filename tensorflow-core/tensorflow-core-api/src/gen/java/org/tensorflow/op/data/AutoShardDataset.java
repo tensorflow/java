@@ -27,6 +27,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -39,6 +40,9 @@ import org.tensorflow.types.family.TType;
  * <p>This dataset will throw a NotFound error if we cannot shard the dataset
  * automatically.
  */
+@Operator(
+    group = "data"
+)
 public final class AutoShardDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

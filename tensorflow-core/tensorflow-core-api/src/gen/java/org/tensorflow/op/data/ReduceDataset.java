@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.data;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -30,11 +30,15 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Reduces the input dataset to a singleton using a reduce function.
  */
+@Operator(
+    group = "data"
+)
 public final class ReduceDataset extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -121,7 +125,7 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ReduceDataset}
+   * Optional attributes for {@link org.tensorflow.op.data.ReduceDataset}
    */
   public static class Options {
     private Boolean useInterOpParallelism;
