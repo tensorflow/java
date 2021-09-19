@@ -23,14 +23,18 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.GradFunc;
 import org.tensorflow.internal.c_api.GradOpRegistry;
+import org.tensorflow.internal.c_api.NativeStatus;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -150,7 +154,16 @@ public final class TensorFlow {
   }
 
   // to keep them from getting GC'd
-  private static Set<GradFunc> gradientFuncs = Collections.newSetFromMap(new IdentityHashMap<>());
+  private static final Set<GradFunc> gradientFuncs =
+      Collections.newSetFromMap(new IdentityHashMap<>());
+
+  private static synchronized boolean hasGradient(String opType) {
+    try (PointerScope scope = new PointerScope()) {
+      NativeStatus status =
+          GradOpRegistry.Global().Lookup(opType, new GradFunc(new PointerPointer<>(1)));
+      return status.ok();
+    }
+  }
 
   /**
    * Register a custom gradient function for ops of {@code opType} type.
@@ -161,12 +174,18 @@ public final class TensorFlow {
    * @param opType the type of op to register the gradient for. Should usually be an {@code OP_NAME}
    *     field, i.e. {@link Add#OP_NAME}.
    * @param gradient the gradient function to use
+   * @return {@code true} if the gradient was registered, {@code false} if there was already a
+   *     gradient registered for this op
    */
-  public static synchronized void registerCustomGradient(
+  public static synchronized boolean registerCustomGradient(
       String opType, RawCustomGradient gradient) {
+    if (hasGradient(opType)) {
+      return false;
+    }
     GradFunc g = new RawGradientAdapter(gradient);
     GradOpRegistry.Global().Register(opType, g);
     gradientFuncs.add(g);
+    return true;
   }
 
   /**
@@ -175,13 +194,29 @@ public final class TensorFlow {
    *
    * @param opClass the class of op to register the gradient for.
    * @param gradient the gradient function to use
+   * @return {@code true} if the gradient was registered, {@code false} if there was already a
+   *     gradient registered for this op
+   * @throws IllegalArgumentException if {@code opClass} does not have a static {@code OP_NAME}
+   *     field.
    */
-  public static synchronized <T extends RawOp> void registerCustomGradient(
+  public static synchronized <T extends RawOp> boolean registerCustomGradient(
       Class<T> opClass, CustomGradient<T> gradient) {
     try {
-      String opName = (String) opClass.getDeclaredField("OP_NAME").get(null);
+      Field nameField = opClass.getDeclaredField("OP_NAME");
+
+      if (!Modifier.isStatic(nameField.getModifiers())) {
+        throw new IllegalArgumentException(
+            "Class " + opClass + " has an OP_NAME field, but it is not static.");
+      }
+
+      String opType = (String) nameField.get(null);
+
+      if (hasGradient(opType)) {
+        return false;
+      }
+
       GradFunc g = new TypedGradientAdapter<>(gradient, opClass);
-      GradOpRegistry.Global().Register(opName, g);
+      GradOpRegistry.Global().Register(opType, g);
       gradientFuncs.add(g);
     } catch (IllegalAccessException | NoSuchFieldException e) {
       throw new IllegalArgumentException(
@@ -190,5 +225,6 @@ public final class TensorFlow {
               + ", ensure it is a generated op class",
           e);
     }
+    return true;
   }
 }
