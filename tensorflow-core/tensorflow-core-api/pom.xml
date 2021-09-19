@@ -502,7 +502,7 @@
         <executions>
           <execution>
             <id>format-generated</id>
-            <phase>process-sources</phase>
+            <phase>process-classes</phase>
             <goals>
               <goal>apply</goal>
             </goals>
