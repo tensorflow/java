@@ -32,6 +32,8 @@ BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON
 # Always allow distinct host configuration since we rely on the host JVM for a few things (this was disabled by default on windows)
 BUILD_FLAGS="$BUILD_FLAGS --distinct_host_configuration=true"
 
+BUILD_FLAGS="--bazelrc=tensorflow.bazelrc $BUILD_FLAGS"
+
 # Build C/C++ API of TensorFlow itself including a target to generate ops for Java
 bazel build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
     @org_tensorflow//tensorflow:tensorflow_cc \
