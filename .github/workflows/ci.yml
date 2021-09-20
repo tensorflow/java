@@ -111,7 +111,7 @@ jobs:
           echo Installing CUDA
           curl -L https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda-repo-rhel7-11-2-local-11.2.2_460.32.03-1.x86_64.rpm -o $HOME/cuda.rpm
           curl -L https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.1.1.33/11.2_20210301/cudnn-11.2-linux-x64-v8.1.1.33.tgz -o $HOME/cudnn.tgz
-          curl -L https://developer.nvidia.com/compute/machine-learning/nccl/secure/2.8.4/rhel7/x86_64/nccl-local-repo-rhel7-2.8.4-cuda11.2-1.0-1.x86_64.rpm -o $HOME/nccl.txz
+          curl -L https://developer.nvidia.com/compute/machine-learning/nccl/secure/2.8.4/agnostic/x64/nccl_2.8.4-1+cuda11.2_x86_64.txz -o $HOME/nccl.txz
           rpm -i $HOME/cuda.rpm
           pushd /var/cuda-repo-rhel7-11-2-local/; rpm -i --nodeps cuda*.rpm libc*.rpm libn*.rpm; rm *.rpm; popd
           ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
