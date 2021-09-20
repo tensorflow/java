@@ -110,8 +110,8 @@ jobs:
           if [[ "${{ matrix.ext }}" == *-gpu ]]; then
           echo Installing CUDA
           curl -L https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda-repo-rhel7-11-2-local-11.2.2_460.32.03-1.x86_64.rpm -o $HOME/cuda.rpm
-          curl -L https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.1.1.33/11.2_20210301/cudnn-11.2-linux-x64-v8.1.1.33.tgz -o $HOME/cudnn.tgz
-          curl -L https://developer.nvidia.com/compute/machine-learning/nccl/secure/2.8.4/agnostic/x64/nccl_2.8.4-1+cuda11.2_x86_64.txz -o $HOME/nccl.txz
+          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.1.1/cudnn-11.2-linux-x64-v8.1.1.33.tgz -o $HOME/cudnn.tgz
+          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.8/nccl_2.8.4-1+cuda11.2_x86_64.txz -o $HOME/nccl.txz
           rpm -i $HOME/cuda.rpm
           pushd /var/cuda-repo-rhel7-11-2-local/; rpm -i --nodeps cuda*.rpm libc*.rpm libn*.rpm; rm *.rpm; popd
           ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
@@ -216,7 +216,7 @@ jobs:
             rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
             echo Installing CUDA
             curl.exe -L https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda_11.2.2_461.33_win10.exe -o cuda.exe
-            curl.exe -L https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.1.1.33/11.2_20210301/cudnn-11.2-windows-x64-v8.1.1.33.zip -o cudnn.zip
+            curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.1.1/cudnn-11.2-windows-x64-v8.1.1.33.zip -o cudnn.zip
             cuda.exe -s
             mkdir cuda
             unzip.exe cudnn.zip
