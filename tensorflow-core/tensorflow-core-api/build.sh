@@ -33,7 +33,7 @@ BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON
 BUILD_FLAGS="$BUILD_FLAGS --distinct_host_configuration=true"
 
 # Build C/C++ API of TensorFlow itself including a target to generate ops for Java
-bazel build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
+bazel --bazelrc=tensorflow.bazelrc build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
     @org_tensorflow//tensorflow:tensorflow_cc \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \

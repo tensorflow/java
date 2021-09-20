@@ -109,11 +109,11 @@ jobs:
           bash bazel.sh
           if [[ "${{ matrix.ext }}" == *-gpu ]]; then
           echo Installing CUDA
-          curl -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda-repo-rhel7-11-0-local-11.0.3_450.51.06-1.x86_64.rpm -o $HOME/cuda.rpm
-          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-linux-x64-v8.0.3.33.tgz -o $HOME/cudnn.tgz
-          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.7/nccl_2.7.8-1+cuda11.0_x86_64.txz -o $HOME/nccl.txz
+          curl -L https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda-repo-rhel7-11-2-local-11.2.2_460.32.03-1.x86_64.rpm -o $HOME/cuda.rpm
+          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.1.1/cudnn-11.2-linux-x64-v8.1.1.33.tgz -o $HOME/cudnn.tgz
+          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.8/nccl_2.8.4-1+cuda11.2_x86_64.txz -o $HOME/nccl.txz
           rpm -i $HOME/cuda.rpm
-          pushd /var/cuda-repo-rhel7-11-0-local/; rpm -i --nodeps cuda*.rpm libc*.rpm libn*.rpm; rm *.rpm; popd
+          pushd /var/cuda-repo-rhel7-11-2-local/; rpm -i --nodeps cuda*.rpm libc*.rpm libn*.rpm; rm *.rpm; popd
           ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
           ln -sf /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/libnvidia-ml.so
           tar hxvf $HOME/cudnn.tgz -C /usr/local/
@@ -215,12 +215,12 @@ jobs:
             echo Removing some unused stuff to avoid running out of disk space
             rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
             echo Installing CUDA
-            curl.exe -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda_11.0.3_451.82_win10.exe -o cuda.exe
-            curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-windows-x64-v8.0.3.33.zip -o cudnn.zip
+            curl.exe -L https://developer.download.nvidia.com/compute/cuda/11.2.2/local_installers/cuda_11.2.2_461.33_win10.exe -o cuda.exe
+            curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.1.1/cudnn-11.2-windows-x64-v8.1.1.33.zip -o cudnn.zip
             cuda.exe -s
             mkdir cuda
             unzip.exe cudnn.zip
-            cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/"
+            cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/"
           )
           echo %JAVA_HOME%
       - name: Checkout repository
@@ -229,9 +229,9 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          set "CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0"
-          set "CUDA_PATH_V11_0=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0"
-          set "PATH=C:\msys64\usr\bin;C:\bazel;C:\Program Files\Git\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0\libnvvp;%PATH%"
+          set "CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2"
+          set "CUDA_PATH_V11_2=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2"
+          set "PATH=C:\msys64\usr\bin;C:\bazel;C:\Program Files\Git\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2\libnvvp;%PATH%"
           echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
           set "TEST_TMPDIR=C:\tmp"
           set "TMPDIR=C:\tmp"
