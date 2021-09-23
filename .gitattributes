@@ -1,0 +1,12 @@
+*.java text eol=lf
+*.kt text eol=lf
+*.cc text eol=lf
+*.h text eol=lf
+*.pom text eol=lf
+
+*.md text eol=lf
+*.sh text eol=lf
+
+*.pbtxt text eol=lf
+
+*.pb binary
