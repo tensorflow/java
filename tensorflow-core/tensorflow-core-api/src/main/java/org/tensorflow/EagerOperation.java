@@ -118,6 +118,7 @@ class EagerOperation extends AbstractOperation {
 
   @Override
   Shape shape(int outputIndex) {
+
     // If the tensor of this output has already been resolved, return its shape.
     // Otherwise, retrieve the tensor shape from the native library.
     Tensor tensor = outputTensors.get(outputIndex);

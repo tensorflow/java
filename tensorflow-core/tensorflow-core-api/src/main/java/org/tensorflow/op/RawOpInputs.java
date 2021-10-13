@@ -23,6 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.GraphOperation;
+import org.tensorflow.OperationAttributeInspector;
 import org.tensorflow.proto.framework.AttrValue;
 
 /** A base class for operation input accessors. */
@@ -40,13 +41,13 @@ public abstract class RawOpInputs<T extends RawOp> {
 
   /**
    * Get the value of an attribute as an {@link AttrValue} proto. The type-safe accessors should be
-   * prefered when possible.
+   * preferred when possible.
    *
    * @param name the name of the attribute
    * @return the value of the attribute, as an {@link AttrValue} proto
    */
   public AttrValue attributeValue(String name) {
-    return op.getAttrValueProto(name);
+    return op.attributes().getAttrValueProto(name);
   }
 
   /** Get all attribute value protos */
@@ -65,7 +66,12 @@ public abstract class RawOpInputs<T extends RawOp> {
    * @return the attribute's metadata
    */
   public AttributeMetadata attributeMetadata(String name) {
-    return op.getAttrMetadata(name);
+    return op.attributes().getAttrMetadata(name);
+  }
+
+  /** Get an inspector for the operation's attributes. */
+  public OperationAttributeInspector attributes() {
+    return op.attributes();
   }
 
   @Override

@@ -18,22 +18,6 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorNumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorShape;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationAllInputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrBool;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrBoolList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrFloat;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrFloatList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrInt;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrIntList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrMetadata;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrShape;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrShapeList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrString;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrStringList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTensor;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTensorList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrType;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTypeList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlInputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInput;
@@ -49,30 +33,20 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutput
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputNumConsumers;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputType;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.IntPointer;
-import org.bytedeco.javacpp.LongPointer;
+import java.util.concurrent.atomic.AtomicReference;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.bytedeco.javacpp.SizeTPointer;
-import org.tensorflow.internal.c_api.TF_AttrMetadata;
-import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Input;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.AttributeMetadata;
-import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 
 /**
@@ -237,6 +211,15 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
+  private final AtomicReference<GraphOperationAttributeInspector> attrs =
+      new AtomicReference<>(null);
+
+  /** Get an inspector for the graph operation's attributes. */
+  public OperationAttributeInspector attributes() {
+    return attrs.updateAndGet(
+        (old) -> old == null ? new GraphOperationAttributeInspector(this) : old);
+  }
+
   /**
    * Get the input list that starts at {@code idx} and has length {@code length}
    *
@@ -384,168 +367,17 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
-  /**
-   * Get the value of a string attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public String getAttrString(String name) {
-    return getAttrString(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a string list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public String[] getAttrStringList(String name) {
-    return getAttrStringList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a int attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public long getAttrInt(String name) {
-    return getAttrInt(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a int list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public long[] getAttrIntList(String name) {
-    return getAttrIntList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a float attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public float getAttrFloat(String name) {
-    return getAttrFloat(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a float list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public float[] getAttrFloatList(String name) {
-    return getAttrFloatList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a boolean attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public boolean getAttrBool(String name) {
-    return getAttrBool(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a boolean list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public boolean[] getAttrBoolList(String name) {
-    return getAttrBoolList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a data type attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public DataType getAttrType(String name) {
-    return getAttrType(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a data type list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public DataType[] getAttrTypeList(String name) {
-    return getAttrTypeList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a tensor attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public Tensor getAttrTensor(String name) {
-    return getAttrTensor(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a tensor list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public Tensor[] getAttrTensorList(String name) {
-    return getAttrTensorList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a shape attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public Shape getAttrShape(String name) {
-    return getAttrShape(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of a shape list attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute
-   */
-  public Shape[] getAttrShapeList(String name) {
-    return getAttrShapeList(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the metadata of an attribute of this operation.
-   *
-   * @param name the name of the attribute
-   * @return the metadata of the attribute
-   */
-  public AttributeMetadata getAttrMetadata(String name) {
-    return getAttrMetadata(unsafeNativeHandle, name);
-  }
-
-  /**
-   * Get the value of an attribute of this operation as an {@link AttrValue} proto.
-   *
-   * @param name the name of the attribute
-   * @return the value of the attribute as an {@link AttrValue} proto
-   */
-  public AttrValue getAttrValueProto(String name) {
-    return getAttrValueProto(unsafeNativeHandle, name);
-  }
-
   TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
+  }
+
+  TF_Operation getCheckedNativeHandle() {
+    requireHandle(unsafeNativeHandle);
+    return unsafeNativeHandle;
+  }
+
+  Graph graph() {
+    return graph;
   }
 
   private final Graph graph;
@@ -641,273 +473,6 @@ public final class GraphOperation extends AbstractOperation {
 
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationOutputType(new TF_Output().oper(opHandle).index(outputIndex));
-    }
-  }
-
-  private static AttributeMetadata getAttrMetadata(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      TF_Status status = TF_Status.newStatus();
-      TF_AttrMetadata r = TF_OperationGetAttrMetadata(handle, name, status);
-      status.throwExceptionIfNotOK();
-      return new AttributeMetadata(r);
-    }
-  }
-
-  private static String getAttrString(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).totalSize;
-      BytePointer result = new BytePointer(size);
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrString(handle, name, result, size, status);
-      status.throwExceptionIfNotOK();
-      return result.getString();
-    }
-  }
-
-  private static String[] getAttrStringList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      AttributeMetadata metadata = getAttrMetadata(handle, name);
-      int listSize = (int) metadata.listSize;
-      long totalSize = metadata.totalSize;
-
-      PointerPointer<BytePointer> values = new PointerPointer<>(listSize);
-      SizeTPointer lengths = new SizeTPointer(listSize);
-      BytePointer storage = new BytePointer(totalSize);
-
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrStringList(
-          handle, new BytePointer(name), values, lengths, listSize, storage, totalSize, status);
-      status.throwExceptionIfNotOK();
-
-      String[] results = new String[listSize];
-
-      for (int i = 0; i < results.length; i++) {
-        int length = (int) lengths.get(i);
-
-        if (length == 0) {
-          results[i] = "";
-          continue;
-        }
-
-        byte[] bytes = new byte[length];
-        BytePointer p = values.get(BytePointer.class, i);
-        p.get(bytes);
-
-        results[i] = new String(bytes, StandardCharsets.UTF_8);
-      }
-
-      return results;
-    }
-  }
-
-  private static long getAttrInt(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long[] result = new long[1];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrInt(handle, name, result, status);
-      status.throwExceptionIfNotOK();
-      return result[0];
-    }
-  }
-
-  private static long[] getAttrIntList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).listSize;
-      long[] result = new long[(int) size];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrIntList(handle, name, result, result.length, status);
-      status.throwExceptionIfNotOK();
-      return result;
-    }
-  }
-
-  private static float getAttrFloat(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      float[] result = new float[1];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrFloat(handle, name, result, status);
-      status.throwExceptionIfNotOK();
-      return result[0];
-    }
-  }
-
-  private static float[] getAttrFloatList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).listSize;
-      float[] result = new float[(int) size];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrFloatList(handle, name, result, result.length, status);
-      status.throwExceptionIfNotOK();
-      return result;
-    }
-  }
-
-  private static boolean getAttrBool(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      byte[] result = new byte[1];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrBool(handle, name, result, status);
-      status.throwExceptionIfNotOK();
-      return result[0] == 1;
-    }
-  }
-
-  private static boolean[] getAttrBoolList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).listSize;
-      byte[] byteResults = new byte[(int) size];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrBoolList(handle, name, byteResults, byteResults.length, status);
-      status.throwExceptionIfNotOK();
-
-      boolean[] results = new boolean[byteResults.length];
-
-      for (int i = 0; i < results.length; i++) {
-        results[i] = byteResults[i] == 1;
-      }
-
-      return results;
-    }
-  }
-
-  private static DataType getAttrType(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      int[] result = new int[1];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrType(handle, name, result, status);
-      status.throwExceptionIfNotOK();
-      return DataType.forNumber(result[0]);
-    }
-  }
-
-  private static DataType[] getAttrTypeList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).listSize;
-      int[] typeInts = new int[(int) size];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrTypeList(handle, name, typeInts, typeInts.length, status);
-      status.throwExceptionIfNotOK();
-
-      DataType[] results = new DataType[typeInts.length];
-
-      for (int i = 0; i < results.length; i++) {
-        results[i] = DataType.forNumber(typeInts[i]);
-      }
-
-      return results;
-    }
-  }
-
-  private static Tensor getAttrTensor(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      PointerPointer<TF_Tensor> result = new PointerPointer<>(1);
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrTensor(handle, new BytePointer(name), result, status);
-      status.throwExceptionIfNotOK();
-      return RawTensor.fromHandle(result.get(TF_Tensor.class, 0).withDeallocator());
-    }
-  }
-
-  private static Tensor[] getAttrTensorList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).listSize;
-      PointerPointer<TF_Tensor> pointers = new PointerPointer<>(size);
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrTensorList(handle, new BytePointer(name), pointers, (int) size, status);
-      status.throwExceptionIfNotOK();
-
-      Tensor[] results = new Tensor[(int) size];
-      for (int i = 0; i < results.length; i++) {
-        results[i] = RawTensor.fromHandle(pointers.get(TF_Tensor.class, i).withDeallocator());
-      }
-
-      return results;
-    }
-  }
-
-  private static Shape getAttrShape(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).totalSize;
-
-      if (size == -1) {
-        return Shape.unknown();
-      }
-
-      long[] result = new long[(int) size];
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrShape(handle, name, result, result.length, status);
-      status.throwExceptionIfNotOK();
-      return Shape.of(result);
-    }
-  }
-
-  // TODO test
-  private static Shape[] getAttrShapeList(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      AttributeMetadata metadata = getAttrMetadata(handle, name);
-      int listSize = (int) metadata.listSize;
-      int totalSize = (int) metadata.totalSize;
-
-      PointerPointer<LongPointer> dimPointers = new PointerPointer<>(listSize);
-      IntPointer numDims = new IntPointer(listSize);
-      LongPointer storage = new LongPointer(totalSize);
-
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrShapeList(
-          handle,
-          new BytePointer(name),
-          dimPointers,
-          numDims,
-          listSize,
-          storage,
-          totalSize,
-          status);
-      status.throwExceptionIfNotOK();
-
-      Shape[] results = new Shape[listSize];
-
-      for (int i = 0; i < results.length; i++) {
-        int length = numDims.get(i);
-
-        if (length == -1) {
-          results[i] = Shape.unknown();
-          continue;
-        }
-
-        long[] shape = new long[length];
-        dimPointers.get(LongPointer.class, i).get(shape);
-        results[i] = Shape.of(shape);
-      }
-
-      return results;
-    }
-  }
-
-  private static AttrValue getAttrValueProto(TF_Operation handle, String name) {
-    requireHandle(handle);
-    try (PointerScope scope = new PointerScope()) {
-      TF_Buffer buffer = TF_Buffer.newBuffer();
-      TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrValueProto(handle, name, buffer, status);
-      status.throwExceptionIfNotOK();
-      return AttrValue.parseFrom(buffer.dataAsByteBuffer());
-    } catch (InvalidProtocolBufferException e) {
-      throw new IllegalStateException("Invalud protobuf for attribute " + name, e);
     }
   }
 }

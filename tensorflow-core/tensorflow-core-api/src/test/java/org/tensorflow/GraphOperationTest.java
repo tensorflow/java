@@ -282,19 +282,20 @@ public class GraphOperationTest {
       Operand<TString> barrier =
           tf.barrier(
               Arrays.asList(TInt32.class, TInt32.class),
-              Barrier.shapes(Shape.of(1, 2), Shape.of(3, 4)));
+              Barrier.shapes(new Shape[] {Shape.of(1, 2), Shape.of(3, 4)}));
 
       GraphOperation op1 = (GraphOperation) c.op();
 
-      assertEquals(0, op1.getAttrInt("output_slot"));
-      assertArrayEquals(new String[] {"a", "b"}, op1.getAttrStringList("debug_urls"));
+      assertEquals(0, op1.attributes().getAttrInt("output_slot"));
+      assertArrayEquals(new String[] {"a", "b"}, op1.attributes().getAttrStringList("debug_urls"));
 
       GraphOperation op2 = (GraphOperation) barrier.op();
       assertArrayEquals(
           new DataType[] {DataType.DT_INT32, DataType.DT_INT32},
-          op2.getAttrTypeList("component_types"));
+          op2.attributes().getAttrTypeList("component_types"));
       assertArrayEquals(
-          new Shape[] {Shape.of(1, 2), Shape.of(3, 4)}, op2.getAttrShapeList("shapes"));
+          new Shape[] {Shape.of(1, 2), Shape.of(3, 4)},
+          op2.attributes().getAttrShapeList("shapes"));
     }
   }
 }
