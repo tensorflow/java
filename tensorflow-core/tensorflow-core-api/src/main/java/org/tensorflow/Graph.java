@@ -541,20 +541,25 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
             });
   }
 
-  private synchronized void addInitOp() {
-    if (!newInitializers) {
-      return;
+  /**
+   * Create and return a NoOp that will run all init ops. If {@code required} is false and there are
+   * no new init ops since the last call, will do nothing and return null.
+   */
+  synchronized GraphOperation addInitOp(boolean required) {
+    if (!newInitializers && !required) {
+      return null;
     }
-    if (initializers.isEmpty()) {
-      return;
+    if (initializers.isEmpty() && !required) {
+      return null;
     }
 
     baseScope.refreshNames();
     OperationBuilder builder =
         baseScope().withInitScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
     initializers.forEach(builder::addControlInput);
-    builder.build();
+    GraphOperation initOp = (GraphOperation) builder.build();
     newInitializers = false;
+    return initOp;
   }
 
   /**
@@ -568,7 +573,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @see #importGraphDef(GraphDef, String)
    */
   public GraphDef toGraphDef() {
-    addInitOp();
+    addInitOp(false);
     synchronized (nativeHandleLock) {
       return toGraphDef(nativeHandle);
     }
@@ -1238,6 +1243,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   private static SaverDef addVariableSaver(Graph graph) {
     Ops tf = Ops.create(graph).withSubScope(SAVER_DEF_SCOPE);
+
+    // TODO handle resource variables, too
 
     List<String> varNames = new ArrayList<>();
     List<Operand<?>> varOutputs = new ArrayList<>();
