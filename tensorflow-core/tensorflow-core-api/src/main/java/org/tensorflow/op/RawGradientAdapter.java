@@ -54,7 +54,7 @@ public final class RawGradientAdapter extends GradFunc {
         throw new IllegalStateException("No graph found for native gradient scope.");
       }
 
-      Scope nativeScope = new NativeScope(scope, g);
+      Scope nativeScope = new GradientScope(scope, g);
       Ops tf = new Ops(nativeScope);
 
       List<Output<?>> gradInputs = GradientAdapterHelpers.fromNativeOutputs(g, grad_inputs);

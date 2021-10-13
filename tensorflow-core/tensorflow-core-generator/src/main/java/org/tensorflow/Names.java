@@ -71,7 +71,7 @@ public class Names {
       ClassName.get(TensorflowPackage, "ConcreteFunction");
 
   public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
-  public static final ClassName JavaScope = ClassName.get(OpPackage, "JavaScope");
+  public static final ClassName OpScope = ClassName.get(OpPackage, "OpScope");
   public static final TypeName DeviceSpec = ClassName.get(TensorflowPackage, "DeviceSpec");
   public static final ClassName Ops = ClassName.get(OpPackage, "Ops");
 

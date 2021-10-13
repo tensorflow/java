@@ -22,7 +22,7 @@ import org.tensorflow.EagerSession;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.op.JavaScope;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -35,7 +35,7 @@ public class ShapesTest {
   public void testFlatten_Operand() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> reshaped =
@@ -57,7 +57,7 @@ public class ShapesTest {
   @Test
   public void testFlatten_Shape() {
     try (EagerSession session = EagerSession.create()) {
-      Scope scope = new JavaScope(session);
+      Scope scope = new OpScope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Shape<TInt64> expShape = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> actual =
@@ -79,7 +79,7 @@ public class ShapesTest {
   public void testSize_Shape() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
@@ -98,7 +98,7 @@ public class ShapesTest {
   public void testSize_Shape_Operand() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
@@ -126,7 +126,7 @@ public class ShapesTest {
   public void testSize_Operand_Operand() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
@@ -153,7 +153,7 @@ public class ShapesTest {
   public void testNumDimensions() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
@@ -170,7 +170,7 @@ public class ShapesTest {
   @Test
   public void testReduceDims_Operand_Operand() {
     try (EagerSession session = EagerSession.create()) {
-      Scope scope = new JavaScope(session);
+      Scope scope = new OpScope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {2, 2, 2}));
@@ -195,7 +195,7 @@ public class ShapesTest {
   @Test
   public void testReduceDims_Shape_Operand() {
     try (EagerSession session = EagerSession.create()) {
-      Scope scope = new JavaScope(session);
+      Scope scope = new OpScope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {2, 2, 2}));
@@ -247,7 +247,7 @@ public class ShapesTest {
   public void testSqueeze() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -272,7 +272,7 @@ public class ShapesTest {
   public void testHead() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -297,7 +297,7 @@ public class ShapesTest {
   public void testTake() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -322,7 +322,7 @@ public class ShapesTest {
   public void testTail() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -347,7 +347,7 @@ public class ShapesTest {
   public void testTakeLast() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -372,7 +372,7 @@ public class ShapesTest {
   public void testPrependInt() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -397,7 +397,7 @@ public class ShapesTest {
   public void testPrependLong() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -422,7 +422,7 @@ public class ShapesTest {
   public void testPrependShapeTInt32() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -451,7 +451,7 @@ public class ShapesTest {
   public void testPrependShapeTInt64() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -480,7 +480,7 @@ public class ShapesTest {
   public void testAppendLong() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -505,7 +505,7 @@ public class ShapesTest {
   public void testAppendInt() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -530,7 +530,7 @@ public class ShapesTest {
   public void testAppendShapeTInt32() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -559,7 +559,7 @@ public class ShapesTest {
   public void testAppendShapeTInt64() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));

@@ -25,7 +25,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.JavaScope;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
@@ -36,7 +36,7 @@ public class BooleanMaskUpdateTest {
   public void testBooleanMaskUpdateSlice() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
 
       Operand<TInt32> input =
           Constant.tensorOf(scope, new int[][] {{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
@@ -75,7 +75,7 @@ public class BooleanMaskUpdateTest {
   public void testBooleanMaskUpdateSliceWithBroadcast() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
 
       Operand<TInt32> input =
           Constant.tensorOf(scope, new int[][] {{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
@@ -114,7 +114,7 @@ public class BooleanMaskUpdateTest {
   public void testBooleanMaskUpdateAxis() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
 
       Operand<TInt32> input =
           Constant.tensorOf(scope, new int[][][] {{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}});

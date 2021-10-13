@@ -29,7 +29,7 @@ import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.TF_Scope;
 
 /** A {@link Scope} implementation backed by a native scope. Only used for gradient declarations. */
-public final class NativeScope implements Scope {
+public final class GradientScope implements Scope {
 
   @Override
   public ExecutionEnvironment env() {
@@ -37,23 +37,23 @@ public final class NativeScope implements Scope {
   }
 
   @Override
-  public NativeScope withSubScope(String childScopeName) {
-    return new NativeScope(nativeScope.NewSubScope(childScopeName), graph, childScopeName);
+  public GradientScope withSubScope(String childScopeName) {
+    return new GradientScope(nativeScope.NewSubScope(childScopeName), graph, childScopeName);
   }
 
   @Override
-  public NativeScope withName(String opName) {
-    return new NativeScope(nativeScope, graph, opName);
+  public GradientScope withName(String opName) {
+    return new GradientScope(nativeScope, graph, opName);
   }
 
   @Override
-  public NativeScope withNameAsSubScope(String defaultName) {
+  public GradientScope withNameAsSubScope(String defaultName) {
     return withSubScope(opName);
   }
 
   @Override
-  public NativeScope withDevice(DeviceSpec deviceSpec) {
-    return new NativeScope(nativeScope.WithDevice(deviceSpec.toString()), graph);
+  public GradientScope withDevice(DeviceSpec deviceSpec) {
+    return new GradientScope(nativeScope.WithDevice(deviceSpec.toString()), graph);
   }
 
   @Override
@@ -76,7 +76,7 @@ public final class NativeScope implements Scope {
   public void refreshNames() {}
 
   @Override
-  public NativeScope withControlDependencies(Iterable<Op> controls) {
+  public GradientScope withControlDependencies(Iterable<Op> controls) {
     List<Op> controlDeps =
         StreamSupport.stream(controls.spliterator(), false).collect(Collectors.toList());
     NativeOperation ops = new NativeOperation(controlDeps.size());
@@ -90,7 +90,7 @@ public final class NativeScope implements Scope {
           .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
     }
 
-    return new NativeScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
+    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
   }
 
   @Override
@@ -108,7 +108,7 @@ public final class NativeScope implements Scope {
           .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
     }
 
-    return new NativeScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
+    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
   }
 
   @Override
@@ -129,11 +129,11 @@ public final class NativeScope implements Scope {
     return false;
   }
 
-  NativeScope(TF_Scope nativeScope, Graph graph) {
+  GradientScope(TF_Scope nativeScope, Graph graph) {
     this(nativeScope, graph, null);
   }
 
-  private NativeScope(TF_Scope nativeScope, Graph graph, String opName) {
+  private GradientScope(TF_Scope nativeScope, Graph graph, String opName) {
     this.graph = graph;
     this.nativeScope = nativeScope;
     this.opName = opName;

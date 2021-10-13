@@ -26,14 +26,14 @@ import org.tensorflow.OperationBuilder;
  * A Java implementation of {@link Scope}. This is used in all cases except custom gradient
  * definitions.
  */
-public final class JavaScope implements Scope {
+public final class OpScope implements Scope {
 
   /**
    * Create a new top-level scope.
    *
    * @param env The execution environment used by the scope.
    */
-  public JavaScope(ExecutionEnvironment env) {
+  public OpScope(ExecutionEnvironment env) {
     this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build(), false);
   }
 
@@ -43,19 +43,19 @@ public final class JavaScope implements Scope {
   }
 
   @Override
-  public JavaScope withSubScope(String childScopeName) {
-    return new JavaScope(
+  public OpScope withSubScope(String childScopeName) {
+    return new OpScope(
         env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec, isInit);
   }
 
   @Override
-  public JavaScope withName(String opName) {
-    return new JavaScope(env, nameScope.withName(opName), controlDependencies, deviceSpec, isInit);
+  public OpScope withName(String opName) {
+    return new OpScope(env, nameScope.withName(opName), controlDependencies, deviceSpec, isInit);
   }
 
   @Override
-  public JavaScope withNameAsSubScope(String defaultName) {
-    return new JavaScope(
+  public OpScope withNameAsSubScope(String defaultName) {
+    return new OpScope(
         env,
         nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
         controlDependencies,
@@ -64,13 +64,13 @@ public final class JavaScope implements Scope {
   }
 
   @Override
-  public JavaScope withDevice(DeviceSpec deviceSpec) {
-    return new JavaScope(env, nameScope, controlDependencies, deviceSpec, isInit);
+  public OpScope withDevice(DeviceSpec deviceSpec) {
+    return new OpScope(env, nameScope, controlDependencies, deviceSpec, isInit);
   }
 
   @Override
-  public JavaScope withInitScope() {
-    return new JavaScope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
+  public OpScope withInitScope() {
+    return new OpScope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
   }
 
   @Override
@@ -88,7 +88,7 @@ public final class JavaScope implements Scope {
     nameScope.importIdsFrom(env);
   }
 
-  private JavaScope(
+  private OpScope(
       ExecutionEnvironment env,
       NameScope nameScope,
       List<Operation> controlDependencies,
@@ -114,7 +114,7 @@ public final class JavaScope implements Scope {
       }
     }
 
-    return new JavaScope(env, nameScope, toAdd, deviceSpec, isInit);
+    return new OpScope(env, nameScope, toAdd, deviceSpec, isInit);
   }
 
   @Override

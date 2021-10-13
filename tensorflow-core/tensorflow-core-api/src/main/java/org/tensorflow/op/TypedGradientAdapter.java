@@ -61,7 +61,7 @@ public final class TypedGradientAdapter<T extends RawOp> extends GradFunc {
         throw new IllegalStateException("No graph found for native gradient scope.");
       }
 
-      Scope nativeScope = new NativeScope(scope, g);
+      Scope nativeScope = new GradientScope(scope, g);
 
       Ops tf = new Ops(nativeScope);
 

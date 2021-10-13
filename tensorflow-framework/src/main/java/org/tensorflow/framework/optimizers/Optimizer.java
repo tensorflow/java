@@ -25,7 +25,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
-import org.tensorflow.op.JavaScope;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
@@ -281,7 +281,7 @@ public abstract class Optimizer {
    * @return A NoOp with a control dependency on each update operation.
    */
   protected Op finish(List<Op> updateOperations, String name) {
-    Scope scope = new JavaScope(graph);
+    Scope scope = new OpScope(graph);
     scope = scope.withName(name);
     scope = scope.withControlDependencies(updateOperations);
     return NoOp.create(scope);

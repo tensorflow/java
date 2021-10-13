@@ -23,7 +23,7 @@ import org.tensorflow.Session;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.ndarray.index.Indices;
-import org.tensorflow.op.JavaScope;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 
@@ -59,7 +59,7 @@ public class IndexingTest {
   public void testStridedSliceIndex() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {10, 10, 10, 10, 10, 10, 10, 10};
       Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.class);
       StridedSlice<TFloat32> output = StridedSliceHelper.stridedSlice(scope, op, slice);

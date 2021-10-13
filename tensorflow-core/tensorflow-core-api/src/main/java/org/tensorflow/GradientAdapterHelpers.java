@@ -23,18 +23,18 @@ import org.tensorflow.internal.c_api.NativeOutput;
 import org.tensorflow.internal.c_api.NativeOutputVector;
 import org.tensorflow.internal.c_api.Node;
 import org.tensorflow.internal.c_api.TF_Operation;
+import org.tensorflow.op.RawGradientAdapter;
+import org.tensorflow.op.TypedGradientAdapter;
 
-/**
- * Helpers for {@link org.tensorflow.op.TypedGradientAdapter} and {@link
- * org.tensorflow.op.RawGradientAdapter}.
- */
+/** Helpers for {@link TypedGradientAdapter} and {@link RawGradientAdapter}. */
 public class GradientAdapterHelpers {
 
   /**
-   * Convert a array of native outputs to a list of {@link Output}s.
+   * Convert an array of native outputs to a list of {@link Output}s.
    *
    * @param g the graph the outputs are in
    * @param nativeOutputs the native outputs to convert
+   * @return a list of Outputs
    */
   public static List<Output<?>> fromNativeOutputs(Graph g, NativeOutputVector nativeOutputs) {
     List<Output<?>> gradInputs = new ArrayList<>((int) nativeOutputs.size());

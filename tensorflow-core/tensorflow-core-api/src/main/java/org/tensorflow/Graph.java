@@ -57,8 +57,8 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Constant;
@@ -90,7 +90,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
-    this.baseScope = new JavaScope(this);
+    this.baseScope = new OpScope(this);
     allGraphs.add(this);
   }
 
@@ -375,6 +375,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
    * @param name to refer to the created Operation in the graph.
+   * @param scope the scope to use for the operation
    * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
@@ -1309,7 +1310,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .build();
   }
 
-  private static Set<Graph> allGraphs = Collections.newSetFromMap(new WeakHashMap<>());
+  private static Set<Graph> allGraphs =
+      Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
   /**
    * Find the graph with the matching underlying native pointer.

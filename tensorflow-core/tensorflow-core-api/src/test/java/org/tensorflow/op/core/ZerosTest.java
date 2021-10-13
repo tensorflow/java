@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
-import org.tensorflow.op.JavaScope;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
@@ -39,7 +39,7 @@ public class ZerosTest {
   public void createIntZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TInt32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt32.class);
       try (TInt32 result = (TInt32) sess.runner().fetch(op).run().get(0)) {
@@ -52,7 +52,7 @@ public class ZerosTest {
   public void createFloatZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.class);
       try (TFloat32 result = (TFloat32) sess.runner().fetch(op.asOutput()).run().get(0)) {
@@ -65,7 +65,7 @@ public class ZerosTest {
   public void createDoubleZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TFloat64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat64.class);
       try (TFloat64 result = (TFloat64) sess.runner().fetch(op.asOutput()).run().get(0)) {
@@ -78,7 +78,7 @@ public class ZerosTest {
   public void createLongZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TInt64> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TInt64.class);
       try (TInt64 result = (TInt64) sess.runner().fetch(op.asOutput()).run().get(0)) {
@@ -91,7 +91,7 @@ public class ZerosTest {
   public void createBooleanZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TBool> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TBool.class);
       try (TBool result = (TBool) sess.runner().fetch(op.asOutput()).run().get(0)) {
@@ -104,7 +104,7 @@ public class ZerosTest {
   public void createUint8Zeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TUint8> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TUint8.class);
       try (TUint8 result = (TUint8) sess.runner().fetch(op.asOutput()).run().get(0)) {
@@ -117,7 +117,7 @@ public class ZerosTest {
   public void createStringZeros() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TString> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TString.class);
       try (TString result = (TString) sess.runner().fetch(op.asOutput()).run().get(0)) {
@@ -130,7 +130,7 @@ public class ZerosTest {
   public void operationsComposingZerosAreCorrectlyNamed() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new JavaScope(g);
+      Scope scope = new OpScope(g);
       long[] shape = {2, 2};
       Zeros<TFloat32> zeros =
           Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.class);
