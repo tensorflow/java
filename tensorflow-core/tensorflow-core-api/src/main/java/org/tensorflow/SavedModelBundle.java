@@ -67,10 +67,30 @@ import org.tensorflow.proto.util.SaverDef;
 public class SavedModelBundle implements AutoCloseable {
 
   public static final String DEFAULT_TAG = "serve";
+
+  /** Signature used to track Java init ops, for our init scope. */
   private static final String JAVA_INIT_OP_SIGNATURE_KEY = "__saved_model_java_init_op_tracker";
+
+  /**
+   * Tensorflow init op tracking signature. Init ops are executed before loading variables, so this
+   * does not work for us.
+   */
   private static final String INIT_OP_SIGNATURE_KEY = "__saved_model_init_op";
+
+  /**
+   * A backup Tensorflow init op collection key. In TF1, init ops will be stored in collections
+   * instead of signatures.
+   */
   private static final String MAIN_OP_COLLECTION_KEY = "saved_model_main_op";
+
+  /**
+   * An even more legacy init op collection key.
+   */
   private static final String LEGACY_INIT_OP_COLLECTION_KEY = "legacy_init_op";
+
+  /**
+   * The collection where table initializers are stored in some hub models.
+   */
   private static final String TABLE_INITIALIZERS_COLLECTION_KEY = "table_initializer";
 
   /** Options for loading a SavedModel. */
