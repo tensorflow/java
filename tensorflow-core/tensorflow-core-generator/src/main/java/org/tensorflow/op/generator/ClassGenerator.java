@@ -992,7 +992,7 @@ final class ClassGenerator {
                 .addJavadoc("$L", description)
                 .build());
         fieldInits.addStatement(
-            "$L = op.getAttr$L($S)",
+            "$L = op.attributes().getAttr$L($S)",
             name,
             type.attributeType.getterName(type.iterable),
             attr.getName());
