@@ -22,9 +22,7 @@ import org.tensorflow.op.AttributeMetadata;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 
-/**
- * Helper type for attribute getters, so we don't clutter the operation classes too much.
- */
+/** Helper type for attribute getters, so we don't clutter the operation classes too much. */
 public interface OperationAttributeInspector {
 
   /**
