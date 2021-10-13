@@ -83,14 +83,10 @@ public class SavedModelBundle implements AutoCloseable {
    */
   private static final String MAIN_OP_COLLECTION_KEY = "saved_model_main_op";
 
-  /**
-   * An even more legacy init op collection key.
-   */
+  /** An even more legacy init op collection key. */
   private static final String LEGACY_INIT_OP_COLLECTION_KEY = "legacy_init_op";
 
-  /**
-   * The collection where table initializers are stored in some hub models.
-   */
+  /** The collection where table initializers are stored in some hub models. */
   private static final String TABLE_INITIALIZERS_COLLECTION_KEY = "table_initializer";
 
   /** Options for loading a SavedModel. */
@@ -410,9 +406,13 @@ public class SavedModelBundle implements AutoCloseable {
 
   /** Return the signature of all functions available in this saved model. */
   public List<Signature> signatures() {
+    // the init signatures aren't actual functions, just markers
     return functions.values().stream()
         .map(SessionFunction::signature)
-        .filter(signature -> !signature.key().equals(INIT_OP_SIGNATURE_KEY))
+        .filter(
+            signature ->
+                !signature.key().equals(INIT_OP_SIGNATURE_KEY)
+                    && !signature.key().equals(JAVA_INIT_OP_SIGNATURE_KEY))
         .collect(Collectors.toList());
   }
 
