@@ -18,6 +18,7 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorNumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorShape;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationAllInputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationDevice;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlInputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInput;
@@ -184,6 +185,11 @@ public final class GraphOperation extends AbstractOperation {
   @Override
   Tensor tensor(int outputIdx) {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");
+  }
+
+  /** Get the op's device. */
+  public String device() {
+    return TF_OperationDevice(getCheckedNativeHandle()).getString();
   }
 
   /** Get the number of inputs to the op, not including control inputs. */
