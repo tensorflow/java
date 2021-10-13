@@ -17,8 +17,8 @@ package org.tensorflow.framework.op;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
-import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 

@@ -220,6 +220,7 @@ final class ClassGenerator {
     if (!isStateSelector) {
       builder.addModifiers(Modifier.FINAL);
       builder.superclass(Names.RawOp);
+      addMetadataAnnotation();
     }
 
     if (isStateSubclass) {
@@ -1030,5 +1031,13 @@ final class ClassGenerator {
     inputsBuilder.addMethod(ctor.build());
     inputsBuilder.addTypeVariables(typeVars);
     this.builder.addType(inputsBuilder.build());
+  }
+
+  /** Adds the GeneratedOpMetadata annotation */
+  private void addMetadataAnnotation() {
+    builder.addAnnotation(
+        AnnotationSpec.builder(Names.GeneratedOpMetadata)
+            .addMember("opType", "$L", className + ".OP_NAME")
+            .build());
   }
 }
