@@ -36,7 +36,7 @@ public class CustomGradientTest {
   public void testAlreadyExisting() {
     assertFalse(
         TensorFlow.registerCustomGradient(
-            Cast.class,
+            Cast.Inputs.class,
             (tf, op, gradInputs) -> {
               Operand<?> out = gradInputs.get(0);
               Operand<?> a = tf.stridedSlice(out, Indices.slice(0, 1));
@@ -51,7 +51,7 @@ public class CustomGradientTest {
         Session s = new Session(g)) {
       assertTrue(
           TensorFlow.registerCustomGradient(
-              NthElement.class,
+              NthElement.Inputs.class,
               (tf, op, gradInputs) -> Arrays.asList(tf.constant(0f), tf.constant(0f))));
 
       Ops tf = Ops.create(g);

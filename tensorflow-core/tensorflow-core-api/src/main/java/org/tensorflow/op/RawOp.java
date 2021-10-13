@@ -59,8 +59,19 @@ public abstract class RawOp implements Op {
    * Constructor.
    *
    * @param operation the underlying operation
+   * @param requiredType the type that the underlying operation must be
    */
-  protected RawOp(Operation operation) {
+  protected RawOp(Operation operation, String requiredType) {
+    if (!requiredType.equals(operation.type())) {
+      throw new IllegalArgumentException(
+          "Can't create a "
+              + this.getClass()
+              + " from an operation with type \""
+              + operation.type()
+              + "\", operation must have type \""
+              + requiredType
+              + "\".");
+    }
     this.operation = operation;
   }
 }

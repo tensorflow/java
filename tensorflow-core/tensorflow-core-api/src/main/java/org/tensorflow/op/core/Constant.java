@@ -1356,7 +1356,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   }
 
   private Constant(Operation operation) {
-    super(operation);
+    super(operation, OP_NAME);
     output = operation.output(0);
   }
 

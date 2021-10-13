@@ -12,7 +12,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-==============================================================================
+=======================================================================
+
 */
 package org.tensorflow.op;
 
@@ -22,11 +23,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.GradientAdapterHelpers;
+import org.tensorflow.BaseGradientAdapter;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.internal.c_api.GradFunc;
 import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.NativeOutputVector;
 import org.tensorflow.internal.c_api.NativeStatus;
@@ -34,19 +34,18 @@ import org.tensorflow.internal.c_api.TF_Scope;
 import org.tensorflow.internal.c_api.TF_Status;
 
 /** A native adapter for {@link CustomGradient}. */
-public final class TypedGradientAdapter<T extends RawOp> extends GradFunc {
+final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientAdapter {
 
   private final CustomGradient<T> gradient;
-  private final Class<T> opClass;
+  private final Class<T> opInputClass;
   private final Constructor<T> ctor;
 
-  public TypedGradientAdapter(CustomGradient<T> gradient, Class<T> opClass) {
+  TypedGradientAdapter(CustomGradient<T> gradient, Class<T> opInputClass) {
     super();
     this.gradient = gradient;
-    this.opClass = opClass;
+    this.opInputClass = opInputClass;
     //noinspection unchecked
-    this.ctor = (Constructor<T>) opClass.getDeclaredConstructors()[0];
-    ctor.setAccessible(true);
+    this.ctor = (Constructor<T>) this.opInputClass.getDeclaredConstructors()[0];
   }
 
   @Override
@@ -65,18 +64,19 @@ public final class TypedGradientAdapter<T extends RawOp> extends GradFunc {
 
       Ops tf = new Ops(nativeScope);
 
-      List<Output<?>> gradInputs = GradientAdapterHelpers.fromNativeOutputs(g, grad_inputs);
+      List<Output<?>> gradInputs = BaseGradientAdapter.fromNativeOutputs(g, grad_inputs);
 
-      T rawOp = ctor.newInstance(GradientAdapterHelpers.getGraphOp(g, op.node()));
+      T rawOp = ctor.newInstance(BaseGradientAdapter.getGraphOp(g, op.node()));
 
-      GradientAdapterHelpers.useDangerousLockedBuilders(g, true);
+      BaseGradientAdapter.useDangerousLockedBuilders(g, true);
       List<Operand<?>> gradOutputs = gradient.call(tf, rawOp, gradInputs);
-      GradientAdapterHelpers.useDangerousLockedBuilders(g, false);
+      BaseGradientAdapter.useDangerousLockedBuilders(g, false);
 
-      GradientAdapterHelpers.putToNativeOutputs(gradOutputs, grad_outputs);
+      BaseGradientAdapter.putToNativeOutputs(gradOutputs, grad_outputs);
 
     } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      RuntimeException re = new RuntimeException("Could not instantiate Op class " + opClass, e);
+      RuntimeException re =
+          new RuntimeException("Could not instantiate Op class " + opInputClass, e);
       re.printStackTrace();
       throw re;
     } catch (Throwable t) {

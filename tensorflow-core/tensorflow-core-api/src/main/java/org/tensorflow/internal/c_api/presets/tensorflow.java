@@ -57,7 +57,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow_adapters.h",
             "tensorflow/c/eager/c_api.h",
             "tensorflow/c/eager/c_api_experimental.h",
-                                "tensorflow/cc/framework/scope.h",
+            "tensorflow/cc/framework/scope.h",
             "tensorflow/cc/framework/grad_op_registry.h",
             "tensorflow/core/platform/status.h",
             "tensorflow/core/graph/graph.h",
@@ -395,15 +395,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             new Info("TF_ImportGraphDefOptions")
                 .pointerTypes("TF_ImportGraphDefOptions")
                 .base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
-        .put(
-            new Info(
-                    "TF_WhileParams")
-                .purify())
+        .put(new Info("TF_WhileParams").purify())
         .put(new Info("TF_Operation").purify())
         .put(
             new Info("TF_Operation::node")
                 .javaText("public native @MemberGetter @ByRef Node node();"))
-
         .put(
             new Info("TFE_Context")
                 .pointerTypes("TFE_Context")

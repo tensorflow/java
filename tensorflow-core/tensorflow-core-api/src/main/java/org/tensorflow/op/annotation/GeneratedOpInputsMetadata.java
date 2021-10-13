@@ -21,7 +21,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.tensorflow.op.RawOpInputs;
+import org.tensorflow.op.RawOp;
 
 /**
  * An annotation that should only be used by codegeneration. Used to provide some metadata about the
@@ -31,9 +31,6 @@ import org.tensorflow.op.RawOpInputs;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GeneratedOpMetadata {
-  String opType();
-
-  @SuppressWarnings("rawtypes")
-  Class<? extends RawOpInputs> inputsClass();
+public @interface GeneratedOpInputsMetadata {
+  Class<? extends RawOp> outputsClass();
 }

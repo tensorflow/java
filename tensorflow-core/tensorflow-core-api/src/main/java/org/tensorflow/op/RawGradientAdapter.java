@@ -12,7 +12,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-==============================================================================
+=======================================================================
+
 */
 package org.tensorflow.op;
 
@@ -20,12 +21,11 @@ import static org.tensorflow.internal.c_api.global.tensorflow.StatusFromTF_Statu
 
 import java.util.List;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.GradientAdapterHelpers;
+import org.tensorflow.BaseGradientAdapter;
 import org.tensorflow.Graph;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.internal.c_api.GradFunc;
 import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.NativeOutputVector;
 import org.tensorflow.internal.c_api.NativeStatus;
@@ -33,11 +33,11 @@ import org.tensorflow.internal.c_api.TF_Scope;
 import org.tensorflow.internal.c_api.TF_Status;
 
 /** A native adapter for {@link RawCustomGradient}. */
-public final class RawGradientAdapter extends GradFunc {
+final class RawGradientAdapter extends BaseGradientAdapter {
 
   private final RawCustomGradient gradient;
 
-  public RawGradientAdapter(RawCustomGradient gradient) {
+  RawGradientAdapter(RawCustomGradient gradient) {
     super();
     this.gradient = gradient;
   }
@@ -57,15 +57,15 @@ public final class RawGradientAdapter extends GradFunc {
       Scope nativeScope = new GradientScope(scope, g);
       Ops tf = new Ops(nativeScope);
 
-      List<Output<?>> gradInputs = GradientAdapterHelpers.fromNativeOutputs(g, grad_inputs);
+      List<Output<?>> gradInputs = BaseGradientAdapter.fromNativeOutputs(g, grad_inputs);
 
-      GraphOperation operation = GradientAdapterHelpers.getGraphOp(g, op.node());
+      GraphOperation operation = BaseGradientAdapter.getGraphOp(g, op.node());
 
-      GradientAdapterHelpers.useDangerousLockedBuilders(g, true);
+      BaseGradientAdapter.useDangerousLockedBuilders(g, true);
       List<Operand<?>> gradOutputs = gradient.call(tf, operation, gradInputs);
-      GradientAdapterHelpers.useDangerousLockedBuilders(g, false);
+      BaseGradientAdapter.useDangerousLockedBuilders(g, false);
 
-      GradientAdapterHelpers.putToNativeOutputs(gradOutputs, grad_outputs);
+      BaseGradientAdapter.putToNativeOutputs(gradOutputs, grad_outputs);
     } catch (Throwable t) {
       t.printStackTrace();
       throw t;

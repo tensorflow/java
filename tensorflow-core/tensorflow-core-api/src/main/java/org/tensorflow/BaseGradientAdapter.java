@@ -19,15 +19,14 @@ package org.tensorflow;
 import java.util.ArrayList;
 import java.util.List;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.GradFunc;
 import org.tensorflow.internal.c_api.NativeOutput;
 import org.tensorflow.internal.c_api.NativeOutputVector;
 import org.tensorflow.internal.c_api.Node;
 import org.tensorflow.internal.c_api.TF_Operation;
-import org.tensorflow.op.RawGradientAdapter;
-import org.tensorflow.op.TypedGradientAdapter;
 
-/** Helpers for {@link TypedGradientAdapter} and {@link RawGradientAdapter}. */
-public class GradientAdapterHelpers {
+/** Helper base class for custom gradient adapters <b>INTERNAL USE ONLY</b> */
+public abstract class BaseGradientAdapter extends GradFunc {
 
   /**
    * Convert an array of native outputs to a list of {@link Output}s.
@@ -36,7 +35,7 @@ public class GradientAdapterHelpers {
    * @param nativeOutputs the native outputs to convert
    * @return a list of Outputs
    */
-  public static List<Output<?>> fromNativeOutputs(Graph g, NativeOutputVector nativeOutputs) {
+  protected static List<Output<?>> fromNativeOutputs(Graph g, NativeOutputVector nativeOutputs) {
     List<Output<?>> gradInputs = new ArrayList<>((int) nativeOutputs.size());
     for (int i = 0; i < nativeOutputs.size(); i++) {
       NativeOutput output = nativeOutputs.get(i);
@@ -51,7 +50,7 @@ public class GradientAdapterHelpers {
    * @param outputs the outputs to put
    * @param nativeOutputs the native array to put the outputs into
    */
-  public static void putToNativeOutputs(
+  protected static void putToNativeOutputs(
       List<Operand<?>> outputs, NativeOutputVector nativeOutputs) {
     nativeOutputs.resize(outputs.size());
     for (int i = 0; i < outputs.size(); i++) {
@@ -68,14 +67,14 @@ public class GradientAdapterHelpers {
    * @param node the native node
    * @return a graph operation with the underlying native node
    */
-  public static GraphOperation getGraphOp(Graph g, Node node) {
+  protected static GraphOperation getGraphOp(Graph g, Node node) {
     try (PointerScope scope = new PointerScope();
         Graph.Reference ref = g.ref()) {
       return new GraphOperation(g, new TF_Operation(node));
     }
   }
 
-  public static void useDangerousLockedBuilders(Graph g, boolean dangerous) {
+  protected static void useDangerousLockedBuilders(Graph g, boolean dangerous) {
     g.setDangerousGradientBuilder(dangerous);
   }
 }

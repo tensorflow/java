@@ -18,17 +18,29 @@ package org.tensorflow.op;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.Operand;
 import org.tensorflow.Output;
+import org.tensorflow.op.math.Add;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link RawOp} */
 public class RawOpTest {
+
+  @Test
+  public void wrongOpType() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Operand<TInt32> a = tf.constant(10);
+      assertThrows(IllegalArgumentException.class, () -> new Add<TInt32>(a.op()));
+    }
+  }
 
   @Test
   public void equalsHashcode() {
@@ -38,10 +50,10 @@ public class RawOpTest {
       Output<TInt32> array = tf.constant(new int[2]).asOutput();
 
       RawOp test1 =
-          new RawOp(g.baseScope().opBuilder("Shape", "shape1").addInput(array).build()) {};
+          new RawOp(g.baseScope().opBuilder("Shape", "shape1").addInput(array).build(), "Shape") {};
       RawOp test2 =
-          new RawOp(g.baseScope().opBuilder("Shape", "shape2").addInput(array).build()) {};
-      RawOp test3 = new RawOp(test1.operation) {};
+          new RawOp(g.baseScope().opBuilder("Shape", "shape2").addInput(array).build(), "Shape") {};
+      RawOp test3 = new RawOp(test1.operation, test1.operation.type()) {};
 
       // equals() tests
       assertNotEquals(test1, test2);

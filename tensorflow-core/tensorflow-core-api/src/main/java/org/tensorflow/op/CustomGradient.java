@@ -20,6 +20,7 @@ import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.TensorFlow;
+import org.tensorflow.internal.c_api.GradFunc;
 
 /**
  * A custom gradient for ops of type {@link T}. Should be registered using {@link
@@ -27,8 +28,9 @@ import org.tensorflow.TensorFlow;
  *
  * @param <T> the type of op this gradient is for.
  */
+@SuppressWarnings("rawtypes")
 @FunctionalInterface
-public interface CustomGradient<T extends RawOp> {
+public interface CustomGradient<T extends RawOpInputs> {
 
   /**
    * Calculate the gradients for {@code op}.
@@ -39,4 +41,15 @@ public interface CustomGradient<T extends RawOp> {
    * @return the gradients of the op's inputs.
    */
   List<Operand<?>> call(Ops tf, T op, List<Output<?>> gradInputs);
+
+  /**
+   * Create an adapter for the custom gradient so that it can be used by native code.
+   *
+   * <p>You should not be calling this yourself, use {@link TensorFlow#registerCustomGradient(Class,
+   * CustomGradient)}.
+   */
+  public static <T extends RawOpInputs<?>> GradFunc adapter(
+      CustomGradient<T> gradient, Class<T> opClass) {
+    return new TypedGradientAdapter<T>(gradient, opClass);
+  }
 }
