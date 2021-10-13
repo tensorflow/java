@@ -120,7 +120,7 @@ public class SavedModelBundleTest {
       }
     }
     try (SavedModelBundle model = SavedModelBundle.load(testFolder.toString())) {
-      assertEquals(3, model.signatures().size());
+      assertEquals(2, model.signatures().size());
       TensorFunction f1 = model.function(Signature.DEFAULT_KEY);
       assertNotNull(f1);
       try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
