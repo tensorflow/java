@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -137,6 +141,50 @@ public final class SparseReduceMax<T extends TNumber> extends RawOp implements O
     public Options keepDims(Boolean keepDims) {
       this.keepDims = keepDims;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<SparseReduceMax<T>> {
+    /**
+     * 2-D.  {@code N x R} matrix with the indices of non-empty values in a
+     * SparseTensor, possibly not in canonical ordering.
+     */
+    public final Operand<TInt64> inputIndices;
+
+    /**
+     * 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
+     */
+    public final Operand<T> inputValues;
+
+    /**
+     * 1-D.  Shape of the input SparseTensor.
+     */
+    public final Operand<TInt64> inputShape;
+
+    /**
+     * 1-D.  Length-{@code K} vector containing the reduction axes.
+     */
+    public final Operand<TInt32> reductionAxes;
+
+    /**
+     * If true, retain reduced dimensions with length 1.
+     */
+    public final boolean keepDims;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseReduceMax<>(op), op, Arrays.asList("keep_dims", "T"));
+      int inputIndex = 0;
+      inputIndices = (Operand<TInt64>) op.input(inputIndex++);
+      inputValues = (Operand<T>) op.input(inputIndex++);
+      inputShape = (Operand<TInt64>) op.input(inputIndex++);
+      reductionAxes = (Operand<TInt32>) op.input(inputIndex++);
+      keepDims = op.attributes().getAttrBool("keep_dims");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

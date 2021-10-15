@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -59,5 +63,30 @@ public final class AssignVariableOp extends RawOp {
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
     return new AssignVariableOp(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<AssignVariableOp> {
+    /**
+     * handle to the resource in which to store the variable.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * the value to set the new tensor to use.
+     */
+    public final Operand<? extends TType> value;
+
+    /**
+     * the dtype of the value.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new AssignVariableOp(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      value = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

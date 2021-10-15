@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -52,7 +56,7 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
    *
    * @param scope current scope
    * @param input A CSRSparseMatrix.
-   * @param type the value of the type property
+   * @param type The value of the type attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code SparseMatrixTranspose} output and operands
    * @return a new instance of SparseMatrixTranspose
@@ -118,6 +122,31 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
     public Options conjugate(Boolean conjugate) {
       this.conjugate = conjugate;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SparseMatrixTranspose> {
+    /**
+     * A CSRSparseMatrix.
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * Indicates whether `input` should be conjugated.
+     */
+    public final boolean conjugate;
+
+    /**
+     * The type attribute
+     */
+    public final DataType type;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseMatrixTranspose(op), op, Arrays.asList("conjugate", "type"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      conjugate = op.attributes().getAttrBool("conjugate");
+      type = op.attributes().getAttrType("type");
     }
   }
 }

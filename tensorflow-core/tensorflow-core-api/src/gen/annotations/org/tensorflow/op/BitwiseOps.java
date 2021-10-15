@@ -62,8 +62,8 @@ public final class BitwiseOps {
    *  </pre>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code BitwiseAnd} output and operands
    * @return a new instance of BitwiseAnd
    */
@@ -92,8 +92,8 @@ public final class BitwiseOps {
    *  </pre>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code BitwiseOr} output and operands
    * @return a new instance of BitwiseOr
    */
@@ -122,8 +122,8 @@ public final class BitwiseOps {
    *  </pre>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code BitwiseXor} output and operands
    * @return a new instance of BitwiseXor
    */
@@ -173,7 +173,7 @@ public final class BitwiseOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Invert} output and operands
    * @return a new instance of Invert
    */
@@ -213,8 +213,8 @@ public final class BitwiseOps {
    *  </pre>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code LeftShift} output and operands
    * @return a new instance of LeftShift
    */
@@ -256,8 +256,8 @@ public final class BitwiseOps {
    *  </pre>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code RightShift} output and operands
    * @return a new instance of RightShift
    */

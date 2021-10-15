@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -150,6 +154,93 @@ public final class ResourceApplyAdam extends RawOp {
     public Options useNesterov(Boolean useNesterov) {
       this.useNesterov = useNesterov;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyAdam> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> var;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> m;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> v;
+
+    /**
+     * Must be a scalar.
+     */
+    public final Operand<T> beta1Power;
+
+    /**
+     * Must be a scalar.
+     */
+    public final Operand<T> beta2Power;
+
+    /**
+     * Scaling factor. Must be a scalar.
+     */
+    public final Operand<T> lr;
+
+    /**
+     * Momentum factor. Must be a scalar.
+     */
+    public final Operand<T> beta1;
+
+    /**
+     * Momentum factor. Must be a scalar.
+     */
+    public final Operand<T> beta2;
+
+    /**
+     * Ridge term. Must be a scalar.
+     */
+    public final Operand<T> epsilon;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If `True`, updating of the var, m, and v tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     */
+    public final boolean useLocking;
+
+    /**
+     * If `True`, uses the nesterov update.
+     */
+    public final boolean useNesterov;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceApplyAdam(op), op, Arrays.asList("T", "use_locking", "use_nesterov"));
+      int inputIndex = 0;
+      var = (Operand<? extends TType>) op.input(inputIndex++);
+      m = (Operand<? extends TType>) op.input(inputIndex++);
+      v = (Operand<? extends TType>) op.input(inputIndex++);
+      beta1Power = (Operand<T>) op.input(inputIndex++);
+      beta2Power = (Operand<T>) op.input(inputIndex++);
+      lr = (Operand<T>) op.input(inputIndex++);
+      beta1 = (Operand<T>) op.input(inputIndex++);
+      beta2 = (Operand<T>) op.input(inputIndex++);
+      epsilon = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      useLocking = op.attributes().getAttrBool("use_locking");
+      useNesterov = op.attributes().getAttrBool("use_nesterov");
     }
   }
 }

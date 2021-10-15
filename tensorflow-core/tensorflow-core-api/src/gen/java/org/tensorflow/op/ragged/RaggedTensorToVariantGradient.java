@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -60,7 +64,7 @@ public final class RaggedTensorToVariantGradient<U extends TType> extends RawOp 
    * @param rowSplits Outermost row-splits that were used as input to the RaggedTensorToVariant op.
    * @param denseValuesShape Shape of the dense_values that was used as an input to the
    * RaggedTensorToVariant op.
-   * @param Tvalues the value of the Tvalues property
+   * @param Tvalues The value of the Tvalues attribute
    * @param <U> data type for {@code RaggedTensorToVariantGradient} output and operands
    * @return a new instance of RaggedTensorToVariantGradient
    */
@@ -90,5 +94,43 @@ public final class RaggedTensorToVariantGradient<U extends TType> extends RawOp 
   @Override
   public Output<U> asOutput() {
     return denseValuesGrad;
+  }
+
+  public static class Inputs extends RawOpInputs<RaggedTensorToVariantGradient<?>> {
+    /**
+     * A {@code variant} Tensor containing encoded {@code RaggedTensor} gradients.
+     */
+    public final Operand<? extends TType> encodedRaggedGrad;
+
+    /**
+     * Outermost row-splits that were used as input to the RaggedTensorToVariant op.
+     */
+    public final Operand<? extends TNumber> rowSplits;
+
+    /**
+     * Shape of the dense_values that was used as an input to the
+     * RaggedTensorToVariant op.
+     */
+    public final Operand<TInt32> denseValuesShape;
+
+    /**
+     * The Tvalues attribute
+     */
+    public final DataType Tvalues;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedTensorToVariantGradient<>(op), op, Arrays.asList("Tvalues", "Tsplits"));
+      int inputIndex = 0;
+      encodedRaggedGrad = (Operand<? extends TType>) op.input(inputIndex++);
+      rowSplits = (Operand<? extends TNumber>) op.input(inputIndex++);
+      denseValuesShape = (Operand<TInt32>) op.input(inputIndex++);
+      Tvalues = op.attributes().getAttrType("Tvalues");
+      Tsplits = op.attributes().getAttrType("Tsplits");
+    }
   }
 }

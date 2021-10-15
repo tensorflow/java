@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -70,7 +74,7 @@ public final class DenseToDenseSetOperation<T extends TType> extends RawOp {
    * Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
    * @param set2 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set1}.
    * Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
-   * @param setOperation the value of the setOperation property
+   * @param setOperation The value of the setOperation attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code DenseToDenseSetOperation} output and operands
    * @return a new instance of DenseToDenseSetOperation
@@ -151,6 +155,45 @@ public final class DenseToDenseSetOperation<T extends TType> extends RawOp {
     public Options validateIndices(Boolean validateIndices) {
       this.validateIndices = validateIndices;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<DenseToDenseSetOperation<T>> {
+    /**
+     * {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set2}.
+     * Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
+     */
+    public final Operand<T> set1;
+
+    /**
+     * {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set1}.
+     * Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
+     */
+    public final Operand<T> set2;
+
+    /**
+     * The setOperation attribute
+     */
+    public final String setOperation;
+
+    /**
+     * The validateIndices attribute
+     */
+    public final boolean validateIndices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new DenseToDenseSetOperation<>(op), op, Arrays.asList("set_operation", "validate_indices", "T"));
+      int inputIndex = 0;
+      set1 = (Operand<T>) op.input(inputIndex++);
+      set2 = (Operand<T>) op.input(inputIndex++);
+      setOperation = op.attributes().getAttrString("set_operation");
+      validateIndices = op.attributes().getAttrBool("validate_indices");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

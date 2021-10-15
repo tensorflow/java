@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -101,5 +105,30 @@ public final class IsotonicRegression<U extends TNumber> extends RawOp {
    */
   public Output<TInt32> segments() {
     return segments;
+  }
+
+  public static class Inputs extends RawOpInputs<IsotonicRegression<?>> {
+    /**
+     * A (batch_size, dim)-tensor holding a batch of inputs.
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Dtype of output.
+     */
+    public final DataType outputDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new IsotonicRegression<>(op), op, Arrays.asList("T", "output_dtype"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      outputDtype = op.attributes().getAttrType("output_dtype");
+    }
   }
 }

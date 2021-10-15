@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -113,5 +117,31 @@ public final class SparseAccumulatorTakeGradient<T extends TType> extends RawOp 
    */
   public Output<TInt64> shape() {
     return shape;
+  }
+
+  public static class Inputs extends RawOpInputs<SparseAccumulatorTakeGradient<?>> {
+    /**
+     * The handle to a SparseConditionalAccumulator.
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * Number of gradients required before we return an aggregate.
+     */
+    public final Operand<TInt32> numRequired;
+
+    /**
+     * The data type of accumulated gradients. Needs to correspond to the type
+     * of the accumulator.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseAccumulatorTakeGradient<>(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      numRequired = (Operand<TInt32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

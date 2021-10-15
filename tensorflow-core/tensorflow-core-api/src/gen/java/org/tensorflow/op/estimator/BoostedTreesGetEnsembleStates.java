@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt32;
@@ -118,5 +121,18 @@ public final class BoostedTreesGetEnsembleStates extends RawOp {
    */
   public Output<TInt32> lastLayerNodesRange() {
     return lastLayerNodesRange;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesGetEnsembleStates> {
+    /**
+     * Handle to the tree ensemble.
+     */
+    public final Operand<? extends TType> treeEnsembleHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesGetEnsembleStates(op), op, Arrays.asList());
+      int inputIndex = 0;
+      treeEnsembleHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

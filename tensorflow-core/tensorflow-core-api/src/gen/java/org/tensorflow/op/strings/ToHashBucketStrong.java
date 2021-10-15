@@ -17,12 +17,15 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -107,5 +110,31 @@ public final class ToHashBucketStrong extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<ToHashBucketStrong> {
+    /**
+     * The strings to assign a hash bucket.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * The number of buckets.
+     */
+    public final long numBuckets;
+
+    /**
+     * The key used to seed the hash function, passed as a list of two uint64
+     * elements.
+     */
+    public final long[] key;
+
+    public Inputs(GraphOperation op) {
+      super(new ToHashBucketStrong(op), op, Arrays.asList("num_buckets", "key"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      numBuckets = op.attributes().getAttrInt("num_buckets");
+      key = op.attributes().getAttrIntList("key");
+    }
   }
 }

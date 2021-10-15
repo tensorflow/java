@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -56,7 +60,7 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new BatchSelfAdjointEigV2 operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchSelfAdjointEigV2} output and operands
    * @return a new instance of BatchSelfAdjointEig
@@ -124,6 +128,31 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
     public Options computeV(Boolean computeV) {
       this.computeV = computeV;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<BatchSelfAdjointEig<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The computeV attribute
+     */
+    public final boolean computeV;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchSelfAdjointEig<>(op), op, Arrays.asList("compute_v", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      computeV = op.attributes().getAttrBool("compute_v");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

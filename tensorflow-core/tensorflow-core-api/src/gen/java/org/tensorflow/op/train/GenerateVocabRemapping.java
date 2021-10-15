@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -157,6 +160,44 @@ public final class GenerateVocabRemapping extends RawOp {
     public Options oldVocabSize(Long oldVocabSize) {
       this.oldVocabSize = oldVocabSize;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<GenerateVocabRemapping> {
+    /**
+     * Path to the new vocab file.
+     */
+    public final Operand<TString> newVocabFile;
+
+    /**
+     * Path to the old vocab file.
+     */
+    public final Operand<TString> oldVocabFile;
+
+    /**
+     * How many entries into the new vocab file to start reading.
+     */
+    public final long newVocabOffset;
+
+    /**
+     * Number of entries in the new vocab file to remap.
+     */
+    public final long numNewVocab;
+
+    /**
+     * Number of entries in the old vocab file to consider.  If -1,
+     * use the entire old vocabulary.
+     */
+    public final long oldVocabSize;
+
+    public Inputs(GraphOperation op) {
+      super(new GenerateVocabRemapping(op), op, Arrays.asList("new_vocab_offset", "num_new_vocab", "old_vocab_size"));
+      int inputIndex = 0;
+      newVocabFile = (Operand<TString>) op.input(inputIndex++);
+      oldVocabFile = (Operand<TString>) op.input(inputIndex++);
+      newVocabOffset = op.attributes().getAttrInt("new_vocab_offset");
+      numNewVocab = op.attributes().getAttrInt("num_new_vocab");
+      oldVocabSize = op.attributes().getAttrInt("old_vocab_size");
     }
   }
 }

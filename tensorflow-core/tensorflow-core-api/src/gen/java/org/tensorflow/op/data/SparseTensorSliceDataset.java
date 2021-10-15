@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -53,9 +57,9 @@ public final class SparseTensorSliceDataset extends RawOp implements Operand<TTy
    * Factory method to create a class wrapping a new SparseTensorSliceDataset operation.
    *
    * @param scope current scope
-   * @param indices the indices value
-   * @param values the values value
-   * @param denseShape the denseShape value
+   * @param indices The indices value
+   * @param values The values value
+   * @param denseShape The denseShape value
    * @return a new instance of SparseTensorSliceDataset
    */
   @Endpoint(
@@ -83,5 +87,36 @@ public final class SparseTensorSliceDataset extends RawOp implements Operand<TTy
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<SparseTensorSliceDataset> {
+    /**
+     * The indices input
+     */
+    public final Operand<TInt64> indices;
+
+    /**
+     * The values input
+     */
+    public final Operand<? extends TType> values;
+
+    /**
+     * The denseShape input
+     */
+    public final Operand<TInt64> denseShape;
+
+    /**
+     * The Tvalues attribute
+     */
+    public final DataType Tvalues;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseTensorSliceDataset(op), op, Arrays.asList("Tvalues"));
+      int inputIndex = 0;
+      indices = (Operand<TInt64>) op.input(inputIndex++);
+      values = (Operand<? extends TType>) op.input(inputIndex++);
+      denseShape = (Operand<TInt64>) op.input(inputIndex++);
+      Tvalues = op.attributes().getAttrType("Tvalues");
+    }
   }
 }

@@ -150,7 +150,7 @@ public final class MathOps {
    *  an output element, this operation computes \(y = |x|\).
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Abs} output and operands
    * @return a new instance of Abs
    */
@@ -183,7 +183,7 @@ public final class MathOps {
    *  <p>Input range is {@code [-1, 1]} and the output has a range of {@code [0, pi]}.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Acos} output and operands
    * @return a new instance of Acos
    */
@@ -201,7 +201,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Acosh} output and operands
    * @return a new instance of Acosh
    */
@@ -217,8 +217,8 @@ public final class MathOps {
    *  <p>Both input and output have a range {@code (-inf, inf)}.
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Add} output and operands
    * @return a new instance of Add
    */
@@ -235,7 +235,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code sum} output
-   * @param inputs the inputs value
+   * @param inputs The inputs value
    * @param <T> data type for {@code AddN} output and operands
    * @return a new instance of AddN
    */
@@ -260,7 +260,7 @@ public final class MathOps {
    *  <br>{@literal @}end_compatibility
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of Angle, with default output types
    */
   public Angle<TFloat32> angle(Operand<? extends TType> input) {
@@ -284,8 +284,8 @@ public final class MathOps {
    *  <br>{@literal @}end_compatibility
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param Tout the value of the Tout property
+   * @param input The input value
+   * @param Tout The value of the Tout attribute
    * @param <U> data type for {@code Angle} output and operands
    * @return a new instance of Angle
    */
@@ -296,8 +296,8 @@ public final class MathOps {
   /**
    * Returns the truth value of abs(x-y) &lt; tolerance element-wise.
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param options carries optional attribute values
    * @param <T> data type for {@code ApproximateEqual} output and operands
    * @return a new instance of ApproximateEqual
@@ -321,7 +321,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <V> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    *  Describes which dimension of the input Tensor to reduce across. For vectors,
    *  use dimension = 0.
@@ -346,11 +346,11 @@ public final class MathOps {
    *  </pre>
    *
    * @param <V> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    *  Describes which dimension of the input Tensor to reduce across. For vectors,
    *  use dimension = 0.
-   * @param outputType the value of the outputType property
+   * @param outputType The value of the outputType attribute
    * @param <V> data type for {@code ArgMax} output and operands
    * @return a new instance of ArgMax
    */
@@ -373,7 +373,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <V> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    *  Describes which dimension of the input Tensor to reduce across. For vectors,
    *  use dimension = 0.
@@ -398,11 +398,11 @@ public final class MathOps {
    *  </pre>
    *
    * @param <V> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    *  Describes which dimension of the input Tensor to reduce across. For vectors,
    *  use dimension = 0.
-   * @param outputType the value of the outputType property
+   * @param outputType The value of the outputType attribute
    * @param <V> data type for {@code ArgMin} output and operands
    * @return a new instance of ArgMin
    */
@@ -427,7 +427,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Asin} output and operands
    * @return a new instance of Asin
    */
@@ -446,7 +446,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Asinh} output and operands
    * @return a new instance of Asinh
    */
@@ -470,7 +470,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Atan} output and operands
    * @return a new instance of Atan
    */
@@ -498,8 +498,8 @@ public final class MathOps {
    *  </blockquote>
    *
    * @param <T> data type for {@code z} output
-   * @param y the y value
-   * @param x the x value
+   * @param y The y value
+   * @param x The x value
    * @param <T> data type for {@code Atan2} output and operands
    * @return a new instance of Atan2
    */
@@ -520,7 +520,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Atanh} output and operands
    * @return a new instance of Atanh
    */
@@ -538,9 +538,9 @@ public final class MathOps {
    *  beta function.
    *
    * @param <T> data type for {@code z} output
-   * @param a the a value
-   * @param b the b value
-   * @param x the x value
+   * @param a The a value
+   * @param b The b value
+   * @param x The x value
    * @param <T> data type for {@code Betainc} output and operands
    * @return a new instance of Betainc
    */
@@ -575,7 +575,7 @@ public final class MathOps {
    * Returns element-wise smallest integer not less than x.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Ceil} output and operands
    * @return a new instance of Ceil
    */
@@ -601,7 +601,7 @@ public final class MathOps {
    *  </blockquote>
    *
    * @param <U> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of ComplexAbs, with default output types
    */
   public ComplexAbs<TFloat32> complexAbs(Operand<? extends TType> x) {
@@ -626,8 +626,8 @@ public final class MathOps {
    *  </blockquote>
    *
    * @param <U> data type for {@code y} output
-   * @param x the x value
-   * @param Tout the value of the Tout property
+   * @param x The x value
+   * @param Tout The value of the Tout attribute
    * @param <U> data type for {@code ComplexAbs} output and operands
    * @return a new instance of ComplexAbs
    */
@@ -649,7 +649,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code Conj} output and operands
    * @return a new instance of Conj
    */
@@ -669,7 +669,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Cos} output and operands
    * @return a new instance of Cos
    */
@@ -688,7 +688,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Cosh} output and operands
    * @return a new instance of Cosh
    */
@@ -802,7 +802,7 @@ public final class MathOps {
    *  {@code Gamma(x)}), element-wise.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Digamma} output and operands
    * @return a new instance of Digamma
    */
@@ -816,8 +816,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Div} output and operands
    * @return a new instance of Div
    */
@@ -831,8 +831,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code DivNoNan} output and operands
    * @return a new instance of DivNoNan
    */
@@ -854,8 +854,8 @@ public final class MathOps {
    *  tf.math.equal(x, y) ==&gt; array([True,  True])
    *  </pre>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param options carries optional attribute values
    * @param <T> data type for {@code Equal} output and operands
    * @return a new instance of Equal
@@ -868,7 +868,7 @@ public final class MathOps {
    * Computes the  <a href="https://en.wikipedia.org/wiki/Error_function">Gauss error function</a>  of {@code x} element-wise. In statistics, for non-negative values of $x$, the error function has the following interpretation: for a random variable $Y$ that is normally distributed with mean 0 and variance $1/\sqrt{2}$, $erf(x)$ is the probability that $Y$ falls in the range $[−x, x]$.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Erf} output and operands
    * @return a new instance of Erf
    */
@@ -880,7 +880,7 @@ public final class MathOps {
    * Computes the complementary error function of {@code x} element-wise.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Erfc} output and operands
    * @return a new instance of Erfc
    */
@@ -892,7 +892,7 @@ public final class MathOps {
    * The Erfinv operation
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Erfinv} output and operands
    * @return a new instance of erfinv
    */
@@ -925,7 +925,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Exp} output and operands
    * @return a new instance of Exp
    */
@@ -949,7 +949,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Expm1} output and operands
    * @return a new instance of Expm1
    */
@@ -970,7 +970,7 @@ public final class MathOps {
    * Returns element-wise largest integer not greater than x.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Floor} output and operands
    * @return a new instance of Floor
    */
@@ -984,8 +984,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code FloorDiv} output and operands
    * @return a new instance of FloorDiv
    */
@@ -1001,8 +1001,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code FloorMod} output and operands
    * @return a new instance of FloorMod
    */
@@ -1025,8 +1025,8 @@ public final class MathOps {
    *  tf.math.greater(x, y) ==&gt; [False, False, True]
    *  </pre>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Greater} output and operands
    * @return a new instance of Greater
    */
@@ -1049,8 +1049,8 @@ public final class MathOps {
    *  tf.math.greater_equal(x, y) ==&gt; [True, False, True, True]
    *  </pre>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code GreaterEqual} output and operands
    * @return a new instance of GreaterEqual
    */
@@ -1069,8 +1069,8 @@ public final class MathOps {
    *  Gamma function.
    *
    * @param <T> data type for {@code z} output
-   * @param a the a value
-   * @param x the x value
+   * @param a The a value
+   * @param x The x value
    * @param <T> data type for {@code Igamma} output and operands
    * @return a new instance of Igamma
    */
@@ -1089,8 +1089,8 @@ public final class MathOps {
    *  Gamma function.
    *
    * @param <T> data type for {@code z} output
-   * @param a the a value
-   * @param x the x value
+   * @param a The a value
+   * @param x The x value
    * @param <T> data type for {@code Igammac} output and operands
    * @return a new instance of Igammac
    */
@@ -1111,7 +1111,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of Imag, with default output types
    */
   public Imag<TFloat32> imag(Operand<? extends TType> input) {
@@ -1131,8 +1131,8 @@ public final class MathOps {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param Tout the value of the Tout property
+   * @param input The input value
+   * @param Tout The value of the Tout attribute
    * @param <U> data type for {@code Imag} output and operands
    * @return a new instance of Imag
    */
@@ -1174,7 +1174,7 @@ public final class MathOps {
    *  tf.math.is_finite(x) ==&gt; [True, True, True, False, False]
    *  </pre>
    *
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of IsFinite
    */
   public IsFinite isFinite(Operand<? extends TNumber> x) {
@@ -1192,7 +1192,7 @@ public final class MathOps {
    *  tf.math.is_inf(x) ==&gt; [False, True, False, True]
    *  </pre>
    *
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of IsInf
    */
   public IsInf isInf(Operand<? extends TNumber> x) {
@@ -1210,7 +1210,7 @@ public final class MathOps {
    *  tf.math.is_nan(x) ==&gt; [False, True, False, True, False]
    *  </pre>
    *
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of IsNan
    */
   public IsNan isNan(Operand<? extends TNumber> x) {
@@ -1232,8 +1232,8 @@ public final class MathOps {
    *  tf.math.less(x, y) ==&gt; [False, True, True]
    *  </pre>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Less} output and operands
    * @return a new instance of Less
    */
@@ -1256,8 +1256,8 @@ public final class MathOps {
    *  tf.math.less_equal(x, y) ==&gt; [True, True, True]
    *  </pre>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code LessEqual} output and operands
    * @return a new instance of LessEqual
    */
@@ -1276,7 +1276,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Lgamma} output and operands
    * @return a new instance of Lgamma
    */
@@ -1294,7 +1294,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Log} output and operands
    * @return a new instance of Log
    */
@@ -1312,7 +1312,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Log1p} output and operands
    * @return a new instance of Log1p
    */
@@ -1325,8 +1325,8 @@ public final class MathOps {
    *  <em>NOTE</em>: {@code math.LogicalAnd} supports broadcasting. More about broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @return a new instance of LogicalAnd
    */
   public LogicalAnd logicalAnd(Operand<TBool> x, Operand<TBool> y) {
@@ -1348,8 +1348,8 @@ public final class MathOps {
    *  <em>NOTE</em>: {@code math.LogicalOr} supports broadcasting. More about broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @return a new instance of LogicalOr
    */
   public LogicalOr logicalOr(Operand<TBool> x, Operand<TBool> y) {
@@ -1362,8 +1362,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Maximum} output and operands
    * @return a new instance of Maximum
    */
@@ -1397,8 +1397,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Minimum} output and operands
    * @return a new instance of Minimum
    */
@@ -1414,8 +1414,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Mod} output and operands
    * @return a new instance of Mod
    */
@@ -1429,8 +1429,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Mul} output and operands
    * @return a new instance of Mul
    */
@@ -1444,8 +1444,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code MulNoNan} output and operands
    * @return a new instance of MulNoNan
    */
@@ -1457,7 +1457,7 @@ public final class MathOps {
    * The Ndtri operation
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Ndtri} output and operands
    * @return a new instance of Ndtri
    */
@@ -1470,7 +1470,7 @@ public final class MathOps {
    *  I.e., \(y = -x\).
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Neg} output and operands
    * @return a new instance of Neg
    */
@@ -1487,8 +1487,8 @@ public final class MathOps {
    *  <br>{@literal @}end_compatibility
    *
    * @param <T> data type for {@code output} output
-   * @param x1 the x1 value
-   * @param x2 the x2 value
+   * @param x1 The x1 value
+   * @param x2 The x2 value
    * @param <T> data type for {@code NextAfter} output and operands
    * @return a new instance of NextAfter
    */
@@ -1501,8 +1501,8 @@ public final class MathOps {
    *  <em>NOTE</em>: {@code math.NotEqual} supports broadcasting. More about broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param options carries optional attribute values
    * @param <T> data type for {@code NotEqual} output and operands
    * @return a new instance of NotEqual
@@ -1520,8 +1520,8 @@ public final class MathOps {
    *  The polygamma function is defined only for non-negative integer orders \a\.
    *
    * @param <T> data type for {@code z} output
-   * @param a the a value
-   * @param x the x value
+   * @param a The a value
+   * @param x The x value
    * @param <T> data type for {@code Polygamma} output and operands
    * @return a new instance of Polygamma
    */
@@ -1537,7 +1537,7 @@ public final class MathOps {
    *  {@code int32} or {@code int64} and perform the bitcount on the result, than to feed in
    *  8- or 16-bit inputs and then aggregate the resulting counts.
    *
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of PopulationCount
    */
   public PopulationCount populationCount(Operand<? extends TNumber> x) {
@@ -1555,8 +1555,8 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Pow} output and operands
    * @return a new instance of Pow
    */
@@ -1568,13 +1568,13 @@ public final class MathOps {
    * Returns x + y element-wise, working on quantized buffers.
    *
    * @param <V> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param minX The float value that the lowest quantized {@code x} value represents.
    * @param maxX The float value that the highest quantized {@code x} value represents.
    * @param minY The float value that the lowest quantized {@code y} value represents.
    * @param maxY The float value that the highest quantized {@code y} value represents.
-   * @param Toutput the value of the Toutput property
+   * @param Toutput The value of the Toutput attribute
    * @param <V> data type for {@code QuantizedAdd} output and operands
    * @return a new instance of QuantizedAdd
    */
@@ -1588,13 +1588,13 @@ public final class MathOps {
    * Returns x * y element-wise, working on quantized buffers.
    *
    * @param <V> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param minX The float value that the lowest quantized {@code x} value represents.
    * @param maxX The float value that the highest quantized {@code x} value represents.
    * @param minY The float value that the lowest quantized {@code y} value represents.
    * @param maxY The float value that the highest quantized {@code y} value represents.
-   * @param Toutput the value of the Toutput property
+   * @param Toutput The value of the Toutput attribute
    * @param <V> data type for {@code QuantizedMul} output and operands
    * @return a new instance of QuantizedMul
    */
@@ -1617,7 +1617,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of Real, with default output types
    */
   public Real<TFloat32> real(Operand<? extends TType> input) {
@@ -1637,8 +1637,8 @@ public final class MathOps {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param Tout the value of the Tout property
+   * @param input The input value
+   * @param Tout The value of the Tout attribute
    * @param <U> data type for {@code Real} output and operands
    * @return a new instance of Real
    */
@@ -1653,8 +1653,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code RealDiv} output and operands
    * @return a new instance of RealDiv
    */
@@ -1667,7 +1667,7 @@ public final class MathOps {
    *  I.e., \(y = 1 / x\).
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Reciprocal} output and operands
    * @return a new instance of Reciprocal
    */
@@ -1687,7 +1687,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Rint} output and operands
    * @return a new instance of Rint
    */
@@ -1701,7 +1701,7 @@ public final class MathOps {
    *  according to the current system rounding mode use std::cint.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Round} output and operands
    * @return a new instance of Round
    */
@@ -1714,7 +1714,7 @@ public final class MathOps {
    *  I.e., \(y = 1 / \sqrt{x}\).
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Rsqrt} output and operands
    * @return a new instance of Rsqrt
    */
@@ -1743,7 +1743,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
    * @param <T> data type for {@code SegmentMax} output and operands
@@ -1776,7 +1776,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
    * @param <T> data type for {@code SegmentMean} output and operands
@@ -1808,7 +1808,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
    * @param <T> data type for {@code SegmentMin} output and operands
@@ -1840,7 +1840,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
    * @param <T> data type for {@code SegmentProd} output and operands
@@ -1872,7 +1872,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
    * @param <T> data type for {@code SegmentSum} output and operands
@@ -1888,7 +1888,7 @@ public final class MathOps {
    *  Specifically, {@code y = 1 / (1 + exp(-x))}.
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Sigmoid} output and operands
    * @return a new instance of Sigmoid
    */
@@ -1911,7 +1911,7 @@ public final class MathOps {
    *  </blockquote>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Sign} output and operands
    * @return a new instance of Sign
    */
@@ -1930,7 +1930,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Sin} output and operands
    * @return a new instance of Sin
    */
@@ -1949,7 +1949,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Sinh} output and operands
    * @return a new instance of Sinh
    */
@@ -1961,7 +1961,7 @@ public final class MathOps {
    * The Softplus operation
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Softplus} output and operands
    * @return a new instance of Softplus
    */
@@ -1974,7 +1974,7 @@ public final class MathOps {
    *  I.e., \(y = \sqrt{x} = x^{1/2}\).
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Sqrt} output and operands
    * @return a new instance of Sqrt
    */
@@ -1987,7 +1987,7 @@ public final class MathOps {
    *  I.e., \(y = x * x = x^2\).
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Square} output and operands
    * @return a new instance of Square
    */
@@ -2001,8 +2001,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code SquaredDifference} output and operands
    * @return a new instance of SquaredDifference
    */
@@ -2016,8 +2016,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Sub} output and operands
    * @return a new instance of Sub
    */
@@ -2037,7 +2037,7 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Tan} output and operands
    * @return a new instance of Tan
    */
@@ -2063,7 +2063,7 @@ public final class MathOps {
    *  </blockquote>
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
+   * @param x The x value
    * @param <T> data type for {@code Tanh} output and operands
    * @return a new instance of Tanh
    */
@@ -2081,8 +2081,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code TruncateDiv} output and operands
    * @return a new instance of TruncateDiv
    */
@@ -2097,8 +2097,8 @@ public final class MathOps {
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code TruncateMod} output and operands
    * @return a new instance of TruncateMod
    */
@@ -2133,9 +2133,9 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
-   * @param numSegments the numSegments value
+   * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentMax} output and operands
    * @return a new instance of UnsortedSegmentMax
    */
@@ -2168,9 +2168,9 @@ public final class MathOps {
    *  dropped, and will not be included in the result.
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
-   * @param numSegments the numSegments value
+   * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentMin} output and operands
    * @return a new instance of UnsortedSegmentMin
    */
@@ -2202,9 +2202,9 @@ public final class MathOps {
    *  dropped, and will not be included in the result.
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
-   * @param numSegments the numSegments value
+   * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentProd} output and operands
    * @return a new instance of UnsortedSegmentProd
    */
@@ -2238,9 +2238,9 @@ public final class MathOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
-   * @param numSegments the numSegments value
+   * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentSum} output and operands
    * @return a new instance of UnsortedSegmentSum
    */
@@ -2253,8 +2253,8 @@ public final class MathOps {
    * Returns 0 if x == 0, and x / y otherwise, elementwise.
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Xdivy} output and operands
    * @return a new instance of Xdivy
    */
@@ -2266,8 +2266,8 @@ public final class MathOps {
    * Returns 0 if x == 0, and x * log1p(y) otherwise, elementwise.
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Xlog1py} output and operands
    * @return a new instance of Xlog1py
    */
@@ -2279,8 +2279,8 @@ public final class MathOps {
    * Returns 0 if x == 0, and x * log(y) otherwise, elementwise.
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param <T> data type for {@code Xlogy} output and operands
    * @return a new instance of Xlogy
    */
@@ -2294,8 +2294,8 @@ public final class MathOps {
    *  <p>\(\zeta(x, q) = \sum_{n=0}^{\infty} (q + n)^{-x}\)
    *
    * @param <T> data type for {@code z} output
-   * @param x the x value
-   * @param q the q value
+   * @param x The x value
+   * @param q The q value
    * @param <T> data type for {@code Zeta} output and operands
    * @return a new instance of Zeta
    */

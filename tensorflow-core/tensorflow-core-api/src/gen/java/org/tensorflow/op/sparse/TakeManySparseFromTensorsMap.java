@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -212,6 +216,41 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<TakeManySparseFromTensorsMap<?>> {
+    /**
+     * 1-D, The {@code N} serialized {@code SparseTensor} objects.
+     * Shape: {@code [N]}.
+     */
+    public final Operand<TInt64> sparseHandles;
+
+    /**
+     * The `dtype` of the `SparseTensor` objects stored in the
+     * `SparseTensorsMap`.
+     */
+    public final DataType dtype;
+
+    /**
+     * The container name for the `SparseTensorsMap` read by this op.
+     */
+    public final String container;
+
+    /**
+     * The shared name for the `SparseTensorsMap` read by this op.
+     * It should not be blank; rather the `shared_name` or unique Operation name
+     * of the Op that created the original `SparseTensorsMap` should be used.
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new TakeManySparseFromTensorsMap<>(op), op, Arrays.asList("dtype", "container", "shared_name"));
+      int inputIndex = 0;
+      sparseHandles = (Operand<TInt64>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

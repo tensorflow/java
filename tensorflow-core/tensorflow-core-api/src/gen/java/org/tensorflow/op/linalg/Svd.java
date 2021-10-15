@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -184,6 +188,42 @@ public final class Svd<T extends TType> extends RawOp {
     public Options fullMatrices(Boolean fullMatrices) {
       this.fullMatrices = fullMatrices;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Svd<T>> {
+    /**
+     * A tensor of shape {@code [..., M, N]} whose inner-most 2 dimensions
+     * form matrices of size {@code [M, N]}. Let {@code P} be the minimum of {@code M} and {@code N}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * If true, left and right singular vectors will be
+     * computed and returned in `u` and `v`, respectively.
+     * If false, `u` and `v` are not set and should never referenced.
+     */
+    public final boolean computeUv;
+
+    /**
+     * If true, compute full-sized `u` and `v`. If false
+     * (the default), compute only the leading `P` singular vectors.
+     * Ignored if `compute_uv` is `False`.
+     */
+    public final boolean fullMatrices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Svd<>(op), op, Arrays.asList("compute_uv", "full_matrices", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      computeUv = op.attributes().getAttrBool("compute_uv");
+      fullMatrices = op.attributes().getAttrBool("full_matrices");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -70,8 +74,8 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    * Factory method to create a class wrapping a new ComplexAbs operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param Tout the value of the Tout property
+   * @param x The x value
+   * @param Tout The value of the Tout attribute
    * @param <U> data type for {@code ComplexAbs} output and operands
    * @return a new instance of ComplexAbs
    */
@@ -90,7 +94,7 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    * Factory method to create a class wrapping a new ComplexAbs operation, with the default output types.
    *
    * @param scope current scope
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of ComplexAbs, with default output types
    */
   @Endpoint(
@@ -112,5 +116,30 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
   @Override
   public Output<U> asOutput() {
     return y;
+  }
+
+  public static class Inputs extends RawOpInputs<ComplexAbs<?>> {
+    /**
+     * The x input
+     */
+    public final Operand<? extends TType> x;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tout attribute
+     */
+    public final DataType Tout;
+
+    public Inputs(GraphOperation op) {
+      super(new ComplexAbs<>(op), op, Arrays.asList("T", "Tout"));
+      int inputIndex = 0;
+      x = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tout = op.attributes().getAttrType("Tout");
+    }
   }
 }

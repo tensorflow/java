@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -340,6 +343,74 @@ public final class EncodeJpeg extends RawOp implements Operand<TString> {
     public Options xmpMetadata(String xmpMetadata) {
       this.xmpMetadata = xmpMetadata;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<EncodeJpeg> {
+    /**
+     * 3-D with shape {@code [height, width, channels]}.
+     */
+    public final Operand<TUint8> image;
+
+    /**
+     * Per pixel image format.
+     */
+    public final String format;
+
+    /**
+     * Quality of the compression from 0 to 100 (higher is better and slower).
+     */
+    public final long quality;
+
+    /**
+     * If True, create a JPEG that loads progressively (coarse to fine).
+     */
+    public final boolean progressive;
+
+    /**
+     * If True, spend CPU/RAM to reduce size with no quality change.
+     */
+    public final boolean optimizeSize;
+
+    /**
+     * See http://en.wikipedia.org/wiki/Chroma_subsampling.
+     */
+    public final boolean chromaDownsampling;
+
+    /**
+     * Unit used to specify `x_density` and `y_density`:
+     * pixels per inch (`'in'`) or centimeter (`'cm'`).
+     */
+    public final String densityUnit;
+
+    /**
+     * Horizontal pixels per density unit.
+     */
+    public final long xDensity;
+
+    /**
+     * Vertical pixels per density unit.
+     */
+    public final long yDensity;
+
+    /**
+     * If not empty, embed this XMP metadata in the image header.
+     */
+    public final String xmpMetadata;
+
+    public Inputs(GraphOperation op) {
+      super(new EncodeJpeg(op), op, Arrays.asList("format", "quality", "progressive", "optimize_size", "chroma_downsampling", "density_unit", "x_density", "y_density", "xmp_metadata"));
+      int inputIndex = 0;
+      image = (Operand<TUint8>) op.input(inputIndex++);
+      format = op.attributes().getAttrString("format");
+      quality = op.attributes().getAttrInt("quality");
+      progressive = op.attributes().getAttrBool("progressive");
+      optimizeSize = op.attributes().getAttrBool("optimize_size");
+      chromaDownsampling = op.attributes().getAttrBool("chroma_downsampling");
+      densityUnit = op.attributes().getAttrString("density_unit");
+      xDensity = op.attributes().getAttrInt("x_density");
+      yDensity = op.attributes().getAttrInt("y_density");
+      xmpMetadata = op.attributes().getAttrString("xmp_metadata");
     }
   }
 }

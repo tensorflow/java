@@ -19,9 +19,11 @@ package org.tensorflow.op.tpu;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 
@@ -152,7 +154,7 @@ public final class ReplicateMetadata extends RawOp {
    * @param deviceAssignment The assignment of devices for the computation.
    * @return this Options instance.
    */
-  public static Options deviceAssignment(Long[] deviceAssignment) {
+  public static Options deviceAssignment(Long... deviceAssignment) {
     return new Options().deviceAssignment(deviceAssignment);
   }
 
@@ -172,7 +174,7 @@ public final class ReplicateMetadata extends RawOp {
    * @param computationShape DEPRECATED. Use num_cores_per_replica instead.
    * @return this Options instance.
    */
-  public static Options computationShape(Long[] computationShape) {
+  public static Options computationShape(Long... computationShape) {
     return new Options().computationShape(computationShape);
   }
 
@@ -192,7 +194,7 @@ public final class ReplicateMetadata extends RawOp {
    * @param hostComputeCore the hostComputeCore option
    * @return this Options instance.
    */
-  public static Options hostComputeCore(String[] hostComputeCore) {
+  public static Options hostComputeCore(String... hostComputeCore) {
     return new Options().hostComputeCore(hostComputeCore);
   }
 
@@ -212,7 +214,7 @@ public final class ReplicateMetadata extends RawOp {
    * @param paddingMap the paddingMap option
    * @return this Options instance.
    */
-  public static Options paddingMap(String[] paddingMap) {
+  public static Options paddingMap(String... paddingMap) {
     return new Options().paddingMap(paddingMap);
   }
 
@@ -425,6 +427,79 @@ public final class ReplicateMetadata extends RawOp {
     public Options useSpmdForXlaPartitioning(Boolean useSpmdForXlaPartitioning) {
       this.useSpmdForXlaPartitioning = useSpmdForXlaPartitioning;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ReplicateMetadata> {
+    /**
+     * Number of replicas of the computation
+     */
+    public final long numReplicas;
+
+    /**
+     * Number of cores per replica. Used for model parallelism.
+     */
+    public final long numCoresPerReplica;
+
+    /**
+     * TopologyProto indicating the topology of the TPU pod slice.
+     */
+    public final String topology;
+
+    /**
+     * Whether to place the computation on the TPU.
+     */
+    public final boolean useTpu;
+
+    /**
+     * The assignment of devices for the computation.
+     */
+    public final long[] deviceAssignment;
+
+    /**
+     * DEPRECATED. Use num_cores_per_replica instead.
+     */
+    public final long[] computationShape;
+
+    /**
+     * The hostComputeCore attribute
+     */
+    public final String[] hostComputeCore;
+
+    /**
+     * The paddingMap attribute
+     */
+    public final String[] paddingMap;
+
+    /**
+     * The stepMarkerLocation attribute
+     */
+    public final String stepMarkerLocation;
+
+    /**
+     * The allowSoftPlacement attribute
+     */
+    public final boolean allowSoftPlacement;
+
+    /**
+     * The useSpmdForXlaPartitioning attribute
+     */
+    public final boolean useSpmdForXlaPartitioning;
+
+    public Inputs(GraphOperation op) {
+      super(new ReplicateMetadata(op), op, Arrays.asList("num_replicas", "num_cores_per_replica", "topology", "use_tpu", "device_assignment", "computation_shape", "host_compute_core", "padding_map", "step_marker_location", "allow_soft_placement", "use_spmd_for_xla_partitioning"));
+      int inputIndex = 0;
+      numReplicas = op.attributes().getAttrInt("num_replicas");
+      numCoresPerReplica = op.attributes().getAttrInt("num_cores_per_replica");
+      topology = op.attributes().getAttrString("topology");
+      useTpu = op.attributes().getAttrBool("use_tpu");
+      deviceAssignment = op.attributes().getAttrIntList("device_assignment");
+      computationShape = op.attributes().getAttrIntList("computation_shape");
+      hostComputeCore = op.attributes().getAttrStringList("host_compute_core");
+      paddingMap = op.attributes().getAttrStringList("padding_map");
+      stepMarkerLocation = op.attributes().getAttrString("step_marker_location");
+      allowSoftPlacement = op.attributes().getAttrBool("allow_soft_placement");
+      useSpmdForXlaPartitioning = op.attributes().getAttrBool("use_spmd_for_xla_partitioning");
     }
   }
 }

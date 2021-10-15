@@ -19,13 +19,16 @@ package org.tensorflow.op.debugging;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -123,7 +126,7 @@ public final class DebugNanCount extends RawOp implements Operand<TInt64> {
    * file:///foo/tfdbg_dump, grpc:://localhost:11011.
    * @return this Options instance.
    */
-  public static Options debugUrls(String[] debugUrls) {
+  public static Options debugUrls(String... debugUrls) {
     return new Options().debugUrls(debugUrls);
   }
 
@@ -231,6 +234,55 @@ public final class DebugNanCount extends RawOp implements Operand<TInt64> {
     public Options gatedGrpc(Boolean gatedGrpc) {
       this.gatedGrpc = gatedGrpc;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DebugNanCount> {
+    /**
+     * Input tensor, non-Reference type.
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The deviceName attribute
+     */
+    public final String deviceName;
+
+    /**
+     * Name of the input tensor.
+     */
+    public final String tensorName;
+
+    /**
+     * List of URLs to debug targets, e.g.,
+     *   file:///foo/tfdbg_dump, grpc:://localhost:11011.
+     */
+    public final String[] debugUrls;
+
+    /**
+     *  Whether this op will be gated. If any of the debug_urls of this
+     *   debug node is of the grpc:// scheme, when the value of this attribute is set
+     *   to True, the data will not actually be sent via the grpc stream unless this
+     *   debug op has been enabled at the debug_url. If all of the debug_urls of this
+     *   debug node are of the grpc:// scheme and the debug op is enabled at none of
+     *   them, the output will be an empty Tensor.
+     */
+    public final boolean gatedGrpc;
+
+    public Inputs(GraphOperation op) {
+      super(new DebugNanCount(op), op, Arrays.asList("T", "device_name", "tensor_name", "debug_urls", "gated_grpc"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      deviceName = op.attributes().getAttrString("device_name");
+      tensorName = op.attributes().getAttrString("tensor_name");
+      debugUrls = op.attributes().getAttrStringList("debug_urls");
+      gatedGrpc = op.attributes().getAttrBool("gated_grpc");
     }
   }
 }

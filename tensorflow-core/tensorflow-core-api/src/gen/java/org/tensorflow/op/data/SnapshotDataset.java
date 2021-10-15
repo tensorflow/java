@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +28,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -63,10 +67,10 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
    * @param scope current scope
    * @param inputDataset A variant tensor representing the input dataset.
    * @param path The path we should write snapshots to / read snapshots from.
-   * @param readerFuncOtherArgs the readerFuncOtherArgs value
-   * @param shardFuncOtherArgs the shardFuncOtherArgs value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param readerFuncOtherArgs The readerFuncOtherArgs value
+   * @param shardFuncOtherArgs The shardFuncOtherArgs value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param readerFunc Optional. A function to control how to read data from snapshot shards.
    * @param shardFunc Optional. A function to control how to shard data when writing a snapshot.
    * @param options carries optional attribute values
@@ -250,6 +254,95 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
     public Options hash(Long hash) {
       this.hash = hash;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SnapshotDataset> {
+    /**
+     * A variant tensor representing the input dataset.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The path we should write snapshots to / read snapshots from.
+     */
+    public final Operand<TString> path;
+
+    /**
+     * The readerFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> readerFuncOtherArgs;
+
+    /**
+     * The shardFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> shardFuncOtherArgs;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The type of compression to be applied to the saved snapshot files.
+     */
+    public final String compression;
+
+    /**
+     * The readerPrefix attribute
+     */
+    public final String readerPrefix;
+
+    /**
+     * The writerPrefix attribute
+     */
+    public final String writerPrefix;
+
+    /**
+     * The hashValid attribute
+     */
+    public final boolean hashValid;
+
+    /**
+     * The hash attribute
+     */
+    public final long hash;
+
+    /**
+     * The TreaderFuncArgs attribute
+     */
+    public final DataType[] TreaderFuncArgs;
+
+    /**
+     * The TshardFuncArgs attribute
+     */
+    public final DataType[] TshardFuncArgs;
+
+    public Inputs(GraphOperation op) {
+      super(new SnapshotDataset(op), op, Arrays.asList("output_types", "output_shapes", "compression", "reader_prefix", "writer_prefix", "hash_valid", "hash", "Treader_func_args", "Tshard_func_args"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      path = (Operand<TString>) op.input(inputIndex++);
+      int readerFuncOtherArgsLength = op.inputListLength("reader_func_other_args");
+      readerFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, readerFuncOtherArgsLength));
+      inputIndex += readerFuncOtherArgsLength;
+      int shardFuncOtherArgsLength = op.inputListLength("shard_func_other_args");
+      shardFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, shardFuncOtherArgsLength));
+      inputIndex += shardFuncOtherArgsLength;
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      compression = op.attributes().getAttrString("compression");
+      readerPrefix = op.attributes().getAttrString("reader_prefix");
+      writerPrefix = op.attributes().getAttrString("writer_prefix");
+      hashValid = op.attributes().getAttrBool("hash_valid");
+      hash = op.attributes().getAttrInt("hash");
+      TreaderFuncArgs = op.attributes().getAttrTypeList("Treader_func_args");
+      TshardFuncArgs = op.attributes().getAttrTypeList("Tshard_func_args");
     }
   }
 }

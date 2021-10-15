@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -205,6 +209,51 @@ public final class MutableHashTableOfTensors extends RawOp implements Operand<TT
     public Options valueShape(Shape valueShape) {
       this.valueShape = valueShape;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<MutableHashTableOfTensors> {
+    /**
+     * If non-empty, this table is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this table is shared under the given name across
+     * multiple sessions.
+     */
+    public final String sharedName;
+
+    /**
+     * The useNodeNameSharing attribute
+     */
+    public final boolean useNodeNameSharing;
+
+    /**
+     * Type of the table keys.
+     */
+    public final DataType keyDtype;
+
+    /**
+     * Type of the table values.
+     */
+    public final DataType valueDtype;
+
+    /**
+     * The valueShape attribute
+     */
+    public final Shape valueShape;
+
+    public Inputs(GraphOperation op) {
+      super(new MutableHashTableOfTensors(op), op, Arrays.asList("container", "shared_name", "use_node_name_sharing", "key_dtype", "value_dtype", "value_shape"));
+      int inputIndex = 0;
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      useNodeNameSharing = op.attributes().getAttrBool("use_node_name_sharing");
+      keyDtype = op.attributes().getAttrType("key_dtype");
+      valueDtype = op.attributes().getAttrType("value_dtype");
+      valueShape = op.attributes().getAttrShape("value_shape");
     }
   }
 }

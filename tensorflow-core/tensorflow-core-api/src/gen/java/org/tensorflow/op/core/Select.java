@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
@@ -52,9 +56,9 @@ public final class Select<T extends TType> extends RawOp implements Operand<T> {
    * Factory method to create a class wrapping a new SelectV2 operation.
    *
    * @param scope current scope
-   * @param condition the condition value
-   * @param t the t value
-   * @param e the e value
+   * @param condition The condition value
+   * @param t The t value
+   * @param e The e value
    * @param <T> data type for {@code SelectV2} output and operands
    * @return a new instance of Select
    */
@@ -82,5 +86,36 @@ public final class Select<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Select<T>> {
+    /**
+     * The condition input
+     */
+    public final Operand<TBool> condition;
+
+    /**
+     * The t input
+     */
+    public final Operand<T> t;
+
+    /**
+     * The e input
+     */
+    public final Operand<T> e;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Select<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      condition = (Operand<TBool>) op.input(inputIndex++);
+      t = (Operand<T>) op.input(inputIndex++);
+      e = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

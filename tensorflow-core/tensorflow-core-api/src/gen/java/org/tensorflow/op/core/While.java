@@ -94,7 +94,7 @@ public interface While extends Iterable<Operand<TType>> {
    * @param outputShapes the outputShapes option
    * @return this Options instance.
    */
-  static Options outputShapes(Shape[] outputShapes) {
+  static Options outputShapes(Shape... outputShapes) {
     return new Options().outputShapes(outputShapes);
   }
 

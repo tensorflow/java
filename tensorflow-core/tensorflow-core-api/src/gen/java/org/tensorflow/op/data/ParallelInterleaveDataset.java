@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +28,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -86,8 +90,8 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
    * @param f A function mapping elements of {@code input_dataset}, concatenated with
    * {@code other_arguments}, to a Dataset variant that contains elements matching
    * {@code output_types} and {@code output_shapes}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ParallelInterleaveDataset
    */
@@ -175,6 +179,93 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
     public Options deterministic(String deterministic) {
       this.deterministic = deterministic;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ParallelInterleaveDataset> {
+    /**
+     * Dataset that produces a stream of arguments for the function {@code f}.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * Additional arguments to pass to {@code f} beyond those produced by {@code input_dataset}.
+     * Evaluated once when the dataset is instantiated.
+     */
+    public final Iterable<Operand<?>> otherArguments;
+
+    /**
+     * Number of datasets (each created by applying {@code f} to the elements of
+     * {@code input_dataset}) among which the {@code ParallelInterleaveDatasetV2} will cycle in a
+     * round-robin fashion.
+     */
+    public final Operand<TInt64> cycleLength;
+
+    /**
+     * Number of elements at a time to produce from each interleaved invocation of a
+     * dataset returned by {@code f}.
+     */
+    public final Operand<TInt64> blockLength;
+
+    /**
+     * The number of elements each iterator being interleaved should buffer (similar
+     * to the {@code .prefetch()} transformation for each interleaved iterator).
+     */
+    public final Operand<TInt64> bufferOutputElements;
+
+    /**
+     * Determines the number of iterators to prefetch, allowing buffers to warm up and
+     * data to be pre-fetched without blocking the main thread.
+     */
+    public final Operand<TInt64> prefetchInputElements;
+
+    /**
+     * Determines the number of threads that should be used for fetching data from
+     * input datasets in parallel. The Python API {@code tf.data.experimental.AUTOTUNE}
+     * constant can be used to indicate that the level of parallelism should be autotuned.
+     */
+    public final Operand<TInt64> numParallelCalls;
+
+    /**
+     * A string indicating the op-level determinism to use. Deterministic controls
+     * whether the interleave is allowed to return elements out of order if the next
+     * element to be returned isn't available, but a later element is. Options are
+     * "true", "false", and "default". "default" indicates that determinism should be
+     * decided by the `experimental_deterministic` parameter of `tf.data.Options`.
+     */
+    public final String deterministic;
+
+    /**
+     * Types of the elements of `other_arguments`.
+     */
+    public final DataType[] Targuments;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new ParallelInterleaveDataset(op), op, Arrays.asList("deterministic", "Targuments", "output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      int otherArgumentsLength = op.inputListLength("other_arguments");
+      otherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, otherArgumentsLength));
+      inputIndex += otherArgumentsLength;
+      cycleLength = (Operand<TInt64>) op.input(inputIndex++);
+      blockLength = (Operand<TInt64>) op.input(inputIndex++);
+      bufferOutputElements = (Operand<TInt64>) op.input(inputIndex++);
+      prefetchInputElements = (Operand<TInt64>) op.input(inputIndex++);
+      numParallelCalls = (Operand<TInt64>) op.input(inputIndex++);
+      deterministic = op.attributes().getAttrString("deterministic");
+      Targuments = op.attributes().getAttrTypeList("Targuments");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
     }
   }
 }

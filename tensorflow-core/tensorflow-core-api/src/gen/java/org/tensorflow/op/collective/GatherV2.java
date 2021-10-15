@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.collective;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -52,11 +56,11 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new CollectiveGatherV2 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param groupSize the groupSize value
-   * @param groupKey the groupKey value
-   * @param instanceKey the instanceKey value
-   * @param orderingToken the orderingToken value
+   * @param input The input value
+   * @param groupSize The groupSize value
+   * @param groupKey The groupKey value
+   * @param instanceKey The instanceKey value
+   * @param orderingToken The orderingToken value
    * @param options carries optional attribute values
    * @param <T> data type for {@code CollectiveGatherV2} output and operands
    * @return a new instance of GatherV2
@@ -177,6 +181,63 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
     public Options NorderingToken(Long NorderingToken) {
       this.NorderingToken = NorderingToken;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<GatherV2<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The groupSize input
+     */
+    public final Operand<TInt32> groupSize;
+
+    /**
+     * The groupKey input
+     */
+    public final Operand<TInt32> groupKey;
+
+    /**
+     * The instanceKey input
+     */
+    public final Operand<TInt32> instanceKey;
+
+    /**
+     * The orderingToken input
+     */
+    public final Iterable<Operand<? extends TType>> orderingToken;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The communicationHint attribute
+     */
+    public final String communicationHint;
+
+    /**
+     * The timeoutSeconds attribute
+     */
+    public final float timeoutSeconds;
+
+    public Inputs(GraphOperation op) {
+      super(new GatherV2<>(op), op, Arrays.asList("T", "communication_hint", "timeout_seconds"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      groupSize = (Operand<TInt32>) op.input(inputIndex++);
+      groupKey = (Operand<TInt32>) op.input(inputIndex++);
+      instanceKey = (Operand<TInt32>) op.input(inputIndex++);
+      int orderingTokenLength = op.inputListLength("ordering_token");
+      orderingToken = Arrays.asList((Operand<? extends TType>[]) op.inputList(inputIndex, orderingTokenLength));
+      inputIndex += orderingTokenLength;
+      T = op.attributes().getAttrType("T");
+      communicationHint = op.attributes().getAttrString("communication_hint");
+      timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -73,7 +77,7 @@ public final class UnicodeDecode<T extends TNumber> extends RawOp {
    * to a vector of char values.
    * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
    * by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
-   * @param Tsplits the value of the Tsplits property
+   * @param Tsplits The value of the Tsplits attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code UnicodeDecode} output and operands
    * @return a new instance of UnicodeDecode
@@ -234,6 +238,61 @@ public final class UnicodeDecode<T extends TNumber> extends RawOp {
     public Options replaceControlCharacters(Boolean replaceControlCharacters) {
       this.replaceControlCharacters = replaceControlCharacters;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<UnicodeDecode<?>> {
+    /**
+     * The text to be decoded. Can have any shape. Note that the output is flattened
+     * to a vector of char values.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * Text encoding of the input strings. This is any of the encodings supported
+     * by ICU ucnv algorithmic converters. Examples: `"UTF-16", "US ASCII", "UTF-8"`.
+     */
+    public final String inputEncoding;
+
+    /**
+     * Error handling policy when there is invalid formatting found in the input.
+     * The value of 'strict' will cause the operation to produce a InvalidArgument
+     * error on any invalid input formatting. A value of 'replace' (the default) will
+     * cause the operation to replace any invalid formatting in the input with the
+     * `replacement_char` codepoint. A value of 'ignore' will cause the operation to
+     * skip any invalid formatting in the input and produce no corresponding output
+     * character.
+     */
+    public final String errors;
+
+    /**
+     * The replacement character codepoint to be used in place of any invalid
+     * formatting in the input when `errors='replace'`. Any valid unicode codepoint may
+     * be used. The default value is the default unicode replacement character is
+     * 0xFFFD or U+65533.)
+     */
+    public final long replacementChar;
+
+    /**
+     * Whether to replace the C0 control characters (00-1F) with the
+     * `replacement_char`. Default is false.
+     */
+    public final boolean replaceControlCharacters;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new UnicodeDecode<>(op), op, Arrays.asList("input_encoding", "errors", "replacement_char", "replace_control_characters", "Tsplits"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      inputEncoding = op.attributes().getAttrString("input_encoding");
+      errors = op.attributes().getAttrString("errors");
+      replacementChar = op.attributes().getAttrInt("replacement_char");
+      replaceControlCharacters = op.attributes().getAttrBool("replace_control_characters");
+      Tsplits = op.attributes().getAttrType("Tsplits");
     }
   }
 }

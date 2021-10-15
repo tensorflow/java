@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -50,11 +54,11 @@ public final class ResourceStridedSliceAssign extends RawOp {
    * Factory method to create a class wrapping a new ResourceStridedSliceAssign operation.
    *
    * @param scope current scope
-   * @param ref the ref value
-   * @param begin the begin value
-   * @param end the end value
-   * @param strides the strides value
-   * @param value the value value
+   * @param ref The ref value
+   * @param begin The begin value
+   * @param end The end value
+   * @param strides The strides value
+   * @param value The value value
    * @param options carries optional attribute values
    * @param <T> data type for {@code ResourceStridedSliceAssign} output and operands
    * @return a new instance of ResourceStridedSliceAssign
@@ -213,6 +217,85 @@ public final class ResourceStridedSliceAssign extends RawOp {
     public Options shrinkAxisMask(Long shrinkAxisMask) {
       this.shrinkAxisMask = shrinkAxisMask;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<ResourceStridedSliceAssign> {
+    /**
+     * The ref input
+     */
+    public final Operand<? extends TType> ref;
+
+    /**
+     * The begin input
+     */
+    public final Operand<T> begin;
+
+    /**
+     * The end input
+     */
+    public final Operand<T> end;
+
+    /**
+     * The strides input
+     */
+    public final Operand<T> strides;
+
+    /**
+     * The value input
+     */
+    public final Operand<? extends TType> value;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Index attribute
+     */
+    public final DataType Index;
+
+    /**
+     * The beginMask attribute
+     */
+    public final long beginMask;
+
+    /**
+     * The endMask attribute
+     */
+    public final long endMask;
+
+    /**
+     * The ellipsisMask attribute
+     */
+    public final long ellipsisMask;
+
+    /**
+     * The newAxisMask attribute
+     */
+    public final long newAxisMask;
+
+    /**
+     * The shrinkAxisMask attribute
+     */
+    public final long shrinkAxisMask;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceStridedSliceAssign(op), op, Arrays.asList("T", "Index", "begin_mask", "end_mask", "ellipsis_mask", "new_axis_mask", "shrink_axis_mask"));
+      int inputIndex = 0;
+      ref = (Operand<? extends TType>) op.input(inputIndex++);
+      begin = (Operand<T>) op.input(inputIndex++);
+      end = (Operand<T>) op.input(inputIndex++);
+      strides = (Operand<T>) op.input(inputIndex++);
+      value = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Index = op.attributes().getAttrType("Index");
+      beginMask = op.attributes().getAttrInt("begin_mask");
+      endMask = op.attributes().getAttrInt("end_mask");
+      ellipsisMask = op.attributes().getAttrInt("ellipsis_mask");
+      newAxisMask = op.attributes().getAttrInt("new_axis_mask");
+      shrinkAxisMask = op.attributes().getAttrInt("shrink_axis_mask");
     }
   }
 }

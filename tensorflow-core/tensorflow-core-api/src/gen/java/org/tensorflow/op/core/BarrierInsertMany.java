@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -67,5 +71,43 @@ public final class BarrierInsertMany extends RawOp {
     opBuilder.addInput(values.asOutput());
     opBuilder.setAttr("component_index", componentIndex);
     return new BarrierInsertMany(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<BarrierInsertMany> {
+    /**
+     * The handle to a barrier.
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * A one-dimensional tensor of keys, with length n.
+     */
+    public final Operand<TString> keys;
+
+    /**
+     * An any-dimensional tensor of values, which are associated with the
+     * respective keys. The 0th dimension must have length n.
+     */
+    public final Operand<? extends TType> values;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The component of the barrier elements that is being assigned.
+     */
+    public final long componentIndex;
+
+    public Inputs(GraphOperation op) {
+      super(new BarrierInsertMany(op), op, Arrays.asList("T", "component_index"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      keys = (Operand<TString>) op.input(inputIndex++);
+      values = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      componentIndex = op.attributes().getAttrInt("component_index");
+    }
   }
 }

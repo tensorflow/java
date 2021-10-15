@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
@@ -90,5 +94,30 @@ public final class SwitchCond<T extends TType> extends RawOp {
    */
   public Output<T> outputTrue() {
     return outputTrue;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SwitchCond<T>> {
+    /**
+     * The tensor to be forwarded to the appropriate output.
+     */
+    public final Operand<T> data;
+
+    /**
+     * A scalar that specifies which output port will receive data.
+     */
+    public final Operand<TBool> pred;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SwitchCond<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      data = (Operand<T>) op.input(inputIndex++);
+      pred = (Operand<TBool>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -101,5 +105,68 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
   @Override
   public Output<T> asOutput() {
     return result;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<BatchNormWithGlobalNormalization<T>> {
+    /**
+     * A 4D input Tensor.
+     */
+    public final Operand<T> t;
+
+    /**
+     * A 1D mean Tensor with size matching the last dimension of t.
+     * This is the first output from tf.nn.moments,
+     * or a saved moving average thereof.
+     */
+    public final Operand<T> m;
+
+    /**
+     * A 1D variance Tensor with size matching the last dimension of t.
+     * This is the second output from tf.nn.moments,
+     * or a saved moving average thereof.
+     */
+    public final Operand<T> v;
+
+    /**
+     * A 1D beta Tensor with size matching the last dimension of t.
+     * An offset to be added to the normalized tensor.
+     */
+    public final Operand<T> beta;
+
+    /**
+     * A 1D gamma Tensor with size matching the last dimension of t.
+     * If &quot;scale_after_normalization&quot; is true, this tensor will be multiplied
+     * with the normalized tensor.
+     */
+    public final Operand<T> gamma;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * A small float number to avoid dividing by 0.
+     */
+    public final float varianceEpsilon;
+
+    /**
+     * A bool indicating whether the resulted tensor
+     * needs to be multiplied with gamma.
+     */
+    public final boolean scaleAfterNormalization;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchNormWithGlobalNormalization<>(op), op, Arrays.asList("T", "variance_epsilon", "scale_after_normalization"));
+      int inputIndex = 0;
+      t = (Operand<T>) op.input(inputIndex++);
+      m = (Operand<T>) op.input(inputIndex++);
+      v = (Operand<T>) op.input(inputIndex++);
+      beta = (Operand<T>) op.input(inputIndex++);
+      gamma = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      varianceEpsilon = op.attributes().getAttrFloat("variance_epsilon");
+      scaleAfterNormalization = op.attributes().getAttrBool("scale_after_normalization");
+    }
   }
 }

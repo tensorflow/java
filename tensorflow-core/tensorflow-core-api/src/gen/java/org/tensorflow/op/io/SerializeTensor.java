@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -76,5 +80,24 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
   @Override
   public Output<TString> asOutput() {
     return serialized;
+  }
+
+  public static class Inputs extends RawOpInputs<SerializeTensor> {
+    /**
+     * A Tensor of type {@code T}.
+     */
+    public final Operand<? extends TType> tensor;
+
+    /**
+     * The type of the input tensor.
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SerializeTensor(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      tensor = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

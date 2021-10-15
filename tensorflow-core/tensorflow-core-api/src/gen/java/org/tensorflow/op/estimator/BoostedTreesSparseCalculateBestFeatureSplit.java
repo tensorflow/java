@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -205,6 +208,74 @@ public final class BoostedTreesSparseCalculateBestFeatureSplit extends RawOp {
     public Options splitType(String splitType) {
       this.splitType = splitType;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesSparseCalculateBestFeatureSplit> {
+    /**
+     * A Rank 1 tensor (shape=[2]) to specify the range [first, last) of node ids to process within {@code stats_summary_list}. The nodes are iterated between the two nodes specified by the tensor, as like {@code for node_id in range(node_id_range[0], node_id_range[1])} (Note that the last index node_id_range[1] is exclusive).
+     */
+    public final Operand<TInt32> nodeIdRange;
+
+    /**
+     * A Rank 2 int64 tensor of dense shape [N, 4] (N specifies the number of non-zero values) for accumulated stats summary (gradient/hessian) per node per bucket for each feature. The second dimension contains node id, feature dimension, bucket id, and stats dim.
+     * stats dim is the sum of logits dimension and hessian dimension, hessian dimension can either be logits dimension if diagonal hessian is used, or logits dimension^2 if full hessian is used.
+     */
+    public final Operand<TInt32> statsSummaryIndices;
+
+    /**
+     * A Rank 1 float tensor of dense shape [N] (N specifies the number of non-zero values), which supplies the values for each element in summary_indices.
+     */
+    public final Operand<TFloat32> statsSummaryValues;
+
+    /**
+     * A Rank 1 float tensor of dense shape [4], which specifies the dense shape of the sparse tensor, which is [num tree nodes, feature dimensions, num buckets, stats dim].
+     */
+    public final Operand<TInt32> statsSummaryShape;
+
+    /**
+     * l1 regularization factor on leaf weights, per instance based.
+     */
+    public final Operand<TFloat32> l1;
+
+    /**
+     * l2 regularization factor on leaf weights, per instance based.
+     */
+    public final Operand<TFloat32> l2;
+
+    /**
+     * adjustment to the gain, per leaf based.
+     */
+    public final Operand<TFloat32> treeComplexity;
+
+    /**
+     * minimum avg of hessians in a node before required for the node to be considered for splitting.
+     */
+    public final Operand<TFloat32> minNodeWeight;
+
+    /**
+     * The dimension of logit, i.e., number of classes.
+     */
+    public final long logitsDimension;
+
+    /**
+     * A string indicating if this Op should perform inequality split or equality split.
+     */
+    public final String splitType;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesSparseCalculateBestFeatureSplit(op), op, Arrays.asList("logits_dimension", "split_type"));
+      int inputIndex = 0;
+      nodeIdRange = (Operand<TInt32>) op.input(inputIndex++);
+      statsSummaryIndices = (Operand<TInt32>) op.input(inputIndex++);
+      statsSummaryValues = (Operand<TFloat32>) op.input(inputIndex++);
+      statsSummaryShape = (Operand<TInt32>) op.input(inputIndex++);
+      l1 = (Operand<TFloat32>) op.input(inputIndex++);
+      l2 = (Operand<TFloat32>) op.input(inputIndex++);
+      treeComplexity = (Operand<TFloat32>) op.input(inputIndex++);
+      minNodeWeight = (Operand<TFloat32>) op.input(inputIndex++);
+      logitsDimension = op.attributes().getAttrInt("logits_dimension");
+      splitType = op.attributes().getAttrString("split_type");
     }
   }
 }

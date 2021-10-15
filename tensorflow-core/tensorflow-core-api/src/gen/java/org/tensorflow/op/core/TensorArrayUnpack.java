@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -51,9 +55,9 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
    * Factory method to create a class wrapping a new TensorArrayUnpack operation.
    *
    * @param scope current scope
-   * @param handle the handle value
-   * @param value the value value
-   * @param flowIn the flowIn value
+   * @param handle The handle value
+   * @param value The value value
+   * @param flowIn The flowIn value
    * @return a new instance of TensorArrayUnpack
    */
   @Endpoint(
@@ -80,5 +84,36 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
   @Override
   public Output<TFloat32> asOutput() {
     return flowOut;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayUnpack> {
+    /**
+     * The handle input
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * The value input
+     */
+    public final Operand<? extends TType> value;
+
+    /**
+     * The flowIn input
+     */
+    public final Operand<TFloat32> flowIn;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayUnpack(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      value = (Operand<? extends TType>) op.input(inputIndex++);
+      flowIn = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

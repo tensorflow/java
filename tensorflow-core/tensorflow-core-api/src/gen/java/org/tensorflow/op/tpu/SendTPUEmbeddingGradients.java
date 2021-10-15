@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -106,6 +109,45 @@ public final class SendTPUEmbeddingGradients extends RawOp {
     public Options NN(Long NN) {
       this.NN = NN;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SendTPUEmbeddingGradients> {
+    /**
+     * A TensorList of gradients with which to update embedding tables.
+     * This argument has the same length and shapes as the return value of
+     * RecvTPUEmbeddingActivations, but contains gradients of the model's loss
+     * with respect to the embedding activations. The embedding tables are updated
+     * from these gradients via the optimizer specified in the TPU embedding
+     * configuration given to tpu.initialize_system.
+     */
+    public final Iterable<Operand<TFloat32>> inputs;
+
+    /**
+     * A TensorList of float32 scalars, one for each dynamic learning
+     * rate tag: see the comments in
+     * //third_party/tensorflow/core/protobuf/tpu/optimization_parameters.proto.
+     * Multiple tables can share the same dynamic learning rate tag as specified
+     * in the configuration. If the learning rates for all tables are constant,
+     * this list should be empty.
+     */
+    public final Iterable<Operand<TFloat32>> learningRates;
+
+    /**
+     * Serialized TPUEmbeddingConfiguration proto.
+     */
+    public final String config;
+
+    public Inputs(GraphOperation op) {
+      super(new SendTPUEmbeddingGradients(op), op, Arrays.asList("config"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      int learningRatesLength = op.inputListLength("learning_rates");
+      learningRates = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, learningRatesLength));
+      inputIndex += learningRatesLength;
+      config = op.attributes().getAttrString("config");
     }
   }
 }

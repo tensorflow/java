@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -89,5 +92,24 @@ public final class ReaderRead extends RawOp {
    */
   public Output<TString> value() {
     return value;
+  }
+
+  public static class Inputs extends RawOpInputs<ReaderRead> {
+    /**
+     * Handle to a Reader.
+     */
+    public final Operand<? extends TType> readerHandle;
+
+    /**
+     * Handle to a Queue, with string work items.
+     */
+    public final Operand<? extends TType> queueHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new ReaderRead(op), op, Arrays.asList());
+      int inputIndex = 0;
+      readerHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      queueHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

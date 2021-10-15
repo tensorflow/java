@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -100,5 +104,51 @@ public final class AllToAll<T extends TType> extends RawOp implements Operand<T>
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<AllToAll<T>> {
+    /**
+     * The local input to the sum.
+     */
+    public final Operand<T> input;
+
+    /**
+     * An int32 tensor with shape
+     * [num_groups, num_replicas_per_group]. {@code group_assignment[i]} represents the
+     * replica ids in the ith subgroup.
+     */
+    public final Operand<TInt32> groupAssignment;
+
+    /**
+     * The type of elements to be exchanged.
+     */
+    public final DataType T;
+
+    /**
+     * The dimension number to concatenate.
+     */
+    public final long concatDimension;
+
+    /**
+     * The dimension number to split.
+     */
+    public final long splitDimension;
+
+    /**
+     * The number of splits, this number must equal to the sub-group
+     * size(group_assignment.get_shape()[1])
+     */
+    public final long splitCount;
+
+    public Inputs(GraphOperation op) {
+      super(new AllToAll<>(op), op, Arrays.asList("T", "concat_dimension", "split_dimension", "split_count"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      groupAssignment = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      concatDimension = op.attributes().getAttrInt("concat_dimension");
+      splitDimension = op.attributes().getAttrInt("split_dimension");
+      splitCount = op.attributes().getAttrInt("split_count");
+    }
   }
 }

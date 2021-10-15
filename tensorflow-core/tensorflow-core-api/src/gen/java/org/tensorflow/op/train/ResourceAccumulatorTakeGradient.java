@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -87,5 +91,31 @@ public final class ResourceAccumulatorTakeGradient<T extends TType> extends RawO
   @Override
   public Output<T> asOutput() {
     return average;
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceAccumulatorTakeGradient<?>> {
+    /**
+     * The handle to an accumulator.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * Number of gradients required before we return an aggregate.
+     */
+    public final Operand<TInt32> numRequired;
+
+    /**
+     * The data type of accumulated gradients. Needs to correspond to the type
+     * of the accumulator.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceAccumulatorTakeGradient<>(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      numRequired = (Operand<TInt32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

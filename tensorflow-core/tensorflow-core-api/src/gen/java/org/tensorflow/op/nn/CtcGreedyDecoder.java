@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -190,6 +194,43 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
     public Options blankIndex(Long blankIndex) {
       this.blankIndex = blankIndex;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<CtcGreedyDecoder<T>> {
+    /**
+     * 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.
+     */
+    public final Operand<T> inputs;
+
+    /**
+     * A vector containing sequence lengths, size {@code (batch_size)}.
+     */
+    public final Operand<TInt32> sequenceLength;
+
+    /**
+     * If True, merge repeated classes in output.
+     */
+    public final boolean mergeRepeated;
+
+    /**
+     * The blankIndex attribute
+     */
+    public final long blankIndex;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new CtcGreedyDecoder<>(op), op, Arrays.asList("merge_repeated", "blank_index", "T"));
+      int inputIndex = 0;
+      inputs = (Operand<T>) op.input(inputIndex++);
+      sequenceLength = (Operand<TInt32>) op.input(inputIndex++);
+      mergeRepeated = op.attributes().getAttrBool("merge_repeated");
+      blankIndex = op.attributes().getAttrInt("blank_index");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -50,8 +54,8 @@ public final class RiscCast<U extends TType> extends RawOp implements Operand<U>
    * Factory method to create a class wrapping a new RiscCast operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param DstT the value of the DstT property
+   * @param x The x value
+   * @param DstT The value of the DstT attribute
    * @param <U> data type for {@code RiscCast} output and operands
    * @return a new instance of RiscCast
    */
@@ -78,5 +82,30 @@ public final class RiscCast<U extends TType> extends RawOp implements Operand<U>
   @Override
   public Output<U> asOutput() {
     return y;
+  }
+
+  public static class Inputs extends RawOpInputs<RiscCast<?>> {
+    /**
+     * The x input
+     */
+    public final Operand<? extends TType> x;
+
+    /**
+     * The SrcT attribute
+     */
+    public final DataType SrcT;
+
+    /**
+     * The DstT attribute
+     */
+    public final DataType DstT;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscCast<>(op), op, Arrays.asList("SrcT", "DstT"));
+      int inputIndex = 0;
+      x = (Operand<? extends TType>) op.input(inputIndex++);
+      SrcT = op.attributes().getAttrType("SrcT");
+      DstT = op.attributes().getAttrType("DstT");
+    }
   }
 }

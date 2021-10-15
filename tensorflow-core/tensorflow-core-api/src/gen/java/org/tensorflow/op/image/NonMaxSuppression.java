@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -183,6 +187,68 @@ public final class NonMaxSuppression<T extends TNumber> extends RawOp {
     public Options padToMaxOutputSize(Boolean padToMaxOutputSize) {
       this.padToMaxOutputSize = padToMaxOutputSize;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<NonMaxSuppression<T>> {
+    /**
+     * A 2-D float tensor of shape {@code [num_boxes, 4]}.
+     */
+    public final Operand<T> boxes;
+
+    /**
+     * A 1-D float tensor of shape {@code [num_boxes]} representing a single
+     * score corresponding to each box (each row of boxes).
+     */
+    public final Operand<T> scores;
+
+    /**
+     * A scalar integer tensor representing the maximum number of
+     * boxes to be selected by non max suppression.
+     */
+    public final Operand<TInt32> maxOutputSize;
+
+    /**
+     * A 0-D float tensor representing the threshold for deciding whether
+     * boxes overlap too much with respect to IOU.
+     */
+    public final Operand<T> iouThreshold;
+
+    /**
+     * A 0-D float tensor representing the threshold for deciding when to remove
+     * boxes based on score.
+     */
+    public final Operand<T> scoreThreshold;
+
+    /**
+     * A 0-D float tensor representing the sigma parameter for Soft NMS; see Bodla et
+     * al (c.f. https://arxiv.org/abs/1704.04503).  When {@code soft_nms_sigma=0.0} (which
+     * is default), we fall back to standard (hard) NMS.
+     */
+    public final Operand<T> softNmsSigma;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If true, the output `selected_indices` is padded to be of length
+     * `max_output_size`. Defaults to false.
+     */
+    public final boolean padToMaxOutputSize;
+
+    public Inputs(GraphOperation op) {
+      super(new NonMaxSuppression<>(op), op, Arrays.asList("T", "pad_to_max_output_size"));
+      int inputIndex = 0;
+      boxes = (Operand<T>) op.input(inputIndex++);
+      scores = (Operand<T>) op.input(inputIndex++);
+      maxOutputSize = (Operand<TInt32>) op.input(inputIndex++);
+      iouThreshold = (Operand<T>) op.input(inputIndex++);
+      scoreThreshold = (Operand<T>) op.input(inputIndex++);
+      softNmsSigma = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      padToMaxOutputSize = op.attributes().getAttrBool("pad_to_max_output_size");
     }
   }
 }

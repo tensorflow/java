@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -60,8 +64,8 @@ public final class VariableShape<T extends TNumber> extends RawOp implements Ope
    * Factory method to create a class wrapping a new VariableShape operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param outType the value of the outType property
+   * @param input The input value
+   * @param outType The value of the outType attribute
    * @param <T> data type for {@code VariableShape} output and operands
    * @return a new instance of VariableShape
    */
@@ -80,7 +84,7 @@ public final class VariableShape<T extends TNumber> extends RawOp implements Ope
    * Factory method to create a class wrapping a new VariableShape operation, with the default output types.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of VariableShape, with default output types
    */
   @Endpoint(
@@ -102,5 +106,24 @@ public final class VariableShape<T extends TNumber> extends RawOp implements Ope
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<VariableShape<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new VariableShape<>(op), op, Arrays.asList("out_type"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

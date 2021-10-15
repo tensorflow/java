@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -145,5 +149,49 @@ public final class SparseConcat<T extends TType> extends RawOp {
    */
   public Output<TInt64> outputShape() {
     return outputShape;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseConcat<T>> {
+    /**
+     * 2-D.  Indices of each input {@code SparseTensor}.
+     */
+    public final Iterable<Operand<TInt64>> indices;
+
+    /**
+     * 1-D.  Non-empty values of each {@code SparseTensor}.
+     */
+    public final Iterable<Operand<T>> values;
+
+    /**
+     * 1-D.  Shapes of each {@code SparseTensor}.
+     */
+    public final Iterable<Operand<TInt64>> shapes;
+
+    /**
+     * Dimension to concatenate along. Must be in range [-rank, rank),
+     * where rank is the number of dimensions in each input `SparseTensor`.
+     */
+    public final long concatDim;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseConcat<>(op), op, Arrays.asList("concat_dim", "T"));
+      int inputIndex = 0;
+      int indicesLength = op.inputListLength("indices");
+      indices = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, indicesLength));
+      inputIndex += indicesLength;
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      int shapesLength = op.inputListLength("shapes");
+      shapes = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, shapesLength));
+      inputIndex += shapesLength;
+      concatDim = op.attributes().getAttrInt("concat_dim");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

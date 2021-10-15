@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -56,5 +59,18 @@ public final class TensorArrayClose extends RawOp {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArrayClose");
     opBuilder.addInput(handle.asOutput());
     return new TensorArrayClose(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayClose> {
+    /**
+     * The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
+     */
+    public final Operand<? extends TType> handle;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayClose(op), op, Arrays.asList());
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

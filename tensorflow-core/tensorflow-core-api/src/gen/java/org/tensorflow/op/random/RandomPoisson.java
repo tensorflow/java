@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -67,7 +71,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
    * distribution described by the shape parameters given in rate.
    * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
    * associated poisson distribution.
-   * @param dtype the value of the dtype property
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <V> data type for {@code RandomPoissonV2} output and operands
    * @return a new instance of RandomPoisson
@@ -185,6 +189,59 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<RandomPoisson<?>> {
+    /**
+     * 1-D integer tensor. Shape of independent samples to draw from each
+     * distribution described by the shape parameters given in rate.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * A tensor in which each scalar is a &quot;rate&quot; parameter describing the
+     * associated poisson distribution.
+     */
+    public final Operand<? extends TNumber> rate;
+
+    /**
+     * If either `seed` or `seed2` are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * A second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    /**
+     * The S attribute
+     */
+    public final DataType S;
+
+    /**
+     * The R attribute
+     */
+    public final DataType R;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new RandomPoisson<>(op), op, Arrays.asList("seed", "seed2", "S", "R", "dtype"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      rate = (Operand<? extends TNumber>) op.input(inputIndex++);
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      S = op.attributes().getAttrType("S");
+      R = op.attributes().getAttrType("R");
+      dtype = op.attributes().getAttrType("dtype");
     }
   }
 }

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -28,9 +29,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -122,5 +125,60 @@ public final class StatelessIf extends RawOp implements If {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<StatelessIf> {
+    /**
+     * <pre>
+     *   A Tensor. If the tensor is a scalar of non-boolean type, the
+     *   scalar is converted to a boolean according to the
+     *   following rule: if the scalar is a numerical value, non-zero means
+     *   `True` and zero means False; if the scalar is a string, non-empty
+     *   means `True` and empty means `False`. If the tensor is not a scalar,
+     *   being empty means False and being non-empty means True.
+     *
+     *   This should only be used when the if then/else body functions do not
+     *   have stateful ops.
+     * </pre>
+     */
+    public final Operand<? extends TType> cond;
+
+    /**
+     * A list of input tensors.
+     */
+    public final Iterable<Operand<?>> input;
+
+    /**
+     * The Tcond attribute
+     */
+    public final DataType Tcond;
+
+    /**
+     * A list of input types.
+     */
+    public final DataType[] Tin;
+
+    /**
+     * A list of output types.
+     */
+    public final DataType[] Tout;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessIf(op), op, Arrays.asList("Tcond", "Tin", "Tout", "output_shapes"));
+      int inputIndex = 0;
+      cond = (Operand<? extends TType>) op.input(inputIndex++);
+      int inputLength = op.inputListLength("input");
+      input = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputLength));
+      inputIndex += inputLength;
+      Tcond = op.attributes().getAttrType("Tcond");
+      Tin = op.attributes().getAttrTypeList("Tin");
+      Tout = op.attributes().getAttrTypeList("Tout");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

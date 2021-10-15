@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
@@ -54,8 +58,8 @@ public final class NotEqual extends RawOp implements Operand<TBool> {
    * Factory method to create a class wrapping a new NotEqual operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param options carries optional attribute values
    * @param <T> data type for {@code NotEqual} output and operands
    * @return a new instance of NotEqual
@@ -120,6 +124,37 @@ public final class NotEqual extends RawOp implements Operand<TBool> {
     public Options incompatibleShapeError(Boolean incompatibleShapeError) {
       this.incompatibleShapeError = incompatibleShapeError;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<NotEqual> {
+    /**
+     * The x input
+     */
+    public final Operand<T> x;
+
+    /**
+     * The y input
+     */
+    public final Operand<T> y;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The incompatibleShapeError attribute
+     */
+    public final boolean incompatibleShapeError;
+
+    public Inputs(GraphOperation op) {
+      super(new NotEqual(op), op, Arrays.asList("T", "incompatible_shape_error"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      y = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      incompatibleShapeError = op.attributes().getAttrBool("incompatible_shape_error");
     }
   }
 }

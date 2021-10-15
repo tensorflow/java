@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -171,6 +174,46 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ThreadPoolHandle> {
+    /**
+     * The number of threads in the thread pool.
+     */
+    public final long numThreads;
+
+    /**
+     * The maximum degree of parallelism to use within operations that execute on this
+     * threadpool.
+     */
+    public final long maxIntraOpParallelism;
+
+    /**
+     * A human-readable name for the threads that may be visible in some
+     * visualizations.
+     * threadpool.
+     */
+    public final String displayName;
+
+    /**
+     * The container attribute
+     */
+    public final String container;
+
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new ThreadPoolHandle(op), op, Arrays.asList("num_threads", "max_intra_op_parallelism", "display_name", "container", "shared_name"));
+      int inputIndex = 0;
+      numThreads = op.attributes().getAttrInt("num_threads");
+      maxIntraOpParallelism = op.attributes().getAttrInt("max_intra_op_parallelism");
+      displayName = op.attributes().getAttrString("display_name");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

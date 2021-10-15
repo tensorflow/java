@@ -20,14 +20,17 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -93,5 +96,31 @@ public final class Split<T extends TType> extends RawOp implements Iterable<Oper
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<T>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Split<T>> {
+    /**
+     * 0-D.  The dimension along which to split.  Must be in the range
+     * {@code [-rank(value), rank(value))}.
+     */
+    public final Operand<TInt32> axis;
+
+    /**
+     * The tensor to split.
+     */
+    public final Operand<T> value;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Split<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      axis = (Operand<TInt32>) op.input(inputIndex++);
+      value = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

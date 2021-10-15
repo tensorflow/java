@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -57,17 +61,17 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
    * Factory method to create a class wrapping a new DataServiceDatasetV2 operation.
    *
    * @param scope current scope
-   * @param datasetId the datasetId value
-   * @param processingMode the processingMode value
-   * @param address the address value
-   * @param protocol the protocol value
-   * @param jobName the jobName value
-   * @param consumerIndex the consumerIndex value
-   * @param numConsumers the numConsumers value
-   * @param maxOutstandingRequests the maxOutstandingRequests value
-   * @param iterationCounter the iterationCounter value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param datasetId The datasetId value
+   * @param processingMode The processingMode value
+   * @param address The address value
+   * @param protocol The protocol value
+   * @param jobName The jobName value
+   * @param consumerIndex The consumerIndex value
+   * @param numConsumers The numConsumers value
+   * @param maxOutstandingRequests The maxOutstandingRequests value
+   * @param iterationCounter The iterationCounter value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of DataServiceDatasetV2
    */
@@ -200,6 +204,97 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
     public Options targetWorkers(String targetWorkers) {
       this.targetWorkers = targetWorkers;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DataServiceDatasetV2> {
+    /**
+     * The datasetId input
+     */
+    public final Operand<TInt64> datasetId;
+
+    /**
+     * The processingMode input
+     */
+    public final Operand<TString> processingMode;
+
+    /**
+     * The address input
+     */
+    public final Operand<TString> address;
+
+    /**
+     * The protocol input
+     */
+    public final Operand<TString> protocol;
+
+    /**
+     * The jobName input
+     */
+    public final Operand<TString> jobName;
+
+    /**
+     * The consumerIndex input
+     */
+    public final Operand<TInt64> consumerIndex;
+
+    /**
+     * The numConsumers input
+     */
+    public final Operand<TInt64> numConsumers;
+
+    /**
+     * The maxOutstandingRequests input
+     */
+    public final Operand<TInt64> maxOutstandingRequests;
+
+    /**
+     * The iterationCounter input
+     */
+    public final Operand<? extends TType> iterationCounter;
+
+    /**
+     * The taskRefreshIntervalHintMs attribute
+     */
+    public final long taskRefreshIntervalHintMs;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The dataTransferProtocol attribute
+     */
+    public final String dataTransferProtocol;
+
+    /**
+     * The targetWorkers attribute
+     */
+    public final String targetWorkers;
+
+    public Inputs(GraphOperation op) {
+      super(new DataServiceDatasetV2(op), op, Arrays.asList("task_refresh_interval_hint_ms", "output_types", "output_shapes", "data_transfer_protocol", "target_workers"));
+      int inputIndex = 0;
+      datasetId = (Operand<TInt64>) op.input(inputIndex++);
+      processingMode = (Operand<TString>) op.input(inputIndex++);
+      address = (Operand<TString>) op.input(inputIndex++);
+      protocol = (Operand<TString>) op.input(inputIndex++);
+      jobName = (Operand<TString>) op.input(inputIndex++);
+      consumerIndex = (Operand<TInt64>) op.input(inputIndex++);
+      numConsumers = (Operand<TInt64>) op.input(inputIndex++);
+      maxOutstandingRequests = (Operand<TInt64>) op.input(inputIndex++);
+      iterationCounter = (Operand<? extends TType>) op.input(inputIndex++);
+      taskRefreshIntervalHintMs = op.attributes().getAttrInt("task_refresh_interval_hint_ms");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      dataTransferProtocol = op.attributes().getAttrString("data_transfer_protocol");
+      targetWorkers = op.attributes().getAttrString("target_workers");
     }
   }
 }

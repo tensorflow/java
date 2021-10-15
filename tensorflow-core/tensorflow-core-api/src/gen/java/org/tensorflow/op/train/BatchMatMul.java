@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -168,6 +172,55 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
     public Options adjY(Boolean adjY) {
       this.adjY = adjY;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BatchMatMul<?>> {
+    /**
+     * 2-D or higher with shape {@code [..., r_x, c_x]}.
+     */
+    public final Operand<? extends TType> x;
+
+    /**
+     * 2-D or higher with shape {@code [..., r_y, c_y]}.
+     */
+    public final Operand<? extends TType> y;
+
+    /**
+     * The Ta attribute
+     */
+    public final DataType Ta;
+
+    /**
+     * The Tb attribute
+     */
+    public final DataType Tb;
+
+    /**
+     * If not spcified, Tout is the same type to input type.
+     */
+    public final DataType Tout;
+
+    /**
+     * If `True`, adjoint the slices of `x`. Defaults to `False`.
+     */
+    public final boolean adjX;
+
+    /**
+     * If `True`, adjoint the slices of `y`. Defaults to `False`.
+     */
+    public final boolean adjY;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchMatMul<>(op), op, Arrays.asList("Ta", "Tb", "Tout", "adj_x", "adj_y"));
+      int inputIndex = 0;
+      x = (Operand<? extends TType>) op.input(inputIndex++);
+      y = (Operand<? extends TType>) op.input(inputIndex++);
+      Ta = op.attributes().getAttrType("Ta");
+      Tb = op.attributes().getAttrType("Tb");
+      Tout = op.attributes().getAttrType("Tout");
+      adjX = op.attributes().getAttrBool("adj_x");
+      adjY = op.attributes().getAttrBool("adj_y");
     }
   }
 }

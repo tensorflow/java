@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -104,5 +107,47 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
   @Override
   public Output<TInt32> asOutput() {
     return selectedIndices;
+  }
+
+  public static class Inputs extends RawOpInputs<NonMaxSuppressionWithOverlaps> {
+    /**
+     * A 2-D float tensor of shape {@code [num_boxes, num_boxes]} representing
+     * the n-by-n box overlap values.
+     */
+    public final Operand<TFloat32> overlaps;
+
+    /**
+     * A 1-D float tensor of shape {@code [num_boxes]} representing a single
+     * score corresponding to each box (each row of boxes).
+     */
+    public final Operand<TFloat32> scores;
+
+    /**
+     * A scalar integer tensor representing the maximum number of
+     * boxes to be selected by non max suppression.
+     */
+    public final Operand<TInt32> maxOutputSize;
+
+    /**
+     * A 0-D float tensor representing the threshold for deciding whether
+     * boxes overlap too.
+     */
+    public final Operand<TFloat32> overlapThreshold;
+
+    /**
+     * A 0-D float tensor representing the threshold for deciding when to remove
+     * boxes based on score.
+     */
+    public final Operand<TFloat32> scoreThreshold;
+
+    public Inputs(GraphOperation op) {
+      super(new NonMaxSuppressionWithOverlaps(op), op, Arrays.asList());
+      int inputIndex = 0;
+      overlaps = (Operand<TFloat32>) op.input(inputIndex++);
+      scores = (Operand<TFloat32>) op.input(inputIndex++);
+      maxOutputSize = (Operand<TInt32>) op.input(inputIndex++);
+      overlapThreshold = (Operand<TFloat32>) op.input(inputIndex++);
+      scoreThreshold = (Operand<TFloat32>) op.input(inputIndex++);
+    }
   }
 }

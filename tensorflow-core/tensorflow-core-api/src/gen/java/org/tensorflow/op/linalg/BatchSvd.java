@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -59,7 +63,7 @@ public final class BatchSvd<T extends TType> extends RawOp {
    * Factory method to create a class wrapping a new BatchSvd operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchSvd} output and operands
    * @return a new instance of BatchSvd
@@ -162,6 +166,37 @@ public final class BatchSvd<T extends TType> extends RawOp {
     public Options fullMatrices(Boolean fullMatrices) {
       this.fullMatrices = fullMatrices;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<BatchSvd<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The computeUv attribute
+     */
+    public final boolean computeUv;
+
+    /**
+     * The fullMatrices attribute
+     */
+    public final boolean fullMatrices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchSvd<>(op), op, Arrays.asList("compute_uv", "full_matrices", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      computeUv = op.attributes().getAttrBool("compute_uv");
+      fullMatrices = op.attributes().getAttrBool("full_matrices");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

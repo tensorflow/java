@@ -19,13 +19,16 @@ package org.tensorflow.op.debugging;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -162,7 +165,7 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
    * @param debugUrls List of URLs to debug targets, e.g., file:///foo/tfdbg_dump.
    * @return this Options instance.
    */
-  public static Options debugUrls(String[] debugUrls) {
+  public static Options debugUrls(String... debugUrls) {
     return new Options().debugUrls(debugUrls);
   }
 
@@ -310,6 +313,70 @@ public final class DebugIdentity<T extends TType> extends RawOp implements Opera
     public Options tfdbgRunId(String tfdbgRunId) {
       this.tfdbgRunId = tfdbgRunId;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<DebugIdentity<T>> {
+    /**
+     * Input tensor, non-Reference type
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * A tfdbg-generated ID for the context that the op belongs to,
+     *   e.g., a concrete compiled tf.function.
+     */
+    public final String tfdbgContextId;
+
+    /**
+     * Optional. Name of the op that the debug op is concerned with.
+     *   Used only for single-tensor trace.
+     */
+    public final String opName;
+
+    /**
+     * Optional. Output slot index of the tensor that the debug op
+     *   is concerned with. Used only for single-tensor trace.
+     */
+    public final long outputSlot;
+
+    /**
+     * TensorDebugMode enum value. See debug_event.proto for details.
+     */
+    public final long tensorDebugMode;
+
+    /**
+     * List of URLs to debug targets, e.g., file:///foo/tfdbg_dump.
+     */
+    public final String[] debugUrls;
+
+    /**
+     * The circularBufferSize attribute
+     */
+    public final long circularBufferSize;
+
+    /**
+     * The tfdbgRunId attribute
+     */
+    public final String tfdbgRunId;
+
+    public Inputs(GraphOperation op) {
+      super(new DebugIdentity<>(op), op, Arrays.asList("T", "tfdbg_context_id", "op_name", "output_slot", "tensor_debug_mode", "debug_urls", "circular_buffer_size", "tfdbg_run_id"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      tfdbgContextId = op.attributes().getAttrString("tfdbg_context_id");
+      opName = op.attributes().getAttrString("op_name");
+      outputSlot = op.attributes().getAttrInt("output_slot");
+      tensorDebugMode = op.attributes().getAttrInt("tensor_debug_mode");
+      debugUrls = op.attributes().getAttrStringList("debug_urls");
+      circularBufferSize = op.attributes().getAttrInt("circular_buffer_size");
+      tfdbgRunId = op.attributes().getAttrString("tfdbg_run_id");
     }
   }
 }

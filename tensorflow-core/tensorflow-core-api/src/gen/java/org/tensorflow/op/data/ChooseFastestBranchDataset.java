@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +28,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -57,15 +61,15 @@ public final class ChooseFastestBranchDataset extends RawOp implements Operand<T
    * Factory method to create a class wrapping a new ChooseFastestBranchDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param ratioNumerator the ratioNumerator value
-   * @param ratioDenominator the ratioDenominator value
-   * @param otherArguments the otherArguments value
-   * @param numElementsPerBranch the value of the numElementsPerBranch property
-   * @param branches the value of the branches property
-   * @param otherArgumentsLengths the value of the otherArgumentsLengths property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param ratioNumerator The ratioNumerator value
+   * @param ratioDenominator The ratioDenominator value
+   * @param otherArguments The otherArguments value
+   * @param numElementsPerBranch The value of the numElementsPerBranch attribute
+   * @param branches The value of the branches attribute
+   * @param otherArgumentsLengths The value of the otherArgumentsLengths attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of ChooseFastestBranchDataset
    */
   @Endpoint(
@@ -114,5 +118,68 @@ public final class ChooseFastestBranchDataset extends RawOp implements Operand<T
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<ChooseFastestBranchDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The ratioNumerator input
+     */
+    public final Operand<TInt64> ratioNumerator;
+
+    /**
+     * The ratioDenominator input
+     */
+    public final Operand<TInt64> ratioDenominator;
+
+    /**
+     * The otherArguments input
+     */
+    public final Iterable<Operand<?>> otherArguments;
+
+    /**
+     * The Targuments attribute
+     */
+    public final DataType[] Targuments;
+
+    /**
+     * The numElementsPerBranch attribute
+     */
+    public final long numElementsPerBranch;
+
+    /**
+     * The otherArgumentsLengths attribute
+     */
+    public final long[] otherArgumentsLengths;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new ChooseFastestBranchDataset(op), op, Arrays.asList("Targuments", "num_elements_per_branch", "other_arguments_lengths", "output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      ratioNumerator = (Operand<TInt64>) op.input(inputIndex++);
+      ratioDenominator = (Operand<TInt64>) op.input(inputIndex++);
+      int otherArgumentsLength = op.inputListLength("other_arguments");
+      otherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, otherArgumentsLength));
+      inputIndex += otherArgumentsLength;
+      Targuments = op.attributes().getAttrTypeList("Targuments");
+      numElementsPerBranch = op.attributes().getAttrInt("num_elements_per_branch");
+      otherArgumentsLengths = op.attributes().getAttrIntList("other_arguments_lengths");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

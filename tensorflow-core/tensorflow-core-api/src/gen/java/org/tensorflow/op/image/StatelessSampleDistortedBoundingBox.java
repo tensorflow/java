@@ -19,14 +19,17 @@ package org.tensorflow.op.image;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -189,7 +192,7 @@ public final class StatelessSampleDistortedBoundingBox<T extends TNumber> extend
    * width / height within this range.
    * @return this Options instance.
    */
-  public static Options aspectRatioRange(Float[] aspectRatioRange) {
+  public static Options aspectRatioRange(Float... aspectRatioRange) {
     return new Options().aspectRatioRange(aspectRatioRange);
   }
 
@@ -211,7 +214,7 @@ public final class StatelessSampleDistortedBoundingBox<T extends TNumber> extend
    * supplied image within this range.
    * @return this Options instance.
    */
-  public static Options areaRange(Float[] areaRange) {
+  public static Options areaRange(Float... areaRange) {
     return new Options().areaRange(areaRange);
   }
 
@@ -356,6 +359,84 @@ public final class StatelessSampleDistortedBoundingBox<T extends TNumber> extend
     public Options useImageIfNoBoundingBoxes(Boolean useImageIfNoBoundingBoxes) {
       this.useImageIfNoBoundingBoxes = useImageIfNoBoundingBoxes;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<StatelessSampleDistortedBoundingBox<T>> {
+    /**
+     * 1-D, containing {@code [height, width, channels]}.
+     */
+    public final Operand<T> imageSize;
+
+    /**
+     * 3-D with shape {@code [batch, N, 4]} describing the N bounding boxes
+     * associated with the image.
+     */
+    public final Operand<TFloat32> boundingBoxes;
+
+    /**
+     * The cropped area of the image must contain at least this
+     * fraction of any bounding box supplied. The value of this parameter should be
+     * non-negative. In the case of 0, the cropped area does not need to overlap
+     * any of the bounding boxes supplied.
+     */
+    public final Operand<TFloat32> minObjectCovered;
+
+    /**
+     * 1-D with shape {@code [2]}. The seed to the random number generator. Must have dtype
+     * {@code int32} or {@code int64}. (When using XLA, only {@code int32} is allowed.)
+     */
+    public final Operand<? extends TNumber> seed;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tseed attribute
+     */
+    public final DataType Tseed;
+
+    /**
+     * The cropped area of the image must have an aspect ratio =
+     * width / height within this range.
+     */
+    public final float[] aspectRatioRange;
+
+    /**
+     * The cropped area of the image must contain a fraction of the
+     * supplied image within this range.
+     */
+    public final float[] areaRange;
+
+    /**
+     * Number of attempts at generating a cropped region of the image
+     * of the specified constraints. After `max_attempts` failures, return the entire
+     * image.
+     */
+    public final long maxAttempts;
+
+    /**
+     * Controls behavior if no bounding boxes supplied.
+     * If true, assume an implicit bounding box covering the whole input. If false,
+     * raise an error.
+     */
+    public final boolean useImageIfNoBoundingBoxes;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessSampleDistortedBoundingBox<>(op), op, Arrays.asList("T", "Tseed", "aspect_ratio_range", "area_range", "max_attempts", "use_image_if_no_bounding_boxes"));
+      int inputIndex = 0;
+      imageSize = (Operand<T>) op.input(inputIndex++);
+      boundingBoxes = (Operand<TFloat32>) op.input(inputIndex++);
+      minObjectCovered = (Operand<TFloat32>) op.input(inputIndex++);
+      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tseed = op.attributes().getAttrType("Tseed");
+      aspectRatioRange = op.attributes().getAttrFloatList("aspect_ratio_range");
+      areaRange = op.attributes().getAttrFloatList("area_range");
+      maxAttempts = op.attributes().getAttrInt("max_attempts");
+      useImageIfNoBoundingBoxes = op.attributes().getAttrBool("use_image_if_no_bounding_boxes");
     }
   }
 }

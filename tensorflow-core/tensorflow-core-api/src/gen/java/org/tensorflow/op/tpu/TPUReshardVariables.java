@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TString;
@@ -49,9 +52,9 @@ public final class TPUReshardVariables extends RawOp {
    * Factory method to create a class wrapping a new TPUReshardVariables operation.
    *
    * @param scope current scope
-   * @param vars the vars value
-   * @param newFormatKey the newFormatKey value
-   * @param formatStateVar the formatStateVar value
+   * @param vars The vars value
+   * @param newFormatKey The newFormatKey value
+   * @param formatStateVar The formatStateVar value
    * @return a new instance of TPUReshardVariables
    */
   @Endpoint(
@@ -64,5 +67,32 @@ public final class TPUReshardVariables extends RawOp {
     opBuilder.addInput(newFormatKey.asOutput());
     opBuilder.addInput(formatStateVar.asOutput());
     return new TPUReshardVariables(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<TPUReshardVariables> {
+    /**
+     * The vars input
+     */
+    public final Iterable<Operand<? extends TType>> vars;
+
+    /**
+     * The newFormatKey input
+     */
+    public final Operand<TString> newFormatKey;
+
+    /**
+     * The formatStateVar input
+     */
+    public final Operand<? extends TType> formatStateVar;
+
+    public Inputs(GraphOperation op) {
+      super(new TPUReshardVariables(op), op, Arrays.asList());
+      int inputIndex = 0;
+      int varsLength = op.inputListLength("vars");
+      vars = Arrays.asList((Operand<? extends TType>[]) op.inputList(inputIndex, varsLength));
+      inputIndex += varsLength;
+      newFormatKey = (Operand<TString>) op.input(inputIndex++);
+      formatStateVar = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.dtypes;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -66,9 +70,9 @@ public final class Complex<U extends TType> extends RawOp implements Operand<U> 
    * Factory method to create a class wrapping a new Complex operation.
    *
    * @param scope current scope
-   * @param real the real value
-   * @param imag the imag value
-   * @param Tout the value of the Tout property
+   * @param real The real value
+   * @param imag The imag value
+   * @param Tout The value of the Tout attribute
    * @param <U> data type for {@code Complex} output and operands
    * @param <T> data type for {@code Complex} output and operands
    * @return a new instance of Complex
@@ -97,5 +101,36 @@ public final class Complex<U extends TType> extends RawOp implements Operand<U> 
   @Override
   public Output<U> asOutput() {
     return out;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Complex<?>> {
+    /**
+     * The real input
+     */
+    public final Operand<T> real;
+
+    /**
+     * The imag input
+     */
+    public final Operand<T> imag;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tout attribute
+     */
+    public final DataType Tout;
+
+    public Inputs(GraphOperation op) {
+      super(new Complex<>(op), op, Arrays.asList("T", "Tout"));
+      int inputIndex = 0;
+      real = (Operand<T>) op.input(inputIndex++);
+      imag = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tout = op.attributes().getAttrType("Tout");
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -139,6 +143,86 @@ public final class SparseApplyAdagradDa<T extends TType> extends RawOp implement
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseApplyAdagradDa<T>> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<T> var;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<T> gradientAccumulator;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<T> gradientSquaredAccumulator;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * A vector of indices into the first dimension of var and accum.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * Learning rate. Must be a scalar.
+     */
+    public final Operand<T> lr;
+
+    /**
+     * L1 regularization. Must be a scalar.
+     */
+    public final Operand<T> l1;
+
+    /**
+     * L2 regularization. Must be a scalar.
+     */
+    public final Operand<T> l2;
+
+    /**
+     * Training step number. Must be a scalar.
+     */
+    public final Operand<TInt64> globalStep;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     */
+    public final boolean useLocking;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseApplyAdagradDa<>(op), op, Arrays.asList("T", "Tindices", "use_locking"));
+      int inputIndex = 0;
+      var = (Operand<T>) op.input(inputIndex++);
+      gradientAccumulator = (Operand<T>) op.input(inputIndex++);
+      gradientSquaredAccumulator = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      lr = (Operand<T>) op.input(inputIndex++);
+      l1 = (Operand<T>) op.input(inputIndex++);
+      l2 = (Operand<T>) op.input(inputIndex++);
+      globalStep = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      useLocking = op.attributes().getAttrBool("use_locking");
     }
   }
 }

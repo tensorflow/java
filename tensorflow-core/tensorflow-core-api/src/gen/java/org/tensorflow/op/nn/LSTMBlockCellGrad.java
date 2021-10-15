@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -153,5 +157,120 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
    */
   public Output<T> wcoGrad() {
     return wcoGrad;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<LSTMBlockCellGrad<T>> {
+    /**
+     * The input to the LSTM cell, shape (batch_size, num_inputs).
+     */
+    public final Operand<T> x;
+
+    /**
+     * The previous cell state.
+     */
+    public final Operand<T> csPrev;
+
+    /**
+     * The previous h state.
+     */
+    public final Operand<T> hPrev;
+
+    /**
+     * The weight matrix.
+     */
+    public final Operand<T> w;
+
+    /**
+     * The weight matrix for input gate peephole connection.
+     */
+    public final Operand<T> wci;
+
+    /**
+     * The weight matrix for forget gate peephole connection.
+     */
+    public final Operand<T> wcf;
+
+    /**
+     * The weight matrix for output gate peephole connection.
+     */
+    public final Operand<T> wco;
+
+    /**
+     * The bias vector.
+     */
+    public final Operand<T> b;
+
+    /**
+     * The input gate.
+     */
+    public final Operand<T> i;
+
+    /**
+     * The cell state before the tanh.
+     */
+    public final Operand<T> cs;
+
+    /**
+     * The forget gate.
+     */
+    public final Operand<T> f;
+
+    /**
+     * The output gate.
+     */
+    public final Operand<T> o;
+
+    /**
+     * The cell input.
+     */
+    public final Operand<T> ci;
+
+    /**
+     * The cell after the tanh.
+     */
+    public final Operand<T> co;
+
+    /**
+     * The current gradient of cs.
+     */
+    public final Operand<T> csGrad;
+
+    /**
+     * The gradient of h vector.
+     */
+    public final Operand<T> hGrad;
+
+    /**
+     * Whether the cell uses peephole connections.
+     */
+    public final boolean usePeephole;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new LSTMBlockCellGrad<>(op), op, Arrays.asList("use_peephole", "T"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      csPrev = (Operand<T>) op.input(inputIndex++);
+      hPrev = (Operand<T>) op.input(inputIndex++);
+      w = (Operand<T>) op.input(inputIndex++);
+      wci = (Operand<T>) op.input(inputIndex++);
+      wcf = (Operand<T>) op.input(inputIndex++);
+      wco = (Operand<T>) op.input(inputIndex++);
+      b = (Operand<T>) op.input(inputIndex++);
+      i = (Operand<T>) op.input(inputIndex++);
+      cs = (Operand<T>) op.input(inputIndex++);
+      f = (Operand<T>) op.input(inputIndex++);
+      o = (Operand<T>) op.input(inputIndex++);
+      ci = (Operand<T>) op.input(inputIndex++);
+      co = (Operand<T>) op.input(inputIndex++);
+      csGrad = (Operand<T>) op.input(inputIndex++);
+      hGrad = (Operand<T>) op.input(inputIndex++);
+      usePeephole = op.attributes().getAttrBool("use_peephole");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -142,6 +145,31 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
     public Options stripDeviceAssignment(Boolean stripDeviceAssignment) {
       this.stripDeviceAssignment = stripDeviceAssignment;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DatasetToGraph> {
+    /**
+     * A variant tensor representing the dataset to return the graph representation for.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The externalStatePolicy attribute
+     */
+    public final long externalStatePolicy;
+
+    /**
+     * The stripDeviceAssignment attribute
+     */
+    public final boolean stripDeviceAssignment;
+
+    public Inputs(GraphOperation op) {
+      super(new DatasetToGraph(op), op, Arrays.asList("external_state_policy", "strip_device_assignment"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      externalStatePolicy = op.attributes().getAttrInt("external_state_policy");
+      stripDeviceAssignment = op.attributes().getAttrBool("strip_device_assignment");
     }
   }
 }

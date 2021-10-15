@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -98,7 +102,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    * find the unique elements.
-   * @param outIdx the value of the outIdx property
+   * @param outIdx The value of the outIdx attribute
    * @param <T> data type for {@code UniqueV2} output and operands
    * @param <V> data type for {@code UniqueV2} output and operands
    * @return a new instance of Unique
@@ -150,5 +154,43 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
    */
   public Output<V> idx() {
     return idx;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Unique<T, ?>> {
+    /**
+     * A {@code Tensor}.
+     */
+    public final Operand<T> x;
+
+    /**
+     * A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
+     * find the unique elements.
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Taxis attribute
+     */
+    public final DataType Taxis;
+
+    /**
+     * The outIdx attribute
+     */
+    public final DataType outIdx;
+
+    public Inputs(GraphOperation op) {
+      super(new Unique<>(op), op, Arrays.asList("T", "Taxis", "out_idx"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Taxis = op.attributes().getAttrType("Taxis");
+      outIdx = op.attributes().getAttrType("out_idx");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -116,5 +119,31 @@ public final class TensorArrayGrad extends RawOp {
    */
   public Output<TFloat32> flowOut() {
     return flowOut;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayGrad> {
+    /**
+     * The handle to the forward TensorArray.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * A float scalar that enforces proper chaining of operations.
+     */
+    public final Operand<TFloat32> flowIn;
+
+    /**
+     * The gradient source string, used to decide which gradient TensorArray
+     * to return.
+     */
+    public final String source;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayGrad(op), op, Arrays.asList("source"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      flowIn = (Operand<TFloat32>) op.input(inputIndex++);
+      source = op.attributes().getAttrString("source");
+    }
   }
 }

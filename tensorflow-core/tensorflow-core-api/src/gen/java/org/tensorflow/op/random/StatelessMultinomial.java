@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -60,7 +64,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    * represents the unnormalized log probabilities for all classes.
    * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
    * @param seed 2 seeds (shape [2]).
-   * @param outputDtype the value of the outputDtype property
+   * @param outputDtype The value of the outputDtype attribute
    * @param <V> data type for {@code StatelessMultinomial} output and operands
    * @return a new instance of StatelessMultinomial
    */
@@ -109,5 +113,49 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
   @Override
   public Output<V> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<StatelessMultinomial<?>> {
+    /**
+     * 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
+     * represents the unnormalized log probabilities for all classes.
+     */
+    public final Operand<? extends TNumber> logits;
+
+    /**
+     * 0-D.  Number of independent samples to draw for each row slice.
+     */
+    public final Operand<TInt32> numSamples;
+
+    /**
+     * 2 seeds (shape [2]).
+     */
+    public final Operand<? extends TNumber> seed;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tseed attribute
+     */
+    public final DataType Tseed;
+
+    /**
+     * The outputDtype attribute
+     */
+    public final DataType outputDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessMultinomial<>(op), op, Arrays.asList("T", "Tseed", "output_dtype"));
+      int inputIndex = 0;
+      logits = (Operand<? extends TNumber>) op.input(inputIndex++);
+      numSamples = (Operand<TInt32>) op.input(inputIndex++);
+      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tseed = op.attributes().getAttrType("Tseed");
+      outputDtype = op.attributes().getAttrType("output_dtype");
+    }
   }
 }

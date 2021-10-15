@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -59,18 +62,18 @@ public final class QuantizedConv2DWithBiasAndRequantize<W extends TNumber> exten
    * Factory method to create a class wrapping a new QuantizedConv2DWithBiasAndRequantize operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param filter the filter value
-   * @param bias the bias value
-   * @param minInput the minInput value
-   * @param maxInput the maxInput value
-   * @param minFilter the minFilter value
-   * @param maxFilter the maxFilter value
-   * @param minFreezedOutput the minFreezedOutput value
-   * @param maxFreezedOutput the maxFreezedOutput value
-   * @param outType the value of the outType property
-   * @param strides the value of the strides property
-   * @param padding the value of the padding property
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
    * @param options carries optional attribute values
    * @param <W> data type for {@code QuantizedConv2DWithBiasAndRequantize} output and operands
    * @return a new instance of QuantizedConv2DWithBiasAndRequantize
@@ -138,7 +141,7 @@ public final class QuantizedConv2DWithBiasAndRequantize<W extends TNumber> exten
    * @param dilations the dilations option
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -158,7 +161,7 @@ public final class QuantizedConv2DWithBiasAndRequantize<W extends TNumber> exten
    * @param paddingList the paddingList option
    * @return this Options instance.
    */
-  public static Options paddingList(Long[] paddingList) {
+  public static Options paddingList(Long... paddingList) {
     return new Options().paddingList(paddingList);
   }
 
@@ -242,6 +245,115 @@ public final class QuantizedConv2DWithBiasAndRequantize<W extends TNumber> exten
     public Options paddingList(Long... paddingList) {
       this.paddingList = Arrays.asList(paddingList);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedConv2DWithBiasAndRequantize<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The filter input
+     */
+    public final Operand<? extends TNumber> filter;
+
+    /**
+     * The bias input
+     */
+    public final Operand<? extends TNumber> bias;
+
+    /**
+     * The minInput input
+     */
+    public final Operand<TFloat32> minInput;
+
+    /**
+     * The maxInput input
+     */
+    public final Operand<TFloat32> maxInput;
+
+    /**
+     * The minFilter input
+     */
+    public final Operand<TFloat32> minFilter;
+
+    /**
+     * The maxFilter input
+     */
+    public final Operand<TFloat32> maxFilter;
+
+    /**
+     * The minFreezedOutput input
+     */
+    public final Operand<TFloat32> minFreezedOutput;
+
+    /**
+     * The maxFreezedOutput input
+     */
+    public final Operand<TFloat32> maxFreezedOutput;
+
+    /**
+     * The Tinput attribute
+     */
+    public final DataType Tinput;
+
+    /**
+     * The Tfilter attribute
+     */
+    public final DataType Tfilter;
+
+    /**
+     * The Tbias attribute
+     */
+    public final DataType Tbias;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    /**
+     * The strides attribute
+     */
+    public final long[] strides;
+
+    /**
+     * The padding attribute
+     */
+    public final String padding;
+
+    /**
+     * The dilations attribute
+     */
+    public final long[] dilations;
+
+    /**
+     * The paddingList attribute
+     */
+    public final long[] paddingList;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedConv2DWithBiasAndRequantize<>(op), op, Arrays.asList("Tinput", "Tfilter", "Tbias", "out_type", "strides", "padding", "dilations", "padding_list"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      filter = (Operand<? extends TNumber>) op.input(inputIndex++);
+      bias = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minInput = (Operand<TFloat32>) op.input(inputIndex++);
+      maxInput = (Operand<TFloat32>) op.input(inputIndex++);
+      minFilter = (Operand<TFloat32>) op.input(inputIndex++);
+      maxFilter = (Operand<TFloat32>) op.input(inputIndex++);
+      minFreezedOutput = (Operand<TFloat32>) op.input(inputIndex++);
+      maxFreezedOutput = (Operand<TFloat32>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+      Tfilter = op.attributes().getAttrType("Tfilter");
+      Tbias = op.attributes().getAttrType("Tbias");
+      outType = op.attributes().getAttrType("out_type");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      dilations = op.attributes().getAttrIntList("dilations");
+      paddingList = op.attributes().getAttrIntList("padding_list");
     }
   }
 }

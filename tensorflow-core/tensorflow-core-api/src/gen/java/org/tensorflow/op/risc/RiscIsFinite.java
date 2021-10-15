@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
@@ -48,7 +52,7 @@ public final class RiscIsFinite extends RawOp implements Operand<TBool> {
    * Factory method to create a class wrapping a new RiscIsFinite operation.
    *
    * @param scope current scope
-   * @param x the x value
+   * @param x The x value
    * @return a new instance of RiscIsFinite
    */
   @Endpoint(
@@ -72,5 +76,24 @@ public final class RiscIsFinite extends RawOp implements Operand<TBool> {
   @Override
   public Output<TBool> asOutput() {
     return y;
+  }
+
+  public static class Inputs extends RawOpInputs<RiscIsFinite> {
+    /**
+     * The x input
+     */
+    public final Operand<? extends TNumber> x;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscIsFinite(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      x = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -76,5 +79,18 @@ public final class AccumulatorNumAccumulated extends RawOp implements Operand<TI
   @Override
   public Output<TInt32> asOutput() {
     return numAccumulated;
+  }
+
+  public static class Inputs extends RawOpInputs<AccumulatorNumAccumulated> {
+    /**
+     * The handle to an accumulator.
+     */
+    public final Operand<TString> handle;
+
+    public Inputs(GraphOperation op) {
+      super(new AccumulatorNumAccumulated(op), op, Arrays.asList());
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

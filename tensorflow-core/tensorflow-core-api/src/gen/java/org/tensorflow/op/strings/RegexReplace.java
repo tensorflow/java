@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -125,6 +128,40 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
     public Options replaceGlobal(Boolean replaceGlobal) {
       this.replaceGlobal = replaceGlobal;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<RegexReplace> {
+    /**
+     * The text to be processed.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * The regular expression to be matched in the {@code input} strings.
+     */
+    public final Operand<TString> pattern;
+
+    /**
+     * The rewrite string to be substituted for the {@code pattern} expression where it is
+     * matched in the {@code input} strings.
+     */
+    public final Operand<TString> rewrite;
+
+    /**
+     * If True, the replacement is global (that is, all matches of the `pattern` regular
+     * expression in each input string are rewritten), otherwise the `rewrite`
+     * substitution is only made for the first `pattern` match.
+     */
+    public final boolean replaceGlobal;
+
+    public Inputs(GraphOperation op) {
+      super(new RegexReplace(op), op, Arrays.asList("replace_global"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      pattern = (Operand<TString>) op.input(inputIndex++);
+      rewrite = (Operand<TString>) op.input(inputIndex++);
+      replaceGlobal = op.attributes().getAttrBool("replace_global");
     }
   }
 }

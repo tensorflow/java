@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -60,5 +63,24 @@ public final class WriteFile extends RawOp {
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(contents.asOutput());
     return new WriteFile(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<WriteFile> {
+    /**
+     * scalar. The name of the file to which we write the contents.
+     */
+    public final Operand<TString> filename;
+
+    /**
+     * scalar. The content to be written to the output file.
+     */
+    public final Operand<TString> contents;
+
+    public Inputs(GraphOperation op) {
+      super(new WriteFile(op), op, Arrays.asList());
+      int inputIndex = 0;
+      filename = (Operand<TString>) op.input(inputIndex++);
+      contents = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -61,10 +65,10 @@ public final class QuantizeAndDequantizeV4Grad<T extends TNumber> extends RawOp 
    * Factory method to create a class wrapping a new QuantizeAndDequantizeV4Grad operation.
    *
    * @param scope current scope
-   * @param gradients the gradients value
-   * @param input the input value
-   * @param inputMin the inputMin value
-   * @param inputMax the inputMax value
+   * @param gradients The gradients value
+   * @param input The input value
+   * @param inputMin The inputMin value
+   * @param inputMax The inputMax value
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeAndDequantizeV4Grad} output and operands
    * @return a new instance of QuantizeAndDequantizeV4Grad
@@ -145,6 +149,49 @@ public final class QuantizeAndDequantizeV4Grad<T extends TNumber> extends RawOp 
     public Options axis(Long axis) {
       this.axis = axis;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizeAndDequantizeV4Grad<T>> {
+    /**
+     * The gradients input
+     */
+    public final Operand<T> gradients;
+
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The inputMin input
+     */
+    public final Operand<T> inputMin;
+
+    /**
+     * The inputMax input
+     */
+    public final Operand<T> inputMax;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The axis attribute
+     */
+    public final long axis;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizeAndDequantizeV4Grad<>(op), op, Arrays.asList("T", "axis"));
+      int inputIndex = 0;
+      gradients = (Operand<T>) op.input(inputIndex++);
+      input = (Operand<T>) op.input(inputIndex++);
+      inputMin = (Operand<T>) op.input(inputIndex++);
+      inputMax = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      axis = op.attributes().getAttrInt("axis");
     }
   }
 }

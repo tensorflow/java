@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -157,6 +160,31 @@ public final class StringSplit extends RawOp {
     public Options maxsplit(Long maxsplit) {
       this.maxsplit = maxsplit;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<StringSplit> {
+    /**
+     * {@code 1-D} string {@code Tensor}, the strings to split.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * {@code 0-D} string {@code Tensor}, the delimiter character.
+     */
+    public final Operand<TString> sep;
+
+    /**
+     * An `int`. If `maxsplit > 0`, limit of the split of the result.
+     */
+    public final long maxsplit;
+
+    public Inputs(GraphOperation op) {
+      super(new StringSplit(op), op, Arrays.asList("maxsplit"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      sep = (Operand<TString>) op.input(inputIndex++);
+      maxsplit = op.attributes().getAttrInt("maxsplit");
     }
   }
 }

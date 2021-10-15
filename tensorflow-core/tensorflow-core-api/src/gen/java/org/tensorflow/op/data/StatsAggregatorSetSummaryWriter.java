@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -42,8 +45,8 @@ public final class StatsAggregatorSetSummaryWriter extends RawOp {
    * Factory method to create a class wrapping a new StatsAggregatorSetSummaryWriter operation.
    *
    * @param scope current scope
-   * @param statsAggregator the statsAggregator value
-   * @param summary the summary value
+   * @param statsAggregator The statsAggregator value
+   * @param summary The summary value
    * @return a new instance of StatsAggregatorSetSummaryWriter
    */
   @Endpoint(
@@ -55,5 +58,24 @@ public final class StatsAggregatorSetSummaryWriter extends RawOp {
     opBuilder.addInput(statsAggregator.asOutput());
     opBuilder.addInput(summary.asOutput());
     return new StatsAggregatorSetSummaryWriter(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<StatsAggregatorSetSummaryWriter> {
+    /**
+     * The statsAggregator input
+     */
+    public final Operand<? extends TType> statsAggregator;
+
+    /**
+     * The summary input
+     */
+    public final Operand<? extends TType> summary;
+
+    public Inputs(GraphOperation op) {
+      super(new StatsAggregatorSetSummaryWriter(op), op, Arrays.asList());
+      int inputIndex = 0;
+      statsAggregator = (Operand<? extends TType>) op.input(inputIndex++);
+      summary = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

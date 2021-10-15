@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -88,5 +91,38 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
   @Override
   public Output<TFloat32> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<TPUEmbeddingActivations> {
+    /**
+     * A trainable variable, enabling optimizers to find this op.
+     */
+    public final Operand<TFloat32> embeddingVariable;
+
+    /**
+     * The embedding activations Tensor to return.
+     */
+    public final Operand<TFloat32> slicedActivations;
+
+    /**
+     * The id of the table in the embedding layer configuration from which
+     * these activations were computed.
+     */
+    public final long tableId;
+
+    /**
+     * Identifier of the set of embedding indices which produced these
+     * activations.
+     */
+    public final long lookupId;
+
+    public Inputs(GraphOperation op) {
+      super(new TPUEmbeddingActivations(op), op, Arrays.asList("table_id", "lookup_id"));
+      int inputIndex = 0;
+      embeddingVariable = (Operand<TFloat32>) op.input(inputIndex++);
+      slicedActivations = (Operand<TFloat32>) op.input(inputIndex++);
+      tableId = op.attributes().getAttrInt("table_id");
+      lookupId = op.attributes().getAttrInt("lookup_id");
+    }
   }
 }

@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -105,6 +109,58 @@ public final class Send extends RawOp {
     public Options clientTerminated(Boolean clientTerminated) {
       this.clientTerminated = clientTerminated;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Send> {
+    /**
+     * The tensor to send.
+     */
+    public final Operand<? extends TType> tensor;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The name of the tensor to send.
+     */
+    public final String tensorName;
+
+    /**
+     * The name of the device sending the tensor.
+     */
+    public final String sendDevice;
+
+    /**
+     * The current incarnation of send_device.
+     */
+    public final long sendDeviceIncarnation;
+
+    /**
+     * The name of the device receiving the tensor.
+     */
+    public final String recvDevice;
+
+    /**
+     * If set to true, this indicates that the node was added
+     * to the graph as a result of a client-side feed or fetch of Tensor data,
+     * in which case the corresponding send or recv is expected to be managed
+     * locally by the caller.
+     */
+    public final boolean clientTerminated;
+
+    public Inputs(GraphOperation op) {
+      super(new Send(op), op, Arrays.asList("T", "tensor_name", "send_device", "send_device_incarnation", "recv_device", "client_terminated"));
+      int inputIndex = 0;
+      tensor = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      tensorName = op.attributes().getAttrString("tensor_name");
+      sendDevice = op.attributes().getAttrString("send_device");
+      sendDeviceIncarnation = op.attributes().getAttrInt("send_device_incarnation");
+      recvDevice = op.attributes().getAttrString("recv_device");
+      clientTerminated = op.attributes().getAttrBool("client_terminated");
     }
   }
 }

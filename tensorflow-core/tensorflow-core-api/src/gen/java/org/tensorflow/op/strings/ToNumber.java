@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -68,7 +72,7 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new StringToNumber operation.
    *
    * @param scope current scope
-   * @param stringTensor the stringTensor value
+   * @param stringTensor The stringTensor value
    * @param outType The numeric type to interpret each string in {@code string_tensor} as.
    * @param <T> data type for {@code StringToNumber} output and operands
    * @return a new instance of ToNumber
@@ -88,7 +92,7 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new StringToNumber operation, with the default output types.
    *
    * @param scope current scope
-   * @param stringTensor the stringTensor value
+   * @param stringTensor The stringTensor value
    * @return a new instance of ToNumber, with default output types
    */
   @Endpoint(
@@ -110,5 +114,24 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<ToNumber<?>> {
+    /**
+     * The stringTensor input
+     */
+    public final Operand<TString> stringTensor;
+
+    /**
+     * The numeric type to interpret each string in `string_tensor` as.
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new ToNumber<>(op), op, Arrays.asList("out_type"));
+      int inputIndex = 0;
+      stringTensor = (Operand<TString>) op.input(inputIndex++);
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

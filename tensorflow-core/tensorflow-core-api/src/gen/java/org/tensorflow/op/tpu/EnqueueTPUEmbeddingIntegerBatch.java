@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt32;
@@ -101,6 +104,38 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
     public Options deviceOrdinal(Long deviceOrdinal) {
       this.deviceOrdinal = deviceOrdinal;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingIntegerBatch> {
+    /**
+     * A list of 1D tensors, one for each embedding table, containing the
+     * indices into the tables.
+     */
+    public final Iterable<Operand<TInt32>> batch;
+
+    /**
+     * A string input that overrides the mode specified in the
+     * TPUEmbeddingConfiguration. Supported values are {'unspecified', 'inference',
+     * 'training', 'backward_pass_only'}. When set to 'unspecified', the mode set
+     * in TPUEmbeddingConfiguration is used, otherwise mode_override is used.
+     */
+    public final Operand<TString> modeOverride;
+
+    /**
+     * The TPU device to use. Should be >= 0 and less than the number
+     * of TPU cores in the task on which the node is placed.
+     */
+    public final long deviceOrdinal;
+
+    public Inputs(GraphOperation op) {
+      super(new EnqueueTPUEmbeddingIntegerBatch(op), op, Arrays.asList("device_ordinal"));
+      int inputIndex = 0;
+      int batchLength = op.inputListLength("batch");
+      batch = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, batchLength));
+      inputIndex += batchLength;
+      modeOverride = (Operand<TString>) op.input(inputIndex++);
+      deviceOrdinal = op.attributes().getAttrInt("device_ordinal");
     }
   }
 }

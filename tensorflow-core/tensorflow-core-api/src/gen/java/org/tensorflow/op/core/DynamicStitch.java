@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -106,8 +110,8 @@ public final class DynamicStitch<T extends TType> extends RawOp implements Opera
    * Factory method to create a class wrapping a new DynamicStitch operation.
    *
    * @param scope current scope
-   * @param indices the indices value
-   * @param data the data value
+   * @param indices The indices value
+   * @param data The data value
    * @param <T> data type for {@code DynamicStitch} output and operands
    * @return a new instance of DynamicStitch
    */
@@ -134,5 +138,34 @@ public final class DynamicStitch<T extends TType> extends RawOp implements Opera
   @Override
   public Output<T> asOutput() {
     return merged;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<DynamicStitch<T>> {
+    /**
+     * The indices input
+     */
+    public final Iterable<Operand<TInt32>> indices;
+
+    /**
+     * The data input
+     */
+    public final Iterable<Operand<T>> data;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new DynamicStitch<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      int indicesLength = op.inputListLength("indices");
+      indices = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, indicesLength));
+      inputIndex += indicesLength;
+      int dataLength = op.inputListLength("data");
+      data = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, dataLength));
+      inputIndex += dataLength;
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

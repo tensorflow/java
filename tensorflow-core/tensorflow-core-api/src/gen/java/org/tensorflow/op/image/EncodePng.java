@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -126,6 +130,31 @@ public final class EncodePng extends RawOp implements Operand<TString> {
     public Options compression(Long compression) {
       this.compression = compression;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<EncodePng> {
+    /**
+     * 3-D with shape {@code [height, width, channels]}.
+     */
+    public final Operand<? extends TNumber> image;
+
+    /**
+     * Compression level.
+     */
+    public final long compression;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new EncodePng(op), op, Arrays.asList("compression", "T"));
+      int inputIndex = 0;
+      image = (Operand<? extends TNumber>) op.input(inputIndex++);
+      compression = op.attributes().getAttrInt("compression");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

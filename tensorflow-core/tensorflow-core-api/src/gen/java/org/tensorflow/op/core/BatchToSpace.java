@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -67,7 +71,7 @@ public final class BatchToSpace<T extends TType> extends RawOp implements Operan
    * <pre>
    * crops = [[crop_top, crop_bottom], [crop_left, crop_right]]
    * </pre>
-   * @param blockSize the value of the blockSize property
+   * @param blockSize The value of the blockSize attribute
    * @param <T> data type for {@code BatchToSpace} output and operands
    * @return a new instance of BatchToSpace
    */
@@ -144,5 +148,49 @@ public final class BatchToSpace<T extends TType> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<BatchToSpace<T>> {
+    /**
+     * 4-D tensor with shape
+     * {@code [batch*block_size*block_size, height_pad/block_size, width_pad/block_size, depth]}. Note that the batch size of the input tensor must be divisible by
+     * {@code block_size * block_size}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 2-D tensor of non-negative integers with shape {@code [2, 2]}. It specifies
+     * how many elements to crop from the intermediate result across the spatial
+     * dimensions as follows:
+     * <pre>
+     * crops = [[crop_top, crop_bottom], [crop_left, crop_right]]
+     * </pre>
+     */
+    public final Operand<? extends TNumber> crops;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The blockSize attribute
+     */
+    public final long blockSize;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchToSpace<>(op), op, Arrays.asList("T", "block_size", "Tidx"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      crops = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      blockSize = op.attributes().getAttrInt("block_size");
+      Tidx = op.attributes().getAttrType("Tidx");
+    }
   }
 }

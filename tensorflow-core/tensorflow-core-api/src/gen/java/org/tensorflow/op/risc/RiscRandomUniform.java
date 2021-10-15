@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -48,7 +52,7 @@ public final class RiscRandomUniform extends RawOp implements Operand<TFloat32> 
    * Factory method to create a class wrapping a new RiscRandomUniform operation.
    *
    * @param scope current scope
-   * @param shape the shape value
+   * @param shape The shape value
    * @param options carries optional attribute values
    * @return a new instance of RiscRandomUniform
    */
@@ -111,6 +115,31 @@ public final class RiscRandomUniform extends RawOp implements Operand<TFloat32> 
     public Options seed(Long seed) {
       this.seed = seed;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<RiscRandomUniform> {
+    /**
+     * The shape input
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * The seed attribute
+     */
+    public final long seed;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscRandomUniform(op), op, Arrays.asList("seed", "T"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      seed = op.attributes().getAttrInt("seed");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

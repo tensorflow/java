@@ -19,6 +19,7 @@ package org.tensorflow.op.io;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -161,7 +164,7 @@ public final class ParseSequenceExample extends RawOp {
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
    * @param contextRaggedValueTypes RaggedTensor.value dtypes for the ragged context features.
    * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context features.
-   * @param featureListDenseTypes the value of the featureListDenseTypes property
+   * @param featureListDenseTypes The value of the featureListDenseTypes attribute
    * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
    * of data in each FeatureList given in feature_list_sparse_keys.
    * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
@@ -268,7 +271,7 @@ public final class ParseSequenceExample extends RawOp {
    * The shape of context_dense_values[j] will match context_dense_shapes[j].
    * @return this Options instance.
    */
-  public static Options contextDenseShapes(Shape[] contextDenseShapes) {
+  public static Options contextDenseShapes(Shape... contextDenseShapes) {
     return new Options().contextDenseShapes(contextDenseShapes);
   }
 
@@ -316,7 +319,7 @@ public final class ParseSequenceExample extends RawOp {
    * feature_list_dense_shapes[j].NumEntries().
    * @return this Options instance.
    */
-  public static Options featureListDenseShapes(Shape[] featureListDenseShapes) {
+  public static Options featureListDenseShapes(Shape... featureListDenseShapes) {
     return new Options().featureListDenseShapes(featureListDenseShapes);
   }
 
@@ -554,6 +557,166 @@ public final class ParseSequenceExample extends RawOp {
     public Options featureListDenseShapes(Shape... featureListDenseShapes) {
       this.featureListDenseShapes = Arrays.asList(featureListDenseShapes);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ParseSequenceExample> {
+    /**
+     * A scalar or vector containing binary serialized SequenceExample protos.
+     */
+    public final Operand<TString> serialized;
+
+    /**
+     * A scalar or vector containing the names of the serialized protos.
+     * May contain, for example, table key (descriptive) name for the
+     * corresponding serialized proto.  This is purely useful for debugging
+     * purposes, and the presence of values here has no effect on the output.
+     * May also be an empty vector if no name is available.
+     */
+    public final Operand<TString> debugName;
+
+    /**
+     * The keys expected in the Examples' features associated with context_sparse
+     * values.
+     */
+    public final Operand<TString> contextSparseKeys;
+
+    /**
+     * The keys expected in the SequenceExamples' context features associated with
+     * dense values.
+     */
+    public final Operand<TString> contextDenseKeys;
+
+    /**
+     * The keys expected in the Examples' features associated with context_ragged
+     * values.
+     */
+    public final Operand<TString> contextRaggedKeys;
+
+    /**
+     * The keys expected in the FeatureLists associated with sparse values.
+     */
+    public final Operand<TString> featureListSparseKeys;
+
+    /**
+     * The keys expected in the SequenceExamples' feature_lists associated
+     * with lists of dense values.
+     */
+    public final Operand<TString> featureListDenseKeys;
+
+    /**
+     * The keys expected in the FeatureLists associated with ragged values.
+     */
+    public final Operand<TString> featureListRaggedKeys;
+
+    /**
+     * A vector corresponding 1:1 with feature_list_dense_keys, indicating which
+     * features may be missing from the SequenceExamples.  If the associated
+     * FeatureList is missing, it is treated as empty.
+     */
+    public final Operand<TBool> featureListDenseMissingAssumedEmpty;
+
+    /**
+     * A list of Ncontext_dense Tensors (some may be empty).
+     * context_dense_defaults[j] provides default values
+     * when the SequenceExample's context map lacks context_dense_key[j].
+     * If an empty Tensor is provided for context_dense_defaults[j],
+     * then the Feature context_dense_keys[j] is required.
+     * The input type is inferred from context_dense_defaults[j], even when it's
+     * empty.  If context_dense_defaults[j] is not empty, its shape must match
+     * context_dense_shapes[j].
+     */
+    public final Iterable<Operand<?>> contextDenseDefaults;
+
+    /**
+     * The TcontextDense attribute
+     */
+    public final DataType[] TcontextDense;
+
+    /**
+     * A list of Ncontext_sparse types; the data types of data in
+     * each context Feature given in context_sparse_keys.
+     * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
+     * DT_INT64 (Int64List), and DT_STRING (BytesList).
+     */
+    public final DataType[] contextSparseTypes;
+
+    /**
+     * RaggedTensor.value dtypes for the ragged context features.
+     */
+    public final DataType[] contextRaggedValueTypes;
+
+    /**
+     * RaggedTensor.row_split dtypes for the ragged context features.
+     */
+    public final DataType[] contextRaggedSplitTypes;
+
+    /**
+     * A list of Ncontext_dense shapes; the shapes of data in
+     * each context Feature given in context_dense_keys.
+     * The number of elements in the Feature corresponding to context_dense_key[j]
+     * must always equal context_dense_shapes[j].NumEntries().
+     * The shape of context_dense_values[j] will match context_dense_shapes[j].
+     */
+    public final Shape[] contextDenseShapes;
+
+    /**
+     * The featureListDenseTypes attribute
+     */
+    public final DataType[] featureListDenseTypes;
+
+    /**
+     * A list of Nfeature_list_sparse types; the data types
+     * of data in each FeatureList given in feature_list_sparse_keys.
+     * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
+     * DT_INT64 (Int64List), and DT_STRING (BytesList).
+     */
+    public final DataType[] featureListSparseTypes;
+
+    /**
+     * RaggedTensor.value dtypes for the ragged FeatureList features.
+     */
+    public final DataType[] featureListRaggedValueTypes;
+
+    /**
+     * RaggedTensor.row_split dtypes for the ragged FeatureList features.
+     */
+    public final DataType[] featureListRaggedSplitTypes;
+
+    /**
+     * A list of Nfeature_list_dense shapes; the shapes of
+     * data in each FeatureList given in feature_list_dense_keys.
+     * The shape of each Feature in the FeatureList corresponding to
+     * feature_list_dense_key[j] must always equal
+     * feature_list_dense_shapes[j].NumEntries().
+     */
+    public final Shape[] featureListDenseShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new ParseSequenceExample(op), op, Arrays.asList("Tcontext_dense", "context_sparse_types", "context_ragged_value_types", "context_ragged_split_types", "context_dense_shapes", "feature_list_dense_types", "feature_list_sparse_types", "feature_list_ragged_value_types", "feature_list_ragged_split_types", "feature_list_dense_shapes"));
+      int inputIndex = 0;
+      serialized = (Operand<TString>) op.input(inputIndex++);
+      debugName = (Operand<TString>) op.input(inputIndex++);
+      contextSparseKeys = (Operand<TString>) op.input(inputIndex++);
+      contextDenseKeys = (Operand<TString>) op.input(inputIndex++);
+      contextRaggedKeys = (Operand<TString>) op.input(inputIndex++);
+      featureListSparseKeys = (Operand<TString>) op.input(inputIndex++);
+      featureListDenseKeys = (Operand<TString>) op.input(inputIndex++);
+      featureListRaggedKeys = (Operand<TString>) op.input(inputIndex++);
+      featureListDenseMissingAssumedEmpty = (Operand<TBool>) op.input(inputIndex++);
+      int contextDenseDefaultsLength = op.inputListLength("context_dense_defaults");
+      contextDenseDefaults = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, contextDenseDefaultsLength));
+      inputIndex += contextDenseDefaultsLength;
+      TcontextDense = op.attributes().getAttrTypeList("Tcontext_dense");
+      contextSparseTypes = op.attributes().getAttrTypeList("context_sparse_types");
+      contextRaggedValueTypes = op.attributes().getAttrTypeList("context_ragged_value_types");
+      contextRaggedSplitTypes = op.attributes().getAttrTypeList("context_ragged_split_types");
+      contextDenseShapes = op.attributes().getAttrShapeList("context_dense_shapes");
+      featureListDenseTypes = op.attributes().getAttrTypeList("feature_list_dense_types");
+      featureListSparseTypes = op.attributes().getAttrTypeList("feature_list_sparse_types");
+      featureListRaggedValueTypes = op.attributes().getAttrTypeList("feature_list_ragged_value_types");
+      featureListRaggedSplitTypes = op.attributes().getAttrTypeList("feature_list_ragged_split_types");
+      featureListDenseShapes = op.attributes().getAttrShapeList("feature_list_dense_shapes");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -94,5 +98,36 @@ public final class InTopK extends RawOp implements Operand<TBool> {
   @Override
   public Output<TBool> asOutput() {
     return precision;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<InTopK> {
+    /**
+     * A {@code batch_size} x {@code classes} tensor.
+     */
+    public final Operand<TFloat32> predictions;
+
+    /**
+     * A {@code batch_size} vector of class ids.
+     */
+    public final Operand<T> targets;
+
+    /**
+     * Number of top elements to look at for computing precision.
+     */
+    public final Operand<T> k;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new InTopK(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      predictions = (Operand<TFloat32>) op.input(inputIndex++);
+      targets = (Operand<T>) op.input(inputIndex++);
+      k = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

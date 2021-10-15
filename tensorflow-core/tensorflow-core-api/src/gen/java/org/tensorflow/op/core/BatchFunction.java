@@ -21,15 +21,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -92,7 +95,7 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
    * @param inTensors The tensors to be batched.
    * @param capturedTensors The tensors which are captured in the function, and don't need
    * to be batched.
-   * @param f the value of the f property
+   * @param f The value of the f attribute
    * @param numBatchThreads Number of scheduling threads for processing batches of work.
    * Determines the number of batches processed in parallel.
    * @param maxBatchSize Batch sizes will never be bigger than this.
@@ -180,7 +183,7 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
    * enabled) the final entry must equal max_batch_size.
    * @return this Options instance.
    */
-  public static Options allowedBatchSizes(Long[] allowedBatchSizes) {
+  public static Options allowedBatchSizes(Long... allowedBatchSizes) {
     return new Options().allowedBatchSizes(allowedBatchSizes);
   }
 
@@ -347,6 +350,111 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     public Options enableLargeBatchSplitting(Boolean enableLargeBatchSplitting) {
       this.enableLargeBatchSplitting = enableLargeBatchSplitting;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BatchFunction> {
+    /**
+     * The tensors to be batched.
+     */
+    public final Iterable<Operand<?>> inTensors;
+
+    /**
+     * The tensors which are captured in the function, and don't need
+     * to be batched.
+     */
+    public final Iterable<Operand<?>> capturedTensors;
+
+    /**
+     * Number of scheduling threads for processing batches of work.
+     * Determines the number of batches processed in parallel.
+     */
+    public final long numBatchThreads;
+
+    /**
+     * Batch sizes will never be bigger than this.
+     */
+    public final long maxBatchSize;
+
+    /**
+     * Maximum number of microseconds to wait before outputting
+     * an incomplete batch.
+     */
+    public final long batchTimeoutMicros;
+
+    /**
+     * Maximum number of batches enqueued. Default: 10.
+     */
+    public final long maxEnqueuedBatches;
+
+    /**
+     * Optional list of allowed batch sizes. If left empty, does
+     * nothing. Otherwise, supplies a list of batch sizes, causing the op to pad
+     * batches up to one of those sizes. The entries must increase monotonically.
+     * If enable_large_batch_splitting is false (i.e., large-input-split is not
+     * enabled) the final entry must equal max_batch_size.
+     */
+    public final long[] allowedBatchSizes;
+
+    /**
+     * Controls the scope of sharing of this batch.
+     */
+    public final String container;
+
+    /**
+     * Concurrently running instances of batch in the same device with the
+     * same container and shared_name will batch their elements together. If left
+     * empty, the op name will be used as the shared name.
+     */
+    public final String sharedName;
+
+    /**
+     * The batchingQueue attribute
+     */
+    public final String batchingQueue;
+
+    /**
+     * the types of tensors to be batched.
+     */
+    public final DataType[] Tin;
+
+    /**
+     * the types of the captured tensors.
+     */
+    public final DataType[] Tcaptured;
+
+    /**
+     * the types of the output tensors.
+     */
+    public final DataType[] Tout;
+
+    /**
+     * input with a large size (i.e., larger than the largest value of
+     * `allowed_batch_sizes`) will be splitted into multiple batches with batch size.
+     */
+    public final boolean enableLargeBatchSplitting;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchFunction(op), op, Arrays.asList("num_batch_threads", "max_batch_size", "batch_timeout_micros", "max_enqueued_batches", "allowed_batch_sizes", "container", "shared_name", "batching_queue", "Tin", "Tcaptured", "Tout", "enable_large_batch_splitting"));
+      int inputIndex = 0;
+      int inTensorsLength = op.inputListLength("in_tensors");
+      inTensors = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inTensorsLength));
+      inputIndex += inTensorsLength;
+      int capturedTensorsLength = op.inputListLength("captured_tensors");
+      capturedTensors = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, capturedTensorsLength));
+      inputIndex += capturedTensorsLength;
+      numBatchThreads = op.attributes().getAttrInt("num_batch_threads");
+      maxBatchSize = op.attributes().getAttrInt("max_batch_size");
+      batchTimeoutMicros = op.attributes().getAttrInt("batch_timeout_micros");
+      maxEnqueuedBatches = op.attributes().getAttrInt("max_enqueued_batches");
+      allowedBatchSizes = op.attributes().getAttrIntList("allowed_batch_sizes");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      batchingQueue = op.attributes().getAttrString("batching_queue");
+      Tin = op.attributes().getAttrTypeList("Tin");
+      Tcaptured = op.attributes().getAttrTypeList("Tcaptured");
+      Tout = op.attributes().getAttrTypeList("Tout");
+      enableLargeBatchSplitting = op.attributes().getAttrBool("enable_large_batch_splitting");
     }
   }
 }

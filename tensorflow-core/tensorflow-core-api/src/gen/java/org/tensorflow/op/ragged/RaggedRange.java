@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -72,7 +76,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
    * @param starts The starts of each range.
    * @param limits The limits of each range.
    * @param deltas The deltas of each range.
-   * @param Tsplits the value of the Tsplits property
+   * @param Tsplits The value of the Tsplits attribute
    * @param <U> data type for {@code RaggedRange} output and operands
    * @param <T> data type for {@code RaggedRange} output and operands
    * @return a new instance of RaggedRange
@@ -124,5 +128,42 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
    */
   public Output<T> rtDenseValues() {
     return rtDenseValues;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RaggedRange<?, T>> {
+    /**
+     * The starts of each range.
+     */
+    public final Operand<T> starts;
+
+    /**
+     * The limits of each range.
+     */
+    public final Operand<T> limits;
+
+    /**
+     * The deltas of each range.
+     */
+    public final Operand<T> deltas;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedRange<>(op), op, Arrays.asList("T", "Tsplits"));
+      int inputIndex = 0;
+      starts = (Operand<T>) op.input(inputIndex++);
+      limits = (Operand<T>) op.input(inputIndex++);
+      deltas = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tsplits = op.attributes().getAttrType("Tsplits");
+    }
   }
 }

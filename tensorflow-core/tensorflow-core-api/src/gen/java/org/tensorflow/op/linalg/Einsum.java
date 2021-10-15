@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -145,5 +149,32 @@ public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Einsum<T>> {
+    /**
+     * List of 1 or 2 Tensors.
+     */
+    public final Iterable<Operand<T>> inputs;
+
+    /**
+     * String describing the Einstein Summation operation; in the format of np.einsum.
+     */
+    public final String equation;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Einsum<>(op), op, Arrays.asList("equation", "T"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      equation = op.attributes().getAttrString("equation");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

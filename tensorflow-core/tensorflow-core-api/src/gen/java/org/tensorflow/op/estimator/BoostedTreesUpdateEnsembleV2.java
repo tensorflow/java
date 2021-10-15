@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -161,6 +164,115 @@ public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
     public Options numGroups(Long numGroups) {
       this.numGroups = numGroups;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesUpdateEnsembleV2> {
+    /**
+     * Handle to the ensemble variable.
+     */
+    public final Operand<? extends TType> treeEnsembleHandle;
+
+    /**
+     * Rank 1 tensor with ids for each feature. This is the real id of
+     * the feature that will be used in the split.
+     */
+    public final Iterable<Operand<TInt32>> featureIds;
+
+    /**
+     * List of rank 1 tensors representing the dimension in each feature.
+     */
+    public final Iterable<Operand<TInt32>> dimensionIds;
+
+    /**
+     * List of rank 1 tensors representing the nodes for which this feature
+     * has a split.
+     */
+    public final Iterable<Operand<TInt32>> nodeIds;
+
+    /**
+     * List of rank 1 tensors representing the gains for each of the feature's
+     * split.
+     */
+    public final Iterable<Operand<TFloat32>> gains;
+
+    /**
+     * List of rank 1 tensors representing the thesholds for each of the
+     * feature's split.
+     */
+    public final Iterable<Operand<TInt32>> thresholds;
+
+    /**
+     * List of rank 2 tensors with left leaf contribs for each of
+     * the feature's splits. Will be added to the previous node values to constitute
+     * the values of the left nodes.
+     */
+    public final Iterable<Operand<TFloat32>> leftNodeContribs;
+
+    /**
+     * List of rank 2 tensors with right leaf contribs for each
+     * of the feature's splits. Will be added to the previous node values to constitute
+     * the values of the right nodes.
+     */
+    public final Iterable<Operand<TFloat32>> rightNodeContribs;
+
+    /**
+     * List of rank 1 tensors representing the split type for each feature.
+     */
+    public final Iterable<Operand<TString>> splitTypes;
+
+    /**
+     * Max depth of the tree to build.
+     */
+    public final Operand<TInt32> maxDepth;
+
+    /**
+     * shrinkage const for each new tree.
+     */
+    public final Operand<TFloat32> learningRate;
+
+    /**
+     * 0-No pruning, 1-Pre-pruning, 2-Post-pruning.
+     */
+    public final Operand<TInt32> pruningMode;
+
+    /**
+     * scalar, dimension of the logits
+     */
+    public final long logitsDimension;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesUpdateEnsembleV2(op), op, Arrays.asList("logits_dimension"));
+      int inputIndex = 0;
+      treeEnsembleHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      int featureIdsLength = op.inputListLength("feature_ids");
+      featureIds = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, featureIdsLength));
+      inputIndex += featureIdsLength;
+      int dimensionIdsLength = op.inputListLength("dimension_ids");
+      dimensionIds = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, dimensionIdsLength));
+      inputIndex += dimensionIdsLength;
+      int nodeIdsLength = op.inputListLength("node_ids");
+      nodeIds = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, nodeIdsLength));
+      inputIndex += nodeIdsLength;
+      int gainsLength = op.inputListLength("gains");
+      gains = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, gainsLength));
+      inputIndex += gainsLength;
+      int thresholdsLength = op.inputListLength("thresholds");
+      thresholds = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, thresholdsLength));
+      inputIndex += thresholdsLength;
+      int leftNodeContribsLength = op.inputListLength("left_node_contribs");
+      leftNodeContribs = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, leftNodeContribsLength));
+      inputIndex += leftNodeContribsLength;
+      int rightNodeContribsLength = op.inputListLength("right_node_contribs");
+      rightNodeContribs = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, rightNodeContribsLength));
+      inputIndex += rightNodeContribsLength;
+      int splitTypesLength = op.inputListLength("split_types");
+      splitTypes = Arrays.asList((Operand<TString>[]) op.inputList(inputIndex, splitTypesLength));
+      inputIndex += splitTypesLength;
+      maxDepth = (Operand<TInt32>) op.input(inputIndex++);
+      learningRate = (Operand<TFloat32>) op.input(inputIndex++);
+      pruningMode = (Operand<TInt32>) op.input(inputIndex++);
+      logitsDimension = op.attributes().getAttrInt("logits_dimension");
     }
   }
 }

@@ -17,12 +17,15 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt32;
@@ -53,7 +56,7 @@ public final class BoostedTreesExampleDebugOutputs extends RawOp implements Oper
    * Factory method to create a class wrapping a new BoostedTreesExampleDebugOutputs operation.
    *
    * @param scope current scope
-   * @param treeEnsembleHandle the treeEnsembleHandle value
+   * @param treeEnsembleHandle The treeEnsembleHandle value
    * @param bucketizedFeatures A list of rank 1 Tensors containing bucket id for each
    * feature.
    * @param logitsDimension scalar, dimension of the logits, to be used for constructing the protos in
@@ -85,5 +88,34 @@ public final class BoostedTreesExampleDebugOutputs extends RawOp implements Oper
   @Override
   public Output<TString> asOutput() {
     return examplesDebugOutputsSerialized;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesExampleDebugOutputs> {
+    /**
+     * The treeEnsembleHandle input
+     */
+    public final Operand<? extends TType> treeEnsembleHandle;
+
+    /**
+     * A list of rank 1 Tensors containing bucket id for each
+     * feature.
+     */
+    public final Iterable<Operand<TInt32>> bucketizedFeatures;
+
+    /**
+     * scalar, dimension of the logits, to be used for constructing the protos in
+     * examples_debug_outputs_serialized.
+     */
+    public final long logitsDimension;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesExampleDebugOutputs(op), op, Arrays.asList("logits_dimension"));
+      int inputIndex = 0;
+      treeEnsembleHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      int bucketizedFeaturesLength = op.inputListLength("bucketized_features");
+      bucketizedFeatures = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, bucketizedFeaturesLength));
+      inputIndex += bucketizedFeaturesLength;
+      logitsDimension = op.attributes().getAttrInt("logits_dimension");
+    }
   }
 }

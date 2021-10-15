@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -55,7 +59,7 @@ public final class TensorArrayRead<T extends TType> extends RawOp implements Ope
    *
    * @param scope current scope
    * @param handle The handle to a TensorArray.
-   * @param index the index value
+   * @param index The index value
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @param dtype The type of the elem that is returned.
    * @param <T> data type for {@code TensorArrayReadV3} output and operands
@@ -87,5 +91,36 @@ public final class TensorArrayRead<T extends TType> extends RawOp implements Ope
   @Override
   public Output<T> asOutput() {
     return value;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayRead<?>> {
+    /**
+     * The handle to a TensorArray.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * The index input
+     */
+    public final Operand<TInt32> index;
+
+    /**
+     * A float scalar that enforces proper chaining of operations.
+     */
+    public final Operand<TFloat32> flowIn;
+
+    /**
+     * The type of the elem that is returned.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayRead<>(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      index = (Operand<TInt32>) op.input(inputIndex++);
+      flowIn = (Operand<TFloat32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

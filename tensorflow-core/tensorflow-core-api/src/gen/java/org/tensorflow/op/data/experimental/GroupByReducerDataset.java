@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,8 +28,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -69,8 +73,8 @@ public final class GroupByReducerDataset extends RawOp implements Operand<TType>
    * @param reduceFunc A function mapping the current reducer state and an element of {@code input_dataset},
    * concatenated with {@code reduce_func_other_arguments} to a new reducer state.
    * @param finalizeFunc A function mapping the final reducer state to an output element.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of GroupByReducerDataset
    */
   @Endpoint(
@@ -114,5 +118,90 @@ public final class GroupByReducerDataset extends RawOp implements Operand<TType>
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<GroupByReducerDataset> {
+    /**
+     * A variant tensor representing the input dataset.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A list of tensors, typically values that were captured when
+     * building a closure for {@code key_func}.
+     */
+    public final Iterable<Operand<?>> keyFuncOtherArguments;
+
+    /**
+     * A list of tensors, typically values that were captured when
+     * building a closure for {@code init_func}.
+     */
+    public final Iterable<Operand<?>> initFuncOtherArguments;
+
+    /**
+     * A list of tensors, typically values that were captured when
+     * building a closure for {@code reduce_func}.
+     */
+    public final Iterable<Operand<?>> reduceFuncOtherArguments;
+
+    /**
+     * A list of tensors, typically values that were captured when
+     * building a closure for {@code finalize_func}.
+     */
+    public final Iterable<Operand<?>> finalizeFuncOtherArguments;
+
+    /**
+     * The TkeyFuncOtherArguments attribute
+     */
+    public final DataType[] TkeyFuncOtherArguments;
+
+    /**
+     * The TinitFuncOtherArguments attribute
+     */
+    public final DataType[] TinitFuncOtherArguments;
+
+    /**
+     * The TreduceFuncOtherArguments attribute
+     */
+    public final DataType[] TreduceFuncOtherArguments;
+
+    /**
+     * The TfinalizeFuncOtherArguments attribute
+     */
+    public final DataType[] TfinalizeFuncOtherArguments;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new GroupByReducerDataset(op), op, Arrays.asList("Tkey_func_other_arguments", "Tinit_func_other_arguments", "Treduce_func_other_arguments", "Tfinalize_func_other_arguments", "output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      int keyFuncOtherArgumentsLength = op.inputListLength("key_func_other_arguments");
+      keyFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, keyFuncOtherArgumentsLength));
+      inputIndex += keyFuncOtherArgumentsLength;
+      int initFuncOtherArgumentsLength = op.inputListLength("init_func_other_arguments");
+      initFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, initFuncOtherArgumentsLength));
+      inputIndex += initFuncOtherArgumentsLength;
+      int reduceFuncOtherArgumentsLength = op.inputListLength("reduce_func_other_arguments");
+      reduceFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, reduceFuncOtherArgumentsLength));
+      inputIndex += reduceFuncOtherArgumentsLength;
+      int finalizeFuncOtherArgumentsLength = op.inputListLength("finalize_func_other_arguments");
+      finalizeFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, finalizeFuncOtherArgumentsLength));
+      inputIndex += finalizeFuncOtherArgumentsLength;
+      TkeyFuncOtherArguments = op.attributes().getAttrTypeList("Tkey_func_other_arguments");
+      TinitFuncOtherArguments = op.attributes().getAttrTypeList("Tinit_func_other_arguments");
+      TreduceFuncOtherArguments = op.attributes().getAttrTypeList("Treduce_func_other_arguments");
+      TfinalizeFuncOtherArguments = op.attributes().getAttrTypeList("Tfinalize_func_other_arguments");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -53,7 +57,7 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new OptionalFromValue operation.
    *
    * @param scope current scope
-   * @param components the components value
+   * @param components The components value
    * @return a new instance of OptionalFromValue
    */
   @Endpoint(
@@ -78,5 +82,26 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) optional;
+  }
+
+  public static class Inputs extends RawOpInputs<OptionalFromValue> {
+    /**
+     * The components input
+     */
+    public final Iterable<Operand<?>> components;
+
+    /**
+     * The ToutputTypes attribute
+     */
+    public final DataType[] ToutputTypes;
+
+    public Inputs(GraphOperation op) {
+      super(new OptionalFromValue(op), op, Arrays.asList("Toutput_types"));
+      int inputIndex = 0;
+      int componentsLength = op.inputListLength("components");
+      components = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, componentsLength));
+      inputIndex += componentsLength;
+      ToutputTypes = op.attributes().getAttrTypeList("Toutput_types");
+    }
   }
 }

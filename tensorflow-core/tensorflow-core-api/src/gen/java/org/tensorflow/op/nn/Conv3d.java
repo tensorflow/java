@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -137,7 +140,7 @@ public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T>
    * depth dimensions must be 1.
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -209,6 +212,64 @@ public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T>
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv3d<T>> {
+    /**
+     * Shape {@code [batch, in_depth, in_height, in_width, in_channels]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * Shape {@code [filter_depth, filter_height, filter_width, in_channels, out_channels]}. {@code in_channels} must match between {@code input} and {@code filter}.
+     */
+    public final Operand<T> filter;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * 1-D tensor of length 5. The stride of the sliding window for each
+     * dimension of `input`. Must have `strides[0] = strides[4] = 1`.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * The data format of the input and output data. With the
+     * default format "NDHWC", the data is stored in the order of:
+     *     [batch, in_depth, in_height, in_width, in_channels].
+     * Alternatively, the format could be "NCDHW", the data storage order is:
+     *     [batch, in_channels, in_depth, in_height, in_width].
+     */
+    public final String dataFormat;
+
+    /**
+     * 1-D tensor of length 5.  The dilation factor for each dimension of
+     * `input`. If set to k > 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of `data_format`, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new Conv3d<>(op), op, Arrays.asList("T", "strides", "padding", "data_format", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      filter = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      dataFormat = op.attributes().getAttrString("data_format");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

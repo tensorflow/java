@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -247,6 +250,57 @@ public final class RecordInput extends RawOp implements Operand<TString> {
     public Options compressionType(String compressionType) {
       this.compressionType = compressionType;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<RecordInput> {
+    /**
+     * Glob pattern for the data files.
+     */
+    public final String filePattern;
+
+    /**
+     * Random seeds used to produce randomized records.
+     */
+    public final long fileRandomSeed;
+
+    /**
+     * Shifts the list of files after the list is randomly
+     * shuffled.
+     */
+    public final float fileShuffleShiftRatio;
+
+    /**
+     * The randomization shuffling buffer.
+     */
+    public final long fileBufferSize;
+
+    /**
+     * How many sstables are opened and concurrently iterated over.
+     */
+    public final long fileParallelism;
+
+    /**
+     * The batch size.
+     */
+    public final long batchSize;
+
+    /**
+     * The type of compression for the file. Currently ZLIB and
+     * GZIP are supported. Defaults to none.
+     */
+    public final String compressionType;
+
+    public Inputs(GraphOperation op) {
+      super(new RecordInput(op), op, Arrays.asList("file_pattern", "file_random_seed", "file_shuffle_shift_ratio", "file_buffer_size", "file_parallelism", "batch_size", "compression_type"));
+      int inputIndex = 0;
+      filePattern = op.attributes().getAttrString("file_pattern");
+      fileRandomSeed = op.attributes().getAttrInt("file_random_seed");
+      fileShuffleShiftRatio = op.attributes().getAttrFloat("file_shuffle_shift_ratio");
+      fileBufferSize = op.attributes().getAttrInt("file_buffer_size");
+      fileParallelism = op.attributes().getAttrInt("file_parallelism");
+      batchSize = op.attributes().getAttrInt("batch_size");
+      compressionType = op.attributes().getAttrString("compression_type");
     }
   }
 }

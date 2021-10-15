@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -104,5 +108,42 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<StatefulUniform<?>> {
+    /**
+     * The handle of the resource variable that stores the state of the RNG.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * The RNG algorithm.
+     */
+    public final Operand<TInt64> algorithm;
+
+    /**
+     * The shape of the output tensor.
+     */
+    public final Operand<? extends TType> shape;
+
+    /**
+     * The type of the output.
+     */
+    public final DataType dtype;
+
+    /**
+     * The shapeDtype attribute
+     */
+    public final DataType shapeDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new StatefulUniform<>(op), op, Arrays.asList("dtype", "shape_dtype"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      algorithm = (Operand<TInt64>) op.input(inputIndex++);
+      shape = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      shapeDtype = op.attributes().getAttrType("shape_dtype");
+    }
   }
 }

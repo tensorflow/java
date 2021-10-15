@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -98,6 +101,37 @@ public final class BoostedTreesCreateQuantileStreamResource extends RawOp {
     public Options maxElements(Long maxElements) {
       this.maxElements = maxElements;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesCreateQuantileStreamResource> {
+    /**
+     * resource; Handle to quantile stream resource.
+     */
+    public final Operand<? extends TType> quantileStreamResourceHandle;
+
+    /**
+     * float; The required approximation error of the stream resource.
+     */
+    public final Operand<TFloat32> epsilon;
+
+    /**
+     * int; The number of streams managed by the resource that shares the same epsilon.
+     */
+    public final Operand<TInt64> numStreams;
+
+    /**
+     * int; The maximum number of data points that can be fed to the stream.
+     */
+    public final long maxElements;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesCreateQuantileStreamResource(op), op, Arrays.asList("max_elements"));
+      int inputIndex = 0;
+      quantileStreamResourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      epsilon = (Operand<TFloat32>) op.input(inputIndex++);
+      numStreams = (Operand<TInt64>) op.input(inputIndex++);
+      maxElements = op.attributes().getAttrInt("max_elements");
     }
   }
 }

@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -85,5 +89,31 @@ public final class ImmutableConst<T extends TType> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return tensor;
+  }
+
+  public static class Inputs extends RawOpInputs<ImmutableConst<?>> {
+    /**
+     * Type of the returned tensor.
+     */
+    public final DataType dtype;
+
+    /**
+     * Shape of the returned tensor.
+     */
+    public final Shape shape;
+
+    /**
+     * Name of readonly memory region used by the tensor, see
+     * NewReadOnlyMemoryRegionFromFile in tensorflow::Env.
+     */
+    public final String memoryRegionName;
+
+    public Inputs(GraphOperation op) {
+      super(new ImmutableConst<>(op), op, Arrays.asList("dtype", "shape", "memory_region_name"));
+      int inputIndex = 0;
+      dtype = op.attributes().getAttrType("dtype");
+      shape = op.attributes().getAttrShape("shape");
+      memoryRegionName = op.attributes().getAttrString("memory_region_name");
+    }
   }
 }

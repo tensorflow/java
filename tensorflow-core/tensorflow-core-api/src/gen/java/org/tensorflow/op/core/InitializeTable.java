@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -59,5 +63,42 @@ public final class InitializeTable extends RawOp {
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
     return new InitializeTable(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<InitializeTable> {
+    /**
+     * Handle to a table which will be initialized.
+     */
+    public final Operand<? extends TType> tableHandle;
+
+    /**
+     * Keys of type Tkey.
+     */
+    public final Operand<? extends TType> keys;
+
+    /**
+     * Values of type Tval.
+     */
+    public final Operand<? extends TType> values;
+
+    /**
+     * The Tkey attribute
+     */
+    public final DataType Tkey;
+
+    /**
+     * The Tval attribute
+     */
+    public final DataType Tval;
+
+    public Inputs(GraphOperation op) {
+      super(new InitializeTable(op), op, Arrays.asList("Tkey", "Tval"));
+      int inputIndex = 0;
+      tableHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      keys = (Operand<? extends TType>) op.input(inputIndex++);
+      values = (Operand<? extends TType>) op.input(inputIndex++);
+      Tkey = op.attributes().getAttrType("Tkey");
+      Tval = op.attributes().getAttrType("Tval");
+    }
   }
 }

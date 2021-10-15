@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -53,8 +56,8 @@ public final class TensorListResize extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new TensorListResize operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
-   * @param sizeOutput the sizeOutput value
+   * @param inputHandle The inputHandle value
+   * @param sizeOutput The sizeOutput value
    * @return a new instance of TensorListResize
    */
   @Endpoint(
@@ -81,5 +84,24 @@ public final class TensorListResize extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorListResize> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    /**
+     * The sizeOutput input
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorListResize(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+    }
   }
 }

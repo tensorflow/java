@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,8 +28,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -53,16 +57,16 @@ public final class GroupByWindowDataset extends RawOp implements Operand<TType> 
    * Factory method to create a class wrapping a new ExperimentalGroupByWindowDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param keyFuncOtherArguments the keyFuncOtherArguments value
-   * @param reduceFuncOtherArguments the reduceFuncOtherArguments value
-   * @param windowSizeFuncOtherArguments the windowSizeFuncOtherArguments value
+   * @param inputDataset The inputDataset value
+   * @param keyFuncOtherArguments The keyFuncOtherArguments value
+   * @param reduceFuncOtherArguments The reduceFuncOtherArguments value
+   * @param windowSizeFuncOtherArguments The windowSizeFuncOtherArguments value
    * @param keyFunc A function mapping an element of {@code input_dataset}, concatenated
    * with {@code key_func_other_arguments} to a scalar value of type DT_INT64.
-   * @param reduceFunc the value of the reduceFunc property
-   * @param windowSizeFunc the value of the windowSizeFunc property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param reduceFunc The value of the reduceFunc attribute
+   * @param windowSizeFunc The value of the windowSizeFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of GroupByWindowDataset
    */
   @Endpoint(
@@ -103,5 +107,72 @@ public final class GroupByWindowDataset extends RawOp implements Operand<TType> 
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<GroupByWindowDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The keyFuncOtherArguments input
+     */
+    public final Iterable<Operand<?>> keyFuncOtherArguments;
+
+    /**
+     * The reduceFuncOtherArguments input
+     */
+    public final Iterable<Operand<?>> reduceFuncOtherArguments;
+
+    /**
+     * The windowSizeFuncOtherArguments input
+     */
+    public final Iterable<Operand<?>> windowSizeFuncOtherArguments;
+
+    /**
+     * The TkeyFuncOtherArguments attribute
+     */
+    public final DataType[] TkeyFuncOtherArguments;
+
+    /**
+     * The TreduceFuncOtherArguments attribute
+     */
+    public final DataType[] TreduceFuncOtherArguments;
+
+    /**
+     * The TwindowSizeFuncOtherArguments attribute
+     */
+    public final DataType[] TwindowSizeFuncOtherArguments;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new GroupByWindowDataset(op), op, Arrays.asList("Tkey_func_other_arguments", "Treduce_func_other_arguments", "Twindow_size_func_other_arguments", "output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      int keyFuncOtherArgumentsLength = op.inputListLength("key_func_other_arguments");
+      keyFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, keyFuncOtherArgumentsLength));
+      inputIndex += keyFuncOtherArgumentsLength;
+      int reduceFuncOtherArgumentsLength = op.inputListLength("reduce_func_other_arguments");
+      reduceFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, reduceFuncOtherArgumentsLength));
+      inputIndex += reduceFuncOtherArgumentsLength;
+      int windowSizeFuncOtherArgumentsLength = op.inputListLength("window_size_func_other_arguments");
+      windowSizeFuncOtherArguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, windowSizeFuncOtherArgumentsLength));
+      inputIndex += windowSizeFuncOtherArgumentsLength;
+      TkeyFuncOtherArguments = op.attributes().getAttrTypeList("Tkey_func_other_arguments");
+      TreduceFuncOtherArguments = op.attributes().getAttrTypeList("Treduce_func_other_arguments");
+      TwindowSizeFuncOtherArguments = op.attributes().getAttrTypeList("Twindow_size_func_other_arguments");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

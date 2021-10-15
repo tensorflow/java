@@ -17,12 +17,15 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -127,6 +130,29 @@ public final class Join extends RawOp implements Operand<TString> {
     public Options separator(String separator) {
       this.separator = separator;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Join> {
+    /**
+     * A list of string tensors.  The tensors must all have the same shape,
+     * or be scalars.  Scalars may be mixed in; these will be broadcast to the shape
+     * of non-scalar inputs.
+     */
+    public final Iterable<Operand<TString>> inputs;
+
+    /**
+     * string, an optional join separator.
+     */
+    public final String separator;
+
+    public Inputs(GraphOperation op) {
+      super(new Join(op), op, Arrays.asList("separator"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<TString>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      separator = op.attributes().getAttrString("separator");
     }
   }
 }

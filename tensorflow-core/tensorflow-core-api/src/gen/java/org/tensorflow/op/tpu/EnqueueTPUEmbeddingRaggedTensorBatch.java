@@ -19,13 +19,16 @@ package org.tensorflow.op.tpu;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -161,7 +164,7 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
    * all tables.
    * @return this Options instance.
    */
-  public static Options combiners(String[] combiners) {
+  public static Options combiners(String... combiners) {
     return new Options().combiners(combiners);
   }
 
@@ -181,7 +184,7 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
    * @param maxSequenceLengths the maxSequenceLengths option
    * @return this Options instance.
    */
-  public static Options maxSequenceLengths(Long[] maxSequenceLengths) {
+  public static Options maxSequenceLengths(Long... maxSequenceLengths) {
     return new Options().maxSequenceLengths(maxSequenceLengths);
   }
 
@@ -201,7 +204,7 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
    * @param numFeatures the numFeatures option
    * @return this Options instance.
    */
-  public static Options numFeatures(Long[] numFeatures) {
+  public static Options numFeatures(Long... numFeatures) {
     return new Options().numFeatures(numFeatures);
   }
 
@@ -306,6 +309,111 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
     public Options numFeatures(Long... numFeatures) {
       this.numFeatures = Arrays.asList(numFeatures);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingRaggedTensorBatch> {
+    /**
+     * A list of rank 1 Tensors specifying the break points for splitting
+     * embedding_indices and aggregation_weights into rows.
+     * It corresponds to ids.row_splits in embedding_lookup(), when ids is a
+     * RaggedTensor.
+     */
+    public final Iterable<Operand<? extends TNumber>> sampleSplits;
+
+    /**
+     * A list of rank 1 Tensors, indices into the embedding tables.
+     * It corresponds to ids.values in embedding_lookup(), when ids is a RaggedTensor.
+     */
+    public final Iterable<Operand<? extends TNumber>> embeddingIndices;
+
+    /**
+     * A list of rank 1 Tensors containing per training example
+     * aggregation weights. It corresponds to the values field of a RaggedTensor
+     * with the same row_splits as ids in embedding_lookup(), when ids is a
+     * RaggedTensor.
+     */
+    public final Iterable<Operand<? extends TNumber>> aggregationWeights;
+
+    /**
+     * A string input that overrides the mode specified in the
+     * TPUEmbeddingConfiguration. Supported values are {'unspecified', 'inference',
+     * 'training', 'backward_pass_only'}. When set to 'unspecified', the mode set
+     * in TPUEmbeddingConfiguration is used, otherwise mode_override is used.
+     */
+    public final Operand<TString> modeOverride;
+
+    /**
+     * The T1 attribute
+     */
+    public final DataType T1;
+
+    /**
+     * The T2 attribute
+     */
+    public final DataType T2;
+
+    /**
+     * The T3 attribute
+     */
+    public final DataType T3;
+
+    /**
+     * The TPU device to use. Should be >= 0 and less than the number
+     * of TPU cores in the task on which the node is placed.
+     */
+    public final long deviceOrdinal;
+
+    /**
+     * A list of string scalars, one for each embedding table that specify
+     * how to normalize the embedding activations after weighted summation.
+     * Supported combiners are 'mean', 'sum', or 'sqrtn'. It is invalid to have
+     * the sum of the weights be 0 for 'mean' or the sum of the squared weights be
+     * 0 for 'sqrtn'. If combiners isn't passed, the default is to use 'sum' for
+     * all tables.
+     */
+    public final String[] combiners;
+
+    /**
+     * A list of integers specifying the identifier of the embedding table
+     * (offset of TableDescriptor in the TPUEmbeddingConfiguration) to lookup the
+     * corresponding input. The ith input is looked up using table_ids[i]. The size
+     * of the table_ids list must be equal to that of sample_indices,
+     * embedding_indices and aggregation_weights.
+     */
+    public final long[] tableIds;
+
+    /**
+     * The maxSequenceLengths attribute
+     */
+    public final long[] maxSequenceLengths;
+
+    /**
+     * The numFeatures attribute
+     */
+    public final long[] numFeatures;
+
+    public Inputs(GraphOperation op) {
+      super(new EnqueueTPUEmbeddingRaggedTensorBatch(op), op, Arrays.asList("T1", "T2", "T3", "device_ordinal", "combiners", "table_ids", "max_sequence_lengths", "num_features"));
+      int inputIndex = 0;
+      int sampleSplitsLength = op.inputListLength("sample_splits");
+      sampleSplits = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, sampleSplitsLength));
+      inputIndex += sampleSplitsLength;
+      int embeddingIndicesLength = op.inputListLength("embedding_indices");
+      embeddingIndices = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, embeddingIndicesLength));
+      inputIndex += embeddingIndicesLength;
+      int aggregationWeightsLength = op.inputListLength("aggregation_weights");
+      aggregationWeights = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, aggregationWeightsLength));
+      inputIndex += aggregationWeightsLength;
+      modeOverride = (Operand<TString>) op.input(inputIndex++);
+      T1 = op.attributes().getAttrType("T1");
+      T2 = op.attributes().getAttrType("T2");
+      T3 = op.attributes().getAttrType("T3");
+      deviceOrdinal = op.attributes().getAttrInt("device_ordinal");
+      combiners = op.attributes().getAttrStringList("combiners");
+      tableIds = op.attributes().getAttrIntList("table_ids");
+      maxSequenceLengths = op.attributes().getAttrIntList("max_sequence_lengths");
+      numFeatures = op.attributes().getAttrIntList("num_features");
     }
   }
 }

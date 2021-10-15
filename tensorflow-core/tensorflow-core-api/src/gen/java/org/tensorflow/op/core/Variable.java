@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -152,6 +156,39 @@ public final class Variable<T extends TType> extends RawOp implements Operand<T>
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Variable<?>> {
+    /**
+     * The shape of the variable tensor.
+     */
+    public final Shape shape;
+
+    /**
+     * The type of elements in the variable tensor.
+     */
+    public final DataType dtype;
+
+    /**
+     * If non-empty, this variable is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this variable is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new Variable<>(op), op, Arrays.asList("shape", "dtype", "container", "shared_name"));
+      int inputIndex = 0;
+      shape = op.attributes().getAttrShape("shape");
+      dtype = op.attributes().getAttrType("dtype");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

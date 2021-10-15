@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -52,7 +55,7 @@ public final class TensorListLength extends RawOp implements Operand<TInt32> {
    * Factory method to create a class wrapping a new TensorListLength operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
+   * @param inputHandle The inputHandle value
    * @return a new instance of TensorListLength
    */
   @Endpoint(
@@ -76,5 +79,18 @@ public final class TensorListLength extends RawOp implements Operand<TInt32> {
   @Override
   public Output<TInt32> asOutput() {
     return length;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorListLength> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorListLength(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

@@ -20,15 +20,18 @@ package org.tensorflow.op.train;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -107,5 +110,38 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) tensors.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<Restore> {
+    /**
+     * Must have a single element.  The prefix of a V2 checkpoint.
+     */
+    public final Operand<TString> prefix;
+
+    /**
+     * shape {N}.  The names of the tensors to be restored.
+     */
+    public final Operand<TString> tensorNames;
+
+    /**
+     * shape {N}.  The slice specs of the tensors to be restored.
+     * Empty strings indicate that they are non-partitioned tensors.
+     */
+    public final Operand<TString> shapeAndSlices;
+
+    /**
+     * shape {N}.  The list of expected dtype for the tensors.  Must match
+     * those stored in the checkpoint.
+     */
+    public final DataType[] dtypes;
+
+    public Inputs(GraphOperation op) {
+      super(new Restore(op), op, Arrays.asList("dtypes"));
+      int inputIndex = 0;
+      prefix = (Operand<TString>) op.input(inputIndex++);
+      tensorNames = (Operand<TString>) op.input(inputIndex++);
+      shapeAndSlices = (Operand<TString>) op.input(inputIndex++);
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+    }
   }
 }

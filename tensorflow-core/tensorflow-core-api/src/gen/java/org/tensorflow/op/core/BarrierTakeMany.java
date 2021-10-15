@@ -19,15 +19,18 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -213,6 +216,53 @@ public final class BarrierTakeMany extends RawOp {
     public Options timeoutMs(Long timeoutMs) {
       this.timeoutMs = timeoutMs;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BarrierTakeMany> {
+    /**
+     * The handle to a barrier.
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * A single-element tensor containing the number of elements to
+     * take.
+     */
+    public final Operand<TInt32> numElements;
+
+    /**
+     * The type of each component in a value.
+     */
+    public final DataType[] componentTypes;
+
+    /**
+     * Allow to return less than num_elements items if barrier is
+     * already closed.
+     */
+    public final boolean allowSmallBatch;
+
+    /**
+     * The waitForIncomplete attribute
+     */
+    public final boolean waitForIncomplete;
+
+    /**
+     * If the queue is empty, this operation will block for up to
+     * timeout_ms milliseconds.
+     * Note: This option is not supported yet.
+     */
+    public final long timeoutMs;
+
+    public Inputs(GraphOperation op) {
+      super(new BarrierTakeMany(op), op, Arrays.asList("component_types", "allow_small_batch", "wait_for_incomplete", "timeout_ms"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      numElements = (Operand<TInt32>) op.input(inputIndex++);
+      componentTypes = op.attributes().getAttrTypeList("component_types");
+      allowSmallBatch = op.attributes().getAttrBool("allow_small_batch");
+      waitForIncomplete = op.attributes().getAttrBool("wait_for_incomplete");
+      timeoutMs = op.attributes().getAttrInt("timeout_ms");
     }
   }
 }

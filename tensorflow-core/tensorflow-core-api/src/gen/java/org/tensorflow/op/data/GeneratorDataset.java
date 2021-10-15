@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +28,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -56,14 +60,14 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new GeneratorDataset operation.
    *
    * @param scope current scope
-   * @param initFuncOtherArgs the initFuncOtherArgs value
-   * @param nextFuncOtherArgs the nextFuncOtherArgs value
-   * @param finalizeFuncOtherArgs the finalizeFuncOtherArgs value
-   * @param initFunc the value of the initFunc property
-   * @param nextFunc the value of the nextFunc property
-   * @param finalizeFunc the value of the finalizeFunc property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param initFuncOtherArgs The initFuncOtherArgs value
+   * @param nextFuncOtherArgs The nextFuncOtherArgs value
+   * @param finalizeFuncOtherArgs The finalizeFuncOtherArgs value
+   * @param initFunc The value of the initFunc attribute
+   * @param nextFunc The value of the nextFunc attribute
+   * @param finalizeFunc The value of the finalizeFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of GeneratorDataset
    */
   @Endpoint(
@@ -102,5 +106,66 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<GeneratorDataset> {
+    /**
+     * The initFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> initFuncOtherArgs;
+
+    /**
+     * The nextFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> nextFuncOtherArgs;
+
+    /**
+     * The finalizeFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> finalizeFuncOtherArgs;
+
+    /**
+     * The TinitFuncArgs attribute
+     */
+    public final DataType[] TinitFuncArgs;
+
+    /**
+     * The TnextFuncArgs attribute
+     */
+    public final DataType[] TnextFuncArgs;
+
+    /**
+     * The TfinalizeFuncArgs attribute
+     */
+    public final DataType[] TfinalizeFuncArgs;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new GeneratorDataset(op), op, Arrays.asList("Tinit_func_args", "Tnext_func_args", "Tfinalize_func_args", "output_types", "output_shapes"));
+      int inputIndex = 0;
+      int initFuncOtherArgsLength = op.inputListLength("init_func_other_args");
+      initFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, initFuncOtherArgsLength));
+      inputIndex += initFuncOtherArgsLength;
+      int nextFuncOtherArgsLength = op.inputListLength("next_func_other_args");
+      nextFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, nextFuncOtherArgsLength));
+      inputIndex += nextFuncOtherArgsLength;
+      int finalizeFuncOtherArgsLength = op.inputListLength("finalize_func_other_args");
+      finalizeFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, finalizeFuncOtherArgsLength));
+      inputIndex += finalizeFuncOtherArgsLength;
+      TinitFuncArgs = op.attributes().getAttrTypeList("Tinit_func_args");
+      TnextFuncArgs = op.attributes().getAttrTypeList("Tnext_func_args");
+      TfinalizeFuncArgs = op.attributes().getAttrTypeList("Tfinalize_func_args");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -92,5 +96,43 @@ public final class DynamicUpdateSlice<T extends TType> extends RawOp implements 
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<DynamicUpdateSlice<T>> {
+    /**
+     * A {@code Tensor} of type T.
+     */
+    public final Operand<T> input;
+
+    /**
+     * A {@code Tensor} of type T. Same rank as {@code input}.
+     */
+    public final Operand<T> update;
+
+    /**
+     * A vector of indices into {@code input}. Must have length equal to the rank of
+     * {@code input}.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new DynamicUpdateSlice<>(op), op, Arrays.asList("T", "Tindices"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      update = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

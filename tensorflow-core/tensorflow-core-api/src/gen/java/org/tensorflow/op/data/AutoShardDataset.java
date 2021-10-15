@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -65,8 +69,8 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
    * @param inputDataset A variant tensor representing the input dataset.
    * @param numWorkers A scalar representing the number of workers to distribute this dataset across.
    * @param index A scalar representing the index of the current worker out of num_workers.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of AutoShardDataset
    */
@@ -165,6 +169,55 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
     public Options numReplicas(Long numReplicas) {
       this.numReplicas = numReplicas;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AutoShardDataset> {
+    /**
+     * A variant tensor representing the input dataset.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A scalar representing the number of workers to distribute this dataset across.
+     */
+    public final Operand<TInt64> numWorkers;
+
+    /**
+     * A scalar representing the index of the current worker out of num_workers.
+     */
+    public final Operand<TInt64> index;
+
+    /**
+     * The autoShardPolicy attribute
+     */
+    public final long autoShardPolicy;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The numReplicas attribute
+     */
+    public final long numReplicas;
+
+    public Inputs(GraphOperation op) {
+      super(new AutoShardDataset(op), op, Arrays.asList("auto_shard_policy", "output_types", "output_shapes", "num_replicas"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      numWorkers = (Operand<TInt64>) op.input(inputIndex++);
+      index = (Operand<TInt64>) op.input(inputIndex++);
+      autoShardPolicy = op.attributes().getAttrInt("auto_shard_policy");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      numReplicas = op.attributes().getAttrInt("num_replicas");
     }
   }
 }

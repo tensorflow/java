@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
@@ -186,6 +190,40 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
     public Options expandAnimations(Boolean expandAnimations) {
       this.expandAnimations = expandAnimations;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeImage<?>> {
+    /**
+     * 0-D. The encoded image bytes.
+     */
+    public final Operand<TString> contents;
+
+    /**
+     * Number of color channels for the decoded image.
+     */
+    public final long channels;
+
+    /**
+     * The desired DType of the returned Tensor.
+     */
+    public final DataType dtype;
+
+    /**
+     * Controls the output shape of the returned op. If True, the returned op will
+     * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
+     * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
+     * tensor for all file types and will truncate animated GIFs to the first frame.
+     */
+    public final boolean expandAnimations;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeImage<>(op), op, Arrays.asList("channels", "dtype", "expand_animations"));
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+      channels = op.attributes().getAttrInt("channels");
+      dtype = op.attributes().getAttrType("dtype");
+      expandAnimations = op.attributes().getAttrBool("expand_animations");
     }
   }
 }

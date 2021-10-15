@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -137,6 +141,63 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
     public Options binaryOutput(Boolean binaryOutput) {
       this.binaryOutput = binaryOutput;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<SparseBincount<U>> {
+    /**
+     * 2D int64 {@code Tensor}.
+     */
+    public final Operand<TInt64> indices;
+
+    /**
+     * 1D int {@code Tensor}.
+     */
+    public final Operand<T> values;
+
+    /**
+     * 1D int64 {@code Tensor}.
+     */
+    public final Operand<TInt64> denseShape;
+
+    /**
+     * non-negative int scalar {@code Tensor}.
+     */
+    public final Operand<T> sizeOutput;
+
+    /**
+     * is an int32, int64, float32, or float64 {@code Tensor} with the same
+     * shape as {@code input}, or a length-0 {@code Tensor}, in which case it acts as all weights
+     * equal to 1.
+     */
+    public final Operand<U> weights;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * bool; Whether the kernel should count the appearance or number of occurrences.
+     */
+    public final boolean binaryOutput;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseBincount<>(op), op, Arrays.asList("Tidx", "T", "binary_output"));
+      int inputIndex = 0;
+      indices = (Operand<TInt64>) op.input(inputIndex++);
+      values = (Operand<T>) op.input(inputIndex++);
+      denseShape = (Operand<TInt64>) op.input(inputIndex++);
+      sizeOutput = (Operand<T>) op.input(inputIndex++);
+      weights = (Operand<U>) op.input(inputIndex++);
+      Tidx = op.attributes().getAttrType("Tidx");
+      T = op.attributes().getAttrType("T");
+      binaryOutput = op.attributes().getAttrBool("binary_output");
     }
   }
 }

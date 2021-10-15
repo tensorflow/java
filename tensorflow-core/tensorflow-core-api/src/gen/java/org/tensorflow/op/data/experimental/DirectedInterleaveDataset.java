@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,8 +27,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -55,8 +59,8 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
    * {@code N} data inputs should produce the next output element.
    * @param dataInputDatasets {@code N} datasets with the same type that will be interleaved according to
    * the values of {@code selector_input_dataset}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of DirectedInterleaveDataset
    */
   @Endpoint(
@@ -91,5 +95,40 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<DirectedInterleaveDataset> {
+    /**
+     * A dataset of scalar {@code DT_INT64} elements that determines which of the
+     * {@code N} data inputs should produce the next output element.
+     */
+    public final Operand<? extends TType> selectorInputDataset;
+
+    /**
+     * {@code N} datasets with the same type that will be interleaved according to
+     * the values of {@code selector_input_dataset}.
+     */
+    public final Iterable<Operand<? extends TType>> dataInputDatasets;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new DirectedInterleaveDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      selectorInputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      int dataInputDatasetsLength = op.inputListLength("data_input_datasets");
+      dataInputDatasets = Arrays.asList((Operand<? extends TType>[]) op.inputList(inputIndex, dataInputDatasetsLength));
+      inputIndex += dataInputDatasetsLength;
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

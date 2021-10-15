@@ -20,15 +20,18 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -82,11 +85,11 @@ public final class Compile extends RawOp {
    * Factory method to create a class wrapping a new TPUCompile operation.
    *
    * @param scope current scope
-   * @param dynamicShapes the dynamicShapes value
-   * @param guaranteedConstants the guaranteedConstants value
-   * @param numComputations the value of the numComputations property
-   * @param function the value of the function property
-   * @param metadata the value of the metadata property
+   * @param dynamicShapes The dynamicShapes value
+   * @param guaranteedConstants The guaranteedConstants value
+   * @param numComputations The value of the numComputations attribute
+   * @param function The value of the function attribute
+   * @param metadata The value of the metadata attribute
    * @return a new instance of Compile
    */
   @Endpoint(
@@ -129,5 +132,40 @@ public final class Compile extends RawOp {
    */
   public List<Output<TBool>> mayModifyVariables() {
     return mayModifyVariables;
+  }
+
+  public static class Inputs extends RawOpInputs<Compile> {
+    /**
+     * The dynamicShapes input
+     */
+    public final Iterable<Operand<TInt64>> dynamicShapes;
+
+    /**
+     * The guaranteedConstants input
+     */
+    public final Iterable<Operand<?>> guaranteedConstants;
+
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
+    /**
+     * The TguaranteedConstants attribute
+     */
+    public final DataType[] TguaranteedConstants;
+
+    public Inputs(GraphOperation op) {
+      super(new Compile(op), op, Arrays.asList("metadata", "Tguaranteed_constants"));
+      int inputIndex = 0;
+      int dynamicShapesLength = op.inputListLength("dynamic_shapes");
+      dynamicShapes = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, dynamicShapesLength));
+      inputIndex += dynamicShapesLength;
+      int guaranteedConstantsLength = op.inputListLength("guaranteed_constants");
+      guaranteedConstants = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, guaranteedConstantsLength));
+      inputIndex += guaranteedConstantsLength;
+      metadata = op.attributes().getAttrString("metadata");
+      TguaranteedConstants = op.attributes().getAttrTypeList("Tguaranteed_constants");
+    }
   }
 }

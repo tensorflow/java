@@ -19,11 +19,13 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -212,7 +214,7 @@ public final class FixedUnigramCandidateSampler extends RawOp {
    * order. Exactly one of vocab_file and unigrams should be passed to this op.
    * @return this Options instance.
    */
-  public static Options unigrams(Float[] unigrams) {
+  public static Options unigrams(Float... unigrams) {
     return new Options().unigrams(unigrams);
   }
 
@@ -411,6 +413,113 @@ public final class FixedUnigramCandidateSampler extends RawOp {
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<FixedUnigramCandidateSampler> {
+    /**
+     * A batch_size * num_true matrix, in which each row contains the
+     * IDs of the num_true target_classes in the corresponding original label.
+     */
+    public final Operand<TInt64> trueClasses;
+
+    /**
+     * Number of true labels per context.
+     */
+    public final long numTrue;
+
+    /**
+     * Number of candidates to randomly sample.
+     */
+    public final long numSampled;
+
+    /**
+     * If unique is true, we sample with rejection, so that all sampled
+     * candidates in a batch are unique. This requires some approximation to
+     * estimate the post-rejection sampling probabilities.
+     */
+    public final boolean unique;
+
+    /**
+     * The sampler will sample integers from the interval [0, range_max).
+     */
+    public final long rangeMax;
+
+    /**
+     * Each valid line in this file (which should have a CSV-like format)
+     * corresponds to a valid word ID. IDs are in sequential order, starting from
+     * num_reserved_ids. The last entry in each line is expected to be a value
+     * corresponding to the count or relative probability. Exactly one of vocab_file
+     * and unigrams needs to be passed to this op.
+     */
+    public final String vocabFile;
+
+    /**
+     * The distortion is used to skew the unigram probability distribution.
+     * Each weight is first raised to the distortion's power before adding to the
+     * internal unigram distribution. As a result, distortion = 1.0 gives regular
+     * unigram sampling (as defined by the vocab file), and distortion = 0.0 gives
+     * a uniform distribution.
+     */
+    public final float distortion;
+
+    /**
+     * Optionally some reserved IDs can be added in the range [0,
+     * ..., num_reserved_ids) by the users. One use case is that a special unknown
+     * word token is used as ID 0. These IDs will have a sampling probability of 0.
+     */
+    public final long numReservedIds;
+
+    /**
+     * A sampler can be used to sample from a subset of the original range
+     * in order to speed up the whole computation through parallelism. This parameter
+     * (together with 'shard') indicates the number of partitions that are being
+     * used in the overall computation.
+     */
+    public final long numShards;
+
+    /**
+     * A sampler can be used to sample from a subset of the original range
+     * in order to speed up the whole computation through parallelism. This parameter
+     * (together with 'num_shards') indicates the particular partition number of a
+     * sampler op, when partitioning is being used.
+     */
+    public final long shard;
+
+    /**
+     * A list of unigram counts or probabilities, one per ID in sequential
+     * order. Exactly one of vocab_file and unigrams should be passed to this op.
+     */
+    public final float[] unigrams;
+
+    /**
+     * If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * An second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    public Inputs(GraphOperation op) {
+      super(new FixedUnigramCandidateSampler(op), op, Arrays.asList("num_true", "num_sampled", "unique", "range_max", "vocab_file", "distortion", "num_reserved_ids", "num_shards", "shard", "unigrams", "seed", "seed2"));
+      int inputIndex = 0;
+      trueClasses = (Operand<TInt64>) op.input(inputIndex++);
+      numTrue = op.attributes().getAttrInt("num_true");
+      numSampled = op.attributes().getAttrInt("num_sampled");
+      unique = op.attributes().getAttrBool("unique");
+      rangeMax = op.attributes().getAttrInt("range_max");
+      vocabFile = op.attributes().getAttrString("vocab_file");
+      distortion = op.attributes().getAttrFloat("distortion");
+      numReservedIds = op.attributes().getAttrInt("num_reserved_ids");
+      numShards = op.attributes().getAttrInt("num_shards");
+      shard = op.attributes().getAttrInt("shard");
+      unigrams = op.attributes().getAttrFloatList("unigrams");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
     }
   }
 }

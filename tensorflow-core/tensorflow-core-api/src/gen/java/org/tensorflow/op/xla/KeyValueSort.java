@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -95,5 +99,36 @@ public final class KeyValueSort<T extends TNumber, U extends TType> extends RawO
    */
   public Output<U> sortedValues() {
     return sortedValues;
+  }
+
+  public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<KeyValueSort<T, U>> {
+    /**
+     * A {@code Tensor} of type K.
+     */
+    public final Operand<T> keys;
+
+    /**
+     * A {@code Tensor} of type V.
+     */
+    public final Operand<U> values;
+
+    /**
+     * The K attribute
+     */
+    public final DataType K;
+
+    /**
+     * The V attribute
+     */
+    public final DataType V;
+
+    public Inputs(GraphOperation op) {
+      super(new KeyValueSort<>(op), op, Arrays.asList("K", "V"));
+      int inputIndex = 0;
+      keys = (Operand<T>) op.input(inputIndex++);
+      values = (Operand<U>) op.input(inputIndex++);
+      K = op.attributes().getAttrType("K");
+      V = op.attributes().getAttrType("V");
+    }
   }
 }

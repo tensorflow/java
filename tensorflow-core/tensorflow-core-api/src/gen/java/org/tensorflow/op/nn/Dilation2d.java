@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -119,5 +123,50 @@ public final class Dilation2d<T extends TNumber> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Dilation2d<T>> {
+    /**
+     * 4-D with shape {@code [batch, in_height, in_width, depth]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 3-D with shape {@code [filter_height, filter_width, depth]}.
+     */
+    public final Operand<T> filter;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The stride of the sliding window for each dimension of the input
+     * tensor. Must be: `[1, stride_height, stride_width, 1]`.
+     */
+    public final long[] strides;
+
+    /**
+     * The input stride for atrous morphological dilation. Must be:
+     * `[1, rate_height, rate_width, 1]`.
+     */
+    public final long[] rates;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    public Inputs(GraphOperation op) {
+      super(new Dilation2d<>(op), op, Arrays.asList("T", "strides", "rates", "padding"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      filter = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      strides = op.attributes().getAttrIntList("strides");
+      rates = op.attributes().getAttrIntList("rates");
+      padding = op.attributes().getAttrString("padding");
+    }
   }
 }

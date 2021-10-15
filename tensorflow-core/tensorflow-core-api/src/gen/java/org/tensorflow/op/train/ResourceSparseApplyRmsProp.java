@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -60,7 +64,7 @@ public final class ResourceSparseApplyRmsProp extends RawOp {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -127,6 +131,87 @@ public final class ResourceSparseApplyRmsProp extends RawOp {
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ResourceSparseApplyRmsProp> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> var;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> ms;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> mom;
+
+    /**
+     * Scaling factor. Must be a scalar.
+     */
+    public final Operand<T> lr;
+
+    /**
+     * Decay rate. Must be a scalar.
+     */
+    public final Operand<T> rho;
+
+    /**
+     * The momentum input
+     */
+    public final Operand<T> momentum;
+
+    /**
+     * Ridge term. Must be a scalar.
+     */
+    public final Operand<T> epsilon;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * A vector of indices into the first dimension of var, ms and mom.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * If `True`, updating of the var, ms, and mom tensors is protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     */
+    public final boolean useLocking;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceSparseApplyRmsProp(op), op, Arrays.asList("T", "Tindices", "use_locking"));
+      int inputIndex = 0;
+      var = (Operand<? extends TType>) op.input(inputIndex++);
+      ms = (Operand<? extends TType>) op.input(inputIndex++);
+      mom = (Operand<? extends TType>) op.input(inputIndex++);
+      lr = (Operand<T>) op.input(inputIndex++);
+      rho = (Operand<T>) op.input(inputIndex++);
+      momentum = (Operand<T>) op.input(inputIndex++);
+      epsilon = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      useLocking = op.attributes().getAttrBool("use_locking");
     }
   }
 }

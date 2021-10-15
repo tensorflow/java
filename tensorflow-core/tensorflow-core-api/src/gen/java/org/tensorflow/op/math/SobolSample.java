@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -107,5 +111,38 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
   @Override
   public Output<T> asOutput() {
     return samples;
+  }
+
+  public static class Inputs extends RawOpInputs<SobolSample<?>> {
+    /**
+     * Positive scalar {@code Tensor} representing each sample's dimension.
+     */
+    public final Operand<TInt32> dim;
+
+    /**
+     * Positive scalar {@code Tensor} of dtype int32. The number of Sobol points to return
+     * in the output.
+     */
+    public final Operand<TInt32> numResults;
+
+    /**
+     * Positive scalar {@code Tensor} of dtype int32. The number of initial points of the
+     * Sobol sequence to skip.
+     */
+    public final Operand<TInt32> skip;
+
+    /**
+     * The type of the sample. One of: `float32` or `float64`.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new SobolSample<>(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      dim = (Operand<TInt32>) op.input(inputIndex++);
+      numResults = (Operand<TInt32>) op.input(inputIndex++);
+      skip = (Operand<TInt32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

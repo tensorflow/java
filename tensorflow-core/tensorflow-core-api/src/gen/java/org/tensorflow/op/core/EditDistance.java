@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -168,6 +172,68 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
     public Options normalize(Boolean normalize) {
       this.normalize = normalize;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<EditDistance> {
+    /**
+     * The indices of the hypothesis list SparseTensor.
+     * This is an N x R int64 matrix.
+     */
+    public final Operand<TInt64> hypothesisIndices;
+
+    /**
+     * The values of the hypothesis list SparseTensor.
+     * This is an N-length vector.
+     */
+    public final Operand<T> hypothesisValues;
+
+    /**
+     * The shape of the hypothesis list SparseTensor.
+     * This is an R-length vector.
+     */
+    public final Operand<TInt64> hypothesisShape;
+
+    /**
+     * The indices of the truth list SparseTensor.
+     * This is an M x R int64 matrix.
+     */
+    public final Operand<TInt64> truthIndices;
+
+    /**
+     * The values of the truth list SparseTensor.
+     * This is an M-length vector.
+     */
+    public final Operand<T> truthValues;
+
+    /**
+     * truth indices, vector.
+     */
+    public final Operand<TInt64> truthShape;
+
+    /**
+     * boolean (if true, edit distances are normalized by length of truth).
+     *
+     * The output is:
+     */
+    public final boolean normalize;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new EditDistance(op), op, Arrays.asList("normalize", "T"));
+      int inputIndex = 0;
+      hypothesisIndices = (Operand<TInt64>) op.input(inputIndex++);
+      hypothesisValues = (Operand<T>) op.input(inputIndex++);
+      hypothesisShape = (Operand<TInt64>) op.input(inputIndex++);
+      truthIndices = (Operand<TInt64>) op.input(inputIndex++);
+      truthValues = (Operand<T>) op.input(inputIndex++);
+      truthShape = (Operand<TInt64>) op.input(inputIndex++);
+      normalize = op.attributes().getAttrBool("normalize");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -156,6 +160,53 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs<U extends TNumber> extends RawOpInputs<RandomGamma<U>> {
+    /**
+     * 1-D integer tensor. Shape of independent samples to draw from each
+     * distribution described by the shape parameters given in alpha.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * A tensor in which each scalar is a &quot;shape&quot; parameter describing the
+     * associated gamma distribution.
+     */
+    public final Operand<U> alpha;
+
+    /**
+     * If either `seed` or `seed2` are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * A second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    /**
+     * The S attribute
+     */
+    public final DataType S;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RandomGamma<>(op), op, Arrays.asList("seed", "seed2", "S", "T"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      alpha = (Operand<U>) op.input(inputIndex++);
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      S = op.attributes().getAttrType("S");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

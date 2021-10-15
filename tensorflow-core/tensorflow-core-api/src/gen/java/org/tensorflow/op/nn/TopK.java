@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -139,6 +143,39 @@ public final class TopK<T extends TNumber> extends RawOp {
     public Options sorted(Boolean sorted) {
       this.sorted = sorted;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<TopK<T>> {
+    /**
+     * 1-D or higher with last dimension at least {@code k}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 0-D.  Number of top elements to look for along the last dimension (along each
+     * row for matrices).
+     */
+    public final Operand<TInt32> k;
+
+    /**
+     * If true the resulting `k` elements will be sorted by the values in
+     * descending order.
+     */
+    public final boolean sorted;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new TopK<>(op), op, Arrays.asList("sorted", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      k = (Operand<TInt32>) op.input(inputIndex++);
+      sorted = op.attributes().getAttrBool("sorted");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

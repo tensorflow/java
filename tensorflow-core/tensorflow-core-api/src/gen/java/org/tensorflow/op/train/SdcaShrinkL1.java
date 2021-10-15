@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -63,5 +66,33 @@ public final class SdcaShrinkL1 extends RawOp {
     opBuilder.setAttr("l1", l1);
     opBuilder.setAttr("l2", l2);
     return new SdcaShrinkL1(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<SdcaShrinkL1> {
+    /**
+     * a list of vectors where each value is the weight associated with a
+     * feature group.
+     */
+    public final Iterable<Operand<TFloat32>> weights;
+
+    /**
+     * Symmetric l1 regularization strength.
+     */
+    public final float l1;
+
+    /**
+     * Symmetric l2 regularization strength. Should be a positive float.
+     */
+    public final float l2;
+
+    public Inputs(GraphOperation op) {
+      super(new SdcaShrinkL1(op), op, Arrays.asList("l1", "l2"));
+      int inputIndex = 0;
+      int weightsLength = op.inputListLength("weights");
+      weights = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, weightsLength));
+      inputIndex += weightsLength;
+      l1 = op.attributes().getAttrFloat("l1");
+      l2 = op.attributes().getAttrFloat("l2");
+    }
   }
 }

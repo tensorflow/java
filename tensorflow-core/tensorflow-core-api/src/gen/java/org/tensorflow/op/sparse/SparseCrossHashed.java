@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 
@@ -149,5 +153,75 @@ public final class SparseCrossHashed extends RawOp {
    */
   public Output<TInt64> outputShape() {
     return outputShape;
+  }
+
+  public static class Inputs extends RawOpInputs<SparseCrossHashed> {
+    /**
+     * 2-D.  Indices of each input {@code SparseTensor}.
+     */
+    public final Iterable<Operand<TInt64>> indices;
+
+    /**
+     * 1-D.   values of each {@code SparseTensor}.
+     */
+    public final Iterable<Operand<?>> values;
+
+    /**
+     * 1-D.   Shapes of each {@code SparseTensor}.
+     */
+    public final Iterable<Operand<TInt64>> shapes;
+
+    /**
+     * 2-D.    Columns represented by dense {@code Tensor}.
+     */
+    public final Iterable<Operand<?>> denseInputs;
+
+    /**
+     * It is used if hashed_output is true.
+     * output = hashed_value%num_buckets if num_buckets &gt; 0 else hashed_value.
+     */
+    public final Operand<TInt64> numBuckets;
+
+    /**
+     * boolean, if true, siphash with salt will be used instead of farmhash.
+     */
+    public final Operand<TBool> strongHash;
+
+    /**
+     * Specify the salt that will be used by the siphash function.
+     */
+    public final Operand<TInt64> salt;
+
+    /**
+     * The sparseTypes attribute
+     */
+    public final DataType[] sparseTypes;
+
+    /**
+     * The denseTypes attribute
+     */
+    public final DataType[] denseTypes;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseCrossHashed(op), op, Arrays.asList("sparse_types", "dense_types"));
+      int inputIndex = 0;
+      int indicesLength = op.inputListLength("indices");
+      indices = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, indicesLength));
+      inputIndex += indicesLength;
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      int shapesLength = op.inputListLength("shapes");
+      shapes = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, shapesLength));
+      inputIndex += shapesLength;
+      int denseInputsLength = op.inputListLength("dense_inputs");
+      denseInputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, denseInputsLength));
+      inputIndex += denseInputsLength;
+      numBuckets = (Operand<TInt64>) op.input(inputIndex++);
+      strongHash = (Operand<TBool>) op.input(inputIndex++);
+      salt = (Operand<TInt64>) op.input(inputIndex++);
+      sparseTypes = op.attributes().getAttrTypeList("sparse_types");
+      denseTypes = op.attributes().getAttrTypeList("dense_types");
+    }
   }
 }

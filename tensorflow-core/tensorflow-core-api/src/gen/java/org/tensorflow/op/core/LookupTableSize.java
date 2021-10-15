@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -74,5 +77,18 @@ public final class LookupTableSize extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<LookupTableSize> {
+    /**
+     * Handle to the table.
+     */
+    public final Operand<? extends TType> tableHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new LookupTableSize(op), op, Arrays.asList());
+      int inputIndex = 0;
+      tableHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

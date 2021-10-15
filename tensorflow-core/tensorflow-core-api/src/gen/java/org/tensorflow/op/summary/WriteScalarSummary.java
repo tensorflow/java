@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -46,10 +50,10 @@ public final class WriteScalarSummary extends RawOp {
    * Factory method to create a class wrapping a new WriteScalarSummary operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param step the step value
-   * @param tag the tag value
-   * @param value the value value
+   * @param writer The writer value
+   * @param step The step value
+   * @param tag The tag value
+   * @param value The value value
    * @return a new instance of WriteScalarSummary
    */
   @Endpoint(
@@ -63,5 +67,42 @@ public final class WriteScalarSummary extends RawOp {
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(value.asOutput());
     return new WriteScalarSummary(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<WriteScalarSummary> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The step input
+     */
+    public final Operand<TInt64> step;
+
+    /**
+     * The tag input
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * The value input
+     */
+    public final Operand<? extends TNumber> value;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new WriteScalarSummary(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      step = (Operand<TInt64>) op.input(inputIndex++);
+      tag = (Operand<TString>) op.input(inputIndex++);
+      value = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

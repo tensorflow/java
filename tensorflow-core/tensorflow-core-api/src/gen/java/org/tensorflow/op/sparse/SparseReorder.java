@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -99,5 +103,37 @@ public final class SparseReorder<T extends TType> extends RawOp {
    */
   public Output<T> outputValues() {
     return outputValues;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseReorder<T>> {
+    /**
+     * 2-D.  {@code N x R} matrix with the indices of non-empty values in a
+     * SparseTensor, possibly not in canonical ordering.
+     */
+    public final Operand<TInt64> inputIndices;
+
+    /**
+     * 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
+     */
+    public final Operand<T> inputValues;
+
+    /**
+     * 1-D.  Shape of the input SparseTensor.
+     */
+    public final Operand<TInt64> inputShape;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseReorder<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      inputIndices = (Operand<TInt64>) op.input(inputIndex++);
+      inputValues = (Operand<T>) op.input(inputIndex++);
+      inputShape = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -50,10 +54,10 @@ public final class RiscPool<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new RiscPool operation.
    *
    * @param scope current scope
-   * @param value the value value
-   * @param ksize the value of the ksize property
-   * @param strides the value of the strides property
-   * @param poolingType the value of the poolingType property
+   * @param value The value value
+   * @param ksize The value of the ksize attribute
+   * @param strides The value of the strides attribute
+   * @param poolingType The value of the poolingType attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code RiscPool} output and operands
    * @return a new instance of RiscPool
@@ -128,6 +132,49 @@ public final class RiscPool<T extends TNumber> extends RawOp implements Operand<
     public Options dataFormat(String dataFormat) {
       this.dataFormat = dataFormat;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RiscPool<T>> {
+    /**
+     * The value input
+     */
+    public final Operand<T> value;
+
+    /**
+     * The ksize attribute
+     */
+    public final long[] ksize;
+
+    /**
+     * The strides attribute
+     */
+    public final long[] strides;
+
+    /**
+     * The poolingType attribute
+     */
+    public final String poolingType;
+
+    /**
+     * The dataFormat attribute
+     */
+    public final String dataFormat;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscPool<>(op), op, Arrays.asList("ksize", "strides", "pooling_type", "data_format", "T"));
+      int inputIndex = 0;
+      value = (Operand<T>) op.input(inputIndex++);
+      ksize = op.attributes().getAttrIntList("ksize");
+      strides = op.attributes().getAttrIntList("strides");
+      poolingType = op.attributes().getAttrString("pooling_type");
+      dataFormat = op.attributes().getAttrString("data_format");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

@@ -17,9 +17,12 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 
@@ -51,5 +54,19 @@ public final class ConfigureTPUEmbedding extends RawOp {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ConfigureTPUEmbedding");
     opBuilder.setAttr("config", config);
     return new ConfigureTPUEmbedding(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ConfigureTPUEmbedding> {
+    /**
+     * Serialized tensorflow.tpu.TPUEmbeddingConfiguration that
+     * describes the embedding lookups of the program.
+     */
+    public final String config;
+
+    public Inputs(GraphOperation op) {
+      super(new ConfigureTPUEmbedding(op), op, Arrays.asList("config"));
+      int inputIndex = 0;
+      config = op.attributes().getAttrString("config");
+    }
   }
 }

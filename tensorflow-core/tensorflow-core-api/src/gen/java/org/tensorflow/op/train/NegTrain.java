@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -52,7 +55,7 @@ public final class NegTrain extends RawOp {
    * @param wOut output word embedding.
    * @param examples A vector of word ids.
    * @param labels A vector of word ids.
-   * @param lr the lr value
+   * @param lr The lr value
    * @param vocabCount Count of words in the vocabulary.
    * @param numNegativeSamples Number of negative samples per example.
    * @return a new instance of NegTrain
@@ -76,5 +79,54 @@ public final class NegTrain extends RawOp {
     opBuilder.setAttr("vocab_count", vocabCountArray);
     opBuilder.setAttr("num_negative_samples", numNegativeSamples);
     return new NegTrain(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<NegTrain> {
+    /**
+     * input word embedding.
+     */
+    public final Operand<TFloat32> wIn;
+
+    /**
+     * output word embedding.
+     */
+    public final Operand<TFloat32> wOut;
+
+    /**
+     * A vector of word ids.
+     */
+    public final Operand<TInt32> examples;
+
+    /**
+     * A vector of word ids.
+     */
+    public final Operand<TInt32> labels;
+
+    /**
+     * The lr input
+     */
+    public final Operand<TFloat32> lr;
+
+    /**
+     * Count of words in the vocabulary.
+     */
+    public final long[] vocabCount;
+
+    /**
+     * Number of negative samples per example.
+     */
+    public final long numNegativeSamples;
+
+    public Inputs(GraphOperation op) {
+      super(new NegTrain(op), op, Arrays.asList("vocab_count", "num_negative_samples"));
+      int inputIndex = 0;
+      wIn = (Operand<TFloat32>) op.input(inputIndex++);
+      wOut = (Operand<TFloat32>) op.input(inputIndex++);
+      examples = (Operand<TInt32>) op.input(inputIndex++);
+      labels = (Operand<TInt32>) op.input(inputIndex++);
+      lr = (Operand<TFloat32>) op.input(inputIndex++);
+      vocabCount = op.attributes().getAttrIntList("vocab_count");
+      numNegativeSamples = op.attributes().getAttrInt("num_negative_samples");
+    }
   }
 }

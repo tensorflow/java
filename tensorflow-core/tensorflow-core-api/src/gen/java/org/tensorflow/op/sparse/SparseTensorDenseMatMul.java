@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -164,6 +168,63 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
     public Options adjointB(Boolean adjointB) {
       this.adjointB = adjointB;
       return this;
+    }
+  }
+
+  public static class Inputs<U extends TType> extends RawOpInputs<SparseTensorDenseMatMul<U>> {
+    /**
+     * 2-D.  The {@code indices} of the {@code SparseTensor}, size {@code [nnz, 2]} Matrix.
+     */
+    public final Operand<? extends TNumber> aIndices;
+
+    /**
+     * 1-D.  The {@code values} of the {@code SparseTensor}, size {@code [nnz]} Vector.
+     */
+    public final Operand<U> aValues;
+
+    /**
+     * 1-D.  The {@code shape} of the {@code SparseTensor}, size {@code [2]} Vector.
+     */
+    public final Operand<TInt64> aShape;
+
+    /**
+     * 2-D.  A dense Matrix.
+     */
+    public final Operand<U> b;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * Use the adjoint of A in the matrix multiply.  If A is complex, this
+     * is transpose(conj(A)).  Otherwise it's transpose(A).
+     */
+    public final boolean adjointA;
+
+    /**
+     * Use the adjoint of B in the matrix multiply.  If B is complex, this
+     * is transpose(conj(B)).  Otherwise it's transpose(B).
+     */
+    public final boolean adjointB;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseTensorDenseMatMul<>(op), op, Arrays.asList("T", "Tindices", "adjoint_a", "adjoint_b"));
+      int inputIndex = 0;
+      aIndices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      aValues = (Operand<U>) op.input(inputIndex++);
+      aShape = (Operand<TInt64>) op.input(inputIndex++);
+      b = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      adjointA = op.attributes().getAttrBool("adjoint_a");
+      adjointB = op.attributes().getAttrBool("adjoint_b");
     }
   }
 }

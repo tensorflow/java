@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -123,5 +127,37 @@ public final class Reverse<T extends TType> extends RawOp implements Operand<T> 
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Reverse<T>> {
+    /**
+     * Up to 8-D.
+     */
+    public final Operand<T> tensor;
+
+    /**
+     * 1-D. The indices of the dimensions to reverse. Must be in the range
+     * {@code [-rank(tensor), rank(tensor))}.
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Reverse<>(op), op, Arrays.asList("Tidx", "T"));
+      int inputIndex = 0;
+      tensor = (Operand<T>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      Tidx = op.attributes().getAttrType("Tidx");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

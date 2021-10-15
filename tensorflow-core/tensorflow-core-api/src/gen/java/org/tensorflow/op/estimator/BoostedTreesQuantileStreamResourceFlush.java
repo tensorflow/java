@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -106,6 +109,36 @@ public final class BoostedTreesQuantileStreamResourceFlush extends RawOp {
     public Options generateQuantiles(Boolean generateQuantiles) {
       this.generateQuantiles = generateQuantiles;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesQuantileStreamResourceFlush> {
+    /**
+     * resource handle referring to a QuantileStreamResource.
+     */
+    public final Operand<? extends TType> quantileStreamResourceHandle;
+
+    /**
+     * int; approximate number of buckets unless using generate_quantiles.
+     */
+    public final Operand<TInt64> numBuckets;
+
+    /**
+     * bool; If True, the output will be the num_quantiles for each stream where the ith
+     * entry is the ith quantile of the input with an approximation error of epsilon.
+     * Duplicate values may be present.
+     * If False, the output will be the points in the histogram that we got which roughly
+     * translates to 1/epsilon boundaries and without any duplicates.
+     * Default to False.
+     */
+    public final boolean generateQuantiles;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesQuantileStreamResourceFlush(op), op, Arrays.asList("generate_quantiles"));
+      int inputIndex = 0;
+      quantileStreamResourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      numBuckets = (Operand<TInt64>) op.input(inputIndex++);
+      generateQuantiles = op.attributes().getAttrBool("generate_quantiles");
     }
   }
 }

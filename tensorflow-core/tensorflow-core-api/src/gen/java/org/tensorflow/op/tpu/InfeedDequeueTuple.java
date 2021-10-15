@@ -20,6 +20,7 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -27,8 +28,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -87,5 +90,24 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<InfeedDequeueTuple> {
+    /**
+     * The element types of each element in `outputs`.
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The shapes of each tensor in `outputs`.
+     */
+    public final Shape[] shapes;
+
+    public Inputs(GraphOperation op) {
+      super(new InfeedDequeueTuple(op), op, Arrays.asList("dtypes", "shapes"));
+      int inputIndex = 0;
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      shapes = op.attributes().getAttrShapeList("shapes");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -52,7 +55,7 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
    * Factory method to create a class wrapping a new OptionalHasValue operation.
    *
    * @param scope current scope
-   * @param optional the optional value
+   * @param optional The optional value
    * @return a new instance of OptionalHasValue
    */
   @Endpoint(
@@ -76,5 +79,18 @@ public final class OptionalHasValue extends RawOp implements Operand<TBool> {
   @Override
   public Output<TBool> asOutput() {
     return hasValue;
+  }
+
+  public static class Inputs extends RawOpInputs<OptionalHasValue> {
+    /**
+     * The optional input
+     */
+    public final Operand<? extends TType> optional;
+
+    public Inputs(GraphOperation op) {
+      super(new OptionalHasValue(op), op, Arrays.asList());
+      int inputIndex = 0;
+      optional = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

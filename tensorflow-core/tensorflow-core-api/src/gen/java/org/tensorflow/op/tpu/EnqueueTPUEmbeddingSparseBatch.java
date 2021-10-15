@@ -19,13 +19,16 @@ package org.tensorflow.op.tpu;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -136,7 +139,7 @@ public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
    * all tables.
    * @return this Options instance.
    */
-  public static Options combiners(String[] combiners) {
+  public static Options combiners(String... combiners) {
     return new Options().combiners(combiners);
   }
 
@@ -193,6 +196,87 @@ public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
     public Options combiners(String... combiners) {
       this.combiners = Arrays.asList(combiners);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingSparseBatch> {
+    /**
+     * A list of rank 1 Tensors specifying the training example and
+     * feature to which the corresponding embedding_indices and aggregation_weights
+     * values belong. sample_indices[i] must equal b * nf + f, where nf is the
+     * number of features from the corresponding table, f is in [0, nf), and
+     * b is in [0, batch size).
+     */
+    public final Iterable<Operand<? extends TNumber>> sampleIndices;
+
+    /**
+     * A list of rank 1 Tensors, indices into the embedding tables.
+     */
+    public final Iterable<Operand<? extends TNumber>> embeddingIndices;
+
+    /**
+     * A list of rank 1 Tensors containing per sample -- i.e. per
+     * (training example, feature) -- aggregation weights.
+     */
+    public final Iterable<Operand<? extends TNumber>> aggregationWeights;
+
+    /**
+     * A string input that overrides the mode specified in the
+     * TPUEmbeddingConfiguration. Supported values are {'unspecified', 'inference',
+     * 'training', 'backward_pass_only'}. When set to 'unspecified', the mode set
+     * in TPUEmbeddingConfiguration is used, otherwise mode_override is used.
+     */
+    public final Operand<TString> modeOverride;
+
+    /**
+     * The T1 attribute
+     */
+    public final DataType T1;
+
+    /**
+     * The T2 attribute
+     */
+    public final DataType T2;
+
+    /**
+     * The T3 attribute
+     */
+    public final DataType T3;
+
+    /**
+     * The TPU device to use. Should be >= 0 and less than the number
+     * of TPU cores in the task on which the node is placed.
+     */
+    public final long deviceOrdinal;
+
+    /**
+     * A list of string scalars, one for each embedding table that specify
+     * how to normalize the embedding activations after weighted summation.
+     * Supported combiners are 'mean', 'sum', or 'sqrtn'. It is invalid to have
+     * the sum of the weights be 0 for 'mean' or the sum of the squared weights be
+     * 0 for 'sqrtn'. If combiners isn't passed, the default is to use 'sum' for
+     * all tables.
+     */
+    public final String[] combiners;
+
+    public Inputs(GraphOperation op) {
+      super(new EnqueueTPUEmbeddingSparseBatch(op), op, Arrays.asList("T1", "T2", "T3", "device_ordinal", "combiners"));
+      int inputIndex = 0;
+      int sampleIndicesLength = op.inputListLength("sample_indices");
+      sampleIndices = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, sampleIndicesLength));
+      inputIndex += sampleIndicesLength;
+      int embeddingIndicesLength = op.inputListLength("embedding_indices");
+      embeddingIndices = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, embeddingIndicesLength));
+      inputIndex += embeddingIndicesLength;
+      int aggregationWeightsLength = op.inputListLength("aggregation_weights");
+      aggregationWeights = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, aggregationWeightsLength));
+      inputIndex += aggregationWeightsLength;
+      modeOverride = (Operand<TString>) op.input(inputIndex++);
+      T1 = op.attributes().getAttrType("T1");
+      T2 = op.attributes().getAttrType("T2");
+      T3 = op.attributes().getAttrType("T3");
+      deviceOrdinal = op.attributes().getAttrInt("device_ordinal");
+      combiners = op.attributes().getAttrStringList("combiners");
     }
   }
 }

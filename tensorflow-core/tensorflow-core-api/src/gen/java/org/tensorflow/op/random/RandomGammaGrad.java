@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -49,8 +53,8 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
    * Factory method to create a class wrapping a new RandomGammaGrad operation.
    *
    * @param scope current scope
-   * @param alpha the alpha value
-   * @param sample the sample value
+   * @param alpha The alpha value
+   * @param sample The sample value
    * @param <T> data type for {@code RandomGammaGrad} output and operands
    * @return a new instance of RandomGammaGrad
    */
@@ -77,5 +81,30 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RandomGammaGrad<T>> {
+    /**
+     * The alpha input
+     */
+    public final Operand<T> alpha;
+
+    /**
+     * The sample input
+     */
+    public final Operand<T> sample;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RandomGammaGrad<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      alpha = (Operand<T>) op.input(inputIndex++);
+      sample = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

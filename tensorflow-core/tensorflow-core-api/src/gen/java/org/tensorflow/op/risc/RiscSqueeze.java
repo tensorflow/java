@@ -19,13 +19,16 @@ package org.tensorflow.op.risc;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -51,7 +54,7 @@ public final class RiscSqueeze<T extends TType> extends RawOp implements Operand
    * Factory method to create a class wrapping a new RiscSqueeze operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code RiscSqueeze} output and operands
    * @return a new instance of RiscSqueeze
@@ -93,7 +96,7 @@ public final class RiscSqueeze<T extends TType> extends RawOp implements Operand
    * @param squeezeDims the squeezeDims option
    * @return this Options instance.
    */
-  public static Options squeezeDims(Long[] squeezeDims) {
+  public static Options squeezeDims(Long... squeezeDims) {
     return new Options().squeezeDims(squeezeDims);
   }
 
@@ -140,6 +143,31 @@ public final class RiscSqueeze<T extends TType> extends RawOp implements Operand
     public Options squeezeDims(Long... squeezeDims) {
       this.squeezeDims = Arrays.asList(squeezeDims);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<RiscSqueeze<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The squeezeDims attribute
+     */
+    public final long[] squeezeDims;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscSqueeze<>(op), op, Arrays.asList("T", "squeeze_dims"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      squeezeDims = op.attributes().getAttrIntList("squeeze_dims");
     }
   }
 }

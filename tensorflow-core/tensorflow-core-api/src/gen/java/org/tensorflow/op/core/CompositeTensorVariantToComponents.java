@@ -20,14 +20,17 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -89,5 +92,32 @@ public final class CompositeTensorVariantToComponents extends RawOp implements I
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<CompositeTensorVariantToComponents> {
+    /**
+     * A scalar {@code variant} Tensor containing an encoded ExtensionType value.
+     */
+    public final Operand<? extends TType> encoded;
+
+    /**
+     * String serialization for the TypeSpec.  Must be compatible with the
+     * `TypeSpec` contained in `encoded`.  (Note: the encoding for the TypeSpec
+     * may change in future versions of TensorFlow.)
+     */
+    public final String metadata;
+
+    /**
+     * Expected dtypes for components.
+     */
+    public final DataType[] Tcomponents;
+
+    public Inputs(GraphOperation op) {
+      super(new CompositeTensorVariantToComponents(op), op, Arrays.asList("metadata", "Tcomponents"));
+      int inputIndex = 0;
+      encoded = (Operand<? extends TType>) op.input(inputIndex++);
+      metadata = op.attributes().getAttrString("metadata");
+      Tcomponents = op.attributes().getAttrTypeList("Tcomponents");
+    }
   }
 }

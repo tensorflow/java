@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,8 +27,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -52,8 +56,8 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new ExperimentalParseExampleDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param numParallelCalls the numParallelCalls value
+   * @param inputDataset The inputDataset value
+   * @param numParallelCalls The numParallelCalls value
    * @param denseDefaults A dict mapping string keys to {@code Tensor}s.
    * The keys of the dict must match the dense_keys of the feature.
    * @param sparseKeys A list of string keys in the examples features.
@@ -163,6 +167,96 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
     public Options sloppy(Boolean sloppy) {
       this.sloppy = sloppy;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ParseExampleDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The numParallelCalls input
+     */
+    public final Operand<TInt64> numParallelCalls;
+
+    /**
+     * A dict mapping string keys to {@code Tensor}s.
+     * The keys of the dict must match the dense_keys of the feature.
+     */
+    public final Iterable<Operand<?>> denseDefaults;
+
+    /**
+     * A list of string keys in the examples features.
+     * The results for these keys will be returned as `SparseTensor` objects.
+     */
+    public final String[] sparseKeys;
+
+    /**
+     * A list of Ndense string Tensors (scalars).
+     * The keys expected in the Examples features associated with dense values.
+     */
+    public final String[] denseKeys;
+
+    /**
+     * A list of `DTypes` of the same length as `sparse_keys`.
+     * Only `tf.float32` (`FloatList`), `tf.int64` (`Int64List`),
+     * and `tf.string` (`BytesList`) are supported.
+     */
+    public final DataType[] sparseTypes;
+
+    /**
+     * A list of DTypes of the same length as `dense_keys`.
+     * Only `tf.float32` (`FloatList`), `tf.int64` (`Int64List`),
+     * and `tf.string` (`BytesList`) are supported.
+     */
+    public final DataType[] Tdense;
+
+    /**
+     * List of tuples with the same length as `dense_keys`.
+     * The shape of the data for each dense feature referenced by `dense_keys`.
+     * Required for any input tensors identified by `dense_keys`.  Must be
+     * either fully defined, or may contain an unknown first dimension.
+     * An unknown first dimension means the feature is treated as having
+     * a variable number of blocks, and the output shape along this dimension
+     * is considered unknown at graph build time.  Padding is applied for
+     * minibatch elements smaller than the maximum number of blocks for the
+     * given feature along this dimension.
+     */
+    public final Shape[] denseShapes;
+
+    /**
+     * The type list for the return values.
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The list of shapes being produced.
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The sloppy attribute
+     */
+    public final boolean sloppy;
+
+    public Inputs(GraphOperation op) {
+      super(new ParseExampleDataset(op), op, Arrays.asList("sparse_keys", "dense_keys", "sparse_types", "Tdense", "dense_shapes", "output_types", "output_shapes", "sloppy"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      numParallelCalls = (Operand<TInt64>) op.input(inputIndex++);
+      int denseDefaultsLength = op.inputListLength("dense_defaults");
+      denseDefaults = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, denseDefaultsLength));
+      inputIndex += denseDefaultsLength;
+      sparseKeys = op.attributes().getAttrStringList("sparse_keys");
+      denseKeys = op.attributes().getAttrStringList("dense_keys");
+      sparseTypes = op.attributes().getAttrTypeList("sparse_types");
+      Tdense = op.attributes().getAttrTypeList("Tdense");
+      denseShapes = op.attributes().getAttrShapeList("dense_shapes");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      sloppy = op.attributes().getAttrBool("sloppy");
     }
   }
 }

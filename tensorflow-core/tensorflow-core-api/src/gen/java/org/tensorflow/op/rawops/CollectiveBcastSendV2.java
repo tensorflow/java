@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.rawops;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -50,10 +54,10 @@ public final class CollectiveBcastSendV2<T extends TType> extends RawOp implemen
    * Factory method to create a class wrapping a new CollectiveBcastSendV2 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param groupSize the groupSize value
-   * @param groupKey the groupKey value
-   * @param instanceKey the instanceKey value
+   * @param input The input value
+   * @param groupSize The groupSize value
+   * @param groupKey The groupKey value
+   * @param instanceKey The instanceKey value
    * @param options carries optional attribute values
    * @param <T> data type for {@code CollectiveBcastSendV2} output and operands
    * @return a new instance of CollectiveBcastSendV2
@@ -147,6 +151,55 @@ public final class CollectiveBcastSendV2<T extends TType> extends RawOp implemen
     public Options timeoutSeconds(Float timeoutSeconds) {
       this.timeoutSeconds = timeoutSeconds;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<CollectiveBcastSendV2<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The groupSize input
+     */
+    public final Operand<TInt32> groupSize;
+
+    /**
+     * The groupKey input
+     */
+    public final Operand<TInt32> groupKey;
+
+    /**
+     * The instanceKey input
+     */
+    public final Operand<TInt32> instanceKey;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The communicationHint attribute
+     */
+    public final String communicationHint;
+
+    /**
+     * The timeoutSeconds attribute
+     */
+    public final float timeoutSeconds;
+
+    public Inputs(GraphOperation op) {
+      super(new CollectiveBcastSendV2<>(op), op, Arrays.asList("T", "communication_hint", "timeout_seconds"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      groupSize = (Operand<TInt32>) op.input(inputIndex++);
+      groupKey = (Operand<TInt32>) op.input(inputIndex++);
+      instanceKey = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      communicationHint = op.attributes().getAttrString("communication_hint");
+      timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
     }
   }
 }

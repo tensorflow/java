@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -152,5 +156,42 @@ public final class ScatterNd<U extends TType> extends RawOp implements Operand<U
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<ScatterNd<U>> {
+    /**
+     * Index tensor.
+     */
+    public final Operand<T> indices;
+
+    /**
+     * Updates to scatter into output.
+     */
+    public final Operand<U> updates;
+
+    /**
+     * 1-D. The shape of the resulting tensor.
+     */
+    public final Operand<T> shape;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new ScatterNd<>(op), op, Arrays.asList("T", "Tindices"));
+      int inputIndex = 0;
+      indices = (Operand<T>) op.input(inputIndex++);
+      updates = (Operand<U>) op.input(inputIndex++);
+      shape = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

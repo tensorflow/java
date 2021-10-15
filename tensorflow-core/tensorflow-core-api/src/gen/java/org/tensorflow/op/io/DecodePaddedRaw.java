@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -59,7 +63,7 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
    * @param inputBytes Tensor of string to be decoded.
    * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
    * of the size of the output type.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code DecodePaddedRaw} output and operands
    * @return a new instance of DecodePaddedRaw
@@ -130,6 +134,39 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
     public Options littleEndian(Boolean littleEndian) {
       this.littleEndian = littleEndian;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodePaddedRaw<?>> {
+    /**
+     * Tensor of string to be decoded.
+     */
+    public final Operand<TString> inputBytes;
+
+    /**
+     * Length in bytes for each element of the decoded output. Must be a multiple
+     * of the size of the output type.
+     */
+    public final Operand<TInt32> fixedLength;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    /**
+     * Whether the input `input_bytes` is in little-endian order. Ignored for
+     * `out_type` values that are stored in a single byte, like `uint8`
+     */
+    public final boolean littleEndian;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodePaddedRaw<>(op), op, Arrays.asList("out_type", "little_endian"));
+      int inputIndex = 0;
+      inputBytes = (Operand<TString>) op.input(inputIndex++);
+      fixedLength = (Operand<TInt32>) op.input(inputIndex++);
+      outType = op.attributes().getAttrType("out_type");
+      littleEndian = op.attributes().getAttrBool("little_endian");
     }
   }
 }

@@ -19,12 +19,14 @@ package org.tensorflow.op.train;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -195,6 +197,131 @@ public final class SdcaOptimizer extends RawOp {
     public Options adaptive(Boolean adaptive) {
       this.adaptive = adaptive;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SdcaOptimizer> {
+    /**
+     * a list of vectors which contain example indices.
+     */
+    public final Iterable<Operand<TInt64>> sparseExampleIndices;
+
+    /**
+     * a list of vectors which contain feature indices.
+     */
+    public final Iterable<Operand<TInt64>> sparseFeatureIndices;
+
+    /**
+     * a list of vectors which contains feature value
+     * associated with each feature group.
+     */
+    public final Iterable<Operand<TFloat32>> sparseFeatureValues;
+
+    /**
+     * a list of matrices which contains the dense feature values.
+     */
+    public final Iterable<Operand<TFloat32>> denseFeatures;
+
+    /**
+     * a vector which contains the weight associated with each
+     * example.
+     */
+    public final Operand<TFloat32> exampleWeights;
+
+    /**
+     * a vector which contains the label/target associated with each
+     * example.
+     */
+    public final Operand<TFloat32> exampleLabels;
+
+    /**
+     * a list of vectors where each value is the indices which has
+     * corresponding weights in sparse_weights. This field maybe omitted for the
+     * dense approach.
+     */
+    public final Iterable<Operand<TInt64>> sparseIndices;
+
+    /**
+     * a list of vectors where each value is the weight associated with
+     * a sparse feature group.
+     */
+    public final Iterable<Operand<TFloat32>> sparseWeights;
+
+    /**
+     * a list of vectors where the values are the weights associated
+     * with a dense feature group.
+     */
+    public final Iterable<Operand<TFloat32>> denseWeights;
+
+    /**
+     * a list of vectors containing the example state data.
+     */
+    public final Operand<TFloat32> exampleStateData;
+
+    /**
+     * Type of the primal loss. Currently SdcaSolver supports logistic,
+     * squared and hinge losses.
+     */
+    public final String lossType;
+
+    /**
+     * Whether to use Adaptive SDCA for the inner loop.
+     */
+    public final boolean adaptive;
+
+    /**
+     * Symmetric l1 regularization strength.
+     */
+    public final float l1;
+
+    /**
+     * Symmetric l2 regularization strength.
+     */
+    public final float l2;
+
+    /**
+     * Number of partitions of the global loss function.
+     */
+    public final long numLossPartitions;
+
+    /**
+     * Number of iterations per mini-batch.
+     */
+    public final long numInnerIterations;
+
+    public Inputs(GraphOperation op) {
+      super(new SdcaOptimizer(op), op, Arrays.asList("loss_type", "adaptive", "l1", "l2", "num_loss_partitions", "num_inner_iterations"));
+      int inputIndex = 0;
+      int sparseExampleIndicesLength = op.inputListLength("sparse_example_indices");
+      sparseExampleIndices = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, sparseExampleIndicesLength));
+      inputIndex += sparseExampleIndicesLength;
+      int sparseFeatureIndicesLength = op.inputListLength("sparse_feature_indices");
+      sparseFeatureIndices = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, sparseFeatureIndicesLength));
+      inputIndex += sparseFeatureIndicesLength;
+      int sparseFeatureValuesLength = op.inputListLength("sparse_feature_values");
+      sparseFeatureValues = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, sparseFeatureValuesLength));
+      inputIndex += sparseFeatureValuesLength;
+      int denseFeaturesLength = op.inputListLength("dense_features");
+      denseFeatures = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, denseFeaturesLength));
+      inputIndex += denseFeaturesLength;
+      exampleWeights = (Operand<TFloat32>) op.input(inputIndex++);
+      exampleLabels = (Operand<TFloat32>) op.input(inputIndex++);
+      int sparseIndicesLength = op.inputListLength("sparse_indices");
+      sparseIndices = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, sparseIndicesLength));
+      inputIndex += sparseIndicesLength;
+      int sparseWeightsLength = op.inputListLength("sparse_weights");
+      sparseWeights = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, sparseWeightsLength));
+      inputIndex += sparseWeightsLength;
+      int denseWeightsLength = op.inputListLength("dense_weights");
+      denseWeights = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, denseWeightsLength));
+      inputIndex += denseWeightsLength;
+      exampleStateData = (Operand<TFloat32>) op.input(inputIndex++);
+      lossType = op.attributes().getAttrString("loss_type");
+      adaptive = op.attributes().getAttrBool("adaptive");
+      l1 = op.attributes().getAttrFloat("l1");
+      l2 = op.attributes().getAttrFloat("l2");
+      numLossPartitions = op.attributes().getAttrInt("num_loss_partitions");
+      numInnerIterations = op.attributes().getAttrInt("num_inner_iterations");
     }
   }
 }

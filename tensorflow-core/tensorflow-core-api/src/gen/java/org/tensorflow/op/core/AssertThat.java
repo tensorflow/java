@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 
 /**
@@ -98,6 +102,39 @@ public final class AssertThat extends RawOp {
     public Options summarize(Long summarize) {
       this.summarize = summarize;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AssertThat> {
+    /**
+     * The condition to evaluate.
+     */
+    public final Operand<TBool> condition;
+
+    /**
+     * The tensors to print out when condition is false.
+     */
+    public final Iterable<Operand<?>> data;
+
+    /**
+     * The T attribute
+     */
+    public final DataType[] T;
+
+    /**
+     * Print this many entries of each tensor.
+     */
+    public final long summarize;
+
+    public Inputs(GraphOperation op) {
+      super(new AssertThat(op), op, Arrays.asList("T", "summarize"));
+      int inputIndex = 0;
+      condition = (Operand<TBool>) op.input(inputIndex++);
+      int dataLength = op.inputListLength("data");
+      data = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, dataLength));
+      inputIndex += dataLength;
+      T = op.attributes().getAttrTypeList("T");
+      summarize = op.attributes().getAttrInt("summarize");
     }
   }
 }

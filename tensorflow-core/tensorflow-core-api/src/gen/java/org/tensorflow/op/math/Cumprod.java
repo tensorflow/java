@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -169,6 +173,52 @@ public final class Cumprod<T extends TType> extends RawOp implements Operand<T> 
     public Options reverse(Boolean reverse) {
       this.reverse = reverse;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Cumprod<T>> {
+    /**
+     * A {@code Tensor}. Must be one of the following types: {@code float32}, {@code float64},
+     * {@code int64}, {@code int32}, {@code uint8}, {@code uint16}, {@code int16}, {@code int8}, {@code complex64},
+     * {@code complex128}, {@code qint8}, {@code quint8}, {@code qint32}, {@code half}.
+     */
+    public final Operand<T> x;
+
+    /**
+     * A {@code Tensor} of type {@code int32} (default: 0). Must be in the range
+     * {@code [-rank(x), rank(x))}.
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * If `True`, perform exclusive cumprod.
+     */
+    public final boolean exclusive;
+
+    /**
+     * A `bool` (default: False).
+     */
+    public final boolean reverse;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    public Inputs(GraphOperation op) {
+      super(new Cumprod<>(op), op, Arrays.asList("exclusive", "reverse", "T", "Tidx"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      exclusive = op.attributes().getAttrBool("exclusive");
+      reverse = op.attributes().getAttrBool("reverse");
+      T = op.attributes().getAttrType("T");
+      Tidx = op.attributes().getAttrType("Tidx");
     }
   }
 }

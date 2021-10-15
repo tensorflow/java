@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -75,9 +78,9 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
    * Factory method to create a class wrapping a new FakeQuantWithMinMaxVarsPerChannel operation.
    *
    * @param scope current scope
-   * @param inputs the inputs value
-   * @param min the min value
-   * @param max the max value
+   * @param inputs The inputs value
+   * @param min The min value
+   * @param max The max value
    * @param options carries optional attribute values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannel
    */
@@ -168,6 +171,43 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
     public Options narrowRange(Boolean narrowRange) {
       this.narrowRange = narrowRange;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxVarsPerChannel> {
+    /**
+     * The inputs input
+     */
+    public final Operand<TFloat32> inputs;
+
+    /**
+     * The min input
+     */
+    public final Operand<TFloat32> min;
+
+    /**
+     * The max input
+     */
+    public final Operand<TFloat32> max;
+
+    /**
+     * The numBits attribute
+     */
+    public final long numBits;
+
+    /**
+     * The narrowRange attribute
+     */
+    public final boolean narrowRange;
+
+    public Inputs(GraphOperation op) {
+      super(new FakeQuantWithMinMaxVarsPerChannel(op), op, Arrays.asList("num_bits", "narrow_range"));
+      int inputIndex = 0;
+      inputs = (Operand<TFloat32>) op.input(inputIndex++);
+      min = (Operand<TFloat32>) op.input(inputIndex++);
+      max = (Operand<TFloat32>) op.input(inputIndex++);
+      numBits = op.attributes().getAttrInt("num_bits");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
     }
   }
 }

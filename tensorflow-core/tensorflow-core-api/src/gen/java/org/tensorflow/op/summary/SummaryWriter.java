@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -135,6 +138,25 @@ public final class SummaryWriter extends RawOp implements Operand<TType> {
     public Options container(String container) {
       this.container = container;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SummaryWriter> {
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    /**
+     * The container attribute
+     */
+    public final String container;
+
+    public Inputs(GraphOperation op) {
+      super(new SummaryWriter(op), op, Arrays.asList("shared_name", "container"));
+      int inputIndex = 0;
+      sharedName = op.attributes().getAttrString("shared_name");
+      container = op.attributes().getAttrString("container");
     }
   }
 }

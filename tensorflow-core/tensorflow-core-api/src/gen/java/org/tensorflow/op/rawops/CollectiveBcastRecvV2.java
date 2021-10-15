@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.rawops;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -52,11 +56,11 @@ public final class CollectiveBcastRecvV2<U extends TType> extends RawOp implemen
    * Factory method to create a class wrapping a new CollectiveBcastRecvV2 operation.
    *
    * @param scope current scope
-   * @param groupSize the groupSize value
-   * @param groupKey the groupKey value
-   * @param instanceKey the instanceKey value
-   * @param shape the shape value
-   * @param T the value of the T property
+   * @param groupSize The groupSize value
+   * @param groupKey The groupKey value
+   * @param instanceKey The instanceKey value
+   * @param shape The shape value
+   * @param T The value of the T attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code CollectiveBcastRecvV2} output and operands
    * @return a new instance of CollectiveBcastRecvV2
@@ -151,6 +155,61 @@ public final class CollectiveBcastRecvV2<U extends TType> extends RawOp implemen
     public Options timeoutSeconds(Float timeoutSeconds) {
       this.timeoutSeconds = timeoutSeconds;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<CollectiveBcastRecvV2<?>> {
+    /**
+     * The groupSize input
+     */
+    public final Operand<TInt32> groupSize;
+
+    /**
+     * The groupKey input
+     */
+    public final Operand<TInt32> groupKey;
+
+    /**
+     * The instanceKey input
+     */
+    public final Operand<TInt32> instanceKey;
+
+    /**
+     * The shape input
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tshape attribute
+     */
+    public final DataType Tshape;
+
+    /**
+     * The communicationHint attribute
+     */
+    public final String communicationHint;
+
+    /**
+     * The timeoutSeconds attribute
+     */
+    public final float timeoutSeconds;
+
+    public Inputs(GraphOperation op) {
+      super(new CollectiveBcastRecvV2<>(op), op, Arrays.asList("T", "Tshape", "communication_hint", "timeout_seconds"));
+      int inputIndex = 0;
+      groupSize = (Operand<TInt32>) op.input(inputIndex++);
+      groupKey = (Operand<TInt32>) op.input(inputIndex++);
+      instanceKey = (Operand<TInt32>) op.input(inputIndex++);
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tshape = op.attributes().getAttrType("Tshape");
+      communicationHint = op.attributes().getAttrString("communication_hint");
+      timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
     }
   }
 }

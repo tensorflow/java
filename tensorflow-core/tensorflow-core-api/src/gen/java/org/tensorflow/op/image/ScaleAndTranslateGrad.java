@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -50,10 +54,10 @@ public final class ScaleAndTranslateGrad<T extends TNumber> extends RawOp implem
    * Factory method to create a class wrapping a new ScaleAndTranslateGrad operation.
    *
    * @param scope current scope
-   * @param grads the grads value
-   * @param originalImage the originalImage value
-   * @param scale the scale value
-   * @param translation the translation value
+   * @param grads The grads value
+   * @param originalImage The originalImage value
+   * @param scale The scale value
+   * @param translation The translation value
    * @param options carries optional attribute values
    * @param <T> data type for {@code ScaleAndTranslateGrad} output and operands
    * @return a new instance of ScaleAndTranslateGrad
@@ -147,6 +151,55 @@ public final class ScaleAndTranslateGrad<T extends TNumber> extends RawOp implem
     public Options antialias(Boolean antialias) {
       this.antialias = antialias;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<ScaleAndTranslateGrad<T>> {
+    /**
+     * The grads input
+     */
+    public final Operand<T> grads;
+
+    /**
+     * The originalImage input
+     */
+    public final Operand<T> originalImage;
+
+    /**
+     * The scale input
+     */
+    public final Operand<TFloat32> scale;
+
+    /**
+     * The translation input
+     */
+    public final Operand<TFloat32> translation;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The kernelType attribute
+     */
+    public final String kernelType;
+
+    /**
+     * The antialias attribute
+     */
+    public final boolean antialias;
+
+    public Inputs(GraphOperation op) {
+      super(new ScaleAndTranslateGrad<>(op), op, Arrays.asList("T", "kernel_type", "antialias"));
+      int inputIndex = 0;
+      grads = (Operand<T>) op.input(inputIndex++);
+      originalImage = (Operand<T>) op.input(inputIndex++);
+      scale = (Operand<TFloat32>) op.input(inputIndex++);
+      translation = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      kernelType = op.attributes().getAttrString("kernel_type");
+      antialias = op.attributes().getAttrBool("antialias");
     }
   }
 }

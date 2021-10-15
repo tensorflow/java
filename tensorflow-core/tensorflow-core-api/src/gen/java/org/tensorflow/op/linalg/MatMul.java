@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -59,8 +63,8 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
    * Factory method to create a class wrapping a new MatMul operation.
    *
    * @param scope current scope
-   * @param a the a value
-   * @param b the b value
+   * @param a The a value
+   * @param b The b value
    * @param options carries optional attribute values
    * @param <T> data type for {@code MatMul} output and operands
    * @return a new instance of MatMul
@@ -151,6 +155,43 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
     public Options transposeB(Boolean transposeB) {
       this.transposeB = transposeB;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<MatMul<T>> {
+    /**
+     * The a input
+     */
+    public final Operand<T> a;
+
+    /**
+     * The b input
+     */
+    public final Operand<T> b;
+
+    /**
+     * If true, "a" is transposed before multiplication.
+     */
+    public final boolean transposeA;
+
+    /**
+     * If true, "b" is transposed before multiplication.
+     */
+    public final boolean transposeB;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new MatMul<>(op), op, Arrays.asList("transpose_a", "transpose_b", "T"));
+      int inputIndex = 0;
+      a = (Operand<T>) op.input(inputIndex++);
+      b = (Operand<T>) op.input(inputIndex++);
+      transposeA = op.attributes().getAttrBool("transpose_a");
+      transposeB = op.attributes().getAttrBool("transpose_b");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

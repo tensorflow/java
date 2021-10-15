@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -137,6 +141,75 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
     public Options updateSlots(Boolean updateSlots) {
       this.updateSlots = updateSlots;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ResourceSparseApplyAdagradV2> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> var;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> accum;
+
+    /**
+     * Learning rate. Must be a scalar.
+     */
+    public final Operand<T> lr;
+
+    /**
+     * Constant factor. Must be a scalar.
+     */
+    public final Operand<T> epsilon;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * A vector of indices into the first dimension of var and accum.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * If `True`, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     */
+    public final boolean useLocking;
+
+    /**
+     * The updateSlots attribute
+     */
+    public final boolean updateSlots;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceSparseApplyAdagradV2(op), op, Arrays.asList("T", "Tindices", "use_locking", "update_slots"));
+      int inputIndex = 0;
+      var = (Operand<? extends TType>) op.input(inputIndex++);
+      accum = (Operand<? extends TType>) op.input(inputIndex++);
+      lr = (Operand<T>) op.input(inputIndex++);
+      epsilon = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      useLocking = op.attributes().getAttrBool("use_locking");
+      updateSlots = op.attributes().getAttrBool("update_slots");
     }
   }
 }

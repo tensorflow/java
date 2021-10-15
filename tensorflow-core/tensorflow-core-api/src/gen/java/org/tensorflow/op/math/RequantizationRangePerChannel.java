@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -87,5 +91,43 @@ public final class RequantizationRangePerChannel extends RawOp {
    */
   public Output<TFloat32> outputMax() {
     return outputMax;
+  }
+
+  public static class Inputs extends RawOpInputs<RequantizationRangePerChannel> {
+    /**
+     * The original input tensor.
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The minimum value of the input tensor
+     */
+    public final Operand<TFloat32> inputMin;
+
+    /**
+     * The maximum value of the input tensor.
+     */
+    public final Operand<TFloat32> inputMax;
+
+    /**
+     * The quantized type of input tensor that needs to be converted.
+     */
+    public final DataType T;
+
+    /**
+     * The maximum value of the output that needs to be clipped.
+     * Example: set this to 6 for Relu6.
+     */
+    public final float clipValueMax;
+
+    public Inputs(GraphOperation op) {
+      super(new RequantizationRangePerChannel(op), op, Arrays.asList("T", "clip_value_max"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      inputMin = (Operand<TFloat32>) op.input(inputIndex++);
+      inputMax = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      clipValueMax = op.attributes().getAttrFloat("clip_value_max");
+    }
   }
 }

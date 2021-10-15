@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -120,6 +124,34 @@ public final class PartitionedInput<T extends TType> extends RawOp implements Op
     public Options partitionDim(Long partitionDim) {
       this.partitionDim = partitionDim;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<PartitionedInput<T>> {
+    /**
+     * A list of partitioned inputs which must have the same shape.
+     */
+    public final Iterable<Operand<T>> inputs;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * An integer describles which dimension is partitioned. -1 means
+     * those inputs are replicated.
+     */
+    public final long partitionDim;
+
+    public Inputs(GraphOperation op) {
+      super(new PartitionedInput<>(op), op, Arrays.asList("T", "partition_dim"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      T = op.attributes().getAttrType("T");
+      partitionDim = op.attributes().getAttrInt("partition_dim");
     }
   }
 }

@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -160,7 +163,7 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
    * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
    * @return this Options instance.
    */
-  public static Options explicitPaddings(Long[] explicitPaddings) {
+  public static Options explicitPaddings(Long... explicitPaddings) {
     return new Options().explicitPaddings(explicitPaddings);
   }
 
@@ -202,7 +205,7 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
    * depth dimensions must be 1.
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -318,6 +321,82 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2d<T>> {
+    /**
+     * A 4-D tensor. The dimension order is interpreted according to the value
+     * of {@code data_format}, see below for details.
+     */
+    public final Operand<T> input;
+
+    /**
+     * A 4-D tensor of shape
+     * {@code [filter_height, filter_width, in_channels, out_channels]}
+     */
+    public final Operand<T> filter;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * 1-D tensor of length 4.  The stride of the sliding window for each
+     * dimension of `input`. The dimension order is determined by the value of
+     * `data_format`, see below for details.
+     */
+    public final long[] strides;
+
+    /**
+     * The useCudnnOnGpu attribute
+     */
+    public final boolean useCudnnOnGpu;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * If `padding` is `"EXPLICIT"`, the list of explicit padding amounts. For the ith
+     * dimension, the amount of padding inserted before and after the dimension is
+     * `explicit_paddings[2 * i]` and `explicit_paddings[2 * i + 1]`, respectively. If
+     * `padding` is not `"EXPLICIT"`, `explicit_paddings` must be empty.
+     */
+    public final long[] explicitPaddings;
+
+    /**
+     * Specify the data format of the input and output data. With the
+     * default format "NHWC", the data is stored in the order of:
+     *     [batch, height, width, channels].
+     * Alternatively, the format could be "NCHW", the data storage order of:
+     *     [batch, channels, height, width].
+     */
+    public final String dataFormat;
+
+    /**
+     * 1-D tensor of length 4.  The dilation factor for each dimension of
+     * `input`. If set to k > 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of `data_format`, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new Conv2d<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      filter = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      strides = op.attributes().getAttrIntList("strides");
+      useCudnnOnGpu = op.attributes().getAttrBool("use_cudnn_on_gpu");
+      padding = op.attributes().getAttrString("padding");
+      explicitPaddings = op.attributes().getAttrIntList("explicit_paddings");
+      dataFormat = op.attributes().getAttrString("data_format");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

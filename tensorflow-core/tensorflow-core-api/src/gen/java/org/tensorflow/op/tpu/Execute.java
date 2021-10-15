@@ -20,15 +20,18 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -60,9 +63,9 @@ public final class Execute extends RawOp implements Iterable<Operand<TType>> {
    * Factory method to create a class wrapping a new TPUExecute operation.
    *
    * @param scope current scope
-   * @param args the args value
-   * @param key the key value
-   * @param Tresults the value of the Tresults property
+   * @param args The args value
+   * @param key The key value
+   * @param Tresults The value of the Tresults attribute
    * @return a new instance of Execute
    */
   @Endpoint(
@@ -90,5 +93,38 @@ public final class Execute extends RawOp implements Iterable<Operand<TType>> {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) results.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<Execute> {
+    /**
+     * The args input
+     */
+    public final Iterable<Operand<?>> args;
+
+    /**
+     * The key input
+     */
+    public final Operand<TString> key;
+
+    /**
+     * The Targs attribute
+     */
+    public final DataType[] Targs;
+
+    /**
+     * The Tresults attribute
+     */
+    public final DataType[] Tresults;
+
+    public Inputs(GraphOperation op) {
+      super(new Execute(op), op, Arrays.asList("Targs", "Tresults"));
+      int inputIndex = 0;
+      int argsLength = op.inputListLength("args");
+      args = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argsLength));
+      inputIndex += argsLength;
+      key = (Operand<TString>) op.input(inputIndex++);
+      Targs = op.attributes().getAttrTypeList("Targs");
+      Tresults = op.attributes().getAttrTypeList("Tresults");
+    }
   }
 }

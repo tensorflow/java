@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -54,9 +58,9 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
    * Factory method to create a class wrapping a new BatchMatrixBandPart operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param numLower the numLower value
-   * @param numUpper the numUpper value
+   * @param input The input value
+   * @param numLower The numLower value
+   * @param numUpper The numUpper value
    * @param <T> data type for {@code BatchMatrixBandPart} output and operands
    * @return a new instance of BatchMatrixBandPart
    */
@@ -84,5 +88,36 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
   @Override
   public Output<T> asOutput() {
     return band;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<BatchMatrixBandPart<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The numLower input
+     */
+    public final Operand<TInt64> numLower;
+
+    /**
+     * The numUpper input
+     */
+    public final Operand<TInt64> numUpper;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchMatrixBandPart<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      numLower = (Operand<TInt64>) op.input(inputIndex++);
+      numUpper = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

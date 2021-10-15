@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -86,5 +90,42 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<LinSpace<T>> {
+    /**
+     * 0-D tensor. First entry in the range.
+     */
+    public final Operand<T> start;
+
+    /**
+     * 0-D tensor. Last entry in the range.
+     */
+    public final Operand<T> stop;
+
+    /**
+     * 0-D tensor. Number of values to generate.
+     */
+    public final Operand<? extends TNumber> num;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    public Inputs(GraphOperation op) {
+      super(new LinSpace<>(op), op, Arrays.asList("T", "Tidx"));
+      int inputIndex = 0;
+      start = (Operand<T>) op.input(inputIndex++);
+      stop = (Operand<T>) op.input(inputIndex++);
+      num = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tidx = op.attributes().getAttrType("Tidx");
+    }
   }
 }

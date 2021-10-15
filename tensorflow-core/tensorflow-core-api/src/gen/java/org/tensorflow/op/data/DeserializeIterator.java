@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -60,5 +63,25 @@ public final class DeserializeIterator extends RawOp {
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder.addInput(serialized.asOutput());
     return new DeserializeIterator(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<DeserializeIterator> {
+    /**
+     * A handle to an iterator resource.
+     */
+    public final Operand<? extends TType> resourceHandle;
+
+    /**
+     * A variant tensor storing the state of the iterator contained in the
+     * resource.
+     */
+    public final Operand<? extends TType> serialized;
+
+    public Inputs(GraphOperation op) {
+      super(new DeserializeIterator(op), op, Arrays.asList());
+      int inputIndex = 0;
+      resourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      serialized = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

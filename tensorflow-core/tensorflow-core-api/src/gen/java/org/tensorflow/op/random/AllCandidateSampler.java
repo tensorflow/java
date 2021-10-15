@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -186,6 +189,54 @@ public final class AllCandidateSampler extends RawOp {
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AllCandidateSampler> {
+    /**
+     * A batch_size * num_true matrix, in which each row contains the
+     * IDs of the num_true target_classes in the corresponding original label.
+     */
+    public final Operand<TInt64> trueClasses;
+
+    /**
+     * Number of true labels per context.
+     */
+    public final long numTrue;
+
+    /**
+     * Number of candidates to produce.
+     */
+    public final long numSampled;
+
+    /**
+     * If unique is true, we sample with rejection, so that all sampled
+     * candidates in a batch are unique. This requires some approximation to
+     * estimate the post-rejection sampling probabilities.
+     */
+    public final boolean unique;
+
+    /**
+     * If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * An second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    public Inputs(GraphOperation op) {
+      super(new AllCandidateSampler(op), op, Arrays.asList("num_true", "num_sampled", "unique", "seed", "seed2"));
+      int inputIndex = 0;
+      trueClasses = (Operand<TInt64>) op.input(inputIndex++);
+      numTrue = op.attributes().getAttrInt("num_true");
+      numSampled = op.attributes().getAttrInt("num_sampled");
+      unique = op.attributes().getAttrBool("unique");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
     }
   }
 }

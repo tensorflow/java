@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -106,19 +110,19 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new CudnnRNNBackpropV3 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param inputH the inputH value
-   * @param inputC the inputC value
-   * @param params the params value
-   * @param sequenceLengths the sequenceLengths value
-   * @param output the output value
-   * @param outputH the outputH value
-   * @param outputC the outputC value
-   * @param outputBackprop the outputBackprop value
-   * @param outputHBackprop the outputHBackprop value
-   * @param outputCBackprop the outputCBackprop value
-   * @param reserveSpace the reserveSpace value
-   * @param hostReserved the hostReserved value
+   * @param input The input value
+   * @param inputH The inputH value
+   * @param inputC The inputC value
+   * @param params The params value
+   * @param sequenceLengths The sequenceLengths value
+   * @param output The output value
+   * @param outputH The outputH value
+   * @param outputC The outputC value
+   * @param outputBackprop The outputBackprop value
+   * @param outputHBackprop The outputHBackprop value
+   * @param outputCBackprop The outputCBackprop value
+   * @param reserveSpace The reserveSpace value
+   * @param hostReserved The hostReserved value
    * @param options carries optional attribute values
    * @param <T> data type for {@code CudnnRNNBackpropV3} output and operands
    * @return a new instance of CudnnRNNBackprop
@@ -401,6 +405,145 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
     public Options timeMajor(Boolean timeMajor) {
       this.timeMajor = timeMajor;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<CudnnRNNBackprop<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The inputH input
+     */
+    public final Operand<T> inputH;
+
+    /**
+     * The inputC input
+     */
+    public final Operand<T> inputC;
+
+    /**
+     * The params input
+     */
+    public final Operand<T> params;
+
+    /**
+     * The sequenceLengths input
+     */
+    public final Operand<TInt32> sequenceLengths;
+
+    /**
+     * The output input
+     */
+    public final Operand<T> output;
+
+    /**
+     * The outputH input
+     */
+    public final Operand<T> outputH;
+
+    /**
+     * The outputC input
+     */
+    public final Operand<T> outputC;
+
+    /**
+     * The outputBackprop input
+     */
+    public final Operand<T> outputBackprop;
+
+    /**
+     * The outputHBackprop input
+     */
+    public final Operand<T> outputHBackprop;
+
+    /**
+     * The outputCBackprop input
+     */
+    public final Operand<T> outputCBackprop;
+
+    /**
+     * The reserveSpace input
+     */
+    public final Operand<T> reserveSpace;
+
+    /**
+     * The hostReserved input
+     */
+    public final Operand<? extends TType> hostReserved;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The rnnMode attribute
+     */
+    public final String rnnMode;
+
+    /**
+     * The inputMode attribute
+     */
+    public final String inputMode;
+
+    /**
+     * The direction attribute
+     */
+    public final String direction;
+
+    /**
+     * The dropout attribute
+     */
+    public final float dropout;
+
+    /**
+     * The seed attribute
+     */
+    public final long seed;
+
+    /**
+     * The seed2 attribute
+     */
+    public final long seed2;
+
+    /**
+     * The numProj attribute
+     */
+    public final long numProj;
+
+    /**
+     * The timeMajor attribute
+     */
+    public final boolean timeMajor;
+
+    public Inputs(GraphOperation op) {
+      super(new CudnnRNNBackprop<>(op), op, Arrays.asList("T", "rnn_mode", "input_mode", "direction", "dropout", "seed", "seed2", "num_proj", "time_major"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      inputH = (Operand<T>) op.input(inputIndex++);
+      inputC = (Operand<T>) op.input(inputIndex++);
+      params = (Operand<T>) op.input(inputIndex++);
+      sequenceLengths = (Operand<TInt32>) op.input(inputIndex++);
+      output = (Operand<T>) op.input(inputIndex++);
+      outputH = (Operand<T>) op.input(inputIndex++);
+      outputC = (Operand<T>) op.input(inputIndex++);
+      outputBackprop = (Operand<T>) op.input(inputIndex++);
+      outputHBackprop = (Operand<T>) op.input(inputIndex++);
+      outputCBackprop = (Operand<T>) op.input(inputIndex++);
+      reserveSpace = (Operand<T>) op.input(inputIndex++);
+      hostReserved = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      rnnMode = op.attributes().getAttrString("rnn_mode");
+      inputMode = op.attributes().getAttrString("input_mode");
+      direction = op.attributes().getAttrString("direction");
+      dropout = op.attributes().getAttrFloat("dropout");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      numProj = op.attributes().getAttrInt("num_proj");
+      timeMajor = op.attributes().getAttrBool("time_major");
     }
   }
 }

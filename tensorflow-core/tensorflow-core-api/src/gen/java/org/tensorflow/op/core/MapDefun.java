@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -28,8 +29,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -75,7 +78,7 @@ public final class MapDefun extends RawOp implements Iterable<Operand<TType>> {
    * </pre>
    * @param outputTypes A list of types.
    * @param outputShapes A list of shapes.
-   * @param f the value of the f property
+   * @param f The value of the f attribute
    * @param options carries optional attribute values
    * @return a new instance of MapDefun
    */
@@ -152,6 +155,65 @@ public final class MapDefun extends RawOp implements Iterable<Operand<TType>> {
     public Options maxIntraOpParallelism(Long maxIntraOpParallelism) {
       this.maxIntraOpParallelism = maxIntraOpParallelism;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<MapDefun> {
+    /**
+     * <pre>
+     * A list of tensors whose types are `Targuments`, corresponding to the inputs
+     * the function should be mapped over.
+     * </pre>
+     */
+    public final Iterable<Operand<?>> arguments;
+
+    /**
+     * <pre>
+     * A list of tensors whose types are `Tcaptured`, corresponding to the captured
+     * inputs of the defun.
+     * </pre>
+     */
+    public final Iterable<Operand<?>> capturedInputs;
+
+    /**
+     * A list of types.
+     */
+    public final DataType[] Targuments;
+
+    /**
+     * A list of types.
+     */
+    public final DataType[] Tcaptured;
+
+    /**
+     * A list of types.
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * A list of shapes.
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The maxIntraOpParallelism attribute
+     */
+    public final long maxIntraOpParallelism;
+
+    public Inputs(GraphOperation op) {
+      super(new MapDefun(op), op, Arrays.asList("Targuments", "Tcaptured", "output_types", "output_shapes", "max_intra_op_parallelism"));
+      int inputIndex = 0;
+      int argumentsLength = op.inputListLength("arguments");
+      arguments = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argumentsLength));
+      inputIndex += argumentsLength;
+      int capturedInputsLength = op.inputListLength("captured_inputs");
+      capturedInputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, capturedInputsLength));
+      inputIndex += capturedInputsLength;
+      Targuments = op.attributes().getAttrTypeList("Targuments");
+      Tcaptured = op.attributes().getAttrTypeList("Tcaptured");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      maxIntraOpParallelism = op.attributes().getAttrInt("max_intra_op_parallelism");
     }
   }
 }

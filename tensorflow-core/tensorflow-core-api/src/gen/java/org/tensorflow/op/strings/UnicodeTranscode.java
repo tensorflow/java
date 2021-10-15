@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -235,6 +238,66 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
     public Options replaceControlCharacters(Boolean replaceControlCharacters) {
       this.replaceControlCharacters = replaceControlCharacters;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<UnicodeTranscode> {
+    /**
+     * The text to be processed. Can have any shape.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * Text encoding of the input strings. This is any of the encodings supported
+     * by ICU ucnv algorithmic converters. Examples: `"UTF-16", "US ASCII", "UTF-8"`.
+     */
+    public final String inputEncoding;
+
+    /**
+     * The unicode encoding to use in the output. Must be one of
+     * `"UTF-8", "UTF-16-BE", "UTF-32-BE"`. Multi-byte encodings will be big-endian.
+     */
+    public final String outputEncoding;
+
+    /**
+     * Error handling policy when there is invalid formatting found in the input.
+     * The value of 'strict' will cause the operation to produce a InvalidArgument
+     * error on any invalid input formatting. A value of 'replace' (the default) will
+     * cause the operation to replace any invalid formatting in the input with the
+     * `replacement_char` codepoint. A value of 'ignore' will cause the operation to
+     * skip any invalid formatting in the input and produce no corresponding output
+     * character.
+     */
+    public final String errors;
+
+    /**
+     * The replacement character codepoint to be used in place of any invalid
+     * formatting in the input when `errors='replace'`. Any valid unicode codepoint may
+     * be used. The default value is the default unicode replacement character is
+     * 0xFFFD or U+65533.)
+     *
+     * Note that for UTF-8, passing a replacement character expressible in 1 byte, such
+     * as ' ', will preserve string alignment to the source since invalid bytes will be
+     * replaced with a 1-byte replacement. For UTF-16-BE and UTF-16-LE, any 1 or 2 byte
+     * replacement character will preserve byte alignment to the source.
+     */
+    public final long replacementChar;
+
+    /**
+     * Whether to replace the C0 control characters (00-1F) with the
+     * `replacement_char`. Default is false.
+     */
+    public final boolean replaceControlCharacters;
+
+    public Inputs(GraphOperation op) {
+      super(new UnicodeTranscode(op), op, Arrays.asList("input_encoding", "output_encoding", "errors", "replacement_char", "replace_control_characters"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      inputEncoding = op.attributes().getAttrString("input_encoding");
+      outputEncoding = op.attributes().getAttrString("output_encoding");
+      errors = op.attributes().getAttrString("errors");
+      replacementChar = op.attributes().getAttrInt("replacement_char");
+      replaceControlCharacters = op.attributes().getAttrBool("replace_control_characters");
     }
   }
 }

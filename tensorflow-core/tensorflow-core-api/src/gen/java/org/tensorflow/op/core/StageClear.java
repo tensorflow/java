@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -45,7 +49,7 @@ public final class StageClear extends RawOp {
    * Factory method to create a class wrapping a new StageClear operation.
    *
    * @param scope current scope
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of StageClear
    */
@@ -172,6 +176,43 @@ public final class StageClear extends RawOp {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<StageClear> {
+    /**
+     * The capacity attribute
+     */
+    public final long capacity;
+
+    /**
+     * The memoryLimit attribute
+     */
+    public final long memoryLimit;
+
+    /**
+     * The dtypes attribute
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The container attribute
+     */
+    public final String container;
+
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new StageClear(op), op, Arrays.asList("capacity", "memory_limit", "dtypes", "container", "shared_name"));
+      int inputIndex = 0;
+      capacity = op.attributes().getAttrInt("capacity");
+      memoryLimit = op.attributes().getAttrInt("memory_limit");
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

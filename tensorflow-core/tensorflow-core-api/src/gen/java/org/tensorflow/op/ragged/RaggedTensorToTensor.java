@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -90,7 +94,7 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
    * then overwritten by values in the ragged tensor. The default value must be
    * compatible with this broadcast operation, and must have fewer dimensions than
    * the value tensor.
-   * @param rowPartitionTensors the rowPartitionTensors value
+   * @param rowPartitionTensors The rowPartitionTensors value
    * @param rowPartitionTypes The types of the row partition tensors. At present, these can be:
    * <ul>
    * <li>&quot;ROW_SPLITS&quot;: the row_splits tensor from the ragged tensor.</li>
@@ -133,5 +137,86 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
   @Override
   public Output<U> asOutput() {
     return result;
+  }
+
+  public static class Inputs<U extends TType> extends RawOpInputs<RaggedTensorToTensor<U>> {
+    /**
+     * The desired shape of the output tensor. If left unspecified (empty),
+     * the minimal shape required to contain all the elements in the ragged tensor
+     * (the natural shape) will be used. If some dimensions are left unspecified, then
+     * the size of the natural shape is used in that dimension.
+     * <p>Note that dense dimensions cannot be modified by the shape argument. Trying to
+     * change the size of a dense dimension will cause the op to fail.
+     * Examples:
+     * natural shape: [4, 5, 6]
+     * shape: -1
+     * output shape: [4, 5, 6]
+     * <p>natural shape: [4, 5, 6]
+     * shape: [3, -1, 2]
+     * output shape: [3, 5, 2]
+     * <p>natural shape: [4, 5, 6]
+     * shape: [3, 7, 2]
+     * output shape: [3, 7, 2]
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * A 1D tensor representing the values of the ragged tensor.
+     */
+    public final Operand<U> values;
+
+    /**
+     * The default_value when the shape is larger than the ragged tensor. The
+     * default_value is broadcast until it is the shape of the output tensor, and
+     * then overwritten by values in the ragged tensor. The default value must be
+     * compatible with this broadcast operation, and must have fewer dimensions than
+     * the value tensor.
+     */
+    public final Operand<U> defaultValue;
+
+    /**
+     * The rowPartitionTensors input
+     */
+    public final Iterable<Operand<? extends TNumber>> rowPartitionTensors;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindex attribute
+     */
+    public final DataType Tindex;
+
+    /**
+     * The Tshape attribute
+     */
+    public final DataType Tshape;
+
+    /**
+     * The types of the row partition tensors. At present, these can be:
+     * * "ROW_SPLITS": the row_splits tensor from the ragged tensor.
+     * * "VALUE_ROWIDS": the value_rowids tensor from the ragged tensor.
+     * * "FIRST_DIM_SIZE": if value_rowids is used for the first dimension, then it
+     *   is preceeded by "FIRST_DIM_SIZE".
+     * The tensors are in the order of the dimensions.
+     */
+    public final String[] rowPartitionTypes;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedTensorToTensor<>(op), op, Arrays.asList("T", "Tindex", "Tshape", "row_partition_types"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      values = (Operand<U>) op.input(inputIndex++);
+      defaultValue = (Operand<U>) op.input(inputIndex++);
+      int rowPartitionTensorsLength = op.inputListLength("row_partition_tensors");
+      rowPartitionTensors = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, rowPartitionTensorsLength));
+      inputIndex += rowPartitionTensorsLength;
+      T = op.attributes().getAttrType("T");
+      Tindex = op.attributes().getAttrType("Tindex");
+      Tshape = op.attributes().getAttrType("Tshape");
+      rowPartitionTypes = op.attributes().getAttrStringList("row_partition_types");
+    }
   }
 }

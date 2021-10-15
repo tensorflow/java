@@ -17,12 +17,15 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -86,5 +89,50 @@ public final class BoostedTreesMakeStatsSummary extends RawOp implements Operand
   @Override
   public Output<TFloat32> asOutput() {
     return statsSummary;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesMakeStatsSummary> {
+    /**
+     * int32 Rank 1 Tensor containing node ids, which each example falls into for the requested layer.
+     */
+    public final Operand<TInt32> nodeIds;
+
+    /**
+     * float32; Rank 2 Tensor (shape=[#examples, 1]) for gradients.
+     */
+    public final Operand<TFloat32> gradients;
+
+    /**
+     * float32; Rank 2 Tensor (shape=[#examples, 1]) for hessians.
+     */
+    public final Operand<TFloat32> hessians;
+
+    /**
+     * int32 list of Rank 1 Tensors, each containing the bucketized feature (for each feature column).
+     */
+    public final Iterable<Operand<TInt32>> bucketizedFeaturesList;
+
+    /**
+     * int; the maximum number of splits possible in the whole tree.
+     */
+    public final long maxSplits;
+
+    /**
+     * int; equals to the maximum possible value of bucketized feature.
+     */
+    public final long numBuckets;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesMakeStatsSummary(op), op, Arrays.asList("max_splits", "num_buckets"));
+      int inputIndex = 0;
+      nodeIds = (Operand<TInt32>) op.input(inputIndex++);
+      gradients = (Operand<TFloat32>) op.input(inputIndex++);
+      hessians = (Operand<TFloat32>) op.input(inputIndex++);
+      int bucketizedFeaturesListLength = op.inputListLength("bucketized_features_list");
+      bucketizedFeaturesList = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, bucketizedFeaturesListLength));
+      inputIndex += bucketizedFeaturesListLength;
+      maxSplits = op.attributes().getAttrInt("max_splits");
+      numBuckets = op.attributes().getAttrInt("num_buckets");
+    }
   }
 }
