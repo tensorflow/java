@@ -18,6 +18,7 @@
 package org.tensorflow.op;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.tensorflow.ConcreteFunction;
@@ -25,6 +26,7 @@ import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
+import org.tensorflow.Operation;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -365,9 +367,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final TpuOps tpu;
-
   public final BitwiseOps bitwise;
+
+  public final TpuOps tpu;
 
   public final MathOps math;
 
@@ -375,9 +377,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -396,13 +398,13 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
+    tpu = new TpuOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -8130,6 +8132,33 @@ public final class Ops {
    */
   public Ops withControlDependencies(Iterable<Op> controls) {
     return new Ops(scope.withControlDependencies(controls));
+  }
+
+  /**
+   * Returns an API that adds operations to the graph with the provided control dependencies.
+   *
+   * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
+   */
+  public Ops withControlDependencies(Op... controls) {
+    return withControlDependencies(Arrays.asList(controls));
+  }
+
+  /**
+   * Returns an API that adds operations to the graph with the provided control dependencies.
+   *
+   * @see {@link Scope#withControlDependencyOps(Iterable<Operation>)}
+   */
+  public Ops withControlDependencyOps(Iterable<Operation> controls) {
+    return new Ops(scope.withControlDependencyOps(controls));
+  }
+
+  /**
+   * Returns an API that adds operations to the graph with the provided control dependencies.
+   *
+   * @see {@link Scope#withControlDependencyOps(Iterable<Operation>)}
+   */
+  public Ops withControlDependencyOps(Operation... controls) {
+    return withControlDependencyOps(Arrays.asList(controls));
   }
 
   /**

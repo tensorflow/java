@@ -16,6 +16,7 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
@@ -57,6 +58,10 @@ public class Names {
       ClassName.get(TensorflowPackage, "OperationBuilder");
   public static final TypeName IterableOp =
       ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
+  public static final TypeName IterableOperation =
+      ParameterizedTypeName.get(ClassName.get(Iterable.class), Operation);
+  public static final TypeName ArrayOp = ArrayTypeName.of(Op);
+  public static final TypeName ArrayOperation = ArrayTypeName.of(Operation);
 
   public static final ClassName Operand = ClassName.get(TensorflowPackage, "Operand");
   public static final ClassName Output = ClassName.get(TensorflowPackage, "Output");
@@ -75,5 +80,5 @@ public class Names {
   public static final TypeName EagerSession = ClassName.get(TensorflowPackage, "EagerSession");
 
   public static final TypeName String = ClassName.get(String.class);
-  public static final TypeName Arrays = ClassName.get(Arrays.class);
+  public static final ClassName Arrays = ClassName.get(java.util.Arrays.class);
 }
