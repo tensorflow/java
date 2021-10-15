@@ -397,12 +397,13 @@ public final class Session implements AutoCloseable {
      * Make {@link #run()} execute {@code operation}, but not return any evaluated {@link Tensor
      * Tensors}.
      *
-     * @param operation the string name of the operation to execute
+     * @param operation Is either the string name of the operation or it is a string of the form
+     *     <tt>operation_name:output_index</tt>, where <tt>output_index</tt> will simply be ignored.
      * @return this session runner
      * @throws IllegalArgumentException if no operation exists with the provided name
      */
     public Runner addTarget(String operation) {
-      return addTarget(graph.operationOrThrow(operation));
+      return addTarget(graph.outputOrThrow(operation));
     }
 
     /**
