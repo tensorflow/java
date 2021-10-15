@@ -272,6 +272,8 @@ public class tensorflow implements LoadEnabled, InfoMapper {
   @Override
   public void map(InfoMap infoMap) {
     infoMap
+        .put(new Info("c_api_experimental.h")
+            .linePatterns("typedef struct TFE_OpAttrs TFE_OpAttrs;", "#define TFE_CUSTOM_DEVICE_VERSION 4"))
         .put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
         .put(
             new Info("TF_Buffer::data")
@@ -348,27 +350,27 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
                     "TF_InitKernel",
                     "TFE_MonitoringCounterCell",
-                    "TFE_MonitoringSamplerCell",
                     "TFE_MonitoringCounter0",
                     "TFE_MonitoringCounter1",
                     "TFE_MonitoringCounter2",
                     "TFE_MonitoringIntGaugeCell",
-                    "TFE_MonitoringStringGaugeCell",
-                    "TFE_MonitoringBoolGaugeCell",
                     "TFE_MonitoringIntGauge0",
                     "TFE_MonitoringIntGauge1",
                     "TFE_MonitoringIntGauge2",
+                    "TFE_MonitoringStringGaugeCell",
                     "TFE_MonitoringStringGauge0",
                     "TFE_MonitoringStringGauge1",
                     "TFE_MonitoringStringGauge2",
+                    "TFE_MonitoringBoolGaugeCell",
                     "TFE_MonitoringBoolGauge0",
                     "TFE_MonitoringBoolGauge1",
                     "TFE_MonitoringBoolGauge2",
+                    "TFE_MonitoringSamplerCell",
                     "TFE_MonitoringSampler0",
                     "TFE_MonitoringSampler1",
                     "TFE_MonitoringSampler2",
-                  "TFE_CustomDeviceTensorHandle",
-                  "TFE_CustomDevice")
+                    "TFE_CustomDeviceTensorHandle",
+                    "TFE_CustomDevice")
                 .skip());
   }
 }
