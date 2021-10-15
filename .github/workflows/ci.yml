@@ -26,7 +26,7 @@ jobs:
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-11-openjdk-devel devtoolset-7 git
+          yum -y install java-11-openjdk-devel devtoolset-7
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
@@ -41,11 +41,8 @@ jobs:
       - name: Run lint checks
         run: |
           mvn compiler:compile -Pdev,jdk11 -B -U -e
-      - shell: bash
-        run: |
-          git add .
-          git update-index --refresh
-          git diff-index --name-status --exit-code HEAD tensorflow-core/tensorflow-core-api/src/gen/** > changes.txt || echo "::error file=changes.txt,line=0,title=\"Un-commited generation\"::Generated classes after build do not match what was committed"
+      - name: Check for un-committed generation
+        uses: ./.github/actions/check-generation
   check-format:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
