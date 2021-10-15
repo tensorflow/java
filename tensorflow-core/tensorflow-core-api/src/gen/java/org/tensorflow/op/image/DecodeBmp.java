@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -122,6 +125,25 @@ public final class DecodeBmp extends RawOp implements Operand<TUint8> {
     public Options channels(Long channels) {
       this.channels = channels;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeBmp> {
+    /**
+     * 0-D.  The BMP-encoded image.
+     */
+    public final Operand<TString> contents;
+
+    /**
+     * The channels attribute
+     */
+    public final long channels;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeBmp(op), op, Arrays.asList("channels"));
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+      channels = op.attributes().getAttrInt("channels");
     }
   }
 }

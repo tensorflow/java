@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -148,6 +151,62 @@ public final class GenerateBoundingBoxProposals extends RawOp {
     public Options postNmsTopn(Long postNmsTopn) {
       this.postNmsTopn = postNmsTopn;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<GenerateBoundingBoxProposals> {
+    /**
+     * A 4-D float tensor of shape {@code [num_images, height, width, num_achors]} containing scores of the boxes for given anchors, can be unsorted.
+     */
+    public final Operand<TFloat32> scores;
+
+    /**
+     * A 4-D float tensor of shape {@code [num_images, height, width, 4 x num_anchors]}. encoding boxes with respec to each anchor.
+     * Coordinates are given in the form [dy, dx, dh, dw].
+     */
+    public final Operand<TFloat32> bboxDeltas;
+
+    /**
+     * A 2-D float tensor of shape {@code [num_images, 5]} containing image information Height, Width, Scale.
+     */
+    public final Operand<TFloat32> imageInfo;
+
+    /**
+     * A 2-D float tensor of shape {@code [num_anchors, 4]} describing the anchor boxes. Boxes are formatted in the form [y1, x1, y2, x2].
+     */
+    public final Operand<TFloat32> anchors;
+
+    /**
+     * A scalar float tensor for non-maximal-suppression threshold.
+     */
+    public final Operand<TFloat32> nmsThreshold;
+
+    /**
+     * A scalar int tensor for the number of top scoring boxes to be used as input.
+     */
+    public final Operand<TInt32> preNmsTopn;
+
+    /**
+     * A scalar float tensor. Any box that has a smaller size than min_size will be discarded.
+     */
+    public final Operand<TFloat32> minSize;
+
+    /**
+     * An integer. Maximum number of rois in the output.
+     */
+    public final long postNmsTopn;
+
+    public Inputs(GraphOperation op) {
+      super(new GenerateBoundingBoxProposals(op), op, Arrays.asList("post_nms_topn"));
+      int inputIndex = 0;
+      scores = (Operand<TFloat32>) op.input(inputIndex++);
+      bboxDeltas = (Operand<TFloat32>) op.input(inputIndex++);
+      imageInfo = (Operand<TFloat32>) op.input(inputIndex++);
+      anchors = (Operand<TFloat32>) op.input(inputIndex++);
+      nmsThreshold = (Operand<TFloat32>) op.input(inputIndex++);
+      preNmsTopn = (Operand<TInt32>) op.input(inputIndex++);
+      minSize = (Operand<TFloat32>) op.input(inputIndex++);
+      postNmsTopn = op.attributes().getAttrInt("post_nms_topn");
     }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -124,6 +127,26 @@ public final class Lower extends RawOp implements Operand<TString> {
     public Options encoding(String encoding) {
       this.encoding = encoding;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Lower> {
+    /**
+     * The input to be lower-cased.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * Character encoding of `input`. Allowed values are '' and 'utf-8'.
+     * Value '' is interpreted as ASCII.
+     */
+    public final String encoding;
+
+    public Inputs(GraphOperation op) {
+      super(new Lower(op), op, Arrays.asList("encoding"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      encoding = op.attributes().getAttrString("encoding");
     }
   }
 }

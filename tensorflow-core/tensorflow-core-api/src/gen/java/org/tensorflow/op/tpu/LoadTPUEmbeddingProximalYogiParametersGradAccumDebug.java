@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -42,12 +45,12 @@ public final class LoadTPUEmbeddingProximalYogiParametersGradAccumDebug extends 
    * Factory method to create a class wrapping a new LoadTPUEmbeddingProximalYogiParametersGradAccumDebug operation.
    *
    * @param scope current scope
-   * @param parameters the parameters value
-   * @param v the v value
-   * @param m the m value
-   * @param gradientAccumulators the gradientAccumulators value
-   * @param numShards the value of the numShards property
-   * @param shardId the value of the shardId property
+   * @param parameters The parameters value
+   * @param v The v value
+   * @param m The m value
+   * @param gradientAccumulators The gradientAccumulators value
+   * @param numShards The value of the numShards attribute
+   * @param shardId The value of the shardId attribute
    * @param options carries optional attribute values
    * @return a new instance of LoadTPUEmbeddingProximalYogiParametersGradAccumDebug
    */
@@ -154,6 +157,67 @@ public final class LoadTPUEmbeddingProximalYogiParametersGradAccumDebug extends 
     public Options config(String config) {
       this.config = config;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<LoadTPUEmbeddingProximalYogiParametersGradAccumDebug> {
+    /**
+     * The parameters input
+     */
+    public final Operand<TFloat32> parameters;
+
+    /**
+     * The v input
+     */
+    public final Operand<TFloat32> v;
+
+    /**
+     * The m input
+     */
+    public final Operand<TFloat32> m;
+
+    /**
+     * The gradientAccumulators input
+     */
+    public final Operand<TFloat32> gradientAccumulators;
+
+    /**
+     * The tableId attribute
+     */
+    public final long tableId;
+
+    /**
+     * The tableName attribute
+     */
+    public final String tableName;
+
+    /**
+     * The numShards attribute
+     */
+    public final long numShards;
+
+    /**
+     * The shardId attribute
+     */
+    public final long shardId;
+
+    /**
+     * The config attribute
+     */
+    public final String config;
+
+    public Inputs(GraphOperation op) {
+      super(new LoadTPUEmbeddingProximalYogiParametersGradAccumDebug(op), op, Arrays.asList("table_id", "table_name", "num_shards", "shard_id", "config"));
+      int inputIndex = 0;
+      parameters = (Operand<TFloat32>) op.input(inputIndex++);
+      v = (Operand<TFloat32>) op.input(inputIndex++);
+      m = (Operand<TFloat32>) op.input(inputIndex++);
+      gradientAccumulators = (Operand<TFloat32>) op.input(inputIndex++);
+      tableId = op.attributes().getAttrInt("table_id");
+      tableName = op.attributes().getAttrString("table_name");
+      numShards = op.attributes().getAttrInt("num_shards");
+      shardId = op.attributes().getAttrInt("shard_id");
+      config = op.attributes().getAttrString("config");
     }
   }
 }

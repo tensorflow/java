@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -53,7 +57,7 @@ public final class Relu6<T extends TNumber> extends RawOp implements Operand<T> 
    * Factory method to create a class wrapping a new Relu6 operation.
    *
    * @param scope current scope
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Relu6} output and operands
    * @return a new instance of Relu6
    */
@@ -78,5 +82,24 @@ public final class Relu6<T extends TNumber> extends RawOp implements Operand<T> 
   @Override
   public Output<T> asOutput() {
     return activations;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Relu6<T>> {
+    /**
+     * The features input
+     */
+    public final Operand<T> features;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Relu6<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      features = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -19,15 +19,18 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -62,8 +65,8 @@ public final class MapUnstageNoKey extends RawOp {
    * Factory method to create a class wrapping a new MapUnstageNoKey operation.
    *
    * @param scope current scope
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapUnstageNoKey
    */
@@ -209,6 +212,49 @@ public final class MapUnstageNoKey extends RawOp {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<MapUnstageNoKey> {
+    /**
+     * The indices input
+     */
+    public final Operand<TInt32> indices;
+
+    /**
+     * The capacity attribute
+     */
+    public final long capacity;
+
+    /**
+     * The memoryLimit attribute
+     */
+    public final long memoryLimit;
+
+    /**
+     * The dtypes attribute
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The container attribute
+     */
+    public final String container;
+
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new MapUnstageNoKey(op), op, Arrays.asList("capacity", "memory_limit", "dtypes", "container", "shared_name"));
+      int inputIndex = 0;
+      indices = (Operand<TInt32>) op.input(inputIndex++);
+      capacity = op.attributes().getAttrInt("capacity");
+      memoryLimit = op.attributes().getAttrInt("memory_limit");
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

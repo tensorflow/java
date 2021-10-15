@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -59,5 +62,26 @@ public final class BoostedTreesQuantileStreamResourceDeserialize extends RawOp {
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketBoundaries));
     return new BoostedTreesQuantileStreamResourceDeserialize(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesQuantileStreamResourceDeserialize> {
+    /**
+     * resource handle referring to a QuantileStreamResource.
+     */
+    public final Operand<? extends TType> quantileStreamResourceHandle;
+
+    /**
+     * float; List of Rank 1 Tensors each containing the bucket boundaries for a feature.
+     */
+    public final Iterable<Operand<TFloat32>> bucketBoundaries;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesQuantileStreamResourceDeserialize(op), op, Arrays.asList());
+      int inputIndex = 0;
+      quantileStreamResourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      int bucketBoundariesLength = op.inputListLength("bucket_boundaries");
+      bucketBoundaries = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, bucketBoundariesLength));
+      inputIndex += bucketBoundariesLength;
+    }
   }
 }

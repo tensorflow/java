@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -279,6 +283,87 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     public Options axis(Long axis) {
       this.axis = axis;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizeAndDequantizeV4<T>> {
+    /**
+     * Tensor to quantize and then dequantize.
+     */
+    public final Operand<T> input;
+
+    /**
+     * If {@code range_given == True}, this specifies the minimum input value that needs to
+     * be represented, otherwise it is determined from the min value of the {@code input}
+     * tensor.
+     */
+    public final Operand<T> inputMin;
+
+    /**
+     * If {@code range_given == True}, this specifies the maximum input value that needs to
+     * be represented, otherwise it is determined from the max value of the {@code input}
+     * tensor.
+     */
+    public final Operand<T> inputMax;
+
+    /**
+     * Whether the quantization is signed or unsigned. (actually this parameter should
+     * have been called <b>`signed_output`</b>)
+     */
+    public final boolean signedInput;
+
+    /**
+     * The bitwidth of the quantization.
+     */
+    public final long numBits;
+
+    /**
+     * Whether the range is given or should be determined from the `input` tensor.
+     */
+    public final boolean rangeGiven;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The 'round_mode' attribute controls which rounding tie-breaking algorithm is
+     * used when rounding float values to their quantized equivalents. The following
+     * rounding modes are currently supported:
+     *
+     * *   HALF_TO_EVEN: this is the default round_mode.
+     * *   HALF_UP: round towards positive. In this mode 7.5 rounds up to 8 and -7.5
+     *     rounds up to -7.
+     */
+    public final String roundMode;
+
+    /**
+     * If True, then the absolute value of the quantized minimum value is the same as
+     * the quantized maximum value, instead of 1 greater.
+     * i.e. for 8 bit quantization, the minimum value is -127 instead of -128.
+     */
+    public final boolean narrowRange;
+
+    /**
+     * If specified, this axis is treated as a channel or slice axis, and a separate
+     * quantization range is used for each channel or slice along this axis.
+     */
+    public final long axis;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizeAndDequantizeV4<>(op), op, Arrays.asList("signed_input", "num_bits", "range_given", "T", "round_mode", "narrow_range", "axis"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      inputMin = (Operand<T>) op.input(inputIndex++);
+      inputMax = (Operand<T>) op.input(inputIndex++);
+      signedInput = op.attributes().getAttrBool("signed_input");
+      numBits = op.attributes().getAttrInt("num_bits");
+      rangeGiven = op.attributes().getAttrBool("range_given");
+      T = op.attributes().getAttrType("T");
+      roundMode = op.attributes().getAttrString("round_mode");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
+      axis = op.attributes().getAttrInt("axis");
     }
   }
 }

@@ -163,7 +163,7 @@ public final class SparseOps {
    *  Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
    * @param set2 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set1}.
    *  Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
-   * @param setOperation the value of the setOperation property
+   * @param setOperation The value of the setOperation attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code DenseToDenseSetOperation} output and operands
    * @return a new instance of DenseToDenseSetOperation
@@ -198,7 +198,7 @@ public final class SparseOps {
    * @param set2Shape 1D {@code Tensor}, shape of a {@code SparseTensor}. {@code set2_shape[0...n-1]} must
    *  be the same as the 1st {@code n-1} dimensions of {@code set1}, {@code result_shape[n]} is the
    *  max set size across {@code n-1} dimensions.
-   * @param setOperation the value of the setOperation property
+   * @param setOperation The value of the setOperation attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code DenseToSparseSetOperation} output and operands
    * @return a new instance of DenseToSparseSetOperation
@@ -721,8 +721,8 @@ public final class SparseOps {
    *  <p>The gradient computation of this operation will only take advantage of sparsity
    *  in the input gradient when that gradient comes from a Relu.
    *
-   * @param a the a value
-   * @param b the b value
+   * @param a The a value
+   * @param b The b value
    * @param options carries optional attribute values
    * @return a new instance of SparseMatMul
    */
@@ -902,7 +902,7 @@ public final class SparseOps {
    *  dimension, selecting a subset of dimension 0, specified by {@code indices}.
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param <T> data type for {@code SparseSegmentMean} output and operands
@@ -941,7 +941,7 @@ public final class SparseOps {
    *  for an explanation of segments.
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
@@ -960,7 +960,7 @@ public final class SparseOps {
    *  <p>See {@code tf.sparse.segment_sum} for usage examples.
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param <T> data type for {@code SparseSegmentSqrtN} output and operands
@@ -1000,7 +1000,7 @@ public final class SparseOps {
    *  for an explanation of segments.
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
@@ -1043,7 +1043,7 @@ public final class SparseOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param <T> data type for {@code SparseSegmentSum} output and operands
@@ -1101,7 +1101,7 @@ public final class SparseOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
@@ -1395,7 +1395,7 @@ public final class SparseOps {
    * @param set2Shape 1D {@code Tensor}, shape of a {@code SparseTensor}. {@code set2_shape[0...n-1]} must
    *  be the same as {@code set1_shape[0...n-1]}, {@code set2_shape[n]} is the
    *  max set size across {@code 0...n-1} dimensions.
-   * @param setOperation the value of the setOperation property
+   * @param setOperation The value of the setOperation attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code SparseToSparseSetOperation} output and operands
    * @return a new instance of SparseToSparseSetOperation

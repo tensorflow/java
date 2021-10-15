@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -273,6 +277,82 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     public Options isTraining(Boolean isTraining) {
       this.isTraining = isTraining;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<FusedBatchNorm<T, U>> {
+    /**
+     * A 4D Tensor for input data.
+     */
+    public final Operand<T> x;
+
+    /**
+     * A 1D Tensor for scaling factor, to scale the normalized x.
+     */
+    public final Operand<U> scale;
+
+    /**
+     * A 1D Tensor for offset, to shift to the normalized x.
+     */
+    public final Operand<U> offset;
+
+    /**
+     * A 1D Tensor for population mean. Used for inference only;
+     * must be empty for training.
+     */
+    public final Operand<U> mean;
+
+    /**
+     * A 1D Tensor for population variance. Used for inference only;
+     * must be empty for training.
+     */
+    public final Operand<U> variance;
+
+    /**
+     * The data type for the elements of input and output Tensors.
+     */
+    public final DataType T;
+
+    /**
+     * The data type for the scale, offset, mean, and variance.
+     */
+    public final DataType U;
+
+    /**
+     * A small float number added to the variance of x.
+     */
+    public final float epsilon;
+
+    /**
+     * The exponentialAvgFactor attribute
+     */
+    public final float exponentialAvgFactor;
+
+    /**
+     * The data format for x and y. Either "NHWC" (default) or "NCHW".
+     */
+    public final String dataFormat;
+
+    /**
+     * A bool value to indicate the operation is for training (default)
+     * or inference.
+     */
+    public final boolean isTraining;
+
+    public Inputs(GraphOperation op) {
+      super(new FusedBatchNorm<>(op), op, Arrays.asList("T", "U", "epsilon", "exponential_avg_factor", "data_format", "is_training"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      scale = (Operand<U>) op.input(inputIndex++);
+      offset = (Operand<U>) op.input(inputIndex++);
+      mean = (Operand<U>) op.input(inputIndex++);
+      variance = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      U = op.attributes().getAttrType("U");
+      epsilon = op.attributes().getAttrFloat("epsilon");
+      exponentialAvgFactor = op.attributes().getAttrFloat("exponential_avg_factor");
+      dataFormat = op.attributes().getAttrString("data_format");
+      isTraining = op.attributes().getAttrBool("is_training");
     }
   }
 }

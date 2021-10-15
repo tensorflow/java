@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -95,5 +99,37 @@ public final class DrawBoundingBoxes<T extends TNumber> extends RawOp implements
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<DrawBoundingBoxes<T>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, depth]}. A batch of images.
+     */
+    public final Operand<T> images;
+
+    /**
+     * 3-D with shape {@code [batch, num_bounding_boxes, 4]} containing bounding
+     * boxes.
+     */
+    public final Operand<TFloat32> boxes;
+
+    /**
+     * 2-D. A list of RGBA colors to cycle through for the boxes.
+     */
+    public final Operand<TFloat32> colors;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new DrawBoundingBoxes<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      images = (Operand<T>) op.input(inputIndex++);
+      boxes = (Operand<TFloat32>) op.input(inputIndex++);
+      colors = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

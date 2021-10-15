@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -145,6 +149,57 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
     public Options batchDims(Long batchDims) {
       this.batchDims = batchDims;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Gather<T>> {
+    /**
+     * The tensor from which to gather values. Must be at least rank
+     * {@code axis + 1}.
+     */
+    public final Operand<T> params;
+
+    /**
+     * Index tensor. Must be in range {@code [0, params.shape[axis])}.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The axis in {@code params} to gather {@code indices} from. Defaults to the first
+     * dimension. Supports negative indexes.
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * The batchDims attribute
+     */
+    public final long batchDims;
+
+    /**
+     * The Tparams attribute
+     */
+    public final DataType Tparams;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * The Taxis attribute
+     */
+    public final DataType Taxis;
+
+    public Inputs(GraphOperation op) {
+      super(new Gather<>(op), op, Arrays.asList("batch_dims", "Tparams", "Tindices", "Taxis"));
+      int inputIndex = 0;
+      params = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      batchDims = op.attributes().getAttrInt("batch_dims");
+      Tparams = op.attributes().getAttrType("Tparams");
+      Tindices = op.attributes().getAttrType("Tindices");
+      Taxis = op.attributes().getAttrType("Taxis");
     }
   }
 }

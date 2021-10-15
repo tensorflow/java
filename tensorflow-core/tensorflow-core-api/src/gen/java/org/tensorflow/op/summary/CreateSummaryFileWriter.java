@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt32;
@@ -44,11 +47,11 @@ public final class CreateSummaryFileWriter extends RawOp {
    * Factory method to create a class wrapping a new CreateSummaryFileWriter operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param logdir the logdir value
-   * @param maxQueue the maxQueue value
-   * @param flushMillis the flushMillis value
-   * @param filenameSuffix the filenameSuffix value
+   * @param writer The writer value
+   * @param logdir The logdir value
+   * @param maxQueue The maxQueue value
+   * @param flushMillis The flushMillis value
+   * @param filenameSuffix The filenameSuffix value
    * @return a new instance of CreateSummaryFileWriter
    */
   @Endpoint(
@@ -64,5 +67,42 @@ public final class CreateSummaryFileWriter extends RawOp {
     opBuilder.addInput(flushMillis.asOutput());
     opBuilder.addInput(filenameSuffix.asOutput());
     return new CreateSummaryFileWriter(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<CreateSummaryFileWriter> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The logdir input
+     */
+    public final Operand<TString> logdir;
+
+    /**
+     * The maxQueue input
+     */
+    public final Operand<TInt32> maxQueue;
+
+    /**
+     * The flushMillis input
+     */
+    public final Operand<TInt32> flushMillis;
+
+    /**
+     * The filenameSuffix input
+     */
+    public final Operand<TString> filenameSuffix;
+
+    public Inputs(GraphOperation op) {
+      super(new CreateSummaryFileWriter(op), op, Arrays.asList());
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      logdir = (Operand<TString>) op.input(inputIndex++);
+      maxQueue = (Operand<TInt32>) op.input(inputIndex++);
+      flushMillis = (Operand<TInt32>) op.input(inputIndex++);
+      filenameSuffix = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

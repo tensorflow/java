@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -61,13 +65,13 @@ public final class QuantizedMul<V extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new QuantizedMul operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @param minX The float value that the lowest quantized {@code x} value represents.
    * @param maxX The float value that the highest quantized {@code x} value represents.
    * @param minY The float value that the lowest quantized {@code y} value represents.
    * @param maxY The float value that the highest quantized {@code y} value represents.
-   * @param Toutput the value of the Toutput property
+   * @param Toutput The value of the Toutput attribute
    * @param <V> data type for {@code QuantizedMul} output and operands
    * @return a new instance of QuantizedMul
    */
@@ -115,5 +119,66 @@ public final class QuantizedMul<V extends TNumber> extends RawOp {
    */
   public Output<TFloat32> maxZ() {
     return maxZ;
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedMul<?>> {
+    /**
+     * The x input
+     */
+    public final Operand<? extends TNumber> x;
+
+    /**
+     * The y input
+     */
+    public final Operand<? extends TNumber> y;
+
+    /**
+     * The float value that the lowest quantized {@code x} value represents.
+     */
+    public final Operand<TFloat32> minX;
+
+    /**
+     * The float value that the highest quantized {@code x} value represents.
+     */
+    public final Operand<TFloat32> maxX;
+
+    /**
+     * The float value that the lowest quantized {@code y} value represents.
+     */
+    public final Operand<TFloat32> minY;
+
+    /**
+     * The float value that the highest quantized {@code y} value represents.
+     */
+    public final Operand<TFloat32> maxY;
+
+    /**
+     * The T1 attribute
+     */
+    public final DataType T1;
+
+    /**
+     * The T2 attribute
+     */
+    public final DataType T2;
+
+    /**
+     * The Toutput attribute
+     */
+    public final DataType Toutput;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedMul<>(op), op, Arrays.asList("T1", "T2", "Toutput"));
+      int inputIndex = 0;
+      x = (Operand<? extends TNumber>) op.input(inputIndex++);
+      y = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minX = (Operand<TFloat32>) op.input(inputIndex++);
+      maxX = (Operand<TFloat32>) op.input(inputIndex++);
+      minY = (Operand<TFloat32>) op.input(inputIndex++);
+      maxY = (Operand<TFloat32>) op.input(inputIndex++);
+      T1 = op.attributes().getAttrType("T1");
+      T2 = op.attributes().getAttrType("T2");
+      Toutput = op.attributes().getAttrType("Toutput");
+    }
   }
 }

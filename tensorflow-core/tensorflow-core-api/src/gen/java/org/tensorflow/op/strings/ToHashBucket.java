@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -57,7 +60,7 @@ public final class ToHashBucket extends RawOp implements Operand<TInt64> {
    * Factory method to create a class wrapping a new StringToHashBucket operation.
    *
    * @param scope current scope
-   * @param stringTensor the stringTensor value
+   * @param stringTensor The stringTensor value
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucket
    */
@@ -83,5 +86,24 @@ public final class ToHashBucket extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<ToHashBucket> {
+    /**
+     * The stringTensor input
+     */
+    public final Operand<TString> stringTensor;
+
+    /**
+     * The number of buckets.
+     */
+    public final long numBuckets;
+
+    public Inputs(GraphOperation op) {
+      super(new ToHashBucket(op), op, Arrays.asList("num_buckets"));
+      int inputIndex = 0;
+      stringTensor = (Operand<TString>) op.input(inputIndex++);
+      numBuckets = op.attributes().getAttrInt("num_buckets");
+    }
   }
 }

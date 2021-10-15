@@ -19,13 +19,16 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -119,7 +122,7 @@ public final class CopyHost<T extends TType> extends RawOp implements Operand<T>
    * &quot;DebugIdentity;file:///tmp/tfdbg_1;0&quot;.
    * @return this Options instance.
    */
-  public static Options debugOpsSpec(String[] debugOpsSpec) {
+  public static Options debugOpsSpec(String... debugOpsSpec) {
     return new Options().debugOpsSpec(debugOpsSpec);
   }
 
@@ -187,6 +190,41 @@ public final class CopyHost<T extends TType> extends RawOp implements Operand<T>
     public Options debugOpsSpec(String... debugOpsSpec) {
       this.debugOpsSpec = Arrays.asList(debugOpsSpec);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<CopyHost<T>> {
+    /**
+     * Input tensor.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The name of the input tensor.
+     */
+    public final String tensorName;
+
+    /**
+     * A list of debug op spec (op, url, gated_grpc) for attached debug
+     * ops. Each element of the list has the format
+     * <debug_op>;<grpc_url>;<gated_grpc>, wherein gated_grpc is boolean represented
+     * as 0/1. E.g., "DebugIdentity;grpc://foo:3333;1",
+     * "DebugIdentity;file:///tmp/tfdbg_1;0".
+     */
+    public final String[] debugOpsSpec;
+
+    public Inputs(GraphOperation op) {
+      super(new CopyHost<>(op), op, Arrays.asList("T", "tensor_name", "debug_ops_spec"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      tensorName = op.attributes().getAttrString("tensor_name");
+      debugOpsSpec = op.attributes().getAttrStringList("debug_ops_spec");
     }
   }
 }

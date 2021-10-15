@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -82,5 +86,30 @@ public final class EnsureShape<T extends TType> extends RawOp implements Operand
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<EnsureShape<T>> {
+    /**
+     * A tensor, whose shape is to be validated.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The expected (possibly partially specified) shape of the input tensor.
+     */
+    public final Shape shape;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new EnsureShape<>(op), op, Arrays.asList("shape", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      shape = op.attributes().getAttrShape("shape");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

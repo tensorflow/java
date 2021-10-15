@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -102,5 +106,46 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
    */
   public Output<T> v() {
     return v;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SelfAdjointEig<T>> {
+    /**
+     * the input tensor.
+     */
+    public final Operand<T> a;
+
+    /**
+     * a boolean specifies whether the calculation is done with the lower
+     * triangular part or the upper triangular part.
+     */
+    public final boolean lower;
+
+    /**
+     * maximum number of sweep update, i.e., the whole lower triangular
+     * part or upper triangular part based on parameter lower. Heuristically, it has
+     * been argued that approximately logN sweeps are needed in practice (Ref: Golub &
+     * van Loan "Matrix Computation").
+     */
+    public final long maxIter;
+
+    /**
+     * the tolerance ratio.
+     */
+    public final float epsilon;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SelfAdjointEig<>(op), op, Arrays.asList("lower", "max_iter", "epsilon", "T"));
+      int inputIndex = 0;
+      a = (Operand<T>) op.input(inputIndex++);
+      lower = op.attributes().getAttrBool("lower");
+      maxIter = op.attributes().getAttrInt("max_iter");
+      epsilon = op.attributes().getAttrFloat("epsilon");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -101,5 +105,44 @@ public final class SparseAddGrad<T extends TType> extends RawOp {
    */
   public Output<T> bValGrad() {
     return bValGrad;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseAddGrad<T>> {
+    /**
+     * 1-D with shape {@code [nnz(sum)]}.  The gradient with respect to
+     * the non-empty values of the sum.
+     */
+    public final Operand<T> backpropValGrad;
+
+    /**
+     * 2-D.  The {@code indices} of the {@code SparseTensor} A, size {@code [nnz(A), ndims]}.
+     */
+    public final Operand<TInt64> aIndices;
+
+    /**
+     * 2-D.  The {@code indices} of the {@code SparseTensor} B, size {@code [nnz(B), ndims]}.
+     */
+    public final Operand<TInt64> bIndices;
+
+    /**
+     * 2-D.  The {@code indices} of the sum {@code SparseTensor}, size
+     * {@code [nnz(sum), ndims]}.
+     */
+    public final Operand<TInt64> sumIndices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseAddGrad<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      backpropValGrad = (Operand<T>) op.input(inputIndex++);
+      aIndices = (Operand<TInt64>) op.input(inputIndex++);
+      bIndices = (Operand<TInt64>) op.input(inputIndex++);
+      sumIndices = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

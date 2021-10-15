@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -180,6 +184,46 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
     public Options useNodeNameSharing(Boolean useNodeNameSharing) {
       this.useNodeNameSharing = useNodeNameSharing;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<MutableHashTable> {
+    /**
+     * If non-empty, this table is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this table is shared under the given name across
+     * multiple sessions.
+     */
+    public final String sharedName;
+
+    /**
+     * If true and shared_name is empty, the table is shared
+     * using the node name.
+     */
+    public final boolean useNodeNameSharing;
+
+    /**
+     * Type of the table keys.
+     */
+    public final DataType keyDtype;
+
+    /**
+     * Type of the table values.
+     */
+    public final DataType valueDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new MutableHashTable(op), op, Arrays.asList("container", "shared_name", "use_node_name_sharing", "key_dtype", "value_dtype"));
+      int inputIndex = 0;
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      useNodeNameSharing = op.attributes().getAttrBool("use_node_name_sharing");
+      keyDtype = op.attributes().getAttrType("key_dtype");
+      valueDtype = op.attributes().getAttrType("value_dtype");
     }
   }
 }

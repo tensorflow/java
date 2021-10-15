@@ -22,14 +22,13 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
-import org.tensorflow.Names;
-
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
+import org.tensorflow.Names;
 
 /** Holds type information for inputs, outputs, or attributes, and provides utilities. */
 final class ResolvedType {
@@ -40,6 +39,9 @@ final class ResolvedType {
   /** The type for jni/attribute setting use. */
   final TypeName jniType;
 
+  /** The type of the attribute, for accessors, if supported. */
+  final AttributeType attributeType;
+
   /**
    * Whether this type should be made iterable when used.
    *
@@ -47,7 +49,7 @@ final class ResolvedType {
    */
   final boolean iterable;
 
-  ResolvedType(TypeName javaType, TypeName jniType, boolean iterable) {
+  ResolvedType(TypeName javaType, TypeName jniType, AttributeType attributeType, boolean iterable) {
     if (javaType == null) {
       throw new NullPointerException("Can't create with a null javaType");
     }
@@ -58,50 +60,51 @@ final class ResolvedType {
     this.javaType = javaType;
     this.jniType = jniType;
     this.iterable = iterable;
+    this.attributeType = attributeType;
+  }
+
+  ResolvedType(TypeName javaType, TypeName jniType, boolean iterable) {
+    this(javaType, jniType, null, iterable);
+  }
+
+  ResolvedType(TypeName javaType, TypeName jniType, AttributeType attributeType) {
+    this(javaType, jniType, attributeType, false);
   }
 
   ResolvedType(TypeName javaType, TypeName jniType) {
-    this(javaType, jniType, false);
+    this(javaType, jniType, null, false);
   }
 
-  ResolvedType(TypeName type, boolean iterable) {
+  ResolvedType(TypeName type, AttributeType attributeType, boolean iterable) {
     if (type == null) {
       throw new NullPointerException("Can't create with a null type");
     }
 
     if (type.isPrimitive()) {
       this.javaType = type.box();
-      jniType = type;
     } else {
       this.javaType = type;
-      this.jniType = type;
     }
+    jniType = type;
     this.iterable = iterable;
+    this.attributeType = attributeType;
+  }
+
+  ResolvedType(TypeName type, boolean iterable) {
+    this(type, (AttributeType) null, iterable);
+  }
+
+  ResolvedType(TypeName type, AttributeType attributeType) {
+    this(type, attributeType, false);
   }
 
   ResolvedType(TypeName type) {
     this(type, false);
   }
 
-  ResolvedType(Class<?> javaType, Class<?> jniType, boolean iterable) {
-    this(TypeName.get(javaType), TypeName.get(jniType), iterable);
-  }
-
-  ResolvedType(Class<?> javaType, Class<?> jniType) {
-    this(TypeName.get(javaType), TypeName.get(jniType), false);
-  }
-
-  ResolvedType(Class<?> type, boolean iterable) {
-    this(TypeName.get(type), iterable);
-  }
-
-  ResolvedType(Class<?> type) {
-    this(type, false);
-  }
-
   /** Returns a copy of this type with the specified {@code iterable} value. */
   ResolvedType withIterable(boolean iterable) {
-    return new ResolvedType(javaType, jniType, iterable);
+    return new ResolvedType(javaType, jniType, attributeType, iterable);
   }
 
   /** Get the unboxed version of {@code javaType} if it is a boxed primitive. */
@@ -121,7 +124,7 @@ final class ResolvedType {
     } else {
       newJType = javaType;
     }
-    return new ResolvedType(newJType, jniType, iterable);
+    return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
   /** Return a copy, wrapping {@code javaType} in {@link Iterable} if this type is iterable. */
@@ -132,7 +135,7 @@ final class ResolvedType {
     } else {
       newJType = javaType;
     }
-    return new ResolvedType(newJType, jniType, iterable);
+    return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
   /** Return a copy, wrapping {@code javaType} in {@link List} if this type is iterable. */
@@ -143,7 +146,7 @@ final class ResolvedType {
     } else {
       newJType = javaType;
     }
-    return new ResolvedType(newJType, jniType, iterable);
+    return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
   /** True if wrapping will be done by {@link #classIfGeneric()} */
@@ -162,7 +165,7 @@ final class ResolvedType {
     } else {
       newJType = javaType;
     }
-    return new ResolvedType(newJType, jniType, iterable);
+    return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
   /** Recursively get all type variable names in {@code javaType}. */

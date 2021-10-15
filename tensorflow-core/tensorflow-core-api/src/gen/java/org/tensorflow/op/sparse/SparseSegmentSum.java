@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -79,7 +83,7 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
    * Factory method to create a class wrapping a new SparseSegmentSum operation.
    *
    * @param scope current scope
-   * @param data the data value
+   * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param <T> data type for {@code SparseSegmentSum} output and operands
@@ -110,5 +114,48 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<SparseSegmentSum<T>> {
+    /**
+     * The data input
+     */
+    public final Operand<T> data;
+
+    /**
+     * A 1-D tensor. Has same rank as {@code segment_ids}.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * A 1-D tensor. Values should be sorted and can be repeated.
+     */
+    public final Operand<? extends TNumber> segmentIds;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    /**
+     * The Tsegmentids attribute
+     */
+    public final DataType Tsegmentids;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseSegmentSum<>(op), op, Arrays.asList("T", "Tidx", "Tsegmentids"));
+      int inputIndex = 0;
+      data = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      segmentIds = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tidx = op.attributes().getAttrType("Tidx");
+      Tsegmentids = op.attributes().getAttrType("Tsegmentids");
+    }
   }
 }

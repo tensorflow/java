@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -128,7 +131,7 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
    * @param explicitPaddings the explicitPaddings option
    * @return this Options instance.
    */
-  public static Options explicitPaddings(Long[] explicitPaddings) {
+  public static Options explicitPaddings(Long... explicitPaddings) {
     return new Options().explicitPaddings(explicitPaddings);
   }
 
@@ -170,7 +173,7 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
    * dimensions must be 1.
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -268,6 +271,82 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<DepthwiseConv2dNativeBackpropFilter<T>> {
+    /**
+     * 4-D with shape based on {@code data_format}.  For example, if
+     * {@code data_format} is 'NHWC' then {@code input} is a 4-D {@code [batch, in_height, in_width, in_channels]} tensor.
+     */
+    public final Operand<T> input;
+
+    /**
+     * An integer vector representing the tensor shape of {@code filter},
+     * where {@code filter} is a 4-D
+     * {@code [filter_height, filter_width, in_channels, depthwise_multiplier]} tensor.
+     */
+    public final Operand<TInt32> filterSizes;
+
+    /**
+     * 4-D with shape  based on {@code data_format}.
+     * For example, if {@code data_format} is 'NHWC' then
+     * out_backprop shape is {@code [batch, out_height, out_width, out_channels]}.
+     * Gradients w.r.t. the output of the convolution.
+     */
+    public final Operand<T> outBackprop;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The stride of the sliding window for each dimension of the input
+     * of the convolution.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * The explicitPaddings attribute
+     */
+    public final long[] explicitPaddings;
+
+    /**
+     * Specify the data format of the input and output data. With the
+     * default format "NHWC", the data is stored in the order of:
+     *     [batch, height, width, channels].
+     * Alternatively, the format could be "NCHW", the data storage order of:
+     *     [batch, channels, height, width].
+     */
+    public final String dataFormat;
+
+    /**
+     * 1-D tensor of length 4.  The dilation factor for each dimension of
+     * `input`. If set to k > 1, there will be k-1 skipped cells between each filter
+     * element on that dimension. The dimension order is determined by the value of
+     * `data_format`, see above for details. Dilations in the batch and depth
+     * dimensions must be 1.
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new DepthwiseConv2dNativeBackpropFilter<>(op), op, Arrays.asList("T", "strides", "padding", "explicit_paddings", "data_format", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      filterSizes = (Operand<TInt32>) op.input(inputIndex++);
+      outBackprop = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      explicitPaddings = op.attributes().getAttrIntList("explicit_paddings");
+      dataFormat = op.attributes().getAttrString("data_format");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

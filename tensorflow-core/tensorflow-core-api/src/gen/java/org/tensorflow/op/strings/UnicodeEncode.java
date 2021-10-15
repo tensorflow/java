@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -174,6 +178,61 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
     public Options replacementChar(Long replacementChar) {
       this.replacementChar = replacementChar;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<UnicodeEncode> {
+    /**
+     * A 1D tensor containing the unicode codepoints that should be encoded.
+     */
+    public final Operand<TInt32> inputValues;
+
+    /**
+     * A 1D tensor specifying how the unicode codepoints should be split into strings.
+     * In particular, {@code output[i]} is constructed by encoding the codepoints in the
+     * slice {@code input_values[input_splits[i]:input_splits[i+1]]}.
+     */
+    public final Operand<? extends TNumber> inputSplits;
+
+    /**
+     * Error handling policy when there is invalid formatting found in the input.
+     * The value of 'strict' will cause the operation to produce a InvalidArgument
+     * error on any invalid input formatting. A value of 'replace' (the default) will
+     * cause the operation to replace any invalid formatting in the input with the
+     * `replacement_char` codepoint. A value of 'ignore' will cause the operation to
+     * skip any invalid formatting in the input and produce no corresponding output
+     * character.
+     */
+    public final String errors;
+
+    /**
+     * Unicode encoding of the output strings. Valid encodings are: `"UTF-8",
+     * "UTF-16-BE", and "UTF-32-BE"`.
+     */
+    public final String outputEncoding;
+
+    /**
+     * The replacement character codepoint to be used in place of any invalid
+     * formatting in the input when `errors='replace'`. Any valid unicode codepoint may
+     * be used. The default value is the default unicode replacement character is
+     * 0xFFFD (U+65533).
+     */
+    public final long replacementChar;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new UnicodeEncode(op), op, Arrays.asList("errors", "output_encoding", "replacement_char", "Tsplits"));
+      int inputIndex = 0;
+      inputValues = (Operand<TInt32>) op.input(inputIndex++);
+      inputSplits = (Operand<? extends TNumber>) op.input(inputIndex++);
+      errors = op.attributes().getAttrString("errors");
+      outputEncoding = op.attributes().getAttrString("output_encoding");
+      replacementChar = op.attributes().getAttrInt("replacement_char");
+      Tsplits = op.attributes().getAttrType("Tsplits");
     }
   }
 }

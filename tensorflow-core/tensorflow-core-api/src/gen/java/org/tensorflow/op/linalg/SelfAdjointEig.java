@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -136,6 +140,32 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
     public Options computeV(Boolean computeV) {
       this.computeV = computeV;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SelfAdjointEig<T>> {
+    /**
+     * {@code Tensor} input of shape {@code [N, N]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * If `True` then eigenvectors will be computed and returned in `v`.
+     * Otherwise, only the eigenvalues will be computed.
+     */
+    public final boolean computeV;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SelfAdjointEig<>(op), op, Arrays.asList("compute_v", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      computeV = op.attributes().getAttrBool("compute_v");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

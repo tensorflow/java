@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -49,8 +53,8 @@ public final class RiscReverse<T extends TNumber> extends RawOp implements Opera
    * Factory method to create a class wrapping a new RiscReverse operation.
    *
    * @param scope current scope
-   * @param tensor the tensor value
-   * @param axis the axis value
+   * @param tensor The tensor value
+   * @param axis The axis value
    * @param <T> data type for {@code RiscReverse} output and operands
    * @return a new instance of RiscReverse
    */
@@ -77,5 +81,36 @@ public final class RiscReverse<T extends TNumber> extends RawOp implements Opera
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RiscReverse<T>> {
+    /**
+     * The tensor input
+     */
+    public final Operand<T> tensor;
+
+    /**
+     * The axis input
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscReverse<>(op), op, Arrays.asList("Tidx", "T"));
+      int inputIndex = 0;
+      tensor = (Operand<T>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      Tidx = op.attributes().getAttrType("Tidx");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

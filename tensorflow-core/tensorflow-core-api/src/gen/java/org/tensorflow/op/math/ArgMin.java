@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -66,11 +70,11 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
    * Factory method to create a class wrapping a new ArgMin operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    * Describes which dimension of the input Tensor to reduce across. For vectors,
    * use dimension = 0.
-   * @param outputType the value of the outputType property
+   * @param outputType The value of the outputType attribute
    * @param <V> data type for {@code ArgMin} output and operands
    * @return a new instance of ArgMin
    */
@@ -90,7 +94,7 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
    * Factory method to create a class wrapping a new ArgMin operation, with the default output types.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    * Describes which dimension of the input Tensor to reduce across. For vectors,
    * use dimension = 0.
@@ -116,5 +120,44 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
   @Override
   public Output<V> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<ArgMin<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
+     * Describes which dimension of the input Tensor to reduce across. For vectors,
+     * use dimension = 0.
+     */
+    public final Operand<? extends TNumber> dimension;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    /**
+     * The outputType attribute
+     */
+    public final DataType outputType;
+
+    public Inputs(GraphOperation op) {
+      super(new ArgMin<>(op), op, Arrays.asList("T", "Tidx", "output_type"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      dimension = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tidx = op.attributes().getAttrType("Tidx");
+      outputType = op.attributes().getAttrType("output_type");
+    }
   }
 }

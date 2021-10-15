@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -97,6 +100,26 @@ public final class DestroyResourceOp extends RawOp {
     public Options ignoreLookupError(Boolean ignoreLookupError) {
       this.ignoreLookupError = ignoreLookupError;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DestroyResourceOp> {
+    /**
+     * handle to the resource to delete.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * whether to ignore the error when the resource
+     * doesn't exist.
+     */
+    public final boolean ignoreLookupError;
+
+    public Inputs(GraphOperation op) {
+      super(new DestroyResourceOp(op), op, Arrays.asList("ignore_lookup_error"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      ignoreLookupError = op.attributes().getAttrBool("ignore_lookup_error");
     }
   }
 }

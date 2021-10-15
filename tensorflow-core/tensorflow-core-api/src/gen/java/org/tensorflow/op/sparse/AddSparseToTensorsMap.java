@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -160,6 +164,50 @@ public final class AddSparseToTensorsMap extends RawOp implements Operand<TInt64
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AddSparseToTensorsMap> {
+    /**
+     * 2-D.  The {@code indices} of the {@code SparseTensor}.
+     */
+    public final Operand<TInt64> sparseIndices;
+
+    /**
+     * 1-D.  The {@code values} of the {@code SparseTensor}.
+     */
+    public final Operand<? extends TType> sparseValues;
+
+    /**
+     * 1-D.  The {@code shape} of the {@code SparseTensor}.
+     */
+    public final Operand<TInt64> sparseShape;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The container name for the `SparseTensorsMap` created by this op.
+     */
+    public final String container;
+
+    /**
+     * The shared name for the `SparseTensorsMap` created by this op.
+     * If blank, the new Operation's unique name is used.
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new AddSparseToTensorsMap(op), op, Arrays.asList("T", "container", "shared_name"));
+      int inputIndex = 0;
+      sparseIndices = (Operand<TInt64>) op.input(inputIndex++);
+      sparseValues = (Operand<? extends TType>) op.input(inputIndex++);
+      sparseShape = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

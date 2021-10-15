@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.audio;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -142,6 +145,39 @@ public final class AudioSpectrogram extends RawOp implements Operand<TFloat32> {
     public Options magnitudeSquared(Boolean magnitudeSquared) {
       this.magnitudeSquared = magnitudeSquared;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AudioSpectrogram> {
+    /**
+     * Float representation of audio data.
+     */
+    public final Operand<TFloat32> input;
+
+    /**
+     * How wide the input window is in samples. For the highest efficiency
+     * this should be a power of two, but other values are accepted.
+     */
+    public final long windowSize;
+
+    /**
+     * How widely apart the center of adjacent sample windows should be.
+     */
+    public final long stride;
+
+    /**
+     * Whether to return the squared magnitude or just the
+     * magnitude. Using squared magnitude can avoid extra calculations.
+     */
+    public final boolean magnitudeSquared;
+
+    public Inputs(GraphOperation op) {
+      super(new AudioSpectrogram(op), op, Arrays.asList("window_size", "stride", "magnitude_squared"));
+      int inputIndex = 0;
+      input = (Operand<TFloat32>) op.input(inputIndex++);
+      windowSize = op.attributes().getAttrInt("window_size");
+      stride = op.attributes().getAttrInt("stride");
+      magnitudeSquared = op.attributes().getAttrBool("magnitude_squared");
     }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -60,8 +64,8 @@ public final class ReduceWindow<T extends TType> extends RawOp implements Operan
    * @param initValue a scalar representing the initial value for the reduction
    * @param windowDimensions the shape of the window
    * @param windowStrides the inter-window strides
-   * @param baseDilations the baseDilations value
-   * @param windowDilations the windowDilations value
+   * @param baseDilations The baseDilations value
+   * @param windowDilations The windowDilations value
    * @param padding the padding to apply at the start and end of each input dimensions
    * @param computation a reducer function to apply
    * @param <T> data type for {@code XlaReduceWindow} output and operands
@@ -99,5 +103,66 @@ public final class ReduceWindow<T extends TType> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<ReduceWindow<T>> {
+    /**
+     * the input tensor
+     */
+    public final Operand<T> input;
+
+    /**
+     * a scalar representing the initial value for the reduction
+     */
+    public final Operand<T> initValue;
+
+    /**
+     * the shape of the window
+     */
+    public final Operand<U> windowDimensions;
+
+    /**
+     * the inter-window strides
+     */
+    public final Operand<U> windowStrides;
+
+    /**
+     * The baseDilations input
+     */
+    public final Operand<U> baseDilations;
+
+    /**
+     * The windowDilations input
+     */
+    public final Operand<U> windowDilations;
+
+    /**
+     * the padding to apply at the start and end of each input dimensions
+     */
+    public final Operand<U> padding;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new ReduceWindow<>(op), op, Arrays.asList("T", "Tindices"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      initValue = (Operand<T>) op.input(inputIndex++);
+      windowDimensions = (Operand<U>) op.input(inputIndex++);
+      windowStrides = (Operand<U>) op.input(inputIndex++);
+      baseDilations = (Operand<U>) op.input(inputIndex++);
+      windowDilations = (Operand<U>) op.input(inputIndex++);
+      padding = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

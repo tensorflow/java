@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TString;
@@ -43,8 +46,8 @@ public final class ImportEvent extends RawOp {
    * Factory method to create a class wrapping a new ImportEvent operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param event the event value
+   * @param writer The writer value
+   * @param event The event value
    * @return a new instance of ImportEvent
    */
   @Endpoint(
@@ -56,5 +59,24 @@ public final class ImportEvent extends RawOp {
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(event.asOutput());
     return new ImportEvent(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ImportEvent> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The event input
+     */
+    public final Operand<TString> event;
+
+    public Inputs(GraphOperation op) {
+      super(new ImportEvent(op), op, Arrays.asList());
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      event = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,9 +17,12 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -117,6 +120,25 @@ public final class Abort extends RawOp {
     public Options exitWithoutError(Boolean exitWithoutError) {
       this.exitWithoutError = exitWithoutError;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Abort> {
+    /**
+     * A string which is the message associated with the exception.
+     */
+    public final String errorMsg;
+
+    /**
+     * The exitWithoutError attribute
+     */
+    public final boolean exitWithoutError;
+
+    public Inputs(GraphOperation op) {
+      super(new Abort(op), op, Arrays.asList("error_msg", "exit_without_error"));
+      int inputIndex = 0;
+      errorMsg = op.attributes().getAttrString("error_msg");
+      exitWithoutError = op.attributes().getAttrBool("exit_without_error");
     }
   }
 }

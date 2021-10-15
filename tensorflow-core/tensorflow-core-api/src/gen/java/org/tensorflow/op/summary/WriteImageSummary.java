@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -48,11 +52,11 @@ public final class WriteImageSummary extends RawOp {
    * Factory method to create a class wrapping a new WriteImageSummary operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param step the step value
-   * @param tag the tag value
-   * @param tensor the tensor value
-   * @param badColor the badColor value
+   * @param writer The writer value
+   * @param step The step value
+   * @param tag The tag value
+   * @param tensor The tensor value
+   * @param badColor The badColor value
    * @param options carries optional attribute values
    * @return a new instance of WriteImageSummary
    */
@@ -106,6 +110,55 @@ public final class WriteImageSummary extends RawOp {
     public Options maxImages(Long maxImages) {
       this.maxImages = maxImages;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<WriteImageSummary> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The step input
+     */
+    public final Operand<TInt64> step;
+
+    /**
+     * The tag input
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * The tensor input
+     */
+    public final Operand<? extends TNumber> tensor;
+
+    /**
+     * The badColor input
+     */
+    public final Operand<TUint8> badColor;
+
+    /**
+     * The maxImages attribute
+     */
+    public final long maxImages;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new WriteImageSummary(op), op, Arrays.asList("max_images", "T"));
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      step = (Operand<TInt64>) op.input(inputIndex++);
+      tag = (Operand<TString>) op.input(inputIndex++);
+      tensor = (Operand<? extends TNumber>) op.input(inputIndex++);
+      badColor = (Operand<TUint8>) op.input(inputIndex++);
+      maxImages = op.attributes().getAttrInt("max_images");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

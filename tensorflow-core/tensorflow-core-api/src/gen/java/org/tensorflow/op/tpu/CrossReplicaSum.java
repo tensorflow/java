@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -85,5 +89,32 @@ public final class CrossReplicaSum<T extends TNumber> extends RawOp implements O
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<CrossReplicaSum<T>> {
+    /**
+     * The local input to the sum.
+     */
+    public final Operand<T> input;
+
+    /**
+     * An int32 tensor with shape
+     * [num_groups, num_replicas_per_group]. {@code group_assignment[i]} represents the
+     * replica ids in the ith subgroup.
+     */
+    public final Operand<TInt32> groupAssignment;
+
+    /**
+     * The type of elements to be summed.
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new CrossReplicaSum<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      groupAssignment = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

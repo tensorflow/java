@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.audio;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -159,6 +162,31 @@ public final class DecodeWav extends RawOp {
     public Options desiredSamples(Long desiredSamples) {
       this.desiredSamples = desiredSamples;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeWav> {
+    /**
+     * The WAV-encoded audio, usually from a file.
+     */
+    public final Operand<TString> contents;
+
+    /**
+     * Number of sample channels wanted.
+     */
+    public final long desiredChannels;
+
+    /**
+     * Length of audio requested.
+     */
+    public final long desiredSamples;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeWav(op), op, Arrays.asList("desired_channels", "desired_samples"));
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+      desiredChannels = op.attributes().getAttrInt("desired_channels");
+      desiredSamples = op.attributes().getAttrInt("desired_samples");
     }
   }
 }

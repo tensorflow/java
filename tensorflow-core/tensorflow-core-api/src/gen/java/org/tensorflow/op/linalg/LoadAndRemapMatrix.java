@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -171,6 +174,71 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
     public Options maxRowsInMemory(Long maxRowsInMemory) {
       this.maxRowsInMemory = maxRowsInMemory;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<LoadAndRemapMatrix> {
+    /**
+     * Path to the TensorFlow checkpoint (version 2, {@code TensorBundle}) from
+     * which the old matrix {@code Tensor} will be loaded.
+     */
+    public final Operand<TString> ckptPath;
+
+    /**
+     * Name of the 2-D {@code Tensor} to load from checkpoint.
+     */
+    public final Operand<TString> oldTensorName;
+
+    /**
+     * An int {@code Tensor} of row remappings (generally created by
+     * {@code generate_vocab_remapping}).  Even if no row remapping is needed, this must
+     * still be an index-valued Tensor (e.g. [0, 1, 2, ...]), or a shifted
+     * index-valued {@code Tensor} (e.g. [8, 9, 10, ...], for partitioned {@code Variables}).
+     */
+    public final Operand<TInt64> rowRemapping;
+
+    /**
+     * An int {@code Tensor} of column remappings (generally created by
+     * {@code generate_vocab_remapping}).  May be a size-0 {@code Tensor} if only row remapping
+     * is to be done (e.g. column ordering is the same).
+     */
+    public final Operand<TInt64> colRemapping;
+
+    /**
+     * A float {@code Tensor} containing  values to fill in for cells
+     * in the output matrix that are not loaded from the checkpoint. Length must be
+     * exactly the same as the number of missing / new cells.
+     */
+    public final Operand<TFloat32> initializingValues;
+
+    /**
+     * Number of rows (length of the 1st dimension) in the output matrix.
+     */
+    public final long numRows;
+
+    /**
+     * Number of columns (length of the 2nd dimension) in the output matrix.
+     */
+    public final long numCols;
+
+    /**
+     * The maximum number of rows to load from the checkpoint at
+     * once. If less than or equal to 0, the entire matrix will be loaded into
+     * memory. Setting this arg trades increased disk reads for lower memory usage.
+     */
+    public final long maxRowsInMemory;
+
+    public Inputs(GraphOperation op) {
+      super(new LoadAndRemapMatrix(op), op, Arrays.asList("num_rows", "num_cols", "max_rows_in_memory"));
+      int inputIndex = 0;
+      ckptPath = (Operand<TString>) op.input(inputIndex++);
+      oldTensorName = (Operand<TString>) op.input(inputIndex++);
+      rowRemapping = (Operand<TInt64>) op.input(inputIndex++);
+      colRemapping = (Operand<TInt64>) op.input(inputIndex++);
+      initializingValues = (Operand<TFloat32>) op.input(inputIndex++);
+      numRows = op.attributes().getAttrInt("num_rows");
+      numCols = op.attributes().getAttrInt("num_cols");
+      maxRowsInMemory = op.attributes().getAttrInt("max_rows_in_memory");
     }
   }
 }

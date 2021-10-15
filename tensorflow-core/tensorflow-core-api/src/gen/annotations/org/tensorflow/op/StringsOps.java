@@ -237,7 +237,7 @@ public final class StringsOps {
    *  sequence. Note that padding will never be greater than 'ngram_widths'-1
    *  regardless of this value. If {@code pad_width=-1}, then add {@code max(ngram_widths)-1}
    *  elements.
-   * @param preserveShortSequences the value of the preserveShortSequences property
+   * @param preserveShortSequences The value of the preserveShortSequences attribute
    * @param <T> data type for {@code StringNGrams} output and operands
    * @return a new instance of StringNGrams
    */
@@ -390,7 +390,7 @@ public final class StringsOps {
    *  This functionality will be deprecated and it's recommended to use
    *  {@code tf.string_to_hash_bucket_fast()} or {@code tf.string_to_hash_bucket_strong()}.
    *
-   * @param stringTensor the stringTensor value
+   * @param stringTensor The stringTensor value
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucket
    */
@@ -474,7 +474,7 @@ public final class StringsOps {
    *  </blockquote>
    *
    * @param <T> data type for {@code output} output
-   * @param stringTensor the stringTensor value
+   * @param stringTensor The stringTensor value
    * @return a new instance of ToNumber, with default output types
    */
   public ToNumber<TFloat32> toNumber(Operand<TString> stringTensor) {
@@ -497,7 +497,7 @@ public final class StringsOps {
    *  </blockquote>
    *
    * @param <T> data type for {@code output} output
-   * @param stringTensor the stringTensor value
+   * @param stringTensor The stringTensor value
    * @param outType The numeric type to interpret each string in {@code string_tensor} as.
    * @param <T> data type for {@code StringToNumber} output and operands
    * @return a new instance of ToNumber

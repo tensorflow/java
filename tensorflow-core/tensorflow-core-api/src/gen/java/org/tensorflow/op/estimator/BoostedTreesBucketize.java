@@ -20,12 +20,14 @@ package org.tensorflow.op.estimator;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -86,5 +88,29 @@ public final class BoostedTreesBucketize extends RawOp implements Iterable<Opera
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TInt32>> iterator() {
     return (Iterator) buckets.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesBucketize> {
+    /**
+     * float; List of Rank 1 Tensor each containing float values for a single feature.
+     */
+    public final Iterable<Operand<TFloat32>> floatValues;
+
+    /**
+     * float; List of Rank 1 Tensors each containing the bucket boundaries for a single
+     * feature.
+     */
+    public final Iterable<Operand<TFloat32>> bucketBoundaries;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesBucketize(op), op, Arrays.asList());
+      int inputIndex = 0;
+      int floatValuesLength = op.inputListLength("float_values");
+      floatValues = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, floatValuesLength));
+      inputIndex += floatValuesLength;
+      int bucketBoundariesLength = op.inputListLength("bucket_boundaries");
+      bucketBoundaries = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, bucketBoundariesLength));
+      inputIndex += bucketBoundariesLength;
+    }
   }
 }

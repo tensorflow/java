@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -63,7 +67,7 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
    * Factory method to create a class wrapping a new TPUReplicatedInput operation.
    *
    * @param scope current scope
-   * @param inputs the inputs value
+   * @param inputs The inputs value
    * @param options carries optional attribute values
    * @param <T> data type for {@code TPUReplicatedInput} output and operands
    * @return a new instance of TPUReplicatedInput
@@ -179,6 +183,45 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
     public Options isPacked(Boolean isPacked) {
       this.isPacked = isPacked;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<TPUReplicatedInput<T>> {
+    /**
+     * The inputs input
+     */
+    public final Iterable<Operand<T>> inputs;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The isMirroredVariable attribute
+     */
+    public final boolean isMirroredVariable;
+
+    /**
+     * The index attribute
+     */
+    public final long index;
+
+    /**
+     * The isPacked attribute
+     */
+    public final boolean isPacked;
+
+    public Inputs(GraphOperation op) {
+      super(new TPUReplicatedInput<>(op), op, Arrays.asList("T", "is_mirrored_variable", "index", "is_packed"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      T = op.attributes().getAttrType("T");
+      isMirroredVariable = op.attributes().getAttrBool("is_mirrored_variable");
+      index = op.attributes().getAttrInt("index");
+      isPacked = op.attributes().getAttrBool("is_packed");
     }
   }
 }

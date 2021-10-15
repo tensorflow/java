@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -68,7 +72,7 @@ public final class UpperBound<U extends TNumber> extends RawOp implements Operan
    * @param sortedInputs 2-D Tensor where each row is ordered.
    * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
    * the values that will be searched for in {@code sorted_search_values}.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code UpperBound} output and operands
    * @param <T> data type for {@code UpperBound} output and operands
    * @return a new instance of UpperBound
@@ -117,5 +121,37 @@ public final class UpperBound<U extends TNumber> extends RawOp implements Operan
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<UpperBound<?>> {
+    /**
+     * 2-D Tensor where each row is ordered.
+     */
+    public final Operand<T> sortedInputs;
+
+    /**
+     * 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
+     * the values that will be searched for in {@code sorted_search_values}.
+     */
+    public final Operand<T> values;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new UpperBound<>(op), op, Arrays.asList("T", "out_type"));
+      int inputIndex = 0;
+      sortedInputs = (Operand<T>) op.input(inputIndex++);
+      values = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

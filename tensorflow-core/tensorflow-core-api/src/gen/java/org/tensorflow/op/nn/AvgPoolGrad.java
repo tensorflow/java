@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -141,6 +145,60 @@ public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Opera
     public Options dataFormat(String dataFormat) {
       this.dataFormat = dataFormat;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<AvgPoolGrad<T>> {
+    /**
+     * 1-D.  Shape of the original input to {@code avg_pool}.
+     */
+    public final Operand<TInt32> origInputShape;
+
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t.
+     * the output of {@code avg_pool}.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * The size of the sliding window for each dimension of the input.
+     */
+    public final long[] ksize;
+
+    /**
+     * The stride of the sliding window for each dimension of the input.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * Specify the data format of the input and output data. With the
+     * default format "NHWC", the data is stored in the order of:
+     *     [batch, in_height, in_width, in_channels].
+     * Alternatively, the format could be "NCHW", the data storage order of:
+     *     [batch, in_channels, in_height, in_width].
+     */
+    public final String dataFormat;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new AvgPoolGrad<>(op), op, Arrays.asList("ksize", "strides", "padding", "data_format", "T"));
+      int inputIndex = 0;
+      origInputShape = (Operand<TInt32>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      ksize = op.attributes().getAttrIntList("ksize");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      dataFormat = op.attributes().getAttrString("data_format");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

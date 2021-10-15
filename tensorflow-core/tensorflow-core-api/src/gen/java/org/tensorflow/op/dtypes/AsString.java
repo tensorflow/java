@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.dtypes;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -67,7 +71,7 @@ public final class AsString extends RawOp implements Operand<TString> {
    * Factory method to create a class wrapping a new AsString operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @return a new instance of AsString
    */
@@ -243,6 +247,60 @@ public final class AsString extends RawOp implements Operand<TString> {
     public Options fill(String fill) {
       this.fill = fill;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AsString> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The post-decimal precision to use for floating point numbers.
+     * Only used if precision > -1.
+     */
+    public final long precision;
+
+    /**
+     * Use scientific notation for floating point numbers.
+     */
+    public final boolean scientific;
+
+    /**
+     * Use shortest representation (either scientific or standard) for
+     * floating point numbers.
+     */
+    public final boolean shortest;
+
+    /**
+     * Pad pre-decimal numbers to this width.
+     * Applies to both floating point and integer numbers.
+     * Only used if width > -1.
+     */
+    public final long width;
+
+    /**
+     * The value to pad if width > -1.  If empty, pads with spaces.
+     * Another typical value is '0'.  String cannot be longer than 1 character.
+     */
+    public final String fill;
+
+    public Inputs(GraphOperation op) {
+      super(new AsString(op), op, Arrays.asList("T", "precision", "scientific", "shortest", "width", "fill"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      precision = op.attributes().getAttrInt("precision");
+      scientific = op.attributes().getAttrBool("scientific");
+      shortest = op.attributes().getAttrBool("shortest");
+      width = op.attributes().getAttrInt("width");
+      fill = op.attributes().getAttrString("fill");
     }
   }
 }

@@ -19,6 +19,7 @@ package org.tensorflow.op.data;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -62,8 +65,8 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
    * @param optimizationsEnabled A {@code tf.string} vector {@code tf.Tensor} identifying user enabled optimizations.
    * @param optimizationsDisabled A {@code tf.string} vector {@code tf.Tensor} identifying user disabled optimizations.
    * @param optimizationsDefault A {@code tf.string} vector {@code tf.Tensor} identifying optimizations by default.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of OptimizeDataset
    */
@@ -115,7 +118,7 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
    * @param optimizationConfigs the optimizationConfigs option
    * @return this Options instance.
    */
-  public static Options optimizationConfigs(String[] optimizationConfigs) {
+  public static Options optimizationConfigs(String... optimizationConfigs) {
     return new Options().optimizationConfigs(optimizationConfigs);
   }
 
@@ -163,6 +166,55 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
     public Options optimizationConfigs(String... optimizationConfigs) {
       this.optimizationConfigs = Arrays.asList(optimizationConfigs);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<OptimizeDataset> {
+    /**
+     * A variant tensor representing the input dataset.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A {@code tf.string} vector {@code tf.Tensor} identifying user enabled optimizations.
+     */
+    public final Operand<TString> optimizationsEnabled;
+
+    /**
+     * A {@code tf.string} vector {@code tf.Tensor} identifying user disabled optimizations.
+     */
+    public final Operand<TString> optimizationsDisabled;
+
+    /**
+     * A {@code tf.string} vector {@code tf.Tensor} identifying optimizations by default.
+     */
+    public final Operand<TString> optimizationsDefault;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The optimizationConfigs attribute
+     */
+    public final String[] optimizationConfigs;
+
+    public Inputs(GraphOperation op) {
+      super(new OptimizeDataset(op), op, Arrays.asList("output_types", "output_shapes", "optimization_configs"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      optimizationsEnabled = (Operand<TString>) op.input(inputIndex++);
+      optimizationsDisabled = (Operand<TString>) op.input(inputIndex++);
+      optimizationsDefault = (Operand<TString>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      optimizationConfigs = op.attributes().getAttrStringList("optimization_configs");
     }
   }
 }

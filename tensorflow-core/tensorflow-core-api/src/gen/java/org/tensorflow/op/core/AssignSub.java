@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -122,6 +126,38 @@ public final class AssignSub<T extends TType> extends RawOp implements Operand<T
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<AssignSub<T>> {
+    /**
+     * Should be from a {@code Variable} node.
+     */
+    public final Operand<T> ref;
+
+    /**
+     * The value to be subtracted to the variable.
+     */
+    public final Operand<T> value;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If True, the subtraction will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     */
+    public final boolean useLocking;
+
+    public Inputs(GraphOperation op) {
+      super(new AssignSub<>(op), op, Arrays.asList("T", "use_locking"));
+      int inputIndex = 0;
+      ref = (Operand<T>) op.input(inputIndex++);
+      value = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      useLocking = op.attributes().getAttrBool("use_locking");
     }
   }
 }

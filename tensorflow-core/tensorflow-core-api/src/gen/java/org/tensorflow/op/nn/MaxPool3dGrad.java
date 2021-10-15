@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -148,6 +152,73 @@ public final class MaxPool3dGrad<U extends TNumber> extends RawOp implements Ope
     public Options dataFormat(String dataFormat) {
       this.dataFormat = dataFormat;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<MaxPool3dGrad<U>> {
+    /**
+     * The original input tensor.
+     */
+    public final Operand<T> origInput;
+
+    /**
+     * The original output tensor.
+     */
+    public final Operand<T> origOutput;
+
+    /**
+     * Output backprop of shape {@code [batch, depth, rows, cols, channels]}.
+     */
+    public final Operand<U> grad;
+
+    /**
+     * 1-D tensor of length 5. The size of the window for each dimension of
+     * the input tensor. Must have `ksize[0] = ksize[4] = 1`.
+     */
+    public final long[] ksize;
+
+    /**
+     * 1-D tensor of length 5. The stride of the sliding window for each
+     * dimension of `input`. Must have `strides[0] = strides[4] = 1`.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * The data format of the input and output data. With the
+     * default format "NDHWC", the data is stored in the order of:
+     *     [batch, in_depth, in_height, in_width, in_channels].
+     * Alternatively, the format could be "NCDHW", the data storage order is:
+     *     [batch, in_channels, in_depth, in_height, in_width].
+     */
+    public final String dataFormat;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The TInput attribute
+     */
+    public final DataType TInput;
+
+    public Inputs(GraphOperation op) {
+      super(new MaxPool3dGrad<>(op), op, Arrays.asList("ksize", "strides", "padding", "data_format", "T", "TInput"));
+      int inputIndex = 0;
+      origInput = (Operand<T>) op.input(inputIndex++);
+      origOutput = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<U>) op.input(inputIndex++);
+      ksize = op.attributes().getAttrIntList("ksize");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      dataFormat = op.attributes().getAttrString("data_format");
+      T = op.attributes().getAttrType("T");
+      TInput = op.attributes().getAttrType("TInput");
     }
   }
 }

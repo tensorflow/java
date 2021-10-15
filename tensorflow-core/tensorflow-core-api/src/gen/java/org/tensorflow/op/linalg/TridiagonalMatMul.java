@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -86,5 +90,46 @@ public final class TridiagonalMatMul<T extends TType> extends RawOp implements O
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<TridiagonalMatMul<T>> {
+    /**
+     * Tensor of shape {@code [..., 1, M]}, representing superdiagonals of
+     * tri-diagonal matrices to the left of multiplication. Last element is ignored.
+     */
+    public final Operand<T> superdiag;
+
+    /**
+     * Tensor of shape {@code [..., 1, M]}, representing main diagonals of tri-diagonal
+     * matrices to the left of multiplication.
+     */
+    public final Operand<T> maindiag;
+
+    /**
+     * Tensor of shape {@code [..., 1, M]}, representing subdiagonals of tri-diagonal
+     * matrices to the left of multiplication. First element is ignored.
+     */
+    public final Operand<T> subdiag;
+
+    /**
+     * Tensor of shape {@code [..., M, N]}, representing MxN matrices to the right of
+     * multiplication.
+     */
+    public final Operand<T> rhs;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new TridiagonalMatMul<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      superdiag = (Operand<T>) op.input(inputIndex++);
+      maindiag = (Operand<T>) op.input(inputIndex++);
+      subdiag = (Operand<T>) op.input(inputIndex++);
+      rhs = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

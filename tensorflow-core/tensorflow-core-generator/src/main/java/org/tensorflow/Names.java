@@ -49,7 +49,9 @@ public class Names {
 
   public static final TypeName Op = ClassName.get(OpPackage, "Op");
   public static final ClassName RawOp = ClassName.get(OpPackage, "RawOp");
+  public static final ClassName RawOpInputs = ClassName.get(OpPackage, "RawOpInputs");
   public static final ClassName Operation = ClassName.get(TensorflowPackage, "Operation");
+  public static final ClassName GraphOperation = ClassName.get(TensorflowPackage, "GraphOperation");
   public static final ClassName Operands = ClassName.get(OpPackage, "Operands");
   public static final ClassName OperationBuilder =
       ClassName.get(TensorflowPackage, "OperationBuilder");

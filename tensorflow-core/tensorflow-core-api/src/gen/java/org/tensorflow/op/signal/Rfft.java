@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.signal;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -66,7 +70,7 @@ public final class Rfft<U extends TType> extends RawOp implements Operand<U> {
    * @param scope current scope
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
-   * @param Tcomplex the value of the Tcomplex property
+   * @param Tcomplex The value of the Tcomplex attribute
    * @param <U> data type for {@code RFFT} output and operands
    * @return a new instance of Rfft
    */
@@ -99,5 +103,36 @@ public final class Rfft<U extends TType> extends RawOp implements Operand<U> {
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<Rfft<?>> {
+    /**
+     * A float32 tensor.
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * An int32 tensor of shape [1]. The FFT length.
+     */
+    public final Operand<TInt32> fftLength;
+
+    /**
+     * The Treal attribute
+     */
+    public final DataType Treal;
+
+    /**
+     * The Tcomplex attribute
+     */
+    public final DataType Tcomplex;
+
+    public Inputs(GraphOperation op) {
+      super(new Rfft<>(op), op, Arrays.asList("Treal", "Tcomplex"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      fftLength = (Operand<TInt32>) op.input(inputIndex++);
+      Treal = op.attributes().getAttrType("Treal");
+      Tcomplex = op.attributes().getAttrType("Tcomplex");
+    }
   }
 }

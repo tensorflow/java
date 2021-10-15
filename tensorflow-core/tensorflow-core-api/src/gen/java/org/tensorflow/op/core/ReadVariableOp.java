@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -85,5 +89,24 @@ public final class ReadVariableOp<T extends TType> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return value;
+  }
+
+  public static class Inputs extends RawOpInputs<ReadVariableOp<?>> {
+    /**
+     * handle to the resource in which to store the variable.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * the dtype of the value.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new ReadVariableOp<>(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

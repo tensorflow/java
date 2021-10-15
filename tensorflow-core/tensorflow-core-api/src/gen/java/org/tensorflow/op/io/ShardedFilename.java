@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -53,9 +56,9 @@ public final class ShardedFilename extends RawOp implements Operand<TString> {
    * Factory method to create a class wrapping a new ShardedFilename operation.
    *
    * @param scope current scope
-   * @param basename the basename value
-   * @param shard the shard value
-   * @param numShards the numShards value
+   * @param basename The basename value
+   * @param shard The shard value
+   * @param numShards The numShards value
    * @return a new instance of ShardedFilename
    */
   @Endpoint(
@@ -82,5 +85,30 @@ public final class ShardedFilename extends RawOp implements Operand<TString> {
   @Override
   public Output<TString> asOutput() {
     return filename;
+  }
+
+  public static class Inputs extends RawOpInputs<ShardedFilename> {
+    /**
+     * The basename input
+     */
+    public final Operand<TString> basename;
+
+    /**
+     * The shard input
+     */
+    public final Operand<TInt32> shard;
+
+    /**
+     * The numShards input
+     */
+    public final Operand<TInt32> numShards;
+
+    public Inputs(GraphOperation op) {
+      super(new ShardedFilename(op), op, Arrays.asList());
+      int inputIndex = 0;
+      basename = (Operand<TString>) op.input(inputIndex++);
+      shard = (Operand<TInt32>) op.input(inputIndex++);
+      numShards = (Operand<TInt32>) op.input(inputIndex++);
+    }
   }
 }

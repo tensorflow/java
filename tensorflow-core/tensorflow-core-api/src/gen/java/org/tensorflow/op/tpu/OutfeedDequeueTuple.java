@@ -20,6 +20,7 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -27,8 +28,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -131,6 +134,33 @@ public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand
     public Options deviceOrdinal(Long deviceOrdinal) {
       this.deviceOrdinal = deviceOrdinal;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<OutfeedDequeueTuple> {
+    /**
+     * The element types of each element in `outputs`.
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The shapes of each tensor in `outputs`.
+     */
+    public final Shape[] shapes;
+
+    /**
+     * The TPU device to use. This should be -1 when the Op
+     * is running on a TPU device, and >= 0 when the Op is running on the CPU
+     * device.
+     */
+    public final long deviceOrdinal;
+
+    public Inputs(GraphOperation op) {
+      super(new OutfeedDequeueTuple(op), op, Arrays.asList("dtypes", "shapes", "device_ordinal"));
+      int inputIndex = 0;
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      shapes = op.attributes().getAttrShapeList("shapes");
+      deviceOrdinal = op.attributes().getAttrInt("device_ordinal");
     }
   }
 }

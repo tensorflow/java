@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -59,7 +63,7 @@ public final class MutableDenseHashTable extends RawOp implements Operand<TType>
    * @param scope current scope
    * @param emptyKey The key used to represent empty key buckets internally. Must not
    * be used in insert or lookup operations.
-   * @param deletedKey the deletedKey value
+   * @param deletedKey The deletedKey value
    * @param valueDtype Type of the table values.
    * @param options carries optional attribute values
    * @param <T> data type for {@code MutableDenseHashTableV2} output and operands
@@ -266,6 +270,78 @@ public final class MutableDenseHashTable extends RawOp implements Operand<TType>
     public Options maxLoadFactor(Float maxLoadFactor) {
       this.maxLoadFactor = maxLoadFactor;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<MutableDenseHashTable> {
+    /**
+     * The key used to represent empty key buckets internally. Must not
+     * be used in insert or lookup operations.
+     */
+    public final Operand<T> emptyKey;
+
+    /**
+     * The deletedKey input
+     */
+    public final Operand<T> deletedKey;
+
+    /**
+     * If non-empty, this table is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this table is shared under the given name across
+     * multiple sessions.
+     */
+    public final String sharedName;
+
+    /**
+     * The useNodeNameSharing attribute
+     */
+    public final boolean useNodeNameSharing;
+
+    /**
+     * Type of the table keys.
+     */
+    public final DataType keyDtype;
+
+    /**
+     * Type of the table values.
+     */
+    public final DataType valueDtype;
+
+    /**
+     * The shape of each value.
+     */
+    public final Shape valueShape;
+
+    /**
+     * The initial number of hash table buckets. Must be a power
+     * to 2.
+     */
+    public final long initialNumBuckets;
+
+    /**
+     * The maximum ratio between number of entries and number of
+     * buckets before growing the table. Must be between 0 and 1.
+     */
+    public final float maxLoadFactor;
+
+    public Inputs(GraphOperation op) {
+      super(new MutableDenseHashTable(op), op, Arrays.asList("container", "shared_name", "use_node_name_sharing", "key_dtype", "value_dtype", "value_shape", "initial_num_buckets", "max_load_factor"));
+      int inputIndex = 0;
+      emptyKey = (Operand<T>) op.input(inputIndex++);
+      deletedKey = (Operand<T>) op.input(inputIndex++);
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      useNodeNameSharing = op.attributes().getAttrBool("use_node_name_sharing");
+      keyDtype = op.attributes().getAttrType("key_dtype");
+      valueDtype = op.attributes().getAttrType("value_dtype");
+      valueShape = op.attributes().getAttrShape("value_shape");
+      initialNumBuckets = op.attributes().getAttrInt("initial_num_buckets");
+      maxLoadFactor = op.attributes().getAttrFloat("max_load_factor");
     }
   }
 }

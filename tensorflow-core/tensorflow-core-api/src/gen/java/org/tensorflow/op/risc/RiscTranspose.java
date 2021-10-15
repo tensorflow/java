@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -50,8 +54,8 @@ public final class RiscTranspose<T extends TType> extends RawOp implements Opera
    * Factory method to create a class wrapping a new RiscTranspose operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param perm the perm value
+   * @param x The x value
+   * @param perm The perm value
    * @param <T> data type for {@code RiscTranspose} output and operands
    * @return a new instance of RiscTranspose
    */
@@ -78,5 +82,36 @@ public final class RiscTranspose<T extends TType> extends RawOp implements Opera
   @Override
   public Output<T> asOutput() {
     return y;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<RiscTranspose<T>> {
+    /**
+     * The x input
+     */
+    public final Operand<T> x;
+
+    /**
+     * The perm input
+     */
+    public final Operand<? extends TNumber> perm;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tperm attribute
+     */
+    public final DataType Tperm;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscTranspose<>(op), op, Arrays.asList("T", "Tperm"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      perm = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tperm = op.attributes().getAttrType("Tperm");
+    }
   }
 }

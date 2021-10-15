@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -82,5 +85,24 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
   @Override
   public Output<TString> asOutput() {
     return contents;
+  }
+
+  public static class Inputs extends RawOpInputs<EncodeJpegVariableQuality> {
+    /**
+     * Images to adjust.  At least 3-D.
+     */
+    public final Operand<TUint8> images;
+
+    /**
+     * An int quality to encode to.
+     */
+    public final Operand<TInt32> quality;
+
+    public Inputs(GraphOperation op) {
+      super(new EncodeJpegVariableQuality(op), op, Arrays.asList());
+      int inputIndex = 0;
+      images = (Operand<TUint8>) op.input(inputIndex++);
+      quality = (Operand<TInt32>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -77,5 +81,59 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
     opBuilder.addInput(gradientShape.asOutput());
     opBuilder.setAttr("has_known_shape", hasKnownShape);
     return new SparseAccumulatorApplyGradient(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<SparseAccumulatorApplyGradient> {
+    /**
+     * The handle to a accumulator.
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * The local_step value at which the sparse gradient was computed.
+     */
+    public final Operand<TInt64> localStep;
+
+    /**
+     * Indices of the sparse gradient to be accumulated. Must be a
+     * vector.
+     */
+    public final Operand<TInt64> gradientIndices;
+
+    /**
+     * Values are the non-zero slices of the gradient, and must have
+     * the same first dimension as indices, i.e., the nnz represented by indices and
+     * values must be consistent.
+     */
+    public final Operand<? extends TType> gradientValues;
+
+    /**
+     * Shape of the sparse gradient to be accumulated.
+     */
+    public final Operand<TInt64> gradientShape;
+
+    /**
+     * The data type of accumulated gradients. Needs to correspond to the type
+     * of the accumulator.
+     */
+    public final DataType dtype;
+
+    /**
+     * Boolean indicating whether gradient_shape is unknown, in which
+     * case the input is ignored during validation.
+     */
+    public final boolean hasKnownShape;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseAccumulatorApplyGradient(op), op, Arrays.asList("dtype", "has_known_shape"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      localStep = (Operand<TInt64>) op.input(inputIndex++);
+      gradientIndices = (Operand<TInt64>) op.input(inputIndex++);
+      gradientValues = (Operand<? extends TType>) op.input(inputIndex++);
+      gradientShape = (Operand<TInt64>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      hasKnownShape = op.attributes().getAttrBool("has_known_shape");
+    }
   }
 }

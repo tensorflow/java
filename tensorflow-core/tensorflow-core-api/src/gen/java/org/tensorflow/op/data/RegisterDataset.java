@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -53,10 +56,10 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
    * Factory method to create a class wrapping a new RegisterDataset operation.
    *
    * @param scope current scope
-   * @param dataset the dataset value
-   * @param address the address value
-   * @param protocol the protocol value
-   * @param externalStatePolicy the value of the externalStatePolicy property
+   * @param dataset The dataset value
+   * @param address The address value
+   * @param protocol The protocol value
+   * @param externalStatePolicy The value of the externalStatePolicy attribute
    * @return a new instance of RegisterDataset
    */
   @Endpoint(
@@ -84,5 +87,36 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return datasetId;
+  }
+
+  public static class Inputs extends RawOpInputs<RegisterDataset> {
+    /**
+     * The dataset input
+     */
+    public final Operand<? extends TType> dataset;
+
+    /**
+     * The address input
+     */
+    public final Operand<TString> address;
+
+    /**
+     * The protocol input
+     */
+    public final Operand<TString> protocol;
+
+    /**
+     * The externalStatePolicy attribute
+     */
+    public final long externalStatePolicy;
+
+    public Inputs(GraphOperation op) {
+      super(new RegisterDataset(op), op, Arrays.asList("external_state_policy"));
+      int inputIndex = 0;
+      dataset = (Operand<? extends TType>) op.input(inputIndex++);
+      address = (Operand<TString>) op.input(inputIndex++);
+      protocol = (Operand<TString>) op.input(inputIndex++);
+      externalStatePolicy = op.attributes().getAttrInt("external_state_policy");
+    }
   }
 }

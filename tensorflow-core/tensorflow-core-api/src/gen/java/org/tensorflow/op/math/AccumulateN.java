@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -89,5 +93,32 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
   @Override
   public Output<T> asOutput() {
     return sum;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<AccumulateN<T>> {
+    /**
+     * A list of {@code Tensor} objects, each with same shape and type.
+     */
+    public final Iterable<Operand<T>> inputs;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Shape of elements of `inputs`.
+     */
+    public final Shape shape;
+
+    public Inputs(GraphOperation op) {
+      super(new AccumulateN<>(op), op, Arrays.asList("T", "shape"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      T = op.attributes().getAttrType("T");
+      shape = op.attributes().getAttrShape("shape");
+    }
   }
 }

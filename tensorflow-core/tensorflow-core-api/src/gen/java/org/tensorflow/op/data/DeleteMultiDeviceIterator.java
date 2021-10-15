@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -59,5 +62,32 @@ public final class DeleteMultiDeviceIterator extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(iterators));
     opBuilder.addInput(deleter.asOutput());
     return new DeleteMultiDeviceIterator(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<DeleteMultiDeviceIterator> {
+    /**
+     * A handle to the multi device iterator to delete.
+     */
+    public final Operand<? extends TType> multiDeviceIterator;
+
+    /**
+     * A list of iterator handles (unused). This is added so that automatic control dependencies get added during function tracing that ensure this op runs after all the dependent iterators are deleted.
+     */
+    public final Iterable<Operand<? extends TType>> iterators;
+
+    /**
+     * A variant deleter.
+     */
+    public final Operand<? extends TType> deleter;
+
+    public Inputs(GraphOperation op) {
+      super(new DeleteMultiDeviceIterator(op), op, Arrays.asList());
+      int inputIndex = 0;
+      multiDeviceIterator = (Operand<? extends TType>) op.input(inputIndex++);
+      int iteratorsLength = op.inputListLength("iterators");
+      iterators = Arrays.asList((Operand<? extends TType>[]) op.inputList(inputIndex, iteratorsLength));
+      inputIndex += iteratorsLength;
+      deleter = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

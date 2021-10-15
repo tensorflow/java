@@ -19,14 +19,17 @@ package org.tensorflow.op.ragged;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -124,5 +127,54 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends RawO
    */
   public Output<U> outputDenseValues() {
     return outputDenseValues;
+  }
+
+  public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<RaggedGather<T, U>> {
+    /**
+     * The {@code nested_row_splits} tensors that define the row-partitioning for the
+     * {@code params} RaggedTensor input.
+     */
+    public final Iterable<Operand<T>> paramsNestedSplits;
+
+    /**
+     * The {@code flat_values} for the {@code params} RaggedTensor. There was a terminology change
+     * at the python level from dense_values to flat_values, so dense_values is the
+     * deprecated name.
+     */
+    public final Operand<U> paramsDenseValues;
+
+    /**
+     * Indices in the outermost dimension of {@code params} of the values that should be
+     * gathered.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The Tvalues attribute
+     */
+    public final DataType Tvalues;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedGather<>(op), op, Arrays.asList("Tvalues", "Tindices", "Tsplits"));
+      int inputIndex = 0;
+      int paramsNestedSplitsLength = op.inputListLength("params_nested_splits");
+      paramsNestedSplits = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, paramsNestedSplitsLength));
+      inputIndex += paramsNestedSplitsLength;
+      paramsDenseValues = (Operand<U>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      Tvalues = op.attributes().getAttrType("Tvalues");
+      Tindices = op.attributes().getAttrType("Tindices");
+      Tsplits = op.attributes().getAttrType("Tsplits");
+    }
   }
 }

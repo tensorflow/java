@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -169,6 +173,50 @@ public final class ReverseSequence<T extends TType> extends RawOp implements Ope
     public Options batchDim(Long batchDim) {
       this.batchDim = batchDim;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ReverseSequence<T>> {
+    /**
+     * The input to reverse.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 1-D with length {@code input.dims(batch_dim)} and
+     * {@code max(seq_lengths) <= input.dims(seq_dim)}
+     */
+    public final Operand<? extends TNumber> seqLengths;
+
+    /**
+     * The dimension which is partially reversed.
+     */
+    public final long seqDim;
+
+    /**
+     * The dimension along which reversal is performed.
+     */
+    public final long batchDim;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tlen attribute
+     */
+    public final DataType Tlen;
+
+    public Inputs(GraphOperation op) {
+      super(new ReverseSequence<>(op), op, Arrays.asList("seq_dim", "batch_dim", "T", "Tlen"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      seqLengths = (Operand<? extends TNumber>) op.input(inputIndex++);
+      seqDim = op.attributes().getAttrInt("seq_dim");
+      batchDim = op.attributes().getAttrInt("batch_dim");
+      T = op.attributes().getAttrType("T");
+      Tlen = op.attributes().getAttrType("Tlen");
     }
   }
 }

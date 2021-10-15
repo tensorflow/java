@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -60,5 +64,30 @@ public final class Send extends RawOp {
     opBuilder.addInput(tensor.asOutput());
     opBuilder.setAttr("tensor_name", tensorName);
     return new Send(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<Send> {
+    /**
+     * The tensor to send.
+     */
+    public final Operand<? extends TType> tensor;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * A string key that identifies the channel.
+     */
+    public final String tensorName;
+
+    public Inputs(GraphOperation op) {
+      super(new Send(op), op, Arrays.asList("T", "tensor_name"));
+      int inputIndex = 0;
+      tensor = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      tensorName = op.attributes().getAttrString("tensor_name");
+    }
   }
 }

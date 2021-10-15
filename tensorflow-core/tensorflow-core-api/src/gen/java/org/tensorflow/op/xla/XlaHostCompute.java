@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -28,9 +29,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -223,6 +226,76 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
     public Options tpuCore(Long tpuCore) {
       this.tpuCore = tpuCore;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<XlaHostCompute> {
+    /**
+     * A list of tensors that will be sent to the host.
+     */
+    public final Iterable<Operand<?>> inputs;
+
+    /**
+     * The element types of each element in `inputs`.
+     */
+    public final DataType[] Tinputs;
+
+    /**
+     * The element types of each element in `outputs`.
+     */
+    public final DataType[] Toutputs;
+
+    /**
+     * A list of names of HostCompute computations that must be
+     * sequenced before this computation.
+     */
+    public final String[] ancestors;
+
+    /**
+     * If shape_inference_graph is empty, a list of the shapes of `outputs`.
+     */
+    public final Shape[] shapes;
+
+    /**
+     * A unique identifier for this region used to match up host transfers.
+     */
+    public final String key;
+
+    /**
+     * The sendKey attribute
+     */
+    public final String sendKey;
+
+    /**
+     * The recvKey attribute
+     */
+    public final String recvKey;
+
+    /**
+     * Estimated duration of the host computation in nanoseconds.
+     */
+    public final long costEstimateNs;
+
+    /**
+     * Default core to use for host to device transfers.
+     */
+    public final long tpuCore;
+
+    public Inputs(GraphOperation op) {
+      super(new XlaHostCompute(op), op, Arrays.asList("Tinputs", "Toutputs", "ancestors", "shapes", "key", "send_key", "recv_key", "cost_estimate_ns", "tpu_core"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      Tinputs = op.attributes().getAttrTypeList("Tinputs");
+      Toutputs = op.attributes().getAttrTypeList("Toutputs");
+      ancestors = op.attributes().getAttrStringList("ancestors");
+      shapes = op.attributes().getAttrShapeList("shapes");
+      key = op.attributes().getAttrString("key");
+      sendKey = op.attributes().getAttrString("send_key");
+      recvKey = op.attributes().getAttrString("recv_key");
+      costEstimateNs = op.attributes().getAttrInt("cost_estimate_ns");
+      tpuCore = op.attributes().getAttrInt("tpu_core");
     }
   }
 }

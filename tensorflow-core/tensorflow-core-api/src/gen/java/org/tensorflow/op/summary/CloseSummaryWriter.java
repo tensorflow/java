@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -42,7 +45,7 @@ public final class CloseSummaryWriter extends RawOp {
    * Factory method to create a class wrapping a new CloseSummaryWriter operation.
    *
    * @param scope current scope
-   * @param writer the writer value
+   * @param writer The writer value
    * @return a new instance of CloseSummaryWriter
    */
   @Endpoint(
@@ -52,5 +55,18 @@ public final class CloseSummaryWriter extends RawOp {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CloseSummaryWriter");
     opBuilder.addInput(writer.asOutput());
     return new CloseSummaryWriter(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<CloseSummaryWriter> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    public Inputs(GraphOperation op) {
+      super(new CloseSummaryWriter(op), op, Arrays.asList());
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

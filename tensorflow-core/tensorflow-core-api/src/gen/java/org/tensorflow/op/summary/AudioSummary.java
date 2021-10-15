@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -129,6 +132,37 @@ public final class AudioSummary extends RawOp implements Operand<TString> {
     public Options maxOutputs(Long maxOutputs) {
       this.maxOutputs = maxOutputs;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<AudioSummary> {
+    /**
+     * Scalar. Used to build the {@code tag} attribute of the summary values.
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * 2-D of shape {@code [batch_size, frames]}.
+     */
+    public final Operand<TFloat32> tensor;
+
+    /**
+     * The sample rate of the signal in hertz.
+     */
+    public final Operand<TFloat32> sampleRate;
+
+    /**
+     * Max number of batch elements to generate audio for.
+     */
+    public final long maxOutputs;
+
+    public Inputs(GraphOperation op) {
+      super(new AudioSummary(op), op, Arrays.asList("max_outputs"));
+      int inputIndex = 0;
+      tag = (Operand<TString>) op.input(inputIndex++);
+      tensor = (Operand<TFloat32>) op.input(inputIndex++);
+      sampleRate = (Operand<TFloat32>) op.input(inputIndex++);
+      maxOutputs = op.attributes().getAttrInt("max_outputs");
     }
   }
 }

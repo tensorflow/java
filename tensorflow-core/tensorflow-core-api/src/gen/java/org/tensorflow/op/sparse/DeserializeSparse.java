@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -142,5 +146,31 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
    */
   public Output<TInt64> sparseShape() {
     return sparseShape;
+  }
+
+  public static class Inputs extends RawOpInputs<DeserializeSparse<?>> {
+    /**
+     * The serialized {@code SparseTensor} objects. The last dimension
+     * must have 3 columns.
+     */
+    public final Operand<? extends TType> serializedSparse;
+
+    /**
+     * The `dtype` of the serialized `SparseTensor` objects.
+     */
+    public final DataType dtype;
+
+    /**
+     * The Tserialized attribute
+     */
+    public final DataType Tserialized;
+
+    public Inputs(GraphOperation op) {
+      super(new DeserializeSparse<>(op), op, Arrays.asList("dtype", "Tserialized"));
+      int inputIndex = 0;
+      serializedSparse = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      Tserialized = op.attributes().getAttrType("Tserialized");
+    }
   }
 }

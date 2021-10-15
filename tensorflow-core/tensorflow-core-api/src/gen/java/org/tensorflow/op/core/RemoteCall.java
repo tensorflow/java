@@ -21,15 +21,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -90,5 +93,38 @@ public final class RemoteCall extends RawOp implements Iterable<Operand<TType>> 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<RemoteCall> {
+    /**
+     * A fully specified device name where we want to run the function.
+     */
+    public final Operand<TString> target;
+
+    /**
+     * A list of arguments for the function.
+     */
+    public final Iterable<Operand<?>> args;
+
+    /**
+     * The type list for the arguments.
+     */
+    public final DataType[] Tin;
+
+    /**
+     * The type list for the return values.
+     */
+    public final DataType[] Tout;
+
+    public Inputs(GraphOperation op) {
+      super(new RemoteCall(op), op, Arrays.asList("Tin", "Tout"));
+      int inputIndex = 0;
+      target = (Operand<TString>) op.input(inputIndex++);
+      int argsLength = op.inputListLength("args");
+      args = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argsLength));
+      inputIndex += argsLength;
+      Tin = op.attributes().getAttrTypeList("Tin");
+      Tout = op.attributes().getAttrTypeList("Tout");
+    }
   }
 }

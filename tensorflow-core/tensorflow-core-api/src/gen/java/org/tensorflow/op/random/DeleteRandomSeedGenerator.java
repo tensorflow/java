@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -42,8 +45,8 @@ public final class DeleteRandomSeedGenerator extends RawOp {
    * Factory method to create a class wrapping a new DeleteRandomSeedGenerator operation.
    *
    * @param scope current scope
-   * @param handle the handle value
-   * @param deleter the deleter value
+   * @param handle The handle value
+   * @param deleter The deleter value
    * @return a new instance of DeleteRandomSeedGenerator
    */
   @Endpoint(
@@ -55,5 +58,24 @@ public final class DeleteRandomSeedGenerator extends RawOp {
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(deleter.asOutput());
     return new DeleteRandomSeedGenerator(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<DeleteRandomSeedGenerator> {
+    /**
+     * The handle input
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * The deleter input
+     */
+    public final Operand<? extends TType> deleter;
+
+    public Inputs(GraphOperation op) {
+      super(new DeleteRandomSeedGenerator(op), op, Arrays.asList());
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      deleter = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

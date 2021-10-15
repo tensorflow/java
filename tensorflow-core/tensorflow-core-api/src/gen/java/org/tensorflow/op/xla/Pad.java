@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -96,5 +100,58 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<Pad<T>> {
+    /**
+     * A {@code Tensor} of type T.
+     */
+    public final Operand<T> input;
+
+    /**
+     * A scalar {@code Tensor} of type T.
+     */
+    public final Operand<T> paddingValue;
+
+    /**
+     * the padding to apply at the start of each input dimensions. Must
+     * be a compile-time constant 1D tensor of length equal to rank of input.
+     */
+    public final Operand<U> paddingLow;
+
+    /**
+     * the padding to apply at the end of each input dimension. Must
+     * be a compile-time constant 1D tensor of length equal to rank of input.
+     */
+    public final Operand<U> paddingHigh;
+
+    /**
+     * the padding to apply between each input element. Must
+     * be a compile-time constant 1D tensor of length equal to rank of input,
+     * containing only non-negative values.
+     */
+    public final Operand<U> paddingInterior;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new Pad<>(op), op, Arrays.asList("T", "Tindices"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      paddingValue = (Operand<T>) op.input(inputIndex++);
+      paddingLow = (Operand<U>) op.input(inputIndex++);
+      paddingHigh = (Operand<U>) op.input(inputIndex++);
+      paddingInterior = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

@@ -20,15 +20,18 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -69,7 +72,7 @@ public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
    * Factory method to create a class wrapping a new IdentityN operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of IdentityN
    */
   @Endpoint(
@@ -94,5 +97,26 @@ public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<IdentityN> {
+    /**
+     * The input input
+     */
+    public final Iterable<Operand<?>> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType[] T;
+
+    public Inputs(GraphOperation op) {
+      super(new IdentityN(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      int inputLength = op.inputListLength("input");
+      input = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputLength));
+      inputIndex += inputLength;
+      T = op.attributes().getAttrTypeList("T");
+    }
   }
 }

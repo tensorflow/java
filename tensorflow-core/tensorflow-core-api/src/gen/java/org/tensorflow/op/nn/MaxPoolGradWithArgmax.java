@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -135,6 +139,69 @@ public final class MaxPoolGradWithArgmax<T extends TNumber> extends RawOp implem
     public Options includeBatchInIndex(Boolean includeBatchInIndex) {
       this.includeBatchInIndex = includeBatchInIndex;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<MaxPoolGradWithArgmax<T>> {
+    /**
+     * The original input.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t. the
+     * output of {@code max_pool}.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * The indices of the maximum values chosen for each output of {@code max_pool}.
+     */
+    public final Operand<? extends TNumber> argmax;
+
+    /**
+     * The size of the window for each dimension of the input tensor.
+     */
+    public final long[] ksize;
+
+    /**
+     * The stride of the sliding window for each dimension of the
+     * input tensor.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * Whether to include batch dimension in flattened index of `argmax`.
+     */
+    public final boolean includeBatchInIndex;
+
+    /**
+     * The Targmax attribute
+     */
+    public final DataType Targmax;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new MaxPoolGradWithArgmax<>(op), op, Arrays.asList("ksize", "strides", "padding", "include_batch_in_index", "Targmax", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      argmax = (Operand<? extends TNumber>) op.input(inputIndex++);
+      ksize = op.attributes().getAttrIntList("ksize");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      includeBatchInIndex = op.attributes().getAttrBool("include_batch_in_index");
+      Targmax = op.attributes().getAttrType("Targmax");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

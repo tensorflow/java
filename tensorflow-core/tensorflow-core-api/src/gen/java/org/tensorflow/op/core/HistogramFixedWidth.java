@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -72,7 +76,7 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
    * values &lt;= value_range[0] will be mapped to hist[0],
    * values &gt;= value_range[1] will be mapped to hist[-1].
    * @param nbins Scalar {@code int32 Tensor}.  Number of histogram bins.
-   * @param dtype the value of the dtype property
+   * @param dtype The value of the dtype attribute
    * @param <U> data type for {@code HistogramFixedWidth} output and operands
    * @param <T> data type for {@code HistogramFixedWidth} output and operands
    * @return a new instance of HistogramFixedWidth
@@ -122,5 +126,44 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
   @Override
   public Output<U> asOutput() {
     return out;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<HistogramFixedWidth<?>> {
+    /**
+     * Numeric {@code Tensor}.
+     */
+    public final Operand<T> values;
+
+    /**
+     * Shape [2] {@code Tensor} of same {@code dtype} as {@code values}.
+     * values &lt;= value_range[0] will be mapped to hist[0],
+     * values &gt;= value_range[1] will be mapped to hist[-1].
+     */
+    public final Operand<T> valueRange;
+
+    /**
+     * Scalar {@code int32 Tensor}.  Number of histogram bins.
+     */
+    public final Operand<TInt32> nbins;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new HistogramFixedWidth<>(op), op, Arrays.asList("T", "dtype"));
+      int inputIndex = 0;
+      values = (Operand<T>) op.input(inputIndex++);
+      valueRange = (Operand<T>) op.input(inputIndex++);
+      nbins = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

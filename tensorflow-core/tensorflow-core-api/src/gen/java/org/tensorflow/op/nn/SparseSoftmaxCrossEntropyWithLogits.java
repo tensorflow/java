@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -94,5 +98,37 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
    */
   public Output<T> backprop() {
     return backprop;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<SparseSoftmaxCrossEntropyWithLogits<T>> {
+    /**
+     * batch_size x num_classes matrix
+     */
+    public final Operand<T> features;
+
+    /**
+     * batch_size vector with values in [0, num_classes).
+     * This is the label for the given minibatch entry.
+     */
+    public final Operand<? extends TNumber> labels;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tlabels attribute
+     */
+    public final DataType Tlabels;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseSoftmaxCrossEntropyWithLogits<>(op), op, Arrays.asList("T", "Tlabels"));
+      int inputIndex = 0;
+      features = (Operand<T>) op.input(inputIndex++);
+      labels = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tlabels = op.attributes().getAttrType("Tlabels");
+    }
   }
 }

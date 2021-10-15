@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -48,7 +51,7 @@ public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
    * Factory method to create a class wrapping a new ComputeBatchSize operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @return a new instance of ComputeBatchSize
    */
   @Endpoint(
@@ -72,5 +75,18 @@ public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return batchSize;
+  }
+
+  public static class Inputs extends RawOpInputs<ComputeBatchSize> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    public Inputs(GraphOperation op) {
+      super(new ComputeBatchSize(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

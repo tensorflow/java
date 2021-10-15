@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -51,8 +55,8 @@ public final class RiscShape<U extends TNumber> extends RawOp implements Operand
    * Factory method to create a class wrapping a new RiscShape operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param outType the value of the outType property
+   * @param input The input value
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code RiscShape} output and operands
    * @return a new instance of RiscShape
    */
@@ -71,7 +75,7 @@ public final class RiscShape<U extends TNumber> extends RawOp implements Operand
    * Factory method to create a class wrapping a new RiscShape operation, with the default output types.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of RiscShape, with default output types
    */
   @Endpoint(
@@ -93,5 +97,30 @@ public final class RiscShape<U extends TNumber> extends RawOp implements Operand
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<RiscShape<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscShape<>(op), op, Arrays.asList("T", "out_type"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

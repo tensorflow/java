@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -54,12 +57,12 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
    * Factory method to create a class wrapping a new FixedLengthRecordDatasetV2 operation.
    *
    * @param scope current scope
-   * @param filenames the filenames value
-   * @param headerBytes the headerBytes value
-   * @param recordBytes the recordBytes value
-   * @param footerBytes the footerBytes value
-   * @param bufferSize the bufferSize value
-   * @param compressionType the compressionType value
+   * @param filenames The filenames value
+   * @param headerBytes The headerBytes value
+   * @param recordBytes The recordBytes value
+   * @param footerBytes The footerBytes value
+   * @param bufferSize The bufferSize value
+   * @param compressionType The compressionType value
    * @return a new instance of FixedLengthRecordDataset
    */
   @Endpoint(
@@ -91,5 +94,48 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<FixedLengthRecordDataset> {
+    /**
+     * The filenames input
+     */
+    public final Operand<TString> filenames;
+
+    /**
+     * The headerBytes input
+     */
+    public final Operand<TInt64> headerBytes;
+
+    /**
+     * The recordBytes input
+     */
+    public final Operand<TInt64> recordBytes;
+
+    /**
+     * The footerBytes input
+     */
+    public final Operand<TInt64> footerBytes;
+
+    /**
+     * The bufferSize input
+     */
+    public final Operand<TInt64> bufferSize;
+
+    /**
+     * The compressionType input
+     */
+    public final Operand<TString> compressionType;
+
+    public Inputs(GraphOperation op) {
+      super(new FixedLengthRecordDataset(op), op, Arrays.asList());
+      int inputIndex = 0;
+      filenames = (Operand<TString>) op.input(inputIndex++);
+      headerBytes = (Operand<TInt64>) op.input(inputIndex++);
+      recordBytes = (Operand<TInt64>) op.input(inputIndex++);
+      footerBytes = (Operand<TInt64>) op.input(inputIndex++);
+      bufferSize = (Operand<TInt64>) op.input(inputIndex++);
+      compressionType = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

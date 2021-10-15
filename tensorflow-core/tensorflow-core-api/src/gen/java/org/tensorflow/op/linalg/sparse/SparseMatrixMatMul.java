@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -266,6 +270,67 @@ public final class SparseMatrixMatMul<T extends TType> extends RawOp implements 
     public Options conjugateOutput(Boolean conjugateOutput) {
       this.conjugateOutput = conjugateOutput;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseMatrixMatMul<T>> {
+    /**
+     * A CSRSparseMatrix.
+     */
+    public final Operand<? extends TType> a;
+
+    /**
+     * A dense tensor.
+     */
+    public final Operand<T> b;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Indicates whether `a` should be transposed.
+     */
+    public final boolean transposeA;
+
+    /**
+     * Indicates whether `b` should be transposed.
+     */
+    public final boolean transposeB;
+
+    /**
+     * Indicates whether `a` should be conjugate-transposed.
+     */
+    public final boolean adjointA;
+
+    /**
+     * Indicates whether `b` should be conjugate-transposed.
+     */
+    public final boolean adjointB;
+
+    /**
+     * Transposes the product of `a` and `b`.
+     */
+    public final boolean transposeOutput;
+
+    /**
+     * Conjugates the product of `a` and `b`.
+     */
+    public final boolean conjugateOutput;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseMatrixMatMul<>(op), op, Arrays.asList("T", "transpose_a", "transpose_b", "adjoint_a", "adjoint_b", "transpose_output", "conjugate_output"));
+      int inputIndex = 0;
+      a = (Operand<? extends TType>) op.input(inputIndex++);
+      b = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      transposeA = op.attributes().getAttrBool("transpose_a");
+      transposeB = op.attributes().getAttrBool("transpose_b");
+      adjointA = op.attributes().getAttrBool("adjoint_a");
+      adjointB = op.attributes().getAttrBool("adjoint_b");
+      transposeOutput = op.attributes().getAttrBool("transpose_output");
+      conjugateOutput = op.attributes().getAttrBool("conjugate_output");
     }
   }
 }

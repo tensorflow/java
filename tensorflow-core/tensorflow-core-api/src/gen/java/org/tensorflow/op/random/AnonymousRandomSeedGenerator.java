@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -52,8 +55,8 @@ public final class AnonymousRandomSeedGenerator extends RawOp {
    * Factory method to create a class wrapping a new AnonymousRandomSeedGenerator operation.
    *
    * @param scope current scope
-   * @param seed the seed value
-   * @param seed2 the seed2 value
+   * @param seed The seed value
+   * @param seed2 The seed2 value
    * @return a new instance of AnonymousRandomSeedGenerator
    */
   @Endpoint(
@@ -83,5 +86,24 @@ public final class AnonymousRandomSeedGenerator extends RawOp {
    */
   public Output<? extends TType> deleter() {
     return deleter;
+  }
+
+  public static class Inputs extends RawOpInputs<AnonymousRandomSeedGenerator> {
+    /**
+     * The seed input
+     */
+    public final Operand<TInt64> seed;
+
+    /**
+     * The seed2 input
+     */
+    public final Operand<TInt64> seed2;
+
+    public Inputs(GraphOperation op) {
+      super(new AnonymousRandomSeedGenerator(op), op, Arrays.asList());
+      int inputIndex = 0;
+      seed = (Operand<TInt64>) op.input(inputIndex++);
+      seed2 = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.audio;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -206,6 +209,52 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
     public Options dctCoefficientCount(Long dctCoefficientCount) {
       this.dctCoefficientCount = dctCoefficientCount;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Mfcc> {
+    /**
+     * Typically produced by the Spectrogram op, with magnitude_squared
+     * set to true.
+     */
+    public final Operand<TFloat32> spectrogram;
+
+    /**
+     * How many samples per second the source audio used.
+     */
+    public final Operand<TInt32> sampleRate;
+
+    /**
+     * The highest frequency to use when calculating the
+     * ceptstrum.
+     */
+    public final float upperFrequencyLimit;
+
+    /**
+     * The lowest frequency to use when calculating the
+     * ceptstrum.
+     */
+    public final float lowerFrequencyLimit;
+
+    /**
+     * Resolution of the Mel bank used internally.
+     */
+    public final long filterbankChannelCount;
+
+    /**
+     * How many output channels to produce per time slice.
+     */
+    public final long dctCoefficientCount;
+
+    public Inputs(GraphOperation op) {
+      super(new Mfcc(op), op, Arrays.asList("upper_frequency_limit", "lower_frequency_limit", "filterbank_channel_count", "dct_coefficient_count"));
+      int inputIndex = 0;
+      spectrogram = (Operand<TFloat32>) op.input(inputIndex++);
+      sampleRate = (Operand<TInt32>) op.input(inputIndex++);
+      upperFrequencyLimit = op.attributes().getAttrFloat("upper_frequency_limit");
+      lowerFrequencyLimit = op.attributes().getAttrFloat("lower_frequency_limit");
+      filterbankChannelCount = op.attributes().getAttrInt("filterbank_channel_count");
+      dctCoefficientCount = op.attributes().getAttrInt("dct_coefficient_count");
     }
   }
 }

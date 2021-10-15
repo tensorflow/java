@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -116,5 +120,44 @@ public final class BandPart<T extends TType> extends RawOp implements Operand<T>
   @Override
   public Output<T> asOutput() {
     return band;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<BandPart<T>> {
+    /**
+     * Rank {@code k} tensor.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 0-D tensor. Number of subdiagonals to keep. If negative, keep entire
+     * lower triangle.
+     */
+    public final Operand<U> numLower;
+
+    /**
+     * 0-D tensor. Number of superdiagonals to keep. If negative, keep
+     * entire upper triangle.
+     */
+    public final Operand<U> numUpper;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindex attribute
+     */
+    public final DataType Tindex;
+
+    public Inputs(GraphOperation op) {
+      super(new BandPart<>(op), op, Arrays.asList("T", "Tindex"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      numLower = (Operand<U>) op.input(inputIndex++);
+      numUpper = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindex = op.attributes().getAttrType("Tindex");
+    }
   }
 }

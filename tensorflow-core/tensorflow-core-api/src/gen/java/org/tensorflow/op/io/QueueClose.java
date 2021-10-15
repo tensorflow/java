@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -102,6 +105,26 @@ public final class QueueClose extends RawOp {
     public Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
       this.cancelPendingEnqueues = cancelPendingEnqueues;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QueueClose> {
+    /**
+     * The handle to a queue.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * If true, all pending enqueue requests that are
+     * blocked on the given queue will be canceled.
+     */
+    public final boolean cancelPendingEnqueues;
+
+    public Inputs(GraphOperation op) {
+      super(new QueueClose(op), op, Arrays.asList("cancel_pending_enqueues"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      cancelPendingEnqueues = op.attributes().getAttrBool("cancel_pending_enqueues");
     }
   }
 }

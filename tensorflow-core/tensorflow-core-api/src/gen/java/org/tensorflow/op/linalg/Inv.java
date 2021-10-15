@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -126,6 +130,31 @@ public final class Inv<T extends TType> extends RawOp implements Operand<T> {
     public Options adjoint(Boolean adjoint) {
       this.adjoint = adjoint;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Inv<T>> {
+    /**
+     * Shape is {@code [..., M, M]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The adjoint attribute
+     */
+    public final boolean adjoint;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Inv<>(op), op, Arrays.asList("adjoint", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      adjoint = op.attributes().getAttrBool("adjoint");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

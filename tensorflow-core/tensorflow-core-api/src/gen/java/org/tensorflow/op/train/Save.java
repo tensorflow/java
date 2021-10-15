@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 
 /**
@@ -69,5 +73,46 @@ public final class Save extends RawOp {
     opBuilder.addInput(shapeAndSlices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(tensors));
     return new Save(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<Save> {
+    /**
+     * Must have a single element. The prefix of the V2 checkpoint to which we
+     * write the tensors.
+     */
+    public final Operand<TString> prefix;
+
+    /**
+     * shape {N}. The names of the tensors to be saved.
+     */
+    public final Operand<TString> tensorNames;
+
+    /**
+     * shape {N}.  The slice specs of the tensors to be saved.
+     * Empty strings indicate that they are non-partitioned tensors.
+     */
+    public final Operand<TString> shapeAndSlices;
+
+    /**
+     * {@code N} tensors to save.
+     */
+    public final Iterable<Operand<?>> tensors;
+
+    /**
+     * The dtypes attribute
+     */
+    public final DataType[] dtypes;
+
+    public Inputs(GraphOperation op) {
+      super(new Save(op), op, Arrays.asList("dtypes"));
+      int inputIndex = 0;
+      prefix = (Operand<TString>) op.input(inputIndex++);
+      tensorNames = (Operand<TString>) op.input(inputIndex++);
+      shapeAndSlices = (Operand<TString>) op.input(inputIndex++);
+      int tensorsLength = op.inputListLength("tensors");
+      tensors = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, tensorsLength));
+      inputIndex += tensorsLength;
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+    }
   }
 }

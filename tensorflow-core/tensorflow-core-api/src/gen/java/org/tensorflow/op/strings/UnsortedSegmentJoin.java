@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -145,6 +149,50 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
     public Options separator(String separator) {
       this.separator = separator;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<UnsortedSegmentJoin> {
+    /**
+     * The input to be joined.
+     */
+    public final Operand<TString> inputs;
+
+    /**
+     * A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
+     * supported.
+     */
+    public final Operand<? extends TNumber> segmentIds;
+
+    /**
+     * A scalar.
+     */
+    public final Operand<? extends TNumber> numSegments;
+
+    /**
+     * The separator to use when joining.
+     */
+    public final String separator;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * The Tnumsegments attribute
+     */
+    public final DataType Tnumsegments;
+
+    public Inputs(GraphOperation op) {
+      super(new UnsortedSegmentJoin(op), op, Arrays.asList("separator", "Tindices", "Tnumsegments"));
+      int inputIndex = 0;
+      inputs = (Operand<TString>) op.input(inputIndex++);
+      segmentIds = (Operand<? extends TNumber>) op.input(inputIndex++);
+      numSegments = (Operand<? extends TNumber>) op.input(inputIndex++);
+      separator = op.attributes().getAttrString("separator");
+      Tindices = op.attributes().getAttrType("Tindices");
+      Tnumsegments = op.attributes().getAttrType("Tnumsegments");
     }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -90,5 +93,31 @@ public final class NearestNeighbors extends RawOp {
    */
   public Output<TFloat32> nearestCenterDistances() {
     return nearestCenterDistances;
+  }
+
+  public static class Inputs extends RawOpInputs<NearestNeighbors> {
+    /**
+     * Matrix of shape (n, d). Rows are assumed to be input points.
+     */
+    public final Operand<TFloat32> points;
+
+    /**
+     * Matrix of shape (m, d). Rows are assumed to be centers.
+     */
+    public final Operand<TFloat32> centers;
+
+    /**
+     * Number of nearest centers to return for each point. If k is larger than m, then
+     * only m centers are returned.
+     */
+    public final Operand<TInt64> k;
+
+    public Inputs(GraphOperation op) {
+      super(new NearestNeighbors(op), op, Arrays.asList());
+      int inputIndex = 0;
+      points = (Operand<TFloat32>) op.input(inputIndex++);
+      centers = (Operand<TFloat32>) op.input(inputIndex++);
+      k = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

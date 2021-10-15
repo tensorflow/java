@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -57,9 +61,9 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
    * Factory method to create a class wrapping a new XlaSpmdShardToFullShape operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param manualSharding the value of the manualSharding property
-   * @param fullShape the value of the fullShape property
+   * @param input The input value
+   * @param manualSharding The value of the manualSharding attribute
+   * @param fullShape The value of the fullShape attribute
    * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
    * @return a new instance of SpmdShardToFullShape
    */
@@ -87,5 +91,36 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SpmdShardToFullShape<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The manualSharding attribute
+     */
+    public final String manualSharding;
+
+    /**
+     * The fullShape attribute
+     */
+    public final Shape fullShape;
+
+    public Inputs(GraphOperation op) {
+      super(new SpmdShardToFullShape<>(op), op, Arrays.asList("T", "manual_sharding", "full_shape"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      manualSharding = op.attributes().getAttrString("manual_sharding");
+      fullShape = op.attributes().getAttrShape("full_shape");
+    }
   }
 }

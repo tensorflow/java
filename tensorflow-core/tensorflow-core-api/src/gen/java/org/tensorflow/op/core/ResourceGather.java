@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -65,9 +69,9 @@ public final class ResourceGather<U extends TType> extends RawOp implements Oper
    * Factory method to create a class wrapping a new ResourceGather operation.
    *
    * @param scope current scope
-   * @param resource the resource value
-   * @param indices the indices value
-   * @param dtype the value of the dtype property
+   * @param resource The resource value
+   * @param indices The indices value
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code ResourceGather} output and operands
    * @return a new instance of ResourceGather
@@ -160,6 +164,49 @@ public final class ResourceGather<U extends TType> extends RawOp implements Oper
     public Options validateIndices(Boolean validateIndices) {
       this.validateIndices = validateIndices;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceGather<?>> {
+    /**
+     * The resource input
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * The indices input
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The batchDims attribute
+     */
+    public final long batchDims;
+
+    /**
+     * The validateIndices attribute
+     */
+    public final boolean validateIndices;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceGather<>(op), op, Arrays.asList("batch_dims", "validate_indices", "dtype", "Tindices"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      batchDims = op.attributes().getAttrInt("batch_dims");
+      validateIndices = op.attributes().getAttrBool("validate_indices");
+      dtype = op.attributes().getAttrType("dtype");
+      Tindices = op.attributes().getAttrType("Tindices");
     }
   }
 }

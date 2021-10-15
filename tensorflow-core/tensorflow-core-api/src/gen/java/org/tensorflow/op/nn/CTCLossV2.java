@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -194,6 +197,63 @@ public final class CTCLossV2 extends RawOp {
     public Options ignoreLongerOutputsThanInputs(Boolean ignoreLongerOutputsThanInputs) {
       this.ignoreLongerOutputsThanInputs = ignoreLongerOutputsThanInputs;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<CTCLossV2> {
+    /**
+     * 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits. Default blank
+     * label is 0 rather num_classes - 1.
+     */
+    public final Operand<TFloat32> inputs;
+
+    /**
+     * The indices of a {@code SparseTensor<int32, 2>}.
+     * {@code labels_indices(i, :) == [b, t]} means {@code labels_values(i)} stores the id for
+     * {@code (batch b, time t)}.
+     */
+    public final Operand<TInt64> labelsIndices;
+
+    /**
+     * The values (labels) associated with the given batch and time.
+     */
+    public final Operand<TInt32> labelsValues;
+
+    /**
+     * A vector containing sequence lengths (batch).
+     */
+    public final Operand<TInt32> sequenceLength;
+
+    /**
+     * Scalar, if true then repeated labels are
+     * collapsed prior to the CTC calculation.
+     */
+    public final boolean preprocessCollapseRepeated;
+
+    /**
+     * Scalar.  If set to false, *during* CTC calculation
+     * repeated non-blank labels will not be merged and are interpreted as
+     * individual labels.  This is a simplified version of CTC.
+     */
+    public final boolean ctcMergeRepeated;
+
+    /**
+     * Scalar. If set to true, during CTC
+     * calculation, items that have longer output sequences than input sequences
+     * are skipped: they don't contribute to the loss term and have zero-gradient.
+     */
+    public final boolean ignoreLongerOutputsThanInputs;
+
+    public Inputs(GraphOperation op) {
+      super(new CTCLossV2(op), op, Arrays.asList("preprocess_collapse_repeated", "ctc_merge_repeated", "ignore_longer_outputs_than_inputs"));
+      int inputIndex = 0;
+      inputs = (Operand<TFloat32>) op.input(inputIndex++);
+      labelsIndices = (Operand<TInt64>) op.input(inputIndex++);
+      labelsValues = (Operand<TInt32>) op.input(inputIndex++);
+      sequenceLength = (Operand<TInt32>) op.input(inputIndex++);
+      preprocessCollapseRepeated = op.attributes().getAttrBool("preprocess_collapse_repeated");
+      ctcMergeRepeated = op.attributes().getAttrBool("ctc_merge_repeated");
+      ignoreLongerOutputsThanInputs = op.attributes().getAttrBool("ignore_longer_outputs_than_inputs");
     }
   }
 }

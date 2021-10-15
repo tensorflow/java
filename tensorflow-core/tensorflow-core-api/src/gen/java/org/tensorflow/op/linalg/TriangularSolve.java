@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -197,6 +201,49 @@ public final class TriangularSolve<T extends TType> extends RawOp implements Ope
     public Options adjoint(Boolean adjoint) {
       this.adjoint = adjoint;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<TriangularSolve<T>> {
+    /**
+     * Shape is {@code [..., M, M]}.
+     */
+    public final Operand<T> matrix;
+
+    /**
+     * Shape is {@code [..., M, K]}.
+     */
+    public final Operand<T> rhs;
+
+    /**
+     * Boolean indicating whether the innermost matrices in `matrix` are
+     * lower or upper triangular.
+     */
+    public final boolean lower;
+
+    /**
+     * Boolean indicating whether to solve with `matrix` or its (block-wise)
+     *          adjoint.
+     *
+     * @compatibility(numpy)
+     * Equivalent to scipy.linalg.solve_triangular
+     * @end_compatibility
+     */
+    public final boolean adjoint;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new TriangularSolve<>(op), op, Arrays.asList("lower", "adjoint", "T"));
+      int inputIndex = 0;
+      matrix = (Operand<T>) op.input(inputIndex++);
+      rhs = (Operand<T>) op.input(inputIndex++);
+      lower = op.attributes().getAttrBool("lower");
+      adjoint = op.attributes().getAttrBool("adjoint");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

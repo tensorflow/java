@@ -21,14 +21,17 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -127,6 +130,45 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
     public Options autotunerThresh(Long autotunerThresh) {
       this.autotunerThresh = autotunerThresh;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<PartitionedCall> {
+    /**
+     * The arguments to the function.
+     */
+    public final Iterable<Operand<?>> args;
+
+    /**
+     * The TPU device ordinal to run the function on.
+     */
+    public final Operand<TInt32> deviceOrdinal;
+
+    /**
+     * The types of the arguments to the function.
+     */
+    public final DataType[] Tin;
+
+    /**
+     * The types of the outputs of the function.
+     */
+    public final DataType[] Tout;
+
+    /**
+     * The autotunerThresh attribute
+     */
+    public final long autotunerThresh;
+
+    public Inputs(GraphOperation op) {
+      super(new PartitionedCall(op), op, Arrays.asList("Tin", "Tout", "autotuner_thresh"));
+      int inputIndex = 0;
+      int argsLength = op.inputListLength("args");
+      args = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argsLength));
+      inputIndex += argsLength;
+      deviceOrdinal = (Operand<TInt32>) op.input(inputIndex++);
+      Tin = op.attributes().getAttrTypeList("Tin");
+      Tout = op.attributes().getAttrTypeList("Tout");
+      autotunerThresh = op.attributes().getAttrInt("autotuner_thresh");
     }
   }
 }

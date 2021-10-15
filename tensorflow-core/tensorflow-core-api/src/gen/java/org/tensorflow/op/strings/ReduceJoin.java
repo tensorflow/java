@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -167,6 +170,39 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
     public Options separator(String separator) {
       this.separator = separator;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ReduceJoin> {
+    /**
+     * The input to be joined.  All reduced indices must have non-zero size.
+     */
+    public final Operand<TString> inputs;
+
+    /**
+     * The dimensions to reduce over.  Dimensions are reduced in the
+     * order specified.  Omitting {@code reduction_indices} is equivalent to passing
+     * {@code [n-1, n-2, ..., 0]}.  Negative indices from {@code -n} to {@code -1} are supported.
+     */
+    public final Operand<TInt32> reductionIndices;
+
+    /**
+     * If `True`, retain reduced dimensions with length `1`.
+     */
+    public final boolean keepDims;
+
+    /**
+     * The separator to use when joining.
+     */
+    public final String separator;
+
+    public Inputs(GraphOperation op) {
+      super(new ReduceJoin(op), op, Arrays.asList("keep_dims", "separator"));
+      int inputIndex = 0;
+      inputs = (Operand<TString>) op.input(inputIndex++);
+      reductionIndices = (Operand<TInt32>) op.input(inputIndex++);
+      keepDims = op.attributes().getAttrBool("keep_dims");
+      separator = op.attributes().getAttrString("separator");
     }
   }
 }

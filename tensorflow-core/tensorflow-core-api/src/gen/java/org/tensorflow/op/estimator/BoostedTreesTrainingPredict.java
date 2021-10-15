@@ -17,12 +17,15 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -59,7 +62,7 @@ public final class BoostedTreesTrainingPredict extends RawOp {
    * Factory method to create a class wrapping a new BoostedTreesTrainingPredict operation.
    *
    * @param scope current scope
-   * @param treeEnsembleHandle the treeEnsembleHandle value
+   * @param treeEnsembleHandle The treeEnsembleHandle value
    * @param cachedTreeIds Rank 1 Tensor containing cached tree ids which is the starting
    * tree of prediction.
    * @param cachedNodeIds Rank 1 Tensor containing cached node id which is the starting
@@ -112,5 +115,48 @@ public final class BoostedTreesTrainingPredict extends RawOp {
    */
   public Output<TInt32> nodeIds() {
     return nodeIds;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesTrainingPredict> {
+    /**
+     * The treeEnsembleHandle input
+     */
+    public final Operand<? extends TType> treeEnsembleHandle;
+
+    /**
+     * Rank 1 Tensor containing cached tree ids which is the starting
+     * tree of prediction.
+     */
+    public final Operand<TInt32> cachedTreeIds;
+
+    /**
+     * Rank 1 Tensor containing cached node id which is the starting
+     * node of prediction.
+     */
+    public final Operand<TInt32> cachedNodeIds;
+
+    /**
+     * A list of rank 1 Tensors containing bucket id for each
+     * feature.
+     */
+    public final Iterable<Operand<TInt32>> bucketizedFeatures;
+
+    /**
+     * scalar, dimension of the logits, to be used for partial logits
+     * shape.
+     */
+    public final long logitsDimension;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesTrainingPredict(op), op, Arrays.asList("logits_dimension"));
+      int inputIndex = 0;
+      treeEnsembleHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      cachedTreeIds = (Operand<TInt32>) op.input(inputIndex++);
+      cachedNodeIds = (Operand<TInt32>) op.input(inputIndex++);
+      int bucketizedFeaturesLength = op.inputListLength("bucketized_features");
+      bucketizedFeatures = Arrays.asList((Operand<TInt32>[]) op.inputList(inputIndex, bucketizedFeaturesLength));
+      inputIndex += bucketizedFeaturesLength;
+      logitsDimension = op.attributes().getAttrInt("logits_dimension");
+    }
   }
 }

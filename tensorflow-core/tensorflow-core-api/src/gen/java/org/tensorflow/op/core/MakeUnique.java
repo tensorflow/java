@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -53,7 +56,7 @@ public final class MakeUnique extends RawOp implements Operand<TFloat32> {
    * Factory method to create a class wrapping a new MakeUnique operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of MakeUnique
    */
   @Endpoint(
@@ -77,5 +80,18 @@ public final class MakeUnique extends RawOp implements Operand<TFloat32> {
   @Override
   public Output<TFloat32> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<MakeUnique> {
+    /**
+     * The input input
+     */
+    public final Operand<TFloat32> input;
+
+    public Inputs(GraphOperation op) {
+      super(new MakeUnique(op), op, Arrays.asList());
+      int inputIndex = 0;
+      input = (Operand<TFloat32>) op.input(inputIndex++);
+    }
   }
 }

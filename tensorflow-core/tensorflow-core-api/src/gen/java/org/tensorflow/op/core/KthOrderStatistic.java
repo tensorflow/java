@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -63,8 +66,8 @@ public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> 
    * Factory method to create a class wrapping a new KthOrderStatistic operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param k the value of the k property
+   * @param input The input value
+   * @param k The value of the k attribute
    * @return a new instance of KthOrderStatistic
    */
   @Endpoint(
@@ -89,5 +92,24 @@ public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> 
   @Override
   public Output<TFloat32> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<KthOrderStatistic> {
+    /**
+     * The input input
+     */
+    public final Operand<TFloat32> input;
+
+    /**
+     * The k attribute
+     */
+    public final long k;
+
+    public Inputs(GraphOperation op) {
+      super(new KthOrderStatistic(op), op, Arrays.asList("k"));
+      int inputIndex = 0;
+      input = (Operand<TFloat32>) op.input(inputIndex++);
+      k = op.attributes().getAttrInt("k");
+    }
   }
 }

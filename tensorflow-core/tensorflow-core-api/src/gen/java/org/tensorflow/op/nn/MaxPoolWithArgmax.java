@@ -17,16 +17,20 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -73,7 +77,7 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
    * input tensor.
-   * @param Targmax the value of the Targmax property
+   * @param Targmax The value of the Targmax attribute
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
    * @param <T> data type for {@code MaxPoolWithArgmax} output and operands
@@ -177,6 +181,56 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
     public Options includeBatchInIndex(Boolean includeBatchInIndex) {
       this.includeBatchInIndex = includeBatchInIndex;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<MaxPoolWithArgmax<T, ?>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.  Input to pool over.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The size of the window for each dimension of the input tensor.
+     */
+    public final long[] ksize;
+
+    /**
+     * The stride of the sliding window for each dimension of the
+     * input tensor.
+     */
+    public final long[] strides;
+
+    /**
+     * The Targmax attribute
+     */
+    public final DataType Targmax;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * Whether to include batch dimension in flattened index of `argmax`.
+     */
+    public final boolean includeBatchInIndex;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new MaxPoolWithArgmax<>(op), op, Arrays.asList("ksize", "strides", "Targmax", "padding", "include_batch_in_index", "T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      ksize = op.attributes().getAttrIntList("ksize");
+      strides = op.attributes().getAttrIntList("strides");
+      Targmax = op.attributes().getAttrType("Targmax");
+      padding = op.attributes().getAttrString("padding");
+      includeBatchInIndex = op.attributes().getAttrBool("include_batch_in_index");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -60,8 +64,8 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
    * Factory method to create a class wrapping a new SparseMatMul operation.
    *
    * @param scope current scope
-   * @param a the a value
-   * @param b the b value
+   * @param a The a value
+   * @param b The b value
    * @param options carries optional attribute values
    * @return a new instance of SparseMatMul
    */
@@ -203,6 +207,61 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
     public Options bIsSparse(Boolean bIsSparse) {
       this.bIsSparse = bIsSparse;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SparseMatMul> {
+    /**
+     * The a input
+     */
+    public final Operand<? extends TNumber> a;
+
+    /**
+     * The b input
+     */
+    public final Operand<? extends TNumber> b;
+
+    /**
+     * The transposeA attribute
+     */
+    public final boolean transposeA;
+
+    /**
+     * The transposeB attribute
+     */
+    public final boolean transposeB;
+
+    /**
+     * The aIsSparse attribute
+     */
+    public final boolean aIsSparse;
+
+    /**
+     * The bIsSparse attribute
+     */
+    public final boolean bIsSparse;
+
+    /**
+     * The Ta attribute
+     */
+    public final DataType Ta;
+
+    /**
+     * The Tb attribute
+     */
+    public final DataType Tb;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseMatMul(op), op, Arrays.asList("transpose_a", "transpose_b", "a_is_sparse", "b_is_sparse", "Ta", "Tb"));
+      int inputIndex = 0;
+      a = (Operand<? extends TNumber>) op.input(inputIndex++);
+      b = (Operand<? extends TNumber>) op.input(inputIndex++);
+      transposeA = op.attributes().getAttrBool("transpose_a");
+      transposeB = op.attributes().getAttrBool("transpose_b");
+      aIsSparse = op.attributes().getAttrBool("a_is_sparse");
+      bIsSparse = op.attributes().getAttrBool("b_is_sparse");
+      Ta = op.attributes().getAttrType("Ta");
+      Tb = op.attributes().getAttrType("Tb");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * Stage values similar to a lightweight Enqueue.
@@ -179,6 +183,55 @@ public final class Stage extends RawOp {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Stage> {
+    /**
+     * a list of tensors
+     * dtypes A list of data types that inserted values should adhere to.
+     */
+    public final Iterable<Operand<?>> values;
+
+    /**
+     * Maximum number of elements in the Staging Area. If > 0, inserts
+     * on the container will block when the capacity is reached.
+     */
+    public final long capacity;
+
+    /**
+     * The maximum number of bytes allowed for Tensors in the Staging Area.
+     * If > 0, inserts will block until sufficient space is available.
+     */
+    public final long memoryLimit;
+
+    /**
+     * The dtypes attribute
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * If non-empty, this queue is placed in the given container. Otherwise,
+     * a default container is used.
+     */
+    public final String container;
+
+    /**
+     * It is necessary to match this name to the matching Unstage Op.
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new Stage(op), op, Arrays.asList("capacity", "memory_limit", "dtypes", "container", "shared_name"));
+      int inputIndex = 0;
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      capacity = op.attributes().getAttrInt("capacity");
+      memoryLimit = op.attributes().getAttrInt("memory_limit");
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

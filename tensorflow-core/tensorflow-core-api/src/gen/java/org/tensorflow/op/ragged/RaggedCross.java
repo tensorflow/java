@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -68,11 +72,11 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
    * this string specifies the type of the {@code i}th input, and is one of: 'R' (ragged),
    * 'D' (dense), or 'S' (sparse).  This attr is used to ensure that the crossed
    * values are combined in the order of the inputs from the call to tf.ragged.cross.
-   * @param hashedOutput the value of the hashedOutput property
-   * @param numBuckets the value of the numBuckets property
-   * @param hashKey the value of the hashKey property
-   * @param outValuesType the value of the outValuesType property
-   * @param outRowSplitsType the value of the outRowSplitsType property
+   * @param hashedOutput The value of the hashedOutput attribute
+   * @param numBuckets The value of the numBuckets attribute
+   * @param hashKey The value of the hashKey attribute
+   * @param outValuesType The value of the outValuesType attribute
+   * @param outRowSplitsType The value of the outRowSplitsType attribute
    * @param <T> data type for {@code RaggedCross} output and operands
    * @param <U> data type for {@code RaggedCross} output and operands
    * @return a new instance of RaggedCross
@@ -118,5 +122,123 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
    */
   public Output<U> outputRowSplits() {
     return outputRowSplits;
+  }
+
+  public static class Inputs extends RawOpInputs<RaggedCross<?, ?>> {
+    /**
+     * The values tensor for each RaggedTensor input.
+     */
+    public final Iterable<Operand<?>> raggedValues;
+
+    /**
+     * The row_splits tensor for each RaggedTensor input.
+     */
+    public final Iterable<Operand<?>> raggedRowSplits;
+
+    /**
+     * The indices tensor for each SparseTensor input.
+     */
+    public final Iterable<Operand<TInt64>> sparseIndices;
+
+    /**
+     * The values tensor for each SparseTensor input.
+     */
+    public final Iterable<Operand<?>> sparseValues;
+
+    /**
+     * The dense_shape tensor for each SparseTensor input.
+     */
+    public final Iterable<Operand<TInt64>> sparseShape;
+
+    /**
+     * The tf.Tensor inputs.
+     */
+    public final Iterable<Operand<?>> denseInputs;
+
+    /**
+     * String specifying the tensor type for each input.  The `i`th character in
+     * this string specifies the type of the `i`th input, and is one of: 'R' (ragged),
+     * 'D' (dense), or 'S' (sparse).  This attr is used to ensure that the crossed
+     * values are combined in the order of the inputs from the call to tf.ragged.cross.
+     */
+    public final String inputOrder;
+
+    /**
+     * The hashedOutput attribute
+     */
+    public final boolean hashedOutput;
+
+    /**
+     * The numBuckets attribute
+     */
+    public final long numBuckets;
+
+    /**
+     * The hashKey attribute
+     */
+    public final long hashKey;
+
+    /**
+     * The raggedValuesTypes attribute
+     */
+    public final DataType[] raggedValuesTypes;
+
+    /**
+     * The raggedSplitsTypes attribute
+     */
+    public final DataType[] raggedSplitsTypes;
+
+    /**
+     * The sparseValuesTypes attribute
+     */
+    public final DataType[] sparseValuesTypes;
+
+    /**
+     * The denseTypes attribute
+     */
+    public final DataType[] denseTypes;
+
+    /**
+     * The outValuesType attribute
+     */
+    public final DataType outValuesType;
+
+    /**
+     * The outRowSplitsType attribute
+     */
+    public final DataType outRowSplitsType;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedCross<>(op), op, Arrays.asList("input_order", "hashed_output", "num_buckets", "hash_key", "ragged_values_types", "ragged_splits_types", "sparse_values_types", "dense_types", "out_values_type", "out_row_splits_type"));
+      int inputIndex = 0;
+      int raggedValuesLength = op.inputListLength("ragged_values");
+      raggedValues = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, raggedValuesLength));
+      inputIndex += raggedValuesLength;
+      int raggedRowSplitsLength = op.inputListLength("ragged_row_splits");
+      raggedRowSplits = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, raggedRowSplitsLength));
+      inputIndex += raggedRowSplitsLength;
+      int sparseIndicesLength = op.inputListLength("sparse_indices");
+      sparseIndices = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, sparseIndicesLength));
+      inputIndex += sparseIndicesLength;
+      int sparseValuesLength = op.inputListLength("sparse_values");
+      sparseValues = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, sparseValuesLength));
+      inputIndex += sparseValuesLength;
+      int sparseShapeLength = op.inputListLength("sparse_shape");
+      sparseShape = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, sparseShapeLength));
+      inputIndex += sparseShapeLength;
+      int denseInputsLength = op.inputListLength("dense_inputs");
+      denseInputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, denseInputsLength));
+      inputIndex += denseInputsLength;
+      inputOrder = op.attributes().getAttrString("input_order");
+      hashedOutput = op.attributes().getAttrBool("hashed_output");
+      numBuckets = op.attributes().getAttrInt("num_buckets");
+      hashKey = op.attributes().getAttrInt("hash_key");
+      raggedValuesTypes = op.attributes().getAttrTypeList("ragged_values_types");
+      raggedSplitsTypes = op.attributes().getAttrTypeList("ragged_splits_types");
+      sparseValuesTypes = op.attributes().getAttrTypeList("sparse_values_types");
+      denseTypes = op.attributes().getAttrTypeList("dense_types");
+      outValuesType = op.attributes().getAttrType("out_values_type");
+      outRowSplitsType = op.attributes().getAttrType("out_row_splits_type");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -78,5 +81,30 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
   @Override
   public Output<TInt64> asOutput() {
     return incarnationId;
+  }
+
+  public static class Inputs extends RawOpInputs<MultiDeviceIteratorInit> {
+    /**
+     * Dataset to be iterated upon.
+     */
+    public final Operand<? extends TType> dataset;
+
+    /**
+     * A MultiDeviceIteratorResource.
+     */
+    public final Operand<? extends TType> multiDeviceIterator;
+
+    /**
+     * The maximum size of the host side per device buffer to keep.
+     */
+    public final Operand<TInt64> maxBufferSize;
+
+    public Inputs(GraphOperation op) {
+      super(new MultiDeviceIteratorInit(op), op, Arrays.asList());
+      int inputIndex = 0;
+      dataset = (Operand<? extends TType>) op.input(inputIndex++);
+      multiDeviceIterator = (Operand<? extends TType>) op.input(inputIndex++);
+      maxBufferSize = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

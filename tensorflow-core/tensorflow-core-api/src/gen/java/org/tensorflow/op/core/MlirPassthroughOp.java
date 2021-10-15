@@ -20,15 +20,18 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -84,9 +87,9 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
    * Factory method to create a class wrapping a new MlirPassthroughOp operation.
    *
    * @param scope current scope
-   * @param inputs the inputs value
-   * @param mlirModule the value of the mlirModule property
-   * @param Toutputs the value of the Toutputs property
+   * @param inputs The inputs value
+   * @param mlirModule The value of the mlirModule attribute
+   * @param Toutputs The value of the Toutputs attribute
    * @return a new instance of MlirPassthroughOp
    */
   @Endpoint(
@@ -114,5 +117,38 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<MlirPassthroughOp> {
+    /**
+     * The inputs input
+     */
+    public final Iterable<Operand<?>> inputs;
+
+    /**
+     * The mlirModule attribute
+     */
+    public final String mlirModule;
+
+    /**
+     * The Tinputs attribute
+     */
+    public final DataType[] Tinputs;
+
+    /**
+     * The Toutputs attribute
+     */
+    public final DataType[] Toutputs;
+
+    public Inputs(GraphOperation op) {
+      super(new MlirPassthroughOp(op), op, Arrays.asList("mlir_module", "Tinputs", "Toutputs"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      mlirModule = op.attributes().getAttrString("mlir_module");
+      Tinputs = op.attributes().getAttrTypeList("Tinputs");
+      Toutputs = op.attributes().getAttrTypeList("Toutputs");
+    }
   }
 }

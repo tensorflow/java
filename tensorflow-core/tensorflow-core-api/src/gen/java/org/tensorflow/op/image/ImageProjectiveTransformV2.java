@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -130,6 +134,51 @@ public final class ImageProjectiveTransformV2<T extends TNumber> extends RawOp i
     public Options fillMode(String fillMode) {
       this.fillMode = fillMode;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<ImageProjectiveTransformV2<T>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<T> images;
+
+    /**
+     * 2-D Tensor, {@code [batch, 8]} or {@code [1, 8]} matrix, where each row corresponds to a 3 x 3
+     * projective transformation matrix, with the last entry assumed to be 1. If there
+     * is one row, the same transformation will be applied to all images.
+     */
+    public final Operand<TFloat32> transforms;
+
+    /**
+     * 1-D Tensor [new_height, new_width].
+     */
+    public final Operand<TInt32> outputShape;
+
+    /**
+     * Input dtype.
+     */
+    public final DataType dtype;
+
+    /**
+     * Interpolation method, "NEAREST" or "BILINEAR".
+     */
+    public final String interpolation;
+
+    /**
+     * Fill mode, "REFLECT", "WRAP", or "CONSTANT".
+     */
+    public final String fillMode;
+
+    public Inputs(GraphOperation op) {
+      super(new ImageProjectiveTransformV2<>(op), op, Arrays.asList("dtype", "interpolation", "fill_mode"));
+      int inputIndex = 0;
+      images = (Operand<T>) op.input(inputIndex++);
+      transforms = (Operand<TFloat32>) op.input(inputIndex++);
+      outputShape = (Operand<TInt32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      interpolation = op.attributes().getAttrString("interpolation");
+      fillMode = op.attributes().getAttrString("fill_mode");
     }
   }
 }

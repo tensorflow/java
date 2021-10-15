@@ -537,11 +537,11 @@ public final class NnOps {
    *  no projection is performed.
    *
    * @param <T> data type for {@code params} output
-   * @param numLayers the numLayers value
-   * @param numUnits the numUnits value
-   * @param inputSize the inputSize value
-   * @param weights the weights value
-   * @param biases the biases value
+   * @param numLayers The numLayers value
+   * @param numUnits The numUnits value
+   * @param inputSize The inputSize value
+   * @param weights The weights value
+   * @param biases The biases value
    * @param options carries optional attribute values
    * @param <T> data type for {@code CudnnRNNCanonicalToParamsV2} output and operands
    * @return a new instance of CudnnRNNCanonicalToParams
@@ -585,12 +585,12 @@ public final class NnOps {
    *  no projection is performed.
    *
    * @param <T> data type for {@code weights} output
-   * @param numLayers the numLayers value
-   * @param numUnits the numUnits value
-   * @param inputSize the inputSize value
-   * @param params the params value
-   * @param numParamsWeights the value of the numParamsWeights property
-   * @param numParamsBiases the value of the numParamsBiases property
+   * @param numLayers The numLayers value
+   * @param numUnits The numUnits value
+   * @param inputSize The inputSize value
+   * @param params The params value
+   * @param numParamsWeights The value of the numParamsWeights attribute
+   * @param numParamsBiases The value of the numParamsBiases attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CudnnRNNParamsToCanonicalV2} output and operands
    * @return a new instance of CudnnRNNParamsToCanonical
@@ -626,11 +626,11 @@ public final class NnOps {
    *  across different runs.
    *
    * @param <T> data type for {@code params_size} output
-   * @param numLayers the numLayers value
-   * @param numUnits the numUnits value
-   * @param inputSize the inputSize value
-   * @param T the value of the T property
-   * @param S the value of the S property
+   * @param numLayers The numLayers value
+   * @param numUnits The numUnits value
+   * @param inputSize The inputSize value
+   * @param T The value of the T attribute
+   * @param S The value of the S attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CudnnRNNParamsSize} output and operands
    * @param <U> data type for {@code CudnnRNNParamsSize} output and operands
@@ -769,7 +769,7 @@ public final class NnOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param blockSize The size of the spatial block, same as in Space2Depth.
    * @param options carries optional attribute values
    * @param <T> data type for {@code DepthToSpace} output and operands
@@ -800,8 +800,8 @@ public final class NnOps {
    *  horizontal and vertices strides, {@code strides = [1, stride, stride, 1]}.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param filter the filter value
+   * @param input The input value
+   * @param filter The filter value
    * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
    *  of {@code input}.
    * @param padding The type of padding algorithm to use.
@@ -973,7 +973,7 @@ public final class NnOps {
    *  </a>
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Elu} output and operands
    * @return a new instance of Elu
    */
@@ -1160,7 +1160,7 @@ public final class NnOps {
    *  rows must be the same as the rank of {@code input}.
    * @param filter 4-D with shape
    *  {@code [filter_height, filter_width, in_channels, out_channels]}.
-   * @param mode the value of the mode property
+   * @param mode The value of the mode attribute
    * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
    *  of {@code input}. Must be in the same order as the dimension specified with format.
    * @param padding The type of padding algorithm to use.
@@ -1194,7 +1194,7 @@ public final class NnOps {
    *  rows must be the same as the rank of {@code input}.
    * @param filter 4-D with shape
    *  {@code [filter_height, filter_width, in_channels, out_channels]}.
-   * @param mode the value of the mode property
+   * @param mode The value of the mode attribute
    * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
    *  of {@code input}. Must be in the same order as the dimension specified with format.
    * @param padding The type of padding algorithm to use.
@@ -1253,7 +1253,7 @@ public final class NnOps {
    * Computes rectified linear: {@code max(features, features * alpha)}.
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param options carries optional attribute values
    * @param <T> data type for {@code LeakyRelu} output and operands
    * @return a new instance of LeakyRelu
@@ -1521,7 +1521,7 @@ public final class NnOps {
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
    *  input tensor.
-   * @param Targmax the value of the Targmax property
+   * @param Targmax The value of the Targmax attribute
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
    * @param <T> data type for {@code MaxPoolWithArgmax} output and operands
@@ -1606,7 +1606,7 @@ public final class NnOps {
    *  with the normalized tensor.
    * @param gammaMin The value represented by the lowest quantized gamma.
    * @param gammaMax The value represented by the highest quantized gamma.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param varianceEpsilon A small float number to avoid dividing by 0.
    * @param scaleAfterNormalization A bool indicating whether the resulted tensor
    *  needs to be multiplied with gamma.
@@ -1628,13 +1628,13 @@ public final class NnOps {
    *  Broadcasts the values of bias on dimensions 0..N-2 of 'input'.
    *
    * @param <V> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
    * @param minBias The float value that the lowest quantized bias value represents.
    * @param maxBias The float value that the highest quantized bias value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <V> data type for {@code QuantizedBiasAdd} output and operands
    * @return a new instance of QuantizedBiasAdd
    */
@@ -1652,13 +1652,13 @@ public final class NnOps {
    *  taking the returned minimum and maximum values into account.
    *
    * @param <V> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param filter filter's input_depth dimension must match input's depth dimensions.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
    * @param minFilter The float value that the lowest quantized filter value represents.
    * @param maxFilter The float value that the highest quantized filter value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param strides The stride of the sliding window for each dimension of the input
    *  tensor.
    * @param padding The type of padding algorithm to use.
@@ -1714,10 +1714,10 @@ public final class NnOps {
    * Computes Quantized Rectified Linear: {@code max(features, 0)}
    *
    * @param <U> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code QuantizedRelu} output and operands
    * @return a new instance of QuantizedRelu
    */
@@ -1730,10 +1730,10 @@ public final class NnOps {
    * Computes Quantized Rectified Linear 6: {@code min(max(features, 0), 6)}
    *
    * @param <U> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code QuantizedRelu6} output and operands
    * @return a new instance of QuantizedRelu6
    */
@@ -1746,11 +1746,11 @@ public final class NnOps {
    * Computes Quantized Rectified Linear X: {@code min(max(features, 0), max_value)}
    *
    * @param <U> data type for {@code activations} output
-   * @param features the features value
-   * @param maxValue the maxValue value
+   * @param features The features value
+   * @param maxValue The maxValue value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code QuantizedReluX} output and operands
    * @return a new instance of QuantizedReluX
    */
@@ -1774,7 +1774,7 @@ public final class NnOps {
    *  </blockquote>
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Relu} output and operands
    * @return a new instance of Relu
    */
@@ -1786,7 +1786,7 @@ public final class NnOps {
    * Computes rectified linear 6: {@code min(max(features, 0), 6)}.
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Relu6} output and operands
    * @return a new instance of Relu6
    */
@@ -1803,7 +1803,7 @@ public final class NnOps {
    *  <p>See  <a href="https://arxiv.org/abs/1706.02515">Self-Normalizing Neural Networks</a>
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Selu} output and operands
    * @return a new instance of Selu
    */
@@ -1848,7 +1848,7 @@ public final class NnOps {
    * Computes softsign: {@code features / (abs(features) + 1)}.
    *
    * @param <T> data type for {@code activations} output
-   * @param features the features value
+   * @param features The features value
    * @param <T> data type for {@code Softsign} output and operands
    * @return a new instance of Softsign
    */
@@ -1935,7 +1935,7 @@ public final class NnOps {
    *    height_pad = pad_top + height + pad_bottom
    *    width_pad = pad_left + width + pad_right
    *  </pre>
-   * @param blockSize the value of the blockSize property
+   * @param blockSize The value of the blockSize attribute
    * @param <T> data type for {@code SpaceToBatch} output and operands
    * @return a new instance of SpaceToBatch
    */
@@ -2016,7 +2016,7 @@ public final class NnOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param blockSize The size of the spatial block.
    * @param options carries optional attribute values
    * @param <T> data type for {@code SpaceToDepth} output and operands

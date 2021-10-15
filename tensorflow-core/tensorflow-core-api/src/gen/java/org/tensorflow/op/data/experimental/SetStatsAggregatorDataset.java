@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,8 +27,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -52,12 +56,12 @@ public final class SetStatsAggregatorDataset extends RawOp implements Operand<TT
    * Factory method to create a class wrapping a new ExperimentalSetStatsAggregatorDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param statsAggregator the statsAggregator value
-   * @param tag the tag value
-   * @param counterPrefix the counterPrefix value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param statsAggregator The statsAggregator value
+   * @param tag The tag value
+   * @param counterPrefix The counterPrefix value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SetStatsAggregatorDataset
    */
   @Endpoint(
@@ -94,5 +98,48 @@ public final class SetStatsAggregatorDataset extends RawOp implements Operand<TT
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<SetStatsAggregatorDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The statsAggregator input
+     */
+    public final Operand<? extends TType> statsAggregator;
+
+    /**
+     * The tag input
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * The counterPrefix input
+     */
+    public final Operand<TString> counterPrefix;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new SetStatsAggregatorDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      statsAggregator = (Operand<? extends TType>) op.input(inputIndex++);
+      tag = (Operand<TString>) op.input(inputIndex++);
+      counterPrefix = (Operand<TString>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

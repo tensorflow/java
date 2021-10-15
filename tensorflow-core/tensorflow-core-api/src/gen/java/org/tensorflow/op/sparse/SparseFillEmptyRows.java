@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -156,5 +160,44 @@ public final class SparseFillEmptyRows<T extends TType> extends RawOp {
    */
   public Output<TInt64> reverseIndexMap() {
     return reverseIndexMap;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseFillEmptyRows<T>> {
+    /**
+     * 2-D. the indices of the sparse tensor.
+     */
+    public final Operand<TInt64> indices;
+
+    /**
+     * 1-D. the values of the sparse tensor.
+     */
+    public final Operand<T> values;
+
+    /**
+     * 1-D. the shape of the sparse tensor.
+     */
+    public final Operand<TInt64> denseShape;
+
+    /**
+     * 0-D. default value to insert into location {@code [row, 0, ..., 0]}
+     * for rows missing from the input sparse tensor.
+     * output indices: 2-D. the indices of the filled sparse tensor.
+     */
+    public final Operand<T> defaultValue;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseFillEmptyRows<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      indices = (Operand<TInt64>) op.input(inputIndex++);
+      values = (Operand<T>) op.input(inputIndex++);
+      denseShape = (Operand<TInt64>) op.input(inputIndex++);
+      defaultValue = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

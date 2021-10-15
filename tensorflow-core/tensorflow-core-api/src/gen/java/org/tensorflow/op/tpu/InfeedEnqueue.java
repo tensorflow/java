@@ -19,13 +19,16 @@ package org.tensorflow.op.tpu;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -106,7 +109,7 @@ public final class InfeedEnqueue extends RawOp {
    * be computed by the infeed operation.
    * @return this Options instance.
    */
-  public static Options layout(Long[] layout) {
+  public static Options layout(Long... layout) {
     return new Options().layout(layout);
   }
 
@@ -183,6 +186,47 @@ public final class InfeedEnqueue extends RawOp {
     public Options deviceOrdinal(Long deviceOrdinal) {
       this.deviceOrdinal = deviceOrdinal;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<InfeedEnqueue> {
+    /**
+     * A tensor that will be provided using the infeed mechanism.
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The type of elements in the tensor.
+     */
+    public final DataType dtype;
+
+    /**
+     * The shape of the tensor.
+     */
+    public final Shape shape;
+
+    /**
+     * A vector holding the requested layout in minor-to-major sequence.
+     * If a layout attribute is passed, but its values are all -1, the layout will
+     * be computed by the infeed operation.
+     */
+    public final long[] layout;
+
+    /**
+     * The TPU device to use. This should be -1 when the Op
+     * is running on a TPU device, and >= 0 when the Op is running on the CPU
+     * device.
+     */
+    public final long deviceOrdinal;
+
+    public Inputs(GraphOperation op) {
+      super(new InfeedEnqueue(op), op, Arrays.asList("dtype", "shape", "layout", "device_ordinal"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      shape = op.attributes().getAttrShape("shape");
+      layout = op.attributes().getAttrIntList("layout");
+      deviceOrdinal = op.attributes().getAttrInt("device_ordinal");
     }
   }
 }

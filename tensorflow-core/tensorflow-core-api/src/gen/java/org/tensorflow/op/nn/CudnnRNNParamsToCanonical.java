@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -92,12 +95,12 @@ public final class CudnnRNNParamsToCanonical<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new CudnnRNNParamsToCanonicalV2 operation.
    *
    * @param scope current scope
-   * @param numLayers the numLayers value
-   * @param numUnits the numUnits value
-   * @param inputSize the inputSize value
-   * @param params the params value
-   * @param numParamsWeights the value of the numParamsWeights property
-   * @param numParamsBiases the value of the numParamsBiases property
+   * @param numLayers The numLayers value
+   * @param numUnits The numUnits value
+   * @param inputSize The inputSize value
+   * @param params The params value
+   * @param numParamsWeights The value of the numParamsWeights attribute
+   * @param numParamsBiases The value of the numParamsBiases attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CudnnRNNParamsToCanonicalV2} output and operands
    * @return a new instance of CudnnRNNParamsToCanonical
@@ -327,6 +330,85 @@ public final class CudnnRNNParamsToCanonical<T extends TNumber> extends RawOp {
     public Options numProj(Long numProj) {
       this.numProj = numProj;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<CudnnRNNParamsToCanonical<T>> {
+    /**
+     * The numLayers input
+     */
+    public final Operand<TInt32> numLayers;
+
+    /**
+     * The numUnits input
+     */
+    public final Operand<TInt32> numUnits;
+
+    /**
+     * The inputSize input
+     */
+    public final Operand<TInt32> inputSize;
+
+    /**
+     * The params input
+     */
+    public final Operand<T> params;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The rnnMode attribute
+     */
+    public final String rnnMode;
+
+    /**
+     * The inputMode attribute
+     */
+    public final String inputMode;
+
+    /**
+     * The direction attribute
+     */
+    public final String direction;
+
+    /**
+     * The dropout attribute
+     */
+    public final float dropout;
+
+    /**
+     * The seed attribute
+     */
+    public final long seed;
+
+    /**
+     * The seed2 attribute
+     */
+    public final long seed2;
+
+    /**
+     * The numProj attribute
+     */
+    public final long numProj;
+
+    public Inputs(GraphOperation op) {
+      super(new CudnnRNNParamsToCanonical<>(op), op, Arrays.asList("T", "rnn_mode", "input_mode", "direction", "dropout", "seed", "seed2", "num_proj"));
+      int inputIndex = 0;
+      numLayers = (Operand<TInt32>) op.input(inputIndex++);
+      numUnits = (Operand<TInt32>) op.input(inputIndex++);
+      inputSize = (Operand<TInt32>) op.input(inputIndex++);
+      params = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      rnnMode = op.attributes().getAttrString("rnn_mode");
+      inputMode = op.attributes().getAttrString("input_mode");
+      direction = op.attributes().getAttrString("direction");
+      dropout = op.attributes().getAttrFloat("dropout");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      numProj = op.attributes().getAttrInt("num_proj");
     }
   }
 }

@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -50,8 +53,8 @@ public final class LoadTPUEmbeddingAdadeltaParameters extends RawOp {
    * @param parameters Value of parameters used in the Adadelta optimization algorithm.
    * @param accumulators Value of accumulators used in the Adadelta optimization algorithm.
    * @param updates Value of updates used in the Adadelta optimization algorithm.
-   * @param numShards the value of the numShards property
-   * @param shardId the value of the shardId property
+   * @param numShards The value of the numShards attribute
+   * @param shardId The value of the shardId attribute
    * @param options carries optional attribute values
    * @return a new instance of LoadTPUEmbeddingAdadeltaParameters
    */
@@ -157,6 +160,61 @@ public final class LoadTPUEmbeddingAdadeltaParameters extends RawOp {
     public Options config(String config) {
       this.config = config;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<LoadTPUEmbeddingAdadeltaParameters> {
+    /**
+     * Value of parameters used in the Adadelta optimization algorithm.
+     */
+    public final Operand<TFloat32> parameters;
+
+    /**
+     * Value of accumulators used in the Adadelta optimization algorithm.
+     */
+    public final Operand<TFloat32> accumulators;
+
+    /**
+     * Value of updates used in the Adadelta optimization algorithm.
+     */
+    public final Operand<TFloat32> updates;
+
+    /**
+     * The tableId attribute
+     */
+    public final long tableId;
+
+    /**
+     * The tableName attribute
+     */
+    public final String tableName;
+
+    /**
+     * The numShards attribute
+     */
+    public final long numShards;
+
+    /**
+     * The shardId attribute
+     */
+    public final long shardId;
+
+    /**
+     * The config attribute
+     */
+    public final String config;
+
+    public Inputs(GraphOperation op) {
+      super(new LoadTPUEmbeddingAdadeltaParameters(op), op, Arrays.asList("table_id", "table_name", "num_shards", "shard_id", "config"));
+      int inputIndex = 0;
+      parameters = (Operand<TFloat32>) op.input(inputIndex++);
+      accumulators = (Operand<TFloat32>) op.input(inputIndex++);
+      updates = (Operand<TFloat32>) op.input(inputIndex++);
+      tableId = op.attributes().getAttrInt("table_id");
+      tableName = op.attributes().getAttrString("table_name");
+      numShards = op.attributes().getAttrInt("num_shards");
+      shardId = op.attributes().getAttrInt("shard_id");
+      config = op.attributes().getAttrString("config");
     }
   }
 }

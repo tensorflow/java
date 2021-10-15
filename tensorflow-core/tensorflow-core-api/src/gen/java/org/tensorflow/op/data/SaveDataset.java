@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -49,10 +53,10 @@ public final class SaveDataset extends RawOp {
    * Factory method to create a class wrapping a new SaveDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param path the path value
-   * @param shardFuncOtherArgs the shardFuncOtherArgs value
-   * @param shardFunc the value of the shardFunc property
+   * @param inputDataset The inputDataset value
+   * @param path The path value
+   * @param shardFuncOtherArgs The shardFuncOtherArgs value
+   * @param shardFunc The value of the shardFunc attribute
    * @param options carries optional attribute values
    * @return a new instance of SaveDataset
    */
@@ -131,6 +135,51 @@ public final class SaveDataset extends RawOp {
     public Options useShardFunc(Boolean useShardFunc) {
       this.useShardFunc = useShardFunc;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SaveDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The path input
+     */
+    public final Operand<TString> path;
+
+    /**
+     * The shardFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> shardFuncOtherArgs;
+
+    /**
+     * The compression attribute
+     */
+    public final String compression;
+
+    /**
+     * The useShardFunc attribute
+     */
+    public final boolean useShardFunc;
+
+    /**
+     * The TshardFuncArgs attribute
+     */
+    public final DataType[] TshardFuncArgs;
+
+    public Inputs(GraphOperation op) {
+      super(new SaveDataset(op), op, Arrays.asList("compression", "use_shard_func", "Tshard_func_args"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      path = (Operand<TString>) op.input(inputIndex++);
+      int shardFuncOtherArgsLength = op.inputListLength("shard_func_other_args");
+      shardFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, shardFuncOtherArgsLength));
+      inputIndex += shardFuncOtherArgsLength;
+      compression = op.attributes().getAttrString("compression");
+      useShardFunc = op.attributes().getAttrBool("use_shard_func");
+      TshardFuncArgs = op.attributes().getAttrTypeList("Tshard_func_args");
     }
   }
 }

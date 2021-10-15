@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -54,8 +58,8 @@ public final class TensorMapStackKeys<T extends TType> extends RawOp implements 
    * Factory method to create a class wrapping a new TensorMapStackKeys operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
-   * @param keyDtype the value of the keyDtype property
+   * @param inputHandle The inputHandle value
+   * @param keyDtype The value of the keyDtype attribute
    * @param <T> data type for {@code TensorMapStackKeys} output and operands
    * @return a new instance of TensorMapStackKeys
    */
@@ -82,5 +86,24 @@ public final class TensorMapStackKeys<T extends TType> extends RawOp implements 
   @Override
   public Output<T> asOutput() {
     return keys;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorMapStackKeys<?>> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    /**
+     * The keyDtype attribute
+     */
+    public final DataType keyDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorMapStackKeys<>(op), op, Arrays.asList("key_dtype"));
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      keyDtype = op.attributes().getAttrType("key_dtype");
+    }
   }
 }

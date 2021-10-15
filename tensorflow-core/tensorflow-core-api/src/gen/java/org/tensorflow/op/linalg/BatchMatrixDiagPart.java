@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -53,7 +57,7 @@ public final class BatchMatrixDiagPart<T extends TType> extends RawOp implements
    * Factory method to create a class wrapping a new BatchMatrixDiagPart operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code BatchMatrixDiagPart} output and operands
    * @return a new instance of BatchMatrixDiagPart
    */
@@ -78,5 +82,24 @@ public final class BatchMatrixDiagPart<T extends TType> extends RawOp implements
   @Override
   public Output<T> asOutput() {
     return diagonal;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<BatchMatrixDiagPart<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchMatrixDiagPart<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

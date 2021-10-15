@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -58,5 +61,24 @@ public final class ResourceAccumulatorSetGlobalStep extends RawOp {
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(newGlobalStep.asOutput());
     return new ResourceAccumulatorSetGlobalStep(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceAccumulatorSetGlobalStep> {
+    /**
+     * The handle to an accumulator.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * The new global_step value to set.
+     */
+    public final Operand<TInt64> newGlobalStep;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceAccumulatorSetGlobalStep(op), op, Arrays.asList());
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      newGlobalStep = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

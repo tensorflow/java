@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -59,11 +63,11 @@ public final class StridedSliceGrad<U extends TType> extends RawOp implements Op
    * Factory method to create a class wrapping a new StridedSliceGrad operation.
    *
    * @param scope current scope
-   * @param shape the shape value
-   * @param begin the begin value
-   * @param end the end value
-   * @param strides the strides value
-   * @param dy the dy value
+   * @param shape The shape value
+   * @param begin The begin value
+   * @param end The end value
+   * @param strides The strides value
+   * @param dy The dy value
    * @param options carries optional attribute values
    * @param <U> data type for {@code StridedSliceGrad} output and operands
    * @param <T> data type for {@code StridedSliceGrad} output and operands
@@ -237,6 +241,85 @@ public final class StridedSliceGrad<U extends TType> extends RawOp implements Op
     public Options shrinkAxisMask(Long shrinkAxisMask) {
       this.shrinkAxisMask = shrinkAxisMask;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<StridedSliceGrad<U>> {
+    /**
+     * The shape input
+     */
+    public final Operand<T> shape;
+
+    /**
+     * The begin input
+     */
+    public final Operand<T> begin;
+
+    /**
+     * The end input
+     */
+    public final Operand<T> end;
+
+    /**
+     * The strides input
+     */
+    public final Operand<T> strides;
+
+    /**
+     * The dy input
+     */
+    public final Operand<U> dy;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Index attribute
+     */
+    public final DataType Index;
+
+    /**
+     * The beginMask attribute
+     */
+    public final long beginMask;
+
+    /**
+     * The endMask attribute
+     */
+    public final long endMask;
+
+    /**
+     * The ellipsisMask attribute
+     */
+    public final long ellipsisMask;
+
+    /**
+     * The newAxisMask attribute
+     */
+    public final long newAxisMask;
+
+    /**
+     * The shrinkAxisMask attribute
+     */
+    public final long shrinkAxisMask;
+
+    public Inputs(GraphOperation op) {
+      super(new StridedSliceGrad<>(op), op, Arrays.asList("T", "Index", "begin_mask", "end_mask", "ellipsis_mask", "new_axis_mask", "shrink_axis_mask"));
+      int inputIndex = 0;
+      shape = (Operand<T>) op.input(inputIndex++);
+      begin = (Operand<T>) op.input(inputIndex++);
+      end = (Operand<T>) op.input(inputIndex++);
+      strides = (Operand<T>) op.input(inputIndex++);
+      dy = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Index = op.attributes().getAttrType("Index");
+      beginMask = op.attributes().getAttrInt("begin_mask");
+      endMask = op.attributes().getAttrInt("end_mask");
+      ellipsisMask = op.attributes().getAttrInt("ellipsis_mask");
+      newAxisMask = op.attributes().getAttrInt("new_axis_mask");
+      shrinkAxisMask = op.attributes().getAttrInt("shrink_axis_mask");
     }
   }
 }

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -28,9 +29,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -116,5 +119,38 @@ public final class StatefulWhile extends RawOp implements While {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<StatefulWhile> {
+    /**
+     * A list of input tensors whose types are T.
+     */
+    public final Iterable<Operand<?>> input;
+
+    /**
+     * dtype in use.
+     */
+    public final DataType[] T;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The parallelIterations attribute
+     */
+    public final long parallelIterations;
+
+    public Inputs(GraphOperation op) {
+      super(new StatefulWhile(op), op, Arrays.asList("T", "output_shapes", "parallel_iterations"));
+      int inputIndex = 0;
+      int inputLength = op.inputListLength("input");
+      input = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputLength));
+      inputIndex += inputLength;
+      T = op.attributes().getAttrTypeList("T");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      parallelIterations = op.attributes().getAttrInt("parallel_iterations");
+    }
   }
 }

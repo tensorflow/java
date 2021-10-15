@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -91,5 +95,54 @@ public final class Dot<V extends TType> extends RawOp implements Operand<V> {
   @Override
   public Output<V> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<Dot<?>> {
+    /**
+     * the LHS tensor
+     */
+    public final Operand<? extends TType> lhs;
+
+    /**
+     * the RHS tensor
+     */
+    public final Operand<? extends TType> rhs;
+
+    /**
+     * The LhsT attribute
+     */
+    public final DataType LhsT;
+
+    /**
+     * The RhsT attribute
+     */
+    public final DataType RhsT;
+
+    /**
+     * a serialized xla::DotDimensionNumbers proto.
+     */
+    public final String dimensionNumbers;
+
+    /**
+     * a serialized xla::PrecisionConfig proto.
+     */
+    public final String precisionConfig;
+
+    /**
+     * The type of the tensor.
+     */
+    public final DataType preferredElementType;
+
+    public Inputs(GraphOperation op) {
+      super(new Dot<>(op), op, Arrays.asList("LhsT", "RhsT", "dimension_numbers", "precision_config", "preferred_element_type"));
+      int inputIndex = 0;
+      lhs = (Operand<? extends TType>) op.input(inputIndex++);
+      rhs = (Operand<? extends TType>) op.input(inputIndex++);
+      LhsT = op.attributes().getAttrType("LhsT");
+      RhsT = op.attributes().getAttrType("RhsT");
+      dimensionNumbers = op.attributes().getAttrString("dimension_numbers");
+      precisionConfig = op.attributes().getAttrString("precision_config");
+      preferredElementType = op.attributes().getAttrType("preferred_element_type");
+    }
   }
 }

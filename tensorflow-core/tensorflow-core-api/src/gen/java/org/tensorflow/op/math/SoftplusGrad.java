@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -77,5 +81,30 @@ public final class SoftplusGrad<T extends TNumber> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return backprops;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<SoftplusGrad<T>> {
+    /**
+     * The backpropagated gradients to the corresponding softplus operation.
+     */
+    public final Operand<T> gradients;
+
+    /**
+     * The features passed as input to the corresponding softplus operation.
+     */
+    public final Operand<T> features;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SoftplusGrad<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      gradients = (Operand<T>) op.input(inputIndex++);
+      features = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

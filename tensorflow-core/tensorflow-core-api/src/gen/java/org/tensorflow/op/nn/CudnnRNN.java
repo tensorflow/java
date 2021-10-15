@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -100,11 +104,11 @@ public final class CudnnRNN<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new CudnnRNNV3 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param inputH the inputH value
-   * @param inputC the inputC value
-   * @param params the params value
-   * @param sequenceLengths the sequenceLengths value
+   * @param input The input value
+   * @param inputH The inputH value
+   * @param inputC The inputC value
+   * @param params The params value
+   * @param sequenceLengths The sequenceLengths value
    * @param options carries optional attribute values
    * @param <T> data type for {@code CudnnRNNV3} output and operands
    * @return a new instance of CudnnRNN
@@ -412,6 +416,103 @@ public final class CudnnRNN<T extends TNumber> extends RawOp {
     public Options timeMajor(Boolean timeMajor) {
       this.timeMajor = timeMajor;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<CudnnRNN<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The inputH input
+     */
+    public final Operand<T> inputH;
+
+    /**
+     * The inputC input
+     */
+    public final Operand<T> inputC;
+
+    /**
+     * The params input
+     */
+    public final Operand<T> params;
+
+    /**
+     * The sequenceLengths input
+     */
+    public final Operand<TInt32> sequenceLengths;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The rnnMode attribute
+     */
+    public final String rnnMode;
+
+    /**
+     * The inputMode attribute
+     */
+    public final String inputMode;
+
+    /**
+     * The direction attribute
+     */
+    public final String direction;
+
+    /**
+     * The dropout attribute
+     */
+    public final float dropout;
+
+    /**
+     * The seed attribute
+     */
+    public final long seed;
+
+    /**
+     * The seed2 attribute
+     */
+    public final long seed2;
+
+    /**
+     * The numProj attribute
+     */
+    public final long numProj;
+
+    /**
+     * The isTraining attribute
+     */
+    public final boolean isTraining;
+
+    /**
+     * The timeMajor attribute
+     */
+    public final boolean timeMajor;
+
+    public Inputs(GraphOperation op) {
+      super(new CudnnRNN<>(op), op, Arrays.asList("T", "rnn_mode", "input_mode", "direction", "dropout", "seed", "seed2", "num_proj", "is_training", "time_major"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      inputH = (Operand<T>) op.input(inputIndex++);
+      inputC = (Operand<T>) op.input(inputIndex++);
+      params = (Operand<T>) op.input(inputIndex++);
+      sequenceLengths = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      rnnMode = op.attributes().getAttrString("rnn_mode");
+      inputMode = op.attributes().getAttrString("input_mode");
+      direction = op.attributes().getAttrString("direction");
+      dropout = op.attributes().getAttrFloat("dropout");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      numProj = op.attributes().getAttrInt("num_proj");
+      isTraining = op.attributes().getAttrBool("is_training");
+      timeMajor = op.attributes().getAttrBool("time_major");
     }
   }
 }

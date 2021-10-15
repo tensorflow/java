@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 
 /**
@@ -86,5 +90,46 @@ public final class SaveSlices extends RawOp {
     opBuilder.addInput(shapesAndSlices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(data));
     return new SaveSlices(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<SaveSlices> {
+    /**
+     * Must have a single element. The name of the file to which we write the
+     * tensor.
+     */
+    public final Operand<TString> filename;
+
+    /**
+     * Shape {@code [N]}. The names of the tensors to be saved.
+     */
+    public final Operand<TString> tensorNames;
+
+    /**
+     * Shape {@code [N]}.  The shapes and slice specifications to use when
+     * saving the tensors.
+     */
+    public final Operand<TString> shapesAndSlices;
+
+    /**
+     * {@code N} tensors to save.
+     */
+    public final Iterable<Operand<?>> data;
+
+    /**
+     * The T attribute
+     */
+    public final DataType[] T;
+
+    public Inputs(GraphOperation op) {
+      super(new SaveSlices(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      filename = (Operand<TString>) op.input(inputIndex++);
+      tensorNames = (Operand<TString>) op.input(inputIndex++);
+      shapesAndSlices = (Operand<TString>) op.input(inputIndex++);
+      int dataLength = op.inputListLength("data");
+      data = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, dataLength));
+      inputIndex += dataLength;
+      T = op.attributes().getAttrTypeList("T");
+    }
   }
 }

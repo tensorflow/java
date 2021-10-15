@@ -17,8 +17,10 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +28,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -57,11 +61,11 @@ public final class LoadDataset extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new LoadDataset operation.
    *
    * @param scope current scope
-   * @param path the path value
-   * @param readerFuncOtherArgs the readerFuncOtherArgs value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
-   * @param readerFunc the value of the readerFunc property
+   * @param path The path value
+   * @param readerFuncOtherArgs The readerFuncOtherArgs value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param readerFunc The value of the readerFunc attribute
    * @param options carries optional attribute values
    * @return a new instance of LoadDataset
    */
@@ -134,6 +138,51 @@ public final class LoadDataset extends RawOp implements Operand<TType> {
     public Options compression(String compression) {
       this.compression = compression;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<LoadDataset> {
+    /**
+     * The path input
+     */
+    public final Operand<TString> path;
+
+    /**
+     * The readerFuncOtherArgs input
+     */
+    public final Iterable<Operand<?>> readerFuncOtherArgs;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The compression attribute
+     */
+    public final String compression;
+
+    /**
+     * The TreaderFuncArgs attribute
+     */
+    public final DataType[] TreaderFuncArgs;
+
+    public Inputs(GraphOperation op) {
+      super(new LoadDataset(op), op, Arrays.asList("output_types", "output_shapes", "compression", "Treader_func_args"));
+      int inputIndex = 0;
+      path = (Operand<TString>) op.input(inputIndex++);
+      int readerFuncOtherArgsLength = op.inputListLength("reader_func_other_args");
+      readerFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, readerFuncOtherArgsLength));
+      inputIndex += readerFuncOtherArgsLength;
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      compression = op.attributes().getAttrString("compression");
+      TreaderFuncArgs = op.attributes().getAttrTypeList("Treader_func_args");
     }
   }
 }

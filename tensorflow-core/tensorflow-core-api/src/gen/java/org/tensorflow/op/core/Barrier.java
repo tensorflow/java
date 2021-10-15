@@ -19,6 +19,7 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -115,7 +118,7 @@ public final class Barrier extends RawOp implements Operand<TString> {
    * component_types.
    * @return this Options instance.
    */
-  public static Options shapes(Shape[] shapes) {
+  public static Options shapes(Shape... shapes) {
     return new Options().shapes(shapes);
   }
 
@@ -241,6 +244,48 @@ public final class Barrier extends RawOp implements Operand<TString> {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Barrier> {
+    /**
+     * The type of each component in a value.
+     */
+    public final DataType[] componentTypes;
+
+    /**
+     * The shape of each component in a value. Each shape must be 1 in the
+     * first dimension. The length of this attr must be the same as the length of
+     * component_types.
+     */
+    public final Shape[] shapes;
+
+    /**
+     * The capacity of the barrier.  The default capacity is MAX_INT32,
+     * which is the largest capacity of the underlying queue.
+     */
+    public final long capacity;
+
+    /**
+     * If non-empty, this barrier is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this barrier will be shared under the given name
+     * across multiple sessions.
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new Barrier(op), op, Arrays.asList("component_types", "shapes", "capacity", "container", "shared_name"));
+      int inputIndex = 0;
+      componentTypes = op.attributes().getAttrTypeList("component_types");
+      shapes = op.attributes().getAttrShapeList("shapes");
+      capacity = op.attributes().getAttrInt("capacity");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

@@ -19,15 +19,18 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -67,13 +70,13 @@ public final class QuantizedConv2d<V extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new QuantizedConv2D operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param filter filter's input_depth dimension must match input's depth dimensions.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
    * @param minFilter The float value that the lowest quantized filter value represents.
    * @param maxFilter The float value that the highest quantized filter value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param strides The stride of the sliding window for each dimension of the input
    * tensor.
    * @param padding The type of padding algorithm to use.
@@ -141,7 +144,7 @@ public final class QuantizedConv2d<V extends TNumber> extends RawOp {
    * depth dimensions must be 1.
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -209,6 +212,90 @@ public final class QuantizedConv2d<V extends TNumber> extends RawOp {
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedConv2d<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * filter's input_depth dimension must match input's depth dimensions.
+     */
+    public final Operand<? extends TNumber> filter;
+
+    /**
+     * The float value that the lowest quantized input value represents.
+     */
+    public final Operand<TFloat32> minInput;
+
+    /**
+     * The float value that the highest quantized input value represents.
+     */
+    public final Operand<TFloat32> maxInput;
+
+    /**
+     * The float value that the lowest quantized filter value represents.
+     */
+    public final Operand<TFloat32> minFilter;
+
+    /**
+     * The float value that the highest quantized filter value represents.
+     */
+    public final Operand<TFloat32> maxFilter;
+
+    /**
+     * The Tinput attribute
+     */
+    public final DataType Tinput;
+
+    /**
+     * The Tfilter attribute
+     */
+    public final DataType Tfilter;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    /**
+     * The stride of the sliding window for each dimension of the input
+     * tensor.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * 1-D tensor of length 4.  The dilation factor for each dimension of
+     * `input`. If set to k > 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of `data_format`, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedConv2d<>(op), op, Arrays.asList("Tinput", "Tfilter", "out_type", "strides", "padding", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      filter = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minInput = (Operand<TFloat32>) op.input(inputIndex++);
+      maxInput = (Operand<TFloat32>) op.input(inputIndex++);
+      minFilter = (Operand<TFloat32>) op.input(inputIndex++);
+      maxFilter = (Operand<TFloat32>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+      Tfilter = op.attributes().getAttrType("Tfilter");
+      outType = op.attributes().getAttrType("out_type");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

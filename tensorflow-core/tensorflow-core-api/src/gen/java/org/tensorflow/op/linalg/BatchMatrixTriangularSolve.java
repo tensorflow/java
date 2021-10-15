@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -53,8 +57,8 @@ public final class BatchMatrixTriangularSolve<T extends TNumber> extends RawOp i
    * Factory method to create a class wrapping a new BatchMatrixTriangularSolve operation.
    *
    * @param scope current scope
-   * @param matrix the matrix value
-   * @param rhs the rhs value
+   * @param matrix The matrix value
+   * @param rhs The rhs value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchMatrixTriangularSolve} output and operands
    * @return a new instance of BatchMatrixTriangularSolve
@@ -145,6 +149,43 @@ public final class BatchMatrixTriangularSolve<T extends TNumber> extends RawOp i
     public Options adjoint(Boolean adjoint) {
       this.adjoint = adjoint;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<BatchMatrixTriangularSolve<T>> {
+    /**
+     * The matrix input
+     */
+    public final Operand<T> matrix;
+
+    /**
+     * The rhs input
+     */
+    public final Operand<T> rhs;
+
+    /**
+     * The lower attribute
+     */
+    public final boolean lower;
+
+    /**
+     * The adjoint attribute
+     */
+    public final boolean adjoint;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchMatrixTriangularSolve<>(op), op, Arrays.asList("lower", "adjoint", "T"));
+      int inputIndex = 0;
+      matrix = (Operand<T>) op.input(inputIndex++);
+      rhs = (Operand<T>) op.input(inputIndex++);
+      lower = op.attributes().getAttrBool("lower");
+      adjoint = op.attributes().getAttrBool("adjoint");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

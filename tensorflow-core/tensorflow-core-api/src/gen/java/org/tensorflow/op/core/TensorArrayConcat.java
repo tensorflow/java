@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -147,6 +151,40 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
     public Options elementShapeExcept0(Shape elementShapeExcept0) {
       this.elementShapeExcept0 = elementShapeExcept0;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayConcat<?>> {
+    /**
+     * The handle to a TensorArray.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * A float scalar that enforces proper chaining of operations.
+     */
+    public final Operand<TFloat32> flowIn;
+
+    /**
+     * The type of the elem that is returned.
+     */
+    public final DataType dtype;
+
+    /**
+     * The expected shape of an element, if known,
+     * excluding the first dimension. Used to validate the shapes of
+     * TensorArray elements. If this shape is not fully specified, concatenating
+     * zero-size TensorArrays is an error.
+     */
+    public final Shape elementShapeExcept0;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayConcat<>(op), op, Arrays.asList("dtype", "element_shape_except0"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      flowIn = (Operand<TFloat32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      elementShapeExcept0 = op.attributes().getAttrShape("element_shape_except0");
     }
   }
 }

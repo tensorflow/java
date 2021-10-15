@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -58,10 +62,10 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
    * Factory method to create a class wrapping a new TensorListGather operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
-   * @param indices the indices value
-   * @param elementShape the elementShape value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputHandle The inputHandle value
+   * @param indices The indices value
+   * @param elementShape The elementShape value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <T> data type for {@code TensorListGather} output and operands
    * @return a new instance of TensorListGather
    */
@@ -91,5 +95,36 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
   @Override
   public Output<T> asOutput() {
     return values;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorListGather<?>> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    /**
+     * The indices input
+     */
+    public final Operand<TInt32> indices;
+
+    /**
+     * The elementShape input
+     */
+    public final Operand<TInt32> elementShape;
+
+    /**
+     * The elementDtype attribute
+     */
+    public final DataType elementDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorListGather<>(op), op, Arrays.asList("element_dtype"));
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      indices = (Operand<TInt32>) op.input(inputIndex++);
+      elementShape = (Operand<TInt32>) op.input(inputIndex++);
+      elementDtype = op.attributes().getAttrType("element_dtype");
+    }
   }
 }

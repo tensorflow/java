@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -152,7 +156,7 @@ public final class Quantize<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new QuantizeV2 operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param minRange The minimum value of the quantization range. This value may be adjusted by the
    * op depending on other parameters. The adjusted value is written to {@code output_min}.
    * If the {@code axis} attribute is specified, this must be a 1-D tensor whose size
@@ -161,7 +165,7 @@ public final class Quantize<T extends TNumber> extends RawOp {
    * op depending on other parameters. The adjusted value is written to {@code output_max}.
    * If the {@code axis} attribute is specified, this must be a 1-D tensor whose size
    * matches the {@code axis} dimension of the input and output tensors.
-   * @param T the value of the T property
+   * @param T The value of the T attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeV2} output and operands
    * @return a new instance of Quantize
@@ -351,6 +355,73 @@ public final class Quantize<T extends TNumber> extends RawOp {
     public Options ensureMinimumRange(Float ensureMinimumRange) {
       this.ensureMinimumRange = ensureMinimumRange;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Quantize<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<TFloat32> input;
+
+    /**
+     * The minimum value of the quantization range. This value may be adjusted by the
+     * op depending on other parameters. The adjusted value is written to {@code output_min}.
+     * If the {@code axis} attribute is specified, this must be a 1-D tensor whose size
+     * matches the {@code axis} dimension of the input and output tensors.
+     */
+    public final Operand<TFloat32> minRange;
+
+    /**
+     * The maximum value of the quantization range. This value may be adjusted by the
+     * op depending on other parameters. The adjusted value is written to {@code output_max}.
+     * If the {@code axis} attribute is specified, this must be a 1-D tensor whose size
+     * matches the {@code axis} dimension of the input and output tensors.
+     */
+    public final Operand<TFloat32> maxRange;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The mode attribute
+     */
+    public final String mode;
+
+    /**
+     * The roundMode attribute
+     */
+    public final String roundMode;
+
+    /**
+     * The narrowRange attribute
+     */
+    public final boolean narrowRange;
+
+    /**
+     * The axis attribute
+     */
+    public final long axis;
+
+    /**
+     * The ensureMinimumRange attribute
+     */
+    public final float ensureMinimumRange;
+
+    public Inputs(GraphOperation op) {
+      super(new Quantize<>(op), op, Arrays.asList("T", "mode", "round_mode", "narrow_range", "axis", "ensure_minimum_range"));
+      int inputIndex = 0;
+      input = (Operand<TFloat32>) op.input(inputIndex++);
+      minRange = (Operand<TFloat32>) op.input(inputIndex++);
+      maxRange = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      mode = op.attributes().getAttrString("mode");
+      roundMode = op.attributes().getAttrString("round_mode");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
+      axis = op.attributes().getAttrInt("axis");
+      ensureMinimumRange = op.attributes().getAttrFloat("ensure_minimum_range");
     }
   }
 }

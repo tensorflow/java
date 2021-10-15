@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -74,5 +77,12 @@ public final class Timestamp extends RawOp implements Operand<TFloat64> {
   @Override
   public Output<TFloat64> asOutput() {
     return ts;
+  }
+
+  public static class Inputs extends RawOpInputs<Timestamp> {
+    public Inputs(GraphOperation op) {
+      super(new Timestamp(op), op, Arrays.asList());
+      int inputIndex = 0;
+    }
   }
 }

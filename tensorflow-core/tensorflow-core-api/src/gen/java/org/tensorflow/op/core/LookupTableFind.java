@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -57,7 +61,7 @@ public final class LookupTableFind<U extends TType> extends RawOp implements Ope
    * @param scope current scope
    * @param tableHandle Handle to the table.
    * @param keys Any shape.  Keys to look up.
-   * @param defaultValue the defaultValue value
+   * @param defaultValue The defaultValue value
    * @param <U> data type for {@code LookupTableFindV2} output and operands
    * @return a new instance of LookupTableFind
    */
@@ -87,5 +91,42 @@ public final class LookupTableFind<U extends TType> extends RawOp implements Ope
   @Override
   public Output<U> asOutput() {
     return values;
+  }
+
+  public static class Inputs<U extends TType> extends RawOpInputs<LookupTableFind<U>> {
+    /**
+     * Handle to the table.
+     */
+    public final Operand<? extends TType> tableHandle;
+
+    /**
+     * Any shape.  Keys to look up.
+     */
+    public final Operand<? extends TType> keys;
+
+    /**
+     * The defaultValue input
+     */
+    public final Operand<U> defaultValue;
+
+    /**
+     * The Tin attribute
+     */
+    public final DataType Tin;
+
+    /**
+     * The Tout attribute
+     */
+    public final DataType Tout;
+
+    public Inputs(GraphOperation op) {
+      super(new LookupTableFind<>(op), op, Arrays.asList("Tin", "Tout"));
+      int inputIndex = 0;
+      tableHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      keys = (Operand<? extends TType>) op.input(inputIndex++);
+      defaultValue = (Operand<U>) op.input(inputIndex++);
+      Tin = op.attributes().getAttrType("Tin");
+      Tout = op.attributes().getAttrType("Tout");
+    }
   }
 }

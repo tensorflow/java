@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -273,6 +276,62 @@ public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
     public Options dctMethod(String dctMethod) {
       this.dctMethod = dctMethod;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeJpeg> {
+    /**
+     * 0-D.  The JPEG-encoded image.
+     */
+    public final Operand<TString> contents;
+
+    /**
+     * Number of color channels for the decoded image.
+     */
+    public final long channels;
+
+    /**
+     * Downscaling ratio.
+     */
+    public final long ratio;
+
+    /**
+     * If true use a slower but nicer upscaling of the
+     * chroma planes (yuv420/422 only).
+     */
+    public final boolean fancyUpscaling;
+
+    /**
+     * If true try to recover an image from truncated input.
+     */
+    public final boolean tryRecoverTruncated;
+
+    /**
+     * The minimum required fraction of lines before a truncated
+     * input is accepted.
+     */
+    public final float acceptableFraction;
+
+    /**
+     * string specifying a hint about the algorithm used for
+     * decompression.  Defaults to "" which maps to a system-specific
+     * default.  Currently valid values are ["INTEGER_FAST",
+     * "INTEGER_ACCURATE"].  The hint may be ignored (e.g., the internal
+     * jpeg library changes to a version that does not have that specific
+     * option.)
+     */
+    public final String dctMethod;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeJpeg(op), op, Arrays.asList("channels", "ratio", "fancy_upscaling", "try_recover_truncated", "acceptable_fraction", "dct_method"));
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+      channels = op.attributes().getAttrInt("channels");
+      ratio = op.attributes().getAttrInt("ratio");
+      fancyUpscaling = op.attributes().getAttrBool("fancy_upscaling");
+      tryRecoverTruncated = op.attributes().getAttrBool("try_recover_truncated");
+      acceptableFraction = op.attributes().getAttrFloat("acceptable_fraction");
+      dctMethod = op.attributes().getAttrString("dct_method");
     }
   }
 }

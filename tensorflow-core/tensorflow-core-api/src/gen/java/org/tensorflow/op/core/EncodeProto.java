@@ -17,16 +17,20 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
@@ -170,6 +174,51 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
     public Options descriptorSource(String descriptorSource) {
       this.descriptorSource = descriptorSource;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<EncodeProto> {
+    /**
+     * Tensor of int32 with shape {@code [batch_shape, len(field_names)]}.
+     */
+    public final Operand<TInt32> sizes;
+
+    /**
+     * List of tensors containing values for the corresponding field.
+     */
+    public final Iterable<Operand<?>> values;
+
+    /**
+     * List of strings containing proto field names.
+     */
+    public final String[] fieldNames;
+
+    /**
+     * Name of the proto message type to decode.
+     */
+    public final String messageType;
+
+    /**
+     * The descriptorSource attribute
+     */
+    public final String descriptorSource;
+
+    /**
+     * The input types.
+     */
+    public final DataType[] TinputTypes;
+
+    public Inputs(GraphOperation op) {
+      super(new EncodeProto(op), op, Arrays.asList("field_names", "message_type", "descriptor_source", "Tinput_types"));
+      int inputIndex = 0;
+      sizes = (Operand<TInt32>) op.input(inputIndex++);
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      fieldNames = op.attributes().getAttrStringList("field_names");
+      messageType = op.attributes().getAttrString("message_type");
+      descriptorSource = op.attributes().getAttrString("descriptor_source");
+      TinputTypes = op.attributes().getAttrTypeList("Tinput_types");
     }
   }
 }

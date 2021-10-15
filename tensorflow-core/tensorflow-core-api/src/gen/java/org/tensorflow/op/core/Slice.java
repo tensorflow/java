@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -57,7 +61,7 @@ public final class Slice<T extends TType> extends RawOp implements Operand<T> {
    * Factory method to create a class wrapping a new Slice operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param begin begin[i] specifies the offset into the 'i'th dimension of
    * 'input' to slice from.
    * @param sizeOutput size[i] specifies the number of elements of the 'i'th dimension
@@ -92,5 +96,46 @@ public final class Slice<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<Slice<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * begin[i] specifies the offset into the 'i'th dimension of
+     * 'input' to slice from.
+     */
+    public final Operand<U> begin;
+
+    /**
+     * size[i] specifies the number of elements of the 'i'th dimension
+     * of 'input' to slice. If size[i] is -1, all remaining elements in dimension
+     * i are included in the slice (i.e. this is equivalent to setting
+     * size[i] = input.dim_size(i) - begin[i]).
+     */
+    public final Operand<U> sizeOutput;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Index attribute
+     */
+    public final DataType Index;
+
+    public Inputs(GraphOperation op) {
+      super(new Slice<>(op), op, Arrays.asList("T", "Index"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      begin = (Operand<U>) op.input(inputIndex++);
+      sizeOutput = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Index = op.attributes().getAttrType("Index");
+    }
   }
 }

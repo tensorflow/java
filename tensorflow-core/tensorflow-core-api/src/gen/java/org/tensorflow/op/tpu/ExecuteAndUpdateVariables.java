@@ -20,15 +20,18 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -66,11 +69,11 @@ public final class ExecuteAndUpdateVariables extends RawOp implements Iterable<O
    * Factory method to create a class wrapping a new TPUExecuteAndUpdateVariables operation.
    *
    * @param scope current scope
-   * @param args the args value
-   * @param key the key value
-   * @param Tresults the value of the Tresults property
-   * @param deviceVarReadsIndices the value of the deviceVarReadsIndices property
-   * @param deviceVarUpdatesIndices the value of the deviceVarUpdatesIndices property
+   * @param args The args value
+   * @param key The key value
+   * @param Tresults The value of the Tresults attribute
+   * @param deviceVarReadsIndices The value of the deviceVarReadsIndices attribute
+   * @param deviceVarUpdatesIndices The value of the deviceVarUpdatesIndices attribute
    * @return a new instance of ExecuteAndUpdateVariables
    */
   @Endpoint(
@@ -109,5 +112,50 @@ public final class ExecuteAndUpdateVariables extends RawOp implements Iterable<O
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) results.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<ExecuteAndUpdateVariables> {
+    /**
+     * The args input
+     */
+    public final Iterable<Operand<?>> args;
+
+    /**
+     * The key input
+     */
+    public final Operand<TString> key;
+
+    /**
+     * The Targs attribute
+     */
+    public final DataType[] Targs;
+
+    /**
+     * The Tresults attribute
+     */
+    public final DataType[] Tresults;
+
+    /**
+     * The deviceVarReadsIndices attribute
+     */
+    public final long[] deviceVarReadsIndices;
+
+    /**
+     * The deviceVarUpdatesIndices attribute
+     */
+    public final long[] deviceVarUpdatesIndices;
+
+    public Inputs(GraphOperation op) {
+      super(new ExecuteAndUpdateVariables(op), op, Arrays.asList("Targs", "Tresults", "device_var_reads_indices", "device_var_updates_indices"));
+      int inputIndex = 0;
+      int argsLength = op.inputListLength("args");
+      args = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argsLength));
+      inputIndex += argsLength;
+      key = (Operand<TString>) op.input(inputIndex++);
+      Targs = op.attributes().getAttrTypeList("Targs");
+      Tresults = op.attributes().getAttrTypeList("Tresults");
+      deviceVarReadsIndices = op.attributes().getAttrIntList("device_var_reads_indices");
+      deviceVarUpdatesIndices = op.attributes().getAttrIntList("device_var_updates_indices");
+    }
   }
 }

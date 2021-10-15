@@ -19,14 +19,17 @@ package org.tensorflow.op.sparse;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -139,5 +142,45 @@ public final class SparseSplit<T extends TType> extends RawOp {
    */
   public List<Output<TInt64>> outputShape() {
     return outputShape;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseSplit<T>> {
+    /**
+     * 0-D.  The dimension along which to split.  Must be in the range
+     * {@code [0, rank(shape))}.
+     */
+    public final Operand<TInt64> splitDim;
+
+    /**
+     * 2-D tensor represents the indices of the sparse tensor.
+     */
+    public final Operand<TInt64> indices;
+
+    /**
+     * 1-D tensor represents the values of the sparse tensor.
+     */
+    public final Operand<T> values;
+
+    /**
+     * 1-D. tensor represents the shape of the sparse tensor.
+     * output indices: A list of 1-D tensors represents the indices of the output
+     * sparse tensors.
+     */
+    public final Operand<TInt64> shape;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseSplit<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      splitDim = (Operand<TInt64>) op.input(inputIndex++);
+      indices = (Operand<TInt64>) op.input(inputIndex++);
+      values = (Operand<T>) op.input(inputIndex++);
+      shape = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

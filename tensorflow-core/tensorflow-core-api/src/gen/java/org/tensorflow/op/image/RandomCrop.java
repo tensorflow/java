@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -155,6 +159,45 @@ public final class RandomCrop<T extends TNumber> extends RawOp implements Operan
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RandomCrop<T>> {
+    /**
+     * 3-D of shape {@code [height, width, channels]}.
+     */
+    public final Operand<T> image;
+
+    /**
+     * 1-D of length 2 containing: {@code crop_height}, {@code crop_width}..
+     */
+    public final Operand<TInt64> sizeOutput;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * An second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    public Inputs(GraphOperation op) {
+      super(new RandomCrop<>(op), op, Arrays.asList("T", "seed", "seed2"));
+      int inputIndex = 0;
+      image = (Operand<T>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
     }
   }
 }

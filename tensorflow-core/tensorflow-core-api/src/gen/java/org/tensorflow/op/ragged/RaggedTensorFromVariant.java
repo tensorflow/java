@@ -19,14 +19,17 @@ package org.tensorflow.op.ragged;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -78,8 +81,8 @@ public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> e
    * -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
    * @param outputRaggedRank The expected ragged rank of the output {@code RaggedTensor}. The following must hold:
    * {@code output_ragged_rank = rank(encoded_ragged) + input_ragged_rank}.
-   * @param Tvalues the value of the Tvalues property
-   * @param Tsplits the value of the Tsplits property
+   * @param Tvalues The value of the Tvalues attribute
+   * @param Tsplits The value of the Tsplits attribute
    * @param <T> data type for {@code RaggedTensorFromVariant} output and operands
    * @param <U> data type for {@code RaggedTensorFromVariant} output and operands
    * @return a new instance of RaggedTensorFromVariant
@@ -108,7 +111,7 @@ public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> e
    * -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
    * @param outputRaggedRank The expected ragged rank of the output {@code RaggedTensor}. The following must hold:
    * {@code output_ragged_rank = rank(encoded_ragged) + input_ragged_rank}.
-   * @param Tvalues the value of the Tvalues property
+   * @param Tvalues The value of the Tvalues attribute
    * @param <U> data type for {@code RaggedTensorFromVariant} output and operands
    * @return a new instance of RaggedTensorFromVariant, with default output types
    */
@@ -138,5 +141,37 @@ public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> e
    */
   public Output<U> outputDenseValues() {
     return outputDenseValues;
+  }
+
+  public static class Inputs extends RawOpInputs<RaggedTensorFromVariant<?, ?>> {
+    /**
+     * A {@code variant} Tensor containing encoded {@code RaggedTensor}s.
+     */
+    public final Operand<? extends TType> encodedRagged;
+
+    /**
+     * The ragged rank of each encoded `RaggedTensor` component in the input. If set to
+     * -1, this is inferred as `output_ragged_rank` - `rank(encoded_ragged)`
+     */
+    public final long inputRaggedRank;
+
+    /**
+     * The Tvalues attribute
+     */
+    public final DataType Tvalues;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedTensorFromVariant<>(op), op, Arrays.asList("input_ragged_rank", "Tvalues", "Tsplits"));
+      int inputIndex = 0;
+      encodedRagged = (Operand<? extends TType>) op.input(inputIndex++);
+      inputRaggedRank = op.attributes().getAttrInt("input_ragged_rank");
+      Tvalues = op.attributes().getAttrType("Tvalues");
+      Tsplits = op.attributes().getAttrType("Tsplits");
+    }
   }
 }

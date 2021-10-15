@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -89,5 +93,48 @@ public final class StatelessRandomUniformFullIntV2<U extends TNumber> extends Ra
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<StatelessRandomUniformFullIntV2<?>> {
+    /**
+     * The shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * Key for the counter-based RNG algorithm (shape uint64[1]).
+     */
+    public final Operand<? extends TType> key;
+
+    /**
+     * Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
+     */
+    public final Operand<? extends TType> counter;
+
+    /**
+     * The RNG algorithm (shape int32[]).
+     */
+    public final Operand<TInt32> alg;
+
+    /**
+     * The type of the output.
+     */
+    public final DataType dtype;
+
+    /**
+     * The Tshape attribute
+     */
+    public final DataType Tshape;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessRandomUniformFullIntV2<>(op), op, Arrays.asList("dtype", "Tshape"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      key = (Operand<? extends TType>) op.input(inputIndex++);
+      counter = (Operand<? extends TType>) op.input(inputIndex++);
+      alg = (Operand<TInt32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      Tshape = op.attributes().getAttrType("Tshape");
+    }
   }
 }

@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -62,5 +65,30 @@ public final class RngSkip extends RawOp {
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(delta.asOutput());
     return new RngSkip(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<RngSkip> {
+    /**
+     * The handle of the resource variable that stores the state of the RNG.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * The RNG algorithm.
+     */
+    public final Operand<TInt64> algorithm;
+
+    /**
+     * The amount of advancement.
+     */
+    public final Operand<TInt64> delta;
+
+    public Inputs(GraphOperation op) {
+      super(new RngSkip(op), op, Arrays.asList());
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      algorithm = (Operand<TInt64>) op.input(inputIndex++);
+      delta = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

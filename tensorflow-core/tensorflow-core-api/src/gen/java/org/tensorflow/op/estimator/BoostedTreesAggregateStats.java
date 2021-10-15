@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -86,5 +89,48 @@ public final class BoostedTreesAggregateStats extends RawOp implements Operand<T
   @Override
   public Output<TFloat32> asOutput() {
     return statsSummary;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesAggregateStats> {
+    /**
+     * int32; Rank 1 Tensor containing node ids for each example, shape [batch_size].
+     */
+    public final Operand<TInt32> nodeIds;
+
+    /**
+     * float32; Rank 2 Tensor (shape=[batch_size, logits_dimension]) with gradients for each example.
+     */
+    public final Operand<TFloat32> gradients;
+
+    /**
+     * float32; Rank 2 Tensor (shape=[batch_size, hessian_dimension]) with hessians for each example.
+     */
+    public final Operand<TFloat32> hessians;
+
+    /**
+     * int32; Rank 2 feature Tensors (shape=[batch_size, feature_dimension]).
+     */
+    public final Operand<TInt32> feature;
+
+    /**
+     * int; the maximum number of splits possible in the whole tree.
+     */
+    public final long maxSplits;
+
+    /**
+     * int; equals to the maximum possible value of bucketized feature.
+     */
+    public final long numBuckets;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesAggregateStats(op), op, Arrays.asList("max_splits", "num_buckets"));
+      int inputIndex = 0;
+      nodeIds = (Operand<TInt32>) op.input(inputIndex++);
+      gradients = (Operand<TFloat32>) op.input(inputIndex++);
+      hessians = (Operand<TFloat32>) op.input(inputIndex++);
+      feature = (Operand<TInt32>) op.input(inputIndex++);
+      maxSplits = op.attributes().getAttrInt("max_splits");
+      numBuckets = op.attributes().getAttrInt("num_buckets");
+    }
   }
 }

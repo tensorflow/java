@@ -141,8 +141,8 @@ public final class DataOps {
   /**
    * A container for an iterator resource.
    *
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of AnonymousIterator
    */
   public AnonymousIterator anonymousIterator(List<Class<? extends TType>> outputTypes,
@@ -153,10 +153,10 @@ public final class DataOps {
   /**
    * The AssertCardinalityDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param cardinality the cardinality value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param cardinality The cardinality value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of AssertCardinalityDataset
    */
   public AssertCardinalityDataset assertCardinalityDataset(Operand<? extends TType> inputDataset,
@@ -179,8 +179,8 @@ public final class DataOps {
    *  {@code data.AssertNextDataset} passes through the outputs of its input dataset.
    * @param transformations A {@code tf.string} vector {@code tf.Tensor} identifying the transformations that are
    *  expected to happen next.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of AssertNextDataset
    */
   public AssertNextDataset assertNextDataset(Operand<? extends TType> inputDataset,
@@ -201,8 +201,8 @@ public final class DataOps {
    * @param inputDataset A variant tensor representing the input dataset.
    * @param numWorkers A scalar representing the number of workers to distribute this dataset across.
    * @param index A scalar representing the index of the current worker out of num_workers.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of AutoShardDataset
    */
@@ -215,12 +215,12 @@ public final class DataOps {
   /**
    * Creates a dataset that batches {@code batch_size} elements from {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param batchSize A scalar representing the number of elements to accumulate in a batch.
    * @param dropRemainder A scalar representing whether the last batch should be dropped in case its size
    *  is smaller than desired.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of BatchDataset
    */
@@ -233,10 +233,10 @@ public final class DataOps {
   /**
    * Records the bytes size of each element of {@code input_dataset} in a StatsAggregator.
    *
-   * @param inputDataset the inputDataset value
-   * @param tag the tag value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param tag The tag value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of BytesProducedStatsDataset
    */
   public BytesProducedStatsDataset bytesProducedStatsDataset(Operand<? extends TType> inputDataset,
@@ -247,17 +247,17 @@ public final class DataOps {
   /**
    * The CSVDatasetV2 operation
    *
-   * @param filenames the filenames value
-   * @param compressionType the compressionType value
-   * @param bufferSize the bufferSize value
-   * @param header the header value
-   * @param fieldDelim the fieldDelim value
-   * @param useQuoteDelim the useQuoteDelim value
-   * @param naValue the naValue value
-   * @param selectCols the selectCols value
-   * @param recordDefaults the recordDefaults value
-   * @param excludeCols the excludeCols value
-   * @param outputShapes the value of the outputShapes property
+   * @param filenames The filenames value
+   * @param compressionType The compressionType value
+   * @param bufferSize The bufferSize value
+   * @param header The header value
+   * @param fieldDelim The fieldDelim value
+   * @param useQuoteDelim The useQuoteDelim value
+   * @param naValue The naValue value
+   * @param selectCols The selectCols value
+   * @param recordDefaults The recordDefaults value
+   * @param excludeCols The excludeCols value
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of CSVDataset
    */
   public CSVDataset cSVDataset(Operand<TString> filenames, Operand<TString> compressionType,
@@ -270,11 +270,11 @@ public final class DataOps {
   /**
    * The CacheDatasetV2 operation
    *
-   * @param inputDataset the inputDataset value
-   * @param filename the filename value
-   * @param cache the cache value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param filename The filename value
+   * @param cache The cache value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of CacheDataset
    */
   public CacheDataset cacheDataset(Operand<? extends TType> inputDataset, Operand<TString> filename,
@@ -286,15 +286,15 @@ public final class DataOps {
   /**
    * The ChooseFastestBranchDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param ratioNumerator the ratioNumerator value
-   * @param ratioDenominator the ratioDenominator value
-   * @param otherArguments the otherArguments value
-   * @param numElementsPerBranch the value of the numElementsPerBranch property
-   * @param branches the value of the branches property
-   * @param otherArgumentsLengths the value of the otherArgumentsLengths property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param ratioNumerator The ratioNumerator value
+   * @param ratioDenominator The ratioDenominator value
+   * @param otherArguments The otherArguments value
+   * @param numElementsPerBranch The value of the numElementsPerBranch attribute
+   * @param branches The value of the branches attribute
+   * @param otherArgumentsLengths The value of the otherArgumentsLengths attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of ChooseFastestBranchDataset
    */
   public ChooseFastestBranchDataset chooseFastestBranchDataset(
@@ -308,10 +308,10 @@ public final class DataOps {
   /**
    * The ChooseFastestDataset operation
    *
-   * @param inputDatasets the inputDatasets value
-   * @param numExperiments the value of the numExperiments property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDatasets The inputDatasets value
+   * @param numExperiments The value of the numExperiments attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of ChooseFastestDataset
    */
   public ChooseFastestDataset chooseFastestDataset(Iterable<Operand<? extends TType>> inputDatasets,
@@ -322,10 +322,10 @@ public final class DataOps {
   /**
    * Creates a dataset that concatenates {@code input_dataset} with {@code another_dataset}.
    *
-   * @param inputDataset the inputDataset value
-   * @param anotherDataset the anotherDataset value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param anotherDataset The anotherDataset value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of ConcatenateDataset
    */
   public ConcatenateDataset concatenateDataset(Operand<? extends TType> inputDataset,
@@ -337,17 +337,17 @@ public final class DataOps {
   /**
    * Creates a dataset that reads data from the tf.data service.
    *
-   * @param datasetId the datasetId value
-   * @param processingMode the processingMode value
-   * @param address the address value
-   * @param protocol the protocol value
-   * @param jobName the jobName value
-   * @param consumerIndex the consumerIndex value
-   * @param numConsumers the numConsumers value
-   * @param maxOutstandingRequests the maxOutstandingRequests value
-   * @param iterationCounter the iterationCounter value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param datasetId The datasetId value
+   * @param processingMode The processingMode value
+   * @param address The address value
+   * @param protocol The protocol value
+   * @param jobName The jobName value
+   * @param consumerIndex The consumerIndex value
+   * @param numConsumers The numConsumers value
+   * @param maxOutstandingRequests The maxOutstandingRequests value
+   * @param iterationCounter The iterationCounter value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of DataServiceDatasetV2
    */
@@ -399,8 +399,8 @@ public final class DataOps {
    * Outputs the single element from the given dataset.
    *
    * @param dataset A handle to a dataset that contains a single element.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of DatasetToSingleElement
    */
   public DatasetToSingleElement datasetToSingleElement(Operand<? extends TType> dataset,
@@ -443,8 +443,8 @@ public final class DataOps {
    * @param rowShape A vector representing the dense shape of each row in the produced
    *  SparseTensor. The shape may be partially specified, using {@code -1} to indicate
    *  that a particular dimension should use the maximum size of all batch elements.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of DenseToSparseBatchDataset
    */
   public DenseToSparseBatchDataset denseToSparseBatchDataset(Operand<? extends TType> inputDataset,
@@ -473,8 +473,8 @@ public final class DataOps {
    *  {@code N} data inputs should produce the next output element.
    * @param dataInputDatasets {@code N} datasets with the same type that will be interleaved according to
    *  the values of {@code selector_input_dataset}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of DirectedInterleaveDataset
    */
@@ -489,9 +489,9 @@ public final class DataOps {
   /**
    * Creates a dataset containing elements of first component of {@code input_dataset} having true in the last component.
    *
-   * @param inputDataset the inputDataset value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of FilterByLastComponentDataset
    */
   public FilterByLastComponentDataset filterByLastComponentDataset(
@@ -509,12 +509,12 @@ public final class DataOps {
    *  <li>One tensor for each value in {@code other_arguments}.</li>
    *  </ul>
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param otherArguments A list of tensors, typically values that were captured when
    *  building a closure for {@code predicate}.
    * @param predicate A function returning a scalar boolean.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of FilterDataset
    */
   public FilterDataset filterDataset(Operand<? extends TType> inputDataset,
@@ -527,8 +527,8 @@ public final class DataOps {
    * Creates a dataset by applying {@code tf.data.Options} to {@code input_dataset}.
    *
    * @param inputDataset A variant tensor representing the input dataset.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of FinalizeDataset
    */
@@ -541,12 +541,12 @@ public final class DataOps {
   /**
    * The FixedLengthRecordDatasetV2 operation
    *
-   * @param filenames the filenames value
-   * @param headerBytes the headerBytes value
-   * @param recordBytes the recordBytes value
-   * @param footerBytes the footerBytes value
-   * @param bufferSize the bufferSize value
-   * @param compressionType the compressionType value
+   * @param filenames The filenames value
+   * @param headerBytes The headerBytes value
+   * @param recordBytes The recordBytes value
+   * @param footerBytes The footerBytes value
+   * @param bufferSize The bufferSize value
+   * @param compressionType The compressionType value
    * @return a new instance of FixedLengthRecordDataset
    */
   public FixedLengthRecordDataset fixedLengthRecordDataset(Operand<TString> filenames,
@@ -561,13 +561,13 @@ public final class DataOps {
    *  Dataset variant, and FlatMapDataset will flatten successive results
    *  into a single Dataset.
    *
-   * @param inputDataset the inputDataset value
-   * @param otherArguments the otherArguments value
+   * @param inputDataset The inputDataset value
+   * @param otherArguments The otherArguments value
    * @param f A function mapping elements of {@code input_dataset}, concatenated with
    *  {@code other_arguments}, to a Dataset variant that contains elements matching
    *  {@code output_types} and {@code output_shapes}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of FlatMapDataset
    */
   public FlatMapDataset flatMapDataset(Operand<? extends TType> inputDataset,
@@ -579,14 +579,14 @@ public final class DataOps {
   /**
    * Creates a dataset that invokes a function to generate elements.
    *
-   * @param initFuncOtherArgs the initFuncOtherArgs value
-   * @param nextFuncOtherArgs the nextFuncOtherArgs value
-   * @param finalizeFuncOtherArgs the finalizeFuncOtherArgs value
-   * @param initFunc the value of the initFunc property
-   * @param nextFunc the value of the nextFunc property
-   * @param finalizeFunc the value of the finalizeFunc property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param initFuncOtherArgs The initFuncOtherArgs value
+   * @param nextFuncOtherArgs The nextFuncOtherArgs value
+   * @param finalizeFuncOtherArgs The finalizeFuncOtherArgs value
+   * @param initFunc The value of the initFunc attribute
+   * @param nextFunc The value of the nextFunc attribute
+   * @param finalizeFunc The value of the finalizeFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of GeneratorDataset
    */
   public GeneratorDataset generatorDataset(Iterable<Operand<?>> initFuncOtherArgs,
@@ -616,8 +616,8 @@ public final class DataOps {
    * @param reduceFunc A function mapping the current reducer state and an element of {@code input_dataset},
    *  concatenated with {@code reduce_func_other_arguments} to a new reducer state.
    * @param finalizeFunc A function mapping the final reducer state to an output element.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of GroupByReducerDataset
    */
   public GroupByReducerDataset groupByReducerDataset(Operand<? extends TType> inputDataset,
@@ -633,16 +633,16 @@ public final class DataOps {
    * Creates a dataset that computes a windowed group-by on {@code input_dataset}.
    *  // TODO(mrry): Support non-int64 keys.
    *
-   * @param inputDataset the inputDataset value
-   * @param keyFuncOtherArguments the keyFuncOtherArguments value
-   * @param reduceFuncOtherArguments the reduceFuncOtherArguments value
-   * @param windowSizeFuncOtherArguments the windowSizeFuncOtherArguments value
+   * @param inputDataset The inputDataset value
+   * @param keyFuncOtherArguments The keyFuncOtherArguments value
+   * @param reduceFuncOtherArguments The reduceFuncOtherArguments value
+   * @param windowSizeFuncOtherArguments The windowSizeFuncOtherArguments value
    * @param keyFunc A function mapping an element of {@code input_dataset}, concatenated
    *  with {@code key_func_other_arguments} to a scalar value of type DT_INT64.
-   * @param reduceFunc the value of the reduceFunc property
-   * @param windowSizeFunc the value of the windowSizeFunc property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param reduceFunc The value of the reduceFunc attribute
+   * @param windowSizeFunc The value of the windowSizeFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of GroupByWindowDataset
    */
   public GroupByWindowDataset groupByWindowDataset(Operand<? extends TType> inputDataset,
@@ -656,9 +656,9 @@ public final class DataOps {
   /**
    * Creates a dataset that contains the elements of {@code input_dataset} ignoring errors.
    *
-   * @param inputDataset the inputDataset value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of IgnoreErrorsDataset
    */
@@ -671,8 +671,8 @@ public final class DataOps {
   /**
    * The InitializeTableFromDataset operation
    *
-   * @param tableHandle the tableHandle value
-   * @param dataset the dataset value
+   * @param tableHandle The tableHandle value
+   * @param dataset The dataset value
    * @return a new instance of InitializeTableFromDataset
    */
   public InitializeTableFromDataset initializeTableFromDataset(Operand<? extends TType> tableHandle,
@@ -688,15 +688,15 @@ public final class DataOps {
    *  InterleaveDataset will interleave sequences of up to {@code block_length}
    *  consecutive elements from {@code cycle_length} input elements.
    *
-   * @param inputDataset the inputDataset value
-   * @param otherArguments the otherArguments value
-   * @param cycleLength the cycleLength value
-   * @param blockLength the blockLength value
+   * @param inputDataset The inputDataset value
+   * @param otherArguments The otherArguments value
+   * @param cycleLength The cycleLength value
+   * @param blockLength The blockLength value
    * @param f A function mapping elements of {@code input_dataset}, concatenated with
    *  {@code other_arguments}, to a Dataset variant that contains elements matching
    *  {@code output_types} and {@code output_shapes}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of InterleaveDataset
    */
   public InterleaveDataset interleaveDataset(Operand<? extends TType> inputDataset,
@@ -708,10 +708,10 @@ public final class DataOps {
   /**
    * The IteratorV2 operation
    *
-   * @param sharedName the value of the sharedName property
-   * @param container the value of the container property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param sharedName The value of the sharedName attribute
+   * @param container The value of the container attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of Iterator
    */
   public Iterator iterator(String sharedName, String container,
@@ -722,9 +722,9 @@ public final class DataOps {
   /**
    * Gets the next output from the given iterator .
    *
-   * @param iterator the iterator value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param iterator The iterator value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of IteratorGetNext
    */
   public IteratorGetNext iteratorGetNext(Operand<? extends TType> iterator,
@@ -735,9 +735,9 @@ public final class DataOps {
   /**
    * Gets the next output from the given iterator as an Optional variant.
    *
-   * @param iterator the iterator value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param iterator The iterator value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of IteratorGetNextAsOptional
    */
   public IteratorGetNextAsOptional iteratorGetNextAsOptional(Operand<? extends TType> iterator,
@@ -752,9 +752,9 @@ public final class DataOps {
    *  the calling thread is not a member of the thread pool used to execute parallel
    *  operations (e.g. in eager mode).
    *
-   * @param iterator the iterator value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param iterator The iterator value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of IteratorGetNextSync
    */
   public IteratorGetNextSync iteratorGetNextSync(Operand<? extends TType> iterator,
@@ -785,8 +785,8 @@ public final class DataOps {
    *
    * @param filenames A scalar or a vector containing the name(s) of the binary file(s) to be
    *  read.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of LMDBDataset
    */
   public LMDBDataset lMDBDataset(Operand<TString> filenames,
@@ -797,10 +797,10 @@ public final class DataOps {
   /**
    * Records the latency of producing {@code input_dataset} elements in a StatsAggregator.
    *
-   * @param inputDataset the inputDataset value
-   * @param tag the tag value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param tag The tag value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of LatencyStatsDataset
    */
   public LatencyStatsDataset latencyStatsDataset(Operand<? extends TType> inputDataset,
@@ -817,17 +817,17 @@ public final class DataOps {
    *  allows the training step to proceed so long as some data is available.
    *  <p>!! WARNING !! This dataset is not deterministic!
    *
-   * @param inputDataset the inputDataset value
-   * @param otherArguments the otherArguments value
-   * @param cycleLength the cycleLength value
-   * @param blockLength the blockLength value
-   * @param bufferOutputElements the bufferOutputElements value
-   * @param prefetchInputElements the prefetchInputElements value
+   * @param inputDataset The inputDataset value
+   * @param otherArguments The otherArguments value
+   * @param cycleLength The cycleLength value
+   * @param blockLength The blockLength value
+   * @param bufferOutputElements The bufferOutputElements value
+   * @param prefetchInputElements The prefetchInputElements value
    * @param f A function mapping elements of {@code input_dataset}, concatenated with
    *  {@code other_arguments}, to a Dataset variant that contains elements matching
    *  {@code output_types} and {@code output_shapes}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of LegacyParallelInterleaveDataset
    */
@@ -843,11 +843,11 @@ public final class DataOps {
   /**
    * The LoadDataset operation
    *
-   * @param path the path value
-   * @param readerFuncOtherArgs the readerFuncOtherArgs value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
-   * @param readerFunc the value of the readerFunc property
+   * @param path The path value
+   * @param readerFuncOtherArgs The readerFuncOtherArgs value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param readerFunc The value of the readerFunc attribute
    * @param options carries optional attribute values
    * @return a new instance of LoadDataset
    */
@@ -862,8 +862,8 @@ public final class DataOps {
    *  This operation may be executed multiple times. Each execution will reset the
    *  iterator in {@code iterator} to the first element of {@code dataset}.
    *
-   * @param dataset the dataset value
-   * @param iterator the iterator value
+   * @param dataset The dataset value
+   * @param iterator The iterator value
    * @return a new instance of MakeIterator
    */
   public MakeIterator makeIterator(Operand<? extends TType> dataset,
@@ -890,8 +890,8 @@ public final class DataOps {
    * @param dropRemainder A scalar representing whether the last batch should be dropped in case its size
    *  is smaller than desired.
    * @param f A function to apply to the outputs of {@code input_dataset}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapAndBatchDataset
    */
@@ -906,11 +906,11 @@ public final class DataOps {
   /**
    * Creates a dataset that applies {@code f} to the outputs of {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
-   * @param otherArguments the otherArguments value
-   * @param f the value of the f property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param otherArguments The otherArguments value
+   * @param f The value of the f attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapDataset
    */
@@ -924,7 +924,7 @@ public final class DataOps {
   /**
    * The MatchingFilesDataset operation
    *
-   * @param patterns the patterns value
+   * @param patterns The patterns value
    * @return a new instance of MatchingFilesDataset
    */
   public MatchingFilesDataset matchingFilesDataset(Operand<TString> patterns) {
@@ -934,10 +934,10 @@ public final class DataOps {
   /**
    * Creates a dataset that overrides the maximum intra-op parallelism.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param maxIntraOpParallelism Identifies the maximum intra-op parallelism to use.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of MaxIntraOpParallelismDataset
    */
   public MaxIntraOpParallelismDataset maxIntraOpParallelismDataset(
@@ -951,8 +951,8 @@ public final class DataOps {
    *  Identity transformation that models performance.
    *
    * @param inputDataset A variant tensor representing the input dataset.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ModelDataset
    */
@@ -965,9 +965,9 @@ public final class DataOps {
   /**
    * The NonSerializableDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of NonSerializableDataset
    */
   public NonSerializableDataset nonSerializableDataset(Operand<? extends TType> inputDataset,
@@ -996,8 +996,8 @@ public final class DataOps {
    *
    * @param datasetFactory A function of type {@code () -> DT_VARIANT}, where the returned
    *  DT_VARIANT is a dataset.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of OneShotIterator
    */
@@ -1015,8 +1015,8 @@ public final class DataOps {
    * @param optimizationsEnabled A {@code tf.string} vector {@code tf.Tensor} identifying user enabled optimizations.
    * @param optimizationsDisabled A {@code tf.string} vector {@code tf.Tensor} identifying user disabled optimizations.
    * @param optimizationsDefault A {@code tf.string} vector {@code tf.Tensor} identifying optimizations by default.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of OptimizeDataset
    */
@@ -1030,7 +1030,7 @@ public final class DataOps {
   /**
    * Constructs an Optional variant from a tuple of tensors.
    *
-   * @param components the components value
+   * @param components The components value
    * @return a new instance of OptionalFromValue
    */
   public OptionalFromValue optionalFromValue(Iterable<Operand<?>> components) {
@@ -1040,9 +1040,9 @@ public final class DataOps {
   /**
    * Returns the value stored in an Optional variant or raises an error if none exists.
    *
-   * @param optional the optional value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param optional The optional value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of OptionalGetValue
    */
   public OptionalGetValue optionalGetValue(Operand<? extends TType> optional,
@@ -1053,7 +1053,7 @@ public final class DataOps {
   /**
    * Returns true if and only if the given Optional variant has a value.
    *
-   * @param optional the optional value
+   * @param optional The optional value
    * @return a new instance of OptionalHasValue
    */
   public OptionalHasValue optionalHasValue(Operand<? extends TType> optional) {
@@ -1074,8 +1074,8 @@ public final class DataOps {
    *
    * @param inputDataset A variant tensor representing the input dataset.
    * @param serializedOptions A {@code tf.string} scalar {@code tf.Tensor} of serialized {@code tf.data.Options} protocol buffer.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of OptionsDataset
    */
   public OptionsDataset optionsDataset(Operand<? extends TType> inputDataset,
@@ -1087,7 +1087,7 @@ public final class DataOps {
   /**
    * Creates a dataset that batches and pads {@code batch_size} elements from the input.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param batchSize A scalar representing the number of elements to accumulate in a
    *  batch.
    * @param paddedShapes A list of int64 tensors representing the desired padded shapes
@@ -1098,7 +1098,7 @@ public final class DataOps {
    *  each of the outputs.
    * @param dropRemainder A scalar representing whether the last batch should be dropped in case its size
    *  is smaller than desired.
-   * @param outputShapes the value of the outputShapes property
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of PaddedBatchDataset
    */
@@ -1112,12 +1112,12 @@ public final class DataOps {
   /**
    * The ParallelBatchDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param batchSize the batchSize value
-   * @param numParallelCalls the numParallelCalls value
-   * @param dropRemainder the dropRemainder value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param batchSize The batchSize value
+   * @param numParallelCalls The numParallelCalls value
+   * @param dropRemainder The dropRemainder value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ParallelBatchDataset
    */
@@ -1160,8 +1160,8 @@ public final class DataOps {
    * @param f A function mapping elements of {@code input_dataset}, concatenated with
    *  {@code other_arguments}, to a Dataset variant that contains elements matching
    *  {@code output_types} and {@code output_shapes}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ParallelInterleaveDataset
    */
@@ -1179,13 +1179,13 @@ public final class DataOps {
    *  Unlike a &quot;MapDataset&quot;, which applies {@code f} sequentially, this dataset invokes up
    *  to {@code num_parallel_calls} copies of {@code f} in parallel.
    *
-   * @param inputDataset the inputDataset value
-   * @param otherArguments the otherArguments value
+   * @param inputDataset The inputDataset value
+   * @param otherArguments The otherArguments value
    * @param numParallelCalls The number of concurrent invocations of {@code f} that process
    *  elements from {@code input_dataset} in parallel.
-   * @param f the value of the f property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param f The value of the f attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ParallelMapDataset
    */
@@ -1199,8 +1199,8 @@ public final class DataOps {
   /**
    * Transforms {@code input_dataset} containing {@code Example} protos as vectors of DT_STRING into a dataset of {@code Tensor} or {@code SparseTensor} objects representing the parsed features.
    *
-   * @param inputDataset the inputDataset value
-   * @param numParallelCalls the numParallelCalls value
+   * @param inputDataset The inputDataset value
+   * @param numParallelCalls The numParallelCalls value
    * @param denseDefaults A dict mapping string keys to {@code Tensor}s.
    *  The keys of the dict must match the dense_keys of the feature.
    * @param sparseKeys A list of string keys in the examples features.
@@ -1221,8 +1221,8 @@ public final class DataOps {
    *  given feature along this dimension.
    * @param outputTypes The type list for the return values.
    * @param outputShapes The list of shapes being produced.
-   * @param raggedValueTypes the value of the raggedValueTypes property
-   * @param raggedSplitTypes the value of the raggedSplitTypes property
+   * @param raggedValueTypes The value of the raggedValueTypes attribute
+   * @param raggedSplitTypes The value of the raggedSplitTypes attribute
    * @param options carries optional attribute values
    * @return a new instance of ParseExampleDataset
    */
@@ -1238,11 +1238,11 @@ public final class DataOps {
   /**
    * Creates a dataset that asynchronously prefetches elements from {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param bufferSize The maximum number of elements to buffer in an iterator over
    *  this dataset.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of PrefetchDataset
    */
@@ -1255,10 +1255,10 @@ public final class DataOps {
   /**
    * Creates a dataset that uses a custom thread pool to compute {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param numThreads Identifies the number of threads to use for the private threadpool.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of PrivateThreadPoolDataset
    */
   public PrivateThreadPoolDataset privateThreadPoolDataset(Operand<? extends TType> inputDataset,
@@ -1282,8 +1282,8 @@ public final class DataOps {
    *  seed2 is set to be non-zero, the random number generator is seeded
    *  by the given seed.  Otherwise, a random seed is used.
    * @param seed2 A second scalar seed to avoid seed collision.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of RandomDataset
    */
   public RandomDataset randomDataset(Operand<TInt64> seed, Operand<TInt64> seed2,
@@ -1297,8 +1297,8 @@ public final class DataOps {
    * @param start corresponds to start in python's xrange().
    * @param stop corresponds to stop in python's xrange().
    * @param step corresponds to step in python's xrange().
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of RangeDataset
    */
   public RangeDataset rangeDataset(Operand<TInt64> start, Operand<TInt64> stop,
@@ -1314,9 +1314,9 @@ public final class DataOps {
    * @param inputDataset A variant tensor representing the input dataset.
    * @param batchSizes A vector of integers representing the size of batches to produce. These values
    *  are cycled through in order.
-   * @param dropRemainder the dropRemainder value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param dropRemainder The dropRemainder value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of RebatchDatasetV2
    */
   public RebatchDatasetV2 rebatchDatasetV2(Operand<? extends TType> inputDataset,
@@ -1331,12 +1331,12 @@ public final class DataOps {
    * @param inputDataset A variant tensor representing the input dataset.
    * @param initialState A nested structure of tensors, representing the initial state of the
    *  transformation.
-   * @param otherArguments the otherArguments value
+   * @param otherArguments The otherArguments value
    * @param f A function that maps {@code (old_state, input_element)} to {@code new_state}. It must take
    *  two arguments and return a nested structures of tensors. The structure of
    *  {@code new_state} must match the structure of {@code initial_state}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ReduceDataset
    */
@@ -1350,10 +1350,10 @@ public final class DataOps {
   /**
    * Registers a dataset with the tf.data service.
    *
-   * @param dataset the dataset value
-   * @param address the address value
-   * @param protocol the protocol value
-   * @param externalStatePolicy the value of the externalStatePolicy property
+   * @param dataset The dataset value
+   * @param address The address value
+   * @param protocol The protocol value
+   * @param externalStatePolicy The value of the externalStatePolicy attribute
    * @return a new instance of RegisterDataset
    */
   public RegisterDataset registerDataset(Operand<? extends TType> dataset, Operand<TString> address,
@@ -1364,11 +1364,11 @@ public final class DataOps {
   /**
    * Creates a dataset that emits the outputs of {@code input_dataset} {@code count} times.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param count A scalar representing the number of times that {@code input_dataset} should
    *  be repeated. A value of {@code -1} indicates that it should be repeated infinitely.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of RepeatDataset
    */
   public RepeatDataset repeatDataset(Operand<? extends TType> inputDataset, Operand<TInt64> count,
@@ -1384,13 +1384,13 @@ public final class DataOps {
    *  {@code experimental_optimization.filter_with_random_uniform_fusion} option of
    *  {@code tf.data.Options}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param rate A scalar representing the sample rate. Each element of {@code input_dataset} is
    *  retained with this probability, independent of all other elements.
    * @param seed A scalar representing seed of random number generator.
    * @param seed2 A scalar representing seed2 of random number generator.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SamplingDataset
    */
   public SamplingDataset samplingDataset(Operand<? extends TType> inputDataset,
@@ -1402,10 +1402,10 @@ public final class DataOps {
   /**
    * The SaveDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param path the path value
-   * @param shardFuncOtherArgs the shardFuncOtherArgs value
-   * @param shardFunc the value of the shardFunc property
+   * @param inputDataset The inputDataset value
+   * @param path The path value
+   * @param shardFuncOtherArgs The shardFuncOtherArgs value
+   * @param shardFunc The value of the shardFunc attribute
    * @param options carries optional attribute values
    * @return a new instance of SaveDataset
    */
@@ -1418,12 +1418,12 @@ public final class DataOps {
   /**
    * Creates a dataset successively reduces {@code f} over the elements of {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
-   * @param initialState the initialState value
-   * @param otherArguments the otherArguments value
-   * @param f the value of the f property
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param initialState The initialState value
+   * @param otherArguments The otherArguments value
+   * @param f The value of the f attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ScanDataset
    */
@@ -1449,12 +1449,12 @@ public final class DataOps {
   /**
    * The SetStatsAggregatorDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param statsAggregator the statsAggregator value
-   * @param tag the tag value
-   * @param counterPrefix the counterPrefix value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param statsAggregator The statsAggregator value
+   * @param tag The tag value
+   * @param counterPrefix The counterPrefix value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SetStatsAggregatorDataset
    */
   public SetStatsAggregatorDataset setStatsAggregatorDataset(Operand<? extends TType> inputDataset,
@@ -1467,11 +1467,11 @@ public final class DataOps {
   /**
    * Creates a {@code Dataset} that includes only 1/{@code num_shards} of this dataset.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param numShards An integer representing the number of shards operating in parallel.
    * @param index An integer representing the current worker index.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ShardDataset
    */
@@ -1484,14 +1484,14 @@ public final class DataOps {
   /**
    * The ShuffleAndRepeatDatasetV2 operation
    *
-   * @param inputDataset the inputDataset value
-   * @param bufferSize the bufferSize value
-   * @param seed the seed value
-   * @param seed2 the seed2 value
-   * @param count the count value
-   * @param seedGenerator the seedGenerator value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param bufferSize The bufferSize value
+   * @param seed The seed value
+   * @param seed2 The seed2 value
+   * @param count The count value
+   * @param seedGenerator The seedGenerator value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ShuffleAndRepeatDataset
    */
@@ -1506,13 +1506,13 @@ public final class DataOps {
   /**
    * The ShuffleDatasetV3 operation
    *
-   * @param inputDataset the inputDataset value
-   * @param bufferSize the bufferSize value
-   * @param seed the seed value
-   * @param seed2 the seed2 value
-   * @param seedGenerator the seedGenerator value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param bufferSize The bufferSize value
+   * @param seed The seed value
+   * @param seed2 The seed2 value
+   * @param seedGenerator The seedGenerator value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ShuffleDataset
    */
@@ -1526,11 +1526,11 @@ public final class DataOps {
   /**
    * Creates a dataset that skips {@code count} elements from the {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param count A scalar representing the number of elements from the {@code input_dataset}
    *  that should be skipped.  If count is -1, skips everything.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SkipDataset
    */
   public SkipDataset skipDataset(Operand<? extends TType> inputDataset, Operand<TInt64> count,
@@ -1541,10 +1541,10 @@ public final class DataOps {
   /**
    * The SleepDataset operation
    *
-   * @param inputDataset the inputDataset value
-   * @param sleepMicroseconds the sleepMicroseconds value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param sleepMicroseconds The sleepMicroseconds value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SleepDataset
    */
   public SleepDataset sleepDataset(Operand<? extends TType> inputDataset,
@@ -1556,15 +1556,15 @@ public final class DataOps {
   /**
    * Creates a dataset that passes a sliding window over {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param windowSize A scalar representing the number of elements in the
    *  sliding window.
    * @param windowShift A scalar representing the steps moving the sliding window
    *  forward in one iteration. It must be positive.
    * @param windowStride A scalar representing the stride of the input elements of the sliding window.
    *  It must be positive.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SlidingWindowDataset
    */
   public SlidingWindowDataset slidingWindowDataset(Operand<? extends TType> inputDataset,
@@ -1582,10 +1582,10 @@ public final class DataOps {
    *
    * @param inputDataset A variant tensor representing the input dataset.
    * @param path The path we should write snapshots to / read snapshots from.
-   * @param readerFuncOtherArgs the readerFuncOtherArgs value
-   * @param shardFuncOtherArgs the shardFuncOtherArgs value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param readerFuncOtherArgs The readerFuncOtherArgs value
+   * @param shardFuncOtherArgs The shardFuncOtherArgs value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param readerFunc Optional. A function to control how to read data from snapshot shards.
    * @param shardFunc Optional. A function to control how to shard data when writing a snapshot.
    * @param options carries optional attribute values
@@ -1602,9 +1602,9 @@ public final class DataOps {
   /**
    * Creates a dataset that splits a SparseTensor into elements row-wise.
    *
-   * @param indices the indices value
-   * @param values the values value
-   * @param denseShape the denseShape value
+   * @param indices The indices value
+   * @param values The values value
+   * @param denseShape The denseShape value
    * @return a new instance of SparseTensorSliceDataset
    */
   public SparseTensorSliceDataset sparseTensorSliceDataset(Operand<TInt64> indices,
@@ -1618,8 +1618,8 @@ public final class DataOps {
    * @param driverName The database type. Currently, the only supported type is 'sqlite'.
    * @param dataSourceName A connection string to connect to the database.
    * @param query A SQL query to execute.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SqlDataset
    */
   public SqlDataset sqlDataset(Operand<TString> driverName, Operand<TString> dataSourceName,
@@ -1630,12 +1630,12 @@ public final class DataOps {
   /**
    * Creates a dataset that contains {@code count} elements from the {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param count A scalar representing the number of elements from the {@code input_dataset}
    *  that should be taken. A value of {@code -1} indicates that all of {@code input_dataset}
    *  is taken.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of TakeDataset
    */
   public TakeDataset takeDataset(Operand<? extends TType> inputDataset, Operand<TInt64> count,
@@ -1652,12 +1652,12 @@ public final class DataOps {
    *  <li>One tensor for each value in {@code other_arguments}.</li>
    *  </ul>
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param otherArguments A list of tensors, typically values that were captured when
    *  building a closure for {@code predicate}.
    * @param predicate A function returning a scalar boolean.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of TakeWhileDataset
    */
   public TakeWhileDataset takeWhileDataset(Operand<? extends TType> inputDataset,
@@ -1669,8 +1669,8 @@ public final class DataOps {
   /**
    * Creates a dataset that emits {@code components} as a tuple of tensors once.
    *
-   * @param components the components value
-   * @param outputShapes the value of the outputShapes property
+   * @param components The components value
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of TensorDataset
    */
   public TensorDataset tensorDataset(Iterable<Operand<?>> components, List<Shape> outputShapes) {
@@ -1680,8 +1680,8 @@ public final class DataOps {
   /**
    * Creates a dataset that emits each dim-0 slice of {@code components} once.
    *
-   * @param components the components value
-   * @param outputShapes the value of the outputShapes property
+   * @param components The components value
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of TensorSliceDataset
    */
   public TensorSliceDataset tensorSliceDataset(Iterable<Operand<?>> components,
@@ -1723,10 +1723,10 @@ public final class DataOps {
   /**
    * Creates a dataset that uses a custom thread pool to compute {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param threadPool A resource produced by the ThreadPoolHandle op.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of ThreadPoolDataset
    */
   public ThreadPoolDataset threadPoolDataset(Operand<? extends TType> inputDataset,
@@ -1738,9 +1738,9 @@ public final class DataOps {
   /**
    * A dataset that splits the elements of its input into multiple elements.
    *
-   * @param inputDataset the inputDataset value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of UnbatchDataset
    */
   public UnbatchDataset unbatchDataset(Operand<? extends TType> inputDataset,
@@ -1751,9 +1751,9 @@ public final class DataOps {
   /**
    * Creates a dataset that contains the unique elements of {@code input_dataset}.
    *
-   * @param inputDataset the inputDataset value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of UniqueDataset
    */
   public UniqueDataset uniqueDataset(Operand<? extends TType> inputDataset,
@@ -1764,7 +1764,7 @@ public final class DataOps {
   /**
    * The UnwrapDatasetVariant operation
    *
-   * @param inputHandle the inputHandle value
+   * @param inputHandle The inputHandle value
    * @return a new instance of UnwrapDatasetVariant
    */
   public UnwrapDatasetVariant unwrapDatasetVariant(Operand<? extends TType> inputHandle) {
@@ -1809,7 +1809,7 @@ public final class DataOps {
    *  produces {@code {{"a": {0, 1}}, {"a": {2, 3}}}}</li>
    *  </ul>
    *
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param sizeOutput An integer scalar, representing the number of elements
    *  of the input dataset to combine into a window. Must be positive.
    * @param shift An integer scalar, representing the number of input elements
@@ -1820,8 +1820,8 @@ public final class DataOps {
    *  &quot;retain every input element&quot;.
    * @param dropRemainder A Boolean scalar, representing whether the last window should be
    *  dropped if its size is smaller than {@code window_size}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of WindowDataset
    */
   public WindowDataset windowDataset(Operand<? extends TType> inputDataset,
@@ -1834,7 +1834,7 @@ public final class DataOps {
   /**
    * The WrapDatasetVariant operation
    *
-   * @param inputHandle the inputHandle value
+   * @param inputHandle The inputHandle value
    * @return a new instance of WrapDatasetVariant
    */
   public WrapDatasetVariant wrapDatasetVariant(Operand<? extends TType> inputHandle) {
@@ -1849,8 +1849,8 @@ public final class DataOps {
    *  dataset, and no error will be raised if input datasets have different sizes.
    *
    * @param inputDatasets List of {@code N} variant Tensors representing datasets to be zipped together.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of ZipDataset
    */
   public ZipDataset zipDataset(Iterable<Operand<? extends TType>> inputDatasets,

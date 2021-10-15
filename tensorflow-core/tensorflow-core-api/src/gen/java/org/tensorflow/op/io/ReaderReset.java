@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -56,5 +59,18 @@ public final class ReaderReset extends RawOp {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReaderReset");
     opBuilder.addInput(readerHandle.asOutput());
     return new ReaderReset(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ReaderReset> {
+    /**
+     * Handle to a Reader.
+     */
+    public final Operand<? extends TType> readerHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new ReaderReset(op), op, Arrays.asList());
+      int inputIndex = 0;
+      readerHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

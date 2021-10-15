@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TString;
@@ -49,7 +52,7 @@ public final class MatchingFilesDataset extends RawOp implements Operand<TType> 
    * Factory method to create a class wrapping a new ExperimentalMatchingFilesDataset operation.
    *
    * @param scope current scope
-   * @param patterns the patterns value
+   * @param patterns The patterns value
    * @return a new instance of MatchingFilesDataset
    */
   @Endpoint(
@@ -74,5 +77,18 @@ public final class MatchingFilesDataset extends RawOp implements Operand<TType> 
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<MatchingFilesDataset> {
+    /**
+     * The patterns input
+     */
+    public final Operand<TString> patterns;
+
+    public Inputs(GraphOperation op) {
+      super(new MatchingFilesDataset(op), op, Arrays.asList());
+      int inputIndex = 0;
+      patterns = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -84,5 +88,25 @@ public final class ParseTensor<T extends TType> extends RawOp implements Operand
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<ParseTensor<?>> {
+    /**
+     * A scalar string containing a serialized TensorProto proto.
+     */
+    public final Operand<TString> serialized;
+
+    /**
+     * The type of the serialized tensor.  The provided type must match the
+     * type of the serialized tensor and no implicit conversion will take place.
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new ParseTensor<>(op), op, Arrays.asList("out_type"));
+      int inputIndex = 0;
+      serialized = (Operand<TString>) op.input(inputIndex++);
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

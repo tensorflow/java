@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -45,11 +49,11 @@ public final class WriteSummary extends RawOp {
    * Factory method to create a class wrapping a new WriteSummary operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param step the step value
-   * @param tensor the tensor value
-   * @param tag the tag value
-   * @param summaryMetadata the summaryMetadata value
+   * @param writer The writer value
+   * @param step The step value
+   * @param tensor The tensor value
+   * @param tag The tag value
+   * @param summaryMetadata The summaryMetadata value
    * @return a new instance of WriteSummary
    */
   @Endpoint(
@@ -65,5 +69,48 @@ public final class WriteSummary extends RawOp {
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(summaryMetadata.asOutput());
     return new WriteSummary(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<WriteSummary> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The step input
+     */
+    public final Operand<TInt64> step;
+
+    /**
+     * The tensor input
+     */
+    public final Operand<? extends TType> tensor;
+
+    /**
+     * The tag input
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * The summaryMetadata input
+     */
+    public final Operand<TString> summaryMetadata;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new WriteSummary(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      step = (Operand<TInt64>) op.input(inputIndex++);
+      tensor = (Operand<? extends TType>) op.input(inputIndex++);
+      tag = (Operand<TString>) op.input(inputIndex++);
+      summaryMetadata = (Operand<TString>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

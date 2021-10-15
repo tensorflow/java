@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -56,14 +60,14 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
    * Factory method to create a class wrapping a new ShuffleAndRepeatDatasetV2 operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param bufferSize the bufferSize value
-   * @param seed the seed value
-   * @param seed2 the seed2 value
-   * @param count the count value
-   * @param seedGenerator the seedGenerator value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param bufferSize The bufferSize value
+   * @param seed The seed value
+   * @param seed2 The seed2 value
+   * @param count The count value
+   * @param seedGenerator The seedGenerator value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ShuffleAndRepeatDataset
    */
@@ -140,6 +144,67 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
     public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
       this.reshuffleEachIteration = reshuffleEachIteration;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ShuffleAndRepeatDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The bufferSize input
+     */
+    public final Operand<TInt64> bufferSize;
+
+    /**
+     * The seed input
+     */
+    public final Operand<TInt64> seed;
+
+    /**
+     * The seed2 input
+     */
+    public final Operand<TInt64> seed2;
+
+    /**
+     * The count input
+     */
+    public final Operand<TInt64> count;
+
+    /**
+     * The seedGenerator input
+     */
+    public final Operand<? extends TType> seedGenerator;
+
+    /**
+     * The reshuffleEachIteration attribute
+     */
+    public final boolean reshuffleEachIteration;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new ShuffleAndRepeatDataset(op), op, Arrays.asList("reshuffle_each_iteration", "output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      bufferSize = (Operand<TInt64>) op.input(inputIndex++);
+      seed = (Operand<TInt64>) op.input(inputIndex++);
+      seed2 = (Operand<TInt64>) op.input(inputIndex++);
+      count = (Operand<TInt64>) op.input(inputIndex++);
+      seedGenerator = (Operand<? extends TType>) op.input(inputIndex++);
+      reshuffleEachIteration = op.attributes().getAttrBool("reshuffle_each_iteration");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
     }
   }
 }

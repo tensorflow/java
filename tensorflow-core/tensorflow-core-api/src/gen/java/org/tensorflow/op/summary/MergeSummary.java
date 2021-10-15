@@ -17,12 +17,15 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -83,5 +86,21 @@ public final class MergeSummary extends RawOp implements Operand<TString> {
   @Override
   public Output<TString> asOutput() {
     return summary;
+  }
+
+  public static class Inputs extends RawOpInputs<MergeSummary> {
+    /**
+     * Can be of any shape.  Each must contain serialized {@code Summary} protocol
+     * buffers.
+     */
+    public final Iterable<Operand<TString>> inputs;
+
+    public Inputs(GraphOperation op) {
+      super(new MergeSummary(op), op, Arrays.asList());
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<TString>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+    }
   }
 }

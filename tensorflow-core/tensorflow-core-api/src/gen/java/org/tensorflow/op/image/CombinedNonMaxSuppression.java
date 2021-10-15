@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -222,6 +225,75 @@ public final class CombinedNonMaxSuppression extends RawOp {
     public Options clipBoxes(Boolean clipBoxes) {
       this.clipBoxes = clipBoxes;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<CombinedNonMaxSuppression> {
+    /**
+     * A 4-D float tensor of shape {@code [batch_size, num_boxes, q, 4]}. If {@code q} is 1 then
+     * same boxes are used for all classes otherwise, if {@code q} is equal to number of
+     * classes, class-specific boxes are used.
+     */
+    public final Operand<TFloat32> boxes;
+
+    /**
+     * A 3-D float tensor of shape {@code [batch_size, num_boxes, num_classes]}
+     * representing a single score corresponding to each box (each row of boxes).
+     */
+    public final Operand<TFloat32> scores;
+
+    /**
+     * A scalar integer tensor representing the maximum number of
+     * boxes to be selected by non max suppression per class
+     */
+    public final Operand<TInt32> maxOutputSizePerClass;
+
+    /**
+     * An int32 scalar representing the maximum number of boxes retained over all
+     * classes. Note that setting this value to a large number may result in OOM error
+     * depending on the system workload.
+     */
+    public final Operand<TInt32> maxTotalSize;
+
+    /**
+     * A 0-D float tensor representing the threshold for deciding whether
+     * boxes overlap too much with respect to IOU.
+     */
+    public final Operand<TFloat32> iouThreshold;
+
+    /**
+     * A 0-D float tensor representing the threshold for deciding when to remove
+     * boxes based on score.
+     */
+    public final Operand<TFloat32> scoreThreshold;
+
+    /**
+     * If false, the output nmsed boxes, scores and classes
+     * are padded/clipped to `max_total_size`. If true, the
+     * output nmsed boxes, scores and classes are padded to be of length
+     * `max_size_per_class`*`num_classes`, unless it exceeds `max_total_size` in
+     * which case it is clipped to `max_total_size`. Defaults to false.
+     */
+    public final boolean padPerClass;
+
+    /**
+     * If true, assume the box coordinates are between [0, 1] and clip the output boxes
+     * if they fall beyond [0, 1]. If false, do not do clipping and output the box
+     * coordinates as it is.
+     */
+    public final boolean clipBoxes;
+
+    public Inputs(GraphOperation op) {
+      super(new CombinedNonMaxSuppression(op), op, Arrays.asList("pad_per_class", "clip_boxes"));
+      int inputIndex = 0;
+      boxes = (Operand<TFloat32>) op.input(inputIndex++);
+      scores = (Operand<TFloat32>) op.input(inputIndex++);
+      maxOutputSizePerClass = (Operand<TInt32>) op.input(inputIndex++);
+      maxTotalSize = (Operand<TInt32>) op.input(inputIndex++);
+      iouThreshold = (Operand<TFloat32>) op.input(inputIndex++);
+      scoreThreshold = (Operand<TFloat32>) op.input(inputIndex++);
+      padPerClass = op.attributes().getAttrBool("pad_per_class");
+      clipBoxes = op.attributes().getAttrBool("clip_boxes");
     }
   }
 }

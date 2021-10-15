@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TString;
@@ -48,7 +51,7 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
    * Factory method to create a class wrapping a new ExperimentalIteratorGetDevice operation.
    *
    * @param scope current scope
-   * @param resource the resource value
+   * @param resource The resource value
    * @return a new instance of IteratorGetDevice
    */
   @Endpoint(
@@ -72,5 +75,18 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
   @Override
   public Output<TString> asOutput() {
     return device;
+  }
+
+  public static class Inputs extends RawOpInputs<IteratorGetDevice> {
+    /**
+     * The resource input
+     */
+    public final Operand<? extends TType> resource;
+
+    public Inputs(GraphOperation op) {
+      super(new IteratorGetDevice(op), op, Arrays.asList());
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

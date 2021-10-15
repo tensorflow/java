@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -80,5 +84,30 @@ public final class PlaceholderWithDefault<T extends TType> extends RawOp impleme
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<PlaceholderWithDefault<T>> {
+    /**
+     * The default value to produce when {@code output} is not fed.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The type of elements in the tensor.
+     */
+    public final DataType dtype;
+
+    /**
+     * The (possibly partial) shape of the tensor.
+     */
+    public final Shape shape;
+
+    public Inputs(GraphOperation op) {
+      super(new PlaceholderWithDefault<>(op), op, Arrays.asList("dtype", "shape"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      shape = op.attributes().getAttrShape("shape");
+    }
   }
 }

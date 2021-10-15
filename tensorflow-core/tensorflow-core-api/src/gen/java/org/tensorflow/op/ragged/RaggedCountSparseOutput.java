@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.ragged;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -174,6 +178,62 @@ public final class RaggedCountSparseOutput<U extends TNumber> extends RawOp {
     public Options maxlength(Long maxlength) {
       this.maxlength = maxlength;
       return this;
+    }
+  }
+
+  public static class Inputs<U extends TNumber> extends RawOpInputs<RaggedCountSparseOutput<U>> {
+    /**
+     * Tensor containing the row splits of the ragged tensor to count.
+     */
+    public final Operand<TInt64> splits;
+
+    /**
+     * Tensor containing values of the sparse tensor to count.
+     */
+    public final Operand<? extends TNumber> values;
+
+    /**
+     * A Tensor of the same shape as indices containing per-index weight values.
+     * May also be the empty tensor if no weights are used.
+     */
+    public final Operand<U> weights;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Minimum value to count. Can be set to -1 for no minimum.
+     */
+    public final long minlength;
+
+    /**
+     * Maximum value to count. Can be set to -1 for no maximum.
+     */
+    public final long maxlength;
+
+    /**
+     * Whether to output the number of occurrences of each value or 1.
+     */
+    public final boolean binaryOutput;
+
+    /**
+     * Dtype of the output values tensor.
+     */
+    public final DataType outputType;
+
+    public Inputs(GraphOperation op) {
+      super(new RaggedCountSparseOutput<>(op), op, Arrays.asList("T", "minlength", "maxlength", "binary_output", "output_type"));
+      int inputIndex = 0;
+      splits = (Operand<TInt64>) op.input(inputIndex++);
+      values = (Operand<? extends TNumber>) op.input(inputIndex++);
+      weights = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      minlength = op.attributes().getAttrInt("minlength");
+      maxlength = op.attributes().getAttrInt("maxlength");
+      binaryOutput = op.attributes().getAttrBool("binary_output");
+      outputType = op.attributes().getAttrType("output_type");
     }
   }
 }

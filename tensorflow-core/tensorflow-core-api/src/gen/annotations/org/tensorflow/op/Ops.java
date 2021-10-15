@@ -773,11 +773,11 @@ public final class Ops {
    *  empty, the op name will be used as the shared name.
    *  T: the types of tensors to be batched.
    *
-   * @param inTensors the inTensors value
-   * @param numBatchThreads the value of the numBatchThreads property
-   * @param maxBatchSize the value of the maxBatchSize property
-   * @param batchTimeoutMicros the value of the batchTimeoutMicros property
-   * @param gradTimeoutMicros the value of the gradTimeoutMicros property
+   * @param inTensors The inTensors value
+   * @param numBatchThreads The value of the numBatchThreads attribute
+   * @param maxBatchSize The value of the maxBatchSize attribute
+   * @param batchTimeoutMicros The value of the batchTimeoutMicros attribute
+   * @param gradTimeoutMicros The value of the gradTimeoutMicros attribute
    * @param options carries optional attribute values
    * @return a new instance of Batch
    */
@@ -824,7 +824,7 @@ public final class Ops {
    * @param inTensors The tensors to be batched.
    * @param capturedTensors The tensors which are captured in the function, and don't need
    *  to be batched.
-   * @param f the value of the f property
+   * @param f The value of the f attribute
    * @param numBatchThreads Number of scheduling threads for processing batches of work.
    *  Determines the number of batches processed in parallel.
    * @param maxBatchSize Batch sizes will never be bigger than this.
@@ -860,7 +860,7 @@ public final class Ops {
    *  <pre>
    *  crops = [[crop_top, crop_bottom], [crop_left, crop_right]]
    *  </pre>
-   * @param blockSize the value of the blockSize property
+   * @param blockSize The value of the blockSize attribute
    * @param <T> data type for {@code BatchToSpace} output and operands
    * @return a new instance of BatchToSpace
    */
@@ -1043,8 +1043,8 @@ public final class Ops {
    *  endian orderings will give different results.
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param type the value of the type property
+   * @param input The input value
+   * @param type The value of the type attribute
    * @param <U> data type for {@code Bitcast} output and operands
    * @return a new instance of Bitcast
    */
@@ -1112,8 +1112,8 @@ public final class Ops {
    *  broadcasted shape. {@code s0}, {@code s1} and {@code r0} are all integer vectors.
    *
    * @param <T> data type for {@code r0} output
-   * @param s0 the s0 value
-   * @param s1 the s1 value
+   * @param s0 The s0 value
+   * @param s1 The s1 value
    * @param <T> data type for {@code BroadcastArgs} output and operands
    * @return a new instance of BroadcastDynamicShape
    */
@@ -2224,7 +2224,7 @@ public final class Ops {
    *  </div>
    *
    * @param <T> data type for {@code outputs} output
-   * @param data the data value
+   * @param data The data value
    * @param partitions Any shape.  Indices in the range {@code [0, num_partitions)}.
    * @param numPartitions The number of partitions to output.
    * @param <T> data type for {@code DynamicPartition} output and operands
@@ -2292,8 +2292,8 @@ public final class Ops {
    *  </div>
    *
    * @param <T> data type for {@code merged} output
-   * @param indices the indices value
-   * @param data the data value
+   * @param indices The indices value
+   * @param data The data value
    * @param <T> data type for {@code DynamicStitch} output and operands
    * @return a new instance of DynamicStitch
    */
@@ -2337,7 +2337,7 @@ public final class Ops {
    *
    * @param <T> data type for {@code output} output
    * @param shape 1-D. Represents the shape of the output tensor.
-   * @param dtype the value of the dtype property
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code Empty} output and operands
    * @return a new instance of Empty
@@ -2355,9 +2355,9 @@ public final class Ops {
    *  element_dtype: the type of elements in the list.
    *  element_shape: a shape compatible with that of elements in the list.
    *
-   * @param elementShape the elementShape value
-   * @param maxNumElements the maxNumElements value
-   * @param elementDtype the value of the elementDtype property
+   * @param elementShape The elementShape value
+   * @param maxNumElements The maxNumElements value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <U> data type for {@code EmptyTensorList} output and operands
    * @return a new instance of EmptyTensorList
    */
@@ -2478,7 +2478,7 @@ public final class Ops {
    *  size 1.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param axis 0-D (scalar). Specifies the dimension index at which to
    *  expand the shape of {@code input}. Must be in the range
    *  {@code [-rank(input) - 1, rank(input)]}.
@@ -2822,7 +2822,7 @@ public final class Ops {
    *  <p>Returns the input tensor without modification.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code GuaranteeConst} output and operands
    * @return a new instance of GuaranteeConst
    */
@@ -2902,7 +2902,7 @@ public final class Ops {
    *  values &lt;= value_range[0] will be mapped to hist[0],
    *  values &gt;= value_range[1] will be mapped to hist[-1].
    * @param nbins Scalar {@code int32 Tensor}.  Number of histogram bins.
-   * @param dtype the value of the dtype property
+   * @param dtype The value of the dtype attribute
    * @param <U> data type for {@code HistogramFixedWidth} output and operands
    * @param <T> data type for {@code HistogramFixedWidth} output and operands
    * @return a new instance of HistogramFixedWidth
@@ -2916,7 +2916,7 @@ public final class Ops {
    * Return a tensor with the same shape and contents as the input tensor or value.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code Identity} output and operands
    * @return a new instance of Identity
    */
@@ -2940,7 +2940,7 @@ public final class Ops {
    *    return [None, g(dy)]  # Do not backprop to f(x).
    *  </pre>
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of IdentityN
    */
   public IdentityN identityN(Iterable<Operand<?>> input) {
@@ -3118,8 +3118,8 @@ public final class Ops {
    *  equal to the Kth order statistic. The semantics are not the same as
    *  top_k_unique.
    *
-   * @param input the input value
-   * @param k the value of the k property
+   * @param input The input value
+   * @param k The value of the k attribute
    * @return a new instance of KthOrderStatistic
    */
   public KthOrderStatistic kthOrderStatistic(Operand<TFloat32> input, Long k) {
@@ -3132,8 +3132,8 @@ public final class Ops {
    * @param <T> data type for {@code keys} output
    * @param <U> data type for {@code values} output
    * @param tableHandle Handle to the table.
-   * @param Tkeys the value of the Tkeys property
-   * @param Tvalues the value of the Tvalues property
+   * @param Tkeys The value of the Tkeys attribute
+   * @param Tvalues The value of the Tvalues attribute
    * @param <T> data type for {@code LookupTableExportV2} output and operands
    * @param <U> data type for {@code LookupTableExportV2} output and operands
    * @return a new instance of LookupTableExport
@@ -3153,7 +3153,7 @@ public final class Ops {
    * @param <U> data type for {@code values} output
    * @param tableHandle Handle to the table.
    * @param keys Any shape.  Keys to look up.
-   * @param defaultValue the defaultValue value
+   * @param defaultValue The defaultValue value
    * @param <U> data type for {@code LookupTableFindV2} output and operands
    * @return a new instance of LookupTableFind
    */
@@ -3221,7 +3221,7 @@ public final class Ops {
    *  of the corresponding output element. Behavior for infinite elements is
    *  undefined. Behavior for subnormal elements is undefined.
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of MakeUnique
    */
   public MakeUnique makeUnique(Operand<TFloat32> input) {
@@ -3231,7 +3231,7 @@ public final class Ops {
   /**
    * Op removes all elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapClear
    */
@@ -3242,7 +3242,7 @@ public final class Ops {
   /**
    * Op returns the number of incomplete elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapIncompleteSize
    */
@@ -3256,9 +3256,9 @@ public final class Ops {
    *  underlying container does not contain this key
    *  this op will block until it does.
    *
-   * @param key the key value
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param key The key value
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapPeek
    */
@@ -3270,7 +3270,7 @@ public final class Ops {
   /**
    * Op returns the number of elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapSize
    */
@@ -3282,10 +3282,10 @@ public final class Ops {
    * Stage (key, values) in the underlying container which behaves like a hashtable.
    *
    * @param key int64
-   * @param indices the indices value
+   * @param indices The indices value
    * @param values a list of tensors
    *  dtypes A list of data types that inserted values should adhere to.
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapStage
    */
@@ -3300,9 +3300,9 @@ public final class Ops {
    *  from the underlying container.   If the underlying container
    *  does not contain this key, the op will block until it does.
    *
-   * @param key the key value
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param key The key value
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapUnstage
    */
@@ -3316,8 +3316,8 @@ public final class Ops {
    *  from the underlying container.   If the underlying container
    *  does not contain elements, the op will block until it does.
    *
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapUnstageNoKey
    */
@@ -3454,9 +3454,9 @@ public final class Ops {
    *  graph_def = foo.get_concrete_function(tf.TensorSpec([10], tf.float32), tf.TensorSpec([10], tf.float32)).graph.as_graph_def()
    *  </pre>
    *
-   * @param inputs the inputs value
-   * @param mlirModule the value of the mlirModule property
-   * @param Toutputs the value of the Toutputs property
+   * @param inputs The inputs value
+   * @param mlirModule The value of the mlirModule attribute
+   * @param Toutputs The value of the Toutputs attribute
    * @return a new instance of MlirPassthroughOp
    */
   public MlirPassthroughOp mlirPassthroughOp(Iterable<Operand<?>> inputs, String mlirModule,
@@ -3474,7 +3474,7 @@ public final class Ops {
    *
    * @param emptyKey The key used to represent empty key buckets internally. Must not
    *  be used in insert or lookup operations.
-   * @param deletedKey the deletedKey value
+   * @param deletedKey The deletedKey value
    * @param valueDtype Type of the table values.
    * @param options carries optional attribute values
    * @param <T> data type for {@code MutableDenseHashTableV2} output and operands
@@ -3715,7 +3715,7 @@ public final class Ops {
   /**
    * Op removes all elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapClear
    */
@@ -3727,7 +3727,7 @@ public final class Ops {
   /**
    * Op returns the number of incomplete elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapIncompleteSize
    */
@@ -3742,9 +3742,9 @@ public final class Ops {
    *  this op will block until it does.   This Op is optimized for
    *  performance.
    *
-   * @param key the key value
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param key The key value
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapPeek
    */
@@ -3756,7 +3756,7 @@ public final class Ops {
   /**
    * Op returns the number of elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapSize
    */
@@ -3770,10 +3770,10 @@ public final class Ops {
    *  associative container.   Elements are ordered by key.
    *
    * @param key int64
-   * @param indices the indices value
+   * @param indices The indices value
    * @param values a list of tensors
    *  dtypes A list of data types that inserted values should adhere to.
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapStage
    */
@@ -3788,9 +3788,9 @@ public final class Ops {
    *  from the underlying container.   If the underlying container
    *  does not contain this key, the op will block until it does.
    *
-   * @param key the key value
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param key The key value
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapUnstage
    */
@@ -3804,8 +3804,8 @@ public final class Ops {
    *  key from the underlying container.   If the underlying container
    *  does not contain elements, the op will block until it does.
    *
-   * @param indices the indices value
-   * @param dtypes the value of the dtypes property
+   * @param indices The indices value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of OrderedMapUnstageNoKey
    */
@@ -3838,9 +3838,9 @@ public final class Ops {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param paddings the paddings value
-   * @param constantValues the constantValues value
+   * @param input The input value
+   * @param paddings The paddings value
+   * @param constantValues The constantValues value
    * @param <T> data type for {@code PadV2} output and operands
    * @return a new instance of Pad
    */
@@ -3934,8 +3934,8 @@ public final class Ops {
    *  </div>
    *
    * @param <T> data type for {@code merged} output
-   * @param indices the indices value
-   * @param data the data value
+   * @param indices The indices value
+   * @param data The data value
    * @param <T> data type for {@code ParallelDynamicStitch} output and operands
    * @return a new instance of ParallelDynamicStitch
    */
@@ -4033,7 +4033,7 @@ public final class Ops {
    * Reshapes a quantized tensor as per the Reshape op.
    *
    * @param <T> data type for {@code output} output
-   * @param tensor the tensor value
+   * @param tensor The tensor value
    * @param shape Defines the shape of the output tensor.
    * @param inputMin The minimum value of the input.
    * @param inputMax The maximum value of the input.
@@ -4081,7 +4081,7 @@ public final class Ops {
    *  of a tensor is the number of indices required to uniquely select each element
    *  of the tensor. Rank is also known as &quot;order&quot;, &quot;degree&quot;, or &quot;ndims.&quot;
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of Rank
    */
   public Rank rank(Operand<? extends TType> input) {
@@ -4337,7 +4337,7 @@ public final class Ops {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param tensor the tensor value
+   * @param tensor The tensor value
    * @param shape Defines the shape of the output tensor.
    * @param <T> data type for {@code Reshape} output and operands
    * @return a new instance of Reshape
@@ -4353,7 +4353,7 @@ public final class Ops {
    * @param resource Should be from a scalar {@code Variable} node.
    * @param limit If incrementing ref would bring it above limit, instead generates an
    *  'OutOfRange' error.
-   * @param T the value of the T property
+   * @param T The value of the T attribute
    * @param <T> data type for {@code ResourceCountUpTo} output and operands
    * @return a new instance of ResourceCountUpTo
    */
@@ -4378,9 +4378,9 @@ public final class Ops {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param resource the resource value
-   * @param indices the indices value
-   * @param dtype the value of the dtype property
+   * @param resource The resource value
+   * @param indices The indices value
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code ResourceGather} output and operands
    * @return a new instance of ResourceGather
@@ -4394,9 +4394,9 @@ public final class Ops {
    * The ResourceGatherNd operation
    *
    * @param <U> data type for {@code output} output
-   * @param resource the resource value
-   * @param indices the indices value
-   * @param dtype the value of the dtype property
+   * @param resource The resource value
+   * @param indices The indices value
+   * @param dtype The value of the dtype attribute
    * @param <U> data type for {@code ResourceGatherNd} output and operands
    * @return a new instance of ResourceGatherNd
    */
@@ -4781,11 +4781,11 @@ public final class Ops {
    *  <p>NOTE this op currently does not support broadcasting and so {@code value}'s
    *  shape must be exactly the shape produced by the slice of {@code ref}.
    *
-   * @param ref the ref value
-   * @param begin the begin value
-   * @param end the end value
-   * @param strides the strides value
-   * @param value the value value
+   * @param ref The ref value
+   * @param begin The begin value
+   * @param end The end value
+   * @param strides The strides value
+   * @param value The value value
    * @param options carries optional attribute values
    * @param <T> data type for {@code ResourceStridedSliceAssign} output and operands
    * @return a new instance of ResourceStridedSliceAssign
@@ -4939,7 +4939,7 @@ public final class Ops {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param shift Dimension must be 0-D or 1-D. {@code shift[i]} specifies the number of places by which
    *  elements are shifted positively (towards larger indices) along the dimension
    *  specified by {@code axis[i]}. Negative shifts will roll the elements in the opposite
@@ -5461,9 +5461,9 @@ public final class Ops {
    * The SelectV2 operation
    *
    * @param <T> data type for {@code output} output
-   * @param condition the condition value
-   * @param t the t value
-   * @param e the e value
+   * @param condition The condition value
+   * @param t The t value
+   * @param e The e value
    * @param <T> data type for {@code SelectV2} output and operands
    * @return a new instance of Select
    */
@@ -5524,7 +5524,7 @@ public final class Ops {
    * @param <U> data type for {@code idx} output
    * @param x 1-D. Values to keep.
    * @param y 1-D. Values to remove.
-   * @param outIdx the value of the outIdx property
+   * @param outIdx The value of the outIdx attribute
    * @param <T> data type for {@code ListDiff} output and operands
    * @param <U> data type for {@code ListDiff} output and operands
    * @return a new instance of SetDiff1d
@@ -5563,7 +5563,7 @@ public final class Ops {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of Shape, with default output types
    */
   public org.tensorflow.op.core.Shape<TInt32> shape(Operand<? extends TType> input) {
@@ -5580,8 +5580,8 @@ public final class Ops {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param outType the value of the outType property
+   * @param input The input value
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code Shape} output and operands
    * @return a new instance of Shape
    */
@@ -5595,7 +5595,7 @@ public final class Ops {
    *  This operation returns N 1-D integer tensors representing shape of {@code input[i]s}.
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of ShapeN, with default output types
    */
   public ShapeN<TInt32> shapeN(Iterable<Operand<? extends TType>> input) {
@@ -5607,8 +5607,8 @@ public final class Ops {
    *  This operation returns N 1-D integer tensors representing shape of {@code input[i]s}.
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param outType the value of the outType property
+   * @param input The input value
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code ShapeN} output and operands
    * @return a new instance of ShapeN
    */
@@ -5628,7 +5628,7 @@ public final class Ops {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of Size, with default output types
    */
   public Size<TInt32> size(Operand<? extends TType> input) {
@@ -5646,8 +5646,8 @@ public final class Ops {
    *  </pre>
    *
    * @param <U> data type for {@code output} output
-   * @param input the input value
-   * @param outType the value of the outType property
+   * @param input The input value
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code Size} output and operands
    * @return a new instance of Size
    */
@@ -5676,7 +5676,7 @@ public final class Ops {
    *  0 &lt;= begin[i] &lt;= begin[i] + size[i] &lt;= Di  for i in [0, n)
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param begin begin[i] specifies the offset into the 'i'th dimension of
    *  'input' to slice from.
    * @param sizeOutput size[i] specifies the number of elements of the 'i'th dimension
@@ -5696,7 +5696,7 @@ public final class Ops {
    * Returns a copy of the input tensor.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code Snapshot} output and operands
    * @return a new instance of Snapshot
    */
@@ -5845,7 +5845,7 @@ public final class Ops {
    *  Can contain one -1 indicating that dimension is to be inferred.
    * @param axis 0-D.  The dimension along which to split.  Must be in the range
    *  {@code [-rank(value), rank(value))}.
-   * @param numSplit the value of the numSplit property
+   * @param numSplit The value of the numSplit attribute
    * @param <T> data type for {@code SplitV} output and operands
    * @return a new instance of SplitV
    */
@@ -5926,7 +5926,7 @@ public final class Ops {
   /**
    * Op removes all elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of StageClear
    */
@@ -5940,8 +5940,8 @@ public final class Ops {
    *  this op will block until it does.   This Op is optimized for
    *  performance.
    *
-   * @param index the index value
-   * @param dtypes the value of the dtypes property
+   * @param index The index value
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of StagePeek
    */
@@ -5953,7 +5953,7 @@ public final class Ops {
   /**
    * Op returns the number of elements in the underlying container.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of StageSize
    */
@@ -6211,7 +6211,7 @@ public final class Ops {
    *  </ul>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code StopGradient} output and operands
    * @return a new instance of StopGradient
    */
@@ -6369,7 +6369,7 @@ public final class Ops {
    *  {@code ellipsis_mask must be a power of two (only one ellipsis)}
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param begin {@code begin[k]} specifies the offset into the {@code k}th range specification.
    *  The exact dimension this corresponds to will be determined by context.
    *  Out-of-bounds values will be silently clamped. If the {@code k}th bit of
@@ -6422,11 +6422,11 @@ public final class Ops {
    *  shape must be exactly the shape produced by the slice of {@code ref}.
    *
    * @param <T> data type for {@code output_ref} output
-   * @param ref the ref value
-   * @param begin the begin value
-   * @param end the end value
-   * @param strides the strides value
-   * @param value the value value
+   * @param ref The ref value
+   * @param begin The begin value
+   * @param end The end value
+   * @param strides The strides value
+   * @param value The value value
    * @param options carries optional attribute values
    * @param <T> data type for {@code StridedSliceAssign} output and operands
    * @param <U> data type for {@code StridedSliceAssign} output and operands
@@ -6449,11 +6449,11 @@ public final class Ops {
    *  shape of {@code StridedSlice}'s {@code input}.
    *
    * @param <U> data type for {@code output} output
-   * @param shape the shape value
-   * @param begin the begin value
-   * @param end the end value
-   * @param strides the strides value
-   * @param dy the dy value
+   * @param shape The shape value
+   * @param begin The begin value
+   * @param end The end value
+   * @param strides The strides value
+   * @param dy The dy value
    * @param options carries optional attribute values
    * @param <U> data type for {@code StridedSliceGrad} output and operands
    * @param <T> data type for {@code StridedSliceGrad} output and operands
@@ -6663,9 +6663,9 @@ public final class Ops {
    * The TensorArrayPack operation
    *
    * @param <T> data type for {@code value} output
-   * @param handle the handle value
-   * @param flowIn the flowIn value
-   * @param dtype the value of the dtype property
+   * @param handle The handle value
+   * @param flowIn The flowIn value
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code TensorArrayPack} output and operands
    * @return a new instance of TensorArrayPack
@@ -6680,7 +6680,7 @@ public final class Ops {
    *
    * @param <T> data type for {@code value} output
    * @param handle The handle to a TensorArray.
-   * @param index the index value
+   * @param index The index value
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @param dtype The type of the elem that is returned.
    * @param <T> data type for {@code TensorArrayReadV3} output and operands
@@ -6745,9 +6745,9 @@ public final class Ops {
   /**
    * The TensorArrayUnpack operation
    *
-   * @param handle the handle value
-   * @param value the value value
-   * @param flowIn the flowIn value
+   * @param handle The handle value
+   * @param value The value value
+   * @param flowIn The flowIn value
    * @return a new instance of TensorArrayUnpack
    */
   public TensorArrayUnpack tensorArrayUnpack(Operand<TString> handle,
@@ -6783,10 +6783,10 @@ public final class Ops {
    *  lengths: Output tensor containing sizes of the 0th dimension of tensors in the list, used for computing the gradient.
    *
    * @param <U> data type for {@code tensor} output
-   * @param inputHandle the inputHandle value
-   * @param elementShape the elementShape value
-   * @param leadingDims the leadingDims value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputHandle The inputHandle value
+   * @param elementShape The elementShape value
+   * @param leadingDims The leadingDims value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <U> data type for {@code TensorListConcatV2} output and operands
    * @return a new instance of TensorListConcat
    */
@@ -6799,9 +6799,9 @@ public final class Ops {
   /**
    * The TensorListConcatLists operation
    *
-   * @param inputA the inputA value
-   * @param inputB the inputB value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputA The inputA value
+   * @param inputB The inputB value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <T> data type for {@code TensorListConcatLists} output and operands
    * @return a new instance of TensorListConcatLists
    */
@@ -6816,8 +6816,8 @@ public final class Ops {
    *  element_shape: the shape of elements of the list
    *
    * @param <T> data type for {@code element_shape} output
-   * @param inputHandle the inputHandle value
-   * @param shapeType the value of the shapeType property
+   * @param inputHandle The inputHandle value
+   * @param shapeType The value of the shapeType attribute
    * @param <T> data type for {@code TensorListElementShape} output and operands
    * @return a new instance of TensorListElementShape
    */
@@ -6832,8 +6832,8 @@ public final class Ops {
    *  <p>tensor: The input tensor.
    *  output_handle: The list.
    *
-   * @param tensor the tensor value
-   * @param elementShape the elementShape value
+   * @param tensor The tensor value
+   * @param elementShape The elementShape value
    * @return a new instance of TensorListFromTensor
    */
   public TensorListFromTensor tensorListFromTensor(Operand<? extends TType> tensor,
@@ -6850,10 +6850,10 @@ public final class Ops {
    *  values: The tensor.
    *
    * @param <T> data type for {@code values} output
-   * @param inputHandle the inputHandle value
-   * @param indices the indices value
-   * @param elementShape the elementShape value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputHandle The inputHandle value
+   * @param indices The indices value
+   * @param elementShape The elementShape value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <T> data type for {@code TensorListGather} output and operands
    * @return a new instance of TensorListGather
    */
@@ -6867,10 +6867,10 @@ public final class Ops {
    * The TensorListGetItem operation
    *
    * @param <T> data type for {@code item} output
-   * @param inputHandle the inputHandle value
-   * @param index the index value
-   * @param elementShape the elementShape value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputHandle The inputHandle value
+   * @param index The index value
+   * @param elementShape The elementShape value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <T> data type for {@code TensorListGetItem} output and operands
    * @return a new instance of TensorListGetItem
    */
@@ -6885,7 +6885,7 @@ public final class Ops {
    *  input_handle: the input list
    *  length: the number of tensors in the list
    *
-   * @param inputHandle the inputHandle value
+   * @param inputHandle The inputHandle value
    * @return a new instance of TensorListLength
    */
   public TensorListLength tensorListLength(Operand<? extends TType> inputHandle) {
@@ -6901,9 +6901,9 @@ public final class Ops {
    *  element_shape: the shape of the output tensor
    *
    * @param <T> data type for {@code tensor} output
-   * @param inputHandle the inputHandle value
-   * @param elementShape the elementShape value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputHandle The inputHandle value
+   * @param elementShape The elementShape value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <T> data type for {@code TensorListPopBack} output and operands
    * @return a new instance of TensorListPopBack
    */
@@ -6920,8 +6920,8 @@ public final class Ops {
    *  element_dtype: the type of elements in the list.
    *  element_shape: a shape compatible with that of elements in the list.
    *
-   * @param inputHandle the inputHandle value
-   * @param tensor the tensor value
+   * @param inputHandle The inputHandle value
+   * @param tensor The tensor value
    * @return a new instance of TensorListPushBack
    */
   public TensorListPushBack tensorListPushBack(Operand<? extends TType> inputHandle,
@@ -6932,8 +6932,8 @@ public final class Ops {
   /**
    * The TensorListPushBackBatch operation
    *
-   * @param inputHandles the inputHandles value
-   * @param tensor the tensor value
+   * @param inputHandles The inputHandles value
+   * @param tensor The tensor value
    * @return a new instance of TensorListPushBackBatch
    */
   public TensorListPushBackBatch tensorListPushBackBatch(Operand<? extends TType> inputHandles,
@@ -6948,9 +6948,9 @@ public final class Ops {
    *  handle: the output list
    *  element_dtype: the desired type of elements in the list.
    *
-   * @param elementShape the elementShape value
-   * @param numElements the numElements value
-   * @param elementDtype the value of the elementDtype property
+   * @param elementShape The elementShape value
+   * @param numElements The numElements value
+   * @param elementDtype The value of the elementDtype attribute
    * @param <U> data type for {@code TensorListReserve} output and operands
    * @return a new instance of TensorListReserve
    */
@@ -6964,8 +6964,8 @@ public final class Ops {
    *  input_handle: the input list
    *  size: size of the output list
    *
-   * @param inputHandle the inputHandle value
-   * @param sizeOutput the sizeOutput value
+   * @param inputHandle The inputHandle value
+   * @param sizeOutput The sizeOutput value
    * @return a new instance of TensorListResize
    */
   public TensorListResize tensorListResize(Operand<? extends TType> inputHandle,
@@ -6986,10 +6986,10 @@ public final class Ops {
    *  the largest index in indices.
    *  output_handle: The TensorList.
    *
-   * @param tensor the tensor value
-   * @param indices the indices value
-   * @param elementShape the elementShape value
-   * @param numElements the numElements value
+   * @param tensor The tensor value
+   * @param indices The indices value
+   * @param elementShape The elementShape value
+   * @param numElements The numElements value
    * @return a new instance of TensorListScatter
    */
   public TensorListScatter tensorListScatter(Operand<? extends TType> tensor,
@@ -7007,9 +7007,9 @@ public final class Ops {
    *  indices: The indices used to index into the list.
    *  output_handle: The TensorList.
    *
-   * @param inputHandle the inputHandle value
-   * @param tensor the tensor value
-   * @param indices the indices value
+   * @param inputHandle The inputHandle value
+   * @param tensor The tensor value
+   * @param indices The indices value
    * @return a new instance of TensorListScatterIntoExistingList
    */
   public TensorListScatterIntoExistingList tensorListScatterIntoExistingList(
@@ -7021,9 +7021,9 @@ public final class Ops {
   /**
    * The TensorListSetItem operation
    *
-   * @param inputHandle the inputHandle value
-   * @param index the index value
-   * @param item the item value
+   * @param inputHandle The inputHandle value
+   * @param index The index value
+   * @param item The item value
    * @return a new instance of TensorListSetItem
    */
   public TensorListSetItem tensorListSetItem(Operand<? extends TType> inputHandle,
@@ -7040,9 +7040,9 @@ public final class Ops {
    *  lengths: Vector of sizes of the 0th dimension of tensors in the list.
    *  output_handle: The list.
    *
-   * @param tensor the tensor value
-   * @param elementShape the elementShape value
-   * @param lengths the lengths value
+   * @param tensor The tensor value
+   * @param elementShape The elementShape value
+   * @param lengths The lengths value
    * @return a new instance of TensorListSplit
    */
   public TensorListSplit tensorListSplit(Operand<? extends TType> tensor,
@@ -7058,9 +7058,9 @@ public final class Ops {
    *  num_elements: optional. If not -1, the number of elements in the list.
    *
    * @param <T> data type for {@code tensor} output
-   * @param inputHandle the inputHandle value
-   * @param elementShape the elementShape value
-   * @param elementDtype the value of the elementDtype property
+   * @param inputHandle The inputHandle value
+   * @param elementShape The elementShape value
+   * @param elementDtype The value of the elementDtype attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code TensorListStack} output and operands
    * @return a new instance of TensorListStack
@@ -7076,9 +7076,9 @@ public final class Ops {
    *  output_handle: the map with value from given key removed
    *  key: the key of the value to be erased
    *
-   * @param inputHandle the inputHandle value
-   * @param key the key value
-   * @param valueDtype the value of the valueDtype property
+   * @param inputHandle The inputHandle value
+   * @param key The key value
+   * @param valueDtype The value of the valueDtype attribute
    * @param <U> data type for {@code TensorMapErase} output and operands
    * @return a new instance of TensorMapErase
    */
@@ -7093,8 +7093,8 @@ public final class Ops {
    *  key: the key to check
    *  has_key: whether the key is already in the map or not
    *
-   * @param inputHandle the inputHandle value
-   * @param key the key value
+   * @param inputHandle The inputHandle value
+   * @param key The key value
    * @return a new instance of TensorMapHasKey
    */
   public TensorMapHasKey tensorMapHasKey(Operand<? extends TType> inputHandle,
@@ -7109,9 +7109,9 @@ public final class Ops {
    *  key: the key to be inserted
    *  value: the value to be inserted
    *
-   * @param inputHandle the inputHandle value
-   * @param key the key value
-   * @param value the value value
+   * @param inputHandle The inputHandle value
+   * @param key The key value
+   * @param value The value value
    * @return a new instance of TensorMapInsert
    */
   public TensorMapInsert tensorMapInsert(Operand<? extends TType> inputHandle,
@@ -7126,9 +7126,9 @@ public final class Ops {
    *  value: the value found from the given key
    *
    * @param <U> data type for {@code value} output
-   * @param inputHandle the inputHandle value
-   * @param key the key value
-   * @param valueDtype the value of the valueDtype property
+   * @param inputHandle The inputHandle value
+   * @param key The key value
+   * @param valueDtype The value of the valueDtype attribute
    * @param <U> data type for {@code TensorMapLookup} output and operands
    * @return a new instance of TensorMapLookup
    */
@@ -7142,7 +7142,7 @@ public final class Ops {
    *  input_handle: the input map
    *  size: the number of tensors in the map
    *
-   * @param inputHandle the inputHandle value
+   * @param inputHandle The inputHandle value
    * @return a new instance of TensorMapSize
    */
   public TensorMapSize tensorMapSize(Operand<? extends TType> inputHandle) {
@@ -7155,8 +7155,8 @@ public final class Ops {
    *  keys: the returned Tensor of all keys in the map
    *
    * @param <T> data type for {@code keys} output
-   * @param inputHandle the inputHandle value
-   * @param keyDtype the value of the keyDtype property
+   * @param inputHandle The inputHandle value
+   * @param keyDtype The value of the keyDtype attribute
    * @param <T> data type for {@code TensorMapStackKeys} output and operands
    * @return a new instance of TensorMapStackKeys
    */
@@ -7389,11 +7389,11 @@ public final class Ops {
    *  must be exactly the shape produced by the slice of {@code input}.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param begin the begin value
-   * @param end the end value
-   * @param strides the strides value
-   * @param value the value value
+   * @param input The input value
+   * @param begin The begin value
+   * @param end The end value
+   * @param strides The strides value
+   * @param value The value value
    * @param options carries optional attribute values
    * @param <T> data type for {@code TensorStridedSliceUpdate} output and operands
    * @param <U> data type for {@code TensorStridedSliceUpdate} output and operands
@@ -7476,8 +7476,8 @@ public final class Ops {
    *  padding value will be returned. The semantics are not the same as
    *  kth_order_statistic.
    *
-   * @param input the input value
-   * @param k the value of the k property
+   * @param input The input value
+   * @param k The value of the k attribute
    * @return a new instance of TopKUnique
    */
   public TopKUnique topKUnique(Operand<TFloat32> input, Long k) {
@@ -7492,8 +7492,8 @@ public final class Ops {
    *  of K and the input size. NaNs are never returned. Subnormal numbers are flushed
    *  to zero.
    *
-   * @param input the input value
-   * @param k the value of the k property
+   * @param input The input value
+   * @param k The value of the k attribute
    * @return a new instance of TopKWithUnique
    */
   public TopKWithUnique topKWithUnique(Operand<TFloat32> input, Long k) {
@@ -7521,10 +7521,10 @@ public final class Ops {
    *  be used as the shared name.
    *
    * @param <T> data type for {@code unbatched_tensor} output
-   * @param batchedTensor the batchedTensor value
-   * @param batchIndex the batchIndex value
-   * @param id the id value
-   * @param timeoutMicros the value of the timeoutMicros property
+   * @param batchedTensor The batchedTensor value
+   * @param batchIndex The batchIndex value
+   * @param id The id value
+   * @param timeoutMicros The value of the timeoutMicros attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code Unbatch} output and operands
    * @return a new instance of Unbatch
@@ -7551,10 +7551,10 @@ public final class Ops {
    *  will be used as the shared name.
    *
    * @param <T> data type for {@code batched_grad} output
-   * @param originalInput the originalInput value
-   * @param batchIndex the batchIndex value
-   * @param grad the grad value
-   * @param id the id value
+   * @param originalInput The originalInput value
+   * @param batchIndex The batchIndex value
+   * @param grad The grad value
+   * @param id The id value
    * @param options carries optional attribute values
    * @param <T> data type for {@code UnbatchGrad} output and operands
    * @return a new instance of UnbatchGrad
@@ -7660,7 +7660,7 @@ public final class Ops {
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    *  find the unique elements.
-   * @param outIdx the value of the outIdx property
+   * @param outIdx The value of the outIdx attribute
    * @param <T> data type for {@code UniqueV2} output and operands
    * @param <V> data type for {@code UniqueV2} output and operands
    * @return a new instance of Unique
@@ -7774,7 +7774,7 @@ public final class Ops {
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    *  find the unique elements.
-   * @param outIdx the value of the outIdx property
+   * @param outIdx The value of the outIdx attribute
    * @param <T> data type for {@code UniqueWithCountsV2} output and operands
    * @param <V> data type for {@code UniqueWithCountsV2} output and operands
    * @return a new instance of UniqueWithCounts
@@ -7830,7 +7830,7 @@ public final class Ops {
    *
    * @param <T> data type for {@code output} output
    * @param value 1-D or higher, with {@code axis} dimension size equal to {@code num}.
-   * @param num the value of the num property
+   * @param num The value of the num attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code Unpack} output and operands
    * @return a new instance of Unstack
@@ -7845,7 +7845,7 @@ public final class Ops {
    *  The basic functionality is similar to dequeue with many fewer
    *  capabilities and options.  This Op is optimized for performance.
    *
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of Unstage
    */
@@ -7921,7 +7921,7 @@ public final class Ops {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of VariableShape, with default output types
    */
   public VariableShape<TInt32> variableShape(Operand<? extends TType> input) {
@@ -7938,8 +7938,8 @@ public final class Ops {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param outType the value of the outType property
+   * @param input The input value
+   * @param outType The value of the outType attribute
    * @param <T> data type for {@code VariableShape} output and operands
    * @return a new instance of VariableShape
    */
@@ -8008,7 +8008,7 @@ public final class Ops {
    *                    [2, 1, 1]]
    *  </pre>
    *
-   * @param condition the condition value
+   * @param condition The condition value
    * @return a new instance of Where
    */
   public Where where(Operand<? extends TType> condition) {

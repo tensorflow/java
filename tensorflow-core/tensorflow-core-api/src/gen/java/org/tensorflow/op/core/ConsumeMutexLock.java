@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -60,5 +63,18 @@ public final class ConsumeMutexLock extends RawOp {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ConsumeMutexLock");
     opBuilder.addInput(mutexLock.asOutput());
     return new ConsumeMutexLock(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ConsumeMutexLock> {
+    /**
+     * A tensor returned by {@code MutexLock}.
+     */
+    public final Operand<? extends TType> mutexLock;
+
+    public Inputs(GraphOperation op) {
+      super(new ConsumeMutexLock(op), op, Arrays.asList());
+      int inputIndex = 0;
+      mutexLock = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -134,6 +138,68 @@ public final class SparseApplyProximalGradientDescent<T extends TType> extends R
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseApplyProximalGradientDescent<T>> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<T> var;
+
+    /**
+     * Scaling factor. Must be a scalar.
+     */
+    public final Operand<T> alpha;
+
+    /**
+     * L1 regularization. Must be a scalar.
+     */
+    public final Operand<T> l1;
+
+    /**
+     * L2 regularization. Must be a scalar.
+     */
+    public final Operand<T> l2;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * A vector of indices into the first dimension of var and accum.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * If True, the subtraction will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     */
+    public final boolean useLocking;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseApplyProximalGradientDescent<>(op), op, Arrays.asList("T", "Tindices", "use_locking"));
+      int inputIndex = 0;
+      var = (Operand<T>) op.input(inputIndex++);
+      alpha = (Operand<T>) op.input(inputIndex++);
+      l1 = (Operand<T>) op.input(inputIndex++);
+      l2 = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      useLocking = op.attributes().getAttrBool("use_locking");
     }
   }
 }

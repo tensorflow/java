@@ -19,15 +19,18 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 
 /**
@@ -92,11 +95,11 @@ public final class Batch extends RawOp {
    * Factory method to create a class wrapping a new Batch operation.
    *
    * @param scope current scope
-   * @param inTensors the inTensors value
-   * @param numBatchThreads the value of the numBatchThreads property
-   * @param maxBatchSize the value of the maxBatchSize property
-   * @param batchTimeoutMicros the value of the batchTimeoutMicros property
-   * @param gradTimeoutMicros the value of the gradTimeoutMicros property
+   * @param inTensors The inTensors value
+   * @param numBatchThreads The value of the numBatchThreads attribute
+   * @param maxBatchSize The value of the maxBatchSize attribute
+   * @param batchTimeoutMicros The value of the batchTimeoutMicros attribute
+   * @param gradTimeoutMicros The value of the gradTimeoutMicros attribute
    * @param options carries optional attribute values
    * @return a new instance of Batch
    */
@@ -163,7 +166,7 @@ public final class Batch extends RawOp {
    * @param allowedBatchSizes the allowedBatchSizes option
    * @return this Options instance.
    */
-  public static Options allowedBatchSizes(Long[] allowedBatchSizes) {
+  public static Options allowedBatchSizes(Long... allowedBatchSizes) {
     return new Options().allowedBatchSizes(allowedBatchSizes);
   }
 
@@ -305,6 +308,81 @@ public final class Batch extends RawOp {
     public Options batchingQueue(String batchingQueue) {
       this.batchingQueue = batchingQueue;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Batch> {
+    /**
+     * The inTensors input
+     */
+    public final Iterable<Operand<?>> inTensors;
+
+    /**
+     * The numBatchThreads attribute
+     */
+    public final long numBatchThreads;
+
+    /**
+     * The maxBatchSize attribute
+     */
+    public final long maxBatchSize;
+
+    /**
+     * The maxEnqueuedBatches attribute
+     */
+    public final long maxEnqueuedBatches;
+
+    /**
+     * The batchTimeoutMicros attribute
+     */
+    public final long batchTimeoutMicros;
+
+    /**
+     * The allowedBatchSizes attribute
+     */
+    public final long[] allowedBatchSizes;
+
+    /**
+     * The gradTimeoutMicros attribute
+     */
+    public final long gradTimeoutMicros;
+
+    /**
+     * The container attribute
+     */
+    public final String container;
+
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    /**
+     * The batchingQueue attribute
+     */
+    public final String batchingQueue;
+
+    /**
+     * The T attribute
+     */
+    public final DataType[] T;
+
+    public Inputs(GraphOperation op) {
+      super(new Batch(op), op, Arrays.asList("num_batch_threads", "max_batch_size", "max_enqueued_batches", "batch_timeout_micros", "allowed_batch_sizes", "grad_timeout_micros", "container", "shared_name", "batching_queue", "T"));
+      int inputIndex = 0;
+      int inTensorsLength = op.inputListLength("in_tensors");
+      inTensors = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inTensorsLength));
+      inputIndex += inTensorsLength;
+      numBatchThreads = op.attributes().getAttrInt("num_batch_threads");
+      maxBatchSize = op.attributes().getAttrInt("max_batch_size");
+      maxEnqueuedBatches = op.attributes().getAttrInt("max_enqueued_batches");
+      batchTimeoutMicros = op.attributes().getAttrInt("batch_timeout_micros");
+      allowedBatchSizes = op.attributes().getAttrIntList("allowed_batch_sizes");
+      gradTimeoutMicros = op.attributes().getAttrInt("grad_timeout_micros");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      batchingQueue = op.attributes().getAttrString("batching_queue");
+      T = op.attributes().getAttrTypeList("T");
     }
   }
 }

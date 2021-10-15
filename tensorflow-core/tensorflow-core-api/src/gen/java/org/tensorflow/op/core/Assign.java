@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -152,6 +156,46 @@ public final class Assign<T extends TType> extends RawOp implements Operand<T> {
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Assign<T>> {
+    /**
+     * Should be from a {@code Variable} node. May be uninitialized.
+     */
+    public final Operand<T> ref;
+
+    /**
+     * The value to be assigned to the variable.
+     */
+    public final Operand<T> value;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If true, the operation will validate that the shape
+     * of 'value' matches the shape of the Tensor being assigned to.  If false,
+     * 'ref' will take on the shape of 'value'.
+     */
+    public final boolean validateShape;
+
+    /**
+     * If True, the assignment will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     */
+    public final boolean useLocking;
+
+    public Inputs(GraphOperation op) {
+      super(new Assign<>(op), op, Arrays.asList("T", "validate_shape", "use_locking"));
+      int inputIndex = 0;
+      ref = (Operand<T>) op.input(inputIndex++);
+      value = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      validateShape = op.attributes().getAttrBool("validate_shape");
+      useLocking = op.attributes().getAttrBool("use_locking");
     }
   }
 }

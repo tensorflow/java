@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -119,6 +122,31 @@ public final class Print extends RawOp {
     public Options end(String end) {
       this.end = end;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Print> {
+    /**
+     * The string scalar to print.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * A string specifying the output stream or logging level to print to.
+     */
+    public final String outputStream;
+
+    /**
+     * The end attribute
+     */
+    public final String end;
+
+    public Inputs(GraphOperation op) {
+      super(new Print(op), op, Arrays.asList("output_stream", "end"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      outputStream = op.attributes().getAttrString("output_stream");
+      end = op.attributes().getAttrString("end");
     }
   }
 }

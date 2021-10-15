@@ -135,7 +135,7 @@ public final class LinalgOps {
    * The BatchCholesky operation
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code BatchCholesky} output and operands
    * @return a new instance of BatchCholesky
    */
@@ -147,8 +147,8 @@ public final class LinalgOps {
    * The BatchCholeskyGrad operation
    *
    * @param <T> data type for {@code output} output
-   * @param l the l value
-   * @param grad the grad value
+   * @param l The l value
+   * @param grad The grad value
    * @param <T> data type for {@code BatchCholeskyGrad} output and operands
    * @return a new instance of BatchCholeskyGrad
    */
@@ -160,9 +160,9 @@ public final class LinalgOps {
    * The BatchMatrixBandPart operation
    *
    * @param <T> data type for {@code band} output
-   * @param input the input value
-   * @param numLower the numLower value
-   * @param numUpper the numUpper value
+   * @param input The input value
+   * @param numLower The numLower value
+   * @param numUpper The numUpper value
    * @param <T> data type for {@code BatchMatrixBandPart} output and operands
    * @return a new instance of BatchMatrixBandPart
    */
@@ -175,7 +175,7 @@ public final class LinalgOps {
    * The BatchMatrixDeterminant operation
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code BatchMatrixDeterminant} output and operands
    * @return a new instance of BatchMatrixDeterminant
    */
@@ -187,7 +187,7 @@ public final class LinalgOps {
    * The BatchMatrixDiag operation
    *
    * @param <T> data type for {@code output} output
-   * @param diagonal the diagonal value
+   * @param diagonal The diagonal value
    * @param <T> data type for {@code BatchMatrixDiag} output and operands
    * @return a new instance of BatchMatrixDiag
    */
@@ -199,7 +199,7 @@ public final class LinalgOps {
    * The BatchMatrixDiagPart operation
    *
    * @param <T> data type for {@code diagonal} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code BatchMatrixDiagPart} output and operands
    * @return a new instance of BatchMatrixDiagPart
    */
@@ -211,7 +211,7 @@ public final class LinalgOps {
    * The BatchMatrixInverse operation
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchMatrixInverse} output and operands
    * @return a new instance of BatchMatrixInverse
@@ -225,8 +225,8 @@ public final class LinalgOps {
    * The BatchMatrixSetDiag operation
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param diagonal the diagonal value
+   * @param input The input value
+   * @param diagonal The diagonal value
    * @param <T> data type for {@code BatchMatrixSetDiag} output and operands
    * @return a new instance of BatchMatrixSetDiag
    */
@@ -239,8 +239,8 @@ public final class LinalgOps {
    * The BatchMatrixSolve operation
    *
    * @param <T> data type for {@code output} output
-   * @param matrix the matrix value
-   * @param rhs the rhs value
+   * @param matrix The matrix value
+   * @param rhs The rhs value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchMatrixSolve} output and operands
    * @return a new instance of BatchMatrixSolve
@@ -254,9 +254,9 @@ public final class LinalgOps {
    * The BatchMatrixSolveLs operation
    *
    * @param <T> data type for {@code output} output
-   * @param matrix the matrix value
-   * @param rhs the rhs value
-   * @param l2Regularizer the l2Regularizer value
+   * @param matrix The matrix value
+   * @param rhs The rhs value
+   * @param l2Regularizer The l2Regularizer value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchMatrixSolveLs} output and operands
    * @return a new instance of BatchMatrixSolveLs
@@ -270,8 +270,8 @@ public final class LinalgOps {
    * The BatchMatrixTriangularSolve operation
    *
    * @param <T> data type for {@code output} output
-   * @param matrix the matrix value
-   * @param rhs the rhs value
+   * @param matrix The matrix value
+   * @param rhs The rhs value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchMatrixTriangularSolve} output and operands
    * @return a new instance of BatchMatrixTriangularSolve
@@ -285,7 +285,7 @@ public final class LinalgOps {
    * The BatchSelfAdjointEigV2 operation
    *
    * @param <T> data type for {@code e} output
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchSelfAdjointEigV2} output and operands
    * @return a new instance of BatchSelfAdjointEig
@@ -299,7 +299,7 @@ public final class LinalgOps {
    * The BatchSvd operation
    *
    * @param <T> data type for {@code s} output
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchSvd} output and operands
    * @return a new instance of BatchSvd
@@ -356,8 +356,8 @@ public final class LinalgOps {
    *  {@code y[i,j,k,...,s,t,u] == conj(x[perm[i], perm[j], perm[k],...,perm[s], perm[t], perm[u]])}
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
-   * @param perm the perm value
+   * @param x The x value
+   * @param perm The perm value
    * @param <T> data type for {@code ConjugateTranspose} output and operands
    * @return a new instance of ConjugateTranspose
    */
@@ -412,7 +412,7 @@ public final class LinalgOps {
    *
    * @param <U> data type for {@code e} output
    * @param input {@code Tensor} input of shape {@code [N, N]}.
-   * @param Tout the value of the Tout property
+   * @param Tout The value of the Tout attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code Eig} output and operands
    * @return a new instance of Eig
@@ -662,7 +662,7 @@ public final class LinalgOps {
    * @param <U> data type for {@code p} output
    * @param input A tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions form matrices of
    *  size {@code [M, M]}.
-   * @param outputIdxType the value of the outputIdxType property
+   * @param outputIdxType The value of the outputIdxType attribute
    * @param <T> data type for {@code Lu} output and operands
    * @param <U> data type for {@code Lu} output and operands
    * @return a new instance of Lu
@@ -682,8 +682,8 @@ public final class LinalgOps {
    *  cublas.
    *
    * @param <T> data type for {@code product} output
-   * @param a the a value
-   * @param b the b value
+   * @param a The a value
+   * @param b The b value
    * @param options carries optional attribute values
    * @param <T> data type for {@code MatMul} output and operands
    * @return a new instance of MatMul
@@ -1326,7 +1326,7 @@ public final class LinalgOps {
    * @param maxA The float value that the highest quantized {@code a} value represents.
    * @param minB The float value that the lowest quantized {@code b} value represents.
    * @param maxB The float value that the highest quantized {@code b} value represents.
-   * @param Toutput the value of the Toutput property
+   * @param Toutput The value of the Toutput attribute
    * @param Tactivation The type of output produced by activation function
    *  following this operation.
    * @param options carries optional attribute values
@@ -1491,8 +1491,8 @@ public final class LinalgOps {
    *  {@code y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]}
    *
    * @param <T> data type for {@code y} output
-   * @param x the x value
-   * @param perm the perm value
+   * @param x The x value
+   * @param perm The perm value
    * @param <T> data type for {@code Transpose} output and operands
    * @return a new instance of Transpose
    */

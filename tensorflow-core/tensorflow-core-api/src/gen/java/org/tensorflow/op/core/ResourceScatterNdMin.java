@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -104,6 +108,53 @@ public final class ResourceScatterNdMin extends RawOp {
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceScatterNdMin> {
+    /**
+     * A resource handle. Must be from a VarHandleOp.
+     */
+    public final Operand<? extends TType> ref;
+
+    /**
+     * A Tensor. Must be one of the following types: int32, int64.
+     * A tensor of indices into ref.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * A Tensor. Must have the same type as ref. A tensor of
+     * values whose element wise min is taken with ref.
+     */
+    public final Operand<? extends TType> updates;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * An optional bool. Defaults to True. If True, the assignment will
+     * be protected by a lock; otherwise the behavior is undefined,
+     * but may exhibit less contention.
+     */
+    public final boolean useLocking;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceScatterNdMin(op), op, Arrays.asList("T", "Tindices", "use_locking"));
+      int inputIndex = 0;
+      ref = (Operand<? extends TType>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      updates = (Operand<? extends TType>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      useLocking = op.attributes().getAttrBool("use_locking");
     }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -85,7 +89,7 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TNumber> 
    * with the normalized tensor.
    * @param gammaMin The value represented by the lowest quantized gamma.
    * @param gammaMax The value represented by the highest quantized gamma.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param varianceEpsilon A small float number to avoid dividing by 0.
    * @param scaleAfterNormalization A bool indicating whether the resulted tensor
    * needs to be multiplied with gamma.
@@ -149,5 +153,134 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TNumber> 
    */
   public Output<TFloat32> resultMax() {
     return resultMax;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizedBatchNormWithGlobalNormalization<?>> {
+    /**
+     * A 4D input Tensor.
+     */
+    public final Operand<T> t;
+
+    /**
+     * The value represented by the lowest quantized input.
+     */
+    public final Operand<TFloat32> tMin;
+
+    /**
+     * The value represented by the highest quantized input.
+     */
+    public final Operand<TFloat32> tMax;
+
+    /**
+     * A 1D mean Tensor with size matching the last dimension of t.
+     * This is the first output from tf.nn.moments,
+     * or a saved moving average thereof.
+     */
+    public final Operand<T> m;
+
+    /**
+     * The value represented by the lowest quantized mean.
+     */
+    public final Operand<TFloat32> mMin;
+
+    /**
+     * The value represented by the highest quantized mean.
+     */
+    public final Operand<TFloat32> mMax;
+
+    /**
+     * A 1D variance Tensor with size matching the last dimension of t.
+     * This is the second output from tf.nn.moments,
+     * or a saved moving average thereof.
+     */
+    public final Operand<T> v;
+
+    /**
+     * The value represented by the lowest quantized variance.
+     */
+    public final Operand<TFloat32> vMin;
+
+    /**
+     * The value represented by the highest quantized variance.
+     */
+    public final Operand<TFloat32> vMax;
+
+    /**
+     * A 1D beta Tensor with size matching the last dimension of t.
+     * An offset to be added to the normalized tensor.
+     */
+    public final Operand<T> beta;
+
+    /**
+     * The value represented by the lowest quantized offset.
+     */
+    public final Operand<TFloat32> betaMin;
+
+    /**
+     * The value represented by the highest quantized offset.
+     */
+    public final Operand<TFloat32> betaMax;
+
+    /**
+     * A 1D gamma Tensor with size matching the last dimension of t.
+     * If &quot;scale_after_normalization&quot; is true, this tensor will be multiplied
+     * with the normalized tensor.
+     */
+    public final Operand<T> gamma;
+
+    /**
+     * The value represented by the lowest quantized gamma.
+     */
+    public final Operand<TFloat32> gammaMin;
+
+    /**
+     * The value represented by the highest quantized gamma.
+     */
+    public final Operand<TFloat32> gammaMax;
+
+    /**
+     * The Tinput attribute
+     */
+    public final DataType Tinput;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    /**
+     * A small float number to avoid dividing by 0.
+     */
+    public final float varianceEpsilon;
+
+    /**
+     * A bool indicating whether the resulted tensor
+     * needs to be multiplied with gamma.
+     */
+    public final boolean scaleAfterNormalization;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedBatchNormWithGlobalNormalization<>(op), op, Arrays.asList("Tinput", "out_type", "variance_epsilon", "scale_after_normalization"));
+      int inputIndex = 0;
+      t = (Operand<T>) op.input(inputIndex++);
+      tMin = (Operand<TFloat32>) op.input(inputIndex++);
+      tMax = (Operand<TFloat32>) op.input(inputIndex++);
+      m = (Operand<T>) op.input(inputIndex++);
+      mMin = (Operand<TFloat32>) op.input(inputIndex++);
+      mMax = (Operand<TFloat32>) op.input(inputIndex++);
+      v = (Operand<T>) op.input(inputIndex++);
+      vMin = (Operand<TFloat32>) op.input(inputIndex++);
+      vMax = (Operand<TFloat32>) op.input(inputIndex++);
+      beta = (Operand<T>) op.input(inputIndex++);
+      betaMin = (Operand<TFloat32>) op.input(inputIndex++);
+      betaMax = (Operand<TFloat32>) op.input(inputIndex++);
+      gamma = (Operand<T>) op.input(inputIndex++);
+      gammaMin = (Operand<TFloat32>) op.input(inputIndex++);
+      gammaMax = (Operand<TFloat32>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+      outType = op.attributes().getAttrType("out_type");
+      varianceEpsilon = op.attributes().getAttrFloat("variance_epsilon");
+      scaleAfterNormalization = op.attributes().getAttrBool("scale_after_normalization");
+    }
   }
 }

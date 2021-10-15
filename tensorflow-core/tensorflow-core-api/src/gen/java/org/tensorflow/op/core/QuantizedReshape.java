@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -59,7 +63,7 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
    * Factory method to create a class wrapping a new QuantizedReshape operation.
    *
    * @param scope current scope
-   * @param tensor the tensor value
+   * @param tensor The tensor value
    * @param shape Defines the shape of the output tensor.
    * @param inputMin The minimum value of the input.
    * @param inputMax The maximum value of the input.
@@ -104,5 +108,48 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
    */
   public Output<TFloat32> outputMax() {
     return outputMax;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<QuantizedReshape<T>> {
+    /**
+     * The tensor input
+     */
+    public final Operand<T> tensor;
+
+    /**
+     * Defines the shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * The minimum value of the input.
+     */
+    public final Operand<TFloat32> inputMin;
+
+    /**
+     * The maximum value of the input.
+     */
+    public final Operand<TFloat32> inputMax;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tshape attribute
+     */
+    public final DataType Tshape;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedReshape<>(op), op, Arrays.asList("T", "Tshape"));
+      int inputIndex = 0;
+      tensor = (Operand<T>) op.input(inputIndex++);
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      inputMin = (Operand<TFloat32>) op.input(inputIndex++);
+      inputMax = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tshape = op.attributes().getAttrType("Tshape");
+    }
   }
 }

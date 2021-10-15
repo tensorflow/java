@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -56,12 +60,12 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
    * Factory method to create a class wrapping a new StatefulRandomBinomial operation.
    *
    * @param scope current scope
-   * @param resource the resource value
-   * @param algorithm the algorithm value
-   * @param shape the shape value
-   * @param counts the counts value
-   * @param probs the probs value
-   * @param dtype the value of the dtype property
+   * @param resource The resource value
+   * @param algorithm The algorithm value
+   * @param shape The shape value
+   * @param counts The counts value
+   * @param probs The probs value
+   * @param dtype The value of the dtype attribute
    * @param <V> data type for {@code StatefulRandomBinomial} output and operands
    * @param <U> data type for {@code StatefulRandomBinomial} output and operands
    * @return a new instance of StatefulRandomBinomial
@@ -86,11 +90,11 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
    * Factory method to create a class wrapping a new StatefulRandomBinomial operation, with the default output types.
    *
    * @param scope current scope
-   * @param resource the resource value
-   * @param algorithm the algorithm value
-   * @param shape the shape value
-   * @param counts the counts value
-   * @param probs the probs value
+   * @param resource The resource value
+   * @param algorithm The algorithm value
+   * @param shape The shape value
+   * @param counts The counts value
+   * @param probs The probs value
    * @param <U> data type for {@code StatefulRandomBinomial} output and operands
    * @return a new instance of StatefulRandomBinomial, with default output types
    */
@@ -115,5 +119,60 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
   @Override
   public Output<V> asOutput() {
     return output;
+  }
+
+  public static class Inputs<U extends TNumber> extends RawOpInputs<StatefulRandomBinomial<?>> {
+    /**
+     * The resource input
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * The algorithm input
+     */
+    public final Operand<TInt64> algorithm;
+
+    /**
+     * The shape input
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * The counts input
+     */
+    public final Operand<U> counts;
+
+    /**
+     * The probs input
+     */
+    public final Operand<U> probs;
+
+    /**
+     * The S attribute
+     */
+    public final DataType S;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new StatefulRandomBinomial<>(op), op, Arrays.asList("S", "T", "dtype"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      algorithm = (Operand<TInt64>) op.input(inputIndex++);
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      counts = (Operand<U>) op.input(inputIndex++);
+      probs = (Operand<U>) op.input(inputIndex++);
+      S = op.attributes().getAttrType("S");
+      T = op.attributes().getAttrType("T");
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

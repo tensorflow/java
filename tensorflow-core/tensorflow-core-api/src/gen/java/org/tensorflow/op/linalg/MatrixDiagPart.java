@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -148,5 +152,40 @@ public final class MatrixDiagPart<T extends TType> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return diagonal;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<MatrixDiagPart<T>> {
+    /**
+     * Rank {@code r} tensor where {@code r >= 2}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+     * diagonal, and negative value means subdiagonals. {@code k} can be a single integer
+     * (for a single diagonal) or a pair of integers specifying the low and high ends
+     * of a matrix band. {@code k[0]} must not be larger than {@code k[1]}.
+     */
+    public final Operand<TInt32> k;
+
+    /**
+     * The value to fill the area outside the specified diagonal band with.
+     * Default is 0.
+     */
+    public final Operand<T> paddingValue;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new MatrixDiagPart<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      k = (Operand<TInt32>) op.input(inputIndex++);
+      paddingValue = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

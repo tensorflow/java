@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -195,6 +198,49 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
     public Options narrowRange(Boolean narrowRange) {
       this.narrowRange = narrowRange;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxArgsGradient> {
+    /**
+     * Backpropagated gradients above the FakeQuantWithMinMaxArgs operation.
+     */
+    public final Operand<TFloat32> gradients;
+
+    /**
+     * Values passed as inputs to the FakeQuantWithMinMaxArgs operation.
+     */
+    public final Operand<TFloat32> inputs;
+
+    /**
+     * The min attribute
+     */
+    public final float min;
+
+    /**
+     * The max attribute
+     */
+    public final float max;
+
+    /**
+     * The numBits attribute
+     */
+    public final long numBits;
+
+    /**
+     * The narrowRange attribute
+     */
+    public final boolean narrowRange;
+
+    public Inputs(GraphOperation op) {
+      super(new FakeQuantWithMinMaxArgsGradient(op), op, Arrays.asList("min", "max", "num_bits", "narrow_range"));
+      int inputIndex = 0;
+      gradients = (Operand<TFloat32>) op.input(inputIndex++);
+      inputs = (Operand<TFloat32>) op.input(inputIndex++);
+      min = op.attributes().getAttrFloat("min");
+      max = op.attributes().getAttrFloat("max");
+      numBits = op.attributes().getAttrInt("num_bits");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
     }
   }
 }

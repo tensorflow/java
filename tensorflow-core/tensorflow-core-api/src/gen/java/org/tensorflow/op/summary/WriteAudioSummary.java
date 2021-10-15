@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -47,11 +50,11 @@ public final class WriteAudioSummary extends RawOp {
    * Factory method to create a class wrapping a new WriteAudioSummary operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param step the step value
-   * @param tag the tag value
-   * @param tensor the tensor value
-   * @param sampleRate the sampleRate value
+   * @param writer The writer value
+   * @param step The step value
+   * @param tag The tag value
+   * @param tensor The tensor value
+   * @param sampleRate The sampleRate value
    * @param options carries optional attribute values
    * @return a new instance of WriteAudioSummary
    */
@@ -105,6 +108,49 @@ public final class WriteAudioSummary extends RawOp {
     public Options maxOutputs(Long maxOutputs) {
       this.maxOutputs = maxOutputs;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<WriteAudioSummary> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The step input
+     */
+    public final Operand<TInt64> step;
+
+    /**
+     * The tag input
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * The tensor input
+     */
+    public final Operand<TFloat32> tensor;
+
+    /**
+     * The sampleRate input
+     */
+    public final Operand<TFloat32> sampleRate;
+
+    /**
+     * The maxOutputs attribute
+     */
+    public final long maxOutputs;
+
+    public Inputs(GraphOperation op) {
+      super(new WriteAudioSummary(op), op, Arrays.asList("max_outputs"));
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      step = (Operand<TInt64>) op.input(inputIndex++);
+      tag = (Operand<TString>) op.input(inputIndex++);
+      tensor = (Operand<TFloat32>) op.input(inputIndex++);
+      sampleRate = (Operand<TFloat32>) op.input(inputIndex++);
+      maxOutputs = op.attributes().getAttrInt("max_outputs");
     }
   }
 }

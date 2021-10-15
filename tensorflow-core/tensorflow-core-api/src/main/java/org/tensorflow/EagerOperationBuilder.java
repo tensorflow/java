@@ -33,6 +33,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrStrin
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrTensor;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrType;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrTypeList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetDevice;
 
 import java.nio.charset.Charset;
@@ -54,6 +55,7 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
+import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 
 /**
@@ -250,7 +252,13 @@ final class EagerOperationBuilder implements OperationBuilder {
     return this;
   }
 
-  private TFE_Op opHandle;
+  @Override
+  public OperationBuilder setAttr(String name, AttrValue value) {
+    setAttrValue(opHandle, name, value);
+    return this;
+  }
+
+  private final TFE_Op opHandle;
 
   private final EagerSession session;
   private final String type;
@@ -473,6 +481,16 @@ final class EagerOperationBuilder implements OperationBuilder {
         fns.put(i, op);
       }
       TFE_OpSetAttrFunctionList(opHandle, new BytePointer(attrName), fns, functionNames.size());
+    }
+  }
+
+  private static void setAttrValue(TFE_Op opHandle, String name, AttrValue value) {
+    requireOp(opHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      byte[] bytes = value.toByteArray();
+      TFE_OpSetAttrValueProto(opHandle, name, new BytePointer(bytes), bytes.length, status);
+      status.throwExceptionIfNotOK();
     }
   }
 }

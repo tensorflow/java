@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -94,5 +98,30 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
   @Override
   public Output<TInt32> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<Bucketize> {
+    /**
+     * Any shape of Tensor contains with int or float type.
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * A sorted list of floats gives the boundary of the buckets.
+     */
+    public final float[] boundaries;
+
+    public Inputs(GraphOperation op) {
+      super(new Bucketize(op), op, Arrays.asList("T", "boundaries"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      boundaries = op.attributes().getAttrFloatList("boundaries");
+    }
   }
 }

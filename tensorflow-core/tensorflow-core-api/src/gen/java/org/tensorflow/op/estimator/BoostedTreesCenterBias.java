@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TBool;
@@ -83,5 +86,42 @@ public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool
   @Override
   public Output<TBool> asOutput() {
     return continueCentering;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesCenterBias> {
+    /**
+     * Handle to the tree ensemble.
+     */
+    public final Operand<? extends TType> treeEnsembleHandle;
+
+    /**
+     * A tensor with shape=[logits_dimension] with mean of gradients for a first node.
+     */
+    public final Operand<TFloat32> meanGradients;
+
+    /**
+     * A tensor with shape=[logits_dimension] mean of hessians for a first node.
+     */
+    public final Operand<TFloat32> meanHessians;
+
+    /**
+     * l1 regularization factor on leaf weights, per instance based.
+     */
+    public final Operand<TFloat32> l1;
+
+    /**
+     * l2 regularization factor on leaf weights, per instance based.
+     */
+    public final Operand<TFloat32> l2;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesCenterBias(op), op, Arrays.asList());
+      int inputIndex = 0;
+      treeEnsembleHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      meanGradients = (Operand<TFloat32>) op.input(inputIndex++);
+      meanHessians = (Operand<TFloat32>) op.input(inputIndex++);
+      l1 = (Operand<TFloat32>) op.input(inputIndex++);
+      l2 = (Operand<TFloat32>) op.input(inputIndex++);
+    }
   }
 }

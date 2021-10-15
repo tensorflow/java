@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -82,5 +86,42 @@ public final class TensorArrayWrite extends RawOp implements Operand<TFloat32> {
   @Override
   public Output<TFloat32> asOutput() {
     return flowOut;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayWrite> {
+    /**
+     * The handle to a TensorArray.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * The position to write to inside the TensorArray.
+     */
+    public final Operand<TInt32> index;
+
+    /**
+     * The tensor to write to the TensorArray.
+     */
+    public final Operand<? extends TType> value;
+
+    /**
+     * A float scalar that enforces proper chaining of operations.
+     */
+    public final Operand<TFloat32> flowIn;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayWrite(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      index = (Operand<TInt32>) op.input(inputIndex++);
+      value = (Operand<? extends TType>) op.input(inputIndex++);
+      flowIn = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

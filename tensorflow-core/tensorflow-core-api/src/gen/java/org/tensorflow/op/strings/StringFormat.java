@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 
 /**
@@ -167,6 +171,45 @@ public final class StringFormat extends RawOp implements Operand<TString> {
     public Options summarize(Long summarize) {
       this.summarize = summarize;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<StringFormat> {
+    /**
+     * The list of tensors to format into the placeholder string.
+     */
+    public final Iterable<Operand<?>> inputs;
+
+    /**
+     * The T attribute
+     */
+    public final DataType[] T;
+
+    /**
+     * A string, the template to format tensor summaries into.
+     */
+    public final String template;
+
+    /**
+     * A string, at each placeholder in the template a subsequent tensor summary will be inserted.
+     */
+    public final String placeholder;
+
+    /**
+     * When formatting the tensor summaries print the first and last summarize entries of each tensor dimension.
+     */
+    public final long summarize;
+
+    public Inputs(GraphOperation op) {
+      super(new StringFormat(op), op, Arrays.asList("T", "template", "placeholder", "summarize"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      T = op.attributes().getAttrTypeList("T");
+      template = op.attributes().getAttrString("template");
+      placeholder = op.attributes().getAttrString("placeholder");
+      summarize = op.attributes().getAttrInt("summarize");
     }
   }
 }

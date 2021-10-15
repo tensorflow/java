@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -93,5 +97,38 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
   @Override
   public Output<T> asOutput() {
     return bins;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Bincount<T>> {
+    /**
+     * int32 {@code Tensor}.
+     */
+    public final Operand<TInt32> arr;
+
+    /**
+     * non-negative int32 scalar {@code Tensor}.
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * is an int32, int64, float32, or float64 {@code Tensor} with the same
+     * shape as {@code arr}, or a length-0 {@code Tensor}, in which case it acts as all weights
+     * equal to 1.
+     */
+    public final Operand<T> weights;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Bincount<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      arr = (Operand<TInt32>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      weights = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

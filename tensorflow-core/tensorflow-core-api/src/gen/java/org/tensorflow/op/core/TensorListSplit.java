@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -58,9 +62,9 @@ public final class TensorListSplit extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new TensorListSplit operation.
    *
    * @param scope current scope
-   * @param tensor the tensor value
-   * @param elementShape the elementShape value
-   * @param lengths the lengths value
+   * @param tensor The tensor value
+   * @param elementShape The elementShape value
+   * @param lengths The lengths value
    * @return a new instance of TensorListSplit
    */
   @Endpoint(
@@ -88,5 +92,42 @@ public final class TensorListSplit extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorListSplit> {
+    /**
+     * The tensor input
+     */
+    public final Operand<? extends TType> tensor;
+
+    /**
+     * The elementShape input
+     */
+    public final Operand<? extends TNumber> elementShape;
+
+    /**
+     * The lengths input
+     */
+    public final Operand<TInt64> lengths;
+
+    /**
+     * The elementDtype attribute
+     */
+    public final DataType elementDtype;
+
+    /**
+     * The shapeType attribute
+     */
+    public final DataType shapeType;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorListSplit(op), op, Arrays.asList("element_dtype", "shape_type"));
+      int inputIndex = 0;
+      tensor = (Operand<? extends TType>) op.input(inputIndex++);
+      elementShape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      lengths = (Operand<TInt64>) op.input(inputIndex++);
+      elementDtype = op.attributes().getAttrType("element_dtype");
+      shapeType = op.attributes().getAttrType("shape_type");
+    }
   }
 }

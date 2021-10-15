@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -249,6 +253,69 @@ public final class QuantizedInstanceNorm<T extends TNumber> extends RawOp {
     public Options minSeparation(Float minSeparation) {
       this.minSeparation = minSeparation;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizedInstanceNorm<T>> {
+    /**
+     * A 4D input Tensor.
+     */
+    public final Operand<T> x;
+
+    /**
+     * The value represented by the lowest quantized input.
+     */
+    public final Operand<TFloat32> xMin;
+
+    /**
+     * The value represented by the highest quantized input.
+     */
+    public final Operand<TFloat32> xMax;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If True, `given_y_min` and `given_y_min`
+     * and `given_y_max` are used as the output range. Otherwise,
+     * the implementation computes the output range.
+     */
+    public final boolean outputRangeGiven;
+
+    /**
+     * Output in `y_min` if `output_range_given` is True.
+     */
+    public final float givenYMin;
+
+    /**
+     * Output in `y_max` if `output_range_given` is True.
+     */
+    public final float givenYMax;
+
+    /**
+     * A small float number to avoid dividing by 0.
+     */
+    public final float varianceEpsilon;
+
+    /**
+     * Minimum value of `y_max - y_min`
+     */
+    public final float minSeparation;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedInstanceNorm<>(op), op, Arrays.asList("T", "output_range_given", "given_y_min", "given_y_max", "variance_epsilon", "min_separation"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      xMin = (Operand<TFloat32>) op.input(inputIndex++);
+      xMax = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      outputRangeGiven = op.attributes().getAttrBool("output_range_given");
+      givenYMin = op.attributes().getAttrFloat("given_y_min");
+      givenYMax = op.attributes().getAttrFloat("given_y_max");
+      varianceEpsilon = op.attributes().getAttrFloat("variance_epsilon");
+      minSeparation = op.attributes().getAttrFloat("min_separation");
     }
   }
 }

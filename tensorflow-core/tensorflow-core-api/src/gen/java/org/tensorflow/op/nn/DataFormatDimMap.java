@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -145,6 +149,38 @@ public final class DataFormatDimMap<T extends TNumber> extends RawOp implements 
     public Options dstFormat(String dstFormat) {
       this.dstFormat = dstFormat;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<DataFormatDimMap<T>> {
+    /**
+     * A Tensor with each element as a dimension index in source data format.
+     * Must be in the range [-4, 4).
+     */
+    public final Operand<T> x;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * source data format.
+     */
+    public final String srcFormat;
+
+    /**
+     * destination data format.
+     */
+    public final String dstFormat;
+
+    public Inputs(GraphOperation op) {
+      super(new DataFormatDimMap<>(op), op, Arrays.asList("T", "src_format", "dst_format"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      srcFormat = op.attributes().getAttrString("src_format");
+      dstFormat = op.attributes().getAttrString("dst_format");
     }
   }
 }
