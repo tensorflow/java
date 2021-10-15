@@ -272,8 +272,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
   @Override
   public void map(InfoMap infoMap) {
     infoMap
-        .put(new Info("c_api_experimental.h")
-            .linePatterns("typedef struct TFE_OpAttrs TFE_OpAttrs;", "#define TFE_CUSTOM_DEVICE_VERSION 4"))
+        .put(
+            new Info("c_api_experimental.h")
+                .linePatterns(
+                    "typedef struct TFE_OpAttrs TFE_OpAttrs;",
+                    "#define TFE_CUSTOM_DEVICE_VERSION 4"))
         .put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
         .put(
             new Info("TF_Buffer::data")
