@@ -5,6 +5,6 @@ runs:
   steps:
     - shell: bash
       run: |
-      git add .
-      git update-index --refresh
-      git diff-index --name-status --exit-code HEAD tensorflow-core/tensorflow-core-api/src/gen/** > changes.txt || echo "::error file=changes.txt,line=0,title=\"Un-commited generation\"::Generated classes after build do not match what was committed"
+        git add .
+        git update-index --refresh
+        git diff-index --name-status --exit-code HEAD tensorflow-core/tensorflow-core-api/src/gen/** > changes.txt || echo "::error file=changes.txt,line=0,title=\"Un-commited generation\"::Generated classes after build do not match what was committed"
