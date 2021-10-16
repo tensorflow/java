@@ -8,4 +8,4 @@ runs:
         git add .
         git update-index --refresh
         git diff-index --quiet --exit-code HEAD tensorflow-core/tensorflow-core-api/src/gen/** || \
-          (git diff -- ; echo "::error file=changes.txt,line=0,title=\"Un-commited generation\"::Generated classes after build do not match what was committed" ; exit 1)
+          (git --no-pager diff HEAD -- ; echo "::error file=changes.txt,line=0,title=\"Un-commited generation\"::Generated classes after build do not match what was committed" ; exit 1)
