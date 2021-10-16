@@ -341,70 +341,70 @@ import org.tensorflow.types.family.TType;
  * }</pre>
  */
 public final class Ops {
-  public final NnOps nn;
-
-  public final SummaryOps summary;
-
-  public final ImageOps image;
-
-  public final RaggedOps ragged;
-
-  public final DataOps data;
-
-  public final ShapeOps shape;
-
-  public final IoOps io;
-
-  public final DtypesOps dtypes;
-
-  public final XlaOps xla;
-
-  public final LinalgOps linalg;
-
-  public final RandomOps random;
-
-  public final StringsOps strings;
-
-  public final SparseOps sparse;
+  public final AudioOps audio;
 
   public final BitwiseOps bitwise;
 
-  public final TpuOps tpu;
+  public final DataOps data;
+
+  public final DtypesOps dtypes;
+
+  public final ImageOps image;
+
+  public final IoOps io;
+
+  public final LinalgOps linalg;
 
   public final MathOps math;
 
-  public final AudioOps audio;
+  public final NnOps nn;
+
+  public final QuantizationOps quantization;
+
+  public final RaggedOps ragged;
+
+  public final RandomOps random;
+
+  public final ShapeOps shape;
 
   public final SignalOps signal;
 
+  public final SparseOps sparse;
+
+  public final StringsOps strings;
+
+  public final SummaryOps summary;
+
+  public final TpuOps tpu;
+
   public final TrainOps train;
 
-  public final QuantizationOps quantization;
+  public final XlaOps xla;
 
   private final Scope scope;
 
   private Ops(Scope scope) {
     this.scope = scope;
-    nn = new NnOps(this);
-    summary = new SummaryOps(this);
-    image = new ImageOps(this);
-    ragged = new RaggedOps(this);
-    data = new DataOps(this);
-    shape = new ShapeOps(this);
-    io = new IoOps(this);
-    dtypes = new DtypesOps(this);
-    xla = new XlaOps(this);
-    linalg = new LinalgOps(this);
-    random = new RandomOps(this);
-    strings = new StringsOps(this);
-    sparse = new SparseOps(this);
-    bitwise = new BitwiseOps(this);
-    tpu = new TpuOps(this);
-    math = new MathOps(this);
     audio = new AudioOps(this);
-    signal = new SignalOps(this);
-    train = new TrainOps(this);
+    bitwise = new BitwiseOps(this);
+    data = new DataOps(this);
+    dtypes = new DtypesOps(this);
+    image = new ImageOps(this);
+    io = new IoOps(this);
+    linalg = new LinalgOps(this);
+    math = new MathOps(this);
+    nn = new NnOps(this);
     quantization = new QuantizationOps(this);
+    ragged = new RaggedOps(this);
+    random = new RandomOps(this);
+    shape = new ShapeOps(this);
+    signal = new SignalOps(this);
+    sparse = new SparseOps(this);
+    strings = new StringsOps(this);
+    summary = new SummaryOps(this);
+    tpu = new TpuOps(this);
+    train = new TrainOps(this);
+    xla = new XlaOps(this);
   }
 
   /**
