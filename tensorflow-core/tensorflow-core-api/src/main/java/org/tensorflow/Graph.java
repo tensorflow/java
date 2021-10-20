@@ -588,10 +588,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
     GraphOperation graphOp = (GraphOperation) op;
 
-    if (op.type().equals(Placeholder.OP_NAME)) {
-      throw new IllegalStateException("Can not make a placeholder " + op + " an init op.");
-    }
-
     for (GraphOperation controlInput : graphOp.controlInputs()) {
       registerInitOpHelper(controlInput);
     }
