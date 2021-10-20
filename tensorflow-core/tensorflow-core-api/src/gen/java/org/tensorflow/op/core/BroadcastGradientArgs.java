@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -53,8 +57,8 @@ public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new BroadcastGradientArgs operation.
    *
    * @param scope current scope
-   * @param s0 the s0 value
-   * @param s1 the s1 value
+   * @param s0 The s0 value
+   * @param s1 The s1 value
    * @param <T> data type for {@code BroadcastGradientArgs} output and operands
    * @return a new instance of BroadcastGradientArgs
    */
@@ -85,5 +89,30 @@ public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
    */
   public Output<T> r1() {
     return r1;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<BroadcastGradientArgs<T>> {
+    /**
+     * The s0 input
+     */
+    public final Operand<T> s0;
+
+    /**
+     * The s1 input
+     */
+    public final Operand<T> s1;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BroadcastGradientArgs<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      s0 = (Operand<T>) op.input(inputIndex++);
+      s1 = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

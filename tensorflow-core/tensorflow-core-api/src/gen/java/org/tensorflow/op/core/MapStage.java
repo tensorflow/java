@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -49,10 +53,10 @@ public final class MapStage extends RawOp {
    *
    * @param scope current scope
    * @param key int64
-   * @param indices the indices value
+   * @param indices The indices value
    * @param values a list of tensors
    * dtypes A list of data types that inserted values should adhere to.
-   * @param dtypes the value of the dtypes property
+   * @param dtypes The value of the dtypes attribute
    * @param options carries optional attribute values
    * @return a new instance of MapStage
    */
@@ -186,6 +190,72 @@ public final class MapStage extends RawOp {
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<MapStage> {
+    /**
+     * int64
+     */
+    public final Operand<TInt64> key;
+
+    /**
+     * The indices input
+     */
+    public final Operand<TInt32> indices;
+
+    /**
+     * a list of tensors
+     * dtypes A list of data types that inserted values should adhere to.
+     */
+    public final Iterable<Operand<?>> values;
+
+    /**
+     * Maximum number of elements in the Staging Area. If > 0, inserts
+     * on the container will block when the capacity is reached.
+     */
+    public final long capacity;
+
+    /**
+     * The memoryLimit attribute
+     */
+    public final long memoryLimit;
+
+    /**
+     * The dtypes attribute
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The fakeDtypes attribute
+     */
+    public final DataType[] fakeDtypes;
+
+    /**
+     * If non-empty, this queue is placed in the given container. Otherwise,
+     * a default container is used.
+     */
+    public final String container;
+
+    /**
+     * It is necessary to match this name to the matching Unstage Op.
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new MapStage(op), op, Arrays.asList("capacity", "memory_limit", "dtypes", "fake_dtypes", "container", "shared_name"));
+      int inputIndex = 0;
+      key = (Operand<TInt64>) op.input(inputIndex++);
+      indices = (Operand<TInt32>) op.input(inputIndex++);
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      capacity = op.attributes().getAttrInt("capacity");
+      memoryLimit = op.attributes().getAttrInt("memory_limit");
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      fakeDtypes = op.attributes().getAttrTypeList("fake_dtypes");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
     }
   }
 }

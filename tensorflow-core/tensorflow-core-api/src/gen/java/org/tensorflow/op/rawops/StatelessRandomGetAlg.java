@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.rawops;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt32;
@@ -70,5 +73,12 @@ public final class StatelessRandomGetAlg extends RawOp implements Operand<TInt32
   @Override
   public Output<TInt32> asOutput() {
     return alg;
+  }
+
+  public static class Inputs extends RawOpInputs<StatelessRandomGetAlg> {
+    public Inputs(GraphOperation op) {
+      super(new StatelessRandomGetAlg(op), op, Arrays.asList());
+      int inputIndex = 0;
+    }
   }
 }

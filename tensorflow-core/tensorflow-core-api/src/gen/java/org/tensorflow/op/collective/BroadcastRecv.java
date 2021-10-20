@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.collective;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,8 +26,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -51,11 +55,11 @@ public final class BroadcastRecv<T extends TType> extends RawOp implements Opera
    * Factory method to create a class wrapping a new CollectiveBcastRecv operation.
    *
    * @param scope current scope
-   * @param T the value of the T property
-   * @param groupSize the value of the groupSize property
-   * @param groupKey the value of the groupKey property
-   * @param instanceKey the value of the instanceKey property
-   * @param shape the value of the shape property
+   * @param T The value of the T attribute
+   * @param groupSize The value of the groupSize attribute
+   * @param groupKey The value of the groupKey attribute
+   * @param instanceKey The value of the instanceKey attribute
+   * @param shape The value of the shape attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CollectiveBcastRecv} output and operands
    * @return a new instance of BroadcastRecv
@@ -149,6 +153,55 @@ public final class BroadcastRecv<T extends TType> extends RawOp implements Opera
     public Options timeoutSeconds(Float timeoutSeconds) {
       this.timeoutSeconds = timeoutSeconds;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BroadcastRecv<?>> {
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The groupSize attribute
+     */
+    public final long groupSize;
+
+    /**
+     * The groupKey attribute
+     */
+    public final long groupKey;
+
+    /**
+     * The instanceKey attribute
+     */
+    public final long instanceKey;
+
+    /**
+     * The shape attribute
+     */
+    public final Shape shape;
+
+    /**
+     * The communicationHint attribute
+     */
+    public final String communicationHint;
+
+    /**
+     * The timeoutSeconds attribute
+     */
+    public final float timeoutSeconds;
+
+    public Inputs(GraphOperation op) {
+      super(new BroadcastRecv<>(op), op, Arrays.asList("T", "group_size", "group_key", "instance_key", "shape", "communication_hint", "timeout_seconds"));
+      int inputIndex = 0;
+      T = op.attributes().getAttrType("T");
+      groupSize = op.attributes().getAttrInt("group_size");
+      groupKey = op.attributes().getAttrInt("group_key");
+      instanceKey = op.attributes().getAttrInt("instance_key");
+      shape = op.attributes().getAttrShape("shape");
+      communicationHint = op.attributes().getAttrString("communication_hint");
+      timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
     }
   }
 }

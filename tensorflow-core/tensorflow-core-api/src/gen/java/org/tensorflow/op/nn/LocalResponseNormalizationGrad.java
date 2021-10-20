@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -195,6 +199,61 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Raw
     public Options beta(Float beta) {
       this.beta = beta;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<LocalResponseNormalizationGrad<T>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<T> inputGrads;
+
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<T> inputImage;
+
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<T> outputImage;
+
+    /**
+     * A depth radius.
+     */
+    public final long depthRadius;
+
+    /**
+     * An offset (usually > 0 to avoid dividing by 0).
+     */
+    public final float bias;
+
+    /**
+     * A scale factor, usually positive.
+     */
+    public final float alpha;
+
+    /**
+     * An exponent.
+     */
+    public final float beta;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new LocalResponseNormalizationGrad<>(op), op, Arrays.asList("depth_radius", "bias", "alpha", "beta", "T"));
+      int inputIndex = 0;
+      inputGrads = (Operand<T>) op.input(inputIndex++);
+      inputImage = (Operand<T>) op.input(inputIndex++);
+      outputImage = (Operand<T>) op.input(inputIndex++);
+      depthRadius = op.attributes().getAttrInt("depth_radius");
+      bias = op.attributes().getAttrFloat("bias");
+      alpha = op.attributes().getAttrFloat("alpha");
+      beta = op.attributes().getAttrFloat("beta");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

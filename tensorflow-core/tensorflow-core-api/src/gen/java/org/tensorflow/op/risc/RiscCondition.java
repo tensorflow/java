@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
@@ -52,12 +56,12 @@ public final class RiscCondition<U extends TNumber> extends RawOp implements Ope
    * Factory method to create a class wrapping a new RiscCondition operation.
    *
    * @param scope current scope
-   * @param pred the pred value
-   * @param inputTrue the inputTrue value
-   * @param inputFalse the inputFalse value
-   * @param funcTrue the value of the funcTrue property
-   * @param funcFalse the value of the funcFalse property
-   * @param DstT the value of the DstT property
+   * @param pred The pred value
+   * @param inputTrue The inputTrue value
+   * @param inputFalse The inputFalse value
+   * @param funcTrue The value of the funcTrue attribute
+   * @param funcFalse The value of the funcFalse attribute
+   * @param DstT The value of the DstT attribute
    * @param <U> data type for {@code RiscCondition} output and operands
    * @param <T> data type for {@code RiscCondition} output and operands
    * @return a new instance of RiscCondition
@@ -90,5 +94,42 @@ public final class RiscCondition<U extends TNumber> extends RawOp implements Ope
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RiscCondition<?>> {
+    /**
+     * The pred input
+     */
+    public final Operand<TBool> pred;
+
+    /**
+     * The inputTrue input
+     */
+    public final Operand<T> inputTrue;
+
+    /**
+     * The inputFalse input
+     */
+    public final Operand<T> inputFalse;
+
+    /**
+     * The SrcT attribute
+     */
+    public final DataType SrcT;
+
+    /**
+     * The DstT attribute
+     */
+    public final DataType DstT;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscCondition<>(op), op, Arrays.asList("SrcT", "DstT"));
+      int inputIndex = 0;
+      pred = (Operand<TBool>) op.input(inputIndex++);
+      inputTrue = (Operand<T>) op.input(inputIndex++);
+      inputFalse = (Operand<T>) op.input(inputIndex++);
+      SrcT = op.attributes().getAttrType("SrcT");
+      DstT = op.attributes().getAttrType("DstT");
+    }
   }
 }

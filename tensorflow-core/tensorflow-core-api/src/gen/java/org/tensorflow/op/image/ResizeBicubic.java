@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -149,6 +153,45 @@ public final class ResizeBicubic extends RawOp implements Operand<TFloat32> {
     public Options halfPixelCenters(Boolean halfPixelCenters) {
       this.halfPixelCenters = halfPixelCenters;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ResizeBicubic> {
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<? extends TNumber> images;
+
+    /**
+     * = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
+     * new size for the images.
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If true, the centers of the 4 corner pixels of the input and output tensors are
+     * aligned, preserving the values at the corner pixels. Defaults to false.
+     */
+    public final boolean alignCorners;
+
+    /**
+     * The halfPixelCenters attribute
+     */
+    public final boolean halfPixelCenters;
+
+    public Inputs(GraphOperation op) {
+      super(new ResizeBicubic(op), op, Arrays.asList("T", "align_corners", "half_pixel_centers"));
+      int inputIndex = 0;
+      images = (Operand<? extends TNumber>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      alignCorners = op.attributes().getAttrBool("align_corners");
+      halfPixelCenters = op.attributes().getAttrBool("half_pixel_centers");
     }
   }
 }

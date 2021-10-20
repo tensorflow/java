@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -165,6 +168,56 @@ public final class InitializeTableFromTextFile extends RawOp {
     public Options offset(Long offset) {
       this.offset = offset;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<InitializeTableFromTextFile> {
+    /**
+     * Handle to a table which will be initialized.
+     */
+    public final Operand<? extends TType> tableHandle;
+
+    /**
+     * Filename of a vocabulary text file.
+     */
+    public final Operand<TString> filename;
+
+    /**
+     * Column index in a line to get the table `key` values from.
+     */
+    public final long keyIndex;
+
+    /**
+     * Column index that represents information of a line to get the table
+     * `value` values from.
+     */
+    public final long valueIndex;
+
+    /**
+     * Number of elements of the file, use -1 if unknown.
+     */
+    public final long vocabSize;
+
+    /**
+     * Delimiter to separate fields in a line.
+     */
+    public final String delimiter;
+
+    /**
+     * The offset attribute
+     */
+    public final long offset;
+
+    public Inputs(GraphOperation op) {
+      super(new InitializeTableFromTextFile(op), op, Arrays.asList("key_index", "value_index", "vocab_size", "delimiter", "offset"));
+      int inputIndex = 0;
+      tableHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      filename = (Operand<TString>) op.input(inputIndex++);
+      keyIndex = op.attributes().getAttrInt("key_index");
+      valueIndex = op.attributes().getAttrInt("value_index");
+      vocabSize = op.attributes().getAttrInt("vocab_size");
+      delimiter = op.attributes().getAttrString("delimiter");
+      offset = op.attributes().getAttrInt("offset");
     }
   }
 }

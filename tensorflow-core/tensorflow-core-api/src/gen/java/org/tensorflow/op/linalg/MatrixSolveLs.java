@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TType;
 
@@ -155,6 +159,46 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
     public Options fast(Boolean fast) {
       this.fast = fast;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<MatrixSolveLs<T>> {
+    /**
+     * Shape is {@code [..., M, N]}.
+     */
+    public final Operand<T> matrix;
+
+    /**
+     * Shape is {@code [..., M, K]}.
+     */
+    public final Operand<T> rhs;
+
+    /**
+     * Scalar tensor.
+     * <p>{@literal @}compatibility(numpy)<br>
+     * Equivalent to np.linalg.lstsq
+     * <br>{@literal @}end_compatibility
+     */
+    public final Operand<TFloat64> l2Regularizer;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The fast attribute
+     */
+    public final boolean fast;
+
+    public Inputs(GraphOperation op) {
+      super(new MatrixSolveLs<>(op), op, Arrays.asList("T", "fast"));
+      int inputIndex = 0;
+      matrix = (Operand<T>) op.input(inputIndex++);
+      rhs = (Operand<T>) op.input(inputIndex++);
+      l2Regularizer = (Operand<TFloat64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      fast = op.attributes().getAttrBool("fast");
     }
   }
 }

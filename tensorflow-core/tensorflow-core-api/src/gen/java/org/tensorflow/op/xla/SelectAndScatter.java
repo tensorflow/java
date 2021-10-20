@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -99,5 +103,60 @@ public final class SelectAndScatter<T extends TType> extends RawOp implements Op
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<SelectAndScatter<T>> {
+    /**
+     * the input tensor
+     */
+    public final Operand<T> operand;
+
+    /**
+     * the shape of the window
+     */
+    public final Operand<U> windowDimensions;
+
+    /**
+     * the inter-window strides
+     */
+    public final Operand<U> windowStrides;
+
+    /**
+     * the padding to apply at the start and end of each input dimensions
+     */
+    public final Operand<U> padding;
+
+    /**
+     * a tensor of values to scatter
+     */
+    public final Operand<T> source;
+
+    /**
+     * a scalar representing the initial value for the output tensor
+     */
+    public final Operand<T> initValue;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new SelectAndScatter<>(op), op, Arrays.asList("T", "Tindices"));
+      int inputIndex = 0;
+      operand = (Operand<T>) op.input(inputIndex++);
+      windowDimensions = (Operand<U>) op.input(inputIndex++);
+      windowStrides = (Operand<U>) op.input(inputIndex++);
+      padding = (Operand<U>) op.input(inputIndex++);
+      source = (Operand<T>) op.input(inputIndex++);
+      initValue = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

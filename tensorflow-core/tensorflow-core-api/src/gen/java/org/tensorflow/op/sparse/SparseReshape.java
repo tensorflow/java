@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -103,5 +106,31 @@ public final class SparseReshape extends RawOp {
    */
   public Output<TInt64> outputShape() {
     return outputShape;
+  }
+
+  public static class Inputs extends RawOpInputs<SparseReshape> {
+    /**
+     * 2-D.  {@code N x R_in} matrix with the indices of non-empty values in a
+     * SparseTensor.
+     */
+    public final Operand<TInt64> inputIndices;
+
+    /**
+     * 1-D.  {@code R_in} vector with the input SparseTensor's dense shape.
+     */
+    public final Operand<TInt64> inputShape;
+
+    /**
+     * 1-D.  {@code R_out} vector with the requested new dense shape.
+     */
+    public final Operand<TInt64> newShape;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseReshape(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputIndices = (Operand<TInt64>) op.input(inputIndex++);
+      inputShape = (Operand<TInt64>) op.input(inputIndex++);
+      newShape = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

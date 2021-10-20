@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.signal;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -52,7 +55,7 @@ public final class BatchFft3d extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new BatchFFT3D operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchFft3d
    */
   @Endpoint(
@@ -77,5 +80,18 @@ public final class BatchFft3d extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) output;
+  }
+
+  public static class Inputs extends RawOpInputs<BatchFft3d> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TType> input;
+
+    public Inputs(GraphOperation op) {
+      super(new BatchFft3d(op), op, Arrays.asList());
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

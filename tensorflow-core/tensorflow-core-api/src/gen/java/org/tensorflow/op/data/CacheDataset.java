@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -56,11 +60,11 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new CacheDatasetV2 operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param filename the filename value
-   * @param cache the cache value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param filename The filename value
+   * @param cache The cache value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of CacheDataset
    */
   @Endpoint(
@@ -95,5 +99,42 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<CacheDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The filename input
+     */
+    public final Operand<TString> filename;
+
+    /**
+     * The cache input
+     */
+    public final Operand<? extends TType> cache;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new CacheDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      filename = (Operand<TString>) op.input(inputIndex++);
+      cache = (Operand<? extends TType>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

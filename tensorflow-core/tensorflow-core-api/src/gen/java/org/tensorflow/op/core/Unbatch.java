@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -69,10 +73,10 @@ public final class Unbatch<T extends TType> extends RawOp implements Operand<T> 
    * Factory method to create a class wrapping a new Unbatch operation.
    *
    * @param scope current scope
-   * @param batchedTensor the batchedTensor value
-   * @param batchIndex the batchIndex value
-   * @param id the id value
-   * @param timeoutMicros the value of the timeoutMicros property
+   * @param batchedTensor The batchedTensor value
+   * @param batchIndex The batchIndex value
+   * @param id The id value
+   * @param timeoutMicros The value of the timeoutMicros attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code Unbatch} output and operands
    * @return a new instance of Unbatch
@@ -165,6 +169,55 @@ public final class Unbatch<T extends TType> extends RawOp implements Operand<T> 
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Unbatch<T>> {
+    /**
+     * The batchedTensor input
+     */
+    public final Operand<T> batchedTensor;
+
+    /**
+     * The batchIndex input
+     */
+    public final Operand<TInt64> batchIndex;
+
+    /**
+     * The id input
+     */
+    public final Operand<TInt64> id;
+
+    /**
+     * The timeoutMicros attribute
+     */
+    public final long timeoutMicros;
+
+    /**
+     * The container attribute
+     */
+    public final String container;
+
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Unbatch<>(op), op, Arrays.asList("timeout_micros", "container", "shared_name", "T"));
+      int inputIndex = 0;
+      batchedTensor = (Operand<T>) op.input(inputIndex++);
+      batchIndex = (Operand<TInt64>) op.input(inputIndex++);
+      id = (Operand<TInt64>) op.input(inputIndex++);
+      timeoutMicros = op.attributes().getAttrInt("timeout_micros");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

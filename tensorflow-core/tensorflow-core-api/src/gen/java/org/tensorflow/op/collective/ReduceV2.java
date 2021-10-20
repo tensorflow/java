@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.collective;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -52,13 +56,13 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new CollectiveReduceV2 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param groupSize the groupSize value
-   * @param groupKey the groupKey value
-   * @param instanceKey the instanceKey value
-   * @param orderingToken the orderingToken value
-   * @param mergeOp the value of the mergeOp property
-   * @param finalOp the value of the finalOp property
+   * @param input The input value
+   * @param groupSize The groupSize value
+   * @param groupKey The groupKey value
+   * @param instanceKey The instanceKey value
+   * @param orderingToken The orderingToken value
+   * @param mergeOp The value of the mergeOp attribute
+   * @param finalOp The value of the finalOp attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CollectiveReduceV2} output and operands
    * @return a new instance of ReduceV2
@@ -208,6 +212,81 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
     public Options maxSubdivsPerDevice(Long maxSubdivsPerDevice) {
       this.maxSubdivsPerDevice = maxSubdivsPerDevice;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<ReduceV2<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The groupSize input
+     */
+    public final Operand<TInt32> groupSize;
+
+    /**
+     * The groupKey input
+     */
+    public final Operand<TInt32> groupKey;
+
+    /**
+     * The instanceKey input
+     */
+    public final Operand<TInt32> instanceKey;
+
+    /**
+     * The orderingToken input
+     */
+    public final Iterable<Operand<? extends TType>> orderingToken;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The mergeOp attribute
+     */
+    public final String mergeOp;
+
+    /**
+     * The finalOp attribute
+     */
+    public final String finalOp;
+
+    /**
+     * The communicationHint attribute
+     */
+    public final String communicationHint;
+
+    /**
+     * The timeoutSeconds attribute
+     */
+    public final float timeoutSeconds;
+
+    /**
+     * The maxSubdivsPerDevice attribute
+     */
+    public final long maxSubdivsPerDevice;
+
+    public Inputs(GraphOperation op) {
+      super(new ReduceV2<>(op), op, Arrays.asList("T", "merge_op", "final_op", "communication_hint", "timeout_seconds", "max_subdivs_per_device"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      groupSize = (Operand<TInt32>) op.input(inputIndex++);
+      groupKey = (Operand<TInt32>) op.input(inputIndex++);
+      instanceKey = (Operand<TInt32>) op.input(inputIndex++);
+      int orderingTokenLength = op.inputListLength("ordering_token");
+      orderingToken = Arrays.asList((Operand<? extends TType>[]) op.inputList(inputIndex, orderingTokenLength));
+      inputIndex += orderingTokenLength;
+      T = op.attributes().getAttrType("T");
+      mergeOp = op.attributes().getAttrString("merge_op");
+      finalOp = op.attributes().getAttrString("final_op");
+      communicationHint = op.attributes().getAttrString("communication_hint");
+      timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
+      maxSubdivsPerDevice = op.attributes().getAttrInt("max_subdivs_per_device");
     }
   }
 }

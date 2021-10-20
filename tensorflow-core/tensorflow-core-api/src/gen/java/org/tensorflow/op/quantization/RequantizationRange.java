@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -59,7 +63,7 @@ public final class RequantizationRange extends RawOp {
    * Factory method to create a class wrapping a new RequantizationRange operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param inputMin The float value that the minimum quantized input value represents.
    * @param inputMax The float value that the maximum quantized input value represents.
    * @return a new instance of RequantizationRange
@@ -92,5 +96,36 @@ public final class RequantizationRange extends RawOp {
    */
   public Output<TFloat32> outputMax() {
     return outputMax;
+  }
+
+  public static class Inputs extends RawOpInputs<RequantizationRange> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The float value that the minimum quantized input value represents.
+     */
+    public final Operand<TFloat32> inputMin;
+
+    /**
+     * The float value that the maximum quantized input value represents.
+     */
+    public final Operand<TFloat32> inputMax;
+
+    /**
+     * The type of the input.
+     */
+    public final DataType Tinput;
+
+    public Inputs(GraphOperation op) {
+      super(new RequantizationRange(op), op, Arrays.asList("Tinput"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      inputMin = (Operand<TFloat32>) op.input(inputIndex++);
+      inputMax = (Operand<TFloat32>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+    }
   }
 }

@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -67,7 +70,7 @@ public final class QuantizedConv2DPerChannel<V extends TNumber> extends RawOp {
    * @param maxFilter The maximum value of the filter tensor.
    * @param outType The quantized type of output tensor that needs to be converted.
    * @param strides list of stride values.
-   * @param padding the value of the padding property
+   * @param padding The value of the padding attribute
    * @param options carries optional attribute values
    * @param <V> data type for {@code QuantizedConv2DPerChannel} output and operands
    * @return a new instance of QuantizedConv2DPerChannel
@@ -124,7 +127,7 @@ public final class QuantizedConv2DPerChannel<V extends TNumber> extends RawOp {
    * @param dilations list of dilation values.
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -184,6 +187,85 @@ public final class QuantizedConv2DPerChannel<V extends TNumber> extends RawOp {
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedConv2DPerChannel<?>> {
+    /**
+     * The original input tensor.
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The original filter tensor.
+     */
+    public final Operand<? extends TNumber> filter;
+
+    /**
+     * The minimum value of the input tensor
+     */
+    public final Operand<TFloat32> minInput;
+
+    /**
+     * The maximum value of the input tensor.
+     */
+    public final Operand<TFloat32> maxInput;
+
+    /**
+     * The minimum value of the filter tensor.
+     */
+    public final Operand<TFloat32> minFilter;
+
+    /**
+     * The maximum value of the filter tensor.
+     */
+    public final Operand<TFloat32> maxFilter;
+
+    /**
+     * The quantized type of input tensor that needs to be converted.
+     */
+    public final DataType Tinput;
+
+    /**
+     * The quantized type of filter tensor that needs to be converted.
+     */
+    public final DataType Tfilter;
+
+    /**
+     * The quantized type of output tensor that needs to be converted.
+     */
+    public final DataType outType;
+
+    /**
+     * list of stride values.
+     */
+    public final long[] strides;
+
+    /**
+     * The padding attribute
+     */
+    public final String padding;
+
+    /**
+     * list of dilation values.
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedConv2DPerChannel<>(op), op, Arrays.asList("Tinput", "Tfilter", "out_type", "strides", "padding", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      filter = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minInput = (Operand<TFloat32>) op.input(inputIndex++);
+      maxInput = (Operand<TFloat32>) op.input(inputIndex++);
+      minFilter = (Operand<TFloat32>) op.input(inputIndex++);
+      maxFilter = (Operand<TFloat32>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+      Tfilter = op.attributes().getAttrType("Tfilter");
+      outType = op.attributes().getAttrType("out_type");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

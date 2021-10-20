@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -65,8 +69,8 @@ public final class QuantizedResizeBilinear<T extends TNumber> extends RawOp {
    * @param images 4-D with shape {@code [batch, height, width, channels]}.
    * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    * new size for the images.
-   * @param min the min value
-   * @param max the max value
+   * @param min The min value
+   * @param max The max value
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizedResizeBilinear} output and operands
    * @return a new instance of QuantizedResizeBilinear
@@ -176,6 +180,57 @@ public final class QuantizedResizeBilinear<T extends TNumber> extends RawOp {
     public Options halfPixelCenters(Boolean halfPixelCenters) {
       this.halfPixelCenters = halfPixelCenters;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizedResizeBilinear<T>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<T> images;
+
+    /**
+     * = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
+     * new size for the images.
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * The min input
+     */
+    public final Operand<TFloat32> min;
+
+    /**
+     * The max input
+     */
+    public final Operand<TFloat32> max;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If true, the centers of the 4 corner pixels of the input and output tensors are
+     * aligned, preserving the values at the corner pixels. Defaults to false.
+     */
+    public final boolean alignCorners;
+
+    /**
+     * The halfPixelCenters attribute
+     */
+    public final boolean halfPixelCenters;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedResizeBilinear<>(op), op, Arrays.asList("T", "align_corners", "half_pixel_centers"));
+      int inputIndex = 0;
+      images = (Operand<T>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      min = (Operand<TFloat32>) op.input(inputIndex++);
+      max = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      alignCorners = op.attributes().getAttrBool("align_corners");
+      halfPixelCenters = op.attributes().getAttrBool("half_pixel_centers");
     }
   }
 }

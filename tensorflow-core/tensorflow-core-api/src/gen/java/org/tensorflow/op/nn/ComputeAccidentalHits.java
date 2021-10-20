@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -175,6 +178,45 @@ public final class ComputeAccidentalHits extends RawOp {
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ComputeAccidentalHits> {
+    /**
+     * The true_classes output of UnpackSparseLabels.
+     */
+    public final Operand<TInt64> trueClasses;
+
+    /**
+     * The sampled_candidates output of CandidateSampler.
+     */
+    public final Operand<TInt64> sampledCandidates;
+
+    /**
+     * Number of true labels per context.
+     */
+    public final long numTrue;
+
+    /**
+     * If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * An second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    public Inputs(GraphOperation op) {
+      super(new ComputeAccidentalHits(op), op, Arrays.asList("num_true", "seed", "seed2"));
+      int inputIndex = 0;
+      trueClasses = (Operand<TInt64>) op.input(inputIndex++);
+      sampledCandidates = (Operand<TInt64>) op.input(inputIndex++);
+      numTrue = op.attributes().getAttrInt("num_true");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
     }
   }
 }

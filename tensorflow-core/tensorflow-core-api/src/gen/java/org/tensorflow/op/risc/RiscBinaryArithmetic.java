@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -49,9 +53,9 @@ public final class RiscBinaryArithmetic<T extends TNumber> extends RawOp impleme
    * Factory method to create a class wrapping a new RiscBinaryArithmetic operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param y the y value
-   * @param opType the value of the opType property
+   * @param x The x value
+   * @param y The y value
+   * @param opType The value of the opType attribute
    * @param <T> data type for {@code RiscBinaryArithmetic} output and operands
    * @return a new instance of RiscBinaryArithmetic
    */
@@ -79,5 +83,36 @@ public final class RiscBinaryArithmetic<T extends TNumber> extends RawOp impleme
   @Override
   public Output<T> asOutput() {
     return z;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RiscBinaryArithmetic<T>> {
+    /**
+     * The x input
+     */
+    public final Operand<T> x;
+
+    /**
+     * The y input
+     */
+    public final Operand<T> y;
+
+    /**
+     * The opType attribute
+     */
+    public final String opType;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscBinaryArithmetic<>(op), op, Arrays.asList("op_type", "T"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      y = (Operand<T>) op.input(inputIndex++);
+      opType = op.attributes().getAttrString("op_type");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

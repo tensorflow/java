@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -28,8 +29,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -56,9 +59,9 @@ public final class RiscWhile extends RawOp implements Iterable<Operand<TType>> {
    * Factory method to create a class wrapping a new RiscWhile operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param cond the value of the cond property
-   * @param body the value of the body property
+   * @param input The input value
+   * @param cond The value of the cond attribute
+   * @param body The value of the body attribute
    * @param options carries optional attribute values
    * @return a new instance of RiscWhile
    */
@@ -104,7 +107,7 @@ public final class RiscWhile extends RawOp implements Iterable<Operand<TType>> {
    * @param outputShapes the outputShapes option
    * @return this Options instance.
    */
-  public static Options outputShapes(Shape[] outputShapes) {
+  public static Options outputShapes(Shape... outputShapes) {
     return new Options().outputShapes(outputShapes);
   }
 
@@ -175,6 +178,39 @@ public final class RiscWhile extends RawOp implements Iterable<Operand<TType>> {
     public Options parallelIterations(Long parallelIterations) {
       this.parallelIterations = parallelIterations;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<RiscWhile> {
+    /**
+     * The input input
+     */
+    public final Iterable<Operand<?>> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType[] T;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The parallelIterations attribute
+     */
+    public final long parallelIterations;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscWhile(op), op, Arrays.asList("T", "output_shapes", "parallel_iterations"));
+      int inputIndex = 0;
+      int inputLength = op.inputListLength("input");
+      input = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputLength));
+      inputIndex += inputLength;
+      T = op.attributes().getAttrTypeList("T");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      parallelIterations = op.attributes().getAttrInt("parallel_iterations");
     }
   }
 }

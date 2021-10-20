@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -196,5 +200,133 @@ public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
    */
   public Output<T> bGrad() {
     return bGrad;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<BlockLSTMGrad<T>> {
+    /**
+     * Maximum time length actually used by this input. Outputs are padded
+     * with zeros beyond this length.
+     */
+    public final Operand<TInt64> seqLenMax;
+
+    /**
+     * The sequence input to the LSTM, shape (timelen, batch_size, num_inputs).
+     */
+    public final Operand<T> x;
+
+    /**
+     * Value of the initial cell state.
+     */
+    public final Operand<T> csPrev;
+
+    /**
+     * Initial output of cell (to be used for peephole).
+     */
+    public final Operand<T> hPrev;
+
+    /**
+     * The weight matrix.
+     */
+    public final Operand<T> w;
+
+    /**
+     * The weight matrix for input gate peephole connection.
+     */
+    public final Operand<T> wci;
+
+    /**
+     * The weight matrix for forget gate peephole connection.
+     */
+    public final Operand<T> wcf;
+
+    /**
+     * The weight matrix for output gate peephole connection.
+     */
+    public final Operand<T> wco;
+
+    /**
+     * The bias vector.
+     */
+    public final Operand<T> b;
+
+    /**
+     * The input gate over the whole time sequence.
+     */
+    public final Operand<T> i;
+
+    /**
+     * The cell state before the tanh over the whole time sequence.
+     */
+    public final Operand<T> cs;
+
+    /**
+     * The forget gate over the whole time sequence.
+     */
+    public final Operand<T> f;
+
+    /**
+     * The output gate over the whole time sequence.
+     */
+    public final Operand<T> o;
+
+    /**
+     * The cell input over the whole time sequence.
+     */
+    public final Operand<T> ci;
+
+    /**
+     * The cell after the tanh over the whole time sequence.
+     */
+    public final Operand<T> co;
+
+    /**
+     * The output h vector over the whole time sequence.
+     */
+    public final Operand<T> h;
+
+    /**
+     * The current gradient of cs.
+     */
+    public final Operand<T> csGrad;
+
+    /**
+     * The gradient of h vector.
+     */
+    public final Operand<T> hGrad;
+
+    /**
+     * Whether to use peephole weights.
+     */
+    public final boolean usePeephole;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new BlockLSTMGrad<>(op), op, Arrays.asList("use_peephole", "T"));
+      int inputIndex = 0;
+      seqLenMax = (Operand<TInt64>) op.input(inputIndex++);
+      x = (Operand<T>) op.input(inputIndex++);
+      csPrev = (Operand<T>) op.input(inputIndex++);
+      hPrev = (Operand<T>) op.input(inputIndex++);
+      w = (Operand<T>) op.input(inputIndex++);
+      wci = (Operand<T>) op.input(inputIndex++);
+      wcf = (Operand<T>) op.input(inputIndex++);
+      wco = (Operand<T>) op.input(inputIndex++);
+      b = (Operand<T>) op.input(inputIndex++);
+      i = (Operand<T>) op.input(inputIndex++);
+      cs = (Operand<T>) op.input(inputIndex++);
+      f = (Operand<T>) op.input(inputIndex++);
+      o = (Operand<T>) op.input(inputIndex++);
+      ci = (Operand<T>) op.input(inputIndex++);
+      co = (Operand<T>) op.input(inputIndex++);
+      h = (Operand<T>) op.input(inputIndex++);
+      csGrad = (Operand<T>) op.input(inputIndex++);
+      hGrad = (Operand<T>) op.input(inputIndex++);
+      usePeephole = op.attributes().getAttrBool("use_peephole");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

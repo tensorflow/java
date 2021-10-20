@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.dtypes;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -54,8 +58,8 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
    * Factory method to create a class wrapping a new Cast operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param DstT the value of the DstT property
+   * @param x The x value
+   * @param DstT The value of the DstT attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code Cast} output and operands
    * @return a new instance of Cast
@@ -120,6 +124,37 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
     public Options Truncate(Boolean Truncate) {
       this.Truncate = Truncate;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Cast<?>> {
+    /**
+     * The x input
+     */
+    public final Operand<? extends TType> x;
+
+    /**
+     * The SrcT attribute
+     */
+    public final DataType SrcT;
+
+    /**
+     * The DstT attribute
+     */
+    public final DataType DstT;
+
+    /**
+     * The Truncate attribute
+     */
+    public final boolean Truncate;
+
+    public Inputs(GraphOperation op) {
+      super(new Cast<>(op), op, Arrays.asList("SrcT", "DstT", "Truncate"));
+      int inputIndex = 0;
+      x = (Operand<? extends TType>) op.input(inputIndex++);
+      SrcT = op.attributes().getAttrType("SrcT");
+      DstT = op.attributes().getAttrType("DstT");
+      Truncate = op.attributes().getAttrBool("Truncate");
     }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
@@ -71,5 +74,12 @@ public final class DummyMemoryCache extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<DummyMemoryCache> {
+    public Inputs(GraphOperation op) {
+      super(new DummyMemoryCache(op), op, Arrays.asList());
+      int inputIndex = 0;
+    }
   }
 }

@@ -19,6 +19,7 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -127,7 +130,7 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
    * output ResourceHandle represents a per-replica/partitioned resource variable.
    * @return this Options instance.
    */
-  public static Options allowedDevices(String[] allowedDevices) {
+  public static Options allowedDevices(String... allowedDevices) {
     return new Options().allowedDevices(allowedDevices);
   }
 
@@ -203,6 +206,45 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
     public Options allowedDevices(String... allowedDevices) {
       this.allowedDevices = Arrays.asList(allowedDevices);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<VarHandleOp> {
+    /**
+     * the container this variable is placed in.
+     */
+    public final String container;
+
+    /**
+     * the name by which this variable is referred to.
+     */
+    public final String sharedName;
+
+    /**
+     * the type of this variable. Must agree with the dtypes
+     * of all ops using this variable.
+     */
+    public final DataType dtype;
+
+    /**
+     * The (possibly partially specified) shape of this variable.
+     */
+    public final Shape shape;
+
+    /**
+     * DEPRECATED. The allowed devices containing the resource variable. Set when the
+     * output ResourceHandle represents a per-replica/partitioned resource variable.
+     */
+    public final String[] allowedDevices;
+
+    public Inputs(GraphOperation op) {
+      super(new VarHandleOp(op), op, Arrays.asList("container", "shared_name", "dtype", "shape", "allowed_devices"));
+      int inputIndex = 0;
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      dtype = op.attributes().getAttrType("dtype");
+      shape = op.attributes().getAttrShape("shape");
+      allowedDevices = op.attributes().getAttrStringList("allowed_devices");
     }
   }
 }

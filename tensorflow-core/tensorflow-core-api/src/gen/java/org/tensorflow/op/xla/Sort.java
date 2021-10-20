@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -81,5 +85,24 @@ public final class Sort<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Sort<T>> {
+    /**
+     * A {@code Tensor} of type T.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Sort<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

@@ -20,14 +20,17 @@ package org.tensorflow.op.core;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -65,7 +68,7 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
    * Can contain one -1 indicating that dimension is to be inferred.
    * @param axis 0-D.  The dimension along which to split.  Must be in the range
    * {@code [-rank(value), rank(value))}.
-   * @param numSplit the value of the numSplit property
+   * @param numSplit The value of the numSplit attribute
    * @param <T> data type for {@code SplitV} output and operands
    * @return a new instance of SplitV
    */
@@ -97,5 +100,45 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<T>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SplitV<T>> {
+    /**
+     * The tensor to split.
+     */
+    public final Operand<T> value;
+
+    /**
+     * list containing the sizes of each output tensor along the split
+     * dimension. Must sum to the dimension of value along split_dim.
+     * Can contain one -1 indicating that dimension is to be inferred.
+     */
+    public final Operand<? extends TNumber> sizeSplits;
+
+    /**
+     * 0-D.  The dimension along which to split.  Must be in the range
+     * {@code [-rank(value), rank(value))}.
+     */
+    public final Operand<TInt32> axis;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tlen attribute
+     */
+    public final DataType Tlen;
+
+    public Inputs(GraphOperation op) {
+      super(new SplitV<>(op), op, Arrays.asList("T", "Tlen"));
+      int inputIndex = 0;
+      value = (Operand<T>) op.input(inputIndex++);
+      sizeSplits = (Operand<? extends TNumber>) op.input(inputIndex++);
+      axis = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tlen = op.attributes().getAttrType("Tlen");
+    }
   }
 }

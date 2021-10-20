@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -234,6 +238,53 @@ public final class MatrixSetDiag<T extends TType> extends RawOp implements Opera
     public Options align(String align) {
       this.align = align;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<MatrixSetDiag<T>> {
+    /**
+     * Rank {@code r+1}, where {@code r >= 1}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * Rank {@code r} when {@code k} is an integer or {@code k[0] == k[1]}. Otherwise, it has rank {@code r+1}.
+     * {@code k >= 1}.
+     */
+    public final Operand<T> diagonal;
+
+    /**
+     * Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
+     * diagonal, and negative value means subdiagonals. {@code k} can be a single integer
+     * (for a single diagonal) or a pair of integers specifying the low and high ends
+     * of a matrix band. {@code k[0]} must not be larger than {@code k[1]}.
+     */
+    public final Operand<TInt32> k;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Some diagonals are shorter than `max_diag_len` and need to be padded. `align` is
+     * a string specifying how superdiagonals and subdiagonals should be aligned,
+     * respectively. There are four possible alignments: "RIGHT_LEFT" (default),
+     * "LEFT_RIGHT", "LEFT_LEFT", and "RIGHT_RIGHT". "RIGHT_LEFT" aligns superdiagonals
+     * to the right (left-pads the row) and subdiagonals to the left (right-pads the
+     * row). It is the packing format LAPACK uses. cuSPARSE uses "LEFT_RIGHT", which is
+     * the opposite alignment.
+     */
+    public final String align;
+
+    public Inputs(GraphOperation op) {
+      super(new MatrixSetDiag<>(op), op, Arrays.asList("T", "align"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      diagonal = (Operand<T>) op.input(inputIndex++);
+      k = (Operand<TInt32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      align = op.attributes().getAttrString("align");
     }
   }
 }

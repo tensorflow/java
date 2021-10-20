@@ -19,13 +19,16 @@ package org.tensorflow.op.collective;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -54,13 +57,13 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
    * Factory method to create a class wrapping a new CollectiveReduce operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param groupSize the value of the groupSize property
-   * @param groupKey the value of the groupKey property
-   * @param instanceKey the value of the instanceKey property
-   * @param mergeOp the value of the mergeOp property
-   * @param finalOp the value of the finalOp property
-   * @param subdivOffsets the value of the subdivOffsets property
+   * @param input The input value
+   * @param groupSize The value of the groupSize attribute
+   * @param groupKey The value of the groupKey attribute
+   * @param instanceKey The value of the instanceKey attribute
+   * @param mergeOp The value of the mergeOp attribute
+   * @param finalOp The value of the finalOp attribute
+   * @param subdivOffsets The value of the subdivOffsets attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CollectiveReduce} output and operands
    * @return a new instance of AllReduce
@@ -119,7 +122,7 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
    * @param waitFor the waitFor option
    * @return this Options instance.
    */
-  public static Options waitFor(Long[] waitFor) {
+  public static Options waitFor(Long... waitFor) {
     return new Options().waitFor(waitFor);
   }
 
@@ -212,6 +215,79 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
     public Options timeoutSeconds(Float timeoutSeconds) {
       this.timeoutSeconds = timeoutSeconds;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<AllReduce<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The groupSize attribute
+     */
+    public final long groupSize;
+
+    /**
+     * The groupKey attribute
+     */
+    public final long groupKey;
+
+    /**
+     * The instanceKey attribute
+     */
+    public final long instanceKey;
+
+    /**
+     * The mergeOp attribute
+     */
+    public final String mergeOp;
+
+    /**
+     * The finalOp attribute
+     */
+    public final String finalOp;
+
+    /**
+     * The subdivOffsets attribute
+     */
+    public final long[] subdivOffsets;
+
+    /**
+     * The waitFor attribute
+     */
+    public final long[] waitFor;
+
+    /**
+     * The communicationHint attribute
+     */
+    public final String communicationHint;
+
+    /**
+     * The timeoutSeconds attribute
+     */
+    public final float timeoutSeconds;
+
+    public Inputs(GraphOperation op) {
+      super(new AllReduce<>(op), op, Arrays.asList("T", "group_size", "group_key", "instance_key", "merge_op", "final_op", "subdiv_offsets", "wait_for", "communication_hint", "timeout_seconds"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      groupSize = op.attributes().getAttrInt("group_size");
+      groupKey = op.attributes().getAttrInt("group_key");
+      instanceKey = op.attributes().getAttrInt("instance_key");
+      mergeOp = op.attributes().getAttrString("merge_op");
+      finalOp = op.attributes().getAttrString("final_op");
+      subdivOffsets = op.attributes().getAttrIntList("subdiv_offsets");
+      waitFor = op.attributes().getAttrIntList("wait_for");
+      communicationHint = op.attributes().getAttrString("communication_hint");
+      timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
     }
   }
 }

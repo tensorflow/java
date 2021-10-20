@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
@@ -70,7 +74,7 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
    *
    * @param scope current scope
    * @param contents 0-D.  The PNG-encoded image.
-   * @param dtype the value of the dtype property
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code DecodePng} output and operands
    * @return a new instance of DecodePng
@@ -151,6 +155,31 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
     public Options channels(Long channels) {
       this.channels = channels;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodePng<?>> {
+    /**
+     * 0-D.  The PNG-encoded image.
+     */
+    public final Operand<TString> contents;
+
+    /**
+     * Number of color channels for the decoded image.
+     */
+    public final long channels;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodePng<>(op), op, Arrays.asList("channels", "dtype"));
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+      channels = op.attributes().getAttrInt("channels");
+      dtype = op.attributes().getAttrType("dtype");
     }
   }
 }

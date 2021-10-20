@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -55,9 +59,9 @@ public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
    * Factory method to create a class wrapping a new XlaEinsum operation.
    *
    * @param scope current scope
-   * @param a the a value
-   * @param b the b value
-   * @param equation the value of the equation property
+   * @param a The a value
+   * @param b The b value
+   * @param equation The value of the equation attribute
    * @param <T> data type for {@code XlaEinsum} output and operands
    * @return a new instance of Einsum
    */
@@ -85,5 +89,36 @@ public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return product;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Einsum<T>> {
+    /**
+     * The a input
+     */
+    public final Operand<T> a;
+
+    /**
+     * The b input
+     */
+    public final Operand<T> b;
+
+    /**
+     * The equation attribute
+     */
+    public final String equation;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Einsum<>(op), op, Arrays.asList("equation", "T"));
+      int inputIndex = 0;
+      a = (Operand<T>) op.input(inputIndex++);
+      b = (Operand<T>) op.input(inputIndex++);
+      equation = op.attributes().getAttrString("equation");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

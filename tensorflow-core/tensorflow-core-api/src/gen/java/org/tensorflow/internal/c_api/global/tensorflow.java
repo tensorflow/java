@@ -4744,4 +4744,43 @@ public static native void TFE_ContextEndStep(TFE_Context ctx);
 // #endif  // TENSORFLOW_C_EAGER_C_API_H_
 
 
+// Targeting ../TFE_OpAttrs.java
+
+
+
+// Fetch a reference to `op`'s attributes. The returned reference is only valid
+// while `op` is alive.
+public static native @Const TFE_OpAttrs TFE_OpGetAttrs(@Const TFE_Op op);
+// Add attributes in `attrs` to `op`.
+//
+// Does not overwrite or update existing attributes, but adds new ones.
+public static native void TFE_OpAddAttrs(TFE_Op op, @Const TFE_OpAttrs attrs);
+
+// Serialize `attrs` as a tensorflow::NameAttrList protocol buffer (into `buf`),
+// containing the op name and a map of its attributes.
+public static native void TFE_OpAttrsSerialize(@Const TFE_OpAttrs attrs,
+                                                TF_Buffer buf,
+                                                TF_Status status);
+
+// Set an op's attribute from a serialized AttrValue protocol buffer.
+//
+// Analogous to TF_SetAttrValueProto for building graph operations.
+public static native void TFE_OpSetAttrValueProto(@Const TFE_Op op,
+                                                   @Cast("const char*") BytePointer attr_name,
+                                                   @Const Pointer proto,
+                                                   @Cast("size_t") long proto_len,
+                                                   TF_Status status);
+public static native void TFE_OpSetAttrValueProto(@Const TFE_Op op,
+                                                   String attr_name,
+                                                   @Const Pointer proto,
+                                                   @Cast("size_t") long proto_len,
+                                                   TF_Status status);
+
+// TODO(b/166642410): It would be nice, for custom devices and for other users,
+// to have a non-string representation of devices (TF_Device) extracted from
+// tensors/ops/etc. and usable in APIs like OpSetDevice/ResetOp/etc.
+
+public static final int TFE_CUSTOM_DEVICE_VERSION = 4;
+
+
 }

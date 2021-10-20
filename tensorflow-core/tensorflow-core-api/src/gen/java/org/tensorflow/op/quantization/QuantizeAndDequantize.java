@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -56,10 +60,10 @@ public final class QuantizeAndDequantize<T extends TNumber> extends RawOp implem
    * Factory method to create a class wrapping a new QuantizeAndDequantizeV3 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param inputMin the inputMin value
-   * @param inputMax the inputMax value
-   * @param numBits the numBits value
+   * @param input The input value
+   * @param inputMin The inputMin value
+   * @param inputMax The inputMax value
+   * @param numBits The numBits value
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeAndDequantizeV3} output and operands
    * @return a new instance of QuantizeAndDequantize
@@ -204,6 +208,67 @@ public final class QuantizeAndDequantize<T extends TNumber> extends RawOp implem
     public Options axis(Long axis) {
       this.axis = axis;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizeAndDequantize<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The inputMin input
+     */
+    public final Operand<T> inputMin;
+
+    /**
+     * The inputMax input
+     */
+    public final Operand<T> inputMax;
+
+    /**
+     * The numBits input
+     */
+    public final Operand<TInt32> numBits;
+
+    /**
+     * The signedInput attribute
+     */
+    public final boolean signedInput;
+
+    /**
+     * The rangeGiven attribute
+     */
+    public final boolean rangeGiven;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The narrowRange attribute
+     */
+    public final boolean narrowRange;
+
+    /**
+     * The axis attribute
+     */
+    public final long axis;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizeAndDequantize<>(op), op, Arrays.asList("signed_input", "range_given", "T", "narrow_range", "axis"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      inputMin = (Operand<T>) op.input(inputIndex++);
+      inputMax = (Operand<T>) op.input(inputIndex++);
+      numBits = (Operand<TInt32>) op.input(inputIndex++);
+      signedInput = op.attributes().getAttrBool("signed_input");
+      rangeGiven = op.attributes().getAttrBool("range_given");
+      T = op.attributes().getAttrType("T");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
+      axis = op.attributes().getAttrInt("axis");
     }
   }
 }

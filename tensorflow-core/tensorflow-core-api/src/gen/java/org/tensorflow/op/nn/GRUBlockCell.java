@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -96,12 +100,12 @@ public final class GRUBlockCell<T extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new GRUBlockCell operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param hPrev the hPrev value
-   * @param wRu the wRu value
-   * @param wC the wC value
-   * @param bRu the bRu value
-   * @param bC the bC value
+   * @param x The x value
+   * @param hPrev The hPrev value
+   * @param wRu The wRu value
+   * @param wC The wC value
+   * @param bRu The bRu value
+   * @param bC The bC value
    * @param <T> data type for {@code GRUBlockCell} output and operands
    * @return a new instance of GRUBlockCell
    */
@@ -154,5 +158,54 @@ public final class GRUBlockCell<T extends TNumber> extends RawOp {
    */
   public Output<T> h() {
     return h;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<GRUBlockCell<T>> {
+    /**
+     * The x input
+     */
+    public final Operand<T> x;
+
+    /**
+     * The hPrev input
+     */
+    public final Operand<T> hPrev;
+
+    /**
+     * The wRu input
+     */
+    public final Operand<T> wRu;
+
+    /**
+     * The wC input
+     */
+    public final Operand<T> wC;
+
+    /**
+     * The bRu input
+     */
+    public final Operand<T> bRu;
+
+    /**
+     * The bC input
+     */
+    public final Operand<T> bC;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new GRUBlockCell<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      x = (Operand<T>) op.input(inputIndex++);
+      hPrev = (Operand<T>) op.input(inputIndex++);
+      wRu = (Operand<T>) op.input(inputIndex++);
+      wC = (Operand<T>) op.input(inputIndex++);
+      bRu = (Operand<T>) op.input(inputIndex++);
+      bC = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

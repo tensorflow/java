@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -127,5 +131,50 @@ public final class SparseSlice<T extends TType> extends RawOp {
    */
   public Output<TInt64> outputShape() {
     return outputShape;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseSlice<T>> {
+    /**
+     * 2-D tensor represents the indices of the sparse tensor.
+     */
+    public final Operand<TInt64> indices;
+
+    /**
+     * 1-D tensor represents the values of the sparse tensor.
+     */
+    public final Operand<T> values;
+
+    /**
+     * 1-D. tensor represents the shape of the sparse tensor.
+     */
+    public final Operand<TInt64> shape;
+
+    /**
+     * 1-D. tensor represents the start of the slice.
+     */
+    public final Operand<TInt64> start;
+
+    /**
+     * 1-D. tensor represents the size of the slice.
+     * output indices: A list of 1-D tensors represents the indices of the output
+     * sparse tensors.
+     */
+    public final Operand<TInt64> sizeOutput;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseSlice<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      indices = (Operand<TInt64>) op.input(inputIndex++);
+      values = (Operand<T>) op.input(inputIndex++);
+      shape = (Operand<TInt64>) op.input(inputIndex++);
+      start = (Operand<TInt64>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt64>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

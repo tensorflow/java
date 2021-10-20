@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -98,7 +102,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
    * Factory method to create a class wrapping a new Dequantize operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
    * @param dtype Type of the output tensor. Currently Dequantize supports float and bfloat16.
@@ -138,7 +142,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
    * Factory method to create a class wrapping a new Dequantize operation, with the default output types.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
    * @param options carries optional attribute values
@@ -240,6 +244,62 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
     public Options axis(Long axis) {
       this.axis = axis;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Dequantize<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * The minimum scalar value possibly produced for the input.
+     */
+    public final Operand<TFloat32> minRange;
+
+    /**
+     * The maximum scalar value possibly produced for the input.
+     */
+    public final Operand<TFloat32> maxRange;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The mode attribute
+     */
+    public final String mode;
+
+    /**
+     * The narrowRange attribute
+     */
+    public final boolean narrowRange;
+
+    /**
+     * The axis attribute
+     */
+    public final long axis;
+
+    /**
+     * Type of the output tensor. Currently Dequantize supports float and bfloat16.
+     * If 'dtype' is 'bfloat16', it only supports 'MIN_COMBINED' mode.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new Dequantize<>(op), op, Arrays.asList("T", "mode", "narrow_range", "axis", "dtype"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minRange = (Operand<TFloat32>) op.input(inputIndex++);
+      maxRange = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      mode = op.attributes().getAttrString("mode");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
+      axis = op.attributes().getAttrInt("axis");
+      dtype = op.attributes().getAttrType("dtype");
     }
   }
 }

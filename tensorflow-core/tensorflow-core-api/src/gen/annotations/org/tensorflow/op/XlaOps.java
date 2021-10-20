@@ -97,7 +97,7 @@ public final class XlaOps {
    * Operator that connects the output of an XLA computation to other consumer graph nodes.
    *
    * @param <T> data type for {@code outputs} output
-   * @param input the input value
+   * @param input The input value
    * @param <T> data type for {@code XlaClusterOutput} output and operands
    * @return a new instance of ClusterOutput
    */
@@ -184,7 +184,7 @@ public final class XlaOps {
    *  dimension. Each value must be strictly greater than zero, and start + size
    *  must be less than or equal to the size of the dimension to avoid
    *  implementation defined behavior.
-   * @param sizeIndices the sizeIndices value
+   * @param sizeIndices The sizeIndices value
    * @param <T> data type for {@code XlaDynamicSlice} output and operands
    * @param <U> data type for {@code XlaDynamicSlice} output and operands
    * @return a new instance of DynamicSlice
@@ -223,9 +223,9 @@ public final class XlaOps {
    *  transpose operations as tf.einsum does.
    *
    * @param <T> data type for {@code product} output
-   * @param a the a value
-   * @param b the b value
-   * @param equation the value of the equation property
+   * @param a The a value
+   * @param b The b value
+   * @param equation The value of the equation attribute
    * @param <T> data type for {@code XlaEinsum} output and operands
    * @return a new instance of Einsum
    */
@@ -262,7 +262,7 @@ public final class XlaOps {
    *  whose types are the same as what else_branch returns.
    * @param elseBranch A function takes 'inputs' and returns a list of tensors.
    *  whose types are the same as what then_branch returns.
-   * @param Tout the value of the Tout property
+   * @param Tout The value of the Tout attribute
    * @return a new instance of If
    */
   public If ifOp(Operand<? extends TType> cond, Iterable<Operand<?>> inputs,
@@ -355,8 +355,8 @@ public final class XlaOps {
    * @param initValue a scalar representing the initial value for the reduction
    * @param windowDimensions the shape of the window
    * @param windowStrides the inter-window strides
-   * @param baseDilations the baseDilations value
-   * @param windowDilations the windowDilations value
+   * @param baseDilations The baseDilations value
+   * @param windowDilations The windowDilations value
    * @param padding the padding to apply at the start and end of each input dimensions
    * @param computation a reducer function to apply
    * @param <T> data type for {@code XlaReduceWindow} output and operands
@@ -378,8 +378,8 @@ public final class XlaOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param dimIndex the dimIndex value
+   * @param input The input value
+   * @param dimIndex The dimIndex value
    * @param <T> data type for {@code XlaRemoveDynamicDimensionSize} output and operands
    * @return a new instance of RemoveDynamicDimensionSize
    */
@@ -488,9 +488,9 @@ public final class XlaOps {
    *  </pre>
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param dimIndex the dimIndex value
-   * @param sizeOutput the sizeOutput value
+   * @param input The input value
+   * @param dimIndex The dimIndex value
+   * @param sizeOutput The sizeOutput value
    * @param <T> data type for {@code XlaSetDynamicDimensionSize} output and operands
    * @return a new instance of SetDynamicDimensionSize
    */
@@ -503,7 +503,7 @@ public final class XlaOps {
    * An op which shards the input based on the given sharding attribute.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
+   * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSharding} output and operands
    * @return a new instance of Sharding
@@ -535,8 +535,8 @@ public final class XlaOps {
    *  shape is not evenly partitionable, the padding region will be masked with 0s.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param manualSharding the value of the manualSharding property
+   * @param input The input value
+   * @param manualSharding The value of the manualSharding attribute
    * @param <T> data type for {@code XlaSpmdFullToShardShape} output and operands
    * @return a new instance of SpmdFullToShardShape
    */
@@ -552,9 +552,9 @@ public final class XlaOps {
    *  used by manual partitioning.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param manualSharding the value of the manualSharding property
-   * @param fullShape the value of the fullShape property
+   * @param input The input value
+   * @param manualSharding The value of the manualSharding attribute
+   * @param fullShape The value of the fullShape attribute
    * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
    * @return a new instance of SpmdShardToFullShape
    */
@@ -627,11 +627,11 @@ public final class XlaOps {
   /**
    * XLA Launch Op. For use by the XLA JIT only.
    *
-   * @param constants the constants value
-   * @param args the args value
-   * @param resources the resources value
-   * @param Tresults the value of the Tresults property
-   * @param function the value of the function property
+   * @param constants The constants value
+   * @param args The args value
+   * @param resources The resources value
+   * @param Tresults The value of the Tresults attribute
+   * @param function The value of the function attribute
    * @return a new instance of XlaLaunch
    */
   public XlaLaunch xlaLaunch(Iterable<Operand<?>> constants, Iterable<Operand<?>> args,
@@ -648,9 +648,9 @@ public final class XlaOps {
    *  key: A unique identifier for this region used to match up host transfers.
    *
    * @param <T> data type for {@code output} output
-   * @param Toutput the value of the Toutput property
-   * @param shape the value of the shape property
-   * @param key the value of the key property
+   * @param Toutput The value of the Toutput attribute
+   * @param shape The value of the shape attribute
+   * @param key The value of the key attribute
    * @param <T> data type for {@code XlaRecvFromHost} output and operands
    * @return a new instance of XlaRecvFromHost
    */
@@ -665,8 +665,8 @@ public final class XlaOps {
    *  Tinput: element type for input.
    *  key: A unique identifier for this region used to match up host transfers.
    *
-   * @param input the input value
-   * @param key the value of the key property
+   * @param input The input value
+   * @param key The value of the key attribute
    * @return a new instance of XlaSendToHost
    */
   public XlaSendToHost xlaSendToHost(Operand<? extends TType> input, String key) {
@@ -679,8 +679,8 @@ public final class XlaOps {
    *      returns the same value.
    *  </pre>
    *
-   * @param input the input value
-   * @param bound the bound value
+   * @param input The input value
+   * @param bound The bound value
    * @return a new instance of XlaSetBound
    */
   public XlaSetBound xlaSetBound(Operand<TInt32> input, Operand<TInt32> bound) {

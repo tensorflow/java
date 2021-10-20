@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TBool;
@@ -53,9 +56,9 @@ public final class AnonymousSeedGenerator extends RawOp {
    * Factory method to create a class wrapping a new AnonymousSeedGenerator operation.
    *
    * @param scope current scope
-   * @param seed the seed value
-   * @param seed2 the seed2 value
-   * @param reshuffle the reshuffle value
+   * @param seed The seed value
+   * @param seed2 The seed2 value
+   * @param reshuffle The reshuffle value
    * @return a new instance of AnonymousSeedGenerator
    */
   @Endpoint(
@@ -86,5 +89,30 @@ public final class AnonymousSeedGenerator extends RawOp {
    */
   public Output<? extends TType> deleter() {
     return deleter;
+  }
+
+  public static class Inputs extends RawOpInputs<AnonymousSeedGenerator> {
+    /**
+     * The seed input
+     */
+    public final Operand<TInt64> seed;
+
+    /**
+     * The seed2 input
+     */
+    public final Operand<TInt64> seed2;
+
+    /**
+     * The reshuffle input
+     */
+    public final Operand<TBool> reshuffle;
+
+    public Inputs(GraphOperation op) {
+      super(new AnonymousSeedGenerator(op), op, Arrays.asList());
+      int inputIndex = 0;
+      seed = (Operand<TInt64>) op.input(inputIndex++);
+      seed2 = (Operand<TInt64>) op.input(inputIndex++);
+      reshuffle = (Operand<TBool>) op.input(inputIndex++);
+    }
   }
 }

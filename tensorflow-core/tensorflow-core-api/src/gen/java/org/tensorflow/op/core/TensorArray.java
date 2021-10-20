@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -256,6 +260,67 @@ public final class TensorArray extends RawOp {
     public Options tensorArrayName(String tensorArrayName) {
       this.tensorArrayName = tensorArrayName;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArray> {
+    /**
+     * The size of the array.
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * The type of the elements on the tensor_array.
+     */
+    public final DataType dtype;
+
+    /**
+     * The expected shape of an element, if known. Used to
+     * validate the shapes of TensorArray elements. If this shape is not
+     * fully specified, gathering zero-size TensorArrays is an error.
+     */
+    public final Shape elementShape;
+
+    /**
+     * A boolean that determines whether writes to the TensorArray
+     * are allowed to grow the size.  By default, this is not allowed.
+     */
+    public final boolean dynamicSize;
+
+    /**
+     * If true (default), Tensors in the TensorArray are cleared
+     * after being read.  This disables multiple read semantics but allows early
+     * release of memory.
+     */
+    public final boolean clearAfterRead;
+
+    /**
+     * If true (default is false), then all
+     * elements in the TensorArray will be expected to have identical shapes.
+     * This allows certain behaviors, like dynamically checking for
+     * consistent shapes on write, and being able to fill in properly
+     * shaped zero tensors on stack -- even if the element_shape attribute
+     * is not fully defined.
+     */
+    public final boolean identicalElementShapes;
+
+    /**
+     * Overrides the name used for the temporary tensor_array
+     * resource. Default value is the name of the 'TensorArray' op (which
+     * is guaranteed unique).
+     */
+    public final String tensorArrayName;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArray(op), op, Arrays.asList("dtype", "element_shape", "dynamic_size", "clear_after_read", "identical_element_shapes", "tensor_array_name"));
+      int inputIndex = 0;
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      elementShape = op.attributes().getAttrShape("element_shape");
+      dynamicSize = op.attributes().getAttrBool("dynamic_size");
+      clearAfterRead = op.attributes().getAttrBool("clear_after_read");
+      identicalElementShapes = op.attributes().getAttrBool("identical_element_shapes");
+      tensorArrayName = op.attributes().getAttrString("tensor_array_name");
     }
   }
 }

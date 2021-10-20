@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -101,5 +105,50 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
   @Override
   public Output<T> asOutput() {
     return patches;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<ExtractVolumePatches<T>> {
+    /**
+     * 5-D Tensor with shape {@code [batch, in_planes, in_rows, in_cols, depth]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The size of the sliding window for each dimension of `input`.
+     */
+    public final long[] ksizes;
+
+    /**
+     * 1-D of length 5. How far the centers of two consecutive patches are in
+     * `input`. Must be: `[1, stride_planes, stride_rows, stride_cols, 1]`.
+     */
+    public final long[] strides;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The type of padding algorithm to use.
+     *
+     * The size-related attributes are specified as follows:
+     *
+     * ```python
+     * ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
+     * strides = [1, stride_planes, strides_rows, strides_cols, 1]
+     * ```
+     */
+    public final String padding;
+
+    public Inputs(GraphOperation op) {
+      super(new ExtractVolumePatches<>(op), op, Arrays.asList("ksizes", "strides", "T", "padding"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      ksizes = op.attributes().getAttrIntList("ksizes");
+      strides = op.attributes().getAttrIntList("strides");
+      T = op.attributes().getAttrType("T");
+      padding = op.attributes().getAttrString("padding");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -52,7 +55,7 @@ public final class UnwrapDatasetVariant extends RawOp implements Operand<TType> 
    * Factory method to create a class wrapping a new UnwrapDatasetVariant operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
+   * @param inputHandle The inputHandle value
    * @return a new instance of UnwrapDatasetVariant
    */
   @Endpoint(
@@ -77,5 +80,18 @@ public final class UnwrapDatasetVariant extends RawOp implements Operand<TType> 
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
+  }
+
+  public static class Inputs extends RawOpInputs<UnwrapDatasetVariant> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new UnwrapDatasetVariant(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

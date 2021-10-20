@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.cluster;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -86,5 +89,39 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
   @Override
   public Output<TFloat32> asOutput() {
     return samples;
+  }
+
+  public static class Inputs extends RawOpInputs<KmeansPlusPlusInitialization> {
+    /**
+     * Matrix of shape (n, d). Rows are assumed to be input points.
+     */
+    public final Operand<TFloat32> points;
+
+    /**
+     * Scalar. The number of rows to sample. This value must not be larger than n.
+     */
+    public final Operand<TInt64> numToSample;
+
+    /**
+     * Scalar. Seed for initializing the random number generator.
+     */
+    public final Operand<TInt64> seed;
+
+    /**
+     * Scalar. For each row that is sampled, this parameter
+     * specifies the number of additional points to draw from the current
+     * distribution before selecting the best. If a negative value is specified, a
+     * heuristic is used to sample O(log(num_to_sample)) additional points.
+     */
+    public final Operand<TInt64> numRetriesPerSample;
+
+    public Inputs(GraphOperation op) {
+      super(new KmeansPlusPlusInitialization(op), op, Arrays.asList());
+      int inputIndex = 0;
+      points = (Operand<TFloat32>) op.input(inputIndex++);
+      numToSample = (Operand<TInt64>) op.input(inputIndex++);
+      seed = (Operand<TInt64>) op.input(inputIndex++);
+      numRetriesPerSample = (Operand<TInt64>) op.input(inputIndex++);
+    }
   }
 }

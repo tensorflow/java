@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -123,6 +127,44 @@ public final class ReduceSum<T extends TType> extends RawOp implements Operand<T
     public Options keepDims(Boolean keepDims) {
       this.keepDims = keepDims;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ReduceSum<T>> {
+    /**
+     * The tensor to reduce.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The dimensions to reduce. Must be in the range
+     * {@code [-rank(input), rank(input))}.
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * If true, retain reduced dimensions with length 1.
+     */
+    public final boolean keepDims;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    public Inputs(GraphOperation op) {
+      super(new ReduceSum<>(op), op, Arrays.asList("keep_dims", "T", "Tidx"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      keepDims = op.attributes().getAttrBool("keep_dims");
+      T = op.attributes().getAttrType("T");
+      Tidx = op.attributes().getAttrType("Tidx");
     }
   }
 }

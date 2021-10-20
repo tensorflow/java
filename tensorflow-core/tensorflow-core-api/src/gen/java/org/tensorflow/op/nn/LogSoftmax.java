@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -82,5 +86,24 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return logsoftmax;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<LogSoftmax<T>> {
+    /**
+     * 2-D with shape {@code [batch_size, num_classes]}.
+     */
+    public final Operand<T> logits;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new LogSoftmax<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      logits = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

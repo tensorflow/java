@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -59,7 +63,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
    * @param logits 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
    * represents the unnormalized log probabilities for all classes.
    * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
-   * @param outputDtype the value of the outputDtype property
+   * @param outputDtype The value of the outputDtype attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code Multinomial} output and operands
    * @return a new instance of Multinomial
@@ -173,6 +177,51 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Multinomial<?>> {
+    /**
+     * 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
+     * represents the unnormalized log probabilities for all classes.
+     */
+    public final Operand<? extends TNumber> logits;
+
+    /**
+     * 0-D.  Number of independent samples to draw for each row slice.
+     */
+    public final Operand<TInt32> numSamples;
+
+    /**
+     * If either seed or seed2 is set to be non-zero, the internal random number
+     * generator is seeded by the given seed.  Otherwise, a random seed is used.
+     */
+    public final long seed;
+
+    /**
+     * A second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The outputDtype attribute
+     */
+    public final DataType outputDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new Multinomial<>(op), op, Arrays.asList("seed", "seed2", "T", "output_dtype"));
+      int inputIndex = 0;
+      logits = (Operand<? extends TNumber>) op.input(inputIndex++);
+      numSamples = (Operand<TInt32>) op.input(inputIndex++);
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      T = op.attributes().getAttrType("T");
+      outputDtype = op.attributes().getAttrType("output_dtype");
     }
   }
 }

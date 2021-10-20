@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -195,6 +199,47 @@ public final class Substr extends RawOp implements Operand<TString> {
     public Options unit(String unit) {
       this.unit = unit;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Substr> {
+    /**
+     * Tensor of strings
+     */
+    public final Operand<TString> input;
+
+    /**
+     * Scalar defining the position of first character in each substring
+     */
+    public final Operand<T> pos;
+
+    /**
+     * Scalar defining the number of characters to include in each substring
+     */
+    public final Operand<T> len;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The unit that is used to create the substring.  One of: `"BYTE"` (for
+     * defining position and length by bytes) or `"UTF8_CHAR"` (for the UTF-8
+     * encoded Unicode code points).  The default is `"BYTE"`. Results are undefined if
+     * `unit=UTF8_CHAR` and the `input` strings do not contain structurally valid
+     * UTF-8.
+     */
+    public final String unit;
+
+    public Inputs(GraphOperation op) {
+      super(new Substr(op), op, Arrays.asList("T", "unit"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      pos = (Operand<T>) op.input(inputIndex++);
+      len = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      unit = op.attributes().getAttrString("unit");
     }
   }
 }

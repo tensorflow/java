@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -50,9 +54,9 @@ public final class RiscGather<T extends TType> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new RiscGather operation.
    *
    * @param scope current scope
-   * @param params the params value
-   * @param indices the indices value
-   * @param axis the axis value
+   * @param params The params value
+   * @param indices The indices value
+   * @param axis The axis value
    * @param options carries optional attribute values
    * @param <T> data type for {@code RiscGather} output and operands
    * @return a new instance of RiscGather
@@ -118,6 +122,55 @@ public final class RiscGather<T extends TType> extends RawOp implements Operand<
     public Options batchDims(Long batchDims) {
       this.batchDims = batchDims;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<RiscGather<T>> {
+    /**
+     * The params input
+     */
+    public final Operand<T> params;
+
+    /**
+     * The indices input
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * The axis input
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * The batchDims attribute
+     */
+    public final long batchDims;
+
+    /**
+     * The Tparams attribute
+     */
+    public final DataType Tparams;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * The Taxis attribute
+     */
+    public final DataType Taxis;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscGather<>(op), op, Arrays.asList("batch_dims", "Tparams", "Tindices", "Taxis"));
+      int inputIndex = 0;
+      params = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      batchDims = op.attributes().getAttrInt("batch_dims");
+      Tparams = op.attributes().getAttrType("Tparams");
+      Tindices = op.attributes().getAttrType("Tindices");
+      Taxis = op.attributes().getAttrType("Taxis");
     }
   }
 }

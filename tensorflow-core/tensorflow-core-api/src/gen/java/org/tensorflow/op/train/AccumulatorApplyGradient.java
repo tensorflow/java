@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -64,5 +68,37 @@ public final class AccumulatorApplyGradient extends RawOp {
     opBuilder.addInput(localStep.asOutput());
     opBuilder.addInput(gradient.asOutput());
     return new AccumulatorApplyGradient(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<AccumulatorApplyGradient> {
+    /**
+     * The handle to a accumulator.
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * The local_step value at which the gradient was computed.
+     */
+    public final Operand<TInt64> localStep;
+
+    /**
+     * A tensor of the gradient to be accumulated.
+     */
+    public final Operand<? extends TType> gradient;
+
+    /**
+     * The data type of accumulated gradients. Needs to correspond to the type
+     * of the accumulator.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new AccumulatorApplyGradient(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      localStep = (Operand<TInt64>) op.input(inputIndex++);
+      gradient = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

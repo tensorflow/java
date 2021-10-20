@@ -41,11 +41,15 @@ import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.proto.framework.CollectionDef;
+import org.tensorflow.proto.framework.CollectionDef.NodeList;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
+import org.tensorflow.proto.framework.SignatureDef;
+import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.util.SaverDef;
 
 /**
@@ -63,6 +67,27 @@ import org.tensorflow.proto.util.SaverDef;
 public class SavedModelBundle implements AutoCloseable {
 
   public static final String DEFAULT_TAG = "serve";
+
+  /** Signature used to track Java init ops, for our init scope. */
+  private static final String JAVA_INIT_OP_SIGNATURE_KEY = "__saved_model_java_init_op_tracker";
+
+  /**
+   * Tensorflow init op tracking signature. Init ops are executed before loading variables, so this
+   * does not work for us.
+   */
+  private static final String INIT_OP_SIGNATURE_KEY = "__saved_model_init_op";
+
+  /**
+   * A backup Tensorflow init op collection key. In TF1, init ops will be stored in collections
+   * instead of signatures.
+   */
+  private static final String MAIN_OP_COLLECTION_KEY = "saved_model_main_op";
+
+  /** An even more legacy init op collection key. */
+  private static final String LEGACY_INIT_OP_COLLECTION_KEY = "legacy_init_op";
+
+  /** The collection where table initializers are stored in some hub models. */
+  private static final String TABLE_INITIALIZERS_COLLECTION_KEY = "table_initializer";
 
   /** Options for loading a SavedModel. */
   public static final class Loader {
@@ -260,12 +285,28 @@ public class SavedModelBundle implements AutoCloseable {
       // new ops to the graph for saving and restoring the variables.
       SaverDef saverDef = graph.saverDef();
 
+      GraphOperation initOp = null;
+      if (!functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
+        initOp = graph.addInitOp(true);
+      }
+
       MetaGraphDef.Builder metaGraphDef =
           metaGraphDefBuilder
               .setSaverDef(saverDef)
               .setGraphDef(graph.toGraphDef())
               .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
+
+      if (!functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
+
+        metaGraphDef.putSignatureDef(
+            JAVA_INIT_OP_SIGNATURE_KEY,
+            SignatureDef.newBuilder()
+                .putOutputs(
+                    JAVA_INIT_OP_SIGNATURE_KEY,
+                    TensorInfo.newBuilder().setName(initOp.name() + ":0").build())
+                .build());
+      }
 
       // Make sure saved model directories exist
       Path variableDir = Paths.get(exportDir, "variables");
@@ -365,7 +406,14 @@ public class SavedModelBundle implements AutoCloseable {
 
   /** Return the signature of all functions available in this saved model. */
   public List<Signature> signatures() {
-    return functions.values().stream().map(f -> f.signature()).collect(Collectors.toList());
+    // the init signatures aren't actual functions, just markers
+    return functions.values().stream()
+        .map(SessionFunction::signature)
+        .filter(
+            signature ->
+                !signature.key().equals(INIT_OP_SIGNATURE_KEY)
+                    && !signature.key().equals(JAVA_INIT_OP_SIGNATURE_KEY))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -382,7 +430,7 @@ public class SavedModelBundle implements AutoCloseable {
    * @return object that can be used to make calls to a function
    * @throws IllegalArgumentException if {@code signatureKey} is not found in this saved model.
    */
-  public TensorFunction function(String signatureKey) {
+  public SessionFunction function(String signatureKey) {
     SessionFunction function = functions.get(signatureKey);
     if (function == null) {
       throw new IllegalArgumentException(
@@ -396,7 +444,7 @@ public class SavedModelBundle implements AutoCloseable {
    *
    * <p><b>All functions use the bundle's underlying session.</b>
    */
-  public List<TensorFunction> functions() {
+  public List<SessionFunction> functions() {
     return new ArrayList<>(functions.values());
   }
 
@@ -459,6 +507,32 @@ public class SavedModelBundle implements AutoCloseable {
                 Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session)));
   }
 
+  private static GraphOperation findInitOp(
+      Graph graph, Map<String, Signature> signatures, Map<String, CollectionDef> collections) {
+
+    Signature initSig = signatures.get(INIT_OP_SIGNATURE_KEY);
+    if (initSig != null) {
+      return (GraphOperation)
+          graph.outputOrThrow(initSig.getOutputs().get(INIT_OP_SIGNATURE_KEY).name).op();
+    }
+
+    CollectionDef initCollection;
+    if (collections.containsKey(MAIN_OP_COLLECTION_KEY)) {
+      initCollection = collections.get(MAIN_OP_COLLECTION_KEY);
+    } else {
+      initCollection = collections.get(LEGACY_INIT_OP_COLLECTION_KEY);
+    }
+
+    if (initCollection != null) {
+      NodeList nodes = initCollection.getNodeList();
+      if (nodes.getValueCount() != 1) {
+        throw new IllegalArgumentException("Expected exactly one main op in saved model.");
+      }
+      return (GraphOperation) graph.outputOrThrow(nodes.getValue(0)).op();
+    }
+    return null;
+  }
+
   /**
    * Create a SavedModelBundle object from a handle to the C TF_Graph object and to the C TF_Session
    * object, plus the MetaGraphDef.
@@ -486,6 +560,41 @@ public class SavedModelBundle implements AutoCloseable {
                 functions.put(signatureName, signature);
               }
             });
+
+    GraphOperation initOp = findInitOp(graph, functions, metaGraphDef.getCollectionDefMap());
+    if (initOp != null) {
+      graph.registerInitOp(initOp);
+    }
+
+    // java init ops are marked as ran, since the variable restore will restore any state
+    // they mutated.
+    // Technically, init ops should be ran first, then variable restore, but that is not possible
+    // since TF_Session.loadSessionFromSavedModel does it in reverse order, so we just mark them as
+    // ran.
+    if (functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
+      String initOpName =
+          functions
+              .get(JAVA_INIT_OP_SIGNATURE_KEY)
+              .getOutputs()
+              .get(JAVA_INIT_OP_SIGNATURE_KEY)
+              .name;
+      graph.registerInitOp(graph.outputOrThrow(initOpName).op());
+    }
+
+    session.setInitialized();
+
+    if (metaGraphDef.containsCollectionDef(TABLE_INITIALIZERS_COLLECTION_KEY)) {
+      metaGraphDef
+          .getCollectionDefMap()
+          .get(TABLE_INITIALIZERS_COLLECTION_KEY)
+          .getNodeList()
+          .getValueList()
+          .forEach(
+              node -> {
+                graph.registerInitOp(graph.operationOrThrow(node));
+              });
+    }
+
     return new SavedModelBundle(graph, session, metaGraphDef, functions);
   }
 
@@ -525,6 +634,7 @@ public class SavedModelBundle implements AutoCloseable {
         throw new TensorFlowException("Cannot parse MetaGraphDef protocol buffer", e);
       }
     }
+    bundle.session.initialize();
 
     return bundle;
   }

@@ -59,7 +59,7 @@ public final class SignalOps {
   /**
    * The BatchFFT operation
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchFft
    */
   public BatchFft batchFft(Operand<? extends TType> input) {
@@ -69,7 +69,7 @@ public final class SignalOps {
   /**
    * The BatchFFT2D operation
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchFft2d
    */
   public BatchFft2d batchFft2d(Operand<? extends TType> input) {
@@ -79,7 +79,7 @@ public final class SignalOps {
   /**
    * The BatchFFT3D operation
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchFft3d
    */
   public BatchFft3d batchFft3d(Operand<? extends TType> input) {
@@ -89,7 +89,7 @@ public final class SignalOps {
   /**
    * The BatchIFFT operation
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchIfft
    */
   public BatchIfft batchIfft(Operand<? extends TType> input) {
@@ -99,7 +99,7 @@ public final class SignalOps {
   /**
    * The BatchIFFT2D operation
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchIfft2d
    */
   public BatchIfft2d batchIfft2d(Operand<? extends TType> input) {
@@ -109,7 +109,7 @@ public final class SignalOps {
   /**
    * The BatchIFFT3D operation
    *
-   * @param input the input value
+   * @param input The input value
    * @return a new instance of BatchIfft3d
    */
   public BatchIfft3d batchIfft3d(Operand<? extends TType> input) {
@@ -240,7 +240,7 @@ public final class SignalOps {
    * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
-   * @param Treal the value of the Treal property
+   * @param Treal The value of the Treal attribute
    * @param <U> data type for {@code IRFFT} output and operands
    * @return a new instance of Irfft
    */
@@ -291,7 +291,7 @@ public final class SignalOps {
    * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-   * @param Treal the value of the Treal property
+   * @param Treal The value of the Treal attribute
    * @param <U> data type for {@code IRFFT2D} output and operands
    * @return a new instance of Irfft2d
    */
@@ -342,7 +342,7 @@ public final class SignalOps {
    * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-   * @param Treal the value of the Treal property
+   * @param Treal The value of the Treal attribute
    * @param <U> data type for {@code IRFFT3D} output and operands
    * @return a new instance of Irfft3d
    */
@@ -365,7 +365,7 @@ public final class SignalOps {
    * @param <U> data type for {@code output} output
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
-   * @param Tcomplex the value of the Tcomplex property
+   * @param Tcomplex The value of the Tcomplex attribute
    * @param <U> data type for {@code RFFT} output and operands
    * @return a new instance of Rfft
    */
@@ -389,7 +389,7 @@ public final class SignalOps {
    * @param <U> data type for {@code output} output
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-   * @param Tcomplex the value of the Tcomplex property
+   * @param Tcomplex The value of the Tcomplex attribute
    * @param <U> data type for {@code RFFT2D} output and operands
    * @return a new instance of Rfft2d
    */
@@ -413,7 +413,7 @@ public final class SignalOps {
    * @param <U> data type for {@code output} output
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-   * @param Tcomplex the value of the Tcomplex property
+   * @param Tcomplex The value of the Tcomplex attribute
    * @param <U> data type for {@code RFFT3D} output and operands
    * @return a new instance of Rfft3d
    */

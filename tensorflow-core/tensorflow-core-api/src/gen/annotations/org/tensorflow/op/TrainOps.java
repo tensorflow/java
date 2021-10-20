@@ -340,7 +340,7 @@ public final class TrainOps {
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage the l2Shrinkage value
+   * @param l2Shrinkage The l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attribute values
    * @param <T> data type for {@code ApplyFtrlV2} output and operands
@@ -474,7 +474,7 @@ public final class TrainOps {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param options carries optional attribute values
@@ -610,7 +610,7 @@ public final class TrainOps {
    * @param wOut output word embedding.
    * @param examples A vector of word ids.
    * @param labels A vector of word ids.
-   * @param lr the lr value
+   * @param lr The lr value
    * @param vocabCount Count of words in the vocabulary.
    * @param numNegativeSamples Number of negative samples per example.
    * @return a new instance of NegTrain
@@ -825,7 +825,7 @@ public final class TrainOps {
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage the l2Shrinkage value
+   * @param l2Shrinkage The l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attribute values
    * @param <T> data type for {@code ResourceApplyFtrlV2} output and operands
@@ -978,7 +978,7 @@ public final class TrainOps {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param options carries optional attribute values
@@ -995,7 +995,7 @@ public final class TrainOps {
   /**
    * var: Should be from a Variable().
    *
-   * @param var the var value
+   * @param var The var value
    * @param accum Should be from a Variable().
    * @param accumUpdate : Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
@@ -1082,7 +1082,7 @@ public final class TrainOps {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -1117,7 +1117,7 @@ public final class TrainOps {
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage the l2Shrinkage value
+   * @param l2Shrinkage The l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attribute values
    * @param <T> data type for {@code ResourceSparseApplyFtrlV2} output and operands
@@ -1244,7 +1244,7 @@ public final class TrainOps {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -1396,7 +1396,7 @@ public final class TrainOps {
    * var: Should be from a Variable().
    *
    * @param <T> data type for {@code out} output
-   * @param var the var value
+   * @param var The var value
    * @param accum Should be from a Variable().
    * @param accumUpdate : Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
@@ -1461,7 +1461,7 @@ public final class TrainOps {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -1496,7 +1496,7 @@ public final class TrainOps {
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage the l2Shrinkage value
+   * @param l2Shrinkage The l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attribute values
    * @param <T> data type for {@code SparseApplyFtrlV2} output and operands
@@ -1599,7 +1599,7 @@ public final class TrainOps {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum the momentum value
+   * @param momentum The momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -1646,8 +1646,8 @@ public final class TrainOps {
    *  each repeated tile of {@code input} into {@code output}.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param multiples the multiples value
+   * @param input The input value
+   * @param multiples The multiples value
    * @param <T> data type for {@code TileGrad} output and operands
    * @return a new instance of TileGrad
    */

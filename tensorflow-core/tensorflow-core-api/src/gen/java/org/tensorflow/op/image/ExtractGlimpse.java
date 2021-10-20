@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -227,6 +230,64 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
     public Options noise(String noise) {
       this.noise = noise;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ExtractGlimpse> {
+    /**
+     * A 4-D float tensor of shape {@code [batch_size, height, width, channels]}.
+     */
+    public final Operand<TFloat32> input;
+
+    /**
+     * A 1-D tensor of 2 elements containing the size of the glimpses
+     * to extract.  The glimpse height must be specified first, following
+     * by the glimpse width.
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * A 2-D integer tensor of shape {@code [batch_size, 2]} containing
+     * the y, x locations of the center of each window.
+     */
+    public final Operand<TFloat32> offsets;
+
+    /**
+     * indicates if the offset coordinates are centered relative to
+     * the image, in which case the (0, 0) offset is relative to the center
+     * of the input images. If false, the (0,0) offset corresponds to the
+     * upper left corner of the input images.
+     */
+    public final boolean centered;
+
+    /**
+     * indicates if the offset coordinates are normalized.
+     */
+    public final boolean normalized;
+
+    /**
+     * indicates if the noise should be generated using a
+     * uniform distribution or a Gaussian distribution.
+     */
+    public final boolean uniformNoise;
+
+    /**
+     * indicates if the noise should `uniform`, `gaussian`, or
+     * `zero`. The default is `uniform` which means the noise type
+     * will be decided by `uniform_noise`.
+     */
+    public final String noise;
+
+    public Inputs(GraphOperation op) {
+      super(new ExtractGlimpse(op), op, Arrays.asList("centered", "normalized", "uniform_noise", "noise"));
+      int inputIndex = 0;
+      input = (Operand<TFloat32>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      offsets = (Operand<TFloat32>) op.input(inputIndex++);
+      centered = op.attributes().getAttrBool("centered");
+      normalized = op.attributes().getAttrBool("normalized");
+      uniformNoise = op.attributes().getAttrBool("uniform_noise");
+      noise = op.attributes().getAttrString("noise");
     }
   }
 }

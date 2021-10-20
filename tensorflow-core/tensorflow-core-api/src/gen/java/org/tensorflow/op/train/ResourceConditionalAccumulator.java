@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,8 +26,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -181,6 +185,45 @@ public final class ResourceConditionalAccumulator extends RawOp implements Opera
     public Options reductionType(String reductionType) {
       this.reductionType = reductionType;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceConditionalAccumulator> {
+    /**
+     * The type of the value being accumulated.
+     */
+    public final DataType dtype;
+
+    /**
+     * The shape of the values, can be [], in which case shape is unknown.
+     */
+    public final Shape shape;
+
+    /**
+     * If non-empty, this accumulator is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this accumulator will be shared under the
+     * given name across multiple sessions.
+     */
+    public final String sharedName;
+
+    /**
+     * The reductionType attribute
+     */
+    public final String reductionType;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceConditionalAccumulator(op), op, Arrays.asList("dtype", "shape", "container", "shared_name", "reduction_type"));
+      int inputIndex = 0;
+      dtype = op.attributes().getAttrType("dtype");
+      shape = op.attributes().getAttrShape("shape");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      reductionType = op.attributes().getAttrString("reduction_type");
     }
   }
 }

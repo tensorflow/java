@@ -20,6 +20,7 @@ package org.tensorflow.op.data;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -27,8 +28,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -55,9 +58,9 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
    * Factory method to create a class wrapping a new UncompressElement operation.
    *
    * @param scope current scope
-   * @param compressed the compressed value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param compressed The compressed value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of UncompressElement
    */
   @Endpoint(
@@ -89,5 +92,30 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<UncompressElement> {
+    /**
+     * The compressed input
+     */
+    public final Operand<? extends TType> compressed;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new UncompressElement(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      compressed = (Operand<? extends TType>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TString;
@@ -214,6 +217,44 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
     public Options compilationFailureClosesChips(Boolean compilationFailureClosesChips) {
       this.compilationFailureClosesChips = compilationFailureClosesChips;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ConfigureDistributedTPU> {
+    /**
+     * Reserved. Do not use.
+     */
+    public final String embeddingConfig;
+
+    /**
+     * Serialized tensorflow.tpu.TPUEmbeddingConfiguration that
+     * describes the embedding lookups of the program.
+     */
+    public final String tpuEmbeddingConfig;
+
+    /**
+     * Reserved. Do not use.
+     */
+    public final boolean isGlobalInit;
+
+    /**
+     * The enableWholeMeshCompilations attribute
+     */
+    public final boolean enableWholeMeshCompilations;
+
+    /**
+     * The compilationFailureClosesChips attribute
+     */
+    public final boolean compilationFailureClosesChips;
+
+    public Inputs(GraphOperation op) {
+      super(new ConfigureDistributedTPU(op), op, Arrays.asList("embedding_config", "tpu_embedding_config", "is_global_init", "enable_whole_mesh_compilations", "compilation_failure_closes_chips"));
+      int inputIndex = 0;
+      embeddingConfig = op.attributes().getAttrString("embedding_config");
+      tpuEmbeddingConfig = op.attributes().getAttrString("tpu_embedding_config");
+      isGlobalInit = op.attributes().getAttrBool("is_global_init");
+      enableWholeMeshCompilations = op.attributes().getAttrBool("enable_whole_mesh_compilations");
+      compilationFailureClosesChips = op.attributes().getAttrBool("compilation_failure_closes_chips");
     }
   }
 }

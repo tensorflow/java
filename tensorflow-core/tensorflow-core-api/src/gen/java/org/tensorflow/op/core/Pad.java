@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -72,9 +76,9 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
    * Factory method to create a class wrapping a new PadV2 operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param paddings the paddings value
-   * @param constantValues the constantValues value
+   * @param input The input value
+   * @param paddings The paddings value
+   * @param constantValues The constantValues value
    * @param <T> data type for {@code PadV2} output and operands
    * @return a new instance of Pad
    */
@@ -102,5 +106,42 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Pad<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The paddings input
+     */
+    public final Operand<? extends TNumber> paddings;
+
+    /**
+     * The constantValues input
+     */
+    public final Operand<T> constantValues;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tpaddings attribute
+     */
+    public final DataType Tpaddings;
+
+    public Inputs(GraphOperation op) {
+      super(new Pad<>(op), op, Arrays.asList("T", "Tpaddings"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      paddings = (Operand<? extends TNumber>) op.input(inputIndex++);
+      constantValues = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tpaddings = op.attributes().getAttrType("Tpaddings");
+    }
   }
 }

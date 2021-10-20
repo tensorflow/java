@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -49,9 +53,9 @@ public final class RiscSort<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new RiscSort operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param axis the axis value
-   * @param direction the value of the direction property
+   * @param input The input value
+   * @param axis The axis value
+   * @param direction The value of the direction attribute
    * @param <T> data type for {@code RiscSort} output and operands
    * @return a new instance of RiscSort
    */
@@ -79,5 +83,42 @@ public final class RiscSort<T extends TNumber> extends RawOp implements Operand<
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RiscSort<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The axis input
+     */
+    public final Operand<? extends TNumber> axis;
+
+    /**
+     * The Index attribute
+     */
+    public final DataType Index;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The direction attribute
+     */
+    public final String direction;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscSort<>(op), op, Arrays.asList("Index", "T", "direction"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      axis = (Operand<? extends TNumber>) op.input(inputIndex++);
+      Index = op.attributes().getAttrType("Index");
+      T = op.attributes().getAttrType("T");
+      direction = op.attributes().getAttrString("direction");
+    }
   }
 }

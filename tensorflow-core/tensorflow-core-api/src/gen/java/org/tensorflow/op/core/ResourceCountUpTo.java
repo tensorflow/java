@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -56,7 +60,7 @@ public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements
    * @param resource Should be from a scalar {@code Variable} node.
    * @param limit If incrementing ref would bring it above limit, instead generates an
    * 'OutOfRange' error.
-   * @param T the value of the T property
+   * @param T The value of the T attribute
    * @param <T> data type for {@code ResourceCountUpTo} output and operands
    * @return a new instance of ResourceCountUpTo
    */
@@ -85,5 +89,31 @@ public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceCountUpTo<?>> {
+    /**
+     * Should be from a scalar {@code Variable} node.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * If incrementing ref would bring it above limit, instead generates an
+     * 'OutOfRange' error.
+     */
+    public final long limit;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceCountUpTo<>(op), op, Arrays.asList("limit", "T"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      limit = op.attributes().getAttrInt("limit");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

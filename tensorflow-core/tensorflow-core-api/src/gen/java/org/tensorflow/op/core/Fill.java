@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -100,5 +104,39 @@ public final class Fill<U extends TType> extends RawOp implements Operand<U> {
   @Override
   public Output<U> asOutput() {
     return output;
+  }
+
+  public static class Inputs<U extends TType> extends RawOpInputs<Fill<U>> {
+    /**
+     * 1-D. Represents the shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> dims;
+
+    /**
+     * 0-D (scalar). Value to fill the returned tensor.
+     * <p>{@literal @}compatibility(numpy)<br>
+     * Equivalent to np.full
+     * <br>{@literal @}end_compatibility
+     */
+    public final Operand<U> value;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The indexType attribute
+     */
+    public final DataType indexType;
+
+    public Inputs(GraphOperation op) {
+      super(new Fill<>(op), op, Arrays.asList("T", "index_type"));
+      int inputIndex = 0;
+      dims = (Operand<? extends TNumber>) op.input(inputIndex++);
+      value = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      indexType = op.attributes().getAttrType("index_type");
+    }
   }
 }

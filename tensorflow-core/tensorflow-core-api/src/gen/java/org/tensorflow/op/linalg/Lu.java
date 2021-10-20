@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -76,7 +80,7 @@ public final class Lu<T extends TType, U extends TNumber> extends RawOp {
    * @param scope current scope
    * @param input A tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions form matrices of
    * size {@code [M, M]}.
-   * @param outputIdxType the value of the outputIdxType property
+   * @param outputIdxType The value of the outputIdxType attribute
    * @param <T> data type for {@code Lu} output and operands
    * @param <U> data type for {@code Lu} output and operands
    * @return a new instance of Lu
@@ -133,5 +137,31 @@ public final class Lu<T extends TType, U extends TNumber> extends RawOp {
    */
   public Output<U> p() {
     return p;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Lu<T, ?>> {
+    /**
+     * A tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions form matrices of
+     * size {@code [M, M]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The outputIdxType attribute
+     */
+    public final DataType outputIdxType;
+
+    public Inputs(GraphOperation op) {
+      super(new Lu<>(op), op, Arrays.asList("T", "output_idx_type"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      outputIdxType = op.attributes().getAttrType("output_idx_type");
+    }
   }
 }

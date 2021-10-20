@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -56,10 +60,10 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
    * Factory method to create a class wrapping a new BytesProducedStatsDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param tag the tag value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param tag The tag value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of BytesProducedStatsDataset
    */
   @Endpoint(
@@ -92,5 +96,36 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<BytesProducedStatsDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The tag input
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new BytesProducedStatsDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      tag = (Operand<TString>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

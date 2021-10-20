@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.risc;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TBool;
@@ -47,8 +50,8 @@ public final class RiscLogicalOr extends RawOp implements Operand<TBool> {
    * Factory method to create a class wrapping a new RiscLogicalOr operation.
    *
    * @param scope current scope
-   * @param x the x value
-   * @param y the y value
+   * @param x The x value
+   * @param y The y value
    * @return a new instance of RiscLogicalOr
    */
   @Endpoint(
@@ -73,5 +76,24 @@ public final class RiscLogicalOr extends RawOp implements Operand<TBool> {
   @Override
   public Output<TBool> asOutput() {
     return z;
+  }
+
+  public static class Inputs extends RawOpInputs<RiscLogicalOr> {
+    /**
+     * The x input
+     */
+    public final Operand<TBool> x;
+
+    /**
+     * The y input
+     */
+    public final Operand<TBool> y;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscLogicalOr(op), op, Arrays.asList());
+      int inputIndex = 0;
+      x = (Operand<TBool>) op.input(inputIndex++);
+      y = (Operand<TBool>) op.input(inputIndex++);
+    }
   }
 }

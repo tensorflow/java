@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -117,6 +120,25 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
     public Options externalStatePolicy(Long externalStatePolicy) {
       this.externalStatePolicy = externalStatePolicy;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SerializeIterator> {
+    /**
+     * A handle to an iterator resource.
+     */
+    public final Operand<? extends TType> resourceHandle;
+
+    /**
+     * The externalStatePolicy attribute
+     */
+    public final long externalStatePolicy;
+
+    public Inputs(GraphOperation op) {
+      super(new SerializeIterator(op), op, Arrays.asList("external_state_policy"));
+      int inputIndex = 0;
+      resourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      externalStatePolicy = op.attributes().getAttrInt("external_state_policy");
     }
   }
 }

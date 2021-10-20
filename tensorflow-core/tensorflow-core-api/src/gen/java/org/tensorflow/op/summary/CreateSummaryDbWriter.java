@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TString;
@@ -43,11 +46,11 @@ public final class CreateSummaryDbWriter extends RawOp {
    * Factory method to create a class wrapping a new CreateSummaryDbWriter operation.
    *
    * @param scope current scope
-   * @param writer the writer value
-   * @param dbUri the dbUri value
-   * @param experimentName the experimentName value
-   * @param runName the runName value
-   * @param userName the userName value
+   * @param writer The writer value
+   * @param dbUri The dbUri value
+   * @param experimentName The experimentName value
+   * @param runName The runName value
+   * @param userName The userName value
    * @return a new instance of CreateSummaryDbWriter
    */
   @Endpoint(
@@ -63,5 +66,42 @@ public final class CreateSummaryDbWriter extends RawOp {
     opBuilder.addInput(runName.asOutput());
     opBuilder.addInput(userName.asOutput());
     return new CreateSummaryDbWriter(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<CreateSummaryDbWriter> {
+    /**
+     * The writer input
+     */
+    public final Operand<? extends TType> writer;
+
+    /**
+     * The dbUri input
+     */
+    public final Operand<TString> dbUri;
+
+    /**
+     * The experimentName input
+     */
+    public final Operand<TString> experimentName;
+
+    /**
+     * The runName input
+     */
+    public final Operand<TString> runName;
+
+    /**
+     * The userName input
+     */
+    public final Operand<TString> userName;
+
+    public Inputs(GraphOperation op) {
+      super(new CreateSummaryDbWriter(op), op, Arrays.asList());
+      int inputIndex = 0;
+      writer = (Operand<? extends TType>) op.input(inputIndex++);
+      dbUri = (Operand<TString>) op.input(inputIndex++);
+      experimentName = (Operand<TString>) op.input(inputIndex++);
+      runName = (Operand<TString>) op.input(inputIndex++);
+      userName = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

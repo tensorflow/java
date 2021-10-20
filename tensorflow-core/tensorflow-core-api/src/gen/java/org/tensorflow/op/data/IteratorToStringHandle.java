@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -77,5 +80,18 @@ public final class IteratorToStringHandle extends RawOp implements Operand<TStri
   @Override
   public Output<TString> asOutput() {
     return stringHandle;
+  }
+
+  public static class Inputs extends RawOpInputs<IteratorToStringHandle> {
+    /**
+     * A handle to an iterator resource.
+     */
+    public final Operand<? extends TType> resourceHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new IteratorToStringHandle(op), op, Arrays.asList());
+      int inputIndex = 0;
+      resourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

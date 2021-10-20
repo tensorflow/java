@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -56,15 +60,15 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
    * Factory method to create a class wrapping a new SlidingWindowDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param windowSize A scalar representing the number of elements in the
    * sliding window.
    * @param windowShift A scalar representing the steps moving the sliding window
    * forward in one iteration. It must be positive.
    * @param windowStride A scalar representing the stride of the input elements of the sliding window.
    * It must be positive.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of SlidingWindowDataset
    */
   @Endpoint(
@@ -100,5 +104,51 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<SlidingWindowDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A scalar representing the number of elements in the
+     * sliding window.
+     */
+    public final Operand<TInt64> windowSize;
+
+    /**
+     * A scalar representing the steps moving the sliding window
+     * forward in one iteration. It must be positive.
+     */
+    public final Operand<TInt64> windowShift;
+
+    /**
+     * A scalar representing the stride of the input elements of the sliding window.
+     * It must be positive.
+     */
+    public final Operand<TInt64> windowStride;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new SlidingWindowDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      windowSize = (Operand<TInt64>) op.input(inputIndex++);
+      windowShift = (Operand<TInt64>) op.input(inputIndex++);
+      windowStride = (Operand<TInt64>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

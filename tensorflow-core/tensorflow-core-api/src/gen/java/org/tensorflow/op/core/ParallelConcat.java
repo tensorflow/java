@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -96,5 +100,34 @@ public final class ParallelConcat<T extends TType> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ParallelConcat<T>> {
+    /**
+     * Tensors to be concatenated. All must have size 1 in the first dimension
+     * and same shape.
+     */
+    public final Iterable<Operand<T>> values;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * the final shape of the result; should be equal to the shapes of any input
+     * but with the number of input values in the first dimension.
+     */
+    public final Shape shape;
+
+    public Inputs(GraphOperation op) {
+      super(new ParallelConcat<>(op), op, Arrays.asList("T", "shape"));
+      int inputIndex = 0;
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      T = op.attributes().getAttrType("T");
+      shape = op.attributes().getAttrShape("shape");
+    }
   }
 }

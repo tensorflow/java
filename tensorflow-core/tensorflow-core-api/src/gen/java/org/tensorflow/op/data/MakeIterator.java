@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -48,8 +51,8 @@ public final class MakeIterator extends RawOp {
    * Factory method to create a class wrapping a new MakeIterator operation.
    *
    * @param scope current scope
-   * @param dataset the dataset value
-   * @param iterator the iterator value
+   * @param dataset The dataset value
+   * @param iterator The iterator value
    * @return a new instance of MakeIterator
    */
   @Endpoint(
@@ -61,5 +64,24 @@ public final class MakeIterator extends RawOp {
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(iterator.asOutput());
     return new MakeIterator(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<MakeIterator> {
+    /**
+     * The dataset input
+     */
+    public final Operand<? extends TType> dataset;
+
+    /**
+     * The iterator input
+     */
+    public final Operand<? extends TType> iterator;
+
+    public Inputs(GraphOperation op) {
+      super(new MakeIterator(op), op, Arrays.asList());
+      int inputIndex = 0;
+      dataset = (Operand<? extends TType>) op.input(inputIndex++);
+      iterator = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

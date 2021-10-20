@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -88,5 +92,67 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
   @Override
   public Output<V> asOutput() {
     return output;
+  }
+
+  public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessParameterizedTruncatedNormal<V>> {
+    /**
+     * The shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * 2 seeds (shape [2]).
+     */
+    public final Operand<? extends TNumber> seed;
+
+    /**
+     * The mean parameter of each batch.
+     */
+    public final Operand<V> means;
+
+    /**
+     * The standard deviation parameter of each batch. Must be greater than 0.
+     */
+    public final Operand<V> stddevs;
+
+    /**
+     * The minimum cutoff. May be -infinity.
+     */
+    public final Operand<V> minvals;
+
+    /**
+     * The maximum cutoff. May be +infinity, and must be more than the minval
+     * for each batch.
+     */
+    public final Operand<V> maxvals;
+
+    /**
+     * The S attribute
+     */
+    public final DataType S;
+
+    /**
+     * The Tseed attribute
+     */
+    public final DataType Tseed;
+
+    /**
+     * The type of the output.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessParameterizedTruncatedNormal<>(op), op, Arrays.asList("S", "Tseed", "dtype"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
+      means = (Operand<V>) op.input(inputIndex++);
+      stddevs = (Operand<V>) op.input(inputIndex++);
+      minvals = (Operand<V>) op.input(inputIndex++);
+      maxvals = (Operand<V>) op.input(inputIndex++);
+      S = op.attributes().getAttrType("S");
+      Tseed = op.attributes().getAttrType("Tseed");
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

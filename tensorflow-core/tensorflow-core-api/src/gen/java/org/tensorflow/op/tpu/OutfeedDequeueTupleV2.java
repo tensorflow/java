@@ -20,6 +20,7 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -27,8 +28,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -95,5 +98,32 @@ public final class OutfeedDequeueTupleV2 extends RawOp implements Iterable<Opera
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<OutfeedDequeueTupleV2> {
+    /**
+     * An int scalar tensor, representing the TPU device to use. This should be -1 when
+     * the Op is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
+     * device.
+     */
+    public final Operand<TInt32> deviceOrdinal;
+
+    /**
+     * The element types of each element in `outputs`.
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The shapes of each tensor in `outputs`.
+     */
+    public final Shape[] shapes;
+
+    public Inputs(GraphOperation op) {
+      super(new OutfeedDequeueTupleV2(op), op, Arrays.asList("dtypes", "shapes"));
+      int inputIndex = 0;
+      deviceOrdinal = (Operand<TInt32>) op.input(inputIndex++);
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      shapes = op.attributes().getAttrShapeList("shapes");
+    }
   }
 }

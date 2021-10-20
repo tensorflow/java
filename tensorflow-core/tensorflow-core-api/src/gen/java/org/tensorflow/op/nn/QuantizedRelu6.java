@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -61,10 +65,10 @@ public final class QuantizedRelu6<U extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new QuantizedRelu6 operation.
    *
    * @param scope current scope
-   * @param features the features value
+   * @param features The features value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <U> data type for {@code QuantizedRelu6} output and operands
    * @return a new instance of QuantizedRelu6
    */
@@ -107,5 +111,42 @@ public final class QuantizedRelu6<U extends TNumber> extends RawOp {
    */
   public Output<TFloat32> maxActivations() {
     return maxActivations;
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedRelu6<?>> {
+    /**
+     * The features input
+     */
+    public final Operand<? extends TNumber> features;
+
+    /**
+     * The float value that the lowest quantized value represents.
+     */
+    public final Operand<TFloat32> minFeatures;
+
+    /**
+     * The float value that the highest quantized value represents.
+     */
+    public final Operand<TFloat32> maxFeatures;
+
+    /**
+     * The Tinput attribute
+     */
+    public final DataType Tinput;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedRelu6<>(op), op, Arrays.asList("Tinput", "out_type"));
+      int inputIndex = 0;
+      features = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minFeatures = (Operand<TFloat32>) op.input(inputIndex++);
+      maxFeatures = (Operand<TFloat32>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

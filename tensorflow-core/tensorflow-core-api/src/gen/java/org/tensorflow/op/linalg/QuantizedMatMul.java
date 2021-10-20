@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -71,7 +75,7 @@ public final class QuantizedMatMul<V extends TNumber> extends RawOp {
    * @param maxA The float value that the highest quantized {@code a} value represents.
    * @param minB The float value that the lowest quantized {@code b} value represents.
    * @param maxB The float value that the highest quantized {@code b} value represents.
-   * @param Toutput the value of the Toutput property
+   * @param Toutput The value of the Toutput attribute
    * @param Tactivation The type of output produced by activation function
    * following this operation.
    * @param options carries optional attribute values
@@ -186,6 +190,86 @@ public final class QuantizedMatMul<V extends TNumber> extends RawOp {
     public Options transposeB(Boolean transposeB) {
       this.transposeB = transposeB;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedMatMul<?>> {
+    /**
+     * Must be a two-dimensional tensor.
+     */
+    public final Operand<? extends TNumber> a;
+
+    /**
+     * Must be a two-dimensional tensor.
+     */
+    public final Operand<? extends TNumber> b;
+
+    /**
+     * The float value that the lowest quantized {@code a} value represents.
+     */
+    public final Operand<TFloat32> minA;
+
+    /**
+     * The float value that the highest quantized {@code a} value represents.
+     */
+    public final Operand<TFloat32> maxA;
+
+    /**
+     * The float value that the lowest quantized {@code b} value represents.
+     */
+    public final Operand<TFloat32> minB;
+
+    /**
+     * The float value that the highest quantized {@code b} value represents.
+     */
+    public final Operand<TFloat32> maxB;
+
+    /**
+     * The T1 attribute
+     */
+    public final DataType T1;
+
+    /**
+     * The T2 attribute
+     */
+    public final DataType T2;
+
+    /**
+     * The Toutput attribute
+     */
+    public final DataType Toutput;
+
+    /**
+     * If true, `a` is transposed before multiplication.
+     */
+    public final boolean transposeA;
+
+    /**
+     * If true, `b` is transposed before multiplication.
+     */
+    public final boolean transposeB;
+
+    /**
+     * The type of output produced by activation function
+     * following this operation.
+     */
+    public final DataType Tactivation;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedMatMul<>(op), op, Arrays.asList("T1", "T2", "Toutput", "transpose_a", "transpose_b", "Tactivation"));
+      int inputIndex = 0;
+      a = (Operand<? extends TNumber>) op.input(inputIndex++);
+      b = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minA = (Operand<TFloat32>) op.input(inputIndex++);
+      maxA = (Operand<TFloat32>) op.input(inputIndex++);
+      minB = (Operand<TFloat32>) op.input(inputIndex++);
+      maxB = (Operand<TFloat32>) op.input(inputIndex++);
+      T1 = op.attributes().getAttrType("T1");
+      T2 = op.attributes().getAttrType("T2");
+      Toutput = op.attributes().getAttrType("Toutput");
+      transposeA = op.attributes().getAttrBool("transpose_a");
+      transposeB = op.attributes().getAttrBool("transpose_b");
+      Tactivation = op.attributes().getAttrType("Tactivation");
     }
   }
 }

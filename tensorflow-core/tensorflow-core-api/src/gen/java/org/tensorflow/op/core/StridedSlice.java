@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -149,7 +153,7 @@ public final class StridedSlice<T extends TType> extends RawOp implements Operan
    * Factory method to create a class wrapping a new StridedSlice operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param begin {@code begin[k]} specifies the offset into the {@code k}th range specification.
    * The exact dimension this corresponds to will be determined by context.
    * Out-of-bounds values will be silently clamped. If the {@code k}th bit of
@@ -363,6 +367,103 @@ public final class StridedSlice<T extends TType> extends RawOp implements Operan
     public Options shrinkAxisMask(Long shrinkAxisMask) {
       this.shrinkAxisMask = shrinkAxisMask;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<StridedSlice<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * {@code begin[k]} specifies the offset into the {@code k}th range specification.
+     * The exact dimension this corresponds to will be determined by context.
+     * Out-of-bounds values will be silently clamped. If the {@code k}th bit of
+     * {@code begin_mask} then {@code begin[k]} is ignored and the full range of the
+     * appropriate dimension is used instead. Negative values causes indexing
+     * to start from the highest element e.g. If {@code foo==[1,2,3]} then {@code foo[-1]==3}.
+     */
+    public final Operand<U> begin;
+
+    /**
+     * {@code end[i]} is like {@code begin} with the exception that {@code end_mask} is
+     * used to determine full ranges.
+     */
+    public final Operand<U> end;
+
+    /**
+     * {@code strides[i]} specifies the increment in the {@code i}th specification
+     * after extracting a given element. Negative indices will reverse
+     * the original order. Out or range values are
+     * clamped to {@code [0,dim[i]) if slice[i]>0} or {@code [-1,dim[i]-1] if slice[i] < 0}
+     */
+    public final Operand<U> strides;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Index attribute
+     */
+    public final DataType Index;
+
+    /**
+     * a bitmask where a bit i being 1 means to ignore the begin
+     * value and instead use the largest interval possible. At runtime
+     * begin[i] will be replaced with `[0, n-1)` if `stride[i] > 0` or
+     * `[-1, n-1]` if `stride[i] < 0`
+     */
+    public final long beginMask;
+
+    /**
+     * analogous to `begin_mask`
+     */
+    public final long endMask;
+
+    /**
+     * a bitmask where bit `i` being 1 means the `i`th
+     * position is actually an ellipsis. One bit at most can be 1.
+     * If `ellipsis_mask == 0`, then an implicit ellipsis mask of `1 << (m+1)`
+     * is provided. This means that `foo[3:5] == foo[3:5, ...]`. An ellipsis
+     * implicitly creates as many range specifications as necessary to fully
+     * specify the sliced range for every dimension. For example for a 4-dimensional
+     * tensor `foo` the slice `foo[2, ..., 5:8]` implies `foo[2, :, :, 5:8]`.
+     */
+    public final long ellipsisMask;
+
+    /**
+     * a bitmask where bit `i` being 1 means the `i`th
+     * specification creates a new shape 1 dimension. For example
+     * `foo[:4, tf.newaxis, :2]` would produce a shape `(4, 1, 2)` tensor.
+     */
+    public final long newAxisMask;
+
+    /**
+     * a bitmask where bit `i` implies that the `i`th
+     * specification should shrink the dimensionality. begin and end
+     * must imply a slice of size 1 in the dimension. For example in
+     * python one might do `foo[:, 3, :]` which would result in
+     * `shrink_axis_mask` being 2.
+     */
+    public final long shrinkAxisMask;
+
+    public Inputs(GraphOperation op) {
+      super(new StridedSlice<>(op), op, Arrays.asList("T", "Index", "begin_mask", "end_mask", "ellipsis_mask", "new_axis_mask", "shrink_axis_mask"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      begin = (Operand<U>) op.input(inputIndex++);
+      end = (Operand<U>) op.input(inputIndex++);
+      strides = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Index = op.attributes().getAttrType("Index");
+      beginMask = op.attributes().getAttrInt("begin_mask");
+      endMask = op.attributes().getAttrInt("end_mask");
+      ellipsisMask = op.attributes().getAttrInt("ellipsis_mask");
+      newAxisMask = op.attributes().getAttrInt("new_axis_mask");
+      shrinkAxisMask = op.attributes().getAttrInt("shrink_axis_mask");
     }
   }
 }

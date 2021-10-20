@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -65,8 +68,8 @@ public final class TopKUnique extends RawOp {
    * Factory method to create a class wrapping a new TopKUnique operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param k the value of the k property
+   * @param input The input value
+   * @param k The value of the k attribute
    * @return a new instance of TopKUnique
    */
   @Endpoint(
@@ -95,5 +98,24 @@ public final class TopKUnique extends RawOp {
    */
   public Output<TInt32> topkIndices() {
     return topkIndices;
+  }
+
+  public static class Inputs extends RawOpInputs<TopKUnique> {
+    /**
+     * The input input
+     */
+    public final Operand<TFloat32> input;
+
+    /**
+     * The k attribute
+     */
+    public final long k;
+
+    public Inputs(GraphOperation op) {
+      super(new TopKUnique(op), op, Arrays.asList("k"));
+      int inputIndex = 0;
+      input = (Operand<TFloat32>) op.input(inputIndex++);
+      k = op.attributes().getAttrInt("k");
+    }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -72,7 +76,7 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends RawOp impl
    * rows must be the same as the rank of {@code input}.
    * @param filter 4-D with shape
    * {@code [filter_height, filter_width, in_channels, out_channels]}.
-   * @param mode the value of the mode property
+   * @param mode The value of the mode attribute
    * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
    * of {@code input}. Must be in the same order as the dimension specified with format.
    * @param padding The type of padding algorithm to use.
@@ -152,6 +156,72 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends RawOp impl
     public Options resizeAlignCorners(Boolean resizeAlignCorners) {
       this.resizeAlignCorners = resizeAlignCorners;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<FusedResizeAndPadConv2d<T>> {
+    /**
+     * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
+     * new size for the images.
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * A two-column matrix specifying the padding sizes. The number of
+     * rows must be the same as the rank of {@code input}.
+     */
+    public final Operand<TInt32> paddings;
+
+    /**
+     * 4-D with shape
+     * {@code [filter_height, filter_width, in_channels, out_channels]}.
+     */
+    public final Operand<T> filter;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If true, the centers of the 4 corner pixels of the input and output tensors are
+     * aligned, preserving the values at the corner pixels. Defaults to false.
+     */
+    public final boolean resizeAlignCorners;
+
+    /**
+     * The mode attribute
+     */
+    public final String mode;
+
+    /**
+     * 1-D of length 4.  The stride of the sliding window for each dimension
+     * of `input`. Must be in the same order as the dimension specified with format.
+     */
+    public final long[] strides;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    public Inputs(GraphOperation op) {
+      super(new FusedResizeAndPadConv2d<>(op), op, Arrays.asList("T", "resize_align_corners", "mode", "strides", "padding"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      paddings = (Operand<TInt32>) op.input(inputIndex++);
+      filter = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      resizeAlignCorners = op.attributes().getAttrBool("resize_align_corners");
+      mode = op.attributes().getAttrString("mode");
+      strides = op.attributes().getAttrIntList("strides");
+      padding = op.attributes().getAttrString("padding");
     }
   }
 }

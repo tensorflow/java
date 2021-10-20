@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -253,6 +256,59 @@ public final class FixedLengthRecordReader extends RawOp implements Operand<TTyp
     public Options encoding(String encoding) {
       this.encoding = encoding;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<FixedLengthRecordReader> {
+    /**
+     * Number of bytes in the header, defaults to 0.
+     */
+    public final long headerBytes;
+
+    /**
+     * Number of bytes in the record.
+     */
+    public final long recordBytes;
+
+    /**
+     * Number of bytes in the footer, defaults to 0.
+     */
+    public final long footerBytes;
+
+    /**
+     * Number of bytes to hop before each read. Default of 0 means using
+     * record_bytes.
+     */
+    public final long hopBytes;
+
+    /**
+     * If non-empty, this reader is placed in the given container.
+     * Otherwise, a default container is used.
+     */
+    public final String container;
+
+    /**
+     * If non-empty, this reader is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     */
+    public final String sharedName;
+
+    /**
+     * The type of encoding for the file. Currently ZLIB and GZIP
+     * are supported. Defaults to none.
+     */
+    public final String encoding;
+
+    public Inputs(GraphOperation op) {
+      super(new FixedLengthRecordReader(op), op, Arrays.asList("header_bytes", "record_bytes", "footer_bytes", "hop_bytes", "container", "shared_name", "encoding"));
+      int inputIndex = 0;
+      headerBytes = op.attributes().getAttrInt("header_bytes");
+      recordBytes = op.attributes().getAttrInt("record_bytes");
+      footerBytes = op.attributes().getAttrInt("footer_bytes");
+      hopBytes = op.attributes().getAttrInt("hop_bytes");
+      container = op.attributes().getAttrString("container");
+      sharedName = op.attributes().getAttrString("shared_name");
+      encoding = op.attributes().getAttrString("encoding");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -54,9 +58,9 @@ public final class TensorMapInsert extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new TensorMapInsert operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
-   * @param key the key value
-   * @param value the value value
+   * @param inputHandle The inputHandle value
+   * @param key The key value
+   * @param value The value value
    * @return a new instance of TensorMapInsert
    */
   @Endpoint(
@@ -84,5 +88,42 @@ public final class TensorMapInsert extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorMapInsert> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    /**
+     * The key input
+     */
+    public final Operand<? extends TType> key;
+
+    /**
+     * The value input
+     */
+    public final Operand<? extends TType> value;
+
+    /**
+     * The keyDtype attribute
+     */
+    public final DataType keyDtype;
+
+    /**
+     * The valueDtype attribute
+     */
+    public final DataType valueDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorMapInsert(op), op, Arrays.asList("key_dtype", "value_dtype"));
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      key = (Operand<? extends TType>) op.input(inputIndex++);
+      value = (Operand<? extends TType>) op.input(inputIndex++);
+      keyDtype = op.attributes().getAttrType("key_dtype");
+      valueDtype = op.attributes().getAttrType("value_dtype");
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -243,6 +247,90 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
     public Options isTraining(Boolean isTraining) {
       this.isTraining = isTraining;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<FusedBatchNormGrad<T, U>> {
+    /**
+     * A 4D Tensor for the gradient with respect to y.
+     */
+    public final Operand<T> yBackprop;
+
+    /**
+     * A 4D Tensor for input data.
+     */
+    public final Operand<T> x;
+
+    /**
+     * A 1D Tensor for scaling factor, to scale the normalized x.
+     */
+    public final Operand<TFloat32> scale;
+
+    /**
+     * When is_training is True, a 1D Tensor for the computed batch
+     * mean to be reused in gradient computation. When is_training is
+     * False, a 1D Tensor for the population mean to be reused in both
+     * 1st and 2nd order gradient computation.
+     */
+    public final Operand<U> reserveSpace1;
+
+    /**
+     * When is_training is True, a 1D Tensor for the computed batch
+     * variance (inverted variance in the cuDNN case) to be reused in
+     * gradient computation. When is_training is False, a 1D Tensor
+     * for the population variance to be reused in both 1st and 2nd
+     * order gradient computation.
+     */
+    public final Operand<U> reserveSpace2;
+
+    /**
+     * When is_training is True, a 1D Tensor for some intermediate results to be reused
+     * in gradient computation. When is_training is False, a dummy empty Tensor will be
+     * created.
+     */
+    public final Operand<U> reserveSpace3;
+
+    /**
+     * The data type for the elements of input and output Tensors.
+     */
+    public final DataType T;
+
+    /**
+     * The data type for the scale, offset, mean, and variance.
+     */
+    public final DataType U;
+
+    /**
+     * A small float number added to the variance of x.
+     */
+    public final float epsilon;
+
+    /**
+     * The data format for y_backprop, x, x_backprop.
+     * Either "NHWC" (default) or "NCHW".
+     */
+    public final String dataFormat;
+
+    /**
+     * A bool value to indicate the operation is for training (default)
+     * or inference.
+     */
+    public final boolean isTraining;
+
+    public Inputs(GraphOperation op) {
+      super(new FusedBatchNormGrad<>(op), op, Arrays.asList("T", "U", "epsilon", "data_format", "is_training"));
+      int inputIndex = 0;
+      yBackprop = (Operand<T>) op.input(inputIndex++);
+      x = (Operand<T>) op.input(inputIndex++);
+      scale = (Operand<TFloat32>) op.input(inputIndex++);
+      reserveSpace1 = (Operand<U>) op.input(inputIndex++);
+      reserveSpace2 = (Operand<U>) op.input(inputIndex++);
+      reserveSpace3 = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      U = op.attributes().getAttrType("U");
+      epsilon = op.attributes().getAttrFloat("epsilon");
+      dataFormat = op.attributes().getAttrString("data_format");
+      isTraining = op.attributes().getAttrBool("is_training");
     }
   }
 }

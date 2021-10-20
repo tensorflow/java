@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -157,6 +161,57 @@ public final class RandomUniformInt<U extends TNumber> extends RawOp implements 
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs<U extends TNumber> extends RawOpInputs<RandomUniformInt<U>> {
+    /**
+     * The shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * 0-D.  Inclusive lower bound on the generated integers.
+     */
+    public final Operand<U> minval;
+
+    /**
+     * 0-D.  Exclusive upper bound on the generated integers.
+     */
+    public final Operand<U> maxval;
+
+    /**
+     * If either `seed` or `seed2` are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * A second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    /**
+     * The Tout attribute
+     */
+    public final DataType Tout;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new RandomUniformInt<>(op), op, Arrays.asList("seed", "seed2", "Tout", "T"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minval = (Operand<U>) op.input(inputIndex++);
+      maxval = (Operand<U>) op.input(inputIndex++);
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      Tout = op.attributes().getAttrType("Tout");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

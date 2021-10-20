@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.summary;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -180,6 +184,44 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
     public Options badColor(Tensor badColor) {
       this.badColor = badColor;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ImageSummary> {
+    /**
+     * Scalar. Used to build the {@code tag} attribute of the summary values.
+     */
+    public final Operand<TString> tag;
+
+    /**
+     * 4-D of shape {@code [batch_size, height, width, channels]} where
+     * {@code channels} is 1, 3, or 4.
+     */
+    public final Operand<? extends TNumber> tensor;
+
+    /**
+     * Max number of batch elements to generate images for.
+     */
+    public final long maxImages;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Color to use for pixels with non-finite values.
+     */
+    public final Tensor badColor;
+
+    public Inputs(GraphOperation op) {
+      super(new ImageSummary(op), op, Arrays.asList("max_images", "T", "bad_color"));
+      int inputIndex = 0;
+      tag = (Operand<TString>) op.input(inputIndex++);
+      tensor = (Operand<? extends TNumber>) op.input(inputIndex++);
+      maxImages = op.attributes().getAttrInt("max_images");
+      T = op.attributes().getAttrType("T");
+      badColor = op.attributes().getAttrTensor("bad_color");
     }
   }
 }

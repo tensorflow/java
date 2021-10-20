@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -61,5 +64,26 @@ public final class BoostedTreesQuantileStreamResourceAddSummaries extends RawOp 
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(summaries));
     return new BoostedTreesQuantileStreamResourceAddSummaries(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesQuantileStreamResourceAddSummaries> {
+    /**
+     * resource handle referring to a QuantileStreamResource.
+     */
+    public final Operand<? extends TType> quantileStreamResourceHandle;
+
+    /**
+     * string; List of Rank 2 Tensor each containing the summaries for a single feature.
+     */
+    public final Iterable<Operand<TFloat32>> summaries;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesQuantileStreamResourceAddSummaries(op), op, Arrays.asList());
+      int inputIndex = 0;
+      quantileStreamResourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      int summariesLength = op.inputListLength("summaries");
+      summaries = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, summariesLength));
+      inputIndex += summariesLength;
+    }
   }
 }

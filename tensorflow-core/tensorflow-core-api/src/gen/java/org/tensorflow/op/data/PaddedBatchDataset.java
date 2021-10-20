@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -57,7 +61,7 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new PaddedBatchDatasetV2 operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param batchSize A scalar representing the number of elements to accumulate in a
    * batch.
    * @param paddedShapes A list of int64 tensors representing the desired padded shapes
@@ -68,7 +72,7 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
    * each of the outputs.
    * @param dropRemainder A scalar representing whether the last batch should be dropped in case its size
    * is smaller than desired.
-   * @param outputShapes the value of the outputShapes property
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of PaddedBatchDataset
    */
@@ -143,6 +147,71 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
     public Options parallelCopy(Boolean parallelCopy) {
       this.parallelCopy = parallelCopy;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<PaddedBatchDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A scalar representing the number of elements to accumulate in a
+     * batch.
+     */
+    public final Operand<TInt64> batchSize;
+
+    /**
+     * A list of int64 tensors representing the desired padded shapes
+     * of the corresponding output components. These shapes may be partially
+     * specified, using {@code -1} to indicate that a particular dimension should be
+     * padded to the maximum size of all batch elements.
+     */
+    public final Iterable<Operand<TInt64>> paddedShapes;
+
+    /**
+     * A list of scalars containing the padding value to use for
+     * each of the outputs.
+     */
+    public final Iterable<Operand<?>> paddingValues;
+
+    /**
+     * A scalar representing whether the last batch should be dropped in case its size
+     * is smaller than desired.
+     */
+    public final Operand<TBool> dropRemainder;
+
+    /**
+     * The parallelCopy attribute
+     */
+    public final boolean parallelCopy;
+
+    /**
+     * The ToutputTypes attribute
+     */
+    public final DataType[] ToutputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new PaddedBatchDataset(op), op, Arrays.asList("parallel_copy", "Toutput_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      batchSize = (Operand<TInt64>) op.input(inputIndex++);
+      int paddedShapesLength = op.inputListLength("padded_shapes");
+      paddedShapes = Arrays.asList((Operand<TInt64>[]) op.inputList(inputIndex, paddedShapesLength));
+      inputIndex += paddedShapesLength;
+      int paddingValuesLength = op.inputListLength("padding_values");
+      paddingValues = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, paddingValuesLength));
+      inputIndex += paddingValuesLength;
+      dropRemainder = (Operand<TBool>) op.input(inputIndex++);
+      parallelCopy = op.attributes().getAttrBool("parallel_copy");
+      ToutputTypes = op.attributes().getAttrTypeList("Toutput_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
     }
   }
 }

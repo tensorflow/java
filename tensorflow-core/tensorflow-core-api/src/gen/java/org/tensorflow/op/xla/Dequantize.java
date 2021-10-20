@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -89,5 +92,43 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
   @Override
   public Output<TBfloat16> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<Dequantize> {
+    /**
+     * Input tensors whose types is uint32, shape is [d0, ..., dn].
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The minimum scalar value possibly produced for the input.
+     */
+    public final float minRange;
+
+    /**
+     * The maximum scalar value possibly produced for the input.
+     */
+    public final float maxRange;
+
+    /**
+     * String to determine the dequantize mode in {"MIN_COMBINED", "MIN_FIRST", "SCALED"}.
+     */
+    public final String mode;
+
+    /**
+     * Boolean to determine if output is transposed. transpose_output
+     * is faster when input is large and rank of input is higher than 1.
+     */
+    public final boolean transposeOutput;
+
+    public Inputs(GraphOperation op) {
+      super(new Dequantize(op), op, Arrays.asList("min_range", "max_range", "mode", "transpose_output"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      minRange = op.attributes().getAttrFloat("min_range");
+      maxRange = op.attributes().getAttrFloat("max_range");
+      mode = op.attributes().getAttrString("mode");
+      transposeOutput = op.attributes().getAttrBool("transpose_output");
+    }
   }
 }

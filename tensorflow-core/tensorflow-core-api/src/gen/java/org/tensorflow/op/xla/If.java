@@ -21,15 +21,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -65,7 +68,7 @@ public final class If extends RawOp implements Iterable<Operand<TType>> {
    * whose types are the same as what else_branch returns.
    * @param elseBranch A function takes 'inputs' and returns a list of tensors.
    * whose types are the same as what then_branch returns.
-   * @param Tout the value of the Tout property
+   * @param Tout The value of the Tout attribute
    * @return a new instance of If
    */
   @Endpoint(
@@ -98,5 +101,44 @@ public final class If extends RawOp implements Iterable<Operand<TType>> {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<If> {
+    /**
+     * A boolean scalar.
+     */
+    public final Operand<? extends TType> cond;
+
+    /**
+     * A list of input tensors.
+     */
+    public final Iterable<Operand<?>> inputs;
+
+    /**
+     * The Tcond attribute
+     */
+    public final DataType Tcond;
+
+    /**
+     * The Tin attribute
+     */
+    public final DataType[] Tin;
+
+    /**
+     * The Tout attribute
+     */
+    public final DataType[] Tout;
+
+    public Inputs(GraphOperation op) {
+      super(new If(op), op, Arrays.asList("Tcond", "Tin", "Tout"));
+      int inputIndex = 0;
+      cond = (Operand<? extends TType>) op.input(inputIndex++);
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      Tcond = op.attributes().getAttrType("Tcond");
+      Tin = op.attributes().getAttrTypeList("Tin");
+      Tout = op.attributes().getAttrTypeList("Tout");
+    }
   }
 }

@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -102,6 +105,27 @@ public final class BarrierClose extends RawOp {
     public Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
       this.cancelPendingEnqueues = cancelPendingEnqueues;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<BarrierClose> {
+    /**
+     * The handle to a barrier.
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * If true, all pending enqueue requests that are
+     * blocked on the barrier's queue will be canceled. InsertMany will fail, even
+     * if no new key is introduced.
+     */
+    public final boolean cancelPendingEnqueues;
+
+    public Inputs(GraphOperation op) {
+      super(new BarrierClose(op), op, Arrays.asList("cancel_pending_enqueues"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      cancelPendingEnqueues = op.attributes().getAttrBool("cancel_pending_enqueues");
     }
   }
 }

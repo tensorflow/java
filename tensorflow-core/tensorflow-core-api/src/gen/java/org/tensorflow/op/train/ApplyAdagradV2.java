@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -153,6 +157,63 @@ public final class ApplyAdagradV2<T extends TType> extends RawOp implements Oper
     public Options updateSlots(Boolean updateSlots) {
       this.updateSlots = updateSlots;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ApplyAdagradV2<T>> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<T> var;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<T> accum;
+
+    /**
+     * Scaling factor. Must be a scalar.
+     */
+    public final Operand<T> lr;
+
+    /**
+     * Constant factor. Must be a scalar.
+     */
+    public final Operand<T> epsilon;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * If `True`, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     */
+    public final boolean useLocking;
+
+    /**
+     * The updateSlots attribute
+     */
+    public final boolean updateSlots;
+
+    public Inputs(GraphOperation op) {
+      super(new ApplyAdagradV2<>(op), op, Arrays.asList("T", "use_locking", "update_slots"));
+      int inputIndex = 0;
+      var = (Operand<T>) op.input(inputIndex++);
+      accum = (Operand<T>) op.input(inputIndex++);
+      lr = (Operand<T>) op.input(inputIndex++);
+      epsilon = (Operand<T>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      useLocking = op.attributes().getAttrBool("use_locking");
+      updateSlots = op.attributes().getAttrBool("update_slots");
     }
   }
 }

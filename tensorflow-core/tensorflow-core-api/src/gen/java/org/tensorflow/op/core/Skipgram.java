@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -237,6 +240,45 @@ public final class Skipgram extends RawOp {
     public Options subsample(Float subsample) {
       this.subsample = subsample;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Skipgram> {
+    /**
+     * The corpus's text file name.
+     */
+    public final String filename;
+
+    /**
+     * The size of produced batch.
+     */
+    public final long batchSize;
+
+    /**
+     * The number of words to predict to the left and right of the target.
+     */
+    public final long windowSize;
+
+    /**
+     * The minimum number of word occurrences for it to be included in the
+     * vocabulary.
+     */
+    public final long minCount;
+
+    /**
+     * Threshold for word occurrence. Words that appear with higher
+     * frequency will be randomly down-sampled. Set to 0 to disable.
+     */
+    public final float subsample;
+
+    public Inputs(GraphOperation op) {
+      super(new Skipgram(op), op, Arrays.asList("filename", "batch_size", "window_size", "min_count", "subsample"));
+      int inputIndex = 0;
+      filename = op.attributes().getAttrString("filename");
+      batchSize = op.attributes().getAttrInt("batch_size");
+      windowSize = op.attributes().getAttrInt("window_size");
+      minCount = op.attributes().getAttrInt("min_count");
+      subsample = op.attributes().getAttrFloat("subsample");
     }
   }
 }

@@ -17,9 +17,12 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 
@@ -49,5 +52,12 @@ public final class ShutdownDistributedTPU extends RawOp {
   public static ShutdownDistributedTPU create(Scope scope) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ShutdownDistributedTPU");
     return new ShutdownDistributedTPU(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ShutdownDistributedTPU> {
+    public Inputs(GraphOperation op) {
+      super(new ShutdownDistributedTPU(op), op, Arrays.asList());
+      int inputIndex = 0;
+    }
   }
 }

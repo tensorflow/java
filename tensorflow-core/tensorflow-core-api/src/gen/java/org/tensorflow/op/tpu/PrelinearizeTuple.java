@@ -19,6 +19,7 @@ package org.tensorflow.op.tpu;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -26,8 +27,10 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -105,7 +108,7 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
    * will be computed by the infeed operation.
    * @return this Options instance.
    */
-  public static Options layouts(Long[] layouts) {
+  public static Options layouts(Long... layouts) {
     return new Options().layouts(layouts);
   }
 
@@ -159,6 +162,42 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
     public Options layouts(Long... layouts) {
       this.layouts = Arrays.asList(layouts);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<PrelinearizeTuple> {
+    /**
+     * A list of tensors that will be provided using the infeed mechanism.
+     */
+    public final Iterable<Operand<?>> inputs;
+
+    /**
+     * The element types of each element in `inputs`.
+     */
+    public final DataType[] dtypes;
+
+    /**
+     * The shapes of each tensor in `inputs`.
+     */
+    public final Shape[] shapes;
+
+    /**
+     * A vector holding the requested layout in minor-to-major sequence for all the
+     * tuple shapes in the order the shapes appear in the "shapes" input. The layout
+     * elements for a sub-shape can be set to -1 in which case the corresponding layout
+     * will be computed by the infeed operation.
+     */
+    public final long[] layouts;
+
+    public Inputs(GraphOperation op) {
+      super(new PrelinearizeTuple(op), op, Arrays.asList("dtypes", "shapes", "layouts"));
+      int inputIndex = 0;
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      dtypes = op.attributes().getAttrTypeList("dtypes");
+      shapes = op.attributes().getAttrShapeList("shapes");
+      layouts = op.attributes().getAttrIntList("layouts");
     }
   }
 }

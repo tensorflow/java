@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -57,12 +61,12 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
    * Factory method to create a class wrapping a new ParallelBatchDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param batchSize the batchSize value
-   * @param numParallelCalls the numParallelCalls value
-   * @param dropRemainder the dropRemainder value
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param inputDataset The inputDataset value
+   * @param batchSize The batchSize value
+   * @param numParallelCalls The numParallelCalls value
+   * @param dropRemainder The dropRemainder value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of ParallelBatchDataset
    */
@@ -162,6 +166,61 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
     public Options deterministic(String deterministic) {
       this.deterministic = deterministic;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ParallelBatchDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * The batchSize input
+     */
+    public final Operand<TInt64> batchSize;
+
+    /**
+     * The numParallelCalls input
+     */
+    public final Operand<TInt64> numParallelCalls;
+
+    /**
+     * The dropRemainder input
+     */
+    public final Operand<TBool> dropRemainder;
+
+    /**
+     * The parallelCopy attribute
+     */
+    public final boolean parallelCopy;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    /**
+     * The deterministic attribute
+     */
+    public final String deterministic;
+
+    public Inputs(GraphOperation op) {
+      super(new ParallelBatchDataset(op), op, Arrays.asList("parallel_copy", "output_types", "output_shapes", "deterministic"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      batchSize = (Operand<TInt64>) op.input(inputIndex++);
+      numParallelCalls = (Operand<TInt64>) op.input(inputIndex++);
+      dropRemainder = (Operand<TBool>) op.input(inputIndex++);
+      parallelCopy = op.attributes().getAttrBool("parallel_copy");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      deterministic = op.attributes().getAttrString("deterministic");
     }
   }
 }

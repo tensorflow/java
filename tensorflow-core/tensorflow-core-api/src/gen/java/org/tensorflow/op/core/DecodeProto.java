@@ -19,15 +19,18 @@ package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -247,6 +250,57 @@ public final class DecodeProto extends RawOp {
     public Options sanitize(Boolean sanitize) {
       this.sanitize = sanitize;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeProto> {
+    /**
+     * Tensor of serialized protos with shape {@code batch_shape}.
+     */
+    public final Operand<TString> bytes;
+
+    /**
+     * Name of the proto message type to decode.
+     */
+    public final String messageType;
+
+    /**
+     * List of strings containing proto field names. An extension field can be decoded
+     * by using its full name, e.g. EXT_PACKAGE.EXT_FIELD_NAME.
+     */
+    public final String[] fieldNames;
+
+    /**
+     * List of TF types to use for the respective field in field_names.
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * Either the special value `local://` or a path to a file containing
+     * a serialized `FileDescriptorSet`.
+     */
+    public final String descriptorSource;
+
+    /**
+     * Either `binary` or `text`.
+     */
+    public final String messageFormat;
+
+    /**
+     * Whether to sanitize the result or not.
+     */
+    public final boolean sanitize;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeProto(op), op, Arrays.asList("message_type", "field_names", "output_types", "descriptor_source", "message_format", "sanitize"));
+      int inputIndex = 0;
+      bytes = (Operand<TString>) op.input(inputIndex++);
+      messageType = op.attributes().getAttrString("message_type");
+      fieldNames = op.attributes().getAttrStringList("field_names");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      descriptorSource = op.attributes().getAttrString("descriptor_source");
+      messageFormat = op.attributes().getAttrString("message_format");
+      sanitize = op.attributes().getAttrBool("sanitize");
     }
   }
 }

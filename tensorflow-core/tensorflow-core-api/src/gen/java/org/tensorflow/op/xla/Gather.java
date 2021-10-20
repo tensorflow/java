@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -91,5 +95,54 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<Gather<T>> {
+    /**
+     * The array we're gathering from.
+     */
+    public final Operand<T> operand;
+
+    /**
+     * Array containing the starting indices of the slices we gather.
+     */
+    public final Operand<U> startIndices;
+
+    /**
+     * slice_sizes[i] is the bounds for the slice on dimension i.
+     */
+    public final Operand<U> sliceSizes;
+
+    /**
+     * A serialized xla::GatherDimensionNumbers proto.
+     */
+    public final String dimensionNumbers;
+
+    /**
+     * Boolean indicating if the indices are sorted.
+     */
+    public final boolean indicesAreSorted;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new Gather<>(op), op, Arrays.asList("dimension_numbers", "indices_are_sorted", "T", "Tindices"));
+      int inputIndex = 0;
+      operand = (Operand<T>) op.input(inputIndex++);
+      startIndices = (Operand<U>) op.input(inputIndex++);
+      sliceSizes = (Operand<U>) op.input(inputIndex++);
+      dimensionNumbers = op.attributes().getAttrString("dimension_numbers");
+      indicesAreSorted = op.attributes().getAttrBool("indices_are_sorted");
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

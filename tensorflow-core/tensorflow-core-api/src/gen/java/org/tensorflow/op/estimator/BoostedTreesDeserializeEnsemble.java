@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.estimator;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -61,5 +64,30 @@ public final class BoostedTreesDeserializeEnsemble extends RawOp {
     opBuilder.addInput(stampToken.asOutput());
     opBuilder.addInput(treeEnsembleSerialized.asOutput());
     return new BoostedTreesDeserializeEnsemble(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesDeserializeEnsemble> {
+    /**
+     * Handle to the tree ensemble.
+     */
+    public final Operand<? extends TType> treeEnsembleHandle;
+
+    /**
+     * Token to use as the new value of the resource stamp.
+     */
+    public final Operand<TInt64> stampToken;
+
+    /**
+     * Serialized proto of the ensemble.
+     */
+    public final Operand<TString> treeEnsembleSerialized;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesDeserializeEnsemble(op), op, Arrays.asList());
+      int inputIndex = 0;
+      treeEnsembleHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      stampToken = (Operand<TInt64>) op.input(inputIndex++);
+      treeEnsembleSerialized = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

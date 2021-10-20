@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -105,5 +109,90 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
   @Override
   public Output<W> asOutput() {
     return output;
+  }
+
+  public static class Inputs<V extends TNumber> extends RawOpInputs<Conv<?>> {
+    /**
+     * the input tensor
+     */
+    public final Operand<? extends TType> lhs;
+
+    /**
+     * the kernel tensor
+     */
+    public final Operand<? extends TType> rhs;
+
+    /**
+     * the inter-window strides
+     */
+    public final Operand<V> windowStrides;
+
+    /**
+     * the padding to apply at the start and end of each input dimensions
+     */
+    public final Operand<V> padding;
+
+    /**
+     * dilation to apply between input elements
+     */
+    public final Operand<V> lhsDilation;
+
+    /**
+     * dilation to apply between kernel elements
+     */
+    public final Operand<V> rhsDilation;
+
+    /**
+     * number of feature groups for grouped convolution.
+     */
+    public final Operand<V> featureGroupCount;
+
+    /**
+     * The LhsT attribute
+     */
+    public final DataType LhsT;
+
+    /**
+     * The RhsT attribute
+     */
+    public final DataType RhsT;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * a serialized xla::ConvolutionDimensionNumbers proto.
+     */
+    public final String dimensionNumbers;
+
+    /**
+     * a serialized xla::PrecisionConfig proto.
+     */
+    public final String precisionConfig;
+
+    /**
+     * The type of the tensor.
+     */
+    public final DataType preferredElementType;
+
+    public Inputs(GraphOperation op) {
+      super(new Conv<>(op), op, Arrays.asList("LhsT", "RhsT", "Tindices", "dimension_numbers", "precision_config", "preferred_element_type"));
+      int inputIndex = 0;
+      lhs = (Operand<? extends TType>) op.input(inputIndex++);
+      rhs = (Operand<? extends TType>) op.input(inputIndex++);
+      windowStrides = (Operand<V>) op.input(inputIndex++);
+      padding = (Operand<V>) op.input(inputIndex++);
+      lhsDilation = (Operand<V>) op.input(inputIndex++);
+      rhsDilation = (Operand<V>) op.input(inputIndex++);
+      featureGroupCount = (Operand<V>) op.input(inputIndex++);
+      LhsT = op.attributes().getAttrType("LhsT");
+      RhsT = op.attributes().getAttrType("RhsT");
+      Tindices = op.attributes().getAttrType("Tindices");
+      dimensionNumbers = op.attributes().getAttrString("dimension_numbers");
+      precisionConfig = op.attributes().getAttrString("precision_config");
+      preferredElementType = op.attributes().getAttrType("preferred_element_type");
+    }
   }
 }

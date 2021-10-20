@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -95,5 +99,43 @@ public final class MirrorPadGrad<T extends TType> extends RawOp implements Opera
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<MirrorPadGrad<T>> {
+    /**
+     * The input tensor to be folded.
+     */
+    public final Operand<T> input;
+
+    /**
+     * A two-column matrix specifying the padding sizes. The number of
+     * rows must be the same as the rank of {@code input}.
+     */
+    public final Operand<? extends TNumber> paddings;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tpaddings attribute
+     */
+    public final DataType Tpaddings;
+
+    /**
+     * The mode used in the `MirrorPad` op.
+     */
+    public final String mode;
+
+    public Inputs(GraphOperation op) {
+      super(new MirrorPadGrad<>(op), op, Arrays.asList("T", "Tpaddings", "mode"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      paddings = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tpaddings = op.attributes().getAttrType("Tpaddings");
+      mode = op.attributes().getAttrString("mode");
+    }
   }
 }

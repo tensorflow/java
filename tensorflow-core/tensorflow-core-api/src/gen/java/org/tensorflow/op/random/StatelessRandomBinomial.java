@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -113,5 +117,62 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
   @Override
   public Output<W> asOutput() {
     return output;
+  }
+
+  public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessRandomBinomial<?>> {
+    /**
+     * The shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * 2 seeds (shape [2]).
+     */
+    public final Operand<? extends TNumber> seed;
+
+    /**
+     * The counts of the binomial distribution. Must be broadcastable with {@code probs},
+     * and broadcastable with the rightmost dimensions of {@code shape}.
+     */
+    public final Operand<V> counts;
+
+    /**
+     * The probability of success for the binomial distribution. Must be broadcastable
+     * with {@code counts} and broadcastable with the rightmost dimensions of {@code shape}.
+     */
+    public final Operand<V> probs;
+
+    /**
+     * The S attribute
+     */
+    public final DataType S;
+
+    /**
+     * The Tseed attribute
+     */
+    public final DataType Tseed;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The type of the output.
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessRandomBinomial<>(op), op, Arrays.asList("S", "Tseed", "T", "dtype"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
+      counts = (Operand<V>) op.input(inputIndex++);
+      probs = (Operand<V>) op.input(inputIndex++);
+      S = op.attributes().getAttrType("S");
+      Tseed = op.attributes().getAttrType("Tseed");
+      T = op.attributes().getAttrType("T");
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

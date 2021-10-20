@@ -19,13 +19,16 @@ package org.tensorflow.op.risc;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -51,9 +54,9 @@ public final class RiscConv<T extends TNumber> extends RawOp implements Operand<
    * Factory method to create a class wrapping a new RiscConv operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param filter the filter value
-   * @param strides the value of the strides property
+   * @param input The input value
+   * @param filter The filter value
+   * @param strides The value of the strides attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code RiscConv} output and operands
    * @return a new instance of RiscConv
@@ -114,7 +117,7 @@ public final class RiscConv<T extends TNumber> extends RawOp implements Operand<
    * @param dilations the dilations option
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -174,6 +177,49 @@ public final class RiscConv<T extends TNumber> extends RawOp implements Operand<
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<RiscConv<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The filter input
+     */
+    public final Operand<T> filter;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The strides attribute
+     */
+    public final long[] strides;
+
+    /**
+     * The dataFormat attribute
+     */
+    public final String dataFormat;
+
+    /**
+     * The dilations attribute
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new RiscConv<>(op), op, Arrays.asList("T", "strides", "data_format", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      filter = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      strides = op.attributes().getAttrIntList("strides");
+      dataFormat = op.attributes().getAttrString("data_format");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

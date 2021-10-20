@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -154,6 +158,48 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
     public Options perturbSingular(Boolean perturbSingular) {
       this.perturbSingular = perturbSingular;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<TridiagonalSolve<T>> {
+    /**
+     * Tensor of shape {@code [..., 3, M]} whose innermost 2 dimensions represent the
+     * tridiagonal matrices with three rows being the superdiagonal, diagonals, and
+     * subdiagonals, in order. The last element of the superdiagonal and the first
+     * element of the subdiagonal is ignored.
+     */
+    public final Operand<T> diagonals;
+
+    /**
+     * Tensor of shape {@code [..., M, K]}, representing K right-hand sides per each
+     * left-hand side.
+     */
+    public final Operand<T> rhs;
+
+    /**
+     * Whether to apply partial pivoting. Partial pivoting makes the procedure more
+     * stable, but slower.
+     */
+    public final boolean partialPivoting;
+
+    /**
+     * The perturbSingular attribute
+     */
+    public final boolean perturbSingular;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new TridiagonalSolve<>(op), op, Arrays.asList("partial_pivoting", "perturb_singular", "T"));
+      int inputIndex = 0;
+      diagonals = (Operand<T>) op.input(inputIndex++);
+      rhs = (Operand<T>) op.input(inputIndex++);
+      partialPivoting = op.attributes().getAttrBool("partial_pivoting");
+      perturbSingular = op.attributes().getAttrBool("perturb_singular");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

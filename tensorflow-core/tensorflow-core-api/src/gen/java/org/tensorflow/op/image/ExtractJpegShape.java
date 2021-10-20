@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -100,5 +104,25 @@ public final class ExtractJpegShape<T extends TNumber> extends RawOp implements 
   @Override
   public Output<T> asOutput() {
     return imageShape;
+  }
+
+  public static class Inputs extends RawOpInputs<ExtractJpegShape<?>> {
+    /**
+     * 0-D. The JPEG-encoded image.
+     */
+    public final Operand<TString> contents;
+
+    /**
+     * (Optional) The output type of the operation (int32 or int64).
+     * Defaults to int32.
+     */
+    public final DataType outputType;
+
+    public Inputs(GraphOperation op) {
+      super(new ExtractJpegShape<>(op), op, Arrays.asList("output_type"));
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+      outputType = op.attributes().getAttrType("output_type");
+    }
   }
 }

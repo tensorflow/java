@@ -20,11 +20,13 @@ package org.tensorflow.op.tpu;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -88,5 +90,18 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TFloat32>> iterator() {
     return (Iterator) outputs.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<RecvTPUEmbeddingActivations> {
+    /**
+     * Serialized TPUEmbeddingConfiguration proto.
+     */
+    public final String config;
+
+    public Inputs(GraphOperation op) {
+      super(new RecvTPUEmbeddingActivations(op), op, Arrays.asList("config"));
+      int inputIndex = 0;
+      config = op.attributes().getAttrString("config");
+    }
   }
 }

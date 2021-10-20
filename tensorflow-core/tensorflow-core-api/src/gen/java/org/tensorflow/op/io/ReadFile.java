@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -51,7 +54,7 @@ public final class ReadFile extends RawOp implements Operand<TString> {
    * Factory method to create a class wrapping a new ReadFile operation.
    *
    * @param scope current scope
-   * @param filename the filename value
+   * @param filename The filename value
    * @return a new instance of ReadFile
    */
   @Endpoint(
@@ -75,5 +78,18 @@ public final class ReadFile extends RawOp implements Operand<TString> {
   @Override
   public Output<TString> asOutput() {
     return contents;
+  }
+
+  public static class Inputs extends RawOpInputs<ReadFile> {
+    /**
+     * The filename input
+     */
+    public final Operand<TString> filename;
+
+    public Inputs(GraphOperation op) {
+      super(new ReadFile(op), op, Arrays.asList());
+      int inputIndex = 0;
+      filename = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

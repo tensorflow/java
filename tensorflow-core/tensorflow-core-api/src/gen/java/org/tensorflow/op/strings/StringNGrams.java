@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -74,7 +78,7 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
    * sequence. Note that padding will never be greater than 'ngram_widths'-1
    * regardless of this value. If {@code pad_width=-1}, then add {@code max(ngram_widths)-1}
    * elements.
-   * @param preserveShortSequences the value of the preserveShortSequences property
+   * @param preserveShortSequences The value of the preserveShortSequences attribute
    * @param <T> data type for {@code StringNGrams} output and operands
    * @return a new instance of StringNGrams
    */
@@ -116,5 +120,72 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
    */
   public Output<T> ngramsSplits() {
     return ngramsSplits;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<StringNGrams<T>> {
+    /**
+     * The values tensor of the ragged string tensor to make ngrams out of. Must be a
+     * 1D string tensor.
+     */
+    public final Operand<TString> data;
+
+    /**
+     * The splits tensor of the ragged string tensor to make ngrams out of.
+     */
+    public final Operand<T> dataSplits;
+
+    /**
+     * The string to append between elements of the token. Use "" for no separator.
+     */
+    public final String separator;
+
+    /**
+     * The sizes of the ngrams to create.
+     */
+    public final long[] ngramWidths;
+
+    /**
+     * The string to use to pad the left side of the ngram sequence. Only used if
+     * pad_width != 0.
+     */
+    public final String leftPad;
+
+    /**
+     * The string to use to pad the right side of the ngram sequence. Only used if
+     * pad_width != 0.
+     */
+    public final String rightPad;
+
+    /**
+     * The number of padding elements to add to each side of each
+     * sequence. Note that padding will never be greater than 'ngram_widths'-1
+     * regardless of this value. If `pad_width=-1`, then add `max(ngram_widths)-1`
+     * elements.
+     */
+    public final long padWidth;
+
+    /**
+     * The preserveShortSequences attribute
+     */
+    public final boolean preserveShortSequences;
+
+    /**
+     * The Tsplits attribute
+     */
+    public final DataType Tsplits;
+
+    public Inputs(GraphOperation op) {
+      super(new StringNGrams<>(op), op, Arrays.asList("separator", "ngram_widths", "left_pad", "right_pad", "pad_width", "preserve_short_sequences", "Tsplits"));
+      int inputIndex = 0;
+      data = (Operand<TString>) op.input(inputIndex++);
+      dataSplits = (Operand<T>) op.input(inputIndex++);
+      separator = op.attributes().getAttrString("separator");
+      ngramWidths = op.attributes().getAttrIntList("ngram_widths");
+      leftPad = op.attributes().getAttrString("left_pad");
+      rightPad = op.attributes().getAttrString("right_pad");
+      padWidth = op.attributes().getAttrInt("pad_width");
+      preserveShortSequences = op.attributes().getAttrBool("preserve_short_sequences");
+      Tsplits = op.attributes().getAttrType("Tsplits");
+    }
   }
 }

@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -54,8 +57,8 @@ public final class XlaSetBound extends RawOp implements Operand<TInt32> {
    * Factory method to create a class wrapping a new XlaSetBound operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param bound the bound value
+   * @param input The input value
+   * @param bound The bound value
    * @return a new instance of XlaSetBound
    */
   @Endpoint(
@@ -80,5 +83,24 @@ public final class XlaSetBound extends RawOp implements Operand<TInt32> {
   @Override
   public Output<TInt32> asOutput() {
     return output;
+  }
+
+  public static class Inputs extends RawOpInputs<XlaSetBound> {
+    /**
+     * The input input
+     */
+    public final Operand<TInt32> input;
+
+    /**
+     * The bound input
+     */
+    public final Operand<TInt32> bound;
+
+    public Inputs(GraphOperation op) {
+      super(new XlaSetBound(op), op, Arrays.asList());
+      int inputIndex = 0;
+      input = (Operand<TInt32>) op.input(inputIndex++);
+      bound = (Operand<TInt32>) op.input(inputIndex++);
+    }
   }
 }

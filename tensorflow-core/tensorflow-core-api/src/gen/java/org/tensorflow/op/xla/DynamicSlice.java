@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -66,7 +70,7 @@ public final class DynamicSlice<T extends TType> extends RawOp implements Operan
    * dimension. Each value must be strictly greater than zero, and start + size
    * must be less than or equal to the size of the dimension to avoid
    * implementation defined behavior.
-   * @param sizeIndices the sizeIndices value
+   * @param sizeIndices The sizeIndices value
    * @param <T> data type for {@code XlaDynamicSlice} output and operands
    * @param <U> data type for {@code XlaDynamicSlice} output and operands
    * @return a new instance of DynamicSlice
@@ -95,5 +99,45 @@ public final class DynamicSlice<T extends TType> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType, U extends TNumber> extends RawOpInputs<DynamicSlice<T>> {
+    /**
+     * A {@code Tensor} of type T.
+     */
+    public final Operand<T> input;
+
+    /**
+     * List of N integers containing the slice size for each
+     * dimension. Each value must be strictly greater than zero, and start + size
+     * must be less than or equal to the size of the dimension to avoid
+     * implementation defined behavior.
+     */
+    public final Operand<U> startIndices;
+
+    /**
+     * The sizeIndices input
+     */
+    public final Operand<U> sizeIndices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new DynamicSlice<>(op), op, Arrays.asList("T", "Tindices"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      startIndices = (Operand<U>) op.input(inputIndex++);
+      sizeIndices = (Operand<U>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

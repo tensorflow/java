@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -46,8 +49,8 @@ public final class InitializeTableFromDataset extends RawOp {
    * Factory method to create a class wrapping a new InitializeTableFromDataset operation.
    *
    * @param scope current scope
-   * @param tableHandle the tableHandle value
-   * @param dataset the dataset value
+   * @param tableHandle The tableHandle value
+   * @param dataset The dataset value
    * @return a new instance of InitializeTableFromDataset
    */
   @Endpoint(
@@ -59,5 +62,24 @@ public final class InitializeTableFromDataset extends RawOp {
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(dataset.asOutput());
     return new InitializeTableFromDataset(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<InitializeTableFromDataset> {
+    /**
+     * The tableHandle input
+     */
+    public final Operand<? extends TType> tableHandle;
+
+    /**
+     * The dataset input
+     */
+    public final Operand<? extends TType> dataset;
+
+    public Inputs(GraphOperation op) {
+      super(new InitializeTableFromDataset(op), op, Arrays.asList());
+      int inputIndex = 0;
+      tableHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      dataset = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -129,7 +133,7 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
    *   height_pad = pad_top + height + pad_bottom
    *   width_pad = pad_left + width + pad_right
    * </pre>
-   * @param blockSize the value of the blockSize property
+   * @param blockSize The value of the blockSize attribute
    * @param <T> data type for {@code SpaceToBatch} output and operands
    * @return a new instance of SpaceToBatch
    */
@@ -157,5 +161,51 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SpaceToBatch<T>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, depth]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 2-D tensor of non-negative integers with shape {@code [2, 2]}. It specifies
+     * the padding of the input with zeros across the spatial dimensions as follows:
+     * <pre>
+     *   paddings = [[pad_top, pad_bottom], [pad_left, pad_right]]
+     * </pre>
+     * <p>The effective spatial dimensions of the zero-padded input tensor will be:
+     * <pre>
+     *   height_pad = pad_top + height + pad_bottom
+     *   width_pad = pad_left + width + pad_right
+     * </pre>
+     */
+    public final Operand<? extends TNumber> paddings;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tpaddings attribute
+     */
+    public final DataType Tpaddings;
+
+    /**
+     * The blockSize attribute
+     */
+    public final long blockSize;
+
+    public Inputs(GraphOperation op) {
+      super(new SpaceToBatch<>(op), op, Arrays.asList("T", "Tpaddings", "block_size"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      paddings = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tpaddings = op.attributes().getAttrType("Tpaddings");
+      blockSize = op.attributes().getAttrInt("block_size");
+    }
   }
 }

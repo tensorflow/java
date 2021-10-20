@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -136,6 +140,47 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
     public Options preferredShard(Long preferredShard) {
       this.preferredShard = preferredShard;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<RestoreSlice<?>> {
+    /**
+     * Must have a single element. The pattern of the files from
+     * which we read the tensor.
+     */
+    public final Operand<TString> filePattern;
+
+    /**
+     * Must have a single element. The name of the tensor to be
+     * restored.
+     */
+    public final Operand<TString> tensorName;
+
+    /**
+     * Scalar. The shapes and slice specifications to use when
+     * restoring a tensors.
+     */
+    public final Operand<TString> shapeAndSlice;
+
+    /**
+     * The type of the tensor to be restored.
+     */
+    public final DataType dt;
+
+    /**
+     * Index of file to open first if multiple files match
+     * `file_pattern`. See the documentation for `Restore`.
+     */
+    public final long preferredShard;
+
+    public Inputs(GraphOperation op) {
+      super(new RestoreSlice<>(op), op, Arrays.asList("dt", "preferred_shard"));
+      int inputIndex = 0;
+      filePattern = (Operand<TString>) op.input(inputIndex++);
+      tensorName = (Operand<TString>) op.input(inputIndex++);
+      shapeAndSlice = (Operand<TString>) op.input(inputIndex++);
+      dt = op.attributes().getAttrType("dt");
+      preferredShard = op.attributes().getAttrInt("preferred_shard");
     }
   }
 }

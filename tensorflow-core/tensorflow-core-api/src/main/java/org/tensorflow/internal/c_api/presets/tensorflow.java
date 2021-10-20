@@ -46,7 +46,8 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
-            "tensorflow/c/eager/c_api.h"
+            "tensorflow/c/eager/c_api.h",
+            "tensorflow/c/eager/c_api_experimental.h"
           },
           link = "tensorflow_cc@.2",
           preload = {"iomp5", "mklml", "mklml_intel", "tensorflow_framework@.2"},
@@ -271,6 +272,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
   @Override
   public void map(InfoMap infoMap) {
     infoMap
+        .put(
+            new Info("c_api_experimental.h")
+                .linePatterns(
+                    "typedef struct TFE_OpAttrs TFE_OpAttrs;",
+                    "#define TFE_CUSTOM_DEVICE_VERSION 4"))
         .put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
         .put(
             new Info("TF_Buffer::data")
@@ -314,49 +320,10 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             new Info("TF_ImportGraphDefOptions")
                 .pointerTypes("TF_ImportGraphDefOptions")
                 .base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
-        .put(
-            new Info(
-                    "TF_Operation",
-                    "TF_WhileParams",
-                    "TFE_MonitoringCounterCell",
-                    "TFE_MonitoringSamplerCell",
-                    "TFE_MonitoringCounter0",
-                    "TFE_MonitoringCounter1",
-                    "TFE_MonitoringCounter2",
-                    "TFE_MonitoringIntGaugeCell",
-                    "TFE_MonitoringStringGaugeCell",
-                    "TFE_MonitoringBoolGaugeCell",
-                    "TFE_MonitoringIntGauge0",
-                    "TFE_MonitoringIntGauge1",
-                    "TFE_MonitoringIntGauge2",
-                    "TFE_MonitoringStringGauge0",
-                    "TFE_MonitoringStringGauge1",
-                    "TFE_MonitoringStringGauge2",
-                    "TFE_MonitoringBoolGauge0",
-                    "TFE_MonitoringBoolGauge1",
-                    "TFE_MonitoringBoolGauge2",
-                    "TFE_MonitoringSampler0",
-                    "TFE_MonitoringSampler1",
-                    "TFE_MonitoringSampler2")
-                .purify())
+        .put(new Info("TF_Operation", "TF_WhileParams").purify())
         .put(
             new Info("TF_Operation::node")
                 .javaText("public native @MemberGetter @ByRef Node node();"))
-        .put(
-            new Info("TFE_MonitoringCounterCell::cell")
-                .javaText("public native @MemberGetter @ByRef CounterCell cell();"))
-        .put(
-            new Info("TFE_MonitoringSamplerCell::cell")
-                .javaText("public native @MemberGetter @ByRef SamplerCell cell();"))
-        .put(
-            new Info("TFE_MonitoringIntGaugeCell::cell")
-                .javaText("public native @MemberGetter @ByRef IntGaugeCell cell();"))
-        .put(
-            new Info("TFE_MonitoringStringGaugeCell::cell")
-                .javaText("public native @MemberGetter @ByRef StringGaugeCell cell();"))
-        .put(
-            new Info("TFE_MonitoringBoolGaugeCell::cell")
-                .javaText("public native @MemberGetter @ByRef BoolGaugeCell cell();"))
         .put(
             new Info("TFE_Context")
                 .pointerTypes("TFE_Context")
@@ -384,7 +351,29 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             new Info(
                     "TF_ShapeInferenceContextDimValueKnown",
                     "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
-                    "TF_InitKernel")
+                    "TF_InitKernel",
+                    "TFE_MonitoringCounterCell",
+                    "TFE_MonitoringCounter0",
+                    "TFE_MonitoringCounter1",
+                    "TFE_MonitoringCounter2",
+                    "TFE_MonitoringIntGaugeCell",
+                    "TFE_MonitoringIntGauge0",
+                    "TFE_MonitoringIntGauge1",
+                    "TFE_MonitoringIntGauge2",
+                    "TFE_MonitoringStringGaugeCell",
+                    "TFE_MonitoringStringGauge0",
+                    "TFE_MonitoringStringGauge1",
+                    "TFE_MonitoringStringGauge2",
+                    "TFE_MonitoringBoolGaugeCell",
+                    "TFE_MonitoringBoolGauge0",
+                    "TFE_MonitoringBoolGauge1",
+                    "TFE_MonitoringBoolGauge2",
+                    "TFE_MonitoringSamplerCell",
+                    "TFE_MonitoringSampler0",
+                    "TFE_MonitoringSampler1",
+                    "TFE_MonitoringSampler2",
+                    "TFE_CustomDeviceTensorHandle",
+                    "TFE_CustomDevice")
                 .skip());
   }
 }

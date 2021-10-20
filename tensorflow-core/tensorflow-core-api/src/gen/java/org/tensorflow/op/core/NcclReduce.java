@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -59,8 +63,8 @@ public final class NcclReduce<T extends TNumber> extends RawOp implements Operan
    * Factory method to create a class wrapping a new NcclReduce operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param reduction the value of the reduction property
+   * @param input The input value
+   * @param reduction The value of the reduction attribute
    * @param <T> data type for {@code NcclReduce} output and operands
    * @return a new instance of NcclReduce
    */
@@ -87,5 +91,32 @@ public final class NcclReduce<T extends TNumber> extends RawOp implements Operan
   @Override
   public Output<T> asOutput() {
     return data;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<NcclReduce<T>> {
+    /**
+     * The input input
+     */
+    public final Iterable<Operand<T>> input;
+
+    /**
+     * The reduction attribute
+     */
+    public final String reduction;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new NcclReduce<>(op), op, Arrays.asList("reduction", "T"));
+      int inputIndex = 0;
+      int inputLength = op.inputListLength("input");
+      input = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, inputLength));
+      inputIndex += inputLength;
+      reduction = op.attributes().getAttrString("reduction");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

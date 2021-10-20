@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -160,6 +164,70 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs<U extends TNumber> extends RawOpInputs<ParameterizedTruncatedNormal<U>> {
+    /**
+     * The shape of the output tensor. Batches are indexed by the 0th dimension.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * The mean parameter of each batch.
+     */
+    public final Operand<U> means;
+
+    /**
+     * The standard deviation parameter of each batch. Must be greater than 0.
+     */
+    public final Operand<U> stdevs;
+
+    /**
+     * The minimum cutoff. May be -infinity.
+     */
+    public final Operand<U> minvals;
+
+    /**
+     * The maximum cutoff. May be +infinity, and must be more than the minval
+     * for each batch.
+     */
+    public final Operand<U> maxvals;
+
+    /**
+     * If either `seed` or `seed2` are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * A second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    /**
+     * The type of the output.
+     */
+    public final DataType dtype;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new ParameterizedTruncatedNormal<>(op), op, Arrays.asList("seed", "seed2", "dtype", "T"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      means = (Operand<U>) op.input(inputIndex++);
+      stdevs = (Operand<U>) op.input(inputIndex++);
+      minvals = (Operand<U>) op.input(inputIndex++);
+      maxvals = (Operand<U>) op.input(inputIndex++);
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      dtype = op.attributes().getAttrType("dtype");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

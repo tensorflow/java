@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.math;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -76,9 +80,9 @@ public final class UnsortedSegmentMax<T extends TNumber> extends RawOp implement
    * Factory method to create a class wrapping a new UnsortedSegmentMax operation.
    *
    * @param scope current scope
-   * @param data the data value
+   * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
-   * @param numSegments the numSegments value
+   * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentMax} output and operands
    * @return a new instance of UnsortedSegmentMax
    */
@@ -108,5 +112,48 @@ public final class UnsortedSegmentMax<T extends TNumber> extends RawOp implement
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<UnsortedSegmentMax<T>> {
+    /**
+     * The data input
+     */
+    public final Operand<T> data;
+
+    /**
+     * A tensor whose shape is a prefix of {@code data.shape}.
+     */
+    public final Operand<? extends TNumber> segmentIds;
+
+    /**
+     * The numSegments input
+     */
+    public final Operand<? extends TNumber> numSegments;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * The Tnumsegments attribute
+     */
+    public final DataType Tnumsegments;
+
+    public Inputs(GraphOperation op) {
+      super(new UnsortedSegmentMax<>(op), op, Arrays.asList("T", "Tindices", "Tnumsegments"));
+      int inputIndex = 0;
+      data = (Operand<T>) op.input(inputIndex++);
+      segmentIds = (Operand<? extends TNumber>) op.input(inputIndex++);
+      numSegments = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      Tnumsegments = op.attributes().getAttrType("Tnumsegments");
+    }
   }
 }

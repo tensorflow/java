@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -125,6 +129,43 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
     public Options validateIndices(Boolean validateIndices) {
       this.validateIndices = validateIndices;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SetSize> {
+    /**
+     * 2D {@code Tensor}, indices of a {@code SparseTensor}.
+     */
+    public final Operand<TInt64> setIndices;
+
+    /**
+     * 1D {@code Tensor}, values of a {@code SparseTensor}.
+     */
+    public final Operand<? extends TType> setValues;
+
+    /**
+     * 1D {@code Tensor}, shape of a {@code SparseTensor}.
+     */
+    public final Operand<TInt64> setShape;
+
+    /**
+     * The validateIndices attribute
+     */
+    public final boolean validateIndices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SetSize(op), op, Arrays.asList("validate_indices", "T"));
+      int inputIndex = 0;
+      setIndices = (Operand<TInt64>) op.input(inputIndex++);
+      setValues = (Operand<? extends TType>) op.input(inputIndex++);
+      setShape = (Operand<TInt64>) op.input(inputIndex++);
+      validateIndices = op.attributes().getAttrBool("validate_indices");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

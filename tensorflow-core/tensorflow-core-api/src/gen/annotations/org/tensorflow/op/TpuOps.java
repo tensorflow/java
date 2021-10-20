@@ -62,11 +62,11 @@ public final class TpuOps {
    *  used to look up the program in the compilation cache.
    *  'may_modify_variables' indicates whether variables may be modified.
    *
-   * @param dynamicShapes the dynamicShapes value
-   * @param guaranteedConstants the guaranteedConstants value
-   * @param numComputations the value of the numComputations property
-   * @param function the value of the function property
-   * @param metadata the value of the metadata property
+   * @param dynamicShapes The dynamicShapes value
+   * @param guaranteedConstants The guaranteedConstants value
+   * @param numComputations The value of the numComputations attribute
+   * @param function The value of the function attribute
+   * @param metadata The value of the metadata attribute
    * @return a new instance of Compile
    */
   public Compile compile(Iterable<Operand<TInt64>> dynamicShapes,
@@ -81,7 +81,7 @@ public final class TpuOps {
    *  pending device interactions fail.
    *  <p>'compilation_status' is a serialized CompilationResultProto.
    *
-   * @param compilationStatus the compilationStatus value
+   * @param compilationStatus The compilationStatus value
    * @return a new instance of CompileSucceededAssert
    */
   public CompileSucceededAssert compileSucceededAssert(Operand<TString> compilationStatus) {
@@ -92,9 +92,9 @@ public final class TpuOps {
    * Op that loads and executes a TPU program on a TPU device.
    *  For the internal use of the distributed TPU compiler.
    *
-   * @param args the args value
-   * @param key the key value
-   * @param Tresults the value of the Tresults property
+   * @param args The args value
+   * @param key The key value
+   * @param Tresults The value of the Tresults attribute
    * @return a new instance of Execute
    */
   public Execute execute(Iterable<Operand<?>> args, Operand<TString> key,
@@ -112,11 +112,11 @@ public final class TpuOps {
    *  program outputs are consumed by these variables will not appear in the op
    *  output. For the internal use of the distributed TPU compiler.
    *
-   * @param args the args value
-   * @param key the key value
-   * @param Tresults the value of the Tresults property
-   * @param deviceVarReadsIndices the value of the deviceVarReadsIndices property
-   * @param deviceVarUpdatesIndices the value of the deviceVarUpdatesIndices property
+   * @param args The args value
+   * @param key The key value
+   * @param Tresults The value of the Tresults attribute
+   * @param deviceVarReadsIndices The value of the deviceVarReadsIndices attribute
+   * @param deviceVarUpdatesIndices The value of the deviceVarUpdatesIndices attribute
    * @return a new instance of ExecuteAndUpdateVariables
    */
   public ExecuteAndUpdateVariables executeAndUpdateVariables(Iterable<Operand<?>> args,
@@ -145,7 +145,7 @@ public final class TpuOps {
    *
    * @param <T> data type for {@code output} output
    * @param inputs A tensor which represents the full shape of partitioned tensors.
-   * @param numSplits the value of the numSplits property
+   * @param numSplits The value of the numSplits attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code TPUPartitionedOutput} output and operands
    * @return a new instance of PartitionedOutput

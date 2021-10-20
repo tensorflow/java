@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -96,5 +100,30 @@ public final class SparseFillEmptyRowsGrad<T extends TType> extends RawOp {
    */
   public Output<T> dDefaultValue() {
     return dDefaultValue;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SparseFillEmptyRowsGrad<T>> {
+    /**
+     * 1-D.  The reverse index map from SparseFillEmptyRows.
+     */
+    public final Operand<TInt64> reverseIndexMap;
+
+    /**
+     * 1-D.  The gradients from backprop.
+     */
+    public final Operand<T> gradValues;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseFillEmptyRowsGrad<>(op), op, Arrays.asList("T"));
+      int inputIndex = 0;
+      reverseIndexMap = (Operand<TInt64>) op.input(inputIndex++);
+      gradValues = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

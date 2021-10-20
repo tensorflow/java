@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.quantization;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -62,8 +65,8 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends RawOp {
    * @param inputs Values passed as inputs to the FakeQuantWithMinMaxVars operation, shape
    * same as {@code gradients}.
    * min, max: Quantization interval, floats of shape {@code [d]}.
-   * @param min the min value
-   * @param max the max value
+   * @param min The min value
+   * @param max The max value
    * @param options carries optional attribute values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannelGradient
    */
@@ -173,6 +176,52 @@ public final class FakeQuantWithMinMaxVarsPerChannelGradient extends RawOp {
     public Options narrowRange(Boolean narrowRange) {
       this.narrowRange = narrowRange;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxVarsPerChannelGradient> {
+    /**
+     * Backpropagated gradients above the FakeQuantWithMinMaxVars operation,
+     * shape one of: {@code [d]}, {@code [b, d]},  {@code [b, h, w, d]}.
+     */
+    public final Operand<TFloat32> gradients;
+
+    /**
+     * Values passed as inputs to the FakeQuantWithMinMaxVars operation, shape
+     * same as {@code gradients}.
+     * min, max: Quantization interval, floats of shape {@code [d]}.
+     */
+    public final Operand<TFloat32> inputs;
+
+    /**
+     * The min input
+     */
+    public final Operand<TFloat32> min;
+
+    /**
+     * The max input
+     */
+    public final Operand<TFloat32> max;
+
+    /**
+     * The bitwidth of the quantization; between 2 and 16, inclusive.
+     */
+    public final long numBits;
+
+    /**
+     * Whether to quantize into 2^num_bits - 1 distinct values.
+     */
+    public final boolean narrowRange;
+
+    public Inputs(GraphOperation op) {
+      super(new FakeQuantWithMinMaxVarsPerChannelGradient(op), op, Arrays.asList("num_bits", "narrow_range"));
+      int inputIndex = 0;
+      gradients = (Operand<TFloat32>) op.input(inputIndex++);
+      inputs = (Operand<TFloat32>) op.input(inputIndex++);
+      min = (Operand<TFloat32>) op.input(inputIndex++);
+      max = (Operand<TFloat32>) op.input(inputIndex++);
+      numBits = op.attributes().getAttrInt("num_bits");
+      narrowRange = op.attributes().getAttrBool("narrow_range");
     }
   }
 }

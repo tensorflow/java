@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -104,6 +107,32 @@ public final class MergeV2Checkpoints extends RawOp {
     public Options deleteOldDirs(Boolean deleteOldDirs) {
       this.deleteOldDirs = deleteOldDirs;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<MergeV2Checkpoints> {
+    /**
+     * prefixes of V2 checkpoints to merge.
+     */
+    public final Operand<TString> checkpointPrefixes;
+
+    /**
+     * scalar.  The desired final prefix.  Allowed to be the same
+     * as one of the checkpoint_prefixes.
+     */
+    public final Operand<TString> destinationPrefix;
+
+    /**
+     * see above.
+     */
+    public final boolean deleteOldDirs;
+
+    public Inputs(GraphOperation op) {
+      super(new MergeV2Checkpoints(op), op, Arrays.asList("delete_old_dirs"));
+      int inputIndex = 0;
+      checkpointPrefixes = (Operand<TString>) op.input(inputIndex++);
+      destinationPrefix = (Operand<TString>) op.input(inputIndex++);
+      deleteOldDirs = op.attributes().getAttrBool("delete_old_dirs");
     }
   }
 }

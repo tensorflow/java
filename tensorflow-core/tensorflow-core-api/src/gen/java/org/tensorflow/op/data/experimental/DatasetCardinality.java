@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.data.experimental;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
@@ -74,5 +77,18 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return cardinality;
+  }
+
+  public static class Inputs extends RawOpInputs<DatasetCardinality> {
+    /**
+     * A variant tensor representing the dataset to return cardinality for.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    public Inputs(GraphOperation op) {
+      super(new DatasetCardinality(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

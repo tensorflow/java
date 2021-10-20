@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.train;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -63,7 +67,7 @@ public final class ResourceSparseApplyFtrl extends RawOp {
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage the l2Shrinkage value
+   * @param l2Shrinkage The l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
    * @param options carries optional attribute values
    * @param <T> data type for {@code ResourceSparseApplyFtrlV2} output and operands
@@ -155,6 +159,99 @@ public final class ResourceSparseApplyFtrl extends RawOp {
     public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
       this.multiplyLinearByLr = multiplyLinearByLr;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<ResourceSparseApplyFtrl> {
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> var;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> accum;
+
+    /**
+     * Should be from a Variable().
+     */
+    public final Operand<? extends TType> linear;
+
+    /**
+     * The gradient.
+     */
+    public final Operand<T> grad;
+
+    /**
+     * A vector of indices into the first dimension of var and accum.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * Scaling factor. Must be a scalar.
+     */
+    public final Operand<T> lr;
+
+    /**
+     * L1 regularization. Must be a scalar.
+     */
+    public final Operand<T> l1;
+
+    /**
+     * L2 shrinkage regularization. Must be a scalar.
+     */
+    public final Operand<T> l2;
+
+    /**
+     * The l2Shrinkage input
+     */
+    public final Operand<T> l2Shrinkage;
+
+    /**
+     * Scaling factor. Must be a scalar.
+     */
+    public final Operand<T> lrPower;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    /**
+     * If `True`, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     */
+    public final boolean useLocking;
+
+    /**
+     * The multiplyLinearByLr attribute
+     */
+    public final boolean multiplyLinearByLr;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceSparseApplyFtrl(op), op, Arrays.asList("T", "Tindices", "use_locking", "multiply_linear_by_lr"));
+      int inputIndex = 0;
+      var = (Operand<? extends TType>) op.input(inputIndex++);
+      accum = (Operand<? extends TType>) op.input(inputIndex++);
+      linear = (Operand<? extends TType>) op.input(inputIndex++);
+      grad = (Operand<T>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      lr = (Operand<T>) op.input(inputIndex++);
+      l1 = (Operand<T>) op.input(inputIndex++);
+      l2 = (Operand<T>) op.input(inputIndex++);
+      l2Shrinkage = (Operand<T>) op.input(inputIndex++);
+      lrPower = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
+      useLocking = op.attributes().getAttrBool("use_locking");
+      multiplyLinearByLr = op.attributes().getAttrBool("multiply_linear_by_lr");
     }
   }
 }

@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -117,7 +121,7 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
    * @param scope current scope
    * @param a A CSRSparseMatrix.
    * @param b A CSRSparseMatrix.
-   * @param type the value of the type property
+   * @param type The value of the type attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code SparseMatrixSparseMatMul} output and operands
    * @return a new instance of SparseMatrixSparseMatMul
@@ -262,6 +266,55 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
     public Options adjointB(Boolean adjointB) {
       this.adjointB = adjointB;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<SparseMatrixSparseMatMul> {
+    /**
+     * A CSRSparseMatrix.
+     */
+    public final Operand<? extends TType> a;
+
+    /**
+     * A CSRSparseMatrix.
+     */
+    public final Operand<? extends TType> b;
+
+    /**
+     * The type attribute
+     */
+    public final DataType type;
+
+    /**
+     * Indicates whether `a` should be transposed.
+     */
+    public final boolean transposeA;
+
+    /**
+     * Indicates whether `b` should be transposed.
+     */
+    public final boolean transposeB;
+
+    /**
+     * Indicates whether `a` should be conjugate-transposed.
+     */
+    public final boolean adjointA;
+
+    /**
+     * Indicates whether `b` should be conjugate-transposed.
+     */
+    public final boolean adjointB;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseMatrixSparseMatMul(op), op, Arrays.asList("type", "transpose_a", "transpose_b", "adjoint_a", "adjoint_b"));
+      int inputIndex = 0;
+      a = (Operand<? extends TType>) op.input(inputIndex++);
+      b = (Operand<? extends TType>) op.input(inputIndex++);
+      type = op.attributes().getAttrType("type");
+      transposeA = op.attributes().getAttrBool("transpose_a");
+      transposeB = op.attributes().getAttrBool("transpose_b");
+      adjointA = op.attributes().getAttrBool("adjoint_a");
+      adjointB = op.attributes().getAttrBool("adjoint_b");
     }
   }
 }

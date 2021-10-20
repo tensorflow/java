@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -74,8 +78,8 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TNumber
    * @param minB The float value that the lowest quantized {@code b} value represents.
    * @param maxB The float value that the highest quantized {@code b} value represents.
    * @param minFreezedOutput The float value that the highest quantized output value after requantize.
-   * @param maxFreezedOutput the maxFreezedOutput value
-   * @param Toutput the value of the Toutput property
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param Toutput The value of the Toutput attribute
    * @param options carries optional attribute values
    * @param <W> data type for {@code QuantizedMatMulWithBiasAndReluAndRequantize} output and operands
    * @return a new instance of QuantizedMatMulWithBiasAndReluAndRequantize
@@ -216,6 +220,110 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TNumber
     public Options inputQuantMode(String inputQuantMode) {
       this.inputQuantMode = inputQuantMode;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedMatMulWithBiasAndReluAndRequantize<?>> {
+    /**
+     * A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
+     */
+    public final Operand<? extends TNumber> a;
+
+    /**
+     * A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
+     */
+    public final Operand<? extends TNumber> b;
+
+    /**
+     * A 1D bias tensor with size matching with inner dimension of {@code b} (after being
+     * transposed if {@code transposed_b} is non-zero).
+     */
+    public final Operand<? extends TNumber> bias;
+
+    /**
+     * The float value that the lowest quantized {@code a} value represents.
+     */
+    public final Operand<TFloat32> minA;
+
+    /**
+     * The float value that the highest quantized {@code a} value represents.
+     */
+    public final Operand<TFloat32> maxA;
+
+    /**
+     * The float value that the lowest quantized {@code b} value represents.
+     */
+    public final Operand<TFloat32> minB;
+
+    /**
+     * The float value that the highest quantized {@code b} value represents.
+     */
+    public final Operand<TFloat32> maxB;
+
+    /**
+     * The float value that the highest quantized output value after requantize.
+     */
+    public final Operand<TFloat32> minFreezedOutput;
+
+    /**
+     * The maxFreezedOutput input
+     */
+    public final Operand<TFloat32> maxFreezedOutput;
+
+    /**
+     * The T1 attribute
+     */
+    public final DataType T1;
+
+    /**
+     * The T2 attribute
+     */
+    public final DataType T2;
+
+    /**
+     * The Tbias attribute
+     */
+    public final DataType Tbias;
+
+    /**
+     * The Toutput attribute
+     */
+    public final DataType Toutput;
+
+    /**
+     * If true, `a` is transposed before multiplication.
+     */
+    public final boolean transposeA;
+
+    /**
+     * If true, `b` is transposed before multiplication.
+     */
+    public final boolean transposeB;
+
+    /**
+     * Input data quantization mode. Either MIN_FIRST(default) or SCALED.
+     */
+    public final String inputQuantMode;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedMatMulWithBiasAndReluAndRequantize<>(op), op, Arrays.asList("T1", "T2", "Tbias", "Toutput", "transpose_a", "transpose_b", "input_quant_mode"));
+      int inputIndex = 0;
+      a = (Operand<? extends TNumber>) op.input(inputIndex++);
+      b = (Operand<? extends TNumber>) op.input(inputIndex++);
+      bias = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minA = (Operand<TFloat32>) op.input(inputIndex++);
+      maxA = (Operand<TFloat32>) op.input(inputIndex++);
+      minB = (Operand<TFloat32>) op.input(inputIndex++);
+      maxB = (Operand<TFloat32>) op.input(inputIndex++);
+      minFreezedOutput = (Operand<TFloat32>) op.input(inputIndex++);
+      maxFreezedOutput = (Operand<TFloat32>) op.input(inputIndex++);
+      T1 = op.attributes().getAttrType("T1");
+      T2 = op.attributes().getAttrType("T2");
+      Tbias = op.attributes().getAttrType("Tbias");
+      Toutput = op.attributes().getAttrType("Toutput");
+      transposeA = op.attributes().getAttrBool("transpose_a");
+      transposeB = op.attributes().getAttrBool("transpose_b");
+      inputQuantMode = op.attributes().getAttrString("input_quant_mode");
     }
   }
 }

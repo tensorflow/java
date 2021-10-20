@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.random;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -84,5 +88,54 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp im
   @Override
   public Output<V> asOutput() {
     return output;
+  }
+
+  public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessRandomUniformInt<V>> {
+    /**
+     * The shape of the output tensor.
+     */
+    public final Operand<? extends TNumber> shape;
+
+    /**
+     * 2 seeds (shape [2]).
+     */
+    public final Operand<? extends TNumber> seed;
+
+    /**
+     * Minimum value (inclusive, scalar).
+     */
+    public final Operand<V> minval;
+
+    /**
+     * Maximum value (exclusive, scalar).
+     */
+    public final Operand<V> maxval;
+
+    /**
+     * The type of the output.
+     */
+    public final DataType dtype;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tseed attribute
+     */
+    public final DataType Tseed;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessRandomUniformInt<>(op), op, Arrays.asList("dtype", "T", "Tseed"));
+      int inputIndex = 0;
+      shape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minval = (Operand<V>) op.input(inputIndex++);
+      maxval = (Operand<V>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      T = op.attributes().getAttrType("T");
+      Tseed = op.attributes().getAttrType("Tseed");
+    }
   }
 }

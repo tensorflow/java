@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -99,5 +103,32 @@ public final class UnravelIndex<T extends TNumber> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<UnravelIndex<T>> {
+    /**
+     * An 0-D or 1-D {@code int} Tensor whose elements are indices into the
+     * flattened version of an array of dimensions dims.
+     */
+    public final Operand<T> indices;
+
+    /**
+     * An 1-D {@code int} Tensor. The shape of the array to use for unraveling
+     * indices.
+     */
+    public final Operand<T> dims;
+
+    /**
+     * The Tidx attribute
+     */
+    public final DataType Tidx;
+
+    public Inputs(GraphOperation op) {
+      super(new UnravelIndex<>(op), op, Arrays.asList("Tidx"));
+      int inputIndex = 0;
+      indices = (Operand<T>) op.input(inputIndex++);
+      dims = (Operand<T>) op.input(inputIndex++);
+      Tidx = op.attributes().getAttrType("Tidx");
+    }
   }
 }

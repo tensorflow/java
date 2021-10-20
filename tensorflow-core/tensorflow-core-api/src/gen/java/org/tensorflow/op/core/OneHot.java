@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -197,6 +201,55 @@ public final class OneHot<U extends TType> extends RawOp implements Operand<U> {
     public Options axis(Long axis) {
       this.axis = axis;
       return this;
+    }
+  }
+
+  public static class Inputs<U extends TType> extends RawOpInputs<OneHot<U>> {
+    /**
+     * A tensor of indices.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * A scalar defining the depth of the one hot dimension.
+     */
+    public final Operand<TInt32> depth;
+
+    /**
+     * A scalar defining the value to fill in output when {@code indices[j] = i}.
+     */
+    public final Operand<U> onValue;
+
+    /**
+     * A scalar defining the value to fill in output when {@code indices[j] != i}.
+     */
+    public final Operand<U> offValue;
+
+    /**
+     * The axis to fill (default: -1, a new inner-most axis).
+     */
+    public final long axis;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The TI attribute
+     */
+    public final DataType TI;
+
+    public Inputs(GraphOperation op) {
+      super(new OneHot<>(op), op, Arrays.asList("axis", "T", "TI"));
+      int inputIndex = 0;
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      depth = (Operand<TInt32>) op.input(inputIndex++);
+      onValue = (Operand<U>) op.input(inputIndex++);
+      offValue = (Operand<U>) op.input(inputIndex++);
+      axis = op.attributes().getAttrInt("axis");
+      T = op.attributes().getAttrType("T");
+      TI = op.attributes().getAttrType("TI");
     }
   }
 }

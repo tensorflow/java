@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -84,5 +87,18 @@ public final class DecodeGif extends RawOp implements Operand<TUint8> {
   @Override
   public Output<TUint8> asOutput() {
     return image;
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeGif> {
+    /**
+     * 0-D.  The GIF-encoded image.
+     */
+    public final Operand<TString> contents;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeGif(op), op, Arrays.asList());
+      int inputIndex = 0;
+      contents = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

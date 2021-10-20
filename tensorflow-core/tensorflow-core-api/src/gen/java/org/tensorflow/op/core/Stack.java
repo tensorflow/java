@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -133,6 +137,34 @@ public final class Stack<T extends TType> extends RawOp implements Operand<T> {
     public Options axis(Long axis) {
       this.axis = axis;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Stack<T>> {
+    /**
+     * Must be of same shape and type.
+     */
+    public final Iterable<Operand<T>> values;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * Dimension along which to pack.  Negative values wrap around, so the
+     * valid range is `[-(R+1), R+1)`.
+     */
+    public final long axis;
+
+    public Inputs(GraphOperation op) {
+      super(new Stack<>(op), op, Arrays.asList("T", "axis"));
+      int inputIndex = 0;
+      int valuesLength = op.inputListLength("values");
+      values = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, valuesLength));
+      inputIndex += valuesLength;
+      T = op.attributes().getAttrType("T");
+      axis = op.attributes().getAttrInt("axis");
     }
   }
 }

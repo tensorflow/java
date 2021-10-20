@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -57,5 +61,30 @@ public final class LookupTableRemove extends RawOp {
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     return new LookupTableRemove(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<LookupTableRemove> {
+    /**
+     * Handle to the table.
+     */
+    public final Operand<? extends TType> tableHandle;
+
+    /**
+     * Any shape.  Keys of the elements to remove.
+     */
+    public final Operand<? extends TType> keys;
+
+    /**
+     * The Tin attribute
+     */
+    public final DataType Tin;
+
+    public Inputs(GraphOperation op) {
+      super(new LookupTableRemove(op), op, Arrays.asList("Tin"));
+      int inputIndex = 0;
+      tableHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      keys = (Operand<? extends TType>) op.input(inputIndex++);
+      Tin = op.attributes().getAttrType("Tin");
+    }
   }
 }

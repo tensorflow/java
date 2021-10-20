@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -303,6 +307,81 @@ public final class FractionalMaxPool<T extends TNumber> extends RawOp {
     public Options seed2(Long seed2) {
       this.seed2 = seed2;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<FractionalMaxPool<T>> {
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.
+     */
+    public final Operand<T> value;
+
+    /**
+     * Pooling ratio for each dimension of `value`, currently only
+     * supports row and col dimension and should be >= 1.0. For example, a valid
+     * pooling ratio looks like [1.0, 1.44, 1.73, 1.0]. The first and last elements
+     * must be 1.0 because we don't allow pooling on batch and channels
+     * dimensions. 1.44 and 1.73 are pooling ratio on height and width dimensions
+     * respectively.
+     */
+    public final float[] poolingRatio;
+
+    /**
+     * When set to True, generates the pooling sequence in a
+     * pseudorandom fashion, otherwise, in a random fashion. Check paper [Benjamin
+     * Graham, Fractional Max-Pooling](http://arxiv.org/abs/1412.6071) for
+     * difference between pseudorandom and random.
+     */
+    public final boolean pseudoRandom;
+
+    /**
+     * When set to True, it means when pooling, the values at the boundary
+     * of adjacent pooling cells are used by both cells. For example:
+     *
+     * `index  0  1  2  3  4`
+     *
+     * `value  20 5  16 3  7`
+     *
+     * If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
+     * The result would be [20, 16] for fractional max pooling.
+     */
+    public final boolean overlapping;
+
+    /**
+     * When set to True, a fixed pooling region will be used when
+     * iterating over a FractionalMaxPool node in the computation graph. Mainly used
+     * in unit test to make FractionalMaxPool deterministic.
+     */
+    public final boolean deterministic;
+
+    /**
+     * If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     */
+    public final long seed;
+
+    /**
+     * An second seed to avoid seed collision.
+     */
+    public final long seed2;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new FractionalMaxPool<>(op), op, Arrays.asList("pooling_ratio", "pseudo_random", "overlapping", "deterministic", "seed", "seed2", "T"));
+      int inputIndex = 0;
+      value = (Operand<T>) op.input(inputIndex++);
+      poolingRatio = op.attributes().getAttrFloatList("pooling_ratio");
+      pseudoRandom = op.attributes().getAttrBool("pseudo_random");
+      overlapping = op.attributes().getAttrBool("overlapping");
+      deterministic = op.attributes().getAttrBool("deterministic");
+      seed = op.attributes().getAttrInt("seed");
+      seed2 = op.attributes().getAttrInt("seed2");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

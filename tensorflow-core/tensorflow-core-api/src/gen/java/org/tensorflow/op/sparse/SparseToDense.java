@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.sparse;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -147,6 +151,59 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
     public Options validateIndices(Boolean validateIndices) {
       this.validateIndices = validateIndices;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<SparseToDense<U>> {
+    /**
+     * 0-D, 1-D, or 2-D.  {@code sparse_indices[i]} contains the complete
+     * index where {@code sparse_values[i]} will be placed.
+     */
+    public final Operand<T> sparseIndices;
+
+    /**
+     * 1-D.  Shape of the dense output tensor.
+     */
+    public final Operand<T> outputShape;
+
+    /**
+     * 1-D.  Values corresponding to each row of {@code sparse_indices},
+     * or a scalar value to be used for all sparse indices.
+     */
+    public final Operand<U> sparseValues;
+
+    /**
+     * Scalar value to set for indices not specified in
+     * {@code sparse_indices}.
+     */
+    public final Operand<U> defaultValue;
+
+    /**
+     * If true, indices are checked to make sure they are sorted in
+     * lexicographic order and that there are no repeats.
+     */
+    public final boolean validateIndices;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new SparseToDense<>(op), op, Arrays.asList("validate_indices", "T", "Tindices"));
+      int inputIndex = 0;
+      sparseIndices = (Operand<T>) op.input(inputIndex++);
+      outputShape = (Operand<T>) op.input(inputIndex++);
+      sparseValues = (Operand<U>) op.input(inputIndex++);
+      defaultValue = (Operand<U>) op.input(inputIndex++);
+      validateIndices = op.attributes().getAttrBool("validate_indices");
+      T = op.attributes().getAttrType("T");
+      Tindices = op.attributes().getAttrType("Tindices");
     }
   }
 }

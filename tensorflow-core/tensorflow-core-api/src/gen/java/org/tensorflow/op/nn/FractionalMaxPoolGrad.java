@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
@@ -136,6 +140,66 @@ public final class FractionalMaxPoolGrad<T extends TNumber> extends RawOp implem
     public Options overlapping(Boolean overlapping) {
       this.overlapping = overlapping;
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<FractionalMaxPoolGrad<T>> {
+    /**
+     * Original input for {@code fractional_max_pool}
+     */
+    public final Operand<T> origInput;
+
+    /**
+     * Original output for {@code fractional_max_pool}
+     */
+    public final Operand<T> origOutput;
+
+    /**
+     * 4-D with shape {@code [batch, height, width, channels]}.  Gradients
+     * w.r.t. the output of {@code fractional_max_pool}.
+     */
+    public final Operand<T> outBackprop;
+
+    /**
+     * row pooling sequence, form pooling region with
+     * col_pooling_sequence.
+     */
+    public final Operand<TInt64> rowPoolingSequence;
+
+    /**
+     * column pooling sequence, form pooling region with
+     * row_pooling sequence.
+     */
+    public final Operand<TInt64> colPoolingSequence;
+
+    /**
+     * When set to True, it means when pooling, the values at the boundary
+     * of adjacent pooling cells are used by both cells. For example:
+     *
+     * `index  0  1  2  3  4`
+     *
+     * `value  20 5  16 3  7`
+     *
+     * If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
+     * The result would be [20, 16] for fractional max pooling.
+     */
+    public final boolean overlapping;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new FractionalMaxPoolGrad<>(op), op, Arrays.asList("overlapping", "T"));
+      int inputIndex = 0;
+      origInput = (Operand<T>) op.input(inputIndex++);
+      origOutput = (Operand<T>) op.input(inputIndex++);
+      outBackprop = (Operand<T>) op.input(inputIndex++);
+      rowPoolingSequence = (Operand<TInt64>) op.input(inputIndex++);
+      colPoolingSequence = (Operand<TInt64>) op.input(inputIndex++);
+      overlapping = op.attributes().getAttrBool("overlapping");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

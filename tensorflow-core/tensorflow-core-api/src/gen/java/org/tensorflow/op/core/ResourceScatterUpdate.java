@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -71,5 +75,42 @@ public final class ResourceScatterUpdate extends RawOp {
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     return new ResourceScatterUpdate(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<ResourceScatterUpdate> {
+    /**
+     * Should be from a {@code Variable} node.
+     */
+    public final Operand<? extends TType> resource;
+
+    /**
+     * A tensor of indices into the first dimension of {@code ref}.
+     */
+    public final Operand<? extends TNumber> indices;
+
+    /**
+     * A tensor of updated values to add to {@code ref}.
+     */
+    public final Operand<? extends TType> updates;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    /**
+     * The Tindices attribute
+     */
+    public final DataType Tindices;
+
+    public Inputs(GraphOperation op) {
+      super(new ResourceScatterUpdate(op), op, Arrays.asList("dtype", "Tindices"));
+      int inputIndex = 0;
+      resource = (Operand<? extends TType>) op.input(inputIndex++);
+      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      updates = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      Tindices = op.attributes().getAttrType("Tindices");
+    }
   }
 }

@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -62,13 +66,13 @@ public final class QuantizedBiasAdd<V extends TNumber> extends RawOp {
    * Factory method to create a class wrapping a new QuantizedBiasAdd operation.
    *
    * @param scope current scope
-   * @param input the input value
+   * @param input The input value
    * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
    * @param minBias The float value that the lowest quantized bias value represents.
    * @param maxBias The float value that the highest quantized bias value represents.
-   * @param outType the value of the outType property
+   * @param outType The value of the outType attribute
    * @param <V> data type for {@code QuantizedBiasAdd} output and operands
    * @return a new instance of QuantizedBiasAdd
    */
@@ -115,5 +119,66 @@ public final class QuantizedBiasAdd<V extends TNumber> extends RawOp {
    */
   public Output<TFloat32> maxOut() {
     return maxOut;
+  }
+
+  public static class Inputs extends RawOpInputs<QuantizedBiasAdd<?>> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TNumber> input;
+
+    /**
+     * A 1D bias Tensor with size matching the last dimension of 'input'.
+     */
+    public final Operand<? extends TNumber> bias;
+
+    /**
+     * The float value that the lowest quantized input value represents.
+     */
+    public final Operand<TFloat32> minInput;
+
+    /**
+     * The float value that the highest quantized input value represents.
+     */
+    public final Operand<TFloat32> maxInput;
+
+    /**
+     * The float value that the lowest quantized bias value represents.
+     */
+    public final Operand<TFloat32> minBias;
+
+    /**
+     * The float value that the highest quantized bias value represents.
+     */
+    public final Operand<TFloat32> maxBias;
+
+    /**
+     * The T1 attribute
+     */
+    public final DataType T1;
+
+    /**
+     * The T2 attribute
+     */
+    public final DataType T2;
+
+    /**
+     * The outType attribute
+     */
+    public final DataType outType;
+
+    public Inputs(GraphOperation op) {
+      super(new QuantizedBiasAdd<>(op), op, Arrays.asList("T1", "T2", "out_type"));
+      int inputIndex = 0;
+      input = (Operand<? extends TNumber>) op.input(inputIndex++);
+      bias = (Operand<? extends TNumber>) op.input(inputIndex++);
+      minInput = (Operand<TFloat32>) op.input(inputIndex++);
+      maxInput = (Operand<TFloat32>) op.input(inputIndex++);
+      minBias = (Operand<TFloat32>) op.input(inputIndex++);
+      maxBias = (Operand<TFloat32>) op.input(inputIndex++);
+      T1 = op.attributes().getAttrType("T1");
+      T2 = op.attributes().getAttrType("T2");
+      outType = op.attributes().getAttrType("out_type");
+    }
   }
 }

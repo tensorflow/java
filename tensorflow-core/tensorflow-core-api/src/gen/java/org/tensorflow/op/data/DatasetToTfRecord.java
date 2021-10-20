@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -63,5 +66,31 @@ public final class DatasetToTfRecord extends RawOp {
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     return new DatasetToTfRecord(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<DatasetToTfRecord> {
+    /**
+     * A variant tensor representing the dataset to write.
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A scalar string tensor representing the filename to use.
+     */
+    public final Operand<TString> filename;
+
+    /**
+     * A scalar string tensor containing either (i) the empty string (no
+     * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
+     */
+    public final Operand<TString> compressionType;
+
+    public Inputs(GraphOperation op) {
+      super(new DatasetToTfRecord(op), op, Arrays.asList());
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      filename = (Operand<TString>) op.input(inputIndex++);
+      compressionType = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

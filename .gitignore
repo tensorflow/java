@@ -56,3 +56,7 @@ gradleBuild
 **/target
 .tf_configure.bazelrc
 .clwb/
+
+# Deployment Files
+settings.xml
+pom.xml.asc

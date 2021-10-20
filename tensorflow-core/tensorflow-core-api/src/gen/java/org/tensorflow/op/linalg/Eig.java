@@ -17,15 +17,19 @@ limitations under the License.
 
 package org.tensorflow.op.linalg;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -68,7 +72,7 @@ public final class Eig<U extends TType> extends RawOp {
    *
    * @param scope current scope
    * @param input {@code Tensor} input of shape {@code [N, N]}.
-   * @param Tout the value of the Tout property
+   * @param Tout The value of the Tout attribute
    * @param options carries optional attribute values
    * @param <U> data type for {@code Eig} output and operands
    * @return a new instance of Eig
@@ -139,6 +143,38 @@ public final class Eig<U extends TType> extends RawOp {
     public Options computeV(Boolean computeV) {
       this.computeV = computeV;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<Eig<?>> {
+    /**
+     * {@code Tensor} input of shape {@code [N, N]}.
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * If `True` then eigenvectors will be computed and returned in `v`.
+     * Otherwise, only the eigenvalues will be computed.
+     */
+    public final boolean computeV;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The Tout attribute
+     */
+    public final DataType Tout;
+
+    public Inputs(GraphOperation op) {
+      super(new Eig<>(op), op, Arrays.asList("compute_v", "T", "Tout"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      computeV = op.attributes().getAttrBool("compute_v");
+      T = op.attributes().getAttrType("T");
+      Tout = op.attributes().getAttrType("Tout");
     }
   }
 }

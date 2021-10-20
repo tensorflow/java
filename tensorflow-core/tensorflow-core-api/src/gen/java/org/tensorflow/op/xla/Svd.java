@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -111,5 +115,45 @@ public final class Svd<T extends TType> extends RawOp {
    */
   public Output<T> v() {
     return v;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<Svd<T>> {
+    /**
+     * the input tensor.
+     */
+    public final Operand<T> a;
+
+    /**
+     * maximum number of sweep update, i.e., the whole lower triangular
+     * part or upper triangular part based on parameter lower. Heuristically, it has
+     * been argued that approximately log(min (M, N)) sweeps are needed in practice
+     * (Ref: Golub & van Loan "Matrix Computation").
+     */
+    public final long maxIter;
+
+    /**
+     * the tolerance ratio.
+     */
+    public final float epsilon;
+
+    /**
+     * a serialized xla::PrecisionConfig proto.
+     */
+    public final String precisionConfig;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    public Inputs(GraphOperation op) {
+      super(new Svd<>(op), op, Arrays.asList("max_iter", "epsilon", "precision_config", "T"));
+      int inputIndex = 0;
+      a = (Operand<T>) op.input(inputIndex++);
+      maxIter = op.attributes().getAttrInt("max_iter");
+      epsilon = op.attributes().getAttrFloat("epsilon");
+      precisionConfig = op.attributes().getAttrString("precision_config");
+      T = op.attributes().getAttrType("T");
+    }
   }
 }

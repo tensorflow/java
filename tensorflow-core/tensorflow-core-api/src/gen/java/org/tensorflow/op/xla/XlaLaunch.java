@@ -21,15 +21,18 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -59,11 +62,11 @@ public final class XlaLaunch extends RawOp implements Iterable<Operand<TType>> {
    * Factory method to create a class wrapping a new XlaLaunch operation.
    *
    * @param scope current scope
-   * @param constants the constants value
-   * @param args the args value
-   * @param resources the resources value
-   * @param Tresults the value of the Tresults property
-   * @param function the value of the function property
+   * @param constants The constants value
+   * @param args The args value
+   * @param resources The resources value
+   * @param Tresults The value of the Tresults attribute
+   * @param function The value of the function attribute
    * @return a new instance of XlaLaunch
    */
   @Endpoint(
@@ -94,5 +97,54 @@ public final class XlaLaunch extends RawOp implements Iterable<Operand<TType>> {
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) results.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<XlaLaunch> {
+    /**
+     * The constants input
+     */
+    public final Iterable<Operand<?>> constants;
+
+    /**
+     * The args input
+     */
+    public final Iterable<Operand<?>> args;
+
+    /**
+     * The resources input
+     */
+    public final Iterable<Operand<? extends TType>> resources;
+
+    /**
+     * The Tconstants attribute
+     */
+    public final DataType[] Tconstants;
+
+    /**
+     * The Targs attribute
+     */
+    public final DataType[] Targs;
+
+    /**
+     * The Tresults attribute
+     */
+    public final DataType[] Tresults;
+
+    public Inputs(GraphOperation op) {
+      super(new XlaLaunch(op), op, Arrays.asList("Tconstants", "Targs", "Tresults"));
+      int inputIndex = 0;
+      int constantsLength = op.inputListLength("constants");
+      constants = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, constantsLength));
+      inputIndex += constantsLength;
+      int argsLength = op.inputListLength("args");
+      args = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argsLength));
+      inputIndex += argsLength;
+      int resourcesLength = op.inputListLength("resources");
+      resources = Arrays.asList((Operand<? extends TType>[]) op.inputList(inputIndex, resourcesLength));
+      inputIndex += resourcesLength;
+      Tconstants = op.attributes().getAttrTypeList("Tconstants");
+      Targs = op.attributes().getAttrTypeList("Targs");
+      Tresults = op.attributes().getAttrTypeList("Tresults");
+    }
   }
 }

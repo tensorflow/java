@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.image;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -53,10 +57,10 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
    * Factory method to create a class wrapping a new ScaleAndTranslate operation.
    *
    * @param scope current scope
-   * @param images the images value
-   * @param sizeOutput the sizeOutput value
-   * @param scale the scale value
-   * @param translation the translation value
+   * @param images The images value
+   * @param sizeOutput The sizeOutput value
+   * @param scale The scale value
+   * @param translation The translation value
    * @param options carries optional attribute values
    * @return a new instance of ScaleAndTranslate
    */
@@ -149,6 +153,55 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
     public Options antialias(Boolean antialias) {
       this.antialias = antialias;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<ScaleAndTranslate> {
+    /**
+     * The images input
+     */
+    public final Operand<? extends TNumber> images;
+
+    /**
+     * The sizeOutput input
+     */
+    public final Operand<TInt32> sizeOutput;
+
+    /**
+     * The scale input
+     */
+    public final Operand<TFloat32> scale;
+
+    /**
+     * The translation input
+     */
+    public final Operand<TFloat32> translation;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The kernelType attribute
+     */
+    public final String kernelType;
+
+    /**
+     * The antialias attribute
+     */
+    public final boolean antialias;
+
+    public Inputs(GraphOperation op) {
+      super(new ScaleAndTranslate(op), op, Arrays.asList("T", "kernel_type", "antialias"));
+      int inputIndex = 0;
+      images = (Operand<? extends TNumber>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt32>) op.input(inputIndex++);
+      scale = (Operand<TFloat32>) op.input(inputIndex++);
+      translation = (Operand<TFloat32>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      kernelType = op.attributes().getAttrString("kernel_type");
+      antialias = op.attributes().getAttrBool("antialias");
     }
   }
 }

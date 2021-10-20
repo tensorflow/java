@@ -19,12 +19,14 @@ package org.tensorflow.op.estimator;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -149,5 +151,56 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
    */
   public List<Output<TFloat32>> rightNodeContribsList() {
     return rightNodeContribsList;
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesCalculateBestGainsPerFeature> {
+    /**
+     * A Rank 1 tensor (shape=[2]) to specify the range [first, last) of node ids to process within {@code stats_summary_list}. The nodes are iterated between the two nodes specified by the tensor, as like {@code for node_id in range(node_id_range[0], node_id_range[1])} (Note that the last index node_id_range[1] is exclusive).
+     */
+    public final Operand<TInt32> nodeIdRange;
+
+    /**
+     * A list of Rank 3 tensor (#shape=[max_splits, bucket, 2]) for accumulated stats summary (gradient/hessian) per node per buckets for each feature. The first dimension of the tensor is the maximum number of splits, and thus not all elements of it will be used, but only the indexes specified by node_ids will be used.
+     */
+    public final Iterable<Operand<TFloat32>> statsSummaryList;
+
+    /**
+     * l1 regularization factor on leaf weights, per instance based.
+     */
+    public final Operand<TFloat32> l1;
+
+    /**
+     * l2 regularization factor on leaf weights, per instance based.
+     */
+    public final Operand<TFloat32> l2;
+
+    /**
+     * adjustment to the gain, per leaf based.
+     */
+    public final Operand<TFloat32> treeComplexity;
+
+    /**
+     * minimum avg of hessians in a node before required for the node to be considered for splitting.
+     */
+    public final Operand<TFloat32> minNodeWeight;
+
+    /**
+     * the number of nodes that can be split in the whole tree. Used as a dimension of output tensors.
+     */
+    public final long maxSplits;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesCalculateBestGainsPerFeature(op), op, Arrays.asList("max_splits"));
+      int inputIndex = 0;
+      nodeIdRange = (Operand<TInt32>) op.input(inputIndex++);
+      int statsSummaryListLength = op.inputListLength("stats_summary_list");
+      statsSummaryList = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, statsSummaryListLength));
+      inputIndex += statsSummaryListLength;
+      l1 = (Operand<TFloat32>) op.input(inputIndex++);
+      l2 = (Operand<TFloat32>) op.input(inputIndex++);
+      treeComplexity = (Operand<TFloat32>) op.input(inputIndex++);
+      minNodeWeight = (Operand<TFloat32>) op.input(inputIndex++);
+      maxSplits = op.attributes().getAttrInt("max_splits");
+    }
   }
 }

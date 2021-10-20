@@ -17,10 +17,13 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -42,11 +45,11 @@ public final class LoadTPUEmbeddingProximalYogiParameters extends RawOp {
    * Factory method to create a class wrapping a new LoadTPUEmbeddingProximalYogiParameters operation.
    *
    * @param scope current scope
-   * @param parameters the parameters value
-   * @param v the v value
-   * @param m the m value
-   * @param numShards the value of the numShards property
-   * @param shardId the value of the shardId property
+   * @param parameters The parameters value
+   * @param v The v value
+   * @param m The m value
+   * @param numShards The value of the numShards attribute
+   * @param shardId The value of the shardId attribute
    * @param options carries optional attribute values
    * @return a new instance of LoadTPUEmbeddingProximalYogiParameters
    */
@@ -152,6 +155,61 @@ public final class LoadTPUEmbeddingProximalYogiParameters extends RawOp {
     public Options config(String config) {
       this.config = config;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<LoadTPUEmbeddingProximalYogiParameters> {
+    /**
+     * The parameters input
+     */
+    public final Operand<TFloat32> parameters;
+
+    /**
+     * The v input
+     */
+    public final Operand<TFloat32> v;
+
+    /**
+     * The m input
+     */
+    public final Operand<TFloat32> m;
+
+    /**
+     * The tableId attribute
+     */
+    public final long tableId;
+
+    /**
+     * The tableName attribute
+     */
+    public final String tableName;
+
+    /**
+     * The numShards attribute
+     */
+    public final long numShards;
+
+    /**
+     * The shardId attribute
+     */
+    public final long shardId;
+
+    /**
+     * The config attribute
+     */
+    public final String config;
+
+    public Inputs(GraphOperation op) {
+      super(new LoadTPUEmbeddingProximalYogiParameters(op), op, Arrays.asList("table_id", "table_name", "num_shards", "shard_id", "config"));
+      int inputIndex = 0;
+      parameters = (Operand<TFloat32>) op.input(inputIndex++);
+      v = (Operand<TFloat32>) op.input(inputIndex++);
+      m = (Operand<TFloat32>) op.input(inputIndex++);
+      tableId = op.attributes().getAttrInt("table_id");
+      tableName = op.attributes().getAttrString("table_name");
+      numShards = op.attributes().getAttrInt("num_shards");
+      shardId = op.attributes().getAttrInt("shard_id");
+      config = op.attributes().getAttrString("config");
     }
   }
 }

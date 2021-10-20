@@ -20,15 +20,18 @@ package org.tensorflow.op.io;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -145,6 +148,39 @@ public final class QueueDequeueUpTo extends RawOp implements Iterable<Operand<TT
     public Options timeoutMs(Long timeoutMs) {
       this.timeoutMs = timeoutMs;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<QueueDequeueUpTo> {
+    /**
+     * The handle to a queue.
+     */
+    public final Operand<? extends TType> handle;
+
+    /**
+     * The number of tuples to dequeue.
+     */
+    public final Operand<TInt32> n;
+
+    /**
+     * The type of each component in a tuple.
+     */
+    public final DataType[] componentTypes;
+
+    /**
+     * If the queue has fewer than n elements, this operation
+     * will block for up to timeout_ms milliseconds.
+     * Note: This option is not supported yet.
+     */
+    public final long timeoutMs;
+
+    public Inputs(GraphOperation op) {
+      super(new QueueDequeueUpTo(op), op, Arrays.asList("component_types", "timeout_ms"));
+      int inputIndex = 0;
+      handle = (Operand<? extends TType>) op.input(inputIndex++);
+      n = (Operand<TInt32>) op.input(inputIndex++);
+      componentTypes = op.attributes().getAttrTypeList("component_types");
+      timeoutMs = op.attributes().getAttrInt("timeout_ms");
     }
   }
 }

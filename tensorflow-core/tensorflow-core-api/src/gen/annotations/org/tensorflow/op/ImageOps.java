@@ -254,7 +254,7 @@ public final class ImageOps {
    * @param imageSize A 1-D tensor with value {@code [batch, image_height, image_width, depth]}
    *  containing the original image size. Both {@code image_height} and {@code image_width} need
    *  to be positive.
-   * @param T the value of the T property
+   * @param T The value of the T attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code CropAndResizeGradImage} output and operands
    * @return a new instance of CropAndResizeGradImage
@@ -456,7 +456,7 @@ public final class ImageOps {
    *
    * @param <T> data type for {@code image} output
    * @param contents 0-D.  The PNG-encoded image.
-   * @param dtype the value of the dtype property
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code DecodePng} output and operands
    * @return a new instance of DecodePng
@@ -710,8 +710,8 @@ public final class ImageOps {
    * @param images 4-D with shape {@code [batch, height, width, channels]}.
    * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
-   * @param min the min value
-   * @param max the max value
+   * @param min The min value
+   * @param max The max value
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizedResizeBilinear} output and operands
    * @return a new instance of QuantizedResizeBilinear
@@ -901,10 +901,10 @@ public final class ImageOps {
   /**
    * The ScaleAndTranslate operation
    *
-   * @param images the images value
-   * @param sizeOutput the sizeOutput value
-   * @param scale the scale value
-   * @param translation the translation value
+   * @param images The images value
+   * @param sizeOutput The sizeOutput value
+   * @param scale The scale value
+   * @param translation The translation value
    * @param options carries optional attribute values
    * @return a new instance of ScaleAndTranslate
    */

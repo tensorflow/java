@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -84,5 +87,19 @@ public final class DecodeJsonExample extends RawOp implements Operand<TString> {
   @Override
   public Output<TString> asOutput() {
     return binaryExamples;
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeJsonExample> {
+    /**
+     * Each string is a JSON object serialized according to the JSON
+     * mapping of the Example proto.
+     */
+    public final Operand<TString> jsonExamples;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeJsonExample(op), op, Arrays.asList());
+      int inputIndex = 0;
+      jsonExamples = (Operand<TString>) op.input(inputIndex++);
+    }
   }
 }

@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -62,10 +66,10 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
    * Factory method to create a class wrapping a new NcclAllReduce operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param reduction the value of the reduction property
-   * @param numDevices the value of the numDevices property
-   * @param sharedName the value of the sharedName property
+   * @param input The input value
+   * @param reduction The value of the reduction attribute
+   * @param numDevices The value of the numDevices attribute
+   * @param sharedName The value of the sharedName attribute
    * @param <T> data type for {@code NcclAllReduce} output and operands
    * @return a new instance of NcclAllReduce
    */
@@ -94,5 +98,42 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
   @Override
   public Output<T> asOutput() {
     return data;
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<NcclAllReduce<T>> {
+    /**
+     * The input input
+     */
+    public final Operand<T> input;
+
+    /**
+     * The reduction attribute
+     */
+    public final String reduction;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The numDevices attribute
+     */
+    public final long numDevices;
+
+    /**
+     * The sharedName attribute
+     */
+    public final String sharedName;
+
+    public Inputs(GraphOperation op) {
+      super(new NcclAllReduce<>(op), op, Arrays.asList("reduction", "T", "num_devices", "shared_name"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      reduction = op.attributes().getAttrString("reduction");
+      T = op.attributes().getAttrType("T");
+      numDevices = op.attributes().getAttrInt("num_devices");
+      sharedName = op.attributes().getAttrString("shared_name");
+    }
   }
 }

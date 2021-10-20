@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -121,6 +124,26 @@ public final class DecodeCompressed extends RawOp implements Operand<TString> {
     public Options compressionType(String compressionType) {
       this.compressionType = compressionType;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeCompressed> {
+    /**
+     * A Tensor of string which is compressed.
+     */
+    public final Operand<TString> bytes;
+
+    /**
+     * A scalar containing either (i) the empty string (no
+     * compression), (ii) "ZLIB", or (iii) "GZIP".
+     */
+    public final String compressionType;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeCompressed(op), op, Arrays.asList("compression_type"));
+      int inputIndex = 0;
+      bytes = (Operand<TString>) op.input(inputIndex++);
+      compressionType = op.attributes().getAttrString("compression_type");
     }
   }
 }

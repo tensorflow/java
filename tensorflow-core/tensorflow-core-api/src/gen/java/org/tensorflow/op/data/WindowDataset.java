@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -25,9 +27,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -92,7 +96,7 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new WindowDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
+   * @param inputDataset The inputDataset value
    * @param sizeOutput An integer scalar, representing the number of elements
    * of the input dataset to combine into a window. Must be positive.
    * @param shift An integer scalar, representing the number of input elements
@@ -103,8 +107,8 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
    * &quot;retain every input element&quot;.
    * @param dropRemainder A Boolean scalar, representing whether the last window should be
    * dropped if its size is smaller than {@code window_size}.
-   * @param outputTypes the value of the outputTypes property
-   * @param outputShapes the value of the outputShapes property
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @return a new instance of WindowDataset
    */
   @Endpoint(
@@ -142,5 +146,60 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  public static class Inputs extends RawOpInputs<WindowDataset> {
+    /**
+     * The inputDataset input
+     */
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * An integer scalar, representing the number of elements
+     * of the input dataset to combine into a window. Must be positive.
+     */
+    public final Operand<TInt64> sizeOutput;
+
+    /**
+     * An integer scalar, representing the number of input elements
+     * by which the window moves in each iteration.  Defaults to {@code size}.
+     * Must be positive.
+     */
+    public final Operand<TInt64> shift;
+
+    /**
+     * An integer scalar, representing the stride of the input elements
+     * in the sliding window. Must be positive. The default value of 1 means
+     * &quot;retain every input element&quot;.
+     */
+    public final Operand<TInt64> stride;
+
+    /**
+     * A Boolean scalar, representing whether the last window should be
+     * dropped if its size is smaller than {@code window_size}.
+     */
+    public final Operand<TBool> dropRemainder;
+
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
+    public Inputs(GraphOperation op) {
+      super(new WindowDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      int inputIndex = 0;
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      sizeOutput = (Operand<TInt64>) op.input(inputIndex++);
+      shift = (Operand<TInt64>) op.input(inputIndex++);
+      stride = (Operand<TInt64>) op.input(inputIndex++);
+      dropRemainder = (Operand<TBool>) op.input(inputIndex++);
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
+    }
   }
 }

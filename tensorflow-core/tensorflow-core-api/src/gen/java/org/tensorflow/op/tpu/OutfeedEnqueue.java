@@ -17,12 +17,16 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -52,5 +56,24 @@ public final class OutfeedEnqueue extends RawOp {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OutfeedEnqueue");
     opBuilder.addInput(input.asOutput());
     return new OutfeedEnqueue(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<OutfeedEnqueue> {
+    /**
+     * A tensor that will be inserted into the outfeed queue.
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    public Inputs(GraphOperation op) {
+      super(new OutfeedEnqueue(op), op, Arrays.asList("dtype"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+    }
   }
 }

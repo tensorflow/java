@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
@@ -24,9 +26,11 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -55,9 +59,9 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
    * Factory method to create a class wrapping a new TensorArrayPack operation.
    *
    * @param scope current scope
-   * @param handle the handle value
-   * @param flowIn the flowIn value
-   * @param dtype the value of the dtype property
+   * @param handle The handle value
+   * @param flowIn The flowIn value
+   * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code TensorArrayPack} output and operands
    * @return a new instance of TensorArrayPack
@@ -123,6 +127,37 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
     public Options elementShape(Shape elementShape) {
       this.elementShape = elementShape;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<TensorArrayPack<?>> {
+    /**
+     * The handle input
+     */
+    public final Operand<TString> handle;
+
+    /**
+     * The flowIn input
+     */
+    public final Operand<TFloat32> flowIn;
+
+    /**
+     * The dtype attribute
+     */
+    public final DataType dtype;
+
+    /**
+     * The elementShape attribute
+     */
+    public final Shape elementShape;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorArrayPack<>(op), op, Arrays.asList("dtype", "element_shape"));
+      int inputIndex = 0;
+      handle = (Operand<TString>) op.input(inputIndex++);
+      flowIn = (Operand<TFloat32>) op.input(inputIndex++);
+      dtype = op.attributes().getAttrType("dtype");
+      elementShape = op.attributes().getAttrShape("element_shape");
     }
   }
 }

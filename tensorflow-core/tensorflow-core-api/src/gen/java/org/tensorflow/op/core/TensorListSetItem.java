@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -51,9 +55,9 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
    * Factory method to create a class wrapping a new TensorListSetItem operation.
    *
    * @param scope current scope
-   * @param inputHandle the inputHandle value
-   * @param index the index value
-   * @param item the item value
+   * @param inputHandle The inputHandle value
+   * @param index The index value
+   * @param item The item value
    * @return a new instance of TensorListSetItem
    */
   @Endpoint(
@@ -81,5 +85,36 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
+  }
+
+  public static class Inputs extends RawOpInputs<TensorListSetItem> {
+    /**
+     * The inputHandle input
+     */
+    public final Operand<? extends TType> inputHandle;
+
+    /**
+     * The index input
+     */
+    public final Operand<TInt32> index;
+
+    /**
+     * The item input
+     */
+    public final Operand<? extends TType> item;
+
+    /**
+     * The elementDtype attribute
+     */
+    public final DataType elementDtype;
+
+    public Inputs(GraphOperation op) {
+      super(new TensorListSetItem(op), op, Arrays.asList("element_dtype"));
+      int inputIndex = 0;
+      inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
+      index = (Operand<TInt32>) op.input(inputIndex++);
+      item = (Operand<? extends TType>) op.input(inputIndex++);
+      elementDtype = op.attributes().getAttrType("element_dtype");
+    }
   }
 }

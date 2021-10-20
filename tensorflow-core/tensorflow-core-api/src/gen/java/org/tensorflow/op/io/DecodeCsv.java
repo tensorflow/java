@@ -20,15 +20,18 @@ package org.tensorflow.op.io;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -149,7 +152,7 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
    * @param selectCols the selectCols option
    * @return this Options instance.
    */
-  public static Options selectCols(Long[] selectCols) {
+  public static Options selectCols(Long... selectCols) {
     return new Options().selectCols(selectCols);
   }
 
@@ -238,6 +241,62 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     public Options selectCols(Long... selectCols) {
       this.selectCols = Arrays.asList(selectCols);
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<DecodeCsv> {
+    /**
+     * Each string is a record/row in the csv and all records should have
+     * the same format.
+     */
+    public final Operand<TString> records;
+
+    /**
+     * One tensor per column of the input record, with either a
+     * scalar default value for that column or an empty vector if the column is
+     * required.
+     */
+    public final Iterable<Operand<?>> recordDefaults;
+
+    /**
+     * The OUTTYPE attribute
+     */
+    public final DataType[] OUTTYPE;
+
+    /**
+     * char delimiter to separate fields in a record.
+     */
+    public final String fieldDelim;
+
+    /**
+     * If false, treats double quotation marks as regular
+     * characters inside of the string fields (ignoring RFC 4180, Section 2,
+     * Bullet 5).
+     */
+    public final boolean useQuoteDelim;
+
+    /**
+     * Additional string to recognize as NA/NaN.
+     */
+    public final String naValue;
+
+    /**
+     * The selectCols attribute
+     */
+    public final long[] selectCols;
+
+    public Inputs(GraphOperation op) {
+      super(new DecodeCsv(op), op, Arrays.asList("OUT_TYPE", "field_delim", "use_quote_delim", "na_value", "select_cols"));
+      int inputIndex = 0;
+      records = (Operand<TString>) op.input(inputIndex++);
+      int recordDefaultsLength = op.inputListLength("record_defaults");
+      recordDefaults = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, recordDefaultsLength));
+      inputIndex += recordDefaultsLength;
+      OUTTYPE = op.attributes().getAttrTypeList("OUT_TYPE");
+      fieldDelim = op.attributes().getAttrString("field_delim");
+      useQuoteDelim = op.attributes().getAttrBool("use_quote_delim");
+      naValue = op.attributes().getAttrString("na_value");
+      selectCols = op.attributes().getAttrIntList("select_cols");
     }
   }
 }

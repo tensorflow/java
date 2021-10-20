@@ -17,11 +17,14 @@ limitations under the License.
 
 package org.tensorflow.op.strings;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -135,6 +138,29 @@ public final class StringLength extends RawOp implements Operand<TInt32> {
     public Options unit(String unit) {
       this.unit = unit;
       return this;
+    }
+  }
+
+  public static class Inputs extends RawOpInputs<StringLength> {
+    /**
+     * The strings for which to compute the length for each element.
+     */
+    public final Operand<TString> input;
+
+    /**
+     * The unit that is counted to compute string length.  One of: `"BYTE"` (for
+     * the number of bytes in each string) or `"UTF8_CHAR"` (for the number of UTF-8
+     * encoded Unicode code points in each string).  Results are undefined
+     * if `unit=UTF8_CHAR` and the `input` strings do not contain structurally
+     * valid UTF-8.
+     */
+    public final String unit;
+
+    public Inputs(GraphOperation op) {
+      super(new StringLength(op), op, Arrays.asList("unit"));
+      int inputIndex = 0;
+      input = (Operand<TString>) op.input(inputIndex++);
+      unit = op.attributes().getAttrString("unit");
     }
   }
 }

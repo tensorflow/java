@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.xla;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -49,8 +53,8 @@ public final class XlaSendToHost extends RawOp {
    * Factory method to create a class wrapping a new XlaSendToHost operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param key the value of the key property
+   * @param input The input value
+   * @param key The value of the key attribute
    * @return a new instance of XlaSendToHost
    */
   @Endpoint(
@@ -61,5 +65,30 @@ public final class XlaSendToHost extends RawOp {
     opBuilder.addInput(input.asOutput());
     opBuilder.setAttr("key", key);
     return new XlaSendToHost(opBuilder.build());
+  }
+
+  public static class Inputs extends RawOpInputs<XlaSendToHost> {
+    /**
+     * The input input
+     */
+    public final Operand<? extends TType> input;
+
+    /**
+     * The Tinput attribute
+     */
+    public final DataType Tinput;
+
+    /**
+     * The key attribute
+     */
+    public final String key;
+
+    public Inputs(GraphOperation op) {
+      super(new XlaSendToHost(op), op, Arrays.asList("Tinput", "key"));
+      int inputIndex = 0;
+      input = (Operand<? extends TType>) op.input(inputIndex++);
+      Tinput = op.attributes().getAttrType("Tinput");
+      key = op.attributes().getAttrString("key");
+    }
   }
 }

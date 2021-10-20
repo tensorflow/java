@@ -20,11 +20,13 @@ package org.tensorflow.op.estimator;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TFloat32;
@@ -58,7 +60,7 @@ public final class BoostedTreesFlushQuantileSummaries extends RawOp implements I
    *
    * @param scope current scope
    * @param quantileStreamResourceHandle resource handle referring to a QuantileStreamResource.
-   * @param numFeatures the value of the numFeatures property
+   * @param numFeatures The value of the numFeatures attribute
    * @return a new instance of BoostedTreesFlushQuantileSummaries
    */
   @Endpoint(
@@ -85,5 +87,18 @@ public final class BoostedTreesFlushQuantileSummaries extends RawOp implements I
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TFloat32>> iterator() {
     return (Iterator) summaries.iterator();
+  }
+
+  public static class Inputs extends RawOpInputs<BoostedTreesFlushQuantileSummaries> {
+    /**
+     * resource handle referring to a QuantileStreamResource.
+     */
+    public final Operand<? extends TType> quantileStreamResourceHandle;
+
+    public Inputs(GraphOperation op) {
+      super(new BoostedTreesFlushQuantileSummaries(op), op, Arrays.asList());
+      int inputIndex = 0;
+      quantileStreamResourceHandle = (Operand<? extends TType>) op.input(inputIndex++);
+    }
   }
 }

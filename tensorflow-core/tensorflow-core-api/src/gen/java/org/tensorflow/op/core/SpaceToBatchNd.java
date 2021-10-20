@@ -17,14 +17,18 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -182,5 +186,52 @@ public final class SpaceToBatchNd<T extends TType> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  public static class Inputs<T extends TType> extends RawOpInputs<SpaceToBatchNd<T>> {
+    /**
+     * N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
+     * where spatial_shape has {@code M} dimensions.
+     */
+    public final Operand<T> input;
+
+    /**
+     * 1-D with shape {@code [M]}, all values must be &gt;= 1.
+     */
+    public final Operand<? extends TNumber> blockShape;
+
+    /**
+     * 2-D with shape {@code [M, 2]}, all values must be &gt;= 0.
+     * {@code paddings[i] = [pad_start, pad_end]} specifies the padding for input dimension
+     * {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is required that
+     * {@code block_shape[i]} divides {@code input_shape[i + 1] + pad_start + pad_end}.
+     */
+    public final Operand<? extends TNumber> paddings;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The TblockShape attribute
+     */
+    public final DataType TblockShape;
+
+    /**
+     * The Tpaddings attribute
+     */
+    public final DataType Tpaddings;
+
+    public Inputs(GraphOperation op) {
+      super(new SpaceToBatchNd<>(op), op, Arrays.asList("T", "Tblock_shape", "Tpaddings"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      blockShape = (Operand<? extends TNumber>) op.input(inputIndex++);
+      paddings = (Operand<? extends TNumber>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      TblockShape = op.attributes().getAttrType("Tblock_shape");
+      Tpaddings = op.attributes().getAttrType("Tpaddings");
+    }
   }
 }

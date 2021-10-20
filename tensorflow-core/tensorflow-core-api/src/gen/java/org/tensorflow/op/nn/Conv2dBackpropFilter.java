@@ -19,14 +19,17 @@ package org.tensorflow.op.nn;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -145,7 +148,7 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
    * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
    * @return this Options instance.
    */
-  public static Options explicitPaddings(Long[] explicitPaddings) {
+  public static Options explicitPaddings(Long... explicitPaddings) {
     return new Options().explicitPaddings(explicitPaddings);
   }
 
@@ -187,7 +190,7 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
    * dimensions must be 1.
    * @return this Options instance.
    */
-  public static Options dilations(Long[] dilations) {
+  public static Options dilations(Long... dilations) {
     return new Options().dilations(dilations);
   }
 
@@ -304,6 +307,89 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
     public Options dilations(Long... dilations) {
       this.dilations = Arrays.asList(dilations);
       return this;
+    }
+  }
+
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2dBackpropFilter<T>> {
+    /**
+     * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+     */
+    public final Operand<T> input;
+
+    /**
+     * An integer vector representing the tensor shape of {@code filter},
+     * where {@code filter} is a 4-D
+     * {@code [filter_height, filter_width, in_channels, out_channels]} tensor.
+     */
+    public final Operand<TInt32> filterSizes;
+
+    /**
+     * 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
+     * Gradients w.r.t. the output of the convolution.
+     */
+    public final Operand<T> outBackprop;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
+    /**
+     * The stride of the sliding window for each dimension of the input
+     * of the convolution. Must be in the same order as the dimension specified with
+     * format.
+     */
+    public final long[] strides;
+
+    /**
+     * The useCudnnOnGpu attribute
+     */
+    public final boolean useCudnnOnGpu;
+
+    /**
+     * The type of padding algorithm to use.
+     */
+    public final String padding;
+
+    /**
+     * If `padding` is `"EXPLICIT"`, the list of explicit padding amounts. For the ith
+     * dimension, the amount of padding inserted before and after the dimension is
+     * `explicit_paddings[2 * i]` and `explicit_paddings[2 * i + 1]`, respectively. If
+     * `padding` is not `"EXPLICIT"`, `explicit_paddings` must be empty.
+     */
+    public final long[] explicitPaddings;
+
+    /**
+     * Specify the data format of the input and output data. With the
+     * default format "NHWC", the data is stored in the order of:
+     *     [batch, in_height, in_width, in_channels].
+     * Alternatively, the format could be "NCHW", the data storage order of:
+     *     [batch, in_channels, in_height, in_width].
+     */
+    public final String dataFormat;
+
+    /**
+     * 1-D tensor of length 4.  The dilation factor for each dimension of
+     * `input`. If set to k > 1, there will be k-1 skipped cells between each filter
+     * element on that dimension. The dimension order is determined by the value of
+     * `data_format`, see above for details. Dilations in the batch and depth
+     * dimensions must be 1.
+     */
+    public final long[] dilations;
+
+    public Inputs(GraphOperation op) {
+      super(new Conv2dBackpropFilter<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
+      int inputIndex = 0;
+      input = (Operand<T>) op.input(inputIndex++);
+      filterSizes = (Operand<TInt32>) op.input(inputIndex++);
+      outBackprop = (Operand<T>) op.input(inputIndex++);
+      T = op.attributes().getAttrType("T");
+      strides = op.attributes().getAttrIntList("strides");
+      useCudnnOnGpu = op.attributes().getAttrBool("use_cudnn_on_gpu");
+      padding = op.attributes().getAttrString("padding");
+      explicitPaddings = op.attributes().getAttrIntList("explicit_paddings");
+      dataFormat = op.attributes().getAttrString("data_format");
+      dilations = op.attributes().getAttrIntList("dilations");
     }
   }
 }

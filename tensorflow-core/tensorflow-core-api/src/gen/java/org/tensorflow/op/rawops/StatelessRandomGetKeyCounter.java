@@ -17,13 +17,17 @@ limitations under the License.
 
 package org.tensorflow.op.rawops;
 
+import java.util.Arrays;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -81,5 +85,24 @@ public final class StatelessRandomGetKeyCounter extends RawOp {
    */
   public Output<? extends TType> counter() {
     return counter;
+  }
+
+  public static class Inputs extends RawOpInputs<StatelessRandomGetKeyCounter> {
+    /**
+     * 2 seeds (shape [2]).
+     */
+    public final Operand<? extends TNumber> seed;
+
+    /**
+     * The Tseed attribute
+     */
+    public final DataType Tseed;
+
+    public Inputs(GraphOperation op) {
+      super(new StatelessRandomGetKeyCounter(op), op, Arrays.asList("Tseed"));
+      int inputIndex = 0;
+      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
+      Tseed = op.attributes().getAttrType("Tseed");
+    }
   }
 }
