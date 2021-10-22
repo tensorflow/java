@@ -14,14 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the mean of absolute difference between labels and predictions.
@@ -41,35 +42,52 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * @param <T> The data type for the metric result.
  */
-public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class MeanSquaredError<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
+
+  /**
+   * Creates a Mean Absolute Error metric using {@link Class#getSimpleName()} for the metric name.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public MeanSquaredError(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
 
   /**
    * Creates a Mean Absolute Error metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  public MeanSquaredError(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public MeanSquaredError(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
   }
 
   /**
    * Computes the mean squared error between the labels and predictions.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the truth values or labels. Must be the same shape as predictions.
    * @param predictions the predictions
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return Computes the mean squared error between the labels and predictions.
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.meanSquaredError(getTF(), tLabels, tPredictions);
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<U> tLabels = cast(tf, labels, resultType);
+    Operand<U> tPredictions = cast(tf, predictions, resultType);
+    return Losses.meanSquaredError(tf, tLabels, tPredictions);
   }
 }

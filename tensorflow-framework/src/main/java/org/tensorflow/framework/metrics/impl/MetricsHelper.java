@@ -24,15 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.framework.utils.SparseTensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.Squeeze;
@@ -50,7 +51,7 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * These are helper methods for Metrics and will be module private when Java modularity is applied
- * to TensorFlow Java. These methods should not be used outside of the metrics packages.
+ * to TensorFlow Java. These methods should not be used outside the metrics packages.
  */
 public class MetricsHelper {
   public static final float NEG_INF = -1e10f;
@@ -64,12 +65,14 @@ public class MetricsHelper {
    * scalar, or the same rank as the target values, with each dimension either 1, or the same as the
    * corresponding values dimension.
    *
-   * @param tf the TensorFlow Ops
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param sampleWeights the sample weights.
    * @param values the values to which weights are applied.
+   * @param <T> the data type for the parameters and result
    * @return {@code Operation} with control dependencies to ensure {@code sampleWeight} can be
    *     broadcast to {@code values}
-   * @param <T> the type of Operand
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @throws NotBroadcastableException If static checks determine {@code sampleWeights} has an
    *     incorrect shape that prohibit broadcasting to {@code values}
    */
@@ -154,12 +157,14 @@ public class MetricsHelper {
   /**
    * Gets an operand that tests if the shapes have the same rank and valid dimensions.
    *
-   * @param tf the TensorFlow Ops
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param weightsRank the operand for the rank of the sample weights
    * @param weightsShape the operand for the shape of the sample weights
    * @param valuesRank the operand for the rank of the sample weights
    * @param valuesShape the operand for the shape of the sample weights
    * @param <T> the data type for the operands
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return a boolean operand to determine if the Shape is scalar or not.
    */
   private static <T extends TNumber> Operand<TBool> canBroadcastNonscalarShapes(
@@ -176,10 +181,12 @@ public class MetricsHelper {
   /**
    * Gets an operand that tests if the shapes have valid dimensions or not.
    *
-   * @param tf the TensorFlow Ops
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param weightsShape the operand for the shape of the sample weights
    * @param valuesShape the operand for the shape of the values
    * @param <T> the data type for the operands
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return a boolean operand to determine if the shapes have valid dimensions or not.
    */
   private static <T extends TNumber> Operand<TBool> canBroadcastDims(
@@ -190,7 +197,8 @@ public class MetricsHelper {
         tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     Operand<T> weightsShape2D = tf.expandDims(weightsShape, tf.constant(-1));
 
-    Operand<T> diffResult = SetsOps.difference(tf, weightsShape2D, validDims);
+    FrameworkOps fops = FrameworkOps.create(tf);
+    Operand<T> diffResult = fops.sets.difference(weightsShape2D, validDims);
     Operand<TInt32> numInvalidDims = tf.size(diffResult);
     return tf.math.equal(tf.constant(0), numInvalidDims);
   }
@@ -198,10 +206,12 @@ public class MetricsHelper {
   /**
    * Broadcast {@code weights} to the same shape as {@code values}.
    *
-   * @param tf the TensorFlow ops
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment. the TensorFlow ops
    * @param weights Operand whose shape is broadcastable to {@code values}.
    * @param values Operand of any shape
    * @param <T> the type of Operands
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return {@code weights} broadcast to {@code values} shape
    */
   public static <T extends TNumber> Operand<T> broadcastWeights(
@@ -306,14 +316,12 @@ public class MetricsHelper {
    * LossesHelper#removeSqueezableDimensions(Ops, Operand, Operand)}. {@code sampleWeight} is then
    * broadcast to the shape of {@code predictions}.
    *
-   * @param tf the TensorFlow Ops
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param variablesToUpdate map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding variables to update as values. If {@code multiLabel}, then the variable
    *     shapes are (T, D), where T is the number of thresholds and D is the number of classes
    *     (after slicing by {@code classIndex}, if provided). If {@code multiLabels}, then the
    *     variable shapes are (T).
-   * @param varInitializers map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding initializer Operands to for {@code variablesToUpdate}.
    * @param labels the labels. Will be cast to {@link TBool}. Shape (N, Cx, L1?), where N is the
    *     number of examples, Cx is zero or more class dimensions, and L1 is a potential extra
    *     dimension of size 1 that would be squeezed.
@@ -338,6 +346,8 @@ public class MetricsHelper {
    *     the 0th dimension (the examples dimension) of {@code predictions}. May be null. Must be
    *     null if {@code multiLabel}.
    * @param <T> the data type for the variables
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @throws IllegalArgumentException If {@code predictions} and {@code labels} have mismatched
    *     shapes, or if {@code sampleWeight} is not null and its shape doesn't match {@code
    *     predictions}, or if {@code multiLabel && labelWeights != null}..
@@ -347,7 +357,6 @@ public class MetricsHelper {
   public static <T extends TNumber> List<Op> updateConfusionMatrixVariables(
       Ops tf,
       Map<ConfusionMatrixEnum, Variable<T>> variablesToUpdate,
-      Map<ConfusionMatrixEnum, Assign<T>> varInitializers,
       Operand<T> labels,
       Operand<T> predictions,
       Operand<TFloat32> thresholds,
@@ -594,13 +603,7 @@ public class MetricsHelper {
                 Operand[] op = loopVars.get(c);
                 // op[0] = label, op[1] == prediction
                 controlOps.add(
-                    weightedAssignAdd(
-                        tf,
-                        op[0],
-                        op[1],
-                        weightsTiledF,
-                        variablesToUpdate.get(c),
-                        varInitializers.get(c)));
+                    weightedAssignAdd(tf, op[0], op[1], weightsTiledF, variablesToUpdate.get(c)));
               }
             });
 
@@ -611,13 +614,14 @@ public class MetricsHelper {
    * Creates an Operand that adds the values by taking the logical and of labels and predictions to
    * the specified confusion matrix variable.
    *
-   * @param tf The TensorFlow Ops
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment. The TensorFlow Ops
    * @param labels the labels
    * @param predictions the predictions
    * @param weights the weights applied to the logical and result, may be null
    * @param variable the variable to update
-   * @param initializer the variable initializer to be applied to the variable, may be null.
    * @param <T> the data type for the variable.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return an Operand that updates the variable.
    */
   private static <T extends TNumber> Operand<T> weightedAssignAdd(
@@ -625,8 +629,7 @@ public class MetricsHelper {
       Operand<TBool> labels,
       Operand<TBool> predictions,
       Operand<T> weights,
-      Variable<T> variable,
-      Assign<T> initializer) {
+      Variable<T> variable) {
     Class<T> type = variable.type();
     Operand<T> labelAndPred = cast(tf, tf.math.logicalAnd(labels, predictions), type);
 
@@ -638,16 +641,7 @@ public class MetricsHelper {
     // else:
     //   sum across ND, leaving shape (T)
     Operand<T> valueSum = tf.reduceSum(labelAndPred, tf.constant(1));
-    Operand<T> assignAdd;
-    if (initializer != null) {
-      Ops tfc =
-          tf.withSubScope("weightedAssignAdd")
-              .withControlDependencies(Collections.singletonList(initializer));
-      assignAdd = tfc.assignAdd(variable, valueSum);
-    } else {
-      assignAdd = tf.assignAdd(variable, valueSum);
-    }
-    return assignAdd;
+    return tf.assignAdd(variable, valueSum);
   }
 
   /**
@@ -656,7 +650,7 @@ public class MetricsHelper {
    * <p>Used for computing top-k prediction values in dense labels (which has the same shape as
    * predictions) for recall and precision top-k metrics.
    *
-   * @param tf The TensorFlow Ops
+   * @param tf the TensorFlow Ops
    * @param x the tensor with any dimensions to filter
    * @param topK the number of values to keep.
    * @param <T> the data type for x and the return value.

@@ -16,9 +16,10 @@ package org.tensorflow.framework.metrics;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
@@ -33,8 +34,8 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class BinaryAccuracy<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
   /** the default threshold value for deciding whether prediction values are 1 or 0 */
   public static final float DEFAULT_THRESHOLD = 0.5f;
 
@@ -45,40 +46,37 @@ public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    * Creates a BinaryAccuracy Metric using {@link Class#getSimpleName()} for the metric name and
    * {@link #DEFAULT_THRESHOLD} for the threshold value.
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public BinaryAccuracy(Ops tf, long seed, Class<T> type) {
-    this(tf, null, DEFAULT_THRESHOLD, seed, type);
+  public BinaryAccuracy(long seed, Class<T> type) {
+    this(null, DEFAULT_THRESHOLD, seed, type);
   }
 
   /**
    * Creates a BinaryAccuracy Metric using {@link Class#getSimpleName()} for the metric name
    *
-   * @param tf the TensorFlow Ops
    * @param threshold a threshold for deciding whether prediction values are 1 or 0
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public BinaryAccuracy(Ops tf, float threshold, long seed, Class<T> type) {
-    this(tf, null, threshold, seed, type);
+  public BinaryAccuracy(float threshold, long seed, Class<T> type) {
+    this(null, threshold, seed, type);
   }
 
   /**
    * Creates a BinaryAccuracy Metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param threshold a threshold for deciding whether prediction values are 1 or 0
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public BinaryAccuracy(Ops tf, String name, float threshold, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public BinaryAccuracy(String name, float threshold, long seed, Class<T> type) {
+    super(name, seed, type);
     this.threshold = threshold;
     setLoss(this);
   }
@@ -86,19 +84,24 @@ public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
   /**
    * Calculates how often predictions match binary labels.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
    * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return Binary accuracy values. shape = {@code [batch_size, d0, .. dN-1]}
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    Operand<T> thresholdCast = cast(getTF(), getTF().constant(threshold), getResultType());
-    tPredictions =
-        cast(getTF(), getTF().math.greater(tPredictions, thresholdCast), getResultType());
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    return cast(getTF(), getTF().math.equal(tLabels, tPredictions), getResultType());
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<T> tPredictions = cast(tf, predictions, getInternalType());
+    Operand<T> thresholdCast = cast(tf, tf.constant(threshold), getInternalType());
+    tPredictions = cast(tf, tf.math.greater(tPredictions, thresholdCast), getInternalType());
+    Operand<T> tLabels = cast(tf, labels, getInternalType());
+    return cast(tf, tf.math.equal(tLabels, tPredictions), resultType);
   }
 }

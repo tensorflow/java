@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -33,11 +36,9 @@ class MeanAbsoluteErrorTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       MeanAbsoluteError<TFloat64> instance =
-          new MeanAbsoluteError<>(tf, "MAE_testUnweighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      session.evaluate(0.0f, instance.getTotal());
-      session.evaluate(0f, instance.getCount());
-      session.evaluate(0.f, instance.getCount());
+          new MeanAbsoluteError<>("MAE_testUnweighted", 1001L, TFloat64.class);
+      assertNull(instance.getTotal());
+      assertNull(instance.getCount());
 
       int[] trueArray = {
         0, 1, 0, 1, 0,
@@ -54,16 +55,16 @@ class MeanAbsoluteErrorTest {
       Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(4, 5)));
       Operand<TFloat32> yPrediction =
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(4, 5)));
-      Op op = instance.updateState(yTrue, yPrediction, null);
+      Op op = instance.updateState(tf, yTrue, yPrediction, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       session.evaluate(2.0, total);
       session.evaluate(4, count);
       session.evaluate(0.5, result);
 
-      session.run(instance.resetStates());
+      session.run(instance.resetStates(tf));
       session.evaluate(0.0, instance.getTotal());
       session.evaluate(0, instance.getCount());
       session.evaluate(0., instance.getCount());
@@ -75,11 +76,9 @@ class MeanAbsoluteErrorTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       MeanAbsoluteError<TFloat64> instance =
-          new MeanAbsoluteError<>(tf, "MAE_testWeighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      session.evaluate(0.0, instance.getTotal());
-      session.evaluate(0, instance.getCount());
-      session.evaluate(0., instance.getCount());
+          new MeanAbsoluteError<>("MAE_testWeighted", 1001L, TFloat64.class);
+      assertNull(instance.getTotal());
+      assertNull(instance.getCount());
 
       int[] trueArray = {
         0, 1, 0, 1, 0,
@@ -98,19 +97,28 @@ class MeanAbsoluteErrorTest {
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(4, 5)));
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {1., 1.5, 2., 2.5});
-      Op op = instance.updateState(yTrue, yPrediction, sampleWeight);
+      Op op = instance.updateState(tf, yTrue, yPrediction, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       session.evaluate(3.8, total);
       session.evaluate(7, count);
       session.evaluate(0.54285, result);
 
-      session.run(instance.resetStates());
+      session.run(instance.resetStates(tf));
       session.evaluate(0.0, instance.getTotal());
       session.evaluate(0, instance.getCount());
       session.evaluate(0., instance.getCount());
+    }
+  }
+
+  @Test
+  public void testEagerEnvironment() {
+    try (TestSession session = TestSession.createTestSession(TestSession.Mode.EAGER)) {
+      Ops tf = session.getTF();
+      MeanAbsoluteError<TFloat64> instance = new MeanAbsoluteError<>("MAE", 1001L, TFloat64.class);
+      assertThrows(IllegalArgumentException.class, () -> instance.updateState(tf, null, null));
     }
   }
 }

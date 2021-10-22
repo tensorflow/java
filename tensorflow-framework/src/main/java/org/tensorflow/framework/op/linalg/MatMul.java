@@ -21,7 +21,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.math.Conj;
 import org.tensorflow.op.sparse.SparseMatMul;
-import org.tensorflow.op.train.BatchMatMul;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -234,14 +233,16 @@ public class MatMul {
       // use adjoint instead. Conj() is a noop for real matrices.
       if (transposeA) {
         a = Conj.create(scope, a);
-        adjointA = true;
       }
       if (transposeB) {
         b = Conj.create(scope, b);
-        adjointB = true;
       }
-      return BatchMatMul.create(
-          lscope, a, b, a.type(), BatchMatMul.adjX(adjointA), BatchMatMul.adjY(adjointB));
+      return org.tensorflow.op.linalg.MatMul.create(
+          lscope,
+          a,
+          b,
+          org.tensorflow.op.linalg.MatMul.transposeA(transposeA),
+          org.tensorflow.op.linalg.MatMul.transposeB(transposeB));
     }
 
     // Neither matmul nor sparse_matmul support adjoint, so we conjugate

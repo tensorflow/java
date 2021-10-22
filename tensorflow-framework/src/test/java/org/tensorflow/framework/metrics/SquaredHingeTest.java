@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -33,24 +35,20 @@ class SquaredHingeTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SquaredHinge<TFloat32> instance =
-          new SquaredHinge<>(tf, "SCE_testUnweighted", 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new SquaredHinge<>("SCE_testUnweighted", 1001L, TFloat32.class);
       int[] trueArray = {
         0, 1, 0, 1,
         0, 0, 1, 1
       };
-      float[] predArray = {
-        -0.3f, 0.2f, -0.1f, 1.6f,
-        -0.25f, -1.f, 0.5f, 0.6f
-      };
+      float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       session.evaluate(0.72812f, total);
       session.evaluate(2f, count);
       session.evaluate(0.3640625f, result);
@@ -62,29 +60,34 @@ class SquaredHingeTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SquaredHinge<TFloat64> instance =
-          new SquaredHinge<>(tf, "SCE_testWeighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new SquaredHinge<>("SCE_testWeighted", 1001L, TFloat64.class);
       int[] trueArray = {
         0, 1, 0, 1,
         0, 0, 1, 1
       };
-      double[] predArray = {
-        -0.3, 0.2, -0.1, 1.6,
-        -0.25, -1., 0.5, 0.6
-      };
+      double[] predArray = {-0.3, 0.2, -0.1, 1.6, -0.25, -1., 0.5, 0.6};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
       Operand<TFloat64> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {1.5f, 2.f});
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       session.evaluate(1.2137499, total);
       session.evaluate(3.5, count);
       session.evaluate(0.3467857, result);
+    }
+  }
+
+  @Test
+  public void testEagerEnvironment() {
+    try (TestSession session = TestSession.createTestSession(TestSession.Mode.EAGER)) {
+      Ops tf = session.getTF();
+      SquaredHinge<TFloat64> instance = new SquaredHinge<>("SCE", 1001L, TFloat64.class);
+      assertThrows(IllegalArgumentException.class, () -> instance.updateState(tf, null, null));
     }
   }
 }
