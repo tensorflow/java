@@ -698,19 +698,21 @@ public final class OperatorProcessor extends AbstractProcessor {
       MethodSpec.Builder ctorBuilder,
       List<OpsSpec> groups,
       boolean isTopClass) {
-    groups.forEach(
-        group -> {
-          classBuilder.addField(
-              FieldSpec.builder(group.className, group.fieldName)
-                  .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                  .build());
-          ctorBuilder
-              .addStatement(
-                  "$L = new $T(" + (isTopClass ? "this" : "ops") + ")",
-                  group.fieldName,
-                  group.className)
-              .build();
-        });
+    groups.stream()
+        .sorted(Comparator.comparing(g -> g.fieldName))
+        .forEach(
+            group -> {
+              classBuilder.addField(
+                  FieldSpec.builder(group.className, group.fieldName)
+                      .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                      .build());
+              ctorBuilder
+                  .addStatement(
+                      "$L = new $T(" + (isTopClass ? "this" : "ops") + ")",
+                      group.fieldName,
+                      group.className)
+                  .build();
+            });
   }
 
   private static AnnotationMirror getAnnotationMirror(Element element, Name annotationName) {
