@@ -29,10 +29,10 @@ public class Names {
 
   public static final ClassName Operator = ClassName.get(OpPackage + ".annotation", "Operator");
   public static final ClassName Endpoint = ClassName.get(OpPackage + ".annotation", "Endpoint");
-  public static final ClassName GeneratedOpMetadata =
-      ClassName.get(OpPackage + ".annotation", "GeneratedOpMetadata");
-  public static final ClassName GeneratedOpInputsMetadata =
-      ClassName.get(OpPackage + ".annotation", "GeneratedOpInputsMetadata");
+  public static final ClassName OpMetadata =
+      ClassName.get(OpPackage + ".annotation", "OpMetadata");
+  public static final ClassName OpInputsMetadata =
+      ClassName.get(OpPackage + ".annotation", "OpInputsMetadata");
 
   public static final ClassName TType = ClassName.get(TypesPackage + ".family", "TType");
   public static final ClassName TString = ClassName.get(TypesPackage, "TString");

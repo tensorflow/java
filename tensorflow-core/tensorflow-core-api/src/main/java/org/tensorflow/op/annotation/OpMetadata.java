@@ -24,16 +24,17 @@ import java.lang.annotation.Target;
 import org.tensorflow.op.RawOpInputs;
 
 /**
- * An annotation that should only be used by codegeneration. Used to provide some metadata about the
- * op.
- *
- * <p><b>DO NOT USE MANUALLY</b>
+ * An annotation to provide metadata about an op. Should only be used by users on custom ops, will
+ * be generated for non-custom ops.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GeneratedOpMetadata {
+public @interface OpMetadata {
+
+  /** The type of the op in the TF runtime. */
   String opType();
 
+  /** The typesafe inputs class (which should be annotated with {@link OpInputsMetadata}). */
   @SuppressWarnings("rawtypes")
   Class<? extends RawOpInputs> inputsClass();
 }

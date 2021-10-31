@@ -1057,7 +1057,7 @@ final class ClassGenerator {
   /** Adds the GeneratedOpMetadata annotation to the op class. */
   private void addInputsMetadataAnnotation() {
     builder.addAnnotation(
-        AnnotationSpec.builder(Names.GeneratedOpMetadata)
+        AnnotationSpec.builder(Names.OpMetadata)
             .addMember("opType", "$L", className + ".OP_NAME")
             .addMember("inputsClass", "$T.class", inputsClassName())
             .build());
@@ -1066,7 +1066,7 @@ final class ClassGenerator {
   /** Adds the GeneratedOpInputsMetadata annotation to the op input class. */
   private void addInputsMetadataAnnotation(TypeSpec.Builder inputsBuilder) {
     inputsBuilder.addAnnotation(
-        AnnotationSpec.builder(Names.GeneratedOpInputsMetadata)
+        AnnotationSpec.builder(Names.OpInputsMetadata)
             .addMember("outputsClass", "$T.class", className())
             .build());
   }
