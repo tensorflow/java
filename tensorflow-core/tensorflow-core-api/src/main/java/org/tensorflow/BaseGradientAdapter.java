@@ -28,6 +28,10 @@ import org.tensorflow.internal.c_api.TF_Operation;
 /** Helper base class for custom gradient adapters <b>INTERNAL USE ONLY</b> */
 public abstract class BaseGradientAdapter extends GradFunc {
 
+  protected BaseGradientAdapter() {
+    super();
+  }
+
   /**
    * Convert an array of native outputs to a list of {@link Output}s.
    *
