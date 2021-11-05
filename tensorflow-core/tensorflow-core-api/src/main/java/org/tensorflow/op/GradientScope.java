@@ -52,8 +52,8 @@ public final class GradientScope implements Scope {
   }
 
   @Override
-  public GradientScope withDevice(DeviceSpec deviceSpec) {
-    return new GradientScope(nativeScope.WithDevice(deviceSpec.toString()), graph, deviceSpec.toString());
+  public GradientScope withDevice(DeviceSpec newDevice) {
+    return new GradientScope(nativeScope.WithDevice(newDevice.toString()), graph, newDevice.toString());
   }
 
   @Override

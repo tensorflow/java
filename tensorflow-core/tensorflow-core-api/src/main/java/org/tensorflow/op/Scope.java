@@ -136,10 +136,10 @@ public interface Scope {
    * <p>Operations created within this scope will place the created operations on the device(s)
    * matching the provided spec.
    *
-   * @param deviceSpec device specification for an operator in the returned scope
+   * @param newDevice device specification for an operator in the returned scope
    * @return a new Scope that uses opName for operations.
    */
-  Scope withDevice(DeviceSpec deviceSpec);
+  Scope withDevice(DeviceSpec newDevice);
 
   /** Get an extension of this scope that generates initialization ops. */
   Scope withInitScope();

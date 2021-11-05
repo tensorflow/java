@@ -64,8 +64,8 @@ public final class OpScope implements Scope {
   }
 
   @Override
-  public OpScope withDevice(DeviceSpec deviceSpec) {
-    return new OpScope(env, nameScope, controlDependencies, deviceSpec, isInit);
+  public OpScope withDevice(DeviceSpec newDevice) {
+    return new OpScope(env, nameScope, controlDependencies, newDevice, isInit);
   }
 
   @Override
