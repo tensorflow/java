@@ -68,6 +68,8 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientA
 
       T rawOp = ctor.newInstance(BaseGradientAdapter.getGraphOp(g, op.node()));
 
+      // The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+      // locked by the gradient builder will fail without this.
       BaseGradientAdapter.useDangerousLockedBuilders(g, true);
       List<Operand<?>> gradOutputs = gradient.call(tf, rawOp, gradInputs);
       BaseGradientAdapter.useDangerousLockedBuilders(g, false);

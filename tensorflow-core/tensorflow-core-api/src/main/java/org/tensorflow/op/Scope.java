@@ -224,6 +224,7 @@ public interface Scope {
     return env().opBuilder(type, makeOpName(name), this);
   }
 
+  /** Check whether {@code name} is a valid name for an operation. */
   static boolean isValidOpName(String name) {
     return NameScope.isValidName(name);
   }

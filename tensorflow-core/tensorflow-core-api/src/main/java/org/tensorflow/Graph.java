@@ -905,10 +905,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private boolean newInitializers = false;
 
   /**
-   * Use builders without locking.  This should only be used during custom gradient building.
+   * Use builders without locking. This should only be used during custom gradient building.
    *
-   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
-   * been locked by the gradient builder will fail without this.
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
    */
   synchronized void setDangerousGradientBuilder(boolean dangerous) {
     dangerousGradientBuilder = dangerous;

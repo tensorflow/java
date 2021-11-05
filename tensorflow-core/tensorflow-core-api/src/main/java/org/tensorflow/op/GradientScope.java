@@ -38,7 +38,7 @@ public final class GradientScope implements Scope {
 
   @Override
   public GradientScope withSubScope(String childScopeName) {
-    return new GradientScope(nativeScope.NewSubScope(childScopeName), graph, childScopeName, device);
+    return new GradientScope(nativeScope.NewSubScope(childScopeName), graph, null, device);
   }
 
   @Override
@@ -48,12 +48,17 @@ public final class GradientScope implements Scope {
 
   @Override
   public GradientScope withNameAsSubScope(String defaultName) {
-    return withSubScope(opName);
+    if (opName == null) {
+      return withSubScope(defaultName);
+    } else {
+      return withSubScope(opName);
+    }
   }
 
   @Override
   public GradientScope withDevice(DeviceSpec newDevice) {
-    return new GradientScope(nativeScope.WithDevice(newDevice.toString()), graph, newDevice.toString());
+    return new GradientScope(
+        nativeScope.WithDevice(newDevice.toString()), graph, newDevice.toString());
   }
 
   @Override
@@ -90,7 +95,8 @@ public final class GradientScope implements Scope {
           .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
     }
 
-    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph, device);
+    return new GradientScope(
+        nativeScope.WithControlDependencies(new NativeOperation(ops)), graph, device);
   }
 
   @Override
@@ -108,7 +114,8 @@ public final class GradientScope implements Scope {
           .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
     }
 
-    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph, device);
+    return new GradientScope(
+        nativeScope.WithControlDependencies(new NativeOperation(ops)), graph, device);
   }
 
   @Override
@@ -122,7 +129,8 @@ public final class GradientScope implements Scope {
   @Override
   public String getDeviceString() {
     if (device == null) {
-      throw new UnsupportedOperationException("Can't get device string for gradient scope unless it has been explicitly set");
+      throw new UnsupportedOperationException(
+          "Can't get device string for gradient scope unless it has been explicitly set");
     } else {
       return device;
     }

@@ -154,7 +154,7 @@ public final class TensorFlow {
   /**
    * Keeps references to custom gradient functions to prevent them from being deallocated.
    *
-   * <b>Required for correctness</b>
+   * <p><b>Required for correctness</b>
    */
   private static final Set<GradFunc> gradientFuncs =
       Collections.newSetFromMap(new IdentityHashMap<>());

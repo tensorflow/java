@@ -402,10 +402,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   private final Scope scope;
 
   /**
-   * Use builders without locking.  This should only be used during custom gradient building.
+   * Use builders without locking. This should only be used during custom gradient building.
    *
-   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
-   * been locked by the gradient builder will fail without this.
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
    */
   private final boolean dangerousGradientBuilder;
 
@@ -437,10 +437,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   /**
-   * Use builders without locking.  This should only be used during custom gradient building.
+   * Use builders without locking. This should only be used during custom gradient building.
    *
-   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
-   * been locked by the gradient builder will fail without this.
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
    */
   private static TF_OperationDescription allocateDangerousGradient(
       TF_Graph graphHandle, String type, String name) {
@@ -462,10 +462,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   /**
-   * Use builders without locking.  This should only be used during custom gradient building.
+   * Use builders without locking. This should only be used during custom gradient building.
    *
-   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
-   * been locked by the gradient builder will fail without this.
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
    */
   private static TF_Operation finishDangerousGradient(TF_Graph g, TF_OperationDescription handle) {
     requireHandle(handle);
