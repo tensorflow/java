@@ -34,7 +34,7 @@ import org.tensorflow.internal.c_api.GradFunc;
  */
 @SuppressWarnings("rawtypes")
 @FunctionalInterface
-public interface CustomGradient<T extends RawOpInputs<?>> {
+public interface CustomGradient<T extends RawOpInputs> {
 
   /**
    * Calculate the gradients for {@code op}.
