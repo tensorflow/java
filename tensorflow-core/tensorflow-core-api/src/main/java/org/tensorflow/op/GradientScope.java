@@ -38,12 +38,12 @@ public final class GradientScope implements Scope {
 
   @Override
   public GradientScope withSubScope(String childScopeName) {
-    return new GradientScope(nativeScope.NewSubScope(childScopeName), graph, childScopeName);
+    return new GradientScope(nativeScope.NewSubScope(childScopeName), graph, childScopeName, device);
   }
 
   @Override
   public GradientScope withName(String opName) {
-    return new GradientScope(nativeScope, graph, opName);
+    return new GradientScope(nativeScope, graph, opName, device);
   }
 
   @Override
@@ -53,7 +53,7 @@ public final class GradientScope implements Scope {
 
   @Override
   public GradientScope withDevice(DeviceSpec deviceSpec) {
-    return new GradientScope(nativeScope.WithDevice(deviceSpec.toString()), graph);
+    return new GradientScope(nativeScope.WithDevice(deviceSpec.toString()), graph, deviceSpec.toString());
   }
 
   @Override
@@ -90,7 +90,7 @@ public final class GradientScope implements Scope {
           .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
     }
 
-    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
+    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph, device);
   }
 
   @Override
@@ -108,7 +108,7 @@ public final class GradientScope implements Scope {
           .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
     }
 
-    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
+    return new GradientScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph, device);
   }
 
   @Override
@@ -121,7 +121,11 @@ public final class GradientScope implements Scope {
 
   @Override
   public String getDeviceString() {
-    throw new IllegalStateException("Can't get device string for gradient scope");
+    if (device == null) {
+      throw new UnsupportedOperationException("Can't get device string for gradient scope unless it has been explicitly set");
+    } else {
+      return device;
+    }
   }
 
   @Override
@@ -129,17 +133,19 @@ public final class GradientScope implements Scope {
     return false;
   }
 
-  GradientScope(TF_Scope nativeScope, Graph graph) {
-    this(nativeScope, graph, null);
+  GradientScope(TF_Scope nativeScope, Graph graph, String device) {
+    this(nativeScope, graph, null, device);
   }
 
-  private GradientScope(TF_Scope nativeScope, Graph graph, String opName) {
+  private GradientScope(TF_Scope nativeScope, Graph graph, String opName, String device) {
     this.graph = graph;
     this.nativeScope = nativeScope;
     this.opName = opName;
+    this.device = device;
   }
 
   private final Graph graph;
   private final TF_Scope nativeScope;
   private final String opName;
+  private final String device;
 }
