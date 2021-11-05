@@ -383,6 +383,11 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
+  /**
+   * Get the native handle of this operation.
+   *
+   * No liveness or non-null checking is done, the operation may have been deallocated.
+   */
   public TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
   }
