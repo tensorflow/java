@@ -27,6 +27,9 @@ import org.tensorflow.internal.c_api.GradFunc;
  * A custom gradient for an op of unspecified type. Should be registered using {@link
  * TensorFlow#registerCustomGradient(String, RawCustomGradient)}.
  *
+ * <p>Creates the gradient based off of a {@link GraphOperation}. To operate on the op input class
+ * instead use {@link CustomGradient}.
+ *
  * <p>The op type of {@code op} will depend on the op type string passed to the registration method.
  * Note that the registration method can be called more than once, resulting this gradient function
  * being used for multiple different op types.

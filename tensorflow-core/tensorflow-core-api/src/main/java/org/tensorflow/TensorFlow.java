@@ -152,7 +152,8 @@ public final class TensorFlow {
   }
 
   /**
-   * Keeps references to custom gradient functions to prevent them from being deallocated.
+   * Keeps references to custom gradient functions to prevent them from being deallocated. All
+   * access of this set should be synchronized on this class.
    *
    * <p><b>Required for correctness</b>
    */
@@ -169,6 +170,9 @@ public final class TensorFlow {
 
   /**
    * Register a custom gradient function for ops of {@code opType} type.
+   *
+   * <p>Creates the gradient based off of a {@link GraphOperation}. To operate on the op input class
+   * instead use {@link CustomGradient}.
    *
    * <p>Note that this only works with graph gradients, and will eventually be deprecated in favor
    * of unified gradient support once it is fully supported by tensorflow core.
@@ -193,7 +197,8 @@ public final class TensorFlow {
   /**
    * Register a custom gradient function for ops of {@code inputClass}'s op type. The actual op type
    * is detected from the class's {@link OpInputsMetadata} annotation. As such, it only works on
-   * generated op classes or custom op classes with the correct annotations.
+   * generated op classes or custom op classes with the correct annotations. To operate on the
+   * {@link org.tensorflow.GraphOperation} directly use {@link RawCustomGradient}.
    *
    * @param inputClass the inputs class of op to register the gradient for.
    * @param gradient the gradient function to use

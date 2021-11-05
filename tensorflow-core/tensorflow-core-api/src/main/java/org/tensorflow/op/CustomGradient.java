@@ -26,11 +26,15 @@ import org.tensorflow.internal.c_api.GradFunc;
  * A custom gradient for ops of type {@link T}. Should be registered using {@link
  * TensorFlow#registerCustomGradient(Class, CustomGradient)}.
  *
+ * <p>Creates the gradient based off of an instance of the op inputs class, which is created using
+ * reflection. To operate on the {@link org.tensorflow.GraphOperation} directly use {@link
+ * RawCustomGradient}.
+ *
  * @param <T> the type of op this gradient is for.
  */
 @SuppressWarnings("rawtypes")
 @FunctionalInterface
-public interface CustomGradient<T extends RawOpInputs> {
+public interface CustomGradient<T extends RawOpInputs<?>> {
 
   /**
    * Calculate the gradients for {@code op}.
