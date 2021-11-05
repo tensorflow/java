@@ -400,6 +400,13 @@ public final class GraphOperationBuilder implements OperationBuilder {
   private TF_OperationDescription unsafeNativeHandle;
   private final Graph graph;
   private final Scope scope;
+
+  /**
+   * Use builders without locking.  This should only be used during custom gradient building.
+   *
+   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
+   * been locked by the gradient builder will fail without this.
+   */
   private final boolean dangerousGradientBuilder;
 
   private static void requireHandle(Pointer handle) {

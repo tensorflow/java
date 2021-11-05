@@ -904,6 +904,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
   private boolean newInitializers = false;
 
+  /**
+   * Use builders without locking.  This should only be used during custom gradient building.
+   *
+   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
+   * been locked by the gradient builder will fail without this.
+   */
   synchronized void setDangerousGradientBuilder(boolean dangerous) {
     dangerousGradientBuilder = dangerous;
   }

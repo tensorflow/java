@@ -78,6 +78,12 @@ public abstract class BaseGradientAdapter extends GradFunc {
     }
   }
 
+  /**
+   * Use builders without locking.  This should only be used during custom gradient building.
+   *
+   * The graph locks are not re-entrant, so attempting to add an op to a graph that has
+   * been locked by the gradient builder will fail without this.
+   */
   protected static void useDangerousLockedBuilders(Graph g, boolean dangerous) {
     g.setDangerousGradientBuilder(dangerous);
   }
