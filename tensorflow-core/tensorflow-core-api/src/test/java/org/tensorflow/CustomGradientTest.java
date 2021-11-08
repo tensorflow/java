@@ -22,10 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
@@ -68,13 +64,13 @@ public class CustomGradientTest {
       assertEquals(1, grads0.length);
       assertEquals(DataType.DT_FLOAT, grads0[0].dataType());
 
-      System.out.println(
-          StreamSupport.stream(
-                  Spliterators.spliteratorUnknownSize(
-                      g.operations(), Spliterator.ORDERED | Spliterator.NONNULL),
-                  false)
-              .map(GraphOperation::name)
-              .collect(Collectors.toList()));
+      //      System.out.println(
+      //          StreamSupport.stream(
+      //                  Spliterators.spliteratorUnknownSize(
+      //                      g.operations(), Spliterator.ORDERED | Spliterator.NONNULL),
+      //                  false)
+      //              .map(GraphOperation::name)
+      //              .collect(Collectors.toList()));
 
       try (TFloat32 c1 = TFloat32.vectorOf(3.0f, 2.0f, 1.0f, 0.0f);
           AutoCloseableList<Tensor> outputs =

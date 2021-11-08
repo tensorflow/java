@@ -213,8 +213,7 @@ public final class GraphOperation extends AbstractOperation {
     try (PointerScope scope = new PointerScope()) {
       TF_Input input = new TF_Input().oper(getUnsafeNativeHandle()).index(idx);
       TF_Output output = TF_OperationInput(input);
-      String opName = TF_OperationName(output.oper()).getString();
-      return graph.operation(opName).output(output.index());
+      return new GraphOperation(graph, output.oper()).output(output.index());
     }
   }
 
