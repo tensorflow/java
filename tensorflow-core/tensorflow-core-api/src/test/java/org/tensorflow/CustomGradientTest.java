@@ -57,20 +57,13 @@ public class CustomGradientTest {
 
       Ops tf = Ops.create(g);
       Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
-      Output<TFloat32> y = tf.nn.nthElement(x, tf.constant(2)).asOutput();
+      Output<TFloat32> y =
+          tf.math.add(tf.nn.nthElement(x, tf.constant(2)), tf.constant(4f)).asOutput();
 
       Output<?>[] grads0 = g.addGradients(y, toArray(x));
       assertNotNull(grads0);
       assertEquals(1, grads0.length);
       assertEquals(DataType.DT_FLOAT, grads0[0].dataType());
-
-      //      System.out.println(
-      //          StreamSupport.stream(
-      //                  Spliterators.spliteratorUnknownSize(
-      //                      g.operations(), Spliterator.ORDERED | Spliterator.NONNULL),
-      //                  false)
-      //              .map(GraphOperation::name)
-      //              .collect(Collectors.toList()));
 
       try (TFloat32 c1 = TFloat32.vectorOf(3.0f, 2.0f, 1.0f, 0.0f);
           AutoCloseableList<Tensor> outputs =
