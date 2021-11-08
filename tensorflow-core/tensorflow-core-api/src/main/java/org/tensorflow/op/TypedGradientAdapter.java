@@ -17,8 +17,6 @@ limitations under the License.
 */
 package org.tensorflow.op;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.StatusFromTF_Status;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -31,7 +29,6 @@ import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.NativeOutputVector;
 import org.tensorflow.internal.c_api.NativeStatus;
 import org.tensorflow.internal.c_api.TF_Scope;
-import org.tensorflow.internal.c_api.TF_Status;
 
 /** A native adapter for {@link CustomGradient}. */
 final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientAdapter {
@@ -60,13 +57,14 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientA
         throw new IllegalStateException("No graph found for native gradient scope.");
       }
 
-      Scope nativeScope = new GradientScope(scope, g, null);
+      T rawOp = ctor.newInstance(BaseGradientAdapter.getGraphOp(g, op.node()));
+
+      Scope nativeScope =
+          new GradientScope(scope, g, null).withSubScope(rawOp.getOutputs().op().name());
 
       Ops tf = new Ops(nativeScope);
 
       List<Output<?>> gradInputs = BaseGradientAdapter.fromNativeOutputs(g, grad_inputs);
-
-      T rawOp = ctor.newInstance(BaseGradientAdapter.getGraphOp(g, op.node()));
 
       // The graph locks are not re-entrant, so attempting to add an op to a graph that has been
       // locked by the gradient builder will fail without this.
@@ -77,14 +75,8 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientA
       BaseGradientAdapter.putToNativeOutputs(gradOutputs, grad_outputs);
 
     } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      RuntimeException re =
-          new RuntimeException("Could not instantiate Op class " + opInputClass, e);
-      re.printStackTrace();
-      throw re;
-    } catch (Throwable t) {
-      t.printStackTrace();
-      throw t;
+      throw new RuntimeException("Could not instantiate Op class " + opInputClass, e);
     }
-    return StatusFromTF_Status(TF_Status.newStatus());
+    return NativeStatus.OK();
   }
 }

@@ -17,8 +17,6 @@ limitations under the License.
 */
 package org.tensorflow.op;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.StatusFromTF_Status;
-
 import java.util.List;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.BaseGradientAdapter;
@@ -30,7 +28,6 @@ import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.NativeOutputVector;
 import org.tensorflow.internal.c_api.NativeStatus;
 import org.tensorflow.internal.c_api.TF_Scope;
-import org.tensorflow.internal.c_api.TF_Status;
 
 /** A native adapter for {@link RawCustomGradient}. */
 final class RawGradientAdapter extends BaseGradientAdapter {
@@ -54,12 +51,12 @@ final class RawGradientAdapter extends BaseGradientAdapter {
         throw new IllegalStateException("No graph found for native gradient scope.");
       }
 
-      Scope nativeScope = new GradientScope(scope, g, null);
+      GraphOperation operation = BaseGradientAdapter.getGraphOp(g, op.node());
+
+      Scope nativeScope = new GradientScope(scope, g, null).withSubScope(operation.name());
       Ops tf = new Ops(nativeScope);
 
       List<Output<?>> gradInputs = BaseGradientAdapter.fromNativeOutputs(g, grad_inputs);
-
-      GraphOperation operation = BaseGradientAdapter.getGraphOp(g, op.node());
 
       // The graph locks are not re-entrant, so attempting to add an op to a graph that has been
       // locked by the gradient builder will fail without this.
@@ -68,10 +65,7 @@ final class RawGradientAdapter extends BaseGradientAdapter {
       BaseGradientAdapter.useDangerousLockedBuilders(g, false);
 
       BaseGradientAdapter.putToNativeOutputs(gradOutputs, grad_outputs);
-    } catch (Throwable t) {
-      t.printStackTrace();
-      throw t;
     }
-    return StatusFromTF_Status(TF_Status.newStatus());
+    return NativeStatus.OK();
   }
 }
