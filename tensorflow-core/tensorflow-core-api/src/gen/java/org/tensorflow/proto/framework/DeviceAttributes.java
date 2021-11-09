@@ -92,6 +92,11 @@ private static final long serialVersionUID = 0L;
             physicalDeviceDesc_ = s;
             break;
           }
+          case 64: {
+
+            xlaGlobalId_ = input.readInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -313,6 +318,21 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int XLA_GLOBAL_ID_FIELD_NUMBER = 8;
+  private long xlaGlobalId_;
+  /**
+   * <pre>
+   * A physical device ID for use in XLA DeviceAssignments, unique across
+   * clients in a multi-client setup. Set to -1 if unavailable, non-negative
+   * otherwise.
+   * </pre>
+   *
+   * <code>int64 xla_global_id = 8;</code>
+   */
+  public long getXlaGlobalId() {
+    return xlaGlobalId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -345,6 +365,9 @@ private static final long serialVersionUID = 0L;
     if (!getPhysicalDeviceDescBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 7, physicalDeviceDesc_);
     }
+    if (xlaGlobalId_ != 0L) {
+      output.writeInt64(8, xlaGlobalId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -374,6 +397,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getPhysicalDeviceDescBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, physicalDeviceDesc_);
+    }
+    if (xlaGlobalId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(8, xlaGlobalId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -405,6 +432,8 @@ private static final long serialVersionUID = 0L;
         != other.getIncarnation()) return false;
     if (!getPhysicalDeviceDesc()
         .equals(other.getPhysicalDeviceDesc())) return false;
+    if (getXlaGlobalId()
+        != other.getXlaGlobalId()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -432,6 +461,9 @@ private static final long serialVersionUID = 0L;
         getIncarnation());
     hash = (37 * hash) + PHYSICAL_DEVICE_DESC_FIELD_NUMBER;
     hash = (53 * hash) + getPhysicalDeviceDesc().hashCode();
+    hash = (37 * hash) + XLA_GLOBAL_ID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getXlaGlobalId());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -581,6 +613,8 @@ private static final long serialVersionUID = 0L;
 
       physicalDeviceDesc_ = "";
 
+      xlaGlobalId_ = 0L;
+
       return this;
     }
 
@@ -617,6 +651,7 @@ private static final long serialVersionUID = 0L;
       }
       result.incarnation_ = incarnation_;
       result.physicalDeviceDesc_ = physicalDeviceDesc_;
+      result.xlaGlobalId_ = xlaGlobalId_;
       onBuilt();
       return result;
     }
@@ -685,6 +720,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getPhysicalDeviceDesc().isEmpty()) {
         physicalDeviceDesc_ = other.physicalDeviceDesc_;
         onChanged();
+      }
+      if (other.getXlaGlobalId() != 0L) {
+        setXlaGlobalId(other.getXlaGlobalId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1219,6 +1257,50 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       physicalDeviceDesc_ = value;
+      onChanged();
+      return this;
+    }
+
+    private long xlaGlobalId_ ;
+    /**
+     * <pre>
+     * A physical device ID for use in XLA DeviceAssignments, unique across
+     * clients in a multi-client setup. Set to -1 if unavailable, non-negative
+     * otherwise.
+     * </pre>
+     *
+     * <code>int64 xla_global_id = 8;</code>
+     */
+    public long getXlaGlobalId() {
+      return xlaGlobalId_;
+    }
+    /**
+     * <pre>
+     * A physical device ID for use in XLA DeviceAssignments, unique across
+     * clients in a multi-client setup. Set to -1 if unavailable, non-negative
+     * otherwise.
+     * </pre>
+     *
+     * <code>int64 xla_global_id = 8;</code>
+     */
+    public Builder setXlaGlobalId(long value) {
+      
+      xlaGlobalId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * A physical device ID for use in XLA DeviceAssignments, unique across
+     * clients in a multi-client setup. Set to -1 if unavailable, non-negative
+     * otherwise.
+     * </pre>
+     *
+     * <code>int64 xla_global_id = 8;</code>
+     */
+    public Builder clearXlaGlobalId() {
+      
+      xlaGlobalId_ = 0L;
       onChanged();
       return this;
     }

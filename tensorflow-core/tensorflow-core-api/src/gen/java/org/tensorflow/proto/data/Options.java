@@ -7,6 +7,7 @@ package org.tensorflow.proto.data;
  * <pre>
  * Message stored with Dataset objects to control how datasets are processed and
  * optimized.
+ * next: 8
  * </pre>
  *
  * Protobuf type {@code tensorflow.data.Options}
@@ -106,6 +107,19 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
             optionalExternalStatePolicyCase_ = 6;
             optionalExternalStatePolicy_ = rawValue;
+            break;
+          }
+          case 58: {
+            org.tensorflow.proto.data.AutotuneOptions.Builder subBuilder = null;
+            if (autotuneOptions_ != null) {
+              subBuilder = autotuneOptions_.toBuilder();
+            }
+            autotuneOptions_ = input.readMessage(org.tensorflow.proto.data.AutotuneOptions.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(autotuneOptions_);
+              autotuneOptions_ = subBuilder.buildPartial();
+            }
+
             break;
           }
           default: {
@@ -257,6 +271,39 @@ private static final long serialVersionUID = 0L;
       return (java.lang.Boolean) optionalDeterministic_;
     }
     return false;
+  }
+
+  public static final int AUTOTUNE_OPTIONS_FIELD_NUMBER = 7;
+  private org.tensorflow.proto.data.AutotuneOptions autotuneOptions_;
+  /**
+   * <pre>
+   * The distribution strategy options associated with the dataset.
+   * </pre>
+   *
+   * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+   */
+  public boolean hasAutotuneOptions() {
+    return autotuneOptions_ != null;
+  }
+  /**
+   * <pre>
+   * The distribution strategy options associated with the dataset.
+   * </pre>
+   *
+   * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+   */
+  public org.tensorflow.proto.data.AutotuneOptions getAutotuneOptions() {
+    return autotuneOptions_ == null ? org.tensorflow.proto.data.AutotuneOptions.getDefaultInstance() : autotuneOptions_;
+  }
+  /**
+   * <pre>
+   * The distribution strategy options associated with the dataset.
+   * </pre>
+   *
+   * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+   */
+  public org.tensorflow.proto.data.AutotuneOptionsOrBuilder getAutotuneOptionsOrBuilder() {
+    return getAutotuneOptions();
   }
 
   public static final int DISTRIBUTE_OPTIONS_FIELD_NUMBER = 2;
@@ -426,6 +473,9 @@ private static final long serialVersionUID = 0L;
     if (optionalExternalStatePolicyCase_ == 6) {
       output.writeEnum(6, ((java.lang.Integer) optionalExternalStatePolicy_));
     }
+    if (autotuneOptions_ != null) {
+      output.writeMessage(7, getAutotuneOptions());
+    }
     unknownFields.writeTo(output);
   }
 
@@ -461,6 +511,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(6, ((java.lang.Integer) optionalExternalStatePolicy_));
     }
+    if (autotuneOptions_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getAutotuneOptions());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -476,6 +530,11 @@ private static final long serialVersionUID = 0L;
     }
     org.tensorflow.proto.data.Options other = (org.tensorflow.proto.data.Options) obj;
 
+    if (hasAutotuneOptions() != other.hasAutotuneOptions()) return false;
+    if (hasAutotuneOptions()) {
+      if (!getAutotuneOptions()
+          .equals(other.getAutotuneOptions())) return false;
+    }
     if (hasDistributeOptions() != other.hasDistributeOptions()) return false;
     if (hasDistributeOptions()) {
       if (!getDistributeOptions()
@@ -529,6 +588,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    if (hasAutotuneOptions()) {
+      hash = (37 * hash) + AUTOTUNE_OPTIONS_FIELD_NUMBER;
+      hash = (53 * hash) + getAutotuneOptions().hashCode();
+    }
     if (hasDistributeOptions()) {
       hash = (37 * hash) + DISTRIBUTE_OPTIONS_FIELD_NUMBER;
       hash = (53 * hash) + getDistributeOptions().hashCode();
@@ -666,6 +729,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Message stored with Dataset objects to control how datasets are processed and
    * optimized.
+   * next: 8
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.Options}
@@ -705,6 +769,12 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      if (autotuneOptionsBuilder_ == null) {
+        autotuneOptions_ = null;
+      } else {
+        autotuneOptions_ = null;
+        autotuneOptionsBuilder_ = null;
+      }
       if (distributeOptionsBuilder_ == null) {
         distributeOptions_ = null;
       } else {
@@ -757,6 +827,11 @@ private static final long serialVersionUID = 0L;
       org.tensorflow.proto.data.Options result = new org.tensorflow.proto.data.Options(this);
       if (optionalDeterministicCase_ == 1) {
         result.optionalDeterministic_ = optionalDeterministic_;
+      }
+      if (autotuneOptionsBuilder_ == null) {
+        result.autotuneOptions_ = autotuneOptions_;
+      } else {
+        result.autotuneOptions_ = autotuneOptionsBuilder_.build();
       }
       if (distributeOptionsBuilder_ == null) {
         result.distributeOptions_ = distributeOptions_;
@@ -830,6 +905,9 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.tensorflow.proto.data.Options other) {
       if (other == org.tensorflow.proto.data.Options.getDefaultInstance()) return this;
+      if (other.hasAutotuneOptions()) {
+        mergeAutotuneOptions(other.getAutotuneOptions());
+      }
       if (other.hasDistributeOptions()) {
         mergeDistributeOptions(other.getDistributeOptions());
       }
@@ -968,6 +1046,159 @@ private static final long serialVersionUID = 0L;
         onChanged();
       }
       return this;
+    }
+
+    private org.tensorflow.proto.data.AutotuneOptions autotuneOptions_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.data.AutotuneOptions, org.tensorflow.proto.data.AutotuneOptions.Builder, org.tensorflow.proto.data.AutotuneOptionsOrBuilder> autotuneOptionsBuilder_;
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public boolean hasAutotuneOptions() {
+      return autotuneOptionsBuilder_ != null || autotuneOptions_ != null;
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public org.tensorflow.proto.data.AutotuneOptions getAutotuneOptions() {
+      if (autotuneOptionsBuilder_ == null) {
+        return autotuneOptions_ == null ? org.tensorflow.proto.data.AutotuneOptions.getDefaultInstance() : autotuneOptions_;
+      } else {
+        return autotuneOptionsBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public Builder setAutotuneOptions(org.tensorflow.proto.data.AutotuneOptions value) {
+      if (autotuneOptionsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        autotuneOptions_ = value;
+        onChanged();
+      } else {
+        autotuneOptionsBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public Builder setAutotuneOptions(
+        org.tensorflow.proto.data.AutotuneOptions.Builder builderForValue) {
+      if (autotuneOptionsBuilder_ == null) {
+        autotuneOptions_ = builderForValue.build();
+        onChanged();
+      } else {
+        autotuneOptionsBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public Builder mergeAutotuneOptions(org.tensorflow.proto.data.AutotuneOptions value) {
+      if (autotuneOptionsBuilder_ == null) {
+        if (autotuneOptions_ != null) {
+          autotuneOptions_ =
+            org.tensorflow.proto.data.AutotuneOptions.newBuilder(autotuneOptions_).mergeFrom(value).buildPartial();
+        } else {
+          autotuneOptions_ = value;
+        }
+        onChanged();
+      } else {
+        autotuneOptionsBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public Builder clearAutotuneOptions() {
+      if (autotuneOptionsBuilder_ == null) {
+        autotuneOptions_ = null;
+        onChanged();
+      } else {
+        autotuneOptions_ = null;
+        autotuneOptionsBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public org.tensorflow.proto.data.AutotuneOptions.Builder getAutotuneOptionsBuilder() {
+      
+      onChanged();
+      return getAutotuneOptionsFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    public org.tensorflow.proto.data.AutotuneOptionsOrBuilder getAutotuneOptionsOrBuilder() {
+      if (autotuneOptionsBuilder_ != null) {
+        return autotuneOptionsBuilder_.getMessageOrBuilder();
+      } else {
+        return autotuneOptions_ == null ?
+            org.tensorflow.proto.data.AutotuneOptions.getDefaultInstance() : autotuneOptions_;
+      }
+    }
+    /**
+     * <pre>
+     * The distribution strategy options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.data.AutotuneOptions, org.tensorflow.proto.data.AutotuneOptions.Builder, org.tensorflow.proto.data.AutotuneOptionsOrBuilder> 
+        getAutotuneOptionsFieldBuilder() {
+      if (autotuneOptionsBuilder_ == null) {
+        autotuneOptionsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.data.AutotuneOptions, org.tensorflow.proto.data.AutotuneOptions.Builder, org.tensorflow.proto.data.AutotuneOptionsOrBuilder>(
+                getAutotuneOptions(),
+                getParentForChildren(),
+                isClean());
+        autotuneOptions_ = null;
+      }
+      return autotuneOptionsBuilder_;
     }
 
     private org.tensorflow.proto.data.DistributeOptions distributeOptions_;

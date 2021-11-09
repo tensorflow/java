@@ -371,11 +371,9 @@ public final class XlaOps {
   }
 
   /**
-   * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
-   *  <pre>
-   *      dynamic dimension into a static dimension. The bound of the size of
-   *      dimension `dim_index` becomes the static dimension size.
-   *  </pre>
+   * Inverse of XlaSetDynamicDimensionSize.
+   *  Make an xla bounded dynamic dimension into a static dimension. The bound of the
+   *  size of dimension {@code dim_index} becomes the static dimension size.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
@@ -500,7 +498,9 @@ public final class XlaOps {
   }
 
   /**
-   * An op which shards the input based on the given sharding attribute.
+   * An op which shards the input based on the given sharding attribute. It can
+   *  selectively annotate a subset of tensor dimensions by skipping unspecified_dims,
+   *  and the sharding annotation should be replicated in those dims.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
@@ -533,34 +533,39 @@ public final class XlaOps {
    *  partitioned) with the same sharding used by manual partitioning, and outputs a
    *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
    *  shape is not evenly partitionable, the padding region will be masked with 0s.
+   *  The conversion can happen partially in subgroups, by specifying the dim
+   *  attribute, where only that dim will be converted.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
    * @param manualSharding The value of the manualSharding attribute
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSpmdFullToShardShape} output and operands
    * @return a new instance of SpmdFullToShardShape
    */
   public <T extends TType> SpmdFullToShardShape<T> spmdFullToShardShape(Operand<T> input,
-      String manualSharding) {
-    return SpmdFullToShardShape.create(scope, input, manualSharding);
+      String manualSharding, SpmdFullToShardShape.Options... options) {
+    return SpmdFullToShardShape.create(scope, input, manualSharding, options);
   }
 
   /**
    * An op used by XLA SPMD partitioner to switch from manual partitioning to
    *  automatic partitioning. It converts the shard-shaped, manually partitioned input
    *  into full-shaped tensor to be partitioned automatically with the same sharding
-   *  used by manual partitioning.
+   *  used by manual partitioning. The conversion can happen partially in subgroups,
+   *  by specifying the dim attribute, where only that dim will be converted.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
    * @param manualSharding The value of the manualSharding attribute
    * @param fullShape The value of the fullShape attribute
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
    * @return a new instance of SpmdShardToFullShape
    */
   public <T extends TType> SpmdShardToFullShape<T> spmdShardToFullShape(Operand<T> input,
-      String manualSharding, Shape fullShape) {
-    return SpmdShardToFullShape.create(scope, input, manualSharding, fullShape);
+      String manualSharding, Shape fullShape, SpmdShardToFullShape.Options... options) {
+    return SpmdShardToFullShape.create(scope, input, manualSharding, fullShape, options);
   }
 
   /**
@@ -691,6 +696,8 @@ public final class XlaOps {
    * Wraps the variadic XLA Reduce operator.
    *  Semantics are documented at
    *  https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
+   *  <p>This version is limited to operands of the same dtype.
+   *  XlaVariadicReduceV2 is a version that supports heterogeneous operands.
    *
    * @param <T> data type for {@code output} output
    * @param input the input tensor(s)

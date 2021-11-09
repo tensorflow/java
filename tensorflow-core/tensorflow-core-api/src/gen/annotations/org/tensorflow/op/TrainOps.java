@@ -234,10 +234,10 @@ public final class TrainOps {
 
   /**
    * Update '*var' according to the Adam algorithm.
-   *  $$lr_t := \text{learning_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
-   *  $$m_t := beta_1 * m_{t-1} + (1 - beta_1) * g$$
-   *  $$v_t := beta_2 * v_{t-1} + (1 - beta_2) * g * g$$
-   *  $$variable := variable - lr_t * m_t / (\sqrt{v_t} + \epsilon)$$
+   *  $$\text{lr}<em>t := \mathrm{lr} \cdot \frac{\sqrt{1 - \beta_2^t}}{1 - \beta_1^t}$$
+   *  $$m_t := \beta_1 \cdot m</em>{t-1} + (1 - \beta_1) \cdot g$$
+   *  $$v_t := \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g^2$$
+   *  $$\text{var} := \begin{cases} \text{var} - (m_t \beta_1 + g \cdot (1 - \beta_1))\cdot\text{lr}_t/(\sqrt{v_t} + \epsilon), &amp;\text{if use_nesterov}\\  \text{var} - m_t \cdot \text{lr}_t /(\sqrt{v_t} + \epsilon), &amp;\text{otherwise} \end{cases}$$
    *
    * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
@@ -691,10 +691,10 @@ public final class TrainOps {
 
   /**
    * Update '*var' according to the Adam algorithm.
-   *  $$\text{lr}<em>t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
-   *  $$m_t := \beta_1 * m</em>{t-1} + (1 - \beta_1) * g$$
-   *  $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
-   *  $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{v_t} + \epsilon)$$
+   *  $$\text{lr}<em>t := \mathrm{lr} \cdot \frac{\sqrt{1 - \beta_2^t}}{1 - \beta_1^t}$$
+   *  $$m_t := \beta_1 \cdot m</em>{t-1} + (1 - \beta_1) \cdot g$$
+   *  $$v_t := \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g^2$$
+   *  $$\text{var} := \begin{cases} \text{var} - (m_t \beta_1 + g \cdot (1 - \beta_1))\cdot\text{lr}_t/(\sqrt{v_t} + \epsilon), &amp;\text{if use_nesterov}\\  \text{var} - m_t \cdot \text{lr}_t /(\sqrt{v_t} + \epsilon), &amp;\text{otherwise} \end{cases}$$
    *
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().

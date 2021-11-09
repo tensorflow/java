@@ -4,6 +4,10 @@
 package org.tensorflow.proto.data;
 
 /**
+ * <pre>
+ * next: 18
+ * </pre>
+ *
  * Protobuf type {@code tensorflow.data.OptimizationOptions}
  */
 public  final class OptimizationOptions extends
@@ -51,26 +55,6 @@ private static final long serialVersionUID = 0L;
           case 8: {
             optionalApplyDefaultOptimizationsCase_ = 1;
             optionalApplyDefaultOptimizations_ = input.readBool();
-            break;
-          }
-          case 16: {
-            optionalAutotuneCase_ = 2;
-            optionalAutotune_ = input.readBool();
-            break;
-          }
-          case 24: {
-            optionalAutotuneBuffersCase_ = 3;
-            optionalAutotuneBuffers_ = input.readBool();
-            break;
-          }
-          case 32: {
-            optionalAutotuneCpuBudgetCase_ = 4;
-            optionalAutotuneCpuBudget_ = input.readInt32();
-            break;
-          }
-          case 40: {
-            optionalAutotuneRamBudgetCase_ = 5;
-            optionalAutotuneRamBudget_ = input.readInt64();
             break;
           }
           case 48: {
@@ -179,150 +163,6 @@ private static final long serialVersionUID = 0L;
   getOptionalApplyDefaultOptimizationsCase() {
     return OptionalApplyDefaultOptimizationsCase.forNumber(
         optionalApplyDefaultOptimizationsCase_);
-  }
-
-  private int optionalAutotuneCase_ = 0;
-  private java.lang.Object optionalAutotune_;
-  public enum OptionalAutotuneCase
-      implements com.google.protobuf.Internal.EnumLite {
-    AUTOTUNE(2),
-    OPTIONALAUTOTUNE_NOT_SET(0);
-    private final int value;
-    private OptionalAutotuneCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalAutotuneCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalAutotuneCase forNumber(int value) {
-      switch (value) {
-        case 2: return AUTOTUNE;
-        case 0: return OPTIONALAUTOTUNE_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalAutotuneCase
-  getOptionalAutotuneCase() {
-    return OptionalAutotuneCase.forNumber(
-        optionalAutotuneCase_);
-  }
-
-  private int optionalAutotuneBuffersCase_ = 0;
-  private java.lang.Object optionalAutotuneBuffers_;
-  public enum OptionalAutotuneBuffersCase
-      implements com.google.protobuf.Internal.EnumLite {
-    AUTOTUNE_BUFFERS(3),
-    OPTIONALAUTOTUNEBUFFERS_NOT_SET(0);
-    private final int value;
-    private OptionalAutotuneBuffersCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalAutotuneBuffersCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalAutotuneBuffersCase forNumber(int value) {
-      switch (value) {
-        case 3: return AUTOTUNE_BUFFERS;
-        case 0: return OPTIONALAUTOTUNEBUFFERS_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalAutotuneBuffersCase
-  getOptionalAutotuneBuffersCase() {
-    return OptionalAutotuneBuffersCase.forNumber(
-        optionalAutotuneBuffersCase_);
-  }
-
-  private int optionalAutotuneCpuBudgetCase_ = 0;
-  private java.lang.Object optionalAutotuneCpuBudget_;
-  public enum OptionalAutotuneCpuBudgetCase
-      implements com.google.protobuf.Internal.EnumLite {
-    AUTOTUNE_CPU_BUDGET(4),
-    OPTIONALAUTOTUNECPUBUDGET_NOT_SET(0);
-    private final int value;
-    private OptionalAutotuneCpuBudgetCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalAutotuneCpuBudgetCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalAutotuneCpuBudgetCase forNumber(int value) {
-      switch (value) {
-        case 4: return AUTOTUNE_CPU_BUDGET;
-        case 0: return OPTIONALAUTOTUNECPUBUDGET_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalAutotuneCpuBudgetCase
-  getOptionalAutotuneCpuBudgetCase() {
-    return OptionalAutotuneCpuBudgetCase.forNumber(
-        optionalAutotuneCpuBudgetCase_);
-  }
-
-  private int optionalAutotuneRamBudgetCase_ = 0;
-  private java.lang.Object optionalAutotuneRamBudget_;
-  public enum OptionalAutotuneRamBudgetCase
-      implements com.google.protobuf.Internal.EnumLite {
-    AUTOTUNE_RAM_BUDGET(5),
-    OPTIONALAUTOTUNERAMBUDGET_NOT_SET(0);
-    private final int value;
-    private OptionalAutotuneRamBudgetCase(int value) {
-      this.value = value;
-    }
-    /**
-     * @deprecated Use {@link #forNumber(int)} instead.
-     */
-    @java.lang.Deprecated
-    public static OptionalAutotuneRamBudgetCase valueOf(int value) {
-      return forNumber(value);
-    }
-
-    public static OptionalAutotuneRamBudgetCase forNumber(int value) {
-      switch (value) {
-        case 5: return AUTOTUNE_RAM_BUDGET;
-        case 0: return OPTIONALAUTOTUNERAMBUDGET_NOT_SET;
-        default: return null;
-      }
-    }
-    public int getNumber() {
-      return this.value;
-    }
-  };
-
-  public OptionalAutotuneRamBudgetCase
-  getOptionalAutotuneRamBudgetCase() {
-    return OptionalAutotuneRamBudgetCase.forNumber(
-        optionalAutotuneRamBudgetCase_);
   }
 
   private int optionalFilterFusionCase_ = 0;
@@ -624,50 +464,6 @@ private static final long serialVersionUID = 0L;
     return false;
   }
 
-  public static final int AUTOTUNE_FIELD_NUMBER = 2;
-  /**
-   * <code>bool autotune = 2;</code>
-   */
-  public boolean getAutotune() {
-    if (optionalAutotuneCase_ == 2) {
-      return (java.lang.Boolean) optionalAutotune_;
-    }
-    return false;
-  }
-
-  public static final int AUTOTUNE_BUFFERS_FIELD_NUMBER = 3;
-  /**
-   * <code>bool autotune_buffers = 3;</code>
-   */
-  public boolean getAutotuneBuffers() {
-    if (optionalAutotuneBuffersCase_ == 3) {
-      return (java.lang.Boolean) optionalAutotuneBuffers_;
-    }
-    return false;
-  }
-
-  public static final int AUTOTUNE_CPU_BUDGET_FIELD_NUMBER = 4;
-  /**
-   * <code>int32 autotune_cpu_budget = 4;</code>
-   */
-  public int getAutotuneCpuBudget() {
-    if (optionalAutotuneCpuBudgetCase_ == 4) {
-      return (java.lang.Integer) optionalAutotuneCpuBudget_;
-    }
-    return 0;
-  }
-
-  public static final int AUTOTUNE_RAM_BUDGET_FIELD_NUMBER = 5;
-  /**
-   * <code>int64 autotune_ram_budget = 5;</code>
-   */
-  public long getAutotuneRamBudget() {
-    if (optionalAutotuneRamBudgetCase_ == 5) {
-      return (java.lang.Long) optionalAutotuneRamBudget_;
-    }
-    return 0L;
-  }
-
   public static final int FILTER_FUSION_FIELD_NUMBER = 6;
   /**
    * <code>bool filter_fusion = 6;</code>
@@ -774,22 +570,6 @@ private static final long serialVersionUID = 0L;
       output.writeBool(
           1, (boolean)((java.lang.Boolean) optionalApplyDefaultOptimizations_));
     }
-    if (optionalAutotuneCase_ == 2) {
-      output.writeBool(
-          2, (boolean)((java.lang.Boolean) optionalAutotune_));
-    }
-    if (optionalAutotuneBuffersCase_ == 3) {
-      output.writeBool(
-          3, (boolean)((java.lang.Boolean) optionalAutotuneBuffers_));
-    }
-    if (optionalAutotuneCpuBudgetCase_ == 4) {
-      output.writeInt32(
-          4, (int)((java.lang.Integer) optionalAutotuneCpuBudget_));
-    }
-    if (optionalAutotuneRamBudgetCase_ == 5) {
-      output.writeInt64(
-          5, (long)((java.lang.Long) optionalAutotuneRamBudget_));
-    }
     if (optionalFilterFusionCase_ == 6) {
       output.writeBool(
           6, (boolean)((java.lang.Boolean) optionalFilterFusion_));
@@ -835,26 +615,6 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(
             1, (boolean)((java.lang.Boolean) optionalApplyDefaultOptimizations_));
-    }
-    if (optionalAutotuneCase_ == 2) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(
-            2, (boolean)((java.lang.Boolean) optionalAutotune_));
-    }
-    if (optionalAutotuneBuffersCase_ == 3) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(
-            3, (boolean)((java.lang.Boolean) optionalAutotuneBuffers_));
-    }
-    if (optionalAutotuneCpuBudgetCase_ == 4) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(
-            4, (int)((java.lang.Integer) optionalAutotuneCpuBudget_));
-    }
-    if (optionalAutotuneRamBudgetCase_ == 5) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(
-            5, (long)((java.lang.Long) optionalAutotuneRamBudget_));
     }
     if (optionalFilterFusionCase_ == 6) {
       size += com.google.protobuf.CodedOutputStream
@@ -916,42 +676,6 @@ private static final long serialVersionUID = 0L;
       case 1:
         if (getApplyDefaultOptimizations()
             != other.getApplyDefaultOptimizations()) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!getOptionalAutotuneCase().equals(other.getOptionalAutotuneCase())) return false;
-    switch (optionalAutotuneCase_) {
-      case 2:
-        if (getAutotune()
-            != other.getAutotune()) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!getOptionalAutotuneBuffersCase().equals(other.getOptionalAutotuneBuffersCase())) return false;
-    switch (optionalAutotuneBuffersCase_) {
-      case 3:
-        if (getAutotuneBuffers()
-            != other.getAutotuneBuffers()) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!getOptionalAutotuneCpuBudgetCase().equals(other.getOptionalAutotuneCpuBudgetCase())) return false;
-    switch (optionalAutotuneCpuBudgetCase_) {
-      case 4:
-        if (getAutotuneCpuBudget()
-            != other.getAutotuneCpuBudget()) return false;
-        break;
-      case 0:
-      default:
-    }
-    if (!getOptionalAutotuneRamBudgetCase().equals(other.getOptionalAutotuneRamBudgetCase())) return false;
-    switch (optionalAutotuneRamBudgetCase_) {
-      case 5:
-        if (getAutotuneRamBudget()
-            != other.getAutotuneRamBudget()) return false;
         break;
       case 0:
       default:
@@ -1044,41 +768,6 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + APPLY_DEFAULT_OPTIMIZATIONS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
             getApplyDefaultOptimizations());
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalAutotuneCase_) {
-      case 2:
-        hash = (37 * hash) + AUTOTUNE_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getAutotune());
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalAutotuneBuffersCase_) {
-      case 3:
-        hash = (37 * hash) + AUTOTUNE_BUFFERS_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getAutotuneBuffers());
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalAutotuneCpuBudgetCase_) {
-      case 4:
-        hash = (37 * hash) + AUTOTUNE_CPU_BUDGET_FIELD_NUMBER;
-        hash = (53 * hash) + getAutotuneCpuBudget();
-        break;
-      case 0:
-      default:
-    }
-    switch (optionalAutotuneRamBudgetCase_) {
-      case 5:
-        hash = (37 * hash) + AUTOTUNE_RAM_BUDGET_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-            getAutotuneRamBudget());
         break;
       case 0:
       default:
@@ -1251,6 +940,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   * next: 18
+   * </pre>
+   *
    * Protobuf type {@code tensorflow.data.OptimizationOptions}
    */
   public static final class Builder extends
@@ -1290,14 +983,6 @@ private static final long serialVersionUID = 0L;
       super.clear();
       optionalApplyDefaultOptimizationsCase_ = 0;
       optionalApplyDefaultOptimizations_ = null;
-      optionalAutotuneCase_ = 0;
-      optionalAutotune_ = null;
-      optionalAutotuneBuffersCase_ = 0;
-      optionalAutotuneBuffers_ = null;
-      optionalAutotuneCpuBudgetCase_ = 0;
-      optionalAutotuneCpuBudget_ = null;
-      optionalAutotuneRamBudgetCase_ = 0;
-      optionalAutotuneRamBudget_ = null;
       optionalFilterFusionCase_ = 0;
       optionalFilterFusion_ = null;
       optionalMapAndBatchFusionCase_ = 0;
@@ -1343,18 +1028,6 @@ private static final long serialVersionUID = 0L;
       if (optionalApplyDefaultOptimizationsCase_ == 1) {
         result.optionalApplyDefaultOptimizations_ = optionalApplyDefaultOptimizations_;
       }
-      if (optionalAutotuneCase_ == 2) {
-        result.optionalAutotune_ = optionalAutotune_;
-      }
-      if (optionalAutotuneBuffersCase_ == 3) {
-        result.optionalAutotuneBuffers_ = optionalAutotuneBuffers_;
-      }
-      if (optionalAutotuneCpuBudgetCase_ == 4) {
-        result.optionalAutotuneCpuBudget_ = optionalAutotuneCpuBudget_;
-      }
-      if (optionalAutotuneRamBudgetCase_ == 5) {
-        result.optionalAutotuneRamBudget_ = optionalAutotuneRamBudget_;
-      }
       if (optionalFilterFusionCase_ == 6) {
         result.optionalFilterFusion_ = optionalFilterFusion_;
       }
@@ -1380,10 +1053,6 @@ private static final long serialVersionUID = 0L;
         result.optionalShuffleAndRepeatFusion_ = optionalShuffleAndRepeatFusion_;
       }
       result.optionalApplyDefaultOptimizationsCase_ = optionalApplyDefaultOptimizationsCase_;
-      result.optionalAutotuneCase_ = optionalAutotuneCase_;
-      result.optionalAutotuneBuffersCase_ = optionalAutotuneBuffersCase_;
-      result.optionalAutotuneCpuBudgetCase_ = optionalAutotuneCpuBudgetCase_;
-      result.optionalAutotuneRamBudgetCase_ = optionalAutotuneRamBudgetCase_;
       result.optionalFilterFusionCase_ = optionalFilterFusionCase_;
       result.optionalMapAndBatchFusionCase_ = optionalMapAndBatchFusionCase_;
       result.optionalMapAndFilterFusionCase_ = optionalMapAndFilterFusionCase_;
@@ -1446,42 +1115,6 @@ private static final long serialVersionUID = 0L;
           break;
         }
         case OPTIONALAPPLYDEFAULTOPTIMIZATIONS_NOT_SET: {
-          break;
-        }
-      }
-      switch (other.getOptionalAutotuneCase()) {
-        case AUTOTUNE: {
-          setAutotune(other.getAutotune());
-          break;
-        }
-        case OPTIONALAUTOTUNE_NOT_SET: {
-          break;
-        }
-      }
-      switch (other.getOptionalAutotuneBuffersCase()) {
-        case AUTOTUNE_BUFFERS: {
-          setAutotuneBuffers(other.getAutotuneBuffers());
-          break;
-        }
-        case OPTIONALAUTOTUNEBUFFERS_NOT_SET: {
-          break;
-        }
-      }
-      switch (other.getOptionalAutotuneCpuBudgetCase()) {
-        case AUTOTUNE_CPU_BUDGET: {
-          setAutotuneCpuBudget(other.getAutotuneCpuBudget());
-          break;
-        }
-        case OPTIONALAUTOTUNECPUBUDGET_NOT_SET: {
-          break;
-        }
-      }
-      switch (other.getOptionalAutotuneRamBudgetCase()) {
-        case AUTOTUNE_RAM_BUDGET: {
-          setAutotuneRamBudget(other.getAutotuneRamBudget());
-          break;
-        }
-        case OPTIONALAUTOTUNERAMBUDGET_NOT_SET: {
           break;
         }
       }
@@ -1596,66 +1229,6 @@ private static final long serialVersionUID = 0L;
     public Builder clearOptionalApplyDefaultOptimizations() {
       optionalApplyDefaultOptimizationsCase_ = 0;
       optionalApplyDefaultOptimizations_ = null;
-      onChanged();
-      return this;
-    }
-
-    private int optionalAutotuneCase_ = 0;
-    private java.lang.Object optionalAutotune_;
-    public OptionalAutotuneCase
-        getOptionalAutotuneCase() {
-      return OptionalAutotuneCase.forNumber(
-          optionalAutotuneCase_);
-    }
-
-    public Builder clearOptionalAutotune() {
-      optionalAutotuneCase_ = 0;
-      optionalAutotune_ = null;
-      onChanged();
-      return this;
-    }
-
-    private int optionalAutotuneBuffersCase_ = 0;
-    private java.lang.Object optionalAutotuneBuffers_;
-    public OptionalAutotuneBuffersCase
-        getOptionalAutotuneBuffersCase() {
-      return OptionalAutotuneBuffersCase.forNumber(
-          optionalAutotuneBuffersCase_);
-    }
-
-    public Builder clearOptionalAutotuneBuffers() {
-      optionalAutotuneBuffersCase_ = 0;
-      optionalAutotuneBuffers_ = null;
-      onChanged();
-      return this;
-    }
-
-    private int optionalAutotuneCpuBudgetCase_ = 0;
-    private java.lang.Object optionalAutotuneCpuBudget_;
-    public OptionalAutotuneCpuBudgetCase
-        getOptionalAutotuneCpuBudgetCase() {
-      return OptionalAutotuneCpuBudgetCase.forNumber(
-          optionalAutotuneCpuBudgetCase_);
-    }
-
-    public Builder clearOptionalAutotuneCpuBudget() {
-      optionalAutotuneCpuBudgetCase_ = 0;
-      optionalAutotuneCpuBudget_ = null;
-      onChanged();
-      return this;
-    }
-
-    private int optionalAutotuneRamBudgetCase_ = 0;
-    private java.lang.Object optionalAutotuneRamBudget_;
-    public OptionalAutotuneRamBudgetCase
-        getOptionalAutotuneRamBudgetCase() {
-      return OptionalAutotuneRamBudgetCase.forNumber(
-          optionalAutotuneRamBudgetCase_);
-    }
-
-    public Builder clearOptionalAutotuneRamBudget() {
-      optionalAutotuneRamBudgetCase_ = 0;
-      optionalAutotuneRamBudget_ = null;
       onChanged();
       return this;
     }
@@ -1806,126 +1379,6 @@ private static final long serialVersionUID = 0L;
       if (optionalApplyDefaultOptimizationsCase_ == 1) {
         optionalApplyDefaultOptimizationsCase_ = 0;
         optionalApplyDefaultOptimizations_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>bool autotune = 2;</code>
-     */
-    public boolean getAutotune() {
-      if (optionalAutotuneCase_ == 2) {
-        return (java.lang.Boolean) optionalAutotune_;
-      }
-      return false;
-    }
-    /**
-     * <code>bool autotune = 2;</code>
-     */
-    public Builder setAutotune(boolean value) {
-      optionalAutotuneCase_ = 2;
-      optionalAutotune_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool autotune = 2;</code>
-     */
-    public Builder clearAutotune() {
-      if (optionalAutotuneCase_ == 2) {
-        optionalAutotuneCase_ = 0;
-        optionalAutotune_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>bool autotune_buffers = 3;</code>
-     */
-    public boolean getAutotuneBuffers() {
-      if (optionalAutotuneBuffersCase_ == 3) {
-        return (java.lang.Boolean) optionalAutotuneBuffers_;
-      }
-      return false;
-    }
-    /**
-     * <code>bool autotune_buffers = 3;</code>
-     */
-    public Builder setAutotuneBuffers(boolean value) {
-      optionalAutotuneBuffersCase_ = 3;
-      optionalAutotuneBuffers_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool autotune_buffers = 3;</code>
-     */
-    public Builder clearAutotuneBuffers() {
-      if (optionalAutotuneBuffersCase_ == 3) {
-        optionalAutotuneBuffersCase_ = 0;
-        optionalAutotuneBuffers_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>int32 autotune_cpu_budget = 4;</code>
-     */
-    public int getAutotuneCpuBudget() {
-      if (optionalAutotuneCpuBudgetCase_ == 4) {
-        return (java.lang.Integer) optionalAutotuneCpuBudget_;
-      }
-      return 0;
-    }
-    /**
-     * <code>int32 autotune_cpu_budget = 4;</code>
-     */
-    public Builder setAutotuneCpuBudget(int value) {
-      optionalAutotuneCpuBudgetCase_ = 4;
-      optionalAutotuneCpuBudget_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 autotune_cpu_budget = 4;</code>
-     */
-    public Builder clearAutotuneCpuBudget() {
-      if (optionalAutotuneCpuBudgetCase_ == 4) {
-        optionalAutotuneCpuBudgetCase_ = 0;
-        optionalAutotuneCpuBudget_ = null;
-        onChanged();
-      }
-      return this;
-    }
-
-    /**
-     * <code>int64 autotune_ram_budget = 5;</code>
-     */
-    public long getAutotuneRamBudget() {
-      if (optionalAutotuneRamBudgetCase_ == 5) {
-        return (java.lang.Long) optionalAutotuneRamBudget_;
-      }
-      return 0L;
-    }
-    /**
-     * <code>int64 autotune_ram_budget = 5;</code>
-     */
-    public Builder setAutotuneRamBudget(long value) {
-      optionalAutotuneRamBudgetCase_ = 5;
-      optionalAutotuneRamBudget_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 autotune_ram_budget = 5;</code>
-     */
-    public Builder clearAutotuneRamBudget() {
-      if (optionalAutotuneRamBudgetCase_ == 5) {
-        optionalAutotuneRamBudgetCase_ = 0;
-        optionalAutotuneRamBudget_ = null;
         onChanged();
       }
       return this;

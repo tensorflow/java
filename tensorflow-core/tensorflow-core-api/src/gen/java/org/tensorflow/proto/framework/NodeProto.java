@@ -40,31 +40,34 @@ public final class NodeProto {
     java.lang.String[] descriptorData = {
       "\n(tensorflow/core/framework/node_def.pro" +
       "to\022\ntensorflow\032*tensorflow/core/framewor" +
-      "k/attr_value.proto\"\322\002\n\007NodeDef\022\014\n\004name\030\001" +
-      " \001(\t\022\n\n\002op\030\002 \001(\t\022\r\n\005input\030\003 \003(\t\022\016\n\006devic" +
-      "e\030\004 \001(\t\022+\n\004attr\030\005 \003(\0132\035.tensorflow.NodeD" +
-      "ef.AttrEntry\022J\n\027experimental_debug_info\030" +
-      "\006 \001(\0132).tensorflow.NodeDef.ExperimentalD" +
-      "ebugInfo\032B\n\tAttrEntry\022\013\n\003key\030\001 \001(\t\022$\n\005va" +
-      "lue\030\002 \001(\0132\025.tensorflow.AttrValue:\0028\001\032Q\n\025" +
-      "ExperimentalDebugInfo\022\033\n\023original_node_n" +
-      "ames\030\001 \003(\t\022\033\n\023original_func_names\030\002 \003(\tB" +
-      "\201\001\n\036org.tensorflow.proto.frameworkB\tNode" +
-      "ProtoP\001ZOgithub.com/tensorflow/tensorflo" +
-      "w/tensorflow/go/core/framework/node_def_" +
-      "go_proto\370\001\001b\006proto3"
+      "k/attr_value.proto\032)tensorflow/core/fram" +
+      "ework/full_type.proto\"\206\003\n\007NodeDef\022\014\n\004nam" +
+      "e\030\001 \001(\t\022\n\n\002op\030\002 \001(\t\022\r\n\005input\030\003 \003(\t\022\016\n\006de" +
+      "vice\030\004 \001(\t\022+\n\004attr\030\005 \003(\0132\035.tensorflow.No" +
+      "deDef.AttrEntry\022J\n\027experimental_debug_in" +
+      "fo\030\006 \001(\0132).tensorflow.NodeDef.Experiment" +
+      "alDebugInfo\0222\n\021experimental_type\030\007 \001(\0132\027" +
+      ".tensorflow.FullTypeDef\032B\n\tAttrEntry\022\013\n\003" +
+      "key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.tensorflow.At" +
+      "trValue:\0028\001\032Q\n\025ExperimentalDebugInfo\022\033\n\023" +
+      "original_node_names\030\001 \003(\t\022\033\n\023original_fu" +
+      "nc_names\030\002 \003(\tB\201\001\n\036org.tensorflow.proto." +
+      "frameworkB\tNodeProtoP\001ZOgithub.com/tenso" +
+      "rflow/tensorflow/tensorflow/go/core/fram" +
+      "ework/node_def_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           org.tensorflow.proto.framework.AttrValueProtos.getDescriptor(),
+          org.tensorflow.proto.framework.FullTypeProtos.getDescriptor(),
         });
     internal_static_tensorflow_NodeDef_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tensorflow_NodeDef_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_NodeDef_descriptor,
-        new java.lang.String[] { "Name", "Op", "Input", "Device", "Attr", "ExperimentalDebugInfo", });
+        new java.lang.String[] { "Name", "Op", "Input", "Device", "Attr", "ExperimentalDebugInfo", "ExperimentalType", });
     internal_static_tensorflow_NodeDef_AttrEntry_descriptor =
       internal_static_tensorflow_NodeDef_descriptor.getNestedTypes().get(0);
     internal_static_tensorflow_NodeDef_AttrEntry_fieldAccessorTable = new
@@ -78,6 +81,7 @@ public final class NodeProto {
         internal_static_tensorflow_NodeDef_ExperimentalDebugInfo_descriptor,
         new java.lang.String[] { "OriginalNodeNames", "OriginalFuncNames", });
     org.tensorflow.proto.framework.AttrValueProtos.getDescriptor();
+    org.tensorflow.proto.framework.FullTypeProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

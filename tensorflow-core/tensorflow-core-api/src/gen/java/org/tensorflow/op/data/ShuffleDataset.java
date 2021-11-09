@@ -100,6 +100,9 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
         if (opts.reshuffleEachIteration != null) {
           opBuilder.setAttr("reshuffle_each_iteration", opts.reshuffleEachIteration);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new ShuffleDataset(opBuilder.build());
@@ -113,6 +116,16 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
    */
   public static Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
     return new Options().reshuffleEachIteration(reshuffleEachIteration);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -136,6 +149,8 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
   public static class Options {
     private Boolean reshuffleEachIteration;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -147,6 +162,17 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
      */
     public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
       this.reshuffleEachIteration = reshuffleEachIteration;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -195,8 +221,13 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new ShuffleDataset(op), op, Arrays.asList("reshuffle_each_iteration", "output_types", "output_shapes"));
+      super(new ShuffleDataset(op), op, Arrays.asList("reshuffle_each_iteration", "output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       bufferSize = (Operand<TInt64>) op.input(inputIndex++);
@@ -206,6 +237,7 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
       reshuffleEachIteration = op.attributes().getAttrBool("reshuffle_each_iteration");
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

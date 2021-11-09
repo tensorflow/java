@@ -35,11 +35,9 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
- * <pre>
- *     dynamic dimension into a static dimension. The bound of the size of
- *     dimension `dim_index` becomes the static dimension size.
- * </pre>
+ * Inverse of XlaSetDynamicDimensionSize.
+ * Make an xla bounded dynamic dimension into a static dimension. The bound of the
+ * size of dimension {@code dim_index} becomes the static dimension size.
  *
  * @param <T> data type for {@code output} output
  */

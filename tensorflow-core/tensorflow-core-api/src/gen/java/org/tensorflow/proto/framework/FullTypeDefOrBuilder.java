@@ -62,5 +62,14 @@ public interface FullTypeDefOrBuilder extends
   com.google.protobuf.ByteString
       getSBytes();
 
+  /**
+   * <pre>
+   * TODO(mdan): list/tensor, map? Need to reconcile with TFT_RECORD, etc.
+   * </pre>
+   *
+   * <code>int64 i = 4;</code>
+   */
+  long getI();
+
   public org.tensorflow.proto.framework.FullTypeDef.AttrCase getAttrCase();
 }

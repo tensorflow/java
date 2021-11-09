@@ -117,22 +117,23 @@ public final class StructProtos {
       "hapeProto\022#\n\005dtype\030\003 \001(\0162\024.tensorflow.Da" +
       "taType\022(\n\007minimum\030\004 \001(\0132\027.tensorflow.Ten" +
       "sorProto\022(\n\007maximum\030\005 \001(\0132\027.tensorflow.T" +
-      "ensorProto\"\333\003\n\rTypeSpecProto\022@\n\017type_spe" +
+      "ensorProto\"\370\003\n\rTypeSpecProto\022@\n\017type_spe" +
       "c_class\030\001 \001(\0162\'.tensorflow.TypeSpecProto" +
       ".TypeSpecClass\022/\n\ntype_state\030\002 \001(\0132\033.ten" +
       "sorflow.StructuredValue\022\034\n\024type_spec_cla" +
-      "ss_name\030\003 \001(\t\"\270\002\n\rTypeSpecClass\022\013\n\007UNKNO" +
-      "WN\020\000\022\026\n\022SPARSE_TENSOR_SPEC\020\001\022\027\n\023INDEXED_" +
-      "SLICES_SPEC\020\002\022\026\n\022RAGGED_TENSOR_SPEC\020\003\022\025\n" +
-      "\021TENSOR_ARRAY_SPEC\020\004\022\025\n\021DATA_DATASET_SPE" +
-      "C\020\005\022\026\n\022DATA_ITERATOR_SPEC\020\006\022\021\n\rOPTIONAL_" +
-      "SPEC\020\007\022\024\n\020PER_REPLICA_SPEC\020\010\022\021\n\rVARIABLE" +
-      "_SPEC\020\t\022\026\n\022ROW_PARTITION_SPEC\020\n\022\030\n\024REGIS" +
-      "TERED_TYPE_SPEC\020\014\022\027\n\023EXTENSION_TYPE_SPEC" +
-      "\020\r\"\004\010\013\020\013B\207\001\n\036org.tensorflow.proto.framew" +
-      "orkB\014StructProtosP\001ZUgithub.com/tensorfl" +
-      "ow/tensorflow/tensorflow/go/core/protobu" +
-      "f/for_core_protos_go_protob\006proto3"
+      "ss_name\030\003 \001(\t\022\033\n\023num_flat_components\030\004 \001" +
+      "(\005\"\270\002\n\rTypeSpecClass\022\013\n\007UNKNOWN\020\000\022\026\n\022SPA" +
+      "RSE_TENSOR_SPEC\020\001\022\027\n\023INDEXED_SLICES_SPEC" +
+      "\020\002\022\026\n\022RAGGED_TENSOR_SPEC\020\003\022\025\n\021TENSOR_ARR" +
+      "AY_SPEC\020\004\022\025\n\021DATA_DATASET_SPEC\020\005\022\026\n\022DATA" +
+      "_ITERATOR_SPEC\020\006\022\021\n\rOPTIONAL_SPEC\020\007\022\024\n\020P" +
+      "ER_REPLICA_SPEC\020\010\022\021\n\rVARIABLE_SPEC\020\t\022\026\n\022" +
+      "ROW_PARTITION_SPEC\020\n\022\030\n\024REGISTERED_TYPE_" +
+      "SPEC\020\014\022\027\n\023EXTENSION_TYPE_SPEC\020\r\"\004\010\013\020\013B\207\001" +
+      "\n\036org.tensorflow.proto.frameworkB\014Struct" +
+      "ProtosP\001ZUgithub.com/tensorflow/tensorfl" +
+      "ow/tensorflow/go/core/protobuf/for_core_" +
+      "protos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -206,7 +207,7 @@ public final class StructProtos {
     internal_static_tensorflow_TypeSpecProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_TypeSpecProto_descriptor,
-        new java.lang.String[] { "TypeSpecClass", "TypeState", "TypeSpecClassName", });
+        new java.lang.String[] { "TypeSpecClass", "TypeState", "TypeSpecClassName", "NumFlatComponents", });
     org.tensorflow.proto.framework.TensorProtos.getDescriptor();
     org.tensorflow.proto.framework.TensorShapeProtos.getDescriptor();
     org.tensorflow.proto.framework.TypesProtos.getDescriptor();

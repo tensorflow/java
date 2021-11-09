@@ -25,6 +25,8 @@ public interface ProfileOptionsOrBuilder extends
    * DeviceType::CPU: only CPU will be profiled.
    * DeviceType::GPU: only CPU/GPU will be profiled.
    * DeviceType::TPU: only CPU/TPU will be profiled.
+   * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+   * will be profiled.
    * </pre>
    *
    * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -37,6 +39,8 @@ public interface ProfileOptionsOrBuilder extends
    * DeviceType::CPU: only CPU will be profiled.
    * DeviceType::GPU: only CPU/GPU will be profiled.
    * DeviceType::TPU: only CPU/TPU will be profiled.
+   * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+   * will be profiled.
    * </pre>
    *
    * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>

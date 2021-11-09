@@ -17,6 +17,31 @@ public interface OptionsOrBuilder extends
    * The distribution strategy options associated with the dataset.
    * </pre>
    *
+   * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+   */
+  boolean hasAutotuneOptions();
+  /**
+   * <pre>
+   * The distribution strategy options associated with the dataset.
+   * </pre>
+   *
+   * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+   */
+  org.tensorflow.proto.data.AutotuneOptions getAutotuneOptions();
+  /**
+   * <pre>
+   * The distribution strategy options associated with the dataset.
+   * </pre>
+   *
+   * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
+   */
+  org.tensorflow.proto.data.AutotuneOptionsOrBuilder getAutotuneOptionsOrBuilder();
+
+  /**
+   * <pre>
+   * The distribution strategy options associated with the dataset.
+   * </pre>
+   *
    * <code>.tensorflow.data.DistributeOptions distribute_options = 2;</code>
    */
   boolean hasDistributeOptions();

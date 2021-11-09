@@ -50,15 +50,16 @@ public final class DeviceAttributesProtos {
       "(\0132\034.tensorflow.InterconnectLink\"Z\n\016Devi" +
       "ceLocality\022\016\n\006bus_id\030\001 \001(\005\022\021\n\tnuma_node\030" +
       "\002 \001(\005\022%\n\005links\030\003 \001(\0132\026.tensorflow.LocalL" +
-      "inks\"\254\001\n\020DeviceAttributes\022\014\n\004name\030\001 \001(\t\022" +
+      "inks\"\303\001\n\020DeviceAttributes\022\014\n\004name\030\001 \001(\t\022" +
       "\023\n\013device_type\030\002 \001(\t\022\024\n\014memory_limit\030\004 \001" +
       "(\003\022,\n\010locality\030\005 \001(\0132\032.tensorflow.Device" +
       "Locality\022\023\n\013incarnation\030\006 \001(\006\022\034\n\024physica" +
-      "l_device_desc\030\007 \001(\tB\227\001\n\036org.tensorflow.p" +
-      "roto.frameworkB\026DeviceAttributesProtosP\001" +
-      "ZXgithub.com/tensorflow/tensorflow/tenso" +
-      "rflow/go/core/framework/device_attribute" +
-      "s_go_proto\370\001\001b\006proto3"
+      "l_device_desc\030\007 \001(\t\022\025\n\rxla_global_id\030\010 \001" +
+      "(\003B\227\001\n\036org.tensorflow.proto.frameworkB\026D" +
+      "eviceAttributesProtosP\001ZXgithub.com/tens" +
+      "orflow/tensorflow/tensorflow/go/core/fra" +
+      "mework/device_attributes_go_proto\370\001\001b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -87,7 +88,7 @@ public final class DeviceAttributesProtos {
     internal_static_tensorflow_DeviceAttributes_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_DeviceAttributes_descriptor,
-        new java.lang.String[] { "Name", "DeviceType", "MemoryLimit", "Locality", "Incarnation", "PhysicalDeviceDesc", });
+        new java.lang.String[] { "Name", "DeviceType", "MemoryLimit", "Locality", "Incarnation", "PhysicalDeviceDesc", "XlaGlobalId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

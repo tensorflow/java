@@ -4,6 +4,10 @@
 package org.tensorflow.proto.data;
 
 /**
+ * <pre>
+ * next: 3
+ * </pre>
+ *
  * Protobuf type {@code tensorflow.data.ThreadingOptions}
  */
 public  final class ThreadingOptions extends
@@ -381,6 +385,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   * next: 3
+   * </pre>
+   *
    * Protobuf type {@code tensorflow.data.ThreadingOptions}
    */
   public static final class Builder extends

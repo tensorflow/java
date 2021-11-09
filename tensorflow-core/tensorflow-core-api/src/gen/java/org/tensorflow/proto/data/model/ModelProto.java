@@ -43,6 +43,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -54,29 +55,29 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            org.tensorflow.proto.data.model.ModelProto.Node.Builder subBuilder = null;
-            if (output_ != null) {
-              subBuilder = output_.toBuilder();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              nodes_ = com.google.protobuf.MapField.newMapField(
+                  NodesDefaultEntryHolder.defaultEntry);
+              mutable_bitField0_ |= 0x00000001;
             }
-            output_ = input.readMessage(org.tensorflow.proto.data.model.ModelProto.Node.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(output_);
-              output_ = subBuilder.buildPartial();
-            }
-
+            com.google.protobuf.MapEntry<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>
+            nodes__ = input.readMessage(
+                NodesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            nodes_.getMutableMap().put(
+                nodes__.getKey(), nodes__.getValue());
             break;
           }
           case 16: {
 
-            idCounter_ = input.readInt64();
+            output_ = input.readInt64();
             break;
           }
           case 24: {
 
-            collectResourceUsage_ = input.readBool();
+            idCounter_ = input.readInt64();
             break;
           }
-          case 34: {
+          case 42: {
             org.tensorflow.proto.data.model.ModelProto.OptimizationParams.Builder subBuilder = null;
             if (optimizationParams_ != null) {
               subBuilder = optimizationParams_.toBuilder();
@@ -113,6 +114,18 @@ private static final long serialVersionUID = 0L;
     return org.tensorflow.proto.data.model.ModelProtos.internal_static_tensorflow_data_model_ModelProto_descriptor;
   }
 
+  @SuppressWarnings({"rawtypes"})
+  @java.lang.Override
+  protected com.google.protobuf.MapField internalGetMapField(
+      int number) {
+    switch (number) {
+      case 1:
+        return internalGetNodes();
+      default:
+        throw new RuntimeException(
+            "Invalid map field number: " + number);
+    }
+  }
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
@@ -285,47 +298,28 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * Inputs of this node.
+     * IDs of inputs of this node.
      * </pre>
      *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+     * <code>repeated int64 inputs = 14;</code>
      */
-    java.util.List<org.tensorflow.proto.data.model.ModelProto.Node> 
-        getInputsList();
+    java.util.List<java.lang.Long> getInputsList();
     /**
      * <pre>
-     * Inputs of this node.
+     * IDs of inputs of this node.
      * </pre>
      *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-     */
-    org.tensorflow.proto.data.model.ModelProto.Node getInputs(int index);
-    /**
-     * <pre>
-     * Inputs of this node.
-     * </pre>
-     *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+     * <code>repeated int64 inputs = 14;</code>
      */
     int getInputsCount();
     /**
      * <pre>
-     * Inputs of this node.
+     * IDs of inputs of this node.
      * </pre>
      *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+     * <code>repeated int64 inputs = 14;</code>
      */
-    java.util.List<? extends org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> 
-        getInputsOrBuilderList();
-    /**
-     * <pre>
-     * Inputs of this node.
-     * </pre>
-     *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-     */
-    org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder getInputsOrBuilder(
-        int index);
+    long getInputs(int index);
 
     /**
      * <pre>
@@ -383,7 +377,7 @@ private static final long serialVersionUID = 0L;
     private Node() {
       name_ = "";
       parameters_ = java.util.Collections.emptyList();
-      inputs_ = java.util.Collections.emptyList();
+      inputs_ = emptyLongList();
       nodeClass_ = 0;
     }
 
@@ -488,13 +482,25 @@ private static final long serialVersionUID = 0L;
               inputProcessingTimeCount_ = input.readInt64();
               break;
             }
-            case 114: {
+            case 112: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                inputs_ = new java.util.ArrayList<org.tensorflow.proto.data.model.ModelProto.Node>();
+                inputs_ = newLongList();
                 mutable_bitField0_ |= 0x00000002;
               }
-              inputs_.add(
-                  input.readMessage(org.tensorflow.proto.data.model.ModelProto.Node.parser(), extensionRegistry));
+              inputs_.addLong(input.readInt64());
+              break;
+            }
+            case 114: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                inputs_ = newLongList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                inputs_.addLong(input.readInt64());
+              }
+              input.popLimit(limit);
               break;
             }
             case 120: {
@@ -532,7 +538,7 @@ private static final long serialVersionUID = 0L;
           parameters_ = java.util.Collections.unmodifiableList(parameters_);
         }
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          inputs_ = java.util.Collections.unmodifiableList(inputs_);
+          inputs_.makeImmutable(); // C
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -1812,59 +1818,39 @@ private static final long serialVersionUID = 0L;
     }
 
     public static final int INPUTS_FIELD_NUMBER = 14;
-    private java.util.List<org.tensorflow.proto.data.model.ModelProto.Node> inputs_;
+    private com.google.protobuf.Internal.LongList inputs_;
     /**
      * <pre>
-     * Inputs of this node.
+     * IDs of inputs of this node.
      * </pre>
      *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+     * <code>repeated int64 inputs = 14;</code>
      */
-    public java.util.List<org.tensorflow.proto.data.model.ModelProto.Node> getInputsList() {
+    public java.util.List<java.lang.Long>
+        getInputsList() {
       return inputs_;
     }
     /**
      * <pre>
-     * Inputs of this node.
+     * IDs of inputs of this node.
      * </pre>
      *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-     */
-    public java.util.List<? extends org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> 
-        getInputsOrBuilderList() {
-      return inputs_;
-    }
-    /**
-     * <pre>
-     * Inputs of this node.
-     * </pre>
-     *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+     * <code>repeated int64 inputs = 14;</code>
      */
     public int getInputsCount() {
       return inputs_.size();
     }
     /**
      * <pre>
-     * Inputs of this node.
+     * IDs of inputs of this node.
      * </pre>
      *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+     * <code>repeated int64 inputs = 14;</code>
      */
-    public org.tensorflow.proto.data.model.ModelProto.Node getInputs(int index) {
-      return inputs_.get(index);
+    public long getInputs(int index) {
+      return inputs_.getLong(index);
     }
-    /**
-     * <pre>
-     * Inputs of this node.
-     * </pre>
-     *
-     * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-     */
-    public org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder getInputsOrBuilder(
-        int index) {
-      return inputs_.get(index);
-    }
+    private int inputsMemoizedSerializedSize = -1;
 
     public static final int NODE_CLASS_FIELD_NUMBER = 15;
     private int nodeClass_;
@@ -1933,6 +1919,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (id_ != 0L) {
         output.writeInt64(1, id_);
       }
@@ -1972,8 +1959,12 @@ private static final long serialVersionUID = 0L;
       if (inputProcessingTimeCount_ != 0L) {
         output.writeInt64(13, inputProcessingTimeCount_);
       }
+      if (getInputsList().size() > 0) {
+        output.writeUInt32NoTag(114);
+        output.writeUInt32NoTag(inputsMemoizedSerializedSize);
+      }
       for (int i = 0; i < inputs_.size(); i++) {
-        output.writeMessage(14, inputs_.get(i));
+        output.writeInt64NoTag(inputs_.getLong(i));
       }
       if (nodeClass_ != org.tensorflow.proto.data.model.NodeClass.UNKNOWN.getNumber()) {
         output.writeEnum(15, nodeClass_);
@@ -2044,9 +2035,19 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(13, inputProcessingTimeCount_);
       }
-      for (int i = 0; i < inputs_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(14, inputs_.get(i));
+      {
+        int dataSize = 0;
+        for (int i = 0; i < inputs_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt64SizeNoTag(inputs_.getLong(i));
+        }
+        size += dataSize;
+        if (!getInputsList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        inputsMemoizedSerializedSize = dataSize;
       }
       if (nodeClass_ != org.tensorflow.proto.data.model.NodeClass.UNKNOWN.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
@@ -2306,7 +2307,6 @@ private static final long serialVersionUID = 0L;
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getParametersFieldBuilder();
-          getInputsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -2342,12 +2342,8 @@ private static final long serialVersionUID = 0L;
 
         inputProcessingTimeCount_ = 0L;
 
-        if (inputsBuilder_ == null) {
-          inputs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        } else {
-          inputsBuilder_.clear();
-        }
+        inputs_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
         nodeClass_ = 0;
 
         ratio_ = 0D;
@@ -2402,15 +2398,11 @@ private static final long serialVersionUID = 0L;
         }
         result.inputProcessingTimeSum_ = inputProcessingTimeSum_;
         result.inputProcessingTimeCount_ = inputProcessingTimeCount_;
-        if (inputsBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
-            inputs_ = java.util.Collections.unmodifiableList(inputs_);
-            bitField0_ = (bitField0_ & ~0x00000002);
-          }
-          result.inputs_ = inputs_;
-        } else {
-          result.inputs_ = inputsBuilder_.build();
+        if (((bitField0_ & 0x00000002) != 0)) {
+          inputs_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000002);
         }
+        result.inputs_ = inputs_;
         result.nodeClass_ = nodeClass_;
         result.ratio_ = ratio_;
         result.memoryRatio_ = memoryRatio_;
@@ -2525,31 +2517,15 @@ private static final long serialVersionUID = 0L;
         if (other.getInputProcessingTimeCount() != 0L) {
           setInputProcessingTimeCount(other.getInputProcessingTimeCount());
         }
-        if (inputsBuilder_ == null) {
-          if (!other.inputs_.isEmpty()) {
-            if (inputs_.isEmpty()) {
-              inputs_ = other.inputs_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-            } else {
-              ensureInputsIsMutable();
-              inputs_.addAll(other.inputs_);
-            }
-            onChanged();
+        if (!other.inputs_.isEmpty()) {
+          if (inputs_.isEmpty()) {
+            inputs_ = other.inputs_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureInputsIsMutable();
+            inputs_.addAll(other.inputs_);
           }
-        } else {
-          if (!other.inputs_.isEmpty()) {
-            if (inputsBuilder_.isEmpty()) {
-              inputsBuilder_.dispose();
-              inputsBuilder_ = null;
-              inputs_ = other.inputs_;
-              bitField0_ = (bitField0_ & ~0x00000002);
-              inputsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getInputsFieldBuilder() : null;
-            } else {
-              inputsBuilder_.addAllMessages(other.inputs_);
-            }
-          }
+          onChanged();
         }
         if (other.nodeClass_ != 0) {
           setNodeClassValue(other.getNodeClassValue());
@@ -3400,316 +3376,99 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private java.util.List<org.tensorflow.proto.data.model.ModelProto.Node> inputs_ =
-        java.util.Collections.emptyList();
+      private com.google.protobuf.Internal.LongList inputs_ = emptyLongList();
       private void ensureInputsIsMutable() {
         if (!((bitField0_ & 0x00000002) != 0)) {
-          inputs_ = new java.util.ArrayList<org.tensorflow.proto.data.model.ModelProto.Node>(inputs_);
+          inputs_ = mutableCopy(inputs_);
           bitField0_ |= 0x00000002;
          }
       }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          org.tensorflow.proto.data.model.ModelProto.Node, org.tensorflow.proto.data.model.ModelProto.Node.Builder, org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> inputsBuilder_;
-
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
-      public java.util.List<org.tensorflow.proto.data.model.ModelProto.Node> getInputsList() {
-        if (inputsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(inputs_);
-        } else {
-          return inputsBuilder_.getMessageList();
-        }
+      public java.util.List<java.lang.Long>
+          getInputsList() {
+        return ((bitField0_ & 0x00000002) != 0) ?
+                 java.util.Collections.unmodifiableList(inputs_) : inputs_;
       }
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
       public int getInputsCount() {
-        if (inputsBuilder_ == null) {
-          return inputs_.size();
-        } else {
-          return inputsBuilder_.getCount();
-        }
+        return inputs_.size();
       }
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
-      public org.tensorflow.proto.data.model.ModelProto.Node getInputs(int index) {
-        if (inputsBuilder_ == null) {
-          return inputs_.get(index);
-        } else {
-          return inputsBuilder_.getMessage(index);
-        }
+      public long getInputs(int index) {
+        return inputs_.getLong(index);
       }
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
       public Builder setInputs(
-          int index, org.tensorflow.proto.data.model.ModelProto.Node value) {
-        if (inputsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureInputsIsMutable();
-          inputs_.set(index, value);
-          onChanged();
-        } else {
-          inputsBuilder_.setMessage(index, value);
-        }
+          int index, long value) {
+        ensureInputsIsMutable();
+        inputs_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
-      public Builder setInputs(
-          int index, org.tensorflow.proto.data.model.ModelProto.Node.Builder builderForValue) {
-        if (inputsBuilder_ == null) {
-          ensureInputsIsMutable();
-          inputs_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          inputsBuilder_.setMessage(index, builderForValue.build());
-        }
+      public Builder addInputs(long value) {
+        ensureInputsIsMutable();
+        inputs_.addLong(value);
+        onChanged();
         return this;
       }
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public Builder addInputs(org.tensorflow.proto.data.model.ModelProto.Node value) {
-        if (inputsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureInputsIsMutable();
-          inputs_.add(value);
-          onChanged();
-        } else {
-          inputsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public Builder addInputs(
-          int index, org.tensorflow.proto.data.model.ModelProto.Node value) {
-        if (inputsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureInputsIsMutable();
-          inputs_.add(index, value);
-          onChanged();
-        } else {
-          inputsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public Builder addInputs(
-          org.tensorflow.proto.data.model.ModelProto.Node.Builder builderForValue) {
-        if (inputsBuilder_ == null) {
-          ensureInputsIsMutable();
-          inputs_.add(builderForValue.build());
-          onChanged();
-        } else {
-          inputsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public Builder addInputs(
-          int index, org.tensorflow.proto.data.model.ModelProto.Node.Builder builderForValue) {
-        if (inputsBuilder_ == null) {
-          ensureInputsIsMutable();
-          inputs_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          inputsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
       public Builder addAllInputs(
-          java.lang.Iterable<? extends org.tensorflow.proto.data.model.ModelProto.Node> values) {
-        if (inputsBuilder_ == null) {
-          ensureInputsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, inputs_);
-          onChanged();
-        } else {
-          inputsBuilder_.addAllMessages(values);
-        }
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureInputsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, inputs_);
+        onChanged();
         return this;
       }
       /**
        * <pre>
-       * Inputs of this node.
+       * IDs of inputs of this node.
        * </pre>
        *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
+       * <code>repeated int64 inputs = 14;</code>
        */
       public Builder clearInputs() {
-        if (inputsBuilder_ == null) {
-          inputs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
-          onChanged();
-        } else {
-          inputsBuilder_.clear();
-        }
+        inputs_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public Builder removeInputs(int index) {
-        if (inputsBuilder_ == null) {
-          ensureInputsIsMutable();
-          inputs_.remove(index);
-          onChanged();
-        } else {
-          inputsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public org.tensorflow.proto.data.model.ModelProto.Node.Builder getInputsBuilder(
-          int index) {
-        return getInputsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder getInputsOrBuilder(
-          int index) {
-        if (inputsBuilder_ == null) {
-          return inputs_.get(index);  } else {
-          return inputsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public java.util.List<? extends org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> 
-           getInputsOrBuilderList() {
-        if (inputsBuilder_ != null) {
-          return inputsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(inputs_);
-        }
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public org.tensorflow.proto.data.model.ModelProto.Node.Builder addInputsBuilder() {
-        return getInputsFieldBuilder().addBuilder(
-            org.tensorflow.proto.data.model.ModelProto.Node.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public org.tensorflow.proto.data.model.ModelProto.Node.Builder addInputsBuilder(
-          int index) {
-        return getInputsFieldBuilder().addBuilder(
-            index, org.tensorflow.proto.data.model.ModelProto.Node.getDefaultInstance());
-      }
-      /**
-       * <pre>
-       * Inputs of this node.
-       * </pre>
-       *
-       * <code>repeated .tensorflow.data.model.ModelProto.Node inputs = 14;</code>
-       */
-      public java.util.List<org.tensorflow.proto.data.model.ModelProto.Node.Builder> 
-           getInputsBuilderList() {
-        return getInputsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          org.tensorflow.proto.data.model.ModelProto.Node, org.tensorflow.proto.data.model.ModelProto.Node.Builder, org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> 
-          getInputsFieldBuilder() {
-        if (inputsBuilder_ == null) {
-          inputsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              org.tensorflow.proto.data.model.ModelProto.Node, org.tensorflow.proto.data.model.ModelProto.Node.Builder, org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder>(
-                  inputs_,
-                  ((bitField0_ & 0x00000002) != 0),
-                  getParentForChildren(),
-                  isClean());
-          inputs_ = null;
-        }
-        return inputsBuilder_;
       }
 
       private int nodeClass_ = 0;
@@ -4722,82 +4481,140 @@ private static final long serialVersionUID = 0L;
 
   }
 
-  public static final int OUTPUT_FIELD_NUMBER = 1;
-  private org.tensorflow.proto.data.model.ModelProto.Node output_;
-  /**
-   * <pre>
-   * Output node of this model.
-   * </pre>
-   *
-   * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-   */
-  public boolean hasOutput() {
-    return output_ != null;
+  public static final int NODES_FIELD_NUMBER = 1;
+  private static final class NodesDefaultEntryHolder {
+    static final com.google.protobuf.MapEntry<
+        java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> defaultEntry =
+            com.google.protobuf.MapEntry
+            .<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>newDefaultInstance(
+                org.tensorflow.proto.data.model.ModelProtos.internal_static_tensorflow_data_model_ModelProto_NodesEntry_descriptor, 
+                com.google.protobuf.WireFormat.FieldType.INT64,
+                0L,
+                com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                org.tensorflow.proto.data.model.ModelProto.Node.getDefaultInstance());
   }
-  /**
-   * <pre>
-   * Output node of this model.
-   * </pre>
-   *
-   * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-   */
-  public org.tensorflow.proto.data.model.ModelProto.Node getOutput() {
-    return output_ == null ? org.tensorflow.proto.data.model.ModelProto.Node.getDefaultInstance() : output_;
-  }
-  /**
-   * <pre>
-   * Output node of this model.
-   * </pre>
-   *
-   * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-   */
-  public org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder getOutputOrBuilder() {
-    return getOutput();
+  private com.google.protobuf.MapField<
+      java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> nodes_;
+  private com.google.protobuf.MapField<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>
+  internalGetNodes() {
+    if (nodes_ == null) {
+      return com.google.protobuf.MapField.emptyMapField(
+          NodesDefaultEntryHolder.defaultEntry);
+    }
+    return nodes_;
   }
 
-  public static final int ID_COUNTER_FIELD_NUMBER = 2;
+  public int getNodesCount() {
+    return internalGetNodes().getMap().size();
+  }
+  /**
+   * <pre>
+   * Map of node IDs to nodes of this model.
+   * </pre>
+   *
+   * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+   */
+
+  public boolean containsNodes(
+      long key) {
+    
+    return internalGetNodes().getMap().containsKey(key);
+  }
+  /**
+   * Use {@link #getNodesMap()} instead.
+   */
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> getNodes() {
+    return getNodesMap();
+  }
+  /**
+   * <pre>
+   * Map of node IDs to nodes of this model.
+   * </pre>
+   *
+   * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+   */
+
+  public java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> getNodesMap() {
+    return internalGetNodes().getMap();
+  }
+  /**
+   * <pre>
+   * Map of node IDs to nodes of this model.
+   * </pre>
+   *
+   * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+   */
+
+  public org.tensorflow.proto.data.model.ModelProto.Node getNodesOrDefault(
+      long key,
+      org.tensorflow.proto.data.model.ModelProto.Node defaultValue) {
+    
+    java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> map =
+        internalGetNodes().getMap();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <pre>
+   * Map of node IDs to nodes of this model.
+   * </pre>
+   *
+   * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+   */
+
+  public org.tensorflow.proto.data.model.ModelProto.Node getNodesOrThrow(
+      long key) {
+    
+    java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> map =
+        internalGetNodes().getMap();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
+    }
+    return map.get(key);
+  }
+
+  public static final int OUTPUT_FIELD_NUMBER = 2;
+  private long output_;
+  /**
+   * <pre>
+   * ID of the output node of this model.
+   * </pre>
+   *
+   * <code>int64 output = 2;</code>
+   */
+  public long getOutput() {
+    return output_;
+  }
+
+  public static final int ID_COUNTER_FIELD_NUMBER = 3;
   private long idCounter_;
   /**
    * <pre>
    * Counter for node IDs of this model.
    * </pre>
    *
-   * <code>int64 id_counter = 2;</code>
+   * <code>int64 id_counter = 3;</code>
    */
   public long getIdCounter() {
     return idCounter_;
   }
 
-  public static final int COLLECT_RESOURCE_USAGE_FIELD_NUMBER = 3;
-  private boolean collectResourceUsage_;
-  /**
-   * <pre>
-   * Indicates whether the modeling framework should collect resource usage,
-   * e.g. CPU, memory.
-   * </pre>
-   *
-   * <code>bool collect_resource_usage = 3;</code>
-   */
-  public boolean getCollectResourceUsage() {
-    return collectResourceUsage_;
-  }
-
-  public static final int OPTIMIZATION_PARAMS_FIELD_NUMBER = 4;
+  public static final int OPTIMIZATION_PARAMS_FIELD_NUMBER = 5;
   private org.tensorflow.proto.data.model.ModelProto.OptimizationParams optimizationParams_;
   /**
-   * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+   * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
    */
   public boolean hasOptimizationParams() {
     return optimizationParams_ != null;
   }
   /**
-   * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+   * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
    */
   public org.tensorflow.proto.data.model.ModelProto.OptimizationParams getOptimizationParams() {
     return optimizationParams_ == null ? org.tensorflow.proto.data.model.ModelProto.OptimizationParams.getDefaultInstance() : optimizationParams_;
   }
   /**
-   * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+   * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
    */
   public org.tensorflow.proto.data.model.ModelProto.OptimizationParamsOrBuilder getOptimizationParamsOrBuilder() {
     return getOptimizationParams();
@@ -4817,17 +4634,20 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (output_ != null) {
-      output.writeMessage(1, getOutput());
+    com.google.protobuf.GeneratedMessageV3
+      .serializeLongMapTo(
+        output,
+        internalGetNodes(),
+        NodesDefaultEntryHolder.defaultEntry,
+        1);
+    if (output_ != 0L) {
+      output.writeInt64(2, output_);
     }
     if (idCounter_ != 0L) {
-      output.writeInt64(2, idCounter_);
-    }
-    if (collectResourceUsage_ != false) {
-      output.writeBool(3, collectResourceUsage_);
+      output.writeInt64(3, idCounter_);
     }
     if (optimizationParams_ != null) {
-      output.writeMessage(4, getOptimizationParams());
+      output.writeMessage(5, getOptimizationParams());
     }
     unknownFields.writeTo(output);
   }
@@ -4838,21 +4658,27 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (output_ != null) {
+    for (java.util.Map.Entry<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> entry
+         : internalGetNodes().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>
+      nodes__ = NodesDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getOutput());
+          .computeMessageSize(1, nodes__);
+    }
+    if (output_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(2, output_);
     }
     if (idCounter_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, idCounter_);
-    }
-    if (collectResourceUsage_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(3, collectResourceUsage_);
+        .computeInt64Size(3, idCounter_);
     }
     if (optimizationParams_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getOptimizationParams());
+        .computeMessageSize(5, getOptimizationParams());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -4869,15 +4695,12 @@ private static final long serialVersionUID = 0L;
     }
     org.tensorflow.proto.data.model.ModelProto other = (org.tensorflow.proto.data.model.ModelProto) obj;
 
-    if (hasOutput() != other.hasOutput()) return false;
-    if (hasOutput()) {
-      if (!getOutput()
-          .equals(other.getOutput())) return false;
-    }
+    if (!internalGetNodes().equals(
+        other.internalGetNodes())) return false;
+    if (getOutput()
+        != other.getOutput()) return false;
     if (getIdCounter()
         != other.getIdCounter()) return false;
-    if (getCollectResourceUsage()
-        != other.getCollectResourceUsage()) return false;
     if (hasOptimizationParams() != other.hasOptimizationParams()) return false;
     if (hasOptimizationParams()) {
       if (!getOptimizationParams()
@@ -4894,16 +4717,16 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (hasOutput()) {
-      hash = (37 * hash) + OUTPUT_FIELD_NUMBER;
-      hash = (53 * hash) + getOutput().hashCode();
+    if (!internalGetNodes().getMap().isEmpty()) {
+      hash = (37 * hash) + NODES_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetNodes().hashCode();
     }
+    hash = (37 * hash) + OUTPUT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getOutput());
     hash = (37 * hash) + ID_COUNTER_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getIdCounter());
-    hash = (37 * hash) + COLLECT_RESOURCE_USAGE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getCollectResourceUsage());
     if (hasOptimizationParams()) {
       hash = (37 * hash) + OPTIMIZATION_PARAMS_FIELD_NUMBER;
       hash = (53 * hash) + getOptimizationParams().hashCode();
@@ -5020,6 +4843,28 @@ private static final long serialVersionUID = 0L;
       return org.tensorflow.proto.data.model.ModelProtos.internal_static_tensorflow_data_model_ModelProto_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetNodes();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMutableMapField(
+        int number) {
+      switch (number) {
+        case 1:
+          return internalGetMutableNodes();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -5046,15 +4891,10 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (outputBuilder_ == null) {
-        output_ = null;
-      } else {
-        output_ = null;
-        outputBuilder_ = null;
-      }
-      idCounter_ = 0L;
+      internalGetMutableNodes().clear();
+      output_ = 0L;
 
-      collectResourceUsage_ = false;
+      idCounter_ = 0L;
 
       if (optimizationParamsBuilder_ == null) {
         optimizationParams_ = null;
@@ -5088,13 +4928,11 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public org.tensorflow.proto.data.model.ModelProto buildPartial() {
       org.tensorflow.proto.data.model.ModelProto result = new org.tensorflow.proto.data.model.ModelProto(this);
-      if (outputBuilder_ == null) {
-        result.output_ = output_;
-      } else {
-        result.output_ = outputBuilder_.build();
-      }
+      int from_bitField0_ = bitField0_;
+      result.nodes_ = internalGetNodes();
+      result.nodes_.makeImmutable();
+      result.output_ = output_;
       result.idCounter_ = idCounter_;
-      result.collectResourceUsage_ = collectResourceUsage_;
       if (optimizationParamsBuilder_ == null) {
         result.optimizationParams_ = optimizationParams_;
       } else {
@@ -5148,14 +4986,13 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.tensorflow.proto.data.model.ModelProto other) {
       if (other == org.tensorflow.proto.data.model.ModelProto.getDefaultInstance()) return this;
-      if (other.hasOutput()) {
-        mergeOutput(other.getOutput());
+      internalGetMutableNodes().mergeFrom(
+          other.internalGetNodes());
+      if (other.getOutput() != 0L) {
+        setOutput(other.getOutput());
       }
       if (other.getIdCounter() != 0L) {
         setIdCounter(other.getIdCounter());
-      }
-      if (other.getCollectResourceUsage() != false) {
-        setCollectResourceUsage(other.getCollectResourceUsage());
       }
       if (other.hasOptimizationParams()) {
         mergeOptimizationParams(other.getOptimizationParams());
@@ -5188,158 +5025,195 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
-    private org.tensorflow.proto.data.model.ModelProto.Node output_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.tensorflow.proto.data.model.ModelProto.Node, org.tensorflow.proto.data.model.ModelProto.Node.Builder, org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> outputBuilder_;
-    /**
-     * <pre>
-     * Output node of this model.
-     * </pre>
-     *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-     */
-    public boolean hasOutput() {
-      return outputBuilder_ != null || output_ != null;
+    private com.google.protobuf.MapField<
+        java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> nodes_;
+    private com.google.protobuf.MapField<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>
+    internalGetNodes() {
+      if (nodes_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            NodesDefaultEntryHolder.defaultEntry);
+      }
+      return nodes_;
+    }
+    private com.google.protobuf.MapField<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>
+    internalGetMutableNodes() {
+      onChanged();;
+      if (nodes_ == null) {
+        nodes_ = com.google.protobuf.MapField.newMapField(
+            NodesDefaultEntryHolder.defaultEntry);
+      }
+      if (!nodes_.isMutable()) {
+        nodes_ = nodes_.copy();
+      }
+      return nodes_;
+    }
+
+    public int getNodesCount() {
+      return internalGetNodes().getMap().size();
     }
     /**
      * <pre>
-     * Output node of this model.
+     * Map of node IDs to nodes of this model.
      * </pre>
      *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
      */
-    public org.tensorflow.proto.data.model.ModelProto.Node getOutput() {
-      if (outputBuilder_ == null) {
-        return output_ == null ? org.tensorflow.proto.data.model.ModelProto.Node.getDefaultInstance() : output_;
-      } else {
-        return outputBuilder_.getMessage();
-      }
+
+    public boolean containsNodes(
+        long key) {
+      
+      return internalGetNodes().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getNodesMap()} instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> getNodes() {
+      return getNodesMap();
     }
     /**
      * <pre>
-     * Output node of this model.
+     * Map of node IDs to nodes of this model.
      * </pre>
      *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
      */
-    public Builder setOutput(org.tensorflow.proto.data.model.ModelProto.Node value) {
-      if (outputBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        output_ = value;
-        onChanged();
-      } else {
-        outputBuilder_.setMessage(value);
-      }
 
+    public java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> getNodesMap() {
+      return internalGetNodes().getMap();
+    }
+    /**
+     * <pre>
+     * Map of node IDs to nodes of this model.
+     * </pre>
+     *
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+     */
+
+    public org.tensorflow.proto.data.model.ModelProto.Node getNodesOrDefault(
+        long key,
+        org.tensorflow.proto.data.model.ModelProto.Node defaultValue) {
+      
+      java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> map =
+          internalGetNodes().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * Map of node IDs to nodes of this model.
+     * </pre>
+     *
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+     */
+
+    public org.tensorflow.proto.data.model.ModelProto.Node getNodesOrThrow(
+        long key) {
+      
+      java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> map =
+          internalGetNodes().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public Builder clearNodes() {
+      internalGetMutableNodes().getMutableMap()
+          .clear();
       return this;
     }
     /**
      * <pre>
-     * Output node of this model.
+     * Map of node IDs to nodes of this model.
      * </pre>
      *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
      */
-    public Builder setOutput(
-        org.tensorflow.proto.data.model.ModelProto.Node.Builder builderForValue) {
-      if (outputBuilder_ == null) {
-        output_ = builderForValue.build();
-        onChanged();
-      } else {
-        outputBuilder_.setMessage(builderForValue.build());
-      }
 
+    public Builder removeNodes(
+        long key) {
+      
+      internalGetMutableNodes().getMutableMap()
+          .remove(key);
+      return this;
+    }
+    /**
+     * Use alternate mutation accessors instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node>
+    getMutableNodes() {
+      return internalGetMutableNodes().getMutableMap();
+    }
+    /**
+     * <pre>
+     * Map of node IDs to nodes of this model.
+     * </pre>
+     *
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
+     */
+    public Builder putNodes(
+        long key,
+        org.tensorflow.proto.data.model.ModelProto.Node value) {
+      
+      if (value == null) { throw new java.lang.NullPointerException(); }
+      internalGetMutableNodes().getMutableMap()
+          .put(key, value);
       return this;
     }
     /**
      * <pre>
-     * Output node of this model.
+     * Map of node IDs to nodes of this model.
      * </pre>
      *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
+     * <code>map&lt;int64, .tensorflow.data.model.ModelProto.Node&gt; nodes = 1;</code>
      */
-    public Builder mergeOutput(org.tensorflow.proto.data.model.ModelProto.Node value) {
-      if (outputBuilder_ == null) {
-        if (output_ != null) {
-          output_ =
-            org.tensorflow.proto.data.model.ModelProto.Node.newBuilder(output_).mergeFrom(value).buildPartial();
-        } else {
-          output_ = value;
-        }
-        onChanged();
-      } else {
-        outputBuilder_.mergeFrom(value);
-      }
 
+    public Builder putAllNodes(
+        java.util.Map<java.lang.Long, org.tensorflow.proto.data.model.ModelProto.Node> values) {
+      internalGetMutableNodes().getMutableMap()
+          .putAll(values);
+      return this;
+    }
+
+    private long output_ ;
+    /**
+     * <pre>
+     * ID of the output node of this model.
+     * </pre>
+     *
+     * <code>int64 output = 2;</code>
+     */
+    public long getOutput() {
+      return output_;
+    }
+    /**
+     * <pre>
+     * ID of the output node of this model.
+     * </pre>
+     *
+     * <code>int64 output = 2;</code>
+     */
+    public Builder setOutput(long value) {
+      
+      output_ = value;
+      onChanged();
       return this;
     }
     /**
      * <pre>
-     * Output node of this model.
+     * ID of the output node of this model.
      * </pre>
      *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
+     * <code>int64 output = 2;</code>
      */
     public Builder clearOutput() {
-      if (outputBuilder_ == null) {
-        output_ = null;
-        onChanged();
-      } else {
-        output_ = null;
-        outputBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * Output node of this model.
-     * </pre>
-     *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-     */
-    public org.tensorflow.proto.data.model.ModelProto.Node.Builder getOutputBuilder() {
       
+      output_ = 0L;
       onChanged();
-      return getOutputFieldBuilder().getBuilder();
-    }
-    /**
-     * <pre>
-     * Output node of this model.
-     * </pre>
-     *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-     */
-    public org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder getOutputOrBuilder() {
-      if (outputBuilder_ != null) {
-        return outputBuilder_.getMessageOrBuilder();
-      } else {
-        return output_ == null ?
-            org.tensorflow.proto.data.model.ModelProto.Node.getDefaultInstance() : output_;
-      }
-    }
-    /**
-     * <pre>
-     * Output node of this model.
-     * </pre>
-     *
-     * <code>.tensorflow.data.model.ModelProto.Node output = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        org.tensorflow.proto.data.model.ModelProto.Node, org.tensorflow.proto.data.model.ModelProto.Node.Builder, org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder> 
-        getOutputFieldBuilder() {
-      if (outputBuilder_ == null) {
-        outputBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            org.tensorflow.proto.data.model.ModelProto.Node, org.tensorflow.proto.data.model.ModelProto.Node.Builder, org.tensorflow.proto.data.model.ModelProto.NodeOrBuilder>(
-                getOutput(),
-                getParentForChildren(),
-                isClean());
-        output_ = null;
-      }
-      return outputBuilder_;
+      return this;
     }
 
     private long idCounter_ ;
@@ -5348,7 +5222,7 @@ private static final long serialVersionUID = 0L;
      * Counter for node IDs of this model.
      * </pre>
      *
-     * <code>int64 id_counter = 2;</code>
+     * <code>int64 id_counter = 3;</code>
      */
     public long getIdCounter() {
       return idCounter_;
@@ -5358,7 +5232,7 @@ private static final long serialVersionUID = 0L;
      * Counter for node IDs of this model.
      * </pre>
      *
-     * <code>int64 id_counter = 2;</code>
+     * <code>int64 id_counter = 3;</code>
      */
     public Builder setIdCounter(long value) {
       
@@ -5371,7 +5245,7 @@ private static final long serialVersionUID = 0L;
      * Counter for node IDs of this model.
      * </pre>
      *
-     * <code>int64 id_counter = 2;</code>
+     * <code>int64 id_counter = 3;</code>
      */
     public Builder clearIdCounter() {
       
@@ -5380,58 +5254,17 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private boolean collectResourceUsage_ ;
-    /**
-     * <pre>
-     * Indicates whether the modeling framework should collect resource usage,
-     * e.g. CPU, memory.
-     * </pre>
-     *
-     * <code>bool collect_resource_usage = 3;</code>
-     */
-    public boolean getCollectResourceUsage() {
-      return collectResourceUsage_;
-    }
-    /**
-     * <pre>
-     * Indicates whether the modeling framework should collect resource usage,
-     * e.g. CPU, memory.
-     * </pre>
-     *
-     * <code>bool collect_resource_usage = 3;</code>
-     */
-    public Builder setCollectResourceUsage(boolean value) {
-      
-      collectResourceUsage_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * Indicates whether the modeling framework should collect resource usage,
-     * e.g. CPU, memory.
-     * </pre>
-     *
-     * <code>bool collect_resource_usage = 3;</code>
-     */
-    public Builder clearCollectResourceUsage() {
-      
-      collectResourceUsage_ = false;
-      onChanged();
-      return this;
-    }
-
     private org.tensorflow.proto.data.model.ModelProto.OptimizationParams optimizationParams_;
     private com.google.protobuf.SingleFieldBuilderV3<
         org.tensorflow.proto.data.model.ModelProto.OptimizationParams, org.tensorflow.proto.data.model.ModelProto.OptimizationParams.Builder, org.tensorflow.proto.data.model.ModelProto.OptimizationParamsOrBuilder> optimizationParamsBuilder_;
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public boolean hasOptimizationParams() {
       return optimizationParamsBuilder_ != null || optimizationParams_ != null;
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public org.tensorflow.proto.data.model.ModelProto.OptimizationParams getOptimizationParams() {
       if (optimizationParamsBuilder_ == null) {
@@ -5441,7 +5274,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public Builder setOptimizationParams(org.tensorflow.proto.data.model.ModelProto.OptimizationParams value) {
       if (optimizationParamsBuilder_ == null) {
@@ -5457,7 +5290,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public Builder setOptimizationParams(
         org.tensorflow.proto.data.model.ModelProto.OptimizationParams.Builder builderForValue) {
@@ -5471,7 +5304,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public Builder mergeOptimizationParams(org.tensorflow.proto.data.model.ModelProto.OptimizationParams value) {
       if (optimizationParamsBuilder_ == null) {
@@ -5489,7 +5322,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public Builder clearOptimizationParams() {
       if (optimizationParamsBuilder_ == null) {
@@ -5503,7 +5336,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public org.tensorflow.proto.data.model.ModelProto.OptimizationParams.Builder getOptimizationParamsBuilder() {
       
@@ -5511,7 +5344,7 @@ private static final long serialVersionUID = 0L;
       return getOptimizationParamsFieldBuilder().getBuilder();
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     public org.tensorflow.proto.data.model.ModelProto.OptimizationParamsOrBuilder getOptimizationParamsOrBuilder() {
       if (optimizationParamsBuilder_ != null) {
@@ -5522,7 +5355,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 4;</code>
+     * <code>.tensorflow.data.model.ModelProto.OptimizationParams optimization_params = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         org.tensorflow.proto.data.model.ModelProto.OptimizationParams, org.tensorflow.proto.data.model.ModelProto.OptimizationParams.Builder, org.tensorflow.proto.data.model.ModelProto.OptimizationParamsOrBuilder> 

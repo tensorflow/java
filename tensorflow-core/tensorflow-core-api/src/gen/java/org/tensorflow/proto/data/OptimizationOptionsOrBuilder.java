@@ -13,26 +13,6 @@ public interface OptimizationOptionsOrBuilder extends
   boolean getApplyDefaultOptimizations();
 
   /**
-   * <code>bool autotune = 2;</code>
-   */
-  boolean getAutotune();
-
-  /**
-   * <code>bool autotune_buffers = 3;</code>
-   */
-  boolean getAutotuneBuffers();
-
-  /**
-   * <code>int32 autotune_cpu_budget = 4;</code>
-   */
-  int getAutotuneCpuBudget();
-
-  /**
-   * <code>int64 autotune_ram_budget = 5;</code>
-   */
-  long getAutotuneRamBudget();
-
-  /**
    * <code>bool filter_fusion = 6;</code>
    */
   boolean getFilterFusion();
@@ -73,14 +53,6 @@ public interface OptimizationOptionsOrBuilder extends
   boolean getShuffleAndRepeatFusion();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalApplyDefaultOptimizationsCase getOptionalApplyDefaultOptimizationsCase();
-
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalAutotuneCase getOptionalAutotuneCase();
-
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalAutotuneBuffersCase getOptionalAutotuneBuffersCase();
-
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalAutotuneCpuBudgetCase getOptionalAutotuneCpuBudgetCase();
-
-  public org.tensorflow.proto.data.OptimizationOptions.OptionalAutotuneRamBudgetCase getOptionalAutotuneRamBudgetCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterFusionCase getOptionalFilterFusionCase();
 

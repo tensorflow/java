@@ -79,4 +79,15 @@ public interface OptimizerOptionsOrBuilder extends
    * <code>.tensorflow.OptimizerOptions.GlobalJitLevel global_jit_level = 5;</code>
    */
   org.tensorflow.proto.framework.OptimizerOptions.GlobalJitLevel getGlobalJitLevel();
+
+  /**
+   * <pre>
+   * CPU code will be autoclustered only if global_jit_level &gt;= ON_1 and either:
+   *  - this flag is true, or
+   *  - TF_XLA_FLAGS contains --tf_xla_cpu_global_jit=true.
+   * </pre>
+   *
+   * <code>bool cpu_global_jit = 7;</code>
+   */
+  boolean getCpuGlobalJit();
 }

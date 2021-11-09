@@ -41,6 +41,8 @@ import org.tensorflow.types.family.TType;
  * Wraps the variadic XLA Reduce operator.
  * Semantics are documented at
  * https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
+ * <p>This version is limited to operands of the same dtype.
+ * XlaVariadicReduceV2 is a version that supports heterogeneous operands.
  *
  * @param <T> data type for {@code output} output
  */

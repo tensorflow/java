@@ -281,4 +281,38 @@ public interface NodeDefOrBuilder extends
    * <code>.tensorflow.NodeDef.ExperimentalDebugInfo experimental_debug_info = 6;</code>
    */
   org.tensorflow.proto.framework.NodeDef.ExperimentalDebugInfoOrBuilder getExperimentalDebugInfoOrBuilder();
+
+  /**
+   * <pre>
+   * The complete type of this node. Experimental and subject to change.
+   * Currently, the field only contains the return types of the node. That will
+   * extend in the future to contain the entire signature of the node, as a
+   * function type.
+   * </pre>
+   *
+   * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+   */
+  boolean hasExperimentalType();
+  /**
+   * <pre>
+   * The complete type of this node. Experimental and subject to change.
+   * Currently, the field only contains the return types of the node. That will
+   * extend in the future to contain the entire signature of the node, as a
+   * function type.
+   * </pre>
+   *
+   * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+   */
+  org.tensorflow.proto.framework.FullTypeDef getExperimentalType();
+  /**
+   * <pre>
+   * The complete type of this node. Experimental and subject to change.
+   * Currently, the field only contains the return types of the node. That will
+   * extend in the future to contain the entire signature of the node, as a
+   * function type.
+   * </pre>
+   *
+   * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+   */
+  org.tensorflow.proto.framework.FullTypeDefOrBuilder getExperimentalTypeOrBuilder();
 }
