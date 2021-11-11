@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -46,6 +48,10 @@ import org.tensorflow.types.TInt32;
  *   `roi_probabilities`: probability scores of each roi in 'rois', a 2D tensor of shape [Batch,post_nms_topn], padded with 0 if needed, sorted by scores.
  * </pre>
  */
+@OpMetadata(
+    opType = GenerateBoundingBoxProposals.OP_NAME,
+    inputsClass = GenerateBoundingBoxProposals.Inputs.class
+)
 public final class GenerateBoundingBoxProposals extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -56,8 +62,8 @@ public final class GenerateBoundingBoxProposals extends RawOp {
 
   private Output<TFloat32> roiProbabilities;
 
-  private GenerateBoundingBoxProposals(Operation operation) {
-    super(operation);
+  public GenerateBoundingBoxProposals(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     rois = operation.output(outputIdx++);
     roiProbabilities = operation.output(outputIdx++);
@@ -154,6 +160,9 @@ public final class GenerateBoundingBoxProposals extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = GenerateBoundingBoxProposals.class
+  )
   public static class Inputs extends RawOpInputs<GenerateBoundingBoxProposals> {
     /**
      * A 4-D float tensor of shape {@code [num_images, height, width, num_achors]} containing scores of the boxes for given anchors, can be unsorted.

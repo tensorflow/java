@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code outputs} output
  */
+@OpMetadata(
+    opType = ClusterOutput.OP_NAME,
+    inputsClass = ClusterOutput.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -47,8 +53,8 @@ public final class ClusterOutput<T extends TType> extends RawOp implements Opera
 
   private Output<T> outputs;
 
-  private ClusterOutput(Operation operation) {
-    super(operation);
+  public ClusterOutput(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputs = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class ClusterOutput<T extends TType> extends RawOp implements Opera
     return outputs;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ClusterOutput.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ClusterOutput<T>> {
     /**
      * The input input

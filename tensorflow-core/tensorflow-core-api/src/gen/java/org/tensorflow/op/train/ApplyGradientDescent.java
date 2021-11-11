@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code out} output
  */
+@OpMetadata(
+    opType = ApplyGradientDescent.OP_NAME,
+    inputsClass = ApplyGradientDescent.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -47,8 +53,8 @@ public final class ApplyGradientDescent<T extends TType> extends RawOp implement
 
   private Output<T> out;
 
-  private ApplyGradientDescent(Operation operation) {
-    super(operation);
+  public ApplyGradientDescent(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -130,6 +136,9 @@ public final class ApplyGradientDescent<T extends TType> extends RawOp implement
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ApplyGradientDescent.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ApplyGradientDescent<T>> {
     /**
      * Should be from a Variable().

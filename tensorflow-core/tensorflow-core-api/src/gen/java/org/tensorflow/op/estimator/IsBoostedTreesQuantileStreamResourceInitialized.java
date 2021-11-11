@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
  * Checks whether a quantile stream has been initialized.
  * An Op that checks if quantile stream resource is initialized.
  */
+@OpMetadata(
+    opType = IsBoostedTreesQuantileStreamResourceInitialized.OP_NAME,
+    inputsClass = IsBoostedTreesQuantileStreamResourceInitialized.Inputs.class
+)
 public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -42,8 +48,8 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp
 
   private Output<TBool> isInitialized;
 
-  private IsBoostedTreesQuantileStreamResourceInitialized(Operation operation) {
-    super(operation);
+  public IsBoostedTreesQuantileStreamResourceInitialized(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     isInitialized = operation.output(outputIdx++);
   }
@@ -79,6 +85,9 @@ public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp
     return isInitialized;
   }
 
+  @OpInputsMetadata(
+      outputsClass = IsBoostedTreesQuantileStreamResourceInitialized.class
+  )
   public static class Inputs extends RawOpInputs<IsBoostedTreesQuantileStreamResourceInitialized> {
     /**
      * resource; The reference to quantile stream resource handle.

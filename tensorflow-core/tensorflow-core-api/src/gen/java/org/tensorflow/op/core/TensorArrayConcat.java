@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -47,6 +49,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code value} output
  */
+@OpMetadata(
+    opType = TensorArrayConcat.OP_NAME,
+    inputsClass = TensorArrayConcat.Inputs.class
+)
 @Operator
 public final class TensorArrayConcat<T extends TType> extends RawOp {
   /**
@@ -58,8 +64,8 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
 
   private Output<TInt64> lengths;
 
-  private TensorArrayConcat(Operation operation) {
-    super(operation);
+  public TensorArrayConcat(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
     lengths = operation.output(outputIdx++);
@@ -154,6 +160,9 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArrayConcat.class
+  )
   public static class Inputs extends RawOpInputs<TensorArrayConcat<?>> {
     /**
      * The handle to a TensorArray.

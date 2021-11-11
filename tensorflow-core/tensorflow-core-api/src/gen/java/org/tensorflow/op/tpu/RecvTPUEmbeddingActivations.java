@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -40,6 +42,10 @@ import org.tensorflow.types.TFloat32;
  * one Tensor of activations per table specified in the model. There can be at
  * most one RecvTPUEmbeddingActivations op in the TPU graph.
  */
+@OpMetadata(
+    opType = RecvTPUEmbeddingActivations.OP_NAME,
+    inputsClass = RecvTPUEmbeddingActivations.Inputs.class
+)
 public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable<Operand<TFloat32>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -49,8 +55,8 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
   private List<Output<TFloat32>> outputs;
 
   @SuppressWarnings("unchecked")
-  private RecvTPUEmbeddingActivations(Operation operation) {
-    super(operation);
+  public RecvTPUEmbeddingActivations(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
     outputs = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, outputsLength));
@@ -92,6 +98,9 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
     return (Iterator) outputs.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = RecvTPUEmbeddingActivations.class
+  )
   public static class Inputs extends RawOpInputs<RecvTPUEmbeddingActivations> {
     /**
      * Serialized TPUEmbeddingConfiguration proto.

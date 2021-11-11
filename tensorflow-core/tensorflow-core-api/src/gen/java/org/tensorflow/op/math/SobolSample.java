@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code samples} output
  */
+@OpMetadata(
+    opType = SobolSample.OP_NAME,
+    inputsClass = SobolSample.Inputs.class
+)
 public final class SobolSample<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -48,8 +54,8 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
 
   private Output<T> samples;
 
-  private SobolSample(Operation operation) {
-    super(operation);
+  public SobolSample(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     samples = operation.output(outputIdx++);
   }
@@ -113,6 +119,9 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
     return samples;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SobolSample.class
+  )
   public static class Inputs extends RawOpInputs<SobolSample<?>> {
     /**
      * Positive scalar {@code Tensor} representing each sample's dimension.

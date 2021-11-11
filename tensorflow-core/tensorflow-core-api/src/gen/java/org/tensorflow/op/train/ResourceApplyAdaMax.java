@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -35,14 +37,18 @@ import org.tensorflow.types.family.TType;
  * v_t &lt;- max(beta2 * v_{t-1}, abs(g))
  * variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
  */
+@OpMetadata(
+    opType = ResourceApplyAdaMax.OP_NAME,
+    inputsClass = ResourceApplyAdaMax.Inputs.class
+)
 public final class ResourceApplyAdaMax extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ResourceApplyAdaMax";
 
-  private ResourceApplyAdaMax(Operation operation) {
-    super(operation);
+  public ResourceApplyAdaMax(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -124,6 +130,9 @@ public final class ResourceApplyAdaMax extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyAdaMax.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyAdaMax> {
     /**
      * Should be from a Variable().

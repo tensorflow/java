@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -46,6 +48,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code values} output
  */
+@OpMetadata(
+    opType = TopK.OP_NAME,
+    inputsClass = TopK.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -59,8 +65,8 @@ public final class TopK<T extends TNumber> extends RawOp {
 
   private Output<TInt32> indices;
 
-  private TopK(Operation operation) {
-    super(operation);
+  public TopK(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     values = operation.output(outputIdx++);
     indices = operation.output(outputIdx++);
@@ -146,6 +152,9 @@ public final class TopK<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TopK.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<TopK<T>> {
     /**
      * 1-D or higher with last dimension at least {@code k}.

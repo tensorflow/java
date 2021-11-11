@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Op returns the number of elements in the underlying container.
  */
+@OpMetadata(
+    opType = MapSize.OP_NAME,
+    inputsClass = MapSize.Inputs.class
+)
 @Operator
 public final class MapSize extends RawOp implements Operand<TInt32> {
   /**
@@ -46,8 +52,8 @@ public final class MapSize extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private MapSize(Operation operation) {
-    super(operation);
+  public MapSize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -200,6 +206,9 @@ public final class MapSize extends RawOp implements Operand<TInt32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MapSize.class
+  )
   public static class Inputs extends RawOpInputs<MapSize> {
     /**
      * The capacity attribute

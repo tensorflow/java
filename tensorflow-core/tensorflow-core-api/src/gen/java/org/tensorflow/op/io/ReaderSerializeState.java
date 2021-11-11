@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * Not all Readers support being serialized, so this can produce an
  * Unimplemented error.
  */
+@OpMetadata(
+    opType = ReaderSerializeState.OP_NAME,
+    inputsClass = ReaderSerializeState.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -47,8 +53,8 @@ public final class ReaderSerializeState extends RawOp implements Operand<TString
 
   private Output<TString> state;
 
-  private ReaderSerializeState(Operation operation) {
-    super(operation);
+  public ReaderSerializeState(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     state = operation.output(outputIdx++);
   }
@@ -83,6 +89,9 @@ public final class ReaderSerializeState extends RawOp implements Operand<TString
     return state;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReaderSerializeState.class
+  )
   public static class Inputs extends RawOpInputs<ReaderSerializeState> {
     /**
      * Handle to a Reader.

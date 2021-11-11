@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the lines of a file delimited by '\n'.
  */
+@OpMetadata(
+    opType = TextLineReader.OP_NAME,
+    inputsClass = TextLineReader.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -45,8 +51,8 @@ public final class TextLineReader extends RawOp implements Operand<TType> {
   private Output<? extends TType> readerHandle;
 
   @SuppressWarnings("unchecked")
-  private TextLineReader(Operation operation) {
-    super(operation);
+  public TextLineReader(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     readerHandle = operation.output(outputIdx++);
   }
@@ -175,6 +181,9 @@ public final class TextLineReader extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TextLineReader.class
+  )
   public static class Inputs extends RawOpInputs<TextLineReader> {
     /**
      * Number of lines to skip from the beginning of every file.

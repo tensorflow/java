@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code y} output
  */
+@OpMetadata(
+    opType = QuantizedInstanceNorm.OP_NAME,
+    inputsClass = QuantizedInstanceNorm.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -52,8 +58,8 @@ public final class QuantizedInstanceNorm<T extends TNumber> extends RawOp {
 
   private Output<TFloat32> yMax;
 
-  private QuantizedInstanceNorm(Operation operation) {
-    super(operation);
+  public QuantizedInstanceNorm(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
     yMin = operation.output(outputIdx++);
@@ -256,6 +262,9 @@ public final class QuantizedInstanceNorm<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedInstanceNorm.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizedInstanceNorm<T>> {
     /**
      * A 4D input Tensor.

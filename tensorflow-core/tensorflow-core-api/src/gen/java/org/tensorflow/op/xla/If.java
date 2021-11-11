@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * output = cond ? then_branch(inputs) : else_branch(inputs).
  */
+@OpMetadata(
+    opType = If.OP_NAME,
+    inputsClass = If.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -50,8 +56,8 @@ public final class If extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private If(Operation operation) {
-    super(operation);
+  public If(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -103,6 +109,9 @@ public final class If extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = If.class
+  )
   public static class Inputs extends RawOpInputs<If> {
     /**
      * A boolean scalar.

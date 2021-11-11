@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output_ref} output
  */
+@OpMetadata(
+    opType = ScatterNdMin.OP_NAME,
+    inputsClass = ScatterNdMin.Inputs.class
+)
 public final class ScatterNdMin<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class ScatterNdMin<T extends TType> extends RawOp implements Operan
 
   private Output<T> outputRef;
 
-  private ScatterNdMin(Operation operation) {
-    super(operation);
+  public ScatterNdMin(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputRef = operation.output(outputIdx++);
   }
@@ -132,6 +138,9 @@ public final class ScatterNdMin<T extends TType> extends RawOp implements Operan
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ScatterNdMin.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ScatterNdMin<T>> {
     /**
      * A mutable Tensor. Should be from a Variable node.

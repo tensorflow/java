@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -66,6 +68,10 @@ import org.tensorflow.types.family.TType;
  * <p>It is also useful if two separate functions must share a resource, but we
  * wish to ensure the usage is exclusive.
  */
+@OpMetadata(
+    opType = MutexLock.OP_NAME,
+    inputsClass = MutexLock.Inputs.class
+)
 @Operator
 public final class MutexLock extends RawOp implements Operand<TType> {
   /**
@@ -76,8 +82,8 @@ public final class MutexLock extends RawOp implements Operand<TType> {
   private Output<? extends TType> mutexLock;
 
   @SuppressWarnings("unchecked")
-  private MutexLock(Operation operation) {
-    super(operation);
+  public MutexLock(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     mutexLock = operation.output(outputIdx++);
   }
@@ -115,6 +121,9 @@ public final class MutexLock extends RawOp implements Operand<TType> {
     return (Output<TType>) mutexLock;
   }
 
+  @OpInputsMetadata(
+      outputsClass = MutexLock.class
+  )
   public static class Inputs extends RawOpInputs<MutexLock> {
     /**
      * The mutex resource to lock.

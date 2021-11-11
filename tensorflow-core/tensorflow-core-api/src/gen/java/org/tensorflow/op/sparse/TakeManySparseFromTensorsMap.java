@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -78,6 +80,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code sparse_values} output
  */
+@OpMetadata(
+    opType = TakeManySparseFromTensorsMap.OP_NAME,
+    inputsClass = TakeManySparseFromTensorsMap.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -93,8 +99,8 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
 
   private Output<TInt64> sparseShape;
 
-  private TakeManySparseFromTensorsMap(Operation operation) {
-    super(operation);
+  public TakeManySparseFromTensorsMap(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sparseIndices = operation.output(outputIdx++);
     sparseValues = operation.output(outputIdx++);
@@ -219,6 +225,9 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TakeManySparseFromTensorsMap.class
+  )
   public static class Inputs extends RawOpInputs<TakeManySparseFromTensorsMap<?>> {
     /**
      * 1-D, The {@code N} serialized {@code SparseTensor} objects.

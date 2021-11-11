@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -50,6 +52,10 @@ import org.tensorflow.types.family.TType;
  * {@code experimental_deterministic} parameter of {@code tf.data.Options} to {@code False}.
  * This can improve performance at the expense of non-determinism.
  */
+@OpMetadata(
+    opType = ParallelInterleaveDataset.OP_NAME,
+    inputsClass = ParallelInterleaveDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -62,8 +68,8 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private ParallelInterleaveDataset(Operation operation) {
-    super(operation);
+  public ParallelInterleaveDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -182,6 +188,9 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParallelInterleaveDataset.class
+  )
   public static class Inputs extends RawOpInputs<ParallelInterleaveDataset> {
     /**
      * Dataset that produces a stream of arguments for the function {@code f}.

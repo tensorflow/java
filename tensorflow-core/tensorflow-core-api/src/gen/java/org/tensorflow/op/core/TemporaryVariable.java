@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -49,6 +51,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code ref} output
  */
+@OpMetadata(
+    opType = TemporaryVariable.OP_NAME,
+    inputsClass = TemporaryVariable.Inputs.class
+)
 @Operator
 public final class TemporaryVariable<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -58,8 +64,8 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
 
   private Output<T> ref;
 
-  private TemporaryVariable(Operation operation) {
-    super(operation);
+  public TemporaryVariable(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     ref = operation.output(outputIdx++);
   }
@@ -139,6 +145,9 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TemporaryVariable.class
+  )
   public static class Inputs extends RawOpInputs<TemporaryVariable<?>> {
     /**
      * The shape of the variable tensor.

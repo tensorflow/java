@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code data} output
  */
+@OpMetadata(
+    opType = Reduce.OP_NAME,
+    inputsClass = Reduce.Inputs.class
+)
 public final class Reduce<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class Reduce<T extends TNumber> extends RawOp implements Operand<T>
 
   private Output<T> data;
 
-  private Reduce(Operation operation) {
-    super(operation);
+  public Reduce(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     data = operation.output(outputIdx++);
   }
@@ -215,6 +221,9 @@ public final class Reduce<T extends TNumber> extends RawOp implements Operand<T>
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Reduce.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Reduce<T>> {
     /**
      * The input input

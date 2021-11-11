@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
  * Checks whether a tree ensemble has been initialized.
  */
+@OpMetadata(
+    opType = IsBoostedTreesEnsembleInitialized.OP_NAME,
+    inputsClass = IsBoostedTreesEnsembleInitialized.Inputs.class
+)
 public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
 
   private Output<TBool> isInitialized;
 
-  private IsBoostedTreesEnsembleInitialized(Operation operation) {
-    super(operation);
+  public IsBoostedTreesEnsembleInitialized(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     isInitialized = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Op
     return isInitialized;
   }
 
+  @OpInputsMetadata(
+      outputsClass = IsBoostedTreesEnsembleInitialized.class
+  )
   public static class Inputs extends RawOpInputs<IsBoostedTreesEnsembleInitialized> {
     /**
      * Handle to the tree ensemble resource.

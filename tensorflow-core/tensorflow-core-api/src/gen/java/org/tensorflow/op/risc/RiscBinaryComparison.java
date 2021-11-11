@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TNumber;
 /**
  * The RiscBinaryComparison operation
  */
+@OpMetadata(
+    opType = RiscBinaryComparison.OP_NAME,
+    inputsClass = RiscBinaryComparison.Inputs.class
+)
 public final class RiscBinaryComparison extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -42,8 +48,8 @@ public final class RiscBinaryComparison extends RawOp implements Operand<TBool> 
 
   private Output<TBool> z;
 
-  private RiscBinaryComparison(Operation operation) {
-    super(operation);
+  public RiscBinaryComparison(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class RiscBinaryComparison extends RawOp implements Operand<TBool> 
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscBinaryComparison.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<RiscBinaryComparison> {
     /**
      * The x input

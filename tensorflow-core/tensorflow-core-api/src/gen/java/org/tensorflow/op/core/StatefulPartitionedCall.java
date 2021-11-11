@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
  */
+@OpMetadata(
+    opType = StatefulPartitionedCall.OP_NAME,
+    inputsClass = StatefulPartitionedCall.Inputs.class
+)
 @Operator
 public final class StatefulPartitionedCall extends RawOp implements PartitionedCall {
   /**
@@ -48,8 +54,8 @@ public final class StatefulPartitionedCall extends RawOp implements PartitionedC
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private StatefulPartitionedCall(Operation operation) {
-    super(operation);
+  public StatefulPartitionedCall(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -113,6 +119,9 @@ public final class StatefulPartitionedCall extends RawOp implements PartitionedC
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatefulPartitionedCall.class
+  )
   public static class Inputs extends RawOpInputs<StatefulPartitionedCall> {
     /**
      * A list of input tensors.

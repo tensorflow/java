@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -52,6 +54,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Irfft3d.OP_NAME,
+    inputsClass = Irfft3d.Inputs.class
+)
 @Operator(
     group = "signal"
 )
@@ -63,8 +69,8 @@ public final class Irfft3d<U extends TNumber> extends RawOp implements Operand<U
 
   private Output<U> output;
 
-  private Irfft3d(Operation operation) {
-    super(operation);
+  public Irfft3d(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -126,6 +132,9 @@ public final class Irfft3d<U extends TNumber> extends RawOp implements Operand<U
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Irfft3d.class
+  )
   public static class Inputs extends RawOpInputs<Irfft3d<?>> {
     /**
      * A complex tensor.

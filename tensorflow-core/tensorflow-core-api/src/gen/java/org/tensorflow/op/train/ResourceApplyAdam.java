@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
  * $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{v_t} + \epsilon)$$
  */
+@OpMetadata(
+    opType = ResourceApplyAdam.OP_NAME,
+    inputsClass = ResourceApplyAdam.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -46,8 +52,8 @@ public final class ResourceApplyAdam extends RawOp {
    */
   public static final String OP_NAME = "ResourceApplyAdam";
 
-  private ResourceApplyAdam(Operation operation) {
-    super(operation);
+  public ResourceApplyAdam(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -157,6 +163,9 @@ public final class ResourceApplyAdam extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyAdam.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyAdam> {
     /**
      * Should be from a Variable().

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -44,6 +46,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code average} output
  */
+@OpMetadata(
+    opType = AccumulatorTakeGradient.OP_NAME,
+    inputsClass = AccumulatorTakeGradient.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -55,8 +61,8 @@ public final class AccumulatorTakeGradient<T extends TType> extends RawOp implem
 
   private Output<T> average;
 
-  private AccumulatorTakeGradient(Operation operation) {
-    super(operation);
+  public AccumulatorTakeGradient(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     average = operation.output(outputIdx++);
   }
@@ -98,6 +104,9 @@ public final class AccumulatorTakeGradient<T extends TType> extends RawOp implem
     return average;
   }
 
+  @OpInputsMetadata(
+      outputsClass = AccumulatorTakeGradient.class
+  )
   public static class Inputs extends RawOpInputs<AccumulatorTakeGradient<?>> {
     /**
      * The handle to an accumulator.

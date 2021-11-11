@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code values} output
  */
+@OpMetadata(
+    opType = TensorListGather.OP_NAME,
+    inputsClass = TensorListGather.Inputs.class
+)
 @Operator
 public final class TensorListGather<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -52,8 +58,8 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
 
   private Output<T> values;
 
-  private TensorListGather(Operation operation) {
-    super(operation);
+  public TensorListGather(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     values = operation.output(outputIdx++);
   }
@@ -97,6 +103,9 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
     return values;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListGather.class
+  )
   public static class Inputs extends RawOpInputs<TensorListGather<?>> {
     /**
      * The inputHandle input

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = BatchMatrixDiag.OP_NAME,
+    inputsClass = BatchMatrixDiag.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -47,8 +53,8 @@ public final class BatchMatrixDiag<T extends TType> extends RawOp implements Ope
 
   private Output<T> output;
 
-  private BatchMatrixDiag(Operation operation) {
-    super(operation);
+  public BatchMatrixDiag(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class BatchMatrixDiag<T extends TType> extends RawOp implements Ope
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchMatrixDiag.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<BatchMatrixDiag<T>> {
     /**
      * The diagonal input

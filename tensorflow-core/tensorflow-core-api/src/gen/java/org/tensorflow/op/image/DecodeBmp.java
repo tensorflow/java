@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -42,6 +44,10 @@ import org.tensorflow.types.TUint8;
  * <li>4: output an RGBA image.</li>
  * </ul>
  */
+@OpMetadata(
+    opType = DecodeBmp.OP_NAME,
+    inputsClass = DecodeBmp.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -53,8 +59,8 @@ public final class DecodeBmp extends RawOp implements Operand<TUint8> {
 
   private Output<TUint8> image;
 
-  private DecodeBmp(Operation operation) {
-    super(operation);
+  public DecodeBmp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     image = operation.output(outputIdx++);
   }
@@ -128,6 +134,9 @@ public final class DecodeBmp extends RawOp implements Operand<TUint8> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeBmp.class
+  )
   public static class Inputs extends RawOpInputs<DecodeBmp> {
     /**
      * 0-D.  The BMP-encoded image.

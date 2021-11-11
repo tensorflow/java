@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The AnonymousSeedGenerator operation
  */
+@OpMetadata(
+    opType = AnonymousSeedGenerator.OP_NAME,
+    inputsClass = AnonymousSeedGenerator.Inputs.class
+)
 public final class AnonymousSeedGenerator extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class AnonymousSeedGenerator extends RawOp {
   private Output<? extends TType> deleter;
 
   @SuppressWarnings("unchecked")
-  private AnonymousSeedGenerator(Operation operation) {
-    super(operation);
+  public AnonymousSeedGenerator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
     deleter = operation.output(outputIdx++);
@@ -91,6 +97,9 @@ public final class AnonymousSeedGenerator extends RawOp {
     return deleter;
   }
 
+  @OpInputsMetadata(
+      outputsClass = AnonymousSeedGenerator.class
+  )
   public static class Inputs extends RawOpInputs<AnonymousSeedGenerator> {
     /**
      * The seed input

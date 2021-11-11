@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 
 /**
@@ -34,6 +36,10 @@ import org.tensorflow.types.TString;
  * Heartbeats may be sent periodically to indicate the coordinator is still active,
  * to retrieve the current worker status and to expedite shutdown when necessary.
  */
+@OpMetadata(
+    opType = WorkerHeartbeat.OP_NAME,
+    inputsClass = WorkerHeartbeat.Inputs.class
+)
 public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -42,8 +48,8 @@ public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
 
   private Output<TString> response;
 
-  private WorkerHeartbeat(Operation operation) {
-    super(operation);
+  public WorkerHeartbeat(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     response = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
     return response;
   }
 
+  @OpInputsMetadata(
+      outputsClass = WorkerHeartbeat.class
+  )
   public static class Inputs extends RawOpInputs<WorkerHeartbeat> {
     /**
      * A string tensor containing a serialized WorkerHeartbeatRequest

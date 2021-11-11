@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug.OP_NAME,
+    inputsClass = LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug.Inputs.class
+)
 public final class LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug";
 
-  private LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -163,6 +169,9 @@ public final class LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug exten
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingProximalAdagradParametersGradAccumDebug> {
     /**
      * Value of parameters used in the proximal Adagrad optimization algorithm.

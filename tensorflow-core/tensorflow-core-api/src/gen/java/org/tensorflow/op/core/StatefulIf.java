@@ -32,6 +32,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * output = cond ? then_branch(input) : else_branch(input)
  */
+@OpMetadata(
+    opType = StatefulIf.OP_NAME,
+    inputsClass = StatefulIf.Inputs.class
+)
 @Operator
 public final class StatefulIf extends RawOp implements If {
   /**
@@ -49,8 +55,8 @@ public final class StatefulIf extends RawOp implements If {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private StatefulIf(Operation operation) {
-    super(operation);
+  public StatefulIf(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -124,6 +130,9 @@ public final class StatefulIf extends RawOp implements If {
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatefulIf.class
+  )
   public static class Inputs extends RawOpInputs<StatefulIf> {
     /**
      * <pre>

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * key: the key to be inserted
  * value: the value to be inserted
  */
+@OpMetadata(
+    opType = TensorMapInsert.OP_NAME,
+    inputsClass = TensorMapInsert.Inputs.class
+)
 @Operator
 public final class TensorMapInsert extends RawOp implements Operand<TType> {
   /**
@@ -48,8 +54,8 @@ public final class TensorMapInsert extends RawOp implements Operand<TType> {
   private Output<? extends TType> outputHandle;
 
   @SuppressWarnings("unchecked")
-  private TensorMapInsert(Operation operation) {
-    super(operation);
+  public TensorMapInsert(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class TensorMapInsert extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorMapInsert.class
+  )
   public static class Inputs extends RawOpInputs<TensorMapInsert> {
     /**
      * The inputHandle input

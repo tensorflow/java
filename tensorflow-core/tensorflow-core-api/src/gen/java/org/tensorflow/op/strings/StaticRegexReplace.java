@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 
 /**
  * Replaces the match of pattern in input with rewrite.
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
+@OpMetadata(
+    opType = StaticRegexReplace.OP_NAME,
+    inputsClass = StaticRegexReplace.Inputs.class
+)
 public final class StaticRegexReplace extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
 
   private Output<TString> output;
 
-  private StaticRegexReplace(Operation operation) {
-    super(operation);
+  public StaticRegexReplace(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -123,6 +129,9 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = StaticRegexReplace.class
+  )
   public static class Inputs extends RawOpInputs<StaticRegexReplace> {
     /**
      * The text to be processed.

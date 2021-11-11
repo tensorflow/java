@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * sufficient elements remain in the queue. Subsequent Dequeue(Many)
  * operations that would block will fail immediately.
  */
+@OpMetadata(
+    opType = QueueClose.OP_NAME,
+    inputsClass = QueueClose.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -46,8 +52,8 @@ public final class QueueClose extends RawOp {
    */
   public static final String OP_NAME = "QueueCloseV2";
 
-  private QueueClose(Operation operation) {
-    super(operation);
+  public QueueClose(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -108,6 +114,9 @@ public final class QueueClose extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QueueClose.class
+  )
   public static class Inputs extends RawOpInputs<QueueClose> {
     /**
      * The handle to a queue.

@@ -26,12 +26,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * A container for an iterator resource.
  */
+@OpMetadata(
+    opType = DeleteIterator.OP_NAME,
+    inputsClass = DeleteIterator.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -41,8 +47,8 @@ public final class DeleteIterator extends RawOp {
    */
   public static final String OP_NAME = "DeleteIterator";
 
-  private DeleteIterator(Operation operation) {
-    super(operation);
+  public DeleteIterator(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -64,6 +70,9 @@ public final class DeleteIterator extends RawOp {
     return new DeleteIterator(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DeleteIterator.class
+  )
   public static class Inputs extends RawOpInputs<DeleteIterator> {
     /**
      * A handle to the iterator to delete.

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code sum} output
  */
+@OpMetadata(
+    opType = AddN.OP_NAME,
+    inputsClass = AddN.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -53,8 +59,8 @@ public final class AddN<T extends TType> extends RawOp implements Operand<T> {
 
   private Output<T> sum;
 
-  private AddN(Operation operation) {
-    super(operation);
+  public AddN(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sum = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class AddN<T extends TType> extends RawOp implements Operand<T> {
     return sum;
   }
 
+  @OpInputsMetadata(
+      outputsClass = AddN.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<AddN<T>> {
     /**
      * The inputs input

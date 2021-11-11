@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * This is the same as the number of ReaderRead executions that have
  * succeeded.
  */
+@OpMetadata(
+    opType = ReaderNumRecordsProduced.OP_NAME,
+    inputsClass = ReaderNumRecordsProduced.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -47,8 +53,8 @@ public final class ReaderNumRecordsProduced extends RawOp implements Operand<TIn
 
   private Output<TInt64> recordsProduced;
 
-  private ReaderNumRecordsProduced(Operation operation) {
-    super(operation);
+  public ReaderNumRecordsProduced(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     recordsProduced = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class ReaderNumRecordsProduced extends RawOp implements Operand<TIn
     return recordsProduced;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReaderNumRecordsProduced.class
+  )
   public static class Inputs extends RawOpInputs<ReaderNumRecordsProduced> {
     /**
      * Handle to a Reader.

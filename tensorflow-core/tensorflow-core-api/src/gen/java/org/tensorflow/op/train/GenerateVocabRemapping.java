@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -59,6 +61,10 @@ import org.tensorflow.types.TString;
  * use the corresponding index_table_from_file() as the FeatureColumn framework
  * does (as opposed to tf.feature_to_id(), which uses a CuckooTable).
  */
+@OpMetadata(
+    opType = GenerateVocabRemapping.OP_NAME,
+    inputsClass = GenerateVocabRemapping.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -72,8 +78,8 @@ public final class GenerateVocabRemapping extends RawOp {
 
   private Output<TInt32> numPresent;
 
-  private GenerateVocabRemapping(Operation operation) {
-    super(operation);
+  public GenerateVocabRemapping(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     remapping = operation.output(outputIdx++);
     numPresent = operation.output(outputIdx++);
@@ -163,6 +169,9 @@ public final class GenerateVocabRemapping extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = GenerateVocabRemapping.class
+  )
   public static class Inputs extends RawOpInputs<GenerateVocabRemapping> {
     /**
      * Path to the new vocab file.

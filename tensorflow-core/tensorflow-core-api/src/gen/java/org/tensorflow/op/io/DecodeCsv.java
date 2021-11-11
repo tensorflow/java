@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * (https://tools.ietf.org/html/rfc4180)
  * Note that we allow leading and trailing spaces with int or float field.
  */
+@OpMetadata(
+    opType = DecodeCsv.OP_NAME,
+    inputsClass = DecodeCsv.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -53,8 +59,8 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private DecodeCsv(Operation operation) {
-    super(operation);
+  public DecodeCsv(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -244,6 +250,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeCsv.class
+  )
   public static class Inputs extends RawOpInputs<DecodeCsv> {
     /**
      * Each string is a record/row in the csv and all records should have

@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The IteratorV2 operation
  */
+@OpMetadata(
+    opType = Iterator.OP_NAME,
+    inputsClass = Iterator.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -49,8 +55,8 @@ public final class Iterator extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private Iterator(Operation operation) {
-    super(operation);
+  public Iterator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -97,6 +103,9 @@ public final class Iterator extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Iterator.class
+  )
   public static class Inputs extends RawOpInputs<Iterator> {
     /**
      * The sharedName attribute

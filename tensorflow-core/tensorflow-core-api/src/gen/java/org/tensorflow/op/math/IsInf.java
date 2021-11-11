@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TNumber;
  * tf.math.is_inf(x) ==&gt; [False, True, False, True]
  * </pre>
  */
+@OpMetadata(
+    opType = IsInf.OP_NAME,
+    inputsClass = IsInf.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -54,8 +60,8 @@ public final class IsInf extends RawOp implements Operand<TBool> {
 
   private Output<TBool> y;
 
-  private IsInf(Operation operation) {
-    super(operation);
+  public IsInf(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class IsInf extends RawOp implements Operand<TBool> {
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = IsInf.class
+  )
   public static class Inputs extends RawOpInputs<IsInf> {
     /**
      * The x input

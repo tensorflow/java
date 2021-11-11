@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * (or any other distribution). The actual increment added to the
  * counter is an unspecified implementation choice.
  */
+@OpMetadata(
+    opType = RngReadAndSkip.OP_NAME,
+    inputsClass = RngReadAndSkip.Inputs.class
+)
 public final class RngReadAndSkip extends RawOp implements Operand<TInt64> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class RngReadAndSkip extends RawOp implements Operand<TInt64> {
 
   private Output<TInt64> value;
 
-  private RngReadAndSkip(Operation operation) {
-    super(operation);
+  public RngReadAndSkip(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
   }
@@ -87,6 +93,9 @@ public final class RngReadAndSkip extends RawOp implements Operand<TInt64> {
     return value;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RngReadAndSkip.class
+  )
   public static class Inputs extends RawOpInputs<RngReadAndSkip> {
     /**
      * The handle of the resource variable that stores the state of the RNG.

@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that batches input elements into a SparseTensor.
  */
+@OpMetadata(
+    opType = DenseToSparseBatchDataset.OP_NAME,
+    inputsClass = DenseToSparseBatchDataset.Inputs.class
+)
 public final class DenseToSparseBatchDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class DenseToSparseBatchDataset extends RawOp implements Operand<TT
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private DenseToSparseBatchDataset(Operation operation) {
-    super(operation);
+  public DenseToSparseBatchDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -100,6 +106,9 @@ public final class DenseToSparseBatchDataset extends RawOp implements Operand<TT
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = DenseToSparseBatchDataset.class
+  )
   public static class Inputs extends RawOpInputs<DenseToSparseBatchDataset> {
     /**
      * A handle to an input dataset. Must have a single component.

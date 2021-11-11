@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code tensor} output
  */
+@OpMetadata(
+    opType = TensorListStack.OP_NAME,
+    inputsClass = TensorListStack.Inputs.class
+)
 @Operator
 public final class TensorListStack<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -51,8 +57,8 @@ public final class TensorListStack<T extends TType> extends RawOp implements Ope
 
   private Output<T> tensor;
 
-  private TensorListStack(Operation operation) {
-    super(operation);
+  public TensorListStack(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     tensor = operation.output(outputIdx++);
   }
@@ -133,6 +139,9 @@ public final class TensorListStack<T extends TType> extends RawOp implements Ope
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListStack.class
+  )
   public static class Inputs extends RawOpInputs<TensorListStack<?>> {
     /**
      * The inputHandle input

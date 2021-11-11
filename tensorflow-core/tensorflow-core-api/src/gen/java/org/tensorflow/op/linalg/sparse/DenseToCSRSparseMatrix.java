@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Converts a dense tensor to a (possibly batched) CSRSparseMatrix.
  */
+@OpMetadata(
+    opType = DenseToCSRSparseMatrix.OP_NAME,
+    inputsClass = DenseToCSRSparseMatrix.Inputs.class
+)
 public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType
   private Output<? extends TType> sparseOutput;
 
   @SuppressWarnings("unchecked")
-  private DenseToCSRSparseMatrix(Operation operation) {
-    super(operation);
+  public DenseToCSRSparseMatrix(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sparseOutput = operation.output(outputIdx++);
   }
@@ -83,6 +89,9 @@ public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType
     return (Output<TType>) sparseOutput;
   }
 
+  @OpInputsMetadata(
+      outputsClass = DenseToCSRSparseMatrix.class
+  )
   public static class Inputs extends RawOpInputs<DenseToCSRSparseMatrix> {
     /**
      * A Dense tensor.

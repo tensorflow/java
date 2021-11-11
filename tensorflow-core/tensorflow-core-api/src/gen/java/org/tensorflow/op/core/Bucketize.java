@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TNumber;
  * [3, 2]
  * [1, 3]]
  */
+@OpMetadata(
+    opType = Bucketize.OP_NAME,
+    inputsClass = Bucketize.Inputs.class
+)
 @Operator
 public final class Bucketize extends RawOp implements Operand<TInt32> {
   /**
@@ -54,8 +60,8 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private Bucketize(Operation operation) {
-    super(operation);
+  public Bucketize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -100,6 +106,9 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Bucketize.class
+  )
   public static class Inputs extends RawOpInputs<Bucketize> {
     /**
      * Any shape of Tensor contains with int or float type.

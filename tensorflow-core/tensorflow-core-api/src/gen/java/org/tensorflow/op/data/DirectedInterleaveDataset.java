@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * A substitute for {@code InterleaveDataset} on a fixed list of {@code N} datasets.
  */
+@OpMetadata(
+    opType = DirectedInterleaveDataset.OP_NAME,
+    inputsClass = DirectedInterleaveDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -49,8 +55,8 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private DirectedInterleaveDataset(Operation operation) {
-    super(operation);
+  public DirectedInterleaveDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -140,6 +146,9 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DirectedInterleaveDataset.class
+  )
   public static class Inputs extends RawOpInputs<DirectedInterleaveDataset> {
     /**
      * A dataset of scalar {@code DT_INT64} elements that determines which of the

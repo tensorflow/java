@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -33,14 +35,18 @@ import org.tensorflow.types.family.TType;
 /**
  * The CreateSummaryFileWriter operation
  */
+@OpMetadata(
+    opType = CreateSummaryFileWriter.OP_NAME,
+    inputsClass = CreateSummaryFileWriter.Inputs.class
+)
 public final class CreateSummaryFileWriter extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "CreateSummaryFileWriter";
 
-  private CreateSummaryFileWriter(Operation operation) {
-    super(operation);
+  public CreateSummaryFileWriter(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -69,6 +75,9 @@ public final class CreateSummaryFileWriter extends RawOp {
     return new CreateSummaryFileWriter(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = CreateSummaryFileWriter.class
+  )
   public static class Inputs extends RawOpInputs<CreateSummaryFileWriter> {
     /**
      * The writer input

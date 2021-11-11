@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Stage (key, values) in the underlying container which behaves like a hashtable.
  */
+@OpMetadata(
+    opType = MapStage.OP_NAME,
+    inputsClass = MapStage.Inputs.class
+)
 @Operator
 public final class MapStage extends RawOp {
   /**
@@ -44,8 +50,8 @@ public final class MapStage extends RawOp {
    */
   public static final String OP_NAME = "MapStage";
 
-  private MapStage(Operation operation) {
-    super(operation);
+  public MapStage(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -193,6 +199,9 @@ public final class MapStage extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MapStage.class
+  )
   public static class Inputs extends RawOpInputs<MapStage> {
     /**
      * int64

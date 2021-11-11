@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -67,6 +69,10 @@ import org.tensorflow.types.TInt64;
  * empty, the op name will be used as the shared name.
  * T: the types of tensors to be batched.
  */
+@OpMetadata(
+    opType = Batch.OP_NAME,
+    inputsClass = Batch.Inputs.class
+)
 @Operator
 public final class Batch extends RawOp {
   /**
@@ -81,8 +87,8 @@ public final class Batch extends RawOp {
   private Output<TInt64> id;
 
   @SuppressWarnings("unchecked")
-  private Batch(Operation operation) {
-    super(operation);
+  public Batch(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int batchedTensorsLength = operation.outputListLength("batched_tensors");
     batchedTensors = Arrays.asList(operation.outputList(outputIdx, batchedTensorsLength));
@@ -311,6 +317,9 @@ public final class Batch extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Batch.class
+  )
   public static class Inputs extends RawOpInputs<Batch> {
     /**
      * The inTensors input

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -59,6 +61,10 @@ import org.tensorflow.types.family.TType;
  * </pre>
  * <p>For string data, one should expect {@code Fingerprint(data) != Fingerprint(ReduceJoin(data))} in general.
  */
+@OpMetadata(
+    opType = Fingerprint.OP_NAME,
+    inputsClass = Fingerprint.Inputs.class
+)
 @Operator
 public final class Fingerprint extends RawOp implements Operand<TUint8> {
   /**
@@ -68,8 +74,8 @@ public final class Fingerprint extends RawOp implements Operand<TUint8> {
 
   private Output<TUint8> fingerprint;
 
-  private Fingerprint(Operation operation) {
-    super(operation);
+  public Fingerprint(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     fingerprint = operation.output(outputIdx++);
   }
@@ -110,6 +116,9 @@ public final class Fingerprint extends RawOp implements Operand<TUint8> {
     return fingerprint;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Fingerprint.class
+  )
   public static class Inputs extends RawOpInputs<Fingerprint> {
     /**
      * Must have rank 1 or higher.

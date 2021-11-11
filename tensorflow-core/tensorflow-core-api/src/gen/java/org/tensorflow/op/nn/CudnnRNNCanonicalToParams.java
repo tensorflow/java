@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -66,6 +68,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code params} output
  */
+@OpMetadata(
+    opType = CudnnRNNCanonicalToParams.OP_NAME,
+    inputsClass = CudnnRNNCanonicalToParams.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -77,8 +83,8 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends RawOp im
 
   private Output<T> params;
 
-  private CudnnRNNCanonicalToParams(Operation operation) {
-    super(operation);
+  public CudnnRNNCanonicalToParams(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     params = operation.output(outputIdx++);
   }
@@ -319,6 +325,9 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends RawOp im
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CudnnRNNCanonicalToParams.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<CudnnRNNCanonicalToParams<T>> {
     /**
      * The numLayers input

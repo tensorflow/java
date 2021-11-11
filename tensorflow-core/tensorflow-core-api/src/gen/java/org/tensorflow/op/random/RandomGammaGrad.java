@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = RandomGammaGrad.OP_NAME,
+    inputsClass = RandomGammaGrad.Inputs.class
+)
 public final class RandomGammaGrad<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
 
   private Output<T> output;
 
-  private RandomGammaGrad(Operation operation) {
-    super(operation);
+  public RandomGammaGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -83,6 +89,9 @@ public final class RandomGammaGrad<T extends TNumber> extends RawOp implements O
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RandomGammaGrad.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<RandomGammaGrad<T>> {
     /**
      * The alpha input

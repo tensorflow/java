@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
  * All subsequent operations using the resource will result in a NotFound
  * error status.
  */
+@OpMetadata(
+    opType = DestroyResourceOp.OP_NAME,
+    inputsClass = DestroyResourceOp.Inputs.class
+)
 @Operator
 public final class DestroyResourceOp extends RawOp {
   /**
@@ -41,8 +47,8 @@ public final class DestroyResourceOp extends RawOp {
    */
   public static final String OP_NAME = "DestroyResourceOp";
 
-  private DestroyResourceOp(Operation operation) {
-    super(operation);
+  public DestroyResourceOp(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -103,6 +109,9 @@ public final class DestroyResourceOp extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DestroyResourceOp.class
+  )
   public static class Inputs extends RawOpInputs<DestroyResourceOp> {
     /**
      * handle to the resource to delete.

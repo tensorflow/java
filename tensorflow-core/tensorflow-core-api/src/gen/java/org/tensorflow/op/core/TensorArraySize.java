@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Get the current size of the TensorArray.
  */
+@OpMetadata(
+    opType = TensorArraySize.OP_NAME,
+    inputsClass = TensorArraySize.Inputs.class
+)
 @Operator
 public final class TensorArraySize extends RawOp implements Operand<TInt32> {
   /**
@@ -44,8 +50,8 @@ public final class TensorArraySize extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private TensorArraySize(Operation operation) {
-    super(operation);
+  public TensorArraySize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -83,6 +89,9 @@ public final class TensorArraySize extends RawOp implements Operand<TInt32> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArraySize.class
+  )
   public static class Inputs extends RawOpInputs<TensorArraySize> {
     /**
      * The handle to a TensorArray (output of TensorArray or TensorArrayGrad).

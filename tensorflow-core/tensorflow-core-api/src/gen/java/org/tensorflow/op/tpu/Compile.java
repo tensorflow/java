@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -53,6 +55,10 @@ import org.tensorflow.types.TString;
  * used to look up the program in the compilation cache.
  * 'may_modify_variables' indicates whether variables may be modified.
  */
+@OpMetadata(
+    opType = Compile.OP_NAME,
+    inputsClass = Compile.Inputs.class
+)
 @Operator(
     group = "tpu"
 )
@@ -69,8 +75,8 @@ public final class Compile extends RawOp {
   private List<Output<TBool>> mayModifyVariables;
 
   @SuppressWarnings("unchecked")
-  private Compile(Operation operation) {
-    super(operation);
+  public Compile(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     compilationStatus = operation.output(outputIdx++);
     int programLength = operation.outputListLength("program");
@@ -134,6 +140,9 @@ public final class Compile extends RawOp {
     return mayModifyVariables;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Compile.class
+  )
   public static class Inputs extends RawOpInputs<Compile> {
     /**
      * The dynamicShapes input

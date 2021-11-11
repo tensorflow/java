@@ -27,19 +27,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * A container for an iterator resource.
  */
+@OpMetadata(
+    opType = DeleteMultiDeviceIterator.OP_NAME,
+    inputsClass = DeleteMultiDeviceIterator.Inputs.class
+)
 public final class DeleteMultiDeviceIterator extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "DeleteMultiDeviceIterator";
 
-  private DeleteMultiDeviceIterator(Operation operation) {
-    super(operation);
+  public DeleteMultiDeviceIterator(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -64,6 +70,9 @@ public final class DeleteMultiDeviceIterator extends RawOp {
     return new DeleteMultiDeviceIterator(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DeleteMultiDeviceIterator.class
+  )
   public static class Inputs extends RawOpInputs<DeleteMultiDeviceIterator> {
     /**
      * A handle to the multi device iterator to delete.

@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -82,6 +84,10 @@ import org.tensorflow.types.TString;
  * </li>
  * </ul>
  */
+@OpMetadata(
+    opType = EncodeProto.OP_NAME,
+    inputsClass = EncodeProto.Inputs.class
+)
 @Operator
 public final class EncodeProto extends RawOp implements Operand<TString> {
   /**
@@ -91,8 +97,8 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
 
   private Output<TString> bytes;
 
-  private EncodeProto(Operation operation) {
-    super(operation);
+  public EncodeProto(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     bytes = operation.output(outputIdx++);
   }
@@ -177,6 +183,9 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EncodeProto.class
+  )
   public static class Inputs extends RawOpInputs<EncodeProto> {
     /**
      * Tensor of int32 with shape {@code [batch_shape, len(field_names)]}.

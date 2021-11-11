@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * Checks whether a tensor has been initialized.
  * Outputs boolean scalar indicating whether the tensor has been initialized.
  */
+@OpMetadata(
+    opType = IsVariableInitialized.OP_NAME,
+    inputsClass = IsVariableInitialized.Inputs.class
+)
 @Operator
 public final class IsVariableInitialized extends RawOp implements Operand<TBool> {
   /**
@@ -45,8 +51,8 @@ public final class IsVariableInitialized extends RawOp implements Operand<TBool>
 
   private Output<TBool> isInitialized;
 
-  private IsVariableInitialized(Operation operation) {
-    super(operation);
+  public IsVariableInitialized(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     isInitialized = operation.output(outputIdx++);
   }
@@ -81,6 +87,9 @@ public final class IsVariableInitialized extends RawOp implements Operand<TBool>
     return isInitialized;
   }
 
+  @OpInputsMetadata(
+      outputsClass = IsVariableInitialized.class
+  )
   public static class Inputs extends RawOpInputs<IsVariableInitialized> {
     /**
      * Should be from a {@code Variable} node. May be uninitialized.

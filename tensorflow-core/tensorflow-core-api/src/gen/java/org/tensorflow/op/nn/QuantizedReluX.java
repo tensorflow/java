@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code activations} output
  */
+@OpMetadata(
+    opType = QuantizedReluX.OP_NAME,
+    inputsClass = QuantizedReluX.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -53,8 +59,8 @@ public final class QuantizedReluX<U extends TNumber> extends RawOp {
 
   private Output<TFloat32> maxActivations;
 
-  private QuantizedReluX(Operation operation) {
-    super(operation);
+  public QuantizedReluX(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
     minActivations = operation.output(outputIdx++);
@@ -115,6 +121,9 @@ public final class QuantizedReluX<U extends TNumber> extends RawOp {
     return maxActivations;
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedReluX.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedReluX<?>> {
     /**
      * The features input

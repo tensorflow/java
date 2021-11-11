@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Output a fact about factorials.
  */
+@OpMetadata(
+    opType = Fact.OP_NAME,
+    inputsClass = Fact.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -44,8 +50,8 @@ public final class Fact extends RawOp implements Operand<TString> {
 
   private Output<TString> fact;
 
-  private Fact(Operation operation) {
-    super(operation);
+  public Fact(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     fact = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class Fact extends RawOp implements Operand<TString> {
     return fact;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Fact.class
+  )
   public static class Inputs extends RawOpInputs<Fact> {
     public Inputs(GraphOperation op) {
       super(new Fact(op), op, Arrays.asList());

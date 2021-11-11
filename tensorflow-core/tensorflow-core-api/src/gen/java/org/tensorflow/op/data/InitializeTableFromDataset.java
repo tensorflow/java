@@ -26,12 +26,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * The InitializeTableFromDataset operation
  */
+@OpMetadata(
+    opType = InitializeTableFromDataset.OP_NAME,
+    inputsClass = InitializeTableFromDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -41,8 +47,8 @@ public final class InitializeTableFromDataset extends RawOp {
    */
   public static final String OP_NAME = "InitializeTableFromDataset";
 
-  private InitializeTableFromDataset(Operation operation) {
-    super(operation);
+  public InitializeTableFromDataset(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -64,6 +70,9 @@ public final class InitializeTableFromDataset extends RawOp {
     return new InitializeTableFromDataset(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = InitializeTableFromDataset.class
+  )
   public static class Inputs extends RawOpInputs<InitializeTableFromDataset> {
     /**
      * The tableHandle input

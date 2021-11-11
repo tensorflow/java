@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code backprops} output
  */
+@OpMetadata(
+    opType = LeakyReluGrad.OP_NAME,
+    inputsClass = LeakyReluGrad.Inputs.class
+)
 public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Ope
 
   private Output<T> backprops;
 
-  private LeakyReluGrad(Operation operation) {
-    super(operation);
+  public LeakyReluGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     backprops = operation.output(outputIdx++);
   }
@@ -123,6 +129,9 @@ public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Ope
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LeakyReluGrad.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<LeakyReluGrad<T>> {
     /**
      * The backpropagated gradients to the corresponding LeakyRelu operation.

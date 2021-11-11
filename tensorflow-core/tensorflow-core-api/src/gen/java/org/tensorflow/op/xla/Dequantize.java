@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * Takes the packed uint32 input and unpacks the input to uint8 to do
  * Dequantization on device.
  */
+@OpMetadata(
+    opType = Dequantize.OP_NAME,
+    inputsClass = Dequantize.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -46,8 +52,8 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
 
   private Output<TBfloat16> output;
 
-  private Dequantize(Operation operation) {
-    super(operation);
+  public Dequantize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -94,6 +100,9 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Dequantize.class
+  )
   public static class Inputs extends RawOpInputs<Dequantize> {
     /**
      * Input tensors whose types is uint32, shape is [d0, ..., dn].

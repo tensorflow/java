@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -38,14 +40,18 @@ import org.tensorflow.types.family.TType;
  * specifies the desired state, and format_state_var is the current state of the
  * variables.
  */
+@OpMetadata(
+    opType = TPUReshardVariables.OP_NAME,
+    inputsClass = TPUReshardVariables.Inputs.class
+)
 public final class TPUReshardVariables extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "TPUReshardVariables";
 
-  private TPUReshardVariables(Operation operation) {
-    super(operation);
+  public TPUReshardVariables(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -69,6 +75,9 @@ public final class TPUReshardVariables extends RawOp {
     return new TPUReshardVariables(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = TPUReshardVariables.class
+  )
   public static class Inputs extends RawOpInputs<TPUReshardVariables> {
     /**
      * The vars input

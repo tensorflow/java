@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -36,14 +38,18 @@ import org.tensorflow.types.family.TType;
  * accum += grad * grad
  * var -= lr * grad * (1 / sqrt(accum))
  */
+@OpMetadata(
+    opType = ResourceSparseApplyAdagradV2.OP_NAME,
+    inputsClass = ResourceSparseApplyAdagradV2.Inputs.class
+)
 public final class ResourceSparseApplyAdagradV2 extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ResourceSparseApplyAdagradV2";
 
-  private ResourceSparseApplyAdagradV2(Operation operation) {
-    super(operation);
+  public ResourceSparseApplyAdagradV2(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -144,6 +150,9 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceSparseApplyAdagradV2.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceSparseApplyAdagradV2> {
     /**
      * Should be from a Variable().

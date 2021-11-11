@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code out} output
  */
+@OpMetadata(
+    opType = ApplyPowerSign.OP_NAME,
+    inputsClass = ApplyPowerSign.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -50,8 +56,8 @@ public final class ApplyPowerSign<T extends TType> extends RawOp implements Oper
 
   private Output<T> out;
 
-  private ApplyPowerSign(Operation operation) {
-    super(operation);
+  public ApplyPowerSign(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -144,6 +150,9 @@ public final class ApplyPowerSign<T extends TType> extends RawOp implements Oper
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ApplyPowerSign.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ApplyPowerSign<T>> {
     /**
      * Should be from a Variable().

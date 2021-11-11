@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
@@ -53,6 +55,10 @@ import org.tensorflow.types.TFloat32;
  * </ul>
  * <p>Quantization is called fake since the output is still in floating point.
  */
+@OpMetadata(
+    opType = FakeQuantWithMinMaxArgs.OP_NAME,
+    inputsClass = FakeQuantWithMinMaxArgs.Inputs.class
+)
 @Operator(
     group = "quantization"
 )
@@ -64,8 +70,8 @@ public final class FakeQuantWithMinMaxArgs extends RawOp implements Operand<TFlo
 
   private Output<TFloat32> outputs;
 
-  private FakeQuantWithMinMaxArgs(Operation operation) {
-    super(operation);
+  public FakeQuantWithMinMaxArgs(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputs = operation.output(outputIdx++);
   }
@@ -218,6 +224,9 @@ public final class FakeQuantWithMinMaxArgs extends RawOp implements Operand<TFlo
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FakeQuantWithMinMaxArgs.class
+  )
   public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxArgs> {
     /**
      * The inputs input

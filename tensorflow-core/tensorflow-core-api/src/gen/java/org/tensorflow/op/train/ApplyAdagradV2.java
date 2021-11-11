@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code out} output
  */
+@OpMetadata(
+    opType = ApplyAdagradV2.OP_NAME,
+    inputsClass = ApplyAdagradV2.Inputs.class
+)
 public final class ApplyAdagradV2<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class ApplyAdagradV2<T extends TType> extends RawOp implements Oper
 
   private Output<T> out;
 
-  private ApplyAdagradV2(Operation operation) {
-    super(operation);
+  public ApplyAdagradV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -160,6 +166,9 @@ public final class ApplyAdagradV2<T extends TType> extends RawOp implements Oper
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ApplyAdagradV2.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ApplyAdagradV2<T>> {
     /**
      * Should be from a Variable().

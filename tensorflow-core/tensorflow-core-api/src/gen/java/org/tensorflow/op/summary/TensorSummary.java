@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Outputs a {@code Summary} protocol buffer with a tensor and per-plugin data.
  */
+@OpMetadata(
+    opType = TensorSummary.OP_NAME,
+    inputsClass = TensorSummary.Inputs.class
+)
 @Operator(
     group = "summary"
 )
@@ -46,8 +52,8 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
 
   private Output<TString> summary;
 
-  private TensorSummary(Operation operation) {
-    super(operation);
+  public TensorSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
     return summary;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorSummary.class
+  )
   public static class Inputs extends RawOpInputs<TensorSummary> {
     /**
      * A string attached to this summary. Used for organization in TensorBoard.

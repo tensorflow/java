@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code y} output
  */
+@OpMetadata(
+    opType = RiscCast.OP_NAME,
+    inputsClass = RiscCast.Inputs.class
+)
 public final class RiscCast<U extends TType> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class RiscCast<U extends TType> extends RawOp implements Operand<U>
 
   private Output<U> y;
 
-  private RiscCast(Operation operation) {
-    super(operation);
+  public RiscCast(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class RiscCast<U extends TType> extends RawOp implements Operand<U>
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscCast.class
+  )
   public static class Inputs extends RawOpInputs<RiscCast<?>> {
     /**
      * The x input

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * To use, enqueue filenames in a Queue.  The output of ReaderRead will
  * be a filename (key) and the contents of that file (value).
  */
+@OpMetadata(
+    opType = WholeFileReader.OP_NAME,
+    inputsClass = WholeFileReader.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -47,8 +53,8 @@ public final class WholeFileReader extends RawOp implements Operand<TType> {
   private Output<? extends TType> readerHandle;
 
   @SuppressWarnings("unchecked")
-  private WholeFileReader(Operation operation) {
-    super(operation);
+  public WholeFileReader(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     readerHandle = operation.output(outputIdx++);
   }
@@ -151,6 +157,9 @@ public final class WholeFileReader extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = WholeFileReader.class
+  )
   public static class Inputs extends RawOpInputs<WholeFileReader> {
     /**
      * If non-empty, this reader is placed in the given container.

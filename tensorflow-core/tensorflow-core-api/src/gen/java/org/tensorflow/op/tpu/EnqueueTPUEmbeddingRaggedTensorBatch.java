@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -42,14 +44,18 @@ import org.tensorflow.types.family.TNumber;
  * with dim_size() equal to the total number of lookups into the table described by
  * the corresponding feature.
  */
+@OpMetadata(
+    opType = EnqueueTPUEmbeddingRaggedTensorBatch.OP_NAME,
+    inputsClass = EnqueueTPUEmbeddingRaggedTensorBatch.Inputs.class
+)
 public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "EnqueueTPUEmbeddingRaggedTensorBatch";
 
-  private EnqueueTPUEmbeddingRaggedTensorBatch(Operation operation) {
-    super(operation);
+  public EnqueueTPUEmbeddingRaggedTensorBatch(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -312,6 +318,9 @@ public final class EnqueueTPUEmbeddingRaggedTensorBatch extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EnqueueTPUEmbeddingRaggedTensorBatch.class
+  )
   public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingRaggedTensorBatch> {
     /**
      * A list of rank 1 Tensors specifying the break points for splitting

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
@@ -46,6 +48,10 @@ import org.tensorflow.types.TInt64;
  * the sampled candidates must be chosen independently of the context and of the
  * true labels.
  */
+@OpMetadata(
+    opType = FixedUnigramCandidateSampler.OP_NAME,
+    inputsClass = FixedUnigramCandidateSampler.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -61,8 +67,8 @@ public final class FixedUnigramCandidateSampler extends RawOp {
 
   private Output<TFloat32> sampledExpectedCount;
 
-  private FixedUnigramCandidateSampler(Operation operation) {
-    super(operation);
+  public FixedUnigramCandidateSampler(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sampledCandidates = operation.output(outputIdx++);
     trueExpectedCount = operation.output(outputIdx++);
@@ -416,6 +422,9 @@ public final class FixedUnigramCandidateSampler extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FixedUnigramCandidateSampler.class
+  )
   public static class Inputs extends RawOpInputs<FixedUnigramCandidateSampler> {
     /**
      * A batch_size * num_true matrix, in which each row contains the

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <W> data type for {@code out} output
  */
+@OpMetadata(
+    opType = QuantizedMatMulWithBiasAndDequantize.OP_NAME,
+    inputsClass = QuantizedMatMulWithBiasAndDequantize.Inputs.class
+)
 public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> extends RawOp implements Operand<W> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> exten
 
   private Output<W> out;
 
-  private QuantizedMatMulWithBiasAndDequantize(Operation operation) {
-    super(operation);
+  public QuantizedMatMulWithBiasAndDequantize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -195,6 +201,9 @@ public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> exten
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedMatMulWithBiasAndDequantize.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedMatMulWithBiasAndDequantize<?>> {
     /**
      * The a input

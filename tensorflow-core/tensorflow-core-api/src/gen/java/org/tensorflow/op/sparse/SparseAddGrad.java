@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code a_val_grad} output
  */
+@OpMetadata(
+    opType = SparseAddGrad.OP_NAME,
+    inputsClass = SparseAddGrad.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -54,8 +60,8 @@ public final class SparseAddGrad<T extends TType> extends RawOp {
 
   private Output<T> bValGrad;
 
-  private SparseAddGrad(Operation operation) {
-    super(operation);
+  public SparseAddGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     aValGrad = operation.output(outputIdx++);
     bValGrad = operation.output(outputIdx++);
@@ -107,6 +113,9 @@ public final class SparseAddGrad<T extends TType> extends RawOp {
     return bValGrad;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseAddGrad.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseAddGrad<T>> {
     /**
      * 1-D with shape {@code [nnz(sum)]}.  The gradient with respect to

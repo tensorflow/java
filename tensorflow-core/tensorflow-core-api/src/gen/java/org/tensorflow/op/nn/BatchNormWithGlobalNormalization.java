@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code result} output
  */
+@OpMetadata(
+    opType = BatchNormWithGlobalNormalization.OP_NAME,
+    inputsClass = BatchNormWithGlobalNormalization.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -48,8 +54,8 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
 
   private Output<T> result;
 
-  private BatchNormWithGlobalNormalization(Operation operation) {
-    super(operation);
+  public BatchNormWithGlobalNormalization(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     result = operation.output(outputIdx++);
   }
@@ -107,6 +113,9 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
     return result;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchNormWithGlobalNormalization.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<BatchNormWithGlobalNormalization<T>> {
     /**
      * A 4D input Tensor.

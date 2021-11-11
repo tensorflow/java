@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
 /**
  * A container for an iterator resource.
  */
+@OpMetadata(
+    opType = AnonymousIterator.OP_NAME,
+    inputsClass = AnonymousIterator.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -50,8 +56,8 @@ public final class AnonymousIterator extends RawOp {
   private Output<? extends TType> deleter;
 
   @SuppressWarnings("unchecked")
-  private AnonymousIterator(Operation operation) {
-    super(operation);
+  public AnonymousIterator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
     deleter = operation.output(outputIdx++);
@@ -101,6 +107,9 @@ public final class AnonymousIterator extends RawOp {
     return deleter;
   }
 
+  @OpInputsMetadata(
+      outputsClass = AnonymousIterator.class
+  )
   public static class Inputs extends RawOpInputs<AnonymousIterator> {
     /**
      * The outputTypes attribute

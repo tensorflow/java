@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * indices: The indices used to index into the list.
  * output_handle: The TensorList.
  */
+@OpMetadata(
+    opType = TensorListScatterIntoExistingList.OP_NAME,
+    inputsClass = TensorListScatterIntoExistingList.Inputs.class
+)
 @Operator
 public final class TensorListScatterIntoExistingList extends RawOp implements Operand<TType> {
   /**
@@ -51,8 +57,8 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
   private Output<? extends TType> outputHandle;
 
   @SuppressWarnings("unchecked")
-  private TensorListScatterIntoExistingList(Operation operation) {
-    super(operation);
+  public TensorListScatterIntoExistingList(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
   }
@@ -94,6 +100,9 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
     return (Output<TType>) outputHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListScatterIntoExistingList.class
+  )
   public static class Inputs extends RawOpInputs<TensorListScatterIntoExistingList> {
     /**
      * The inputHandle input

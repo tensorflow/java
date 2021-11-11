@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
  * Returns the number of gradients aggregated in the given accumulators.
  */
+@OpMetadata(
+    opType = ResourceAccumulatorNumAccumulated.OP_NAME,
+    inputsClass = ResourceAccumulatorNumAccumulated.Inputs.class
+)
 public final class ResourceAccumulatorNumAccumulated extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class ResourceAccumulatorNumAccumulated extends RawOp implements Op
 
   private Output<TInt32> numAccumulated;
 
-  private ResourceAccumulatorNumAccumulated(Operation operation) {
-    super(operation);
+  public ResourceAccumulatorNumAccumulated(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     numAccumulated = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class ResourceAccumulatorNumAccumulated extends RawOp implements Op
     return numAccumulated;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceAccumulatorNumAccumulated.class
+  )
   public static class Inputs extends RawOpInputs<ResourceAccumulatorNumAccumulated> {
     /**
      * The handle to an accumulator.

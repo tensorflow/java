@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * <p>NOTE this op currently does not support broadcasting and so {@code value}'s
  * shape must be exactly the shape produced by the slice of {@code ref}.
  */
+@OpMetadata(
+    opType = ResourceStridedSliceAssign.OP_NAME,
+    inputsClass = ResourceStridedSliceAssign.Inputs.class
+)
 @Operator
 public final class ResourceStridedSliceAssign extends RawOp {
   /**
@@ -46,8 +52,8 @@ public final class ResourceStridedSliceAssign extends RawOp {
    */
   public static final String OP_NAME = "ResourceStridedSliceAssign";
 
-  private ResourceStridedSliceAssign(Operation operation) {
-    super(operation);
+  public ResourceStridedSliceAssign(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -220,6 +226,9 @@ public final class ResourceStridedSliceAssign extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceStridedSliceAssign.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<ResourceStridedSliceAssign> {
     /**
      * The ref input

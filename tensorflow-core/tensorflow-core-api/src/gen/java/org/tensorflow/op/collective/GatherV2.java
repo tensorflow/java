@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code data} output
  */
+@OpMetadata(
+    opType = GatherV2.OP_NAME,
+    inputsClass = GatherV2.Inputs.class
+)
 public final class GatherV2<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
 
   private Output<T> data;
 
-  private GatherV2(Operation operation) {
-    super(operation);
+  public GatherV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     data = operation.output(outputIdx++);
   }
@@ -184,6 +190,9 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = GatherV2.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<GatherV2<T>> {
     /**
      * The input input

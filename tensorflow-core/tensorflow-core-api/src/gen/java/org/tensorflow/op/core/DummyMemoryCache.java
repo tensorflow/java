@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * The DummyMemoryCache operation
  */
+@OpMetadata(
+    opType = DummyMemoryCache.OP_NAME,
+    inputsClass = DummyMemoryCache.Inputs.class
+)
 public final class DummyMemoryCache extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class DummyMemoryCache extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private DummyMemoryCache(Operation operation) {
-    super(operation);
+  public DummyMemoryCache(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -76,6 +82,9 @@ public final class DummyMemoryCache extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = DummyMemoryCache.class
+  )
   public static class Inputs extends RawOpInputs<DummyMemoryCache> {
     public Inputs(GraphOperation op) {
       super(new DummyMemoryCache(op), op, Arrays.asList());

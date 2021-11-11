@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -40,6 +42,10 @@ import org.tensorflow.types.TInt32;
  * history in the speech recognition world, and https://en.wikipedia.org/wiki/Mel-frequency_cepstrum
  * is a good resource to learn more.
  */
+@OpMetadata(
+    opType = Mfcc.OP_NAME,
+    inputsClass = Mfcc.Inputs.class
+)
 @Operator(
     group = "audio"
 )
@@ -51,8 +57,8 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> output;
 
-  private Mfcc(Operation operation) {
-    super(operation);
+  public Mfcc(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -212,6 +218,9 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Mfcc.class
+  )
   public static class Inputs extends RawOpInputs<Mfcc> {
     /**
      * Typically produced by the Spectrogram op, with magnitude_squared

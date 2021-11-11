@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -49,6 +51,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code sum_values} output
  */
+@OpMetadata(
+    opType = SparseAdd.OP_NAME,
+    inputsClass = SparseAdd.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -64,8 +70,8 @@ public final class SparseAdd<T extends TType> extends RawOp {
 
   private Output<TInt64> sumShape;
 
-  private SparseAdd(Operation operation) {
-    super(operation);
+  public SparseAdd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sumIndices = operation.output(outputIdx++);
     sumValues = operation.output(outputIdx++);
@@ -131,6 +137,9 @@ public final class SparseAdd<T extends TType> extends RawOp {
     return sumShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseAdd.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseAdd<T>> {
     /**
      * 2-D.  The {@code indices} of the first {@code SparseTensor}, size {@code [nnz, ndims]} Matrix.

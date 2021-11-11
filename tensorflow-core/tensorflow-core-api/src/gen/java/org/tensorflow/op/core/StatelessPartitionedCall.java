@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * within a single process. The kernel places and partitions a given function's
  * underlying graph, and executes each of the partitioned subgraphs as a function.
  */
+@OpMetadata(
+    opType = StatelessPartitionedCall.OP_NAME,
+    inputsClass = StatelessPartitionedCall.Inputs.class
+)
 @Operator
 public final class StatelessPartitionedCall extends RawOp implements PartitionedCall {
   /**
@@ -51,8 +57,8 @@ public final class StatelessPartitionedCall extends RawOp implements Partitioned
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private StatelessPartitionedCall(Operation operation) {
-    super(operation);
+  public StatelessPartitionedCall(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -115,6 +121,9 @@ public final class StatelessPartitionedCall extends RawOp implements Partitioned
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessPartitionedCall.class
+  )
   public static class Inputs extends RawOpInputs<StatelessPartitionedCall> {
     /**
      * A list of input tensors.

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = RiscShape.OP_NAME,
+    inputsClass = RiscShape.Inputs.class
+)
 public final class RiscShape<U extends TNumber> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class RiscShape<U extends TNumber> extends RawOp implements Operand
 
   private Output<U> output;
 
-  private RiscShape(Operation operation) {
-    super(operation);
+  public RiscShape(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -99,6 +105,9 @@ public final class RiscShape<U extends TNumber> extends RawOp implements Operand
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscShape.class
+  )
   public static class Inputs extends RawOpInputs<RiscShape<?>> {
     /**
      * The input input

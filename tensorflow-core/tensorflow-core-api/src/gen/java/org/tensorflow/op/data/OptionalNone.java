@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates an Optional variant with no value.
  */
+@OpMetadata(
+    opType = OptionalNone.OP_NAME,
+    inputsClass = OptionalNone.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -45,8 +51,8 @@ public final class OptionalNone extends RawOp implements Operand<TType> {
   private Output<? extends TType> optional;
 
   @SuppressWarnings("unchecked")
-  private OptionalNone(Operation operation) {
-    super(operation);
+  public OptionalNone(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     optional = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class OptionalNone extends RawOp implements Operand<TType> {
     return (Output<TType>) optional;
   }
 
+  @OpInputsMetadata(
+      outputsClass = OptionalNone.class
+  )
   public static class Inputs extends RawOpInputs<OptionalNone> {
     public Inputs(GraphOperation op) {
       super(new OptionalNone(op), op, Arrays.asList());

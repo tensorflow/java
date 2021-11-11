@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code y} output
  */
+@OpMetadata(
+    opType = BesselY1.OP_NAME,
+    inputsClass = BesselY1.Inputs.class
+)
 public final class BesselY1<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class BesselY1<T extends TNumber> extends RawOp implements Operand<
 
   private Output<T> y;
 
-  private BesselY1(Operation operation) {
-    super(operation);
+  public BesselY1(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class BesselY1<T extends TNumber> extends RawOp implements Operand<
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BesselY1.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<BesselY1<T>> {
     /**
      * The x input

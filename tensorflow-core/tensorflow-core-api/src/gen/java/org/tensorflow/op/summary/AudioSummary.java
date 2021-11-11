@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TString;
@@ -44,6 +46,10 @@ import org.tensorflow.types.TString;
  * generated sequentially as '<em>tag</em>/audio/0', '<em>tag</em>/audio/1', etc.</li>
  * </ul>
  */
+@OpMetadata(
+    opType = AudioSummary.OP_NAME,
+    inputsClass = AudioSummary.Inputs.class
+)
 @Operator(
     group = "summary"
 )
@@ -55,8 +61,8 @@ public final class AudioSummary extends RawOp implements Operand<TString> {
 
   private Output<TString> summary;
 
-  private AudioSummary(Operation operation) {
-    super(operation);
+  public AudioSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -135,6 +141,9 @@ public final class AudioSummary extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = AudioSummary.class
+  )
   public static class Inputs extends RawOpInputs<AudioSummary> {
     /**
      * Scalar. Used to build the {@code tag} attribute of the summary values.

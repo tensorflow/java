@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = RaggedBincount.OP_NAME,
+    inputsClass = RaggedBincount.Inputs.class
+)
 @Operator(
     group = "ragged"
 )
@@ -54,8 +60,8 @@ public final class RaggedBincount<U extends TNumber> extends RawOp implements Op
 
   private Output<U> output;
 
-  private RaggedBincount(Operation operation) {
-    super(operation);
+  public RaggedBincount(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -142,6 +148,9 @@ public final class RaggedBincount<U extends TNumber> extends RawOp implements Op
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RaggedBincount.class
+  )
   public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<RaggedBincount<U>> {
     /**
      * 1D int64 {@code Tensor}.

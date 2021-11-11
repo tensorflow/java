@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code backprops} output
  */
+@OpMetadata(
+    opType = SeluGrad.OP_NAME,
+    inputsClass = SeluGrad.Inputs.class
+)
 public final class SeluGrad<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class SeluGrad<T extends TNumber> extends RawOp implements Operand<
 
   private Output<T> backprops;
 
-  private SeluGrad(Operation operation) {
-    super(operation);
+  public SeluGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     backprops = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class SeluGrad<T extends TNumber> extends RawOp implements Operand<
     return backprops;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SeluGrad.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<SeluGrad<T>> {
     /**
      * The backpropagated gradients to the corresponding Selu operation.

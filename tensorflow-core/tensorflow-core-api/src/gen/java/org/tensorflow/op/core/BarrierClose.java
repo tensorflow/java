@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -38,6 +40,10 @@ import org.tensorflow.types.TString;
  * continue to succeed if sufficient completed elements remain in the barrier.
  * Subsequent TakeMany operations that would block will fail immediately.
  */
+@OpMetadata(
+    opType = BarrierClose.OP_NAME,
+    inputsClass = BarrierClose.Inputs.class
+)
 @Operator
 public final class BarrierClose extends RawOp {
   /**
@@ -45,8 +51,8 @@ public final class BarrierClose extends RawOp {
    */
   public static final String OP_NAME = "BarrierClose";
 
-  private BarrierClose(Operation operation) {
-    super(operation);
+  public BarrierClose(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -108,6 +114,9 @@ public final class BarrierClose extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BarrierClose.class
+  )
   public static class Inputs extends RawOpInputs<BarrierClose> {
     /**
      * The handle to a barrier.

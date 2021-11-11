@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Returns the {@code tf.data.Options} attached to {@code input_dataset}.
  */
+@OpMetadata(
+    opType = GetOptions.OP_NAME,
+    inputsClass = GetOptions.Inputs.class
+)
 public final class GetOptions extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class GetOptions extends RawOp implements Operand<TString> {
 
   private Output<TString> serializedOptions;
 
-  private GetOptions(Operation operation) {
-    super(operation);
+  public GetOptions(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     serializedOptions = operation.output(outputIdx++);
   }
@@ -77,6 +83,9 @@ public final class GetOptions extends RawOp implements Operand<TString> {
     return serializedOptions;
   }
 
+  @OpInputsMetadata(
+      outputsClass = GetOptions.class
+  )
   public static class Inputs extends RawOpInputs<GetOptions> {
     /**
      * A variant tensor representing the input dataset.

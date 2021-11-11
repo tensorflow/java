@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -33,6 +35,10 @@ import org.tensorflow.types.TString;
  * Writes contents to the file at input filename. Creates file and recursively
  * creates directory if not existing.
  */
+@OpMetadata(
+    opType = WriteFile.OP_NAME,
+    inputsClass = WriteFile.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -42,8 +48,8 @@ public final class WriteFile extends RawOp {
    */
   public static final String OP_NAME = "WriteFile";
 
-  private WriteFile(Operation operation) {
-    super(operation);
+  public WriteFile(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -65,6 +71,9 @@ public final class WriteFile extends RawOp {
     return new WriteFile(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = WriteFile.class
+  )
   public static class Inputs extends RawOpInputs<WriteFile> {
     /**
      * scalar. The name of the file to which we write the contents.

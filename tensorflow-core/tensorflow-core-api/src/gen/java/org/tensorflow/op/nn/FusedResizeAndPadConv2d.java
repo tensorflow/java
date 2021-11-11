@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -48,6 +50,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = FusedResizeAndPadConv2d.OP_NAME,
+    inputsClass = FusedResizeAndPadConv2d.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -59,8 +65,8 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends RawOp impl
 
   private Output<T> output;
 
-  private FusedResizeAndPadConv2d(Operation operation) {
-    super(operation);
+  public FusedResizeAndPadConv2d(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -159,6 +165,9 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends RawOp impl
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FusedResizeAndPadConv2d.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<FusedResizeAndPadConv2d<T>> {
     /**
      * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.

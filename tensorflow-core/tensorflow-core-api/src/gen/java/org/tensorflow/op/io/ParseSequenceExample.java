@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  * Transforms a vector of tf.io.SequenceExample protos (as strings) into
  * typed tensors.
  */
+@OpMetadata(
+    opType = ParseSequenceExample.OP_NAME,
+    inputsClass = ParseSequenceExample.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -80,8 +86,8 @@ public final class ParseSequenceExample extends RawOp {
   private List<Output<?>> featureListRaggedInnerSplits;
 
   @SuppressWarnings("unchecked")
-  private ParseSequenceExample(Operation operation) {
-    super(operation);
+  public ParseSequenceExample(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int contextSparseIndicesLength = operation.outputListLength("context_sparse_indices");
     contextSparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, contextSparseIndicesLength));
@@ -560,6 +566,9 @@ public final class ParseSequenceExample extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParseSequenceExample.class
+  )
   public static class Inputs extends RawOpInputs<ParseSequenceExample> {
     /**
      * A scalar or vector containing binary serialized SequenceExample protos.

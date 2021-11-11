@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.TInt64;
  * the list of candidate centers. For each point, the k centers that have least L2
  * distance to it are computed.
  */
+@OpMetadata(
+    opType = NearestNeighbors.OP_NAME,
+    inputsClass = NearestNeighbors.Inputs.class
+)
 public final class NearestNeighbors extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class NearestNeighbors extends RawOp {
 
   private Output<TFloat32> nearestCenterDistances;
 
-  private NearestNeighbors(Operation operation) {
-    super(operation);
+  public NearestNeighbors(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     nearestCenterIndices = operation.output(outputIdx++);
     nearestCenterDistances = operation.output(outputIdx++);
@@ -95,6 +101,9 @@ public final class NearestNeighbors extends RawOp {
     return nearestCenterDistances;
   }
 
+  @OpInputsMetadata(
+      outputsClass = NearestNeighbors.class
+  )
   public static class Inputs extends RawOpInputs<NearestNeighbors> {
     /**
      * Matrix of shape (n, d). Rows are assumed to be input points.

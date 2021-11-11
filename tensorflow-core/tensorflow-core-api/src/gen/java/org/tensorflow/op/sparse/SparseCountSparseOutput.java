@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output_values} output
  */
+@OpMetadata(
+    opType = SparseCountSparseOutput.OP_NAME,
+    inputsClass = SparseCountSparseOutput.Inputs.class
+)
 public final class SparseCountSparseOutput<U extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -49,8 +55,8 @@ public final class SparseCountSparseOutput<U extends TNumber> extends RawOp {
 
   private Output<TInt64> outputDenseShape;
 
-  private SparseCountSparseOutput(Operation operation) {
-    super(operation);
+  public SparseCountSparseOutput(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
@@ -177,6 +183,9 @@ public final class SparseCountSparseOutput<U extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseCountSparseOutput.class
+  )
   public static class Inputs<U extends TNumber> extends RawOpInputs<SparseCountSparseOutput<U>> {
     /**
      * Tensor containing the indices of the sparse tensor to count.

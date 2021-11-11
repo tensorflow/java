@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -46,6 +48,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code product} output
  */
+@OpMetadata(
+    opType = SparseTensorDenseMatMul.OP_NAME,
+    inputsClass = SparseTensorDenseMatMul.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -57,8 +63,8 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
 
   private Output<U> product;
 
-  private SparseTensorDenseMatMul(Operation operation) {
-    super(operation);
+  public SparseTensorDenseMatMul(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     product = operation.output(outputIdx++);
   }
@@ -171,6 +177,9 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseTensorDenseMatMul.class
+  )
   public static class Inputs<U extends TType> extends RawOpInputs<SparseTensorDenseMatMul<U>> {
     /**
      * 2-D.  The {@code indices} of the {@code SparseTensor}, size {@code [nnz, 2]} Matrix.

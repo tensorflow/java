@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat64;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.TFloat64;
  * <p>Note: the timestamp is computed when the op is executed, not when it is added
  * to the graph.
  */
+@OpMetadata(
+    opType = Timestamp.OP_NAME,
+    inputsClass = Timestamp.Inputs.class
+)
 @Operator
 public final class Timestamp extends RawOp implements Operand<TFloat64> {
   /**
@@ -45,8 +51,8 @@ public final class Timestamp extends RawOp implements Operand<TFloat64> {
 
   private Output<TFloat64> ts;
 
-  private Timestamp(Operation operation) {
-    super(operation);
+  public Timestamp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     ts = operation.output(outputIdx++);
   }
@@ -79,6 +85,9 @@ public final class Timestamp extends RawOp implements Operand<TFloat64> {
     return ts;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Timestamp.class
+  )
   public static class Inputs extends RawOpInputs<Timestamp> {
     public Inputs(GraphOperation op) {
       super(new Timestamp(op), op, Arrays.asList());

@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -34,14 +36,18 @@ import org.tensorflow.types.family.TType;
  * Applies a gradient to a given accumulator.
  * Does not add if local_step is lesser than the accumulator's global_step.
  */
+@OpMetadata(
+    opType = ResourceAccumulatorApplyGradient.OP_NAME,
+    inputsClass = ResourceAccumulatorApplyGradient.Inputs.class
+)
 public final class ResourceAccumulatorApplyGradient extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ResourceAccumulatorApplyGradient";
 
-  private ResourceAccumulatorApplyGradient(Operation operation) {
-    super(operation);
+  public ResourceAccumulatorApplyGradient(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -66,6 +72,9 @@ public final class ResourceAccumulatorApplyGradient extends RawOp {
     return new ResourceAccumulatorApplyGradient(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceAccumulatorApplyGradient.class
+  )
   public static class Inputs extends RawOpInputs<ResourceAccumulatorApplyGradient> {
     /**
      * The handle to a accumulator.

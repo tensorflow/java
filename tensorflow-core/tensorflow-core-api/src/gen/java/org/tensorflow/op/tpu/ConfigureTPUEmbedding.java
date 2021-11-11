@@ -25,18 +25,24 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 
 /**
  * Sets up TPUEmbedding in a distributed TPU system.
  */
+@OpMetadata(
+    opType = ConfigureTPUEmbedding.OP_NAME,
+    inputsClass = ConfigureTPUEmbedding.Inputs.class
+)
 public final class ConfigureTPUEmbedding extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ConfigureTPUEmbedding";
 
-  private ConfigureTPUEmbedding(Operation operation) {
-    super(operation);
+  public ConfigureTPUEmbedding(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -56,6 +62,9 @@ public final class ConfigureTPUEmbedding extends RawOp {
     return new ConfigureTPUEmbedding(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ConfigureTPUEmbedding.class
+  )
   public static class Inputs extends RawOpInputs<ConfigureTPUEmbedding> {
     /**
      * Serialized tensorflow.tpu.TPUEmbeddingConfiguration that

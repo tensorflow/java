@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -52,6 +54,10 @@ import org.tensorflow.types.TInt32;
  * </blockquote>
  * </blockquote>
  */
+@OpMetadata(
+    opType = UnicodeScript.OP_NAME,
+    inputsClass = UnicodeScript.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -63,8 +69,8 @@ public final class UnicodeScript extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private UnicodeScript(Operation operation) {
-    super(operation);
+  public UnicodeScript(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -99,6 +105,9 @@ public final class UnicodeScript extends RawOp implements Operand<TInt32> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = UnicodeScript.class
+  )
   public static class Inputs extends RawOpInputs<UnicodeScript> {
     /**
      * A Tensor of int32 Unicode code points.

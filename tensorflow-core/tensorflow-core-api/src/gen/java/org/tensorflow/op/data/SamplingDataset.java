@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -44,6 +46,10 @@ import org.tensorflow.types.family.TType;
  * {@code experimental_optimization.filter_with_random_uniform_fusion} option of
  * {@code tf.data.Options}.
  */
+@OpMetadata(
+    opType = SamplingDataset.OP_NAME,
+    inputsClass = SamplingDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -56,8 +62,8 @@ public final class SamplingDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private SamplingDataset(Operation operation) {
-    super(operation);
+  public SamplingDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -110,6 +116,9 @@ public final class SamplingDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SamplingDataset.class
+  )
   public static class Inputs extends RawOpInputs<SamplingDataset> {
     /**
      * The inputDataset input

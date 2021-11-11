@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -35,6 +37,10 @@ import org.tensorflow.types.TFloat32;
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
+@OpMetadata(
+    opType = RetrieveTPUEmbeddingAdagradParameters.OP_NAME,
+    inputsClass = RetrieveTPUEmbeddingAdagradParameters.Inputs.class
+)
 public final class RetrieveTPUEmbeddingAdagradParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class RetrieveTPUEmbeddingAdagradParameters extends RawOp {
 
   private Output<TFloat32> accumulators;
 
-  private RetrieveTPUEmbeddingAdagradParameters(Operation operation) {
-    super(operation);
+  public RetrieveTPUEmbeddingAdagradParameters(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     parameters = operation.output(outputIdx++);
     accumulators = operation.output(outputIdx++);
@@ -180,6 +186,9 @@ public final class RetrieveTPUEmbeddingAdagradParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RetrieveTPUEmbeddingAdagradParameters.class
+  )
   public static class Inputs extends RawOpInputs<RetrieveTPUEmbeddingAdagradParameters> {
     /**
      * The tableId attribute

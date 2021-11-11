@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = XlaVariadicReduce.OP_NAME,
+    inputsClass = XlaVariadicReduce.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -54,8 +60,8 @@ public final class XlaVariadicReduce<T extends TType> extends RawOp implements I
   private List<Output<T>> output;
 
   @SuppressWarnings("unchecked")
-  private XlaVariadicReduce(Operation operation) {
-    super(operation);
+  public XlaVariadicReduce(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputLength));
@@ -106,6 +112,9 @@ public final class XlaVariadicReduce<T extends TType> extends RawOp implements I
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = XlaVariadicReduce.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<XlaVariadicReduce<T>> {
     /**
      * the input tensor(s)

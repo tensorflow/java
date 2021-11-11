@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -129,6 +131,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Quantize.OP_NAME,
+    inputsClass = Quantize.Inputs.class
+)
 @Operator(
     group = "quantization"
 )
@@ -144,8 +150,8 @@ public final class Quantize<T extends TNumber> extends RawOp {
 
   private Output<TFloat32> outputMax;
 
-  private Quantize(Operation operation) {
-    super(operation);
+  public Quantize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     outputMin = operation.output(outputIdx++);
@@ -358,6 +364,9 @@ public final class Quantize<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Quantize.class
+  )
   public static class Inputs extends RawOpInputs<Quantize<?>> {
     /**
      * The input input

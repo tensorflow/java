@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -55,6 +57,10 @@ import org.tensorflow.types.TString;
  * tf.reduce_join(a) = tf.reduce_join(a, [1, 0]) ==&gt; &quot;abcd&quot;
  * </pre>
  */
+@OpMetadata(
+    opType = ReduceJoin.OP_NAME,
+    inputsClass = ReduceJoin.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -66,8 +72,8 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private ReduceJoin(Operation operation) {
-    super(operation);
+  public ReduceJoin(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -173,6 +179,9 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReduceJoin.class
+  )
   public static class Inputs extends RawOpInputs<ReduceJoin> {
     /**
      * The input to be joined.  All reduced indices must have non-zero size.

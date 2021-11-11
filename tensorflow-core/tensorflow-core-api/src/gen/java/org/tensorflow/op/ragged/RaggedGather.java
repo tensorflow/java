@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -58,6 +60,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output_dense_values} output
  */
+@OpMetadata(
+    opType = RaggedGather.OP_NAME,
+    inputsClass = RaggedGather.Inputs.class
+)
 public final class RaggedGather<T extends TNumber, U extends TType> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -69,8 +75,8 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends RawO
   private Output<U> outputDenseValues;
 
   @SuppressWarnings("unchecked")
-  private RaggedGather(Operation operation) {
-    super(operation);
+  public RaggedGather(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputNestedSplitsLength = operation.outputListLength("output_nested_splits");
     outputNestedSplits = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputNestedSplitsLength));
@@ -129,6 +135,9 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends RawO
     return outputDenseValues;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RaggedGather.class
+  )
   public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<RaggedGather<T, U>> {
     /**
      * The {@code nested_row_splits} tensors that define the row-partitioning for the

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code e} output
  */
+@OpMetadata(
+    opType = BatchSelfAdjointEig.OP_NAME,
+    inputsClass = BatchSelfAdjointEig.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -49,8 +55,8 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
 
   private Output<T> v;
 
-  private BatchSelfAdjointEig(Operation operation) {
-    super(operation);
+  public BatchSelfAdjointEig(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     e = operation.output(outputIdx++);
     v = operation.output(outputIdx++);
@@ -131,6 +137,9 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchSelfAdjointEig.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<BatchSelfAdjointEig<T>> {
     /**
      * The input input

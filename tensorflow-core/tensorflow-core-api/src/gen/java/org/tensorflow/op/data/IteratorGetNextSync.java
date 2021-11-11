@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  * the calling thread is not a member of the thread pool used to execute parallel
  * operations (e.g. in eager mode).
  */
+@OpMetadata(
+    opType = IteratorGetNextSync.OP_NAME,
+    inputsClass = IteratorGetNextSync.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -54,8 +60,8 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private IteratorGetNextSync(Operation operation) {
-    super(operation);
+  public IteratorGetNextSync(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -102,6 +108,9 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
     return (Iterator) components.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = IteratorGetNextSync.class
+  )
   public static class Inputs extends RawOpInputs<IteratorGetNextSync> {
     /**
      * The iterator input

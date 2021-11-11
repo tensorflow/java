@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * The gradients of SparseMatrixAdd outputs with respect to alpha and beta are not
  * currently defined (TensorFlow will return zeros for these entries).
  */
+@OpMetadata(
+    opType = SparseMatrixAdd.OP_NAME,
+    inputsClass = SparseMatrixAdd.Inputs.class
+)
 public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
   private Output<? extends TType> c;
 
   @SuppressWarnings("unchecked")
-  private SparseMatrixAdd(Operation operation) {
-    super(operation);
+  public SparseMatrixAdd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     c = operation.output(outputIdx++);
   }
@@ -89,6 +95,9 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
     return (Output<TType>) c;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixAdd.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseMatrixAdd> {
     /**
      * A CSRSparseMatrix.

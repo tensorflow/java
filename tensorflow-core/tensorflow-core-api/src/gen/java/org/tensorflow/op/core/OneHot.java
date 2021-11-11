@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -112,6 +114,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = OneHot.OP_NAME,
+    inputsClass = OneHot.Inputs.class
+)
 @Operator
 public final class OneHot<U extends TType> extends RawOp implements Operand<U> {
   /**
@@ -121,8 +127,8 @@ public final class OneHot<U extends TType> extends RawOp implements Operand<U> {
 
   private Output<U> output;
 
-  private OneHot(Operation operation) {
-    super(operation);
+  public OneHot(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -204,6 +210,9 @@ public final class OneHot<U extends TType> extends RawOp implements Operand<U> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = OneHot.class
+  )
   public static class Inputs<U extends TType> extends RawOpInputs<OneHot<U>> {
     /**
      * A tensor of indices.

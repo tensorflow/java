@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -89,6 +91,10 @@ import org.tensorflow.types.family.TType;
  * </li>
  * </ul>
  */
+@OpMetadata(
+    opType = DecodeProto.OP_NAME,
+    inputsClass = DecodeProto.Inputs.class
+)
 @Operator
 public final class DecodeProto extends RawOp {
   /**
@@ -101,8 +107,8 @@ public final class DecodeProto extends RawOp {
   private List<Output<?>> values;
 
   @SuppressWarnings("unchecked")
-  private DecodeProto(Operation operation) {
-    super(operation);
+  public DecodeProto(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sizes = operation.output(outputIdx++);
     int valuesLength = operation.outputListLength("values");
@@ -253,6 +259,9 @@ public final class DecodeProto extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeProto.class
+  )
   public static class Inputs extends RawOpInputs<DecodeProto> {
     /**
      * Tensor of serialized protos with shape {@code batch_shape}.

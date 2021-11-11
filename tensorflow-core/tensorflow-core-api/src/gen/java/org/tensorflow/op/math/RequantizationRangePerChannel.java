@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes requantization range per channel.
  */
+@OpMetadata(
+    opType = RequantizationRangePerChannel.OP_NAME,
+    inputsClass = RequantizationRangePerChannel.Inputs.class
+)
 public final class RequantizationRangePerChannel extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class RequantizationRangePerChannel extends RawOp {
 
   private Output<TFloat32> outputMax;
 
-  private RequantizationRangePerChannel(Operation operation) {
-    super(operation);
+  public RequantizationRangePerChannel(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputMin = operation.output(outputIdx++);
     outputMax = operation.output(outputIdx++);
@@ -93,6 +99,9 @@ public final class RequantizationRangePerChannel extends RawOp {
     return outputMax;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RequantizationRangePerChannel.class
+  )
   public static class Inputs extends RawOpInputs<RequantizationRangePerChannel> {
     /**
      * The original input tensor.

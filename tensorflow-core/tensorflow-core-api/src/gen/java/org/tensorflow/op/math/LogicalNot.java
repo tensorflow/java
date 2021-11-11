@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
 /**
  * Returns the truth value of {@code NOT x} element-wise.
  */
+@OpMetadata(
+    opType = LogicalNot.OP_NAME,
+    inputsClass = LogicalNot.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -44,8 +50,8 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
 
   private Output<TBool> y;
 
-  private LogicalNot(Operation operation) {
-    super(operation);
+  public LogicalNot(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class LogicalNot extends RawOp implements Operand<TBool> {
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = LogicalNot.class
+  )
   public static class Inputs extends RawOpInputs<LogicalNot> {
     /**
      * A {@code Tensor} of type {@code bool}.

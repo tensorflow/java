@@ -25,6 +25,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 
 /**
@@ -33,6 +35,10 @@ import org.tensorflow.op.annotation.Operator;
  * otherwise it will exit with a SIGABORT signal.
  * <p>Returns nothing but an exception.
  */
+@OpMetadata(
+    opType = Abort.OP_NAME,
+    inputsClass = Abort.Inputs.class
+)
 @Operator
 public final class Abort extends RawOp {
   /**
@@ -40,8 +46,8 @@ public final class Abort extends RawOp {
    */
   public static final String OP_NAME = "Abort";
 
-  private Abort(Operation operation) {
-    super(operation);
+  public Abort(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -123,6 +129,9 @@ public final class Abort extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Abort.class
+  )
   public static class Inputs extends RawOpInputs<Abort> {
     /**
      * A string which is the message associated with the exception.

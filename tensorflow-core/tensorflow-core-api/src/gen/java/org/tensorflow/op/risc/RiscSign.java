@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code y} output
  */
+@OpMetadata(
+    opType = RiscSign.OP_NAME,
+    inputsClass = RiscSign.Inputs.class
+)
 public final class RiscSign<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class RiscSign<T extends TNumber> extends RawOp implements Operand<
 
   private Output<T> y;
 
-  private RiscSign(Operation operation) {
-    super(operation);
+  public RiscSign(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class RiscSign<T extends TNumber> extends RawOp implements Operand<
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscSign.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<RiscSign<T>> {
     /**
      * The x input

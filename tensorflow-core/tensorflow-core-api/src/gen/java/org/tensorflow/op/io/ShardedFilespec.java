@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -34,6 +36,10 @@ import org.tensorflow.types.TString;
 /**
  * Generate a glob pattern matching all sharded file names.
  */
+@OpMetadata(
+    opType = ShardedFilespec.OP_NAME,
+    inputsClass = ShardedFilespec.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -45,8 +51,8 @@ public final class ShardedFilespec extends RawOp implements Operand<TString> {
 
   private Output<TString> filename;
 
-  private ShardedFilespec(Operation operation) {
-    super(operation);
+  public ShardedFilespec(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     filename = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class ShardedFilespec extends RawOp implements Operand<TString> {
     return filename;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ShardedFilespec.class
+  )
   public static class Inputs extends RawOpInputs<ShardedFilespec> {
     /**
      * The basename input

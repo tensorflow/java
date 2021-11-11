@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -59,6 +61,10 @@ import org.tensorflow.types.family.TNumber;
  * # output_array ==&gt; ['this:is:a:test']
  * </pre>
  */
+@OpMetadata(
+    opType = UnsortedSegmentJoin.OP_NAME,
+    inputsClass = UnsortedSegmentJoin.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -70,8 +76,8 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
 
   private Output<TString> output;
 
-  private UnsortedSegmentJoin(Operation operation) {
-    super(operation);
+  public UnsortedSegmentJoin(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -152,6 +158,9 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = UnsortedSegmentJoin.class
+  )
   public static class Inputs extends RawOpInputs<UnsortedSegmentJoin> {
     /**
      * The input to be joined.

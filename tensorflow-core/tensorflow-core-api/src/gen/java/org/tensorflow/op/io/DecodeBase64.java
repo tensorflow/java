@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.TString;
  * Input may or may not have padding at the end. See EncodeBase64 for padding.
  * Web-safe means that input must use - and _ instead of + and /.
  */
+@OpMetadata(
+    opType = DecodeBase64.OP_NAME,
+    inputsClass = DecodeBase64.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -46,8 +52,8 @@ public final class DecodeBase64 extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private DecodeBase64(Operation operation) {
-    super(operation);
+  public DecodeBase64(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -82,6 +88,9 @@ public final class DecodeBase64 extends RawOp implements Operand<TString> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeBase64.class
+  )
   public static class Inputs extends RawOpInputs<DecodeBase64> {
     /**
      * Base64 strings to decode.

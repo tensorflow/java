@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code value} output
  */
+@OpMetadata(
+    opType = TensorArrayPack.OP_NAME,
+    inputsClass = TensorArrayPack.Inputs.class
+)
 @Operator
 public final class TensorArrayPack<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -49,8 +55,8 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
 
   private Output<T> value;
 
-  private TensorArrayPack(Operation operation) {
-    super(operation);
+  public TensorArrayPack(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
   }
@@ -130,6 +136,9 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArrayPack.class
+  )
   public static class Inputs extends RawOpInputs<TensorArrayPack<?>> {
     /**
      * The handle input

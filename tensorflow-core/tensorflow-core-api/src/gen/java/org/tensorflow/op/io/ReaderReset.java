@@ -26,12 +26,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Restore a Reader to its initial clean state.
  */
+@OpMetadata(
+    opType = ReaderReset.OP_NAME,
+    inputsClass = ReaderReset.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -41,8 +47,8 @@ public final class ReaderReset extends RawOp {
    */
   public static final String OP_NAME = "ReaderResetV2";
 
-  private ReaderReset(Operation operation) {
-    super(operation);
+  public ReaderReset(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -61,6 +67,9 @@ public final class ReaderReset extends RawOp {
     return new ReaderReset(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReaderReset.class
+  )
   public static class Inputs extends RawOpInputs<ReaderReset> {
     /**
      * Handle to a Reader.

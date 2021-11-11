@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -47,6 +49,10 @@ import org.tensorflow.types.family.TNumber;
  * tf.math.greater_equal(x, y) ==&gt; [True, False, True, True]
  * </pre>
  */
+@OpMetadata(
+    opType = GreaterEqual.OP_NAME,
+    inputsClass = GreaterEqual.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -58,8 +64,8 @@ public final class GreaterEqual extends RawOp implements Operand<TBool> {
 
   private Output<TBool> z;
 
-  private GreaterEqual(Operation operation) {
-    super(operation);
+  public GreaterEqual(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -97,6 +103,9 @@ public final class GreaterEqual extends RawOp implements Operand<TBool> {
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = GreaterEqual.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<GreaterEqual> {
     /**
      * The x input

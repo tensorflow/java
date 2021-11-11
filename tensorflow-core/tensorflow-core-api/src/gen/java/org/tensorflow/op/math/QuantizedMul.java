@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <V> data type for {@code z} output
  */
+@OpMetadata(
+    opType = QuantizedMul.OP_NAME,
+    inputsClass = QuantizedMul.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -53,8 +59,8 @@ public final class QuantizedMul<V extends TNumber> extends RawOp {
 
   private Output<TFloat32> maxZ;
 
-  private QuantizedMul(Operation operation) {
-    super(operation);
+  public QuantizedMul(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
     minZ = operation.output(outputIdx++);
@@ -121,6 +127,9 @@ public final class QuantizedMul<V extends TNumber> extends RawOp {
     return maxZ;
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedMul.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedMul<?>> {
     /**
      * The x input

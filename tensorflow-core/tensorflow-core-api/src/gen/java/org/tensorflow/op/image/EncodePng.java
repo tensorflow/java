@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -46,6 +48,10 @@ import org.tensorflow.types.family.TNumber;
  * default or a value from 0 to 9.  9 is the highest compression level, generating
  * the smallest output, but is slower.
  */
+@OpMetadata(
+    opType = EncodePng.OP_NAME,
+    inputsClass = EncodePng.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -57,8 +63,8 @@ public final class EncodePng extends RawOp implements Operand<TString> {
 
   private Output<TString> contents;
 
-  private EncodePng(Operation operation) {
-    super(operation);
+  public EncodePng(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     contents = operation.output(outputIdx++);
   }
@@ -133,6 +139,9 @@ public final class EncodePng extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EncodePng.class
+  )
   public static class Inputs extends RawOpInputs<EncodePng> {
     /**
      * 3-D with shape {@code [height, width, channels]}.

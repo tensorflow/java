@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <V> data type for {@code out} output
  */
+@OpMetadata(
+    opType = QuantizedMatMul.OP_NAME,
+    inputsClass = QuantizedMatMul.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -57,8 +63,8 @@ public final class QuantizedMatMul<V extends TNumber> extends RawOp {
 
   private Output<TFloat32> maxOut;
 
-  private QuantizedMatMul(Operation operation) {
-    super(operation);
+  public QuantizedMatMul(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
     minOut = operation.output(outputIdx++);
@@ -193,6 +199,9 @@ public final class QuantizedMatMul<V extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedMatMul.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedMatMul<?>> {
     /**
      * Must be a two-dimensional tensor.

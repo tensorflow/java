@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  * this op will block until it does.   This Op is optimized for
  * performance.
  */
+@OpMetadata(
+    opType = OrderedMapPeek.OP_NAME,
+    inputsClass = OrderedMapPeek.Inputs.class
+)
 @Operator
 public final class OrderedMapPeek extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -52,8 +58,8 @@ public final class OrderedMapPeek extends RawOp implements Iterable<Operand<TTyp
   private List<Output<?>> values;
 
   @SuppressWarnings("unchecked")
-  private OrderedMapPeek(Operation operation) {
-    super(operation);
+  public OrderedMapPeek(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int valuesLength = operation.outputListLength("values");
     values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
@@ -213,6 +219,9 @@ public final class OrderedMapPeek extends RawOp implements Iterable<Operand<TTyp
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = OrderedMapPeek.class
+  )
   public static class Inputs extends RawOpInputs<OrderedMapPeek> {
     /**
      * The key input

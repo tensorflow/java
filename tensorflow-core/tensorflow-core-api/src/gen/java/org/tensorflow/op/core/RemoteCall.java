@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Runs function {@code f} on a remote device indicated by {@code target}.
  */
+@OpMetadata(
+    opType = RemoteCall.OP_NAME,
+    inputsClass = RemoteCall.Inputs.class
+)
 @Operator
 public final class RemoteCall extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -49,8 +55,8 @@ public final class RemoteCall extends RawOp implements Iterable<Operand<TType>> 
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private RemoteCall(Operation operation) {
-    super(operation);
+  public RemoteCall(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -95,6 +101,9 @@ public final class RemoteCall extends RawOp implements Iterable<Operand<TType>> 
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = RemoteCall.class
+  )
   public static class Inputs extends RawOpInputs<RemoteCall> {
     /**
      * A fully specified device name where we want to run the function.

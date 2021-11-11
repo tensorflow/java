@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
  * This operation may be executed multiple times. Each execution will reset the
  * iterator in {@code iterator} to the first element of {@code dataset}.
  */
+@OpMetadata(
+    opType = MakeIterator.OP_NAME,
+    inputsClass = MakeIterator.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -43,8 +49,8 @@ public final class MakeIterator extends RawOp {
    */
   public static final String OP_NAME = "MakeIterator";
 
-  private MakeIterator(Operation operation) {
-    super(operation);
+  public MakeIterator(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -66,6 +72,9 @@ public final class MakeIterator extends RawOp {
     return new MakeIterator(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = MakeIterator.class
+  )
   public static class Inputs extends RawOpInputs<MakeIterator> {
     /**
      * The dataset input

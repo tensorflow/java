@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -35,6 +37,10 @@ import org.tensorflow.types.TString;
  * Logs warning if the accumulator's value is already higher than
  * new_global_step.
  */
+@OpMetadata(
+    opType = AccumulatorSetGlobalStep.OP_NAME,
+    inputsClass = AccumulatorSetGlobalStep.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -44,8 +50,8 @@ public final class AccumulatorSetGlobalStep extends RawOp {
    */
   public static final String OP_NAME = "AccumulatorSetGlobalStep";
 
-  private AccumulatorSetGlobalStep(Operation operation) {
-    super(operation);
+  public AccumulatorSetGlobalStep(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -67,6 +73,9 @@ public final class AccumulatorSetGlobalStep extends RawOp {
     return new AccumulatorSetGlobalStep(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = AccumulatorSetGlobalStep.class
+  )
   public static class Inputs extends RawOpInputs<AccumulatorSetGlobalStep> {
     /**
      * The handle to an accumulator.

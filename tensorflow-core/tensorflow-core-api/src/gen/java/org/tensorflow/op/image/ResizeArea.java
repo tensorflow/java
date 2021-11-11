@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TNumber;
  * input pixel's contribution to the average is weighted by the fraction of its
  * area that intersects the footprint.  This is the same as OpenCV's INTER_AREA.
  */
+@OpMetadata(
+    opType = ResizeArea.OP_NAME,
+    inputsClass = ResizeArea.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -56,8 +62,8 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> resizedImages;
 
-  private ResizeArea(Operation operation) {
-    super(operation);
+  public ResizeArea(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     resizedImages = operation.output(outputIdx++);
   }
@@ -138,6 +144,9 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResizeArea.class
+  )
   public static class Inputs extends RawOpInputs<ResizeArea> {
     /**
      * 4-D with shape {@code [batch, height, width, channels]}.

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -53,6 +55,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code dense} output
  */
+@OpMetadata(
+    opType = SparseToDense.OP_NAME,
+    inputsClass = SparseToDense.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -64,8 +70,8 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
 
   private Output<U> dense;
 
-  private SparseToDense(Operation operation) {
-    super(operation);
+  public SparseToDense(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     dense = operation.output(outputIdx++);
   }
@@ -154,6 +160,9 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseToDense.class
+  )
   public static class Inputs<T extends TNumber, U extends TType> extends RawOpInputs<SparseToDense<U>> {
     /**
      * 0-D, 1-D, or 2-D.  {@code sparse_indices[i]} contains the complete

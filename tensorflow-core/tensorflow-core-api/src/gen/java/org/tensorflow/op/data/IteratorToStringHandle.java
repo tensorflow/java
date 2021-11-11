@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Converts the given {@code resource_handle} representing an iterator to a string.
  */
+@OpMetadata(
+    opType = IteratorToStringHandle.OP_NAME,
+    inputsClass = IteratorToStringHandle.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -45,8 +51,8 @@ public final class IteratorToStringHandle extends RawOp implements Operand<TStri
 
   private Output<TString> stringHandle;
 
-  private IteratorToStringHandle(Operation operation) {
-    super(operation);
+  public IteratorToStringHandle(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     stringHandle = operation.output(outputIdx++);
   }
@@ -82,6 +88,9 @@ public final class IteratorToStringHandle extends RawOp implements Operand<TStri
     return stringHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = IteratorToStringHandle.class
+  )
   public static class Inputs extends RawOpInputs<IteratorToStringHandle> {
     /**
      * A handle to an iterator resource.

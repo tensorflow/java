@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = QuantizedDepthwiseConv2DWithBiasAndRelu.OP_NAME,
+    inputsClass = QuantizedDepthwiseConv2DWithBiasAndRelu.Inputs.class
+)
 public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -50,8 +56,8 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TNumber> ex
 
   private Output<TFloat32> maxOutput;
 
-  private QuantizedDepthwiseConv2DWithBiasAndRelu(Operation operation) {
-    super(operation);
+  public QuantizedDepthwiseConv2DWithBiasAndRelu(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     minOutput = operation.output(outputIdx++);
@@ -243,6 +249,9 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TNumber> ex
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedDepthwiseConv2DWithBiasAndRelu.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedDepthwiseConv2DWithBiasAndRelu<?>> {
     /**
      * The original input tensor.

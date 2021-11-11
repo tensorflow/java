@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -57,6 +59,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = BatchMatMul.OP_NAME,
+    inputsClass = BatchMatMul.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -68,8 +74,8 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
 
   private Output<V> output;
 
-  private BatchMatMul(Operation operation) {
-    super(operation);
+  public BatchMatMul(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -175,6 +181,9 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchMatMul.class
+  )
   public static class Inputs extends RawOpInputs<BatchMatMul<?>> {
     /**
      * 2-D or higher with shape {@code [..., r_x, c_x]}.

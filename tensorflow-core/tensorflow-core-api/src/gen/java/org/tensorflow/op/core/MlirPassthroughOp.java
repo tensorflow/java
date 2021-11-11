@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -65,6 +67,10 @@ import org.tensorflow.types.family.TType;
  * graph_def = foo.get_concrete_function(tf.TensorSpec([10], tf.float32), tf.TensorSpec([10], tf.float32)).graph.as_graph_def()
  * </pre>
  */
+@OpMetadata(
+    opType = MlirPassthroughOp.OP_NAME,
+    inputsClass = MlirPassthroughOp.Inputs.class
+)
 @Operator
 public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -75,8 +81,8 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
   private List<Output<?>> outputs;
 
   @SuppressWarnings("unchecked")
-  private MlirPassthroughOp(Operation operation) {
-    super(operation);
+  public MlirPassthroughOp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
     outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
@@ -119,6 +125,9 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
     return (Iterator) outputs.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = MlirPassthroughOp.class
+  )
   public static class Inputs extends RawOpInputs<MlirPassthroughOp> {
     /**
      * The inputs input

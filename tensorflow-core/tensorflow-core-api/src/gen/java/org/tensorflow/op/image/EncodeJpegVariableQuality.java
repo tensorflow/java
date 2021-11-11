@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -37,6 +39,10 @@ import org.tensorflow.types.TUint8;
  * {@code image} is a 3-D uint8 Tensor of shape {@code [height, width, channels]}.
  * {@code quality} is an int32 jpeg compression quality value between 0 and 100.
  */
+@OpMetadata(
+    opType = EncodeJpegVariableQuality.OP_NAME,
+    inputsClass = EncodeJpegVariableQuality.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -48,8 +54,8 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
 
   private Output<TString> contents;
 
-  private EncodeJpegVariableQuality(Operation operation) {
-    super(operation);
+  public EncodeJpegVariableQuality(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     contents = operation.output(outputIdx++);
   }
@@ -87,6 +93,9 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
     return contents;
   }
 
+  @OpInputsMetadata(
+      outputsClass = EncodeJpegVariableQuality.class
+  )
   public static class Inputs extends RawOpInputs<EncodeJpegVariableQuality> {
     /**
      * Images to adjust.  At least 3-D.

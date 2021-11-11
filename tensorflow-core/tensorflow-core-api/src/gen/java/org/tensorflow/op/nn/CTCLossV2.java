@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -36,6 +38,10 @@ import org.tensorflow.types.TInt64;
  * the gradient.  This class performs the softmax operation for you, so inputs
  * should be e.g. linear projections of outputs by an LSTM.
  */
+@OpMetadata(
+    opType = CTCLossV2.OP_NAME,
+    inputsClass = CTCLossV2.Inputs.class
+)
 public final class CTCLossV2 extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class CTCLossV2 extends RawOp {
 
   private Output<TFloat32> gradient;
 
-  private CTCLossV2(Operation operation) {
-    super(operation);
+  public CTCLossV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
     gradient = operation.output(outputIdx++);
@@ -200,6 +206,9 @@ public final class CTCLossV2 extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CTCLossV2.class
+  )
   public static class Inputs extends RawOpInputs<CTCLossV2> {
     /**
      * 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits. Default blank

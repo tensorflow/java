@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -41,6 +43,10 @@ import org.tensorflow.types.TString;
  * <p>{@code audio} is a 2-D float Tensor of shape {@code [length, channels]}.
  * {@code sample_rate} is a scalar Tensor holding the rate to use (e.g. 44100).
  */
+@OpMetadata(
+    opType = EncodeWav.OP_NAME,
+    inputsClass = EncodeWav.Inputs.class
+)
 @Operator(
     group = "audio"
 )
@@ -52,8 +58,8 @@ public final class EncodeWav extends RawOp implements Operand<TString> {
 
   private Output<TString> contents;
 
-  private EncodeWav(Operation operation) {
-    super(operation);
+  public EncodeWav(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     contents = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class EncodeWav extends RawOp implements Operand<TString> {
     return contents;
   }
 
+  @OpInputsMetadata(
+      outputsClass = EncodeWav.class
+  )
   public static class Inputs extends RawOpInputs<EncodeWav> {
     /**
      * 2-D with shape {@code [length, channels]}.

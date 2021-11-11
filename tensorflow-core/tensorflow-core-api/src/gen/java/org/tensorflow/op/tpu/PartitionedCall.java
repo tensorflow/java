@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Calls a function placed on a specified TPU device.
  */
+@OpMetadata(
+    opType = PartitionedCall.OP_NAME,
+    inputsClass = PartitionedCall.Inputs.class
+)
 public final class PartitionedCall extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -47,8 +53,8 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private PartitionedCall(Operation operation) {
-    super(operation);
+  public PartitionedCall(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -133,6 +139,9 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = PartitionedCall.class
+  )
   public static class Inputs extends RawOpInputs<PartitionedCall> {
     /**
      * The arguments to the function.

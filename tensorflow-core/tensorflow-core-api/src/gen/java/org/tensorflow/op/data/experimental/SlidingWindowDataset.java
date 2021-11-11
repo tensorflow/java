@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that passes a sliding window over {@code input_dataset}.
  */
+@OpMetadata(
+    opType = SlidingWindowDataset.OP_NAME,
+    inputsClass = SlidingWindowDataset.Inputs.class
+)
 public final class SlidingWindowDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private SlidingWindowDataset(Operation operation) {
-    super(operation);
+  public SlidingWindowDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -102,6 +108,9 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SlidingWindowDataset.class
+  )
   public static class Inputs extends RawOpInputs<SlidingWindowDataset> {
     /**
      * The inputDataset input

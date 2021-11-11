@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -34,6 +36,10 @@ import org.tensorflow.types.TInt32;
  * Aggregates the summary of accumulated stats for the batch.
  * The summary stats contains gradients and hessians accumulated for each node, feature dimension id and bucket.
  */
+@OpMetadata(
+    opType = BoostedTreesAggregateStats.OP_NAME,
+    inputsClass = BoostedTreesAggregateStats.Inputs.class
+)
 public final class BoostedTreesAggregateStats extends RawOp implements Operand<TFloat32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -42,8 +48,8 @@ public final class BoostedTreesAggregateStats extends RawOp implements Operand<T
 
   private Output<TFloat32> statsSummary;
 
-  private BoostedTreesAggregateStats(Operation operation) {
-    super(operation);
+  public BoostedTreesAggregateStats(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     statsSummary = operation.output(outputIdx++);
   }
@@ -91,6 +97,9 @@ public final class BoostedTreesAggregateStats extends RawOp implements Operand<T
     return statsSummary;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesAggregateStats.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesAggregateStats> {
     /**
      * int32; Rank 1 Tensor containing node ids for each example, shape [batch_size].

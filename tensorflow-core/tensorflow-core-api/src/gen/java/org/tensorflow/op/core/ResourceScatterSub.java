@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -51,6 +53,10 @@ import org.tensorflow.types.family.TType;
  * <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
  * </div>
  */
+@OpMetadata(
+    opType = ResourceScatterSub.OP_NAME,
+    inputsClass = ResourceScatterSub.Inputs.class
+)
 @Operator
 public final class ResourceScatterSub extends RawOp {
   /**
@@ -58,8 +64,8 @@ public final class ResourceScatterSub extends RawOp {
    */
   public static final String OP_NAME = "ResourceScatterSub";
 
-  private ResourceScatterSub(Operation operation) {
-    super(operation);
+  public ResourceScatterSub(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -83,6 +89,9 @@ public final class ResourceScatterSub extends RawOp {
     return new ResourceScatterSub(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceScatterSub.class
+  )
   public static class Inputs extends RawOpInputs<ResourceScatterSub> {
     /**
      * Should be from a {@code Variable} node.

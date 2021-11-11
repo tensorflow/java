@@ -30,12 +30,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that contains the elements of {@code input_dataset} ignoring errors.
  */
+@OpMetadata(
+    opType = IgnoreErrorsDataset.OP_NAME,
+    inputsClass = IgnoreErrorsDataset.Inputs.class
+)
 public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private IgnoreErrorsDataset(Operation operation) {
-    super(operation);
+  public IgnoreErrorsDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -130,6 +136,9 @@ public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = IgnoreErrorsDataset.class
+  )
   public static class Inputs extends RawOpInputs<IgnoreErrorsDataset> {
     /**
      * The inputDataset input

@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -35,6 +37,10 @@ import org.tensorflow.types.TFloat32;
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
+@OpMetadata(
+    opType = RetrieveTPUEmbeddingFTRLParameters.OP_NAME,
+    inputsClass = RetrieveTPUEmbeddingFTRLParameters.Inputs.class
+)
 public final class RetrieveTPUEmbeddingFTRLParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -47,8 +53,8 @@ public final class RetrieveTPUEmbeddingFTRLParameters extends RawOp {
 
   private Output<TFloat32> linears;
 
-  private RetrieveTPUEmbeddingFTRLParameters(Operation operation) {
-    super(operation);
+  public RetrieveTPUEmbeddingFTRLParameters(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     parameters = operation.output(outputIdx++);
     accumulators = operation.output(outputIdx++);
@@ -192,6 +198,9 @@ public final class RetrieveTPUEmbeddingFTRLParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RetrieveTPUEmbeddingFTRLParameters.class
+  )
   public static class Inputs extends RawOpInputs<RetrieveTPUEmbeddingFTRLParameters> {
     /**
      * The tableId attribute

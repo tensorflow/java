@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TNumber;
  * {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
  * retained with length 1.
  */
+@OpMetadata(
+    opType = All.OP_NAME,
+    inputsClass = All.Inputs.class
+)
 @Operator
 public final class All extends RawOp implements Operand<TBool> {
   /**
@@ -48,8 +54,8 @@ public final class All extends RawOp implements Operand<TBool> {
 
   private Output<TBool> output;
 
-  private All(Operation operation) {
-    super(operation);
+  public All(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -127,6 +133,9 @@ public final class All extends RawOp implements Operand<TBool> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = All.class
+  )
   public static class Inputs extends RawOpInputs<All> {
     /**
      * The tensor to reduce.

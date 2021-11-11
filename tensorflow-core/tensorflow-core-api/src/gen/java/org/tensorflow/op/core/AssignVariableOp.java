@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * Any ReadVariableOp with a control dependency on this op is guaranteed to return
  * this value or a subsequent newer value of the variable.
  */
+@OpMetadata(
+    opType = AssignVariableOp.OP_NAME,
+    inputsClass = AssignVariableOp.Inputs.class
+)
 @Operator
 public final class AssignVariableOp extends RawOp {
   /**
@@ -42,8 +48,8 @@ public final class AssignVariableOp extends RawOp {
    */
   public static final String OP_NAME = "AssignVariableOp";
 
-  private AssignVariableOp(Operation operation) {
-    super(operation);
+  public AssignVariableOp(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -65,6 +71,9 @@ public final class AssignVariableOp extends RawOp {
     return new AssignVariableOp(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = AssignVariableOp.class
+  )
   public static class Inputs extends RawOpInputs<AssignVariableOp> {
     /**
      * handle to the resource in which to store the variable.

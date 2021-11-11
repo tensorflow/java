@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code serialized_sparse} output
  */
+@OpMetadata(
+    opType = SerializeSparse.OP_NAME,
+    inputsClass = SerializeSparse.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -50,8 +56,8 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
 
   private Output<U> serializedSparse;
 
-  private SerializeSparse(Operation operation) {
-    super(operation);
+  public SerializeSparse(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     serializedSparse = operation.output(outputIdx++);
   }
@@ -113,6 +119,9 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
     return serializedSparse;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SerializeSparse.class
+  )
   public static class Inputs extends RawOpInputs<SerializeSparse<?>> {
     /**
      * 2-D.  The {@code indices} of the {@code SparseTensor}.

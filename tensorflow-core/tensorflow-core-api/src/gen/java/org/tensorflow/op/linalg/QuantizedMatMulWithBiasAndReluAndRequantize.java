@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <W> data type for {@code out} output
  */
+@OpMetadata(
+    opType = QuantizedMatMulWithBiasAndReluAndRequantize.OP_NAME,
+    inputsClass = QuantizedMatMulWithBiasAndReluAndRequantize.Inputs.class
+)
 public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -57,8 +63,8 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TNumber
 
   private Output<TFloat32> maxOut;
 
-  private QuantizedMatMulWithBiasAndReluAndRequantize(Operation operation) {
-    super(operation);
+  public QuantizedMatMulWithBiasAndReluAndRequantize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
     minOut = operation.output(outputIdx++);
@@ -223,6 +229,9 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TNumber
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedMatMulWithBiasAndReluAndRequantize.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedMatMulWithBiasAndReluAndRequantize<?>> {
     /**
      * A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.

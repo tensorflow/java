@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -33,6 +35,10 @@ import org.tensorflow.types.TString;
  * Prints a string scalar.
  * Prints a string scalar to the desired output_stream.
  */
+@OpMetadata(
+    opType = Print.OP_NAME,
+    inputsClass = Print.Inputs.class
+)
 @Operator
 public final class Print extends RawOp {
   /**
@@ -40,8 +46,8 @@ public final class Print extends RawOp {
    */
   public static final String OP_NAME = "PrintV2";
 
-  private Print(Operation operation) {
-    super(operation);
+  public Print(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -125,6 +131,9 @@ public final class Print extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Print.class
+  )
   public static class Inputs extends RawOpInputs<Print> {
     /**
      * The string scalar to print.

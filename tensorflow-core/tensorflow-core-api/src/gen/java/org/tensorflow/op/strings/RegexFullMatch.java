@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TString;
@@ -50,6 +52,10 @@ import org.tensorflow.types.TString;
  * </blockquote>
  * </blockquote>
  */
+@OpMetadata(
+    opType = RegexFullMatch.OP_NAME,
+    inputsClass = RegexFullMatch.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -61,8 +67,8 @@ public final class RegexFullMatch extends RawOp implements Operand<TBool> {
 
   private Output<TBool> output;
 
-  private RegexFullMatch(Operation operation) {
-    super(operation);
+  public RegexFullMatch(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -100,6 +106,9 @@ public final class RegexFullMatch extends RawOp implements Operand<TBool> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RegexFullMatch.class
+  )
   public static class Inputs extends RawOpInputs<RegexFullMatch> {
     /**
      * A string tensor of the text to be processed.

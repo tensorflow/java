@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -38,6 +40,10 @@ import org.tensorflow.types.TString;
  * link above.
  * <p>Web-safe means that the encoder uses - and _ instead of + and /.
  */
+@OpMetadata(
+    opType = EncodeBase64.OP_NAME,
+    inputsClass = EncodeBase64.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -49,8 +55,8 @@ public final class EncodeBase64 extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private EncodeBase64(Operation operation) {
-    super(operation);
+  public EncodeBase64(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -124,6 +130,9 @@ public final class EncodeBase64 extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EncodeBase64.class
+  )
   public static class Inputs extends RawOpInputs<EncodeBase64> {
     /**
      * Strings to be encoded.

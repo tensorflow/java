@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -47,6 +49,10 @@ import org.tensorflow.types.family.TType;
  * {@code sparse.AddSparseToTensorsMap} as the {@code shared_name} passed to
  * {@code TakeManySparseFromTensorsMap}.  Ensure the Operations are colocated.
  */
+@OpMetadata(
+    opType = AddSparseToTensorsMap.OP_NAME,
+    inputsClass = AddSparseToTensorsMap.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -58,8 +64,8 @@ public final class AddSparseToTensorsMap extends RawOp implements Operand<TInt64
 
   private Output<TInt64> sparseHandle;
 
-  private AddSparseToTensorsMap(Operation operation) {
-    super(operation);
+  public AddSparseToTensorsMap(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sparseHandle = operation.output(outputIdx++);
   }
@@ -167,6 +173,9 @@ public final class AddSparseToTensorsMap extends RawOp implements Operand<TInt64
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = AddSparseToTensorsMap.class
+  )
   public static class Inputs extends RawOpInputs<AddSparseToTensorsMap> {
     /**
      * 2-D.  The {@code indices} of the {@code SparseTensor}.

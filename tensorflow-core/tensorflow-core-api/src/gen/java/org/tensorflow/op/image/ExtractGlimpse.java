@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -52,6 +54,10 @@ import org.tensorflow.types.TInt32;
  * numbers of pixels.</li>
  * </ul>
  */
+@OpMetadata(
+    opType = ExtractGlimpse.OP_NAME,
+    inputsClass = ExtractGlimpse.Inputs.class
+)
 public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -60,8 +66,8 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> glimpse;
 
-  private ExtractGlimpse(Operation operation) {
-    super(operation);
+  public ExtractGlimpse(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     glimpse = operation.output(outputIdx++);
   }
@@ -233,6 +239,9 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ExtractGlimpse.class
+  )
   public static class Inputs extends RawOpInputs<ExtractGlimpse> {
     /**
      * A 4-D float tensor of shape {@code [batch_size, height, width, channels]}.

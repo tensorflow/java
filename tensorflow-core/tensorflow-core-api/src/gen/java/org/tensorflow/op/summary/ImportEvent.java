@@ -26,20 +26,26 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * The ImportEvent operation
  */
+@OpMetadata(
+    opType = ImportEvent.OP_NAME,
+    inputsClass = ImportEvent.Inputs.class
+)
 public final class ImportEvent extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ImportEvent";
 
-  private ImportEvent(Operation operation) {
-    super(operation);
+  public ImportEvent(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -61,6 +67,9 @@ public final class ImportEvent extends RawOp {
     return new ImportEvent(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ImportEvent.class
+  )
   public static class Inputs extends RawOpInputs<ImportEvent> {
     /**
      * The writer input

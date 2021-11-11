@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code y} output
  */
+@OpMetadata(
+    opType = RiscCos.OP_NAME,
+    inputsClass = RiscCos.Inputs.class
+)
 public final class RiscCos<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class RiscCos<T extends TNumber> extends RawOp implements Operand<T
 
   private Output<T> y;
 
-  private RiscCos(Operation operation) {
-    super(operation);
+  public RiscCos(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class RiscCos<T extends TNumber> extends RawOp implements Operand<T
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscCos.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<RiscCos<T>> {
     /**
      * The x input

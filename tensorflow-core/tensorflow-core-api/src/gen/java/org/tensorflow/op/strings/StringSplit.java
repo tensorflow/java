@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -55,6 +57,10 @@ import org.tensorflow.types.TString;
  * leading or trailing whitespace.
  * <p>Note that the above mentioned behavior matches python's str.split.
  */
+@OpMetadata(
+    opType = StringSplit.OP_NAME,
+    inputsClass = StringSplit.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -70,8 +76,8 @@ public final class StringSplit extends RawOp {
 
   private Output<TInt64> shape;
 
-  private StringSplit(Operation operation) {
-    super(operation);
+  public StringSplit(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     indices = operation.output(outputIdx++);
     values = operation.output(outputIdx++);
@@ -163,6 +169,9 @@ public final class StringSplit extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = StringSplit.class
+  )
   public static class Inputs extends RawOpInputs<StringSplit> {
     /**
      * {@code 1-D} string {@code Tensor}, the strings to split.

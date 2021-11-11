@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Serializes the tree ensemble to a proto.
  */
+@OpMetadata(
+    opType = BoostedTreesSerializeEnsemble.OP_NAME,
+    inputsClass = BoostedTreesSerializeEnsemble.Inputs.class
+)
 public final class BoostedTreesSerializeEnsemble extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class BoostedTreesSerializeEnsemble extends RawOp {
 
   private Output<TString> treeEnsembleSerialized;
 
-  private BoostedTreesSerializeEnsemble(Operation operation) {
-    super(operation);
+  public BoostedTreesSerializeEnsemble(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     stampToken = operation.output(outputIdx++);
     treeEnsembleSerialized = operation.output(outputIdx++);
@@ -86,6 +92,9 @@ public final class BoostedTreesSerializeEnsemble extends RawOp {
     return treeEnsembleSerialized;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesSerializeEnsemble.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesSerializeEnsemble> {
     /**
      * Handle to the tree ensemble.

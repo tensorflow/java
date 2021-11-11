@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -47,6 +49,10 @@ import org.tensorflow.types.family.TNumber;
  * \(out_i\) be the output for example {@code i},
  * <p>$$out_i = predictions_{i, targets_i} \in TopKIncludingTies(predictions_i)$$
  */
+@OpMetadata(
+    opType = InTopK.OP_NAME,
+    inputsClass = InTopK.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -58,8 +64,8 @@ public final class InTopK extends RawOp implements Operand<TBool> {
 
   private Output<TBool> precision;
 
-  private InTopK(Operation operation) {
-    super(operation);
+  public InTopK(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     precision = operation.output(outputIdx++);
   }
@@ -100,6 +106,9 @@ public final class InTopK extends RawOp implements Operand<TBool> {
     return precision;
   }
 
+  @OpInputsMetadata(
+      outputsClass = InTopK.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<InTopK> {
     /**
      * A {@code batch_size} x {@code classes} tensor.

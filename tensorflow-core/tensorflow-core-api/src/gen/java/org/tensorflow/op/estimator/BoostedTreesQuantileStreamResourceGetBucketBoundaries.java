@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * An op that returns a list of float tensors for a quantile stream resource. Each
  * tensor is Rank 1 containing bucket boundaries for a single feature.
  */
+@OpMetadata(
+    opType = BoostedTreesQuantileStreamResourceGetBucketBoundaries.OP_NAME,
+    inputsClass = BoostedTreesQuantileStreamResourceGetBucketBoundaries.Inputs.class
+)
 public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends RawOp implements Iterable<Operand<TFloat32>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends
   private List<Output<TFloat32>> bucketBoundaries;
 
   @SuppressWarnings("unchecked")
-  private BoostedTreesQuantileStreamResourceGetBucketBoundaries(Operation operation) {
-    super(operation);
+  public BoostedTreesQuantileStreamResourceGetBucketBoundaries(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int bucketBoundariesLength = operation.outputListLength("bucket_boundaries");
     bucketBoundaries = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, bucketBoundariesLength));
@@ -88,6 +94,9 @@ public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends
     return (Iterator) bucketBoundaries.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesQuantileStreamResourceGetBucketBoundaries.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesQuantileStreamResourceGetBucketBoundaries> {
     /**
      * resource handle referring to a QuantileStreamResource.

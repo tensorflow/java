@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Converts the given {@code resource_handle} representing an iterator to a variant tensor.
  */
+@OpMetadata(
+    opType = SerializeIterator.OP_NAME,
+    inputsClass = SerializeIterator.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -45,8 +51,8 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
   private Output<? extends TType> serialized;
 
   @SuppressWarnings("unchecked")
-  private SerializeIterator(Operation operation) {
-    super(operation);
+  public SerializeIterator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     serialized = operation.output(outputIdx++);
   }
@@ -123,6 +129,9 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SerializeIterator.class
+  )
   public static class Inputs extends RawOpInputs<SerializeIterator> {
     /**
      * A handle to an iterator resource.

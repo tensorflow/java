@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TNumber;
 /**
  * The RiscIsFinite operation
  */
+@OpMetadata(
+    opType = RiscIsFinite.OP_NAME,
+    inputsClass = RiscIsFinite.Inputs.class
+)
 public final class RiscIsFinite extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -42,8 +48,8 @@ public final class RiscIsFinite extends RawOp implements Operand<TBool> {
 
   private Output<TBool> y;
 
-  private RiscIsFinite(Operation operation) {
-    super(operation);
+  public RiscIsFinite(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class RiscIsFinite extends RawOp implements Operand<TBool> {
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscIsFinite.class
+  )
   public static class Inputs extends RawOpInputs<RiscIsFinite> {
     /**
      * The x input

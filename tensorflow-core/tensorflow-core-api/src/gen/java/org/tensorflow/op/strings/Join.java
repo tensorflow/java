@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -45,6 +47,10 @@ import org.tensorflow.types.TString;
  * </blockquote>
  * </blockquote>
  */
+@OpMetadata(
+    opType = Join.OP_NAME,
+    inputsClass = Join.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -56,8 +62,8 @@ public final class Join extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private Join(Operation operation) {
-    super(operation);
+  public Join(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -133,6 +139,9 @@ public final class Join extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Join.class
+  )
   public static class Inputs extends RawOpInputs<Join> {
     /**
      * A list of string tensors.  The tensors must all have the same shape,

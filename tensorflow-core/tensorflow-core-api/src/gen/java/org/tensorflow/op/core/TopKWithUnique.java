@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -39,6 +41,10 @@ import org.tensorflow.types.TInt32;
  * of K and the input size. NaNs are never returned. Subnormal numbers are flushed
  * to zero.
  */
+@OpMetadata(
+    opType = TopKWithUnique.OP_NAME,
+    inputsClass = TopKWithUnique.Inputs.class
+)
 @Operator
 public final class TopKWithUnique extends RawOp {
   /**
@@ -50,8 +56,8 @@ public final class TopKWithUnique extends RawOp {
 
   private Output<TInt32> topkIndices;
 
-  private TopKWithUnique(Operation operation) {
-    super(operation);
+  public TopKWithUnique(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     topk = operation.output(outputIdx++);
     topkIndices = operation.output(outputIdx++);
@@ -93,6 +99,9 @@ public final class TopKWithUnique extends RawOp {
     return topkIndices;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TopKWithUnique.class
+  )
   public static class Inputs extends RawOpInputs<TopKWithUnique> {
     /**
      * The input input

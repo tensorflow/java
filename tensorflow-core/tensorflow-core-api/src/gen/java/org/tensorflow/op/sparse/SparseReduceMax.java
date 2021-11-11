@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -48,6 +50,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = SparseReduceMax.OP_NAME,
+    inputsClass = SparseReduceMax.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -59,8 +65,8 @@ public final class SparseReduceMax<T extends TNumber> extends RawOp implements O
 
   private Output<T> output;
 
-  private SparseReduceMax(Operation operation) {
-    super(operation);
+  public SparseReduceMax(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -144,6 +150,9 @@ public final class SparseReduceMax<T extends TNumber> extends RawOp implements O
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseReduceMax.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<SparseReduceMax<T>> {
     /**
      * 2-D.  {@code N x R} matrix with the indices of non-empty values in a

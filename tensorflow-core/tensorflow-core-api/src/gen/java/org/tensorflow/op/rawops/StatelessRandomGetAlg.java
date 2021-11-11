@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 
 /**
  * Picks the best counter-based RNG algorithm based on device.
  * This op picks the best counter-based RNG algorithm based on device.
  */
+@OpMetadata(
+    opType = StatelessRandomGetAlg.OP_NAME,
+    inputsClass = StatelessRandomGetAlg.Inputs.class
+)
 public final class StatelessRandomGetAlg extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class StatelessRandomGetAlg extends RawOp implements Operand<TInt32
 
   private Output<TInt32> alg;
 
-  private StatelessRandomGetAlg(Operation operation) {
-    super(operation);
+  public StatelessRandomGetAlg(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     alg = operation.output(outputIdx++);
   }
@@ -75,6 +81,9 @@ public final class StatelessRandomGetAlg extends RawOp implements Operand<TInt32
     return alg;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessRandomGetAlg.class
+  )
   public static class Inputs extends RawOpInputs<StatelessRandomGetAlg> {
     public Inputs(GraphOperation op) {
       super(new StatelessRandomGetAlg(op), op, Arrays.asList());

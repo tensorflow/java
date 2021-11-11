@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -36,14 +38,18 @@ import org.tensorflow.types.family.TType;
  * Updates the tree ensemble by adding a layer to the last tree being grown
  * or by starting a new tree.
  */
+@OpMetadata(
+    opType = BoostedTreesUpdateEnsembleV2.OP_NAME,
+    inputsClass = BoostedTreesUpdateEnsembleV2.Inputs.class
+)
 public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "BoostedTreesUpdateEnsembleV2";
 
-  private BoostedTreesUpdateEnsembleV2(Operation operation) {
-    super(operation);
+  public BoostedTreesUpdateEnsembleV2(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -167,6 +173,9 @@ public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesUpdateEnsembleV2.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesUpdateEnsembleV2> {
     /**
      * Handle to the ensemble variable.

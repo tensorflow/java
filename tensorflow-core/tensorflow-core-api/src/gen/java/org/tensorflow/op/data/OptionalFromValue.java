@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Constructs an Optional variant from a tuple of tensors.
  */
+@OpMetadata(
+    opType = OptionalFromValue.OP_NAME,
+    inputsClass = OptionalFromValue.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -47,8 +53,8 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
   private Output<? extends TType> optional;
 
   @SuppressWarnings("unchecked")
-  private OptionalFromValue(Operation operation) {
-    super(operation);
+  public OptionalFromValue(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     optional = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class OptionalFromValue extends RawOp implements Operand<TType> {
     return (Output<TType>) optional;
   }
 
+  @OpInputsMetadata(
+      outputsClass = OptionalFromValue.class
+  )
   public static class Inputs extends RawOpInputs<OptionalFromValue> {
     /**
      * The components input

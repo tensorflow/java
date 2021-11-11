@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code scale_backprop} output
  */
+@OpMetadata(
+    opType = FusedBatchNormGrad.OP_NAME,
+    inputsClass = FusedBatchNormGrad.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -60,8 +66,8 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
 
   private Output<U> reserveSpace5;
 
-  private FusedBatchNormGrad(Operation operation) {
-    super(operation);
+  public FusedBatchNormGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     xBackprop = operation.output(outputIdx++);
     scaleBackprop = operation.output(outputIdx++);
@@ -250,6 +256,9 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FusedBatchNormGrad.class
+  )
   public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<FusedBatchNormGrad<T, U>> {
     /**
      * A 4D Tensor for the gradient with respect to y.

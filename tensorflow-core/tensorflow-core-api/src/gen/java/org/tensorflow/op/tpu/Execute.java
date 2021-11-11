@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * Op that loads and executes a TPU program on a TPU device.
  * For the internal use of the distributed TPU compiler.
  */
+@OpMetadata(
+    opType = Execute.OP_NAME,
+    inputsClass = Execute.Inputs.class
+)
 @Operator(
     group = "tpu"
 )
@@ -51,8 +57,8 @@ public final class Execute extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> results;
 
   @SuppressWarnings("unchecked")
-  private Execute(Operation operation) {
-    super(operation);
+  public Execute(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int resultsLength = operation.outputListLength("results");
     results = Arrays.asList(operation.outputList(outputIdx, resultsLength));
@@ -95,6 +101,9 @@ public final class Execute extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) results.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = Execute.class
+  )
   public static class Inputs extends RawOpInputs<Execute> {
     /**
      * The args input

@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Records the bytes size of each element of {@code input_dataset} in a StatsAggregator.
  */
+@OpMetadata(
+    opType = BytesProducedStatsDataset.OP_NAME,
+    inputsClass = BytesProducedStatsDataset.Inputs.class
+)
 public final class BytesProducedStatsDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private BytesProducedStatsDataset(Operation operation) {
-    super(operation);
+  public BytesProducedStatsDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -94,6 +100,9 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BytesProducedStatsDataset.class
+  )
   public static class Inputs extends RawOpInputs<BytesProducedStatsDataset> {
     /**
      * The inputDataset input

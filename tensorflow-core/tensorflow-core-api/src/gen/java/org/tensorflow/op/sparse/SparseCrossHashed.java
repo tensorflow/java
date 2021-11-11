@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -72,6 +74,10 @@ import org.tensorflow.types.TInt64;
  *                 Fingerprint64(&quot;e&quot;), Fingerprint64(&quot;c&quot;)))
  * </pre>
  */
+@OpMetadata(
+    opType = SparseCrossHashed.OP_NAME,
+    inputsClass = SparseCrossHashed.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -87,8 +93,8 @@ public final class SparseCrossHashed extends RawOp {
 
   private Output<TInt64> outputShape;
 
-  private SparseCrossHashed(Operation operation) {
-    super(operation);
+  public SparseCrossHashed(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
@@ -155,6 +161,9 @@ public final class SparseCrossHashed extends RawOp {
     return outputShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseCrossHashed.class
+  )
   public static class Inputs extends RawOpInputs<SparseCrossHashed> {
     /**
      * 2-D.  Indices of each input {@code SparseTensor}.

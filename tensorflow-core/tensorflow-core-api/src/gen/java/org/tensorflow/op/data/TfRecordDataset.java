@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that emits the records from one or more TFRecord files.
  */
+@OpMetadata(
+    opType = TfRecordDataset.OP_NAME,
+    inputsClass = TfRecordDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -47,8 +53,8 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private TfRecordDataset(Operation operation) {
-    super(operation);
+  public TfRecordDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -92,6 +98,9 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TfRecordDataset.class
+  )
   public static class Inputs extends RawOpInputs<TfRecordDataset> {
     /**
      * A scalar or vector containing the name(s) of the file(s) to be

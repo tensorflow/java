@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * The ExperimentalMatchingFilesDataset operation
  */
+@OpMetadata(
+    opType = MatchingFilesDataset.OP_NAME,
+    inputsClass = MatchingFilesDataset.Inputs.class
+)
 public final class MatchingFilesDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -42,8 +48,8 @@ public final class MatchingFilesDataset extends RawOp implements Operand<TType> 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private MatchingFilesDataset(Operation operation) {
-    super(operation);
+  public MatchingFilesDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -79,6 +85,9 @@ public final class MatchingFilesDataset extends RawOp implements Operand<TType> 
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = MatchingFilesDataset.class
+  )
   public static class Inputs extends RawOpInputs<MatchingFilesDataset> {
     /**
      * The patterns input

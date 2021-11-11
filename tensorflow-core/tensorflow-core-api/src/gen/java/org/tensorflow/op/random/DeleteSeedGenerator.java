@@ -26,19 +26,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * The DeleteSeedGenerator operation
  */
+@OpMetadata(
+    opType = DeleteSeedGenerator.OP_NAME,
+    inputsClass = DeleteSeedGenerator.Inputs.class
+)
 public final class DeleteSeedGenerator extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "DeleteSeedGenerator";
 
-  private DeleteSeedGenerator(Operation operation) {
-    super(operation);
+  public DeleteSeedGenerator(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -60,6 +66,9 @@ public final class DeleteSeedGenerator extends RawOp {
     return new DeleteSeedGenerator(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DeleteSeedGenerator.class
+  )
   public static class Inputs extends RawOpInputs<DeleteSeedGenerator> {
     /**
      * The handle input

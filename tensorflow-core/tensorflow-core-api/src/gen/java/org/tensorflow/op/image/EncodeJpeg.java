@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -50,6 +52,10 @@ import org.tensorflow.types.TUint8;
  * <li>3: Output an RGB image.</li>
  * </ul>
  */
+@OpMetadata(
+    opType = EncodeJpeg.OP_NAME,
+    inputsClass = EncodeJpeg.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -61,8 +67,8 @@ public final class EncodeJpeg extends RawOp implements Operand<TString> {
 
   private Output<TString> contents;
 
-  private EncodeJpeg(Operation operation) {
-    super(operation);
+  public EncodeJpeg(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     contents = operation.output(outputIdx++);
   }
@@ -346,6 +352,9 @@ public final class EncodeJpeg extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EncodeJpeg.class
+  )
   public static class Inputs extends RawOpInputs<EncodeJpeg> {
     /**
      * 3-D with shape {@code [height, width, channels]}.

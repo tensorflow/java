@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code z} output
  */
+@OpMetadata(
+    opType = Igamma.OP_NAME,
+    inputsClass = Igamma.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -54,8 +60,8 @@ public final class Igamma<T extends TNumber> extends RawOp implements Operand<T>
 
   private Output<T> z;
 
-  private Igamma(Operation operation) {
-    super(operation);
+  public Igamma(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -93,6 +99,9 @@ public final class Igamma<T extends TNumber> extends RawOp implements Operand<T>
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Igamma.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Igamma<T>> {
     /**
      * The a input

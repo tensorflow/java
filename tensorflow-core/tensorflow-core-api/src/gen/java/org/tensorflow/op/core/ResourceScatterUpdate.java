@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TType;
  * ref[indices[i, ..., j], ...] = updates[i, ..., j, ...]
  * </pre>
  */
+@OpMetadata(
+    opType = ResourceScatterUpdate.OP_NAME,
+    inputsClass = ResourceScatterUpdate.Inputs.class
+)
 @Operator
 public final class ResourceScatterUpdate extends RawOp {
   /**
@@ -52,8 +58,8 @@ public final class ResourceScatterUpdate extends RawOp {
    */
   public static final String OP_NAME = "ResourceScatterUpdate";
 
-  private ResourceScatterUpdate(Operation operation) {
-    super(operation);
+  public ResourceScatterUpdate(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -77,6 +83,9 @@ public final class ResourceScatterUpdate extends RawOp {
     return new ResourceScatterUpdate(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceScatterUpdate.class
+  )
   public static class Inputs extends RawOpInputs<ResourceScatterUpdate> {
     /**
      * Should be from a {@code Variable} node.

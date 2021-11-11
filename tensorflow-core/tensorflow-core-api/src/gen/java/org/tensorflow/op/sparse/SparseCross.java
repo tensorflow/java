@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -72,6 +74,10 @@ import org.tensorflow.types.TString;
  *                 Fingerprint64(&quot;e&quot;), Fingerprint64(&quot;c&quot;)))
  * </pre>
  */
+@OpMetadata(
+    opType = SparseCross.OP_NAME,
+    inputsClass = SparseCross.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -87,8 +93,8 @@ public final class SparseCross extends RawOp {
 
   private Output<TInt64> outputShape;
 
-  private SparseCross(Operation operation) {
-    super(operation);
+  public SparseCross(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
@@ -149,6 +155,9 @@ public final class SparseCross extends RawOp {
     return outputShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseCross.class
+  )
   public static class Inputs extends RawOpInputs<SparseCross> {
     /**
      * 2-D.  Indices of each input {@code SparseTensor}.

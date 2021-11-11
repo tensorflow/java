@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code max} output
  */
+@OpMetadata(
+    opType = RiscMax.OP_NAME,
+    inputsClass = RiscMax.Inputs.class
+)
 public final class RiscMax<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class RiscMax<T extends TNumber> extends RawOp implements Operand<T
 
   private Output<T> max;
 
-  private RiscMax(Operation operation) {
-    super(operation);
+  public RiscMax(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     max = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class RiscMax<T extends TNumber> extends RawOp implements Operand<T
     return max;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscMax.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<RiscMax<T>> {
     /**
      * The x input

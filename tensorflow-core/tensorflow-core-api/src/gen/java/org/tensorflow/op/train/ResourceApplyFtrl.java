@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  * var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
  * accum = accum_new
  */
+@OpMetadata(
+    opType = ResourceApplyFtrl.OP_NAME,
+    inputsClass = ResourceApplyFtrl.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -49,8 +55,8 @@ public final class ResourceApplyFtrl extends RawOp {
    */
   public static final String OP_NAME = "ResourceApplyFtrlV2";
 
-  private ResourceApplyFtrl(Operation operation) {
-    super(operation);
+  public ResourceApplyFtrl(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -158,6 +164,9 @@ public final class ResourceApplyFtrl extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyFtrl.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyFtrl> {
     /**
      * Should be from a Variable().

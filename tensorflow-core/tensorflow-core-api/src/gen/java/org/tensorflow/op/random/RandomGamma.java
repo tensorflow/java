@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = RandomGamma.OP_NAME,
+    inputsClass = RandomGamma.Inputs.class
+)
 @Operator(
     group = "random"
 )
@@ -50,8 +56,8 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
 
   private Output<U> output;
 
-  private RandomGamma(Operation operation) {
-    super(operation);
+  public RandomGamma(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -163,6 +169,9 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RandomGamma.class
+  )
   public static class Inputs<U extends TNumber> extends RawOpInputs<RandomGamma<U>> {
     /**
      * 1-D integer tensor. Shape of independent samples to draw from each

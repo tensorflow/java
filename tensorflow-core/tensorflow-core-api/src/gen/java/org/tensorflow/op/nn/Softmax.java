@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code softmax} output
  */
+@OpMetadata(
+    opType = Softmax.OP_NAME,
+    inputsClass = Softmax.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -51,8 +57,8 @@ public final class Softmax<T extends TNumber> extends RawOp implements Operand<T
 
   private Output<T> softmax;
 
-  private Softmax(Operation operation) {
-    super(operation);
+  public Softmax(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     softmax = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class Softmax<T extends TNumber> extends RawOp implements Operand<T
     return softmax;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Softmax.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Softmax<T>> {
     /**
      * 2-D with shape {@code [batch_size, num_classes]}.

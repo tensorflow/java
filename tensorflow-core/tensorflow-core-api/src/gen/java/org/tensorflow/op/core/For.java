@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  *    output = body(i, output);
  * </pre>
  */
+@OpMetadata(
+    opType = For.OP_NAME,
+    inputsClass = For.Inputs.class
+)
 @Operator
 public final class For extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -53,8 +59,8 @@ public final class For extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private For(Operation operation) {
-    super(operation);
+  public For(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -105,6 +111,9 @@ public final class For extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = For.class
+  )
   public static class Inputs extends RawOpInputs<For> {
     /**
      * The lower bound. An int32

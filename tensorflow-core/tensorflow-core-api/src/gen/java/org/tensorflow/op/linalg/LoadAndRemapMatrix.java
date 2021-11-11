@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
@@ -64,6 +66,10 @@ import org.tensorflow.types.TString;
  * [w(0, 0),  w(0, 2), -0.5],
  * [0.25,    -0.25,      42]]
  */
+@OpMetadata(
+    opType = LoadAndRemapMatrix.OP_NAME,
+    inputsClass = LoadAndRemapMatrix.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -75,8 +81,8 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
 
   private Output<TFloat32> outputMatrix;
 
-  private LoadAndRemapMatrix(Operation operation) {
-    super(operation);
+  public LoadAndRemapMatrix(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputMatrix = operation.output(outputIdx++);
   }
@@ -177,6 +183,9 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadAndRemapMatrix.class
+  )
   public static class Inputs extends RawOpInputs<LoadAndRemapMatrix> {
     /**
      * Path to the TensorFlow checkpoint (version 2, {@code TensorBundle}) from

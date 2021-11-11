@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -49,6 +51,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = ArgMax.OP_NAME,
+    inputsClass = ArgMax.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -60,8 +66,8 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
 
   private Output<V> output;
 
-  private ArgMax(Operation operation) {
-    super(operation);
+  public ArgMax(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -122,6 +128,9 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ArgMax.class
+  )
   public static class Inputs extends RawOpInputs<ArgMax<?>> {
     /**
      * The input input

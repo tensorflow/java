@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -36,14 +38,18 @@ import org.tensorflow.types.family.TType;
  * Writes encoded audio summary {@code tensor} at {@code step} with {@code tag} using summary {@code writer}.
  * {@code sample_rate} is the audio sample rate is Hz.
  */
+@OpMetadata(
+    opType = WriteAudioSummary.OP_NAME,
+    inputsClass = WriteAudioSummary.Inputs.class
+)
 public final class WriteAudioSummary extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "WriteAudioSummary";
 
-  private WriteAudioSummary(Operation operation) {
-    super(operation);
+  public WriteAudioSummary(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -111,6 +117,9 @@ public final class WriteAudioSummary extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = WriteAudioSummary.class
+  )
   public static class Inputs extends RawOpInputs<WriteAudioSummary> {
     /**
      * The writer input

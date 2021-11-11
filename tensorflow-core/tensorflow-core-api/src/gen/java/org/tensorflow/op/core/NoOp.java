@@ -25,11 +25,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 
 /**
  * Does nothing. Only useful as a placeholder for control edges.
  */
+@OpMetadata(
+    opType = NoOp.OP_NAME,
+    inputsClass = NoOp.Inputs.class
+)
 @Operator
 public final class NoOp extends RawOp {
   /**
@@ -37,8 +43,8 @@ public final class NoOp extends RawOp {
    */
   public static final String OP_NAME = "NoOp";
 
-  private NoOp(Operation operation) {
-    super(operation);
+  public NoOp(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -55,6 +61,9 @@ public final class NoOp extends RawOp {
     return new NoOp(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = NoOp.class
+  )
   public static class Inputs extends RawOpInputs<NoOp> {
     public Inputs(GraphOperation op) {
       super(new NoOp(op), op, Arrays.asList());

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Conv3d.OP_NAME,
+    inputsClass = Conv3d.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -52,8 +58,8 @@ public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T>
 
   private Output<T> output;
 
-  private Conv3d(Operation operation) {
-    super(operation);
+  public Conv3d(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -215,6 +221,9 @@ public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T>
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Conv3d.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Conv3d<T>> {
     /**
      * Shape {@code [batch, in_depth, in_height, in_width, in_channels]}.

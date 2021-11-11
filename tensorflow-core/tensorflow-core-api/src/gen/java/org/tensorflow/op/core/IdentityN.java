@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -50,6 +52,10 @@ import org.tensorflow.types.family.TType;
  *   return [None, g(dy)]  # Do not backprop to f(x).
  * </pre>
  */
+@OpMetadata(
+    opType = IdentityN.OP_NAME,
+    inputsClass = IdentityN.Inputs.class
+)
 @Operator
 public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -60,8 +66,8 @@ public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private IdentityN(Operation operation) {
-    super(operation);
+  public IdentityN(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -99,6 +105,9 @@ public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = IdentityN.class
+  )
   public static class Inputs extends RawOpInputs<IdentityN> {
     /**
      * The input input

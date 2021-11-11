@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -72,6 +74,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output_values} output
  */
+@OpMetadata(
+    opType = SparseFillEmptyRows.OP_NAME,
+    inputsClass = SparseFillEmptyRows.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -89,8 +95,8 @@ public final class SparseFillEmptyRows<T extends TType> extends RawOp {
 
   private Output<TInt64> reverseIndexMap;
 
-  private SparseFillEmptyRows(Operation operation) {
-    super(operation);
+  public SparseFillEmptyRows(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
@@ -162,6 +168,9 @@ public final class SparseFillEmptyRows<T extends TType> extends RawOp {
     return reverseIndexMap;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseFillEmptyRows.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseFillEmptyRows<T>> {
     /**
      * 2-D. the indices of the sparse tensor.

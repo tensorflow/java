@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -44,6 +46,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code values} output
  */
+@OpMetadata(
+    opType = NthElement.OP_NAME,
+    inputsClass = NthElement.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -55,8 +61,8 @@ public final class NthElement<T extends TNumber> extends RawOp implements Operan
 
   private Output<T> values;
 
-  private NthElement(Operation operation) {
-    super(operation);
+  public NthElement(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     values = operation.output(outputIdx++);
   }
@@ -137,6 +143,9 @@ public final class NthElement<T extends TNumber> extends RawOp implements Operan
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = NthElement.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<NthElement<T>> {
     /**
      * 1-D or higher with last dimension at least {@code n+1}.

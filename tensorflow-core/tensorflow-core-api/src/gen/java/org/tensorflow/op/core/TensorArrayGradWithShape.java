@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * computed. This enables multiple gradients for the same TensorArray to be
  * calculated using the same accumulator.
  */
+@OpMetadata(
+    opType = TensorArrayGradWithShape.OP_NAME,
+    inputsClass = TensorArrayGradWithShape.Inputs.class
+)
 @Operator
 public final class TensorArrayGradWithShape extends RawOp {
   /**
@@ -51,8 +57,8 @@ public final class TensorArrayGradWithShape extends RawOp {
   private Output<TFloat32> flowOut;
 
   @SuppressWarnings("unchecked")
-  private TensorArrayGradWithShape(Operation operation) {
-    super(operation);
+  public TensorArrayGradWithShape(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     gradHandle = operation.output(outputIdx++);
     flowOut = operation.output(outputIdx++);
@@ -102,6 +108,9 @@ public final class TensorArrayGradWithShape extends RawOp {
     return flowOut;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArrayGradWithShape.class
+  )
   public static class Inputs extends RawOpInputs<TensorArrayGradWithShape> {
     /**
      * The handle to the forward TensorArray.

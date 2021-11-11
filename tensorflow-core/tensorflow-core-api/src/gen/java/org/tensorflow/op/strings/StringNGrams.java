@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code ngrams_splits} output
  */
+@OpMetadata(
+    opType = StringNGrams.OP_NAME,
+    inputsClass = StringNGrams.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -54,8 +60,8 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
 
   private Output<T> ngramsSplits;
 
-  private StringNGrams(Operation operation) {
-    super(operation);
+  public StringNGrams(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     ngrams = operation.output(outputIdx++);
     ngramsSplits = operation.output(outputIdx++);
@@ -122,6 +128,9 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
     return ngramsSplits;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StringNGrams.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<StringNGrams<T>> {
     /**
      * The values tensor of the ragged string tensor to make ngrams out of. Must be a

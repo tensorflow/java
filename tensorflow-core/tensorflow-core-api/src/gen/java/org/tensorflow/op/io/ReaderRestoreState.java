@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * Not all Readers support being restored, so this can produce an
  * Unimplemented error.
  */
+@OpMetadata(
+    opType = ReaderRestoreState.OP_NAME,
+    inputsClass = ReaderRestoreState.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -44,8 +50,8 @@ public final class ReaderRestoreState extends RawOp {
    */
   public static final String OP_NAME = "ReaderRestoreStateV2";
 
-  private ReaderRestoreState(Operation operation) {
-    super(operation);
+  public ReaderRestoreState(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -68,6 +74,9 @@ public final class ReaderRestoreState extends RawOp {
     return new ReaderRestoreState(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReaderRestoreState.class
+  )
   public static class Inputs extends RawOpInputs<ReaderRestoreState> {
     /**
      * Handle to a Reader.

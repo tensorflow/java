@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -47,6 +49,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @deprecated use {@link org.tensorflow.op.distribute.NcclAllReduce} instead
  */
+@OpMetadata(
+    opType = NcclAllReduce.OP_NAME,
+    inputsClass = NcclAllReduce.Inputs.class
+)
 @Deprecated
 public final class NcclAllReduce<T extends TNumber> extends RawOp implements Operand<T> {
   /**
@@ -56,8 +62,8 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
 
   private Output<T> data;
 
-  private NcclAllReduce(Operation operation) {
-    super(operation);
+  public NcclAllReduce(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     data = operation.output(outputIdx++);
   }
@@ -100,6 +106,9 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
     return data;
   }
 
+  @OpInputsMetadata(
+      outputsClass = NcclAllReduce.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<NcclAllReduce<T>> {
     /**
      * The input input

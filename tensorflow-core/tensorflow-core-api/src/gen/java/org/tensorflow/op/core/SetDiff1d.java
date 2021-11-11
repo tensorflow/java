@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -57,6 +59,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code idx} output
  */
+@OpMetadata(
+    opType = SetDiff1d.OP_NAME,
+    inputsClass = SetDiff1d.Inputs.class
+)
 @Operator
 public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
   /**
@@ -68,8 +74,8 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
 
   private Output<U> idx;
 
-  private SetDiff1d(Operation operation) {
-    super(operation);
+  public SetDiff1d(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
     idx = operation.output(outputIdx++);
@@ -133,6 +139,9 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
     return idx;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SetDiff1d.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SetDiff1d<T, ?>> {
     /**
      * 1-D. Values to keep.

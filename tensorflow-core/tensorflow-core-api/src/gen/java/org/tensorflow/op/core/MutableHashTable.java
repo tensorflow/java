@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * values. Each value must be a scalar. Data can be inserted into the table using
  * the insert operations. It does not support the initialization operation.
  */
+@OpMetadata(
+    opType = MutableHashTable.OP_NAME,
+    inputsClass = MutableHashTable.Inputs.class
+)
 @Operator
 public final class MutableHashTable extends RawOp implements Operand<TType> {
   /**
@@ -48,8 +54,8 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
   private Output<? extends TType> tableHandle;
 
   @SuppressWarnings("unchecked")
-  private MutableHashTable(Operation operation) {
-    super(operation);
+  public MutableHashTable(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     tableHandle = operation.output(outputIdx++);
   }
@@ -187,6 +193,9 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MutableHashTable.class
+  )
   public static class Inputs extends RawOpInputs<MutableHashTable> {
     /**
      * If non-empty, this table is placed in the given container.

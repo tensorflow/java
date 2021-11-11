@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -54,6 +56,10 @@ import org.tensorflow.types.TString;
  * </ul>
  * <p>See also {@code Save}.
  */
+@OpMetadata(
+    opType = SaveSlices.OP_NAME,
+    inputsClass = SaveSlices.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -63,8 +69,8 @@ public final class SaveSlices extends RawOp {
    */
   public static final String OP_NAME = "SaveSlices";
 
-  private SaveSlices(Operation operation) {
-    super(operation);
+  public SaveSlices(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -92,6 +98,9 @@ public final class SaveSlices extends RawOp {
     return new SaveSlices(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = SaveSlices.class
+  )
   public static class Inputs extends RawOpInputs<SaveSlices> {
     /**
      * Must have a single element. The name of the file to which we write the

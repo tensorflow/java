@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Dot.OP_NAME,
+    inputsClass = Dot.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -50,8 +56,8 @@ public final class Dot<V extends TType> extends RawOp implements Operand<V> {
 
   private Output<V> output;
 
-  private Dot(Operation operation) {
-    super(operation);
+  public Dot(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -97,6 +103,9 @@ public final class Dot<V extends TType> extends RawOp implements Operand<V> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Dot.class
+  )
   public static class Inputs extends RawOpInputs<Dot<?>> {
     /**
      * the LHS tensor

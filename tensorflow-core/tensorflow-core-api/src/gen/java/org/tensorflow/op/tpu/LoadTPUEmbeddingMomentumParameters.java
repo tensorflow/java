@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingMomentumParameters.OP_NAME,
+    inputsClass = LoadTPUEmbeddingMomentumParameters.Inputs.class
+)
 public final class LoadTPUEmbeddingMomentumParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingMomentumParameters";
 
-  private LoadTPUEmbeddingMomentumParameters(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingMomentumParameters(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -160,6 +166,9 @@ public final class LoadTPUEmbeddingMomentumParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingMomentumParameters.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingMomentumParameters> {
     /**
      * Value of parameters used in the Momentum optimization algorithm.

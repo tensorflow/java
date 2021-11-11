@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Compute gradients for a FakeQuantWithMinMaxVars operation.
  */
+@OpMetadata(
+    opType = FakeQuantWithMinMaxVarsGradient.OP_NAME,
+    inputsClass = FakeQuantWithMinMaxVarsGradient.Inputs.class
+)
 @Operator(
     group = "quantization"
 )
@@ -48,8 +54,8 @@ public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
 
   private Output<TFloat32> backpropWrtMax;
 
-  private FakeQuantWithMinMaxVarsGradient(Operation operation) {
-    super(operation);
+  public FakeQuantWithMinMaxVarsGradient(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     backpropsWrtInput = operation.output(outputIdx++);
     backpropWrtMin = operation.output(outputIdx++);
@@ -175,6 +181,9 @@ public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FakeQuantWithMinMaxVarsGradient.class
+  )
   public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxVarsGradient> {
     /**
      * Backpropagated gradients above the FakeQuantWithMinMaxVars operation.

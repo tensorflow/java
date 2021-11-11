@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The TensorListSetItem operation
  */
+@OpMetadata(
+    opType = TensorListSetItem.OP_NAME,
+    inputsClass = TensorListSetItem.Inputs.class
+)
 @Operator
 public final class TensorListSetItem extends RawOp implements Operand<TType> {
   /**
@@ -45,8 +51,8 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
   private Output<? extends TType> outputHandle;
 
   @SuppressWarnings("unchecked")
-  private TensorListSetItem(Operation operation) {
-    super(operation);
+  public TensorListSetItem(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
   }
@@ -87,6 +93,9 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListSetItem.class
+  )
   public static class Inputs extends RawOpInputs<TensorListSetItem> {
     /**
      * The inputHandle input

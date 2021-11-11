@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = InfeedDequeue.OP_NAME,
+    inputsClass = InfeedDequeue.Inputs.class
+)
 public final class InfeedDequeue<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class InfeedDequeue<T extends TType> extends RawOp implements Opera
 
   private Output<T> output;
 
-  private InfeedDequeue(Operation operation) {
-    super(operation);
+  public InfeedDequeue(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -85,6 +91,9 @@ public final class InfeedDequeue<T extends TType> extends RawOp implements Opera
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = InfeedDequeue.class
+  )
   public static class Inputs extends RawOpInputs<InfeedDequeue<?>> {
     /**
      * The type of elements in the tensor.

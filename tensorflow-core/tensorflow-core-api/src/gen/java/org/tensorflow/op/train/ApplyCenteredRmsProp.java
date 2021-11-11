@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -50,6 +52,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code out} output
  */
+@OpMetadata(
+    opType = ApplyCenteredRmsProp.OP_NAME,
+    inputsClass = ApplyCenteredRmsProp.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -61,8 +67,8 @@ public final class ApplyCenteredRmsProp<T extends TType> extends RawOp implement
 
   private Output<T> out;
 
-  private ApplyCenteredRmsProp(Operation operation) {
-    super(operation);
+  public ApplyCenteredRmsProp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -159,6 +165,9 @@ public final class ApplyCenteredRmsProp<T extends TType> extends RawOp implement
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ApplyCenteredRmsProp.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ApplyCenteredRmsProp<T>> {
     /**
      * Should be from a Variable().

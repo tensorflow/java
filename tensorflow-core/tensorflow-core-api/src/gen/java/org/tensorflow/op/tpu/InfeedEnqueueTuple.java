@@ -29,19 +29,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 
 /**
  * Feeds multiple Tensor values into the computation as an XLA tuple.
  */
+@OpMetadata(
+    opType = InfeedEnqueueTuple.OP_NAME,
+    inputsClass = InfeedEnqueueTuple.Inputs.class
+)
 public final class InfeedEnqueueTuple extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "InfeedEnqueueTuple";
 
-  private InfeedEnqueueTuple(Operation operation) {
-    super(operation);
+  public InfeedEnqueueTuple(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -173,6 +179,9 @@ public final class InfeedEnqueueTuple extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = InfeedEnqueueTuple.class
+  )
   public static class Inputs extends RawOpInputs<InfeedEnqueueTuple> {
     /**
      * A list of tensors that will be provided using the infeed mechanism.

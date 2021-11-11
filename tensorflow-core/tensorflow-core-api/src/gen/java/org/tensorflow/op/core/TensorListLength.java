@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * input_handle: the input list
  * length: the number of tensors in the list
  */
+@OpMetadata(
+    opType = TensorListLength.OP_NAME,
+    inputsClass = TensorListLength.Inputs.class
+)
 @Operator
 public final class TensorListLength extends RawOp implements Operand<TInt32> {
   /**
@@ -45,8 +51,8 @@ public final class TensorListLength extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> length;
 
-  private TensorListLength(Operation operation) {
-    super(operation);
+  public TensorListLength(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     length = operation.output(outputIdx++);
   }
@@ -81,6 +87,9 @@ public final class TensorListLength extends RawOp implements Operand<TInt32> {
     return length;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListLength.class
+  )
   public static class Inputs extends RawOpInputs<TensorListLength> {
     /**
      * The inputHandle input

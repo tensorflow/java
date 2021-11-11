@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -38,14 +40,18 @@ import org.tensorflow.types.family.TType;
  * Writes image {@code tensor} at {@code step} with {@code tag} using summary {@code writer}.
  * {@code tensor} is image with shape [height, width, channels].
  */
+@OpMetadata(
+    opType = WriteImageSummary.OP_NAME,
+    inputsClass = WriteImageSummary.Inputs.class
+)
 public final class WriteImageSummary extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "WriteImageSummary";
 
-  private WriteImageSummary(Operation operation) {
-    super(operation);
+  public WriteImageSummary(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -113,6 +119,9 @@ public final class WriteImageSummary extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = WriteImageSummary.class
+  )
   public static class Inputs extends RawOpInputs<WriteImageSummary> {
     /**
      * The writer input

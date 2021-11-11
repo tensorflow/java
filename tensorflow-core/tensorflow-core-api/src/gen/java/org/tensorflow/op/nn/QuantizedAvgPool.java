@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = QuantizedAvgPool.OP_NAME,
+    inputsClass = QuantizedAvgPool.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -53,8 +59,8 @@ public final class QuantizedAvgPool<T extends TNumber> extends RawOp {
 
   private Output<TFloat32> maxOutput;
 
-  private QuantizedAvgPool(Operation operation) {
-    super(operation);
+  public QuantizedAvgPool(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     minOutput = operation.output(outputIdx++);
@@ -127,6 +133,9 @@ public final class QuantizedAvgPool<T extends TNumber> extends RawOp {
     return maxOutput;
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedAvgPool.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<QuantizedAvgPool<T>> {
     /**
      * 4-D with shape {@code [batch, height, width, channels]}.

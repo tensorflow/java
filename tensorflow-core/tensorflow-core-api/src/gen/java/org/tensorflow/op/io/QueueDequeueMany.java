@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -48,6 +50,10 @@ import org.tensorflow.types.family.TType;
  * <p>N.B. If the queue is empty, this operation will block until {@code n} elements
  * have been dequeued (or 'timeout_ms' elapses, if specified).
  */
+@OpMetadata(
+    opType = QueueDequeueMany.OP_NAME,
+    inputsClass = QueueDequeueMany.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -60,8 +66,8 @@ public final class QueueDequeueMany extends RawOp implements Iterable<Operand<TT
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private QueueDequeueMany(Operation operation) {
-    super(operation);
+  public QueueDequeueMany(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -147,6 +153,9 @@ public final class QueueDequeueMany extends RawOp implements Iterable<Operand<TT
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QueueDequeueMany.class
+  )
   public static class Inputs extends RawOpInputs<QueueDequeueMany> {
     /**
      * The handle to a queue.

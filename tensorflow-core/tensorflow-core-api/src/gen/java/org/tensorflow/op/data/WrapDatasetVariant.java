@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * The WrapDatasetVariant operation
  */
+@OpMetadata(
+    opType = WrapDatasetVariant.OP_NAME,
+    inputsClass = WrapDatasetVariant.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -45,8 +51,8 @@ public final class WrapDatasetVariant extends RawOp implements Operand<TType> {
   private Output<? extends TType> outputHandle;
 
   @SuppressWarnings("unchecked")
-  private WrapDatasetVariant(Operation operation) {
-    super(operation);
+  public WrapDatasetVariant(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
   }
@@ -82,6 +88,9 @@ public final class WrapDatasetVariant extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = WrapDatasetVariant.class
+  )
   public static class Inputs extends RawOpInputs<WrapDatasetVariant> {
     /**
      * The inputHandle input

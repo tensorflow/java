@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = StatelessTruncatedNormalV2.OP_NAME,
+    inputsClass = StatelessTruncatedNormalV2.Inputs.class
+)
 public final class StatelessTruncatedNormalV2<U extends TNumber> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -51,8 +57,8 @@ public final class StatelessTruncatedNormalV2<U extends TNumber> extends RawOp i
 
   private Output<U> output;
 
-  private StatelessTruncatedNormalV2(Operation operation) {
-    super(operation);
+  public StatelessTruncatedNormalV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -117,6 +123,9 @@ public final class StatelessTruncatedNormalV2<U extends TNumber> extends RawOp i
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessTruncatedNormalV2.class
+  )
   public static class Inputs extends RawOpInputs<StatelessTruncatedNormalV2<?>> {
     /**
      * The shape of the output tensor.

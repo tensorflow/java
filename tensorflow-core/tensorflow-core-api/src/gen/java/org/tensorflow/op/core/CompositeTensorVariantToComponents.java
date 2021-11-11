@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * <p>Raises an error if {@code type_spec_proto} doesn't match the TypeSpec
  * in {@code encoded}.
  */
+@OpMetadata(
+    opType = CompositeTensorVariantToComponents.OP_NAME,
+    inputsClass = CompositeTensorVariantToComponents.Inputs.class
+)
 public final class CompositeTensorVariantToComponents extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -48,8 +54,8 @@ public final class CompositeTensorVariantToComponents extends RawOp implements I
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private CompositeTensorVariantToComponents(Operation operation) {
-    super(operation);
+  public CompositeTensorVariantToComponents(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -94,6 +100,9 @@ public final class CompositeTensorVariantToComponents extends RawOp implements I
     return (Iterator) components.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = CompositeTensorVariantToComponents.class
+  )
   public static class Inputs extends RawOpInputs<CompositeTensorVariantToComponents> {
     /**
      * A scalar {@code variant} Tensor containing an encoded ExtensionType value.

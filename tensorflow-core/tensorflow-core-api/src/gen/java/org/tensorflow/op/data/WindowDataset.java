@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -74,6 +76,10 @@ import org.tensorflow.types.family.TType;
  * produces {@code {{"a": {0, 1}}, {"a": {2, 3}}}}</li>
  * </ul>
  */
+@OpMetadata(
+    opType = WindowDataset.OP_NAME,
+    inputsClass = WindowDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -86,8 +92,8 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private WindowDataset(Operation operation) {
-    super(operation);
+  public WindowDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -148,6 +154,9 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = WindowDataset.class
+  )
   public static class Inputs extends RawOpInputs<WindowDataset> {
     /**
      * The inputDataset input

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -50,6 +52,10 @@ import org.tensorflow.types.family.TNumber;
  * {@code tf.image.resize_nearest_neighbor()}(depends on the {@code method} argument) with
  * {@code align_corners=True}.
  */
+@OpMetadata(
+    opType = CropAndResize.OP_NAME,
+    inputsClass = CropAndResize.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -61,8 +67,8 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> crops;
 
-  private CropAndResize(Operation operation) {
-    super(operation);
+  public CropAndResize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     crops = operation.output(outputIdx++);
   }
@@ -188,6 +194,9 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CropAndResize.class
+  )
   public static class Inputs extends RawOpInputs<CropAndResize> {
     /**
      * A 4-D tensor of shape {@code [batch, image_height, image_width, depth]}.

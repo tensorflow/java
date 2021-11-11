@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -47,6 +49,10 @@ import org.tensorflow.types.family.TNumber;
  * output = ['Hello', 'World']
  * </pre>
  */
+@OpMetadata(
+    opType = UnicodeEncode.OP_NAME,
+    inputsClass = UnicodeEncode.Inputs.class
+)
 public final class UnicodeEncode extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -55,8 +61,8 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private UnicodeEncode(Operation operation) {
-    super(operation);
+  public UnicodeEncode(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -181,6 +187,9 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = UnicodeEncode.class
+  )
   public static class Inputs extends RawOpInputs<UnicodeEncode> {
     /**
      * A 1D tensor containing the unicode codepoints that should be encoded.

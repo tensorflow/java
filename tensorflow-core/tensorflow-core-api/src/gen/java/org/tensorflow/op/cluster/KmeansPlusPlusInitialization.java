@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.TInt64;
  * distance from the nearest row selected thus far till num_to_sample rows have
  * been sampled.
  */
+@OpMetadata(
+    opType = KmeansPlusPlusInitialization.OP_NAME,
+    inputsClass = KmeansPlusPlusInitialization.Inputs.class
+)
 public final class KmeansPlusPlusInitialization extends RawOp implements Operand<TFloat32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
 
   private Output<TFloat32> samples;
 
-  private KmeansPlusPlusInitialization(Operation operation) {
-    super(operation);
+  public KmeansPlusPlusInitialization(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     samples = operation.output(outputIdx++);
   }
@@ -91,6 +97,9 @@ public final class KmeansPlusPlusInitialization extends RawOp implements Operand
     return samples;
   }
 
+  @OpInputsMetadata(
+      outputsClass = KmeansPlusPlusInitialization.class
+  )
   public static class Inputs extends RawOpInputs<KmeansPlusPlusInitialization> {
     /**
      * Matrix of shape (n, d). Rows are assumed to be input points.

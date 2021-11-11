@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TBool;
 
 /**
  * The RiscLogicalNot operation
  */
+@OpMetadata(
+    opType = RiscLogicalNot.OP_NAME,
+    inputsClass = RiscLogicalNot.Inputs.class
+)
 public final class RiscLogicalNot extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -40,8 +46,8 @@ public final class RiscLogicalNot extends RawOp implements Operand<TBool> {
 
   private Output<TBool> z;
 
-  private RiscLogicalNot(Operation operation) {
-    super(operation);
+  public RiscLogicalNot(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -76,6 +82,9 @@ public final class RiscLogicalNot extends RawOp implements Operand<TBool> {
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscLogicalNot.class
+  )
   public static class Inputs extends RawOpInputs<RiscLogicalNot> {
     /**
      * The x input

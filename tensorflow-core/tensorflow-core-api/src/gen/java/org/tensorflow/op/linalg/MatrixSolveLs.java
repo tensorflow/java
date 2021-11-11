@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat64;
@@ -67,6 +69,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = MatrixSolveLs.OP_NAME,
+    inputsClass = MatrixSolveLs.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -78,8 +84,8 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
 
   private Output<T> output;
 
-  private MatrixSolveLs(Operation operation) {
-    super(operation);
+  public MatrixSolveLs(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -162,6 +168,9 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MatrixSolveLs.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<MatrixSolveLs<T>> {
     /**
      * Shape is {@code [..., M, N]}.

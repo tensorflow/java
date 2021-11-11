@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 
@@ -35,6 +37,10 @@ import org.tensorflow.proto.framework.DataType;
  * The basic functionality of this Op is similar to a queue with many
  * fewer capabilities and options.  This Op is optimized for performance.
  */
+@OpMetadata(
+    opType = Stage.OP_NAME,
+    inputsClass = Stage.Inputs.class
+)
 @Operator
 public final class Stage extends RawOp {
   /**
@@ -42,8 +48,8 @@ public final class Stage extends RawOp {
    */
   public static final String OP_NAME = "Stage";
 
-  private Stage(Operation operation) {
-    super(operation);
+  public Stage(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -186,6 +192,9 @@ public final class Stage extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Stage.class
+  )
   public static class Inputs extends RawOpInputs<Stage> {
     /**
      * a list of tensors

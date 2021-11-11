@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * <em>NOTE</em>: {@code math.NotEqual} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
  */
+@OpMetadata(
+    opType = NotEqual.OP_NAME,
+    inputsClass = NotEqual.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -48,8 +54,8 @@ public final class NotEqual extends RawOp implements Operand<TBool> {
 
   private Output<TBool> z;
 
-  private NotEqual(Operation operation) {
-    super(operation);
+  public NotEqual(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -127,6 +133,9 @@ public final class NotEqual extends RawOp implements Operand<TBool> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = NotEqual.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<NotEqual> {
     /**
      * The x input

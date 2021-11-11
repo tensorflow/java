@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * XLA Launch Op. For use by the XLA JIT only.
  */
+@OpMetadata(
+    opType = XlaLaunch.OP_NAME,
+    inputsClass = XlaLaunch.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -50,8 +56,8 @@ public final class XlaLaunch extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> results;
 
   @SuppressWarnings("unchecked")
-  private XlaLaunch(Operation operation) {
-    super(operation);
+  public XlaLaunch(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int resultsLength = operation.outputListLength("results");
     results = Arrays.asList(operation.outputList(outputIdx, resultsLength));
@@ -99,6 +105,9 @@ public final class XlaLaunch extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) results.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = XlaLaunch.class
+  )
   public static class Inputs extends RawOpInputs<XlaLaunch> {
     /**
      * The constants input

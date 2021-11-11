@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Checks whether a resource handle-based variable has been initialized.
  */
+@OpMetadata(
+    opType = VarIsInitializedOp.OP_NAME,
+    inputsClass = VarIsInitializedOp.Inputs.class
+)
 @Operator
 public final class VarIsInitializedOp extends RawOp implements Operand<TBool> {
   /**
@@ -43,8 +49,8 @@ public final class VarIsInitializedOp extends RawOp implements Operand<TBool> {
 
   private Output<TBool> isInitialized;
 
-  private VarIsInitializedOp(Operation operation) {
-    super(operation);
+  public VarIsInitializedOp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     isInitialized = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class VarIsInitializedOp extends RawOp implements Operand<TBool> {
     return isInitialized;
   }
 
+  @OpInputsMetadata(
+      outputsClass = VarIsInitializedOp.class
+  )
   public static class Inputs extends RawOpInputs<VarIsInitializedOp> {
     /**
      * the input resource handle.

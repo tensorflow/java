@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Returns the name of the device on which {@code resource} has been placed.
  */
+@OpMetadata(
+    opType = IteratorGetDevice.OP_NAME,
+    inputsClass = IteratorGetDevice.Inputs.class
+)
 public final class IteratorGetDevice extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
 
   private Output<TString> device;
 
-  private IteratorGetDevice(Operation operation) {
-    super(operation);
+  public IteratorGetDevice(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     device = operation.output(outputIdx++);
   }
@@ -77,6 +83,9 @@ public final class IteratorGetDevice extends RawOp implements Operand<TString> {
     return device;
   }
 
+  @OpInputsMetadata(
+      outputsClass = IteratorGetDevice.class
+  )
   public static class Inputs extends RawOpInputs<IteratorGetDevice> {
     /**
      * The resource input

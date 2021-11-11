@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingCenteredRMSPropParameters.OP_NAME,
+    inputsClass = LoadTPUEmbeddingCenteredRMSPropParameters.Inputs.class
+)
 public final class LoadTPUEmbeddingCenteredRMSPropParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingCenteredRMSPropParameters";
 
-  private LoadTPUEmbeddingCenteredRMSPropParameters(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingCenteredRMSPropParameters(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -165,6 +171,9 @@ public final class LoadTPUEmbeddingCenteredRMSPropParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingCenteredRMSPropParameters.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingCenteredRMSPropParameters> {
     /**
      * Value of parameters used in the centered RMSProp optimization algorithm.

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * Transposes the inner (matrix) dimensions of a SparseMatrix and optionally
  * conjugates its values.
  */
+@OpMetadata(
+    opType = SparseMatrixTranspose.OP_NAME,
+    inputsClass = SparseMatrixTranspose.Inputs.class
+)
 public final class SparseMatrixTranspose extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
   private Output<? extends TType> output;
 
   @SuppressWarnings("unchecked")
-  private SparseMatrixTranspose(Operation operation) {
-    super(operation);
+  public SparseMatrixTranspose(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -125,6 +131,9 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixTranspose.class
+  )
   public static class Inputs extends RawOpInputs<SparseMatrixTranspose> {
     /**
      * A CSRSparseMatrix.

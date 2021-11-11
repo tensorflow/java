@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * Does not add if local_step is smaller than the accumulator's
  * global_step.
  */
+@OpMetadata(
+    opType = SparseAccumulatorApplyGradient.OP_NAME,
+    inputsClass = SparseAccumulatorApplyGradient.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -46,8 +52,8 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
    */
   public static final String OP_NAME = "SparseAccumulatorApplyGradient";
 
-  private SparseAccumulatorApplyGradient(Operation operation) {
-    super(operation);
+  public SparseAccumulatorApplyGradient(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -83,6 +89,9 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
     return new SparseAccumulatorApplyGradient(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseAccumulatorApplyGradient.class
+  )
   public static class Inputs extends RawOpInputs<SparseAccumulatorApplyGradient> {
     /**
      * The handle to a accumulator.

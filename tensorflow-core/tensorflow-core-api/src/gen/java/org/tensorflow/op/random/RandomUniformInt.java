@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = RandomUniformInt.OP_NAME,
+    inputsClass = RandomUniformInt.Inputs.class
+)
 @Operator(
     group = "random"
 )
@@ -53,8 +59,8 @@ public final class RandomUniformInt<U extends TNumber> extends RawOp implements 
 
   private Output<U> output;
 
-  private RandomUniformInt(Operation operation) {
-    super(operation);
+  public RandomUniformInt(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -164,6 +170,9 @@ public final class RandomUniformInt<U extends TNumber> extends RawOp implements 
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RandomUniformInt.class
+  )
   public static class Inputs<U extends TNumber> extends RawOpInputs<RandomUniformInt<U>> {
     /**
      * The shape of the output tensor.

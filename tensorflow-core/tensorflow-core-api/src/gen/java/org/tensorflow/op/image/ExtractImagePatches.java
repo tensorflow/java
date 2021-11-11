@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code patches} output
  */
+@OpMetadata(
+    opType = ExtractImagePatches.OP_NAME,
+    inputsClass = ExtractImagePatches.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -48,8 +54,8 @@ public final class ExtractImagePatches<T extends TType> extends RawOp implements
 
   private Output<T> patches;
 
-  private ExtractImagePatches(Operation operation) {
-    super(operation);
+  public ExtractImagePatches(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     patches = operation.output(outputIdx++);
   }
@@ -114,6 +120,9 @@ public final class ExtractImagePatches<T extends TType> extends RawOp implements
     return patches;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ExtractImagePatches.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ExtractImagePatches<T>> {
     /**
      * 4-D Tensor with shape {@code [batch, in_rows, in_cols, depth]}.

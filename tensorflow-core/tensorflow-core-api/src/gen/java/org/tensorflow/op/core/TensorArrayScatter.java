@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * Scatter the data from the input value into specific TensorArray elements.
  * {@code indices} must be a vector, its length must match the first dim of {@code value}.
  */
+@OpMetadata(
+    opType = TensorArrayScatter.OP_NAME,
+    inputsClass = TensorArrayScatter.Inputs.class
+)
 @Operator
 public final class TensorArrayScatter extends RawOp implements Operand<TFloat32> {
   /**
@@ -46,8 +52,8 @@ public final class TensorArrayScatter extends RawOp implements Operand<TFloat32>
 
   private Output<TFloat32> flowOut;
 
-  private TensorArrayScatter(Operation operation) {
-    super(operation);
+  public TensorArrayScatter(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     flowOut = operation.output(outputIdx++);
   }
@@ -89,6 +95,9 @@ public final class TensorArrayScatter extends RawOp implements Operand<TFloat32>
     return flowOut;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArrayScatter.class
+  )
   public static class Inputs extends RawOpInputs<TensorArrayScatter> {
     /**
      * The handle to a TensorArray.

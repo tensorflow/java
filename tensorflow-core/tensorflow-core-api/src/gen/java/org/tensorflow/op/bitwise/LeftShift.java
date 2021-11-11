@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -64,6 +66,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code z} output
  */
+@OpMetadata(
+    opType = LeftShift.OP_NAME,
+    inputsClass = LeftShift.Inputs.class
+)
 @Operator(
     group = "bitwise"
 )
@@ -75,8 +81,8 @@ public final class LeftShift<T extends TNumber> extends RawOp implements Operand
 
   private Output<T> z;
 
-  private LeftShift(Operation operation) {
-    super(operation);
+  public LeftShift(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -114,6 +120,9 @@ public final class LeftShift<T extends TNumber> extends RawOp implements Operand
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = LeftShift.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<LeftShift<T>> {
     /**
      * The x input

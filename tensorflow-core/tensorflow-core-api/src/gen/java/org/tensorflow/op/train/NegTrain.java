@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -34,6 +36,10 @@ import org.tensorflow.types.TInt32;
 /**
  * Training via negative sampling.
  */
+@OpMetadata(
+    opType = NegTrain.OP_NAME,
+    inputsClass = NegTrain.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -43,8 +49,8 @@ public final class NegTrain extends RawOp {
    */
   public static final String OP_NAME = "NegTrain";
 
-  private NegTrain(Operation operation) {
-    super(operation);
+  public NegTrain(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -81,6 +87,9 @@ public final class NegTrain extends RawOp {
     return new NegTrain(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = NegTrain.class
+  )
   public static class Inputs extends RawOpInputs<NegTrain> {
     /**
      * input word embedding.

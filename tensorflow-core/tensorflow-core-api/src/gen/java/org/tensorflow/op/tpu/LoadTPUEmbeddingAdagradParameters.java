@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingAdagradParameters.OP_NAME,
+    inputsClass = LoadTPUEmbeddingAdagradParameters.Inputs.class
+)
 public final class LoadTPUEmbeddingAdagradParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingAdagradParameters";
 
-  private LoadTPUEmbeddingAdagradParameters(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingAdagradParameters(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -160,6 +166,9 @@ public final class LoadTPUEmbeddingAdagradParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingAdagradParameters.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingAdagradParameters> {
     /**
      * Value of parameters used in the Adagrad optimization algorithm.

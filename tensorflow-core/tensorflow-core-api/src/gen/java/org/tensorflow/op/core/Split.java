@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Split.OP_NAME,
+    inputsClass = Split.Inputs.class
+)
 @Operator
 public final class Split<T extends TType> extends RawOp implements Iterable<Operand<T>> {
   /**
@@ -49,8 +55,8 @@ public final class Split<T extends TType> extends RawOp implements Iterable<Oper
   private List<Output<T>> output;
 
   @SuppressWarnings("unchecked")
-  private Split(Operation operation) {
-    super(operation);
+  public Split(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputLength));
@@ -98,6 +104,9 @@ public final class Split<T extends TType> extends RawOp implements Iterable<Oper
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = Split.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<Split<T>> {
     /**
      * 0-D.  The dimension along which to split.  Must be in the range

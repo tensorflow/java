@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = QuantizedReshape.OP_NAME,
+    inputsClass = QuantizedReshape.Inputs.class
+)
 @Operator
 public final class QuantizedReshape<T extends TType> extends RawOp {
   /**
@@ -51,8 +57,8 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
 
   private Output<TFloat32> outputMax;
 
-  private QuantizedReshape(Operation operation) {
-    super(operation);
+  public QuantizedReshape(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     outputMin = operation.output(outputIdx++);
@@ -110,6 +116,9 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
     return outputMax;
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedReshape.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<QuantizedReshape<T>> {
     /**
      * The tensor input

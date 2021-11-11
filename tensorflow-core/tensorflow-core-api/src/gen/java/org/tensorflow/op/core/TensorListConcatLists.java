@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The TensorListConcatLists operation
  */
+@OpMetadata(
+    opType = TensorListConcatLists.OP_NAME,
+    inputsClass = TensorListConcatLists.Inputs.class
+)
 @Operator
 public final class TensorListConcatLists extends RawOp implements Operand<TType> {
   /**
@@ -45,8 +51,8 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
   private Output<? extends TType> output;
 
   @SuppressWarnings("unchecked")
-  private TensorListConcatLists(Operation operation) {
-    super(operation);
+  public TensorListConcatLists(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
     return (Output<TType>) output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListConcatLists.class
+  )
   public static class Inputs extends RawOpInputs<TensorListConcatLists> {
     /**
      * The inputA input
