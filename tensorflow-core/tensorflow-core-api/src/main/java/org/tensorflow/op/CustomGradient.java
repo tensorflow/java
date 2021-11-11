@@ -30,6 +30,9 @@ import org.tensorflow.internal.c_api.GradFunc;
  * reflection. To operate on the {@link org.tensorflow.GraphOperation} directly use {@link
  * RawCustomGradient}.
  *
+ * <p>The type of the op is not checked here, but it is required to match the class given to the
+ * adapter.
+ *
  * @param <T> the type of op this gradient is for.
  */
 @SuppressWarnings("rawtypes")
