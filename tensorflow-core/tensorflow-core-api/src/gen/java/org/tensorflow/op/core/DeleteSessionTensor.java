@@ -26,12 +26,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Delete the tensor specified by its handle in the session.
  */
+@OpMetadata(
+    opType = DeleteSessionTensor.OP_NAME,
+    inputsClass = DeleteSessionTensor.Inputs.class
+)
 @Operator
 public final class DeleteSessionTensor extends RawOp {
   /**
@@ -39,8 +45,8 @@ public final class DeleteSessionTensor extends RawOp {
    */
   public static final String OP_NAME = "DeleteSessionTensor";
 
-  private DeleteSessionTensor(Operation operation) {
-    super(operation);
+  public DeleteSessionTensor(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -59,6 +65,9 @@ public final class DeleteSessionTensor extends RawOp {
     return new DeleteSessionTensor(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DeleteSessionTensor.class
+  )
   public static class Inputs extends RawOpInputs<DeleteSessionTensor> {
     /**
      * The handle for a tensor stored in the session state.

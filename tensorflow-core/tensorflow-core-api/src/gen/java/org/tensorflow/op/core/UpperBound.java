@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -51,6 +53,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = UpperBound.OP_NAME,
+    inputsClass = UpperBound.Inputs.class
+)
 public final class UpperBound<U extends TNumber> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -59,8 +65,8 @@ public final class UpperBound<U extends TNumber> extends RawOp implements Operan
 
   private Output<U> output;
 
-  private UpperBound(Operation operation) {
-    super(operation);
+  public UpperBound(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -123,6 +129,9 @@ public final class UpperBound<U extends TNumber> extends RawOp implements Operan
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = UpperBound.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<UpperBound<?>> {
     /**
      * 2-D Tensor where each row is ordered.

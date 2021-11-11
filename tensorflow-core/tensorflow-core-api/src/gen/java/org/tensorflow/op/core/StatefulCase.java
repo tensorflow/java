@@ -32,6 +32,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -58,6 +60,10 @@ import org.tensorflow.types.family.TType;
  * ```
  * </pre>
  */
+@OpMetadata(
+    opType = StatefulCase.OP_NAME,
+    inputsClass = StatefulCase.Inputs.class
+)
 @Operator
 public final class StatefulCase extends RawOp implements Case {
   /**
@@ -68,8 +74,8 @@ public final class StatefulCase extends RawOp implements Case {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private StatefulCase(Operation operation) {
-    super(operation);
+  public StatefulCase(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -135,6 +141,9 @@ public final class StatefulCase extends RawOp implements Case {
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatefulCase.class
+  )
   public static class Inputs extends RawOpInputs<StatefulCase> {
     /**
      * The branch selector, an int32 Tensor.

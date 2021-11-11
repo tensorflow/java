@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -33,14 +35,18 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a tree ensemble model and returns a handle to it.
  */
+@OpMetadata(
+    opType = BoostedTreesCreateEnsemble.OP_NAME,
+    inputsClass = BoostedTreesCreateEnsemble.Inputs.class
+)
 public final class BoostedTreesCreateEnsemble extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "BoostedTreesCreateEnsemble";
 
-  private BoostedTreesCreateEnsemble(Operation operation) {
-    super(operation);
+  public BoostedTreesCreateEnsemble(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -65,6 +71,9 @@ public final class BoostedTreesCreateEnsemble extends RawOp {
     return new BoostedTreesCreateEnsemble(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesCreateEnsemble.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesCreateEnsemble> {
     /**
      * Handle to the tree ensemble resource to be created.

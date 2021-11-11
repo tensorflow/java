@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 
 /**
  * Sets up the centralized structures for a distributed TPU system.
  */
+@OpMetadata(
+    opType = ConfigureDistributedTPU.OP_NAME,
+    inputsClass = ConfigureDistributedTPU.Inputs.class
+)
 public final class ConfigureDistributedTPU extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -40,8 +46,8 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
 
   private Output<TString> topology;
 
-  private ConfigureDistributedTPU(Operation operation) {
-    super(operation);
+  public ConfigureDistributedTPU(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     topology = operation.output(outputIdx++);
   }
@@ -220,6 +226,9 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ConfigureDistributedTPU.class
+  )
   public static class Inputs extends RawOpInputs<ConfigureDistributedTPU> {
     /**
      * Reserved. Do not use.

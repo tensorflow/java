@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -127,6 +129,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code diagonal} output
  */
+@OpMetadata(
+    opType = MatrixDiagPartV3.OP_NAME,
+    inputsClass = MatrixDiagPartV3.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -138,8 +144,8 @@ public final class MatrixDiagPartV3<T extends TType> extends RawOp implements Op
 
   private Output<T> diagonal;
 
-  private MatrixDiagPartV3(Operation operation) {
-    super(operation);
+  public MatrixDiagPartV3(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     diagonal = operation.output(outputIdx++);
   }
@@ -235,6 +241,9 @@ public final class MatrixDiagPartV3<T extends TType> extends RawOp implements Op
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MatrixDiagPartV3.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<MatrixDiagPartV3<T>> {
     /**
      * Rank {@code r} tensor where {@code r >= 2}.

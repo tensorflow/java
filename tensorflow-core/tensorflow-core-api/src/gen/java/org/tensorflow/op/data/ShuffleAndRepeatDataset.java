@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The ShuffleAndRepeatDatasetV2 operation
  */
+@OpMetadata(
+    opType = ShuffleAndRepeatDataset.OP_NAME,
+    inputsClass = ShuffleAndRepeatDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -50,8 +56,8 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private ShuffleAndRepeatDataset(Operation operation) {
-    super(operation);
+  public ShuffleAndRepeatDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -147,6 +153,9 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ShuffleAndRepeatDataset.class
+  )
   public static class Inputs extends RawOpInputs<ShuffleAndRepeatDataset> {
     /**
      * The inputDataset input

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output_ref} output
  */
+@OpMetadata(
+    opType = AssignSub.OP_NAME,
+    inputsClass = AssignSub.Inputs.class
+)
 @Operator
 public final class AssignSub<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -47,8 +53,8 @@ public final class AssignSub<T extends TType> extends RawOp implements Operand<T
 
   private Output<T> outputRef;
 
-  private AssignSub(Operation operation) {
-    super(operation);
+  public AssignSub(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputRef = operation.output(outputIdx++);
   }
@@ -129,6 +135,9 @@ public final class AssignSub<T extends TType> extends RawOp implements Operand<T
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = AssignSub.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<AssignSub<T>> {
     /**
      * Should be from a {@code Variable} node.

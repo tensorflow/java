@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a tf.Example proto (as a string) into typed tensors.
  */
+@OpMetadata(
+    opType = ParseSingleExample.OP_NAME,
+    inputsClass = ParseSingleExample.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -57,8 +63,8 @@ public final class ParseSingleExample extends RawOp {
   private List<Output<?>> denseValues;
 
   @SuppressWarnings("unchecked")
-  private ParseSingleExample(Operation operation) {
-    super(operation);
+  public ParseSingleExample(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int sparseIndicesLength = operation.outputListLength("sparse_indices");
     sparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, sparseIndicesLength));
@@ -175,6 +181,9 @@ public final class ParseSingleExample extends RawOp {
     return denseValues;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParseSingleExample.class
+  )
   public static class Inputs extends RawOpInputs<ParseSingleExample> {
     /**
      * A vector containing a batch of binary serialized Example protos.

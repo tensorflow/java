@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -44,6 +46,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code sum} output
  */
+@OpMetadata(
+    opType = AccumulateN.OP_NAME,
+    inputsClass = AccumulateN.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -55,8 +61,8 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
 
   private Output<T> sum;
 
-  private AccumulateN(Operation operation) {
-    super(operation);
+  public AccumulateN(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sum = operation.output(outputIdx++);
   }
@@ -95,6 +101,9 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
     return sum;
   }
 
+  @OpInputsMetadata(
+      outputsClass = AccumulateN.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<AccumulateN<T>> {
     /**
      * A list of {@code Tensor} objects, each with same shape and type.

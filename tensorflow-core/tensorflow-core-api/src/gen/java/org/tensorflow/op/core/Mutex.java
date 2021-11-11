@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a Mutex resource that can be locked by {@code MutexLock}.
  */
+@OpMetadata(
+    opType = Mutex.OP_NAME,
+    inputsClass = Mutex.Inputs.class
+)
 @Operator
 public final class Mutex extends RawOp implements Operand<TType> {
   /**
@@ -43,8 +49,8 @@ public final class Mutex extends RawOp implements Operand<TType> {
   private Output<? extends TType> resource;
 
   @SuppressWarnings("unchecked")
-  private Mutex(Operation operation) {
-    super(operation);
+  public Mutex(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     resource = operation.output(outputIdx++);
   }
@@ -147,6 +153,9 @@ public final class Mutex extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Mutex.class
+  )
   public static class Inputs extends RawOpInputs<Mutex> {
     /**
      * If non-empty, this variable is placed in the given container.

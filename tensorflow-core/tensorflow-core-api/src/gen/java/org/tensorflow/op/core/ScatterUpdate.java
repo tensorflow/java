@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -58,6 +60,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output_ref} output
  */
+@OpMetadata(
+    opType = ScatterUpdate.OP_NAME,
+    inputsClass = ScatterUpdate.Inputs.class
+)
 @Operator
 public final class ScatterUpdate<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -67,8 +73,8 @@ public final class ScatterUpdate<T extends TType> extends RawOp implements Opera
 
   private Output<T> outputRef;
 
-  private ScatterUpdate(Operation operation) {
-    super(operation);
+  public ScatterUpdate(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputRef = operation.output(outputIdx++);
   }
@@ -151,6 +157,9 @@ public final class ScatterUpdate<T extends TType> extends RawOp implements Opera
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ScatterUpdate.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ScatterUpdate<T>> {
     /**
      * Should be from a {@code Variable} node.

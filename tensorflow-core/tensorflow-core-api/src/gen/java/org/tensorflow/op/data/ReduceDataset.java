@@ -32,6 +32,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Reduces the input dataset to a singleton using a reduce function.
  */
+@OpMetadata(
+    opType = ReduceDataset.OP_NAME,
+    inputsClass = ReduceDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -51,8 +57,8 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private ReduceDataset(Operation operation) {
-    super(operation);
+  public ReduceDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -148,6 +154,9 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReduceDataset.class
+  )
   public static class Inputs extends RawOpInputs<ReduceDataset> {
     /**
      * A variant tensor representing the input dataset.

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -55,6 +57,10 @@ import org.tensorflow.types.TString;
  * </blockquote>
  * </blockquote>
  */
+@OpMetadata(
+    opType = ToHashBucketStrong.OP_NAME,
+    inputsClass = ToHashBucketStrong.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -66,8 +72,8 @@ public final class ToHashBucketStrong extends RawOp implements Operand<TInt64> {
 
   private Output<TInt64> output;
 
-  private ToHashBucketStrong(Operation operation) {
-    super(operation);
+  public ToHashBucketStrong(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -112,6 +118,9 @@ public final class ToHashBucketStrong extends RawOp implements Operand<TInt64> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ToHashBucketStrong.class
+  )
   public static class Inputs extends RawOpInputs<ToHashBucketStrong> {
     /**
      * The strings to assign a hash bucket.

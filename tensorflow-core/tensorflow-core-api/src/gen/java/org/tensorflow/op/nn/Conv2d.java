@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -57,6 +59,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Conv2d.OP_NAME,
+    inputsClass = Conv2d.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -68,8 +74,8 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
 
   private Output<T> output;
 
-  private Conv2d(Operation operation) {
-    super(operation);
+  public Conv2d(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -324,6 +330,9 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Conv2d.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2d<T>> {
     /**
      * A 4-D tensor. The dimension order is interpreted according to the value

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = BatchToSpaceNd.OP_NAME,
+    inputsClass = BatchToSpaceNd.Inputs.class
+)
 @Operator
 public final class BatchToSpaceNd<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -52,8 +58,8 @@ public final class BatchToSpaceNd<T extends TType> extends RawOp implements Oper
 
   private Output<T> output;
 
-  private BatchToSpaceNd(Operation operation) {
-    super(operation);
+  public BatchToSpaceNd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -185,6 +191,9 @@ public final class BatchToSpaceNd<T extends TType> extends RawOp implements Oper
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchToSpaceNd.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<BatchToSpaceNd<T>> {
     /**
      * N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},

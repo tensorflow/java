@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Outputs the single element from the given dataset.
  */
+@OpMetadata(
+    opType = DatasetToSingleElement.OP_NAME,
+    inputsClass = DatasetToSingleElement.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -50,8 +56,8 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private DatasetToSingleElement(Operation operation) {
-    super(operation);
+  public DatasetToSingleElement(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -98,6 +104,9 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
     return (Iterator) components.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = DatasetToSingleElement.class
+  )
   public static class Inputs extends RawOpInputs<DatasetToSingleElement> {
     /**
      * A handle to a dataset that contains a single element.

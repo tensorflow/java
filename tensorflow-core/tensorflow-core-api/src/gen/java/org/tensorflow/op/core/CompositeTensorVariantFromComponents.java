@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * Returns a scalar variant tensor containing a single {@code CompositeTensorVariant}
  * with the specified Tensor components and TypeSpec.
  */
+@OpMetadata(
+    opType = CompositeTensorVariantFromComponents.OP_NAME,
+    inputsClass = CompositeTensorVariantFromComponents.Inputs.class
+)
 public final class CompositeTensorVariantFromComponents extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class CompositeTensorVariantFromComponents extends RawOp implements
   private Output<? extends TType> encoded;
 
   @SuppressWarnings("unchecked")
-  private CompositeTensorVariantFromComponents(Operation operation) {
-    super(operation);
+  public CompositeTensorVariantFromComponents(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     encoded = operation.output(outputIdx++);
   }
@@ -86,6 +92,9 @@ public final class CompositeTensorVariantFromComponents extends RawOp implements
     return (Output<TType>) encoded;
   }
 
+  @OpInputsMetadata(
+      outputsClass = CompositeTensorVariantFromComponents.class
+  )
   public static class Inputs extends RawOpInputs<CompositeTensorVariantFromComponents> {
     /**
      * The component tensors for the extension type value.

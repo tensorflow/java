@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * input_handle: the input map
  * size: the number of tensors in the map
  */
+@OpMetadata(
+    opType = TensorMapSize.OP_NAME,
+    inputsClass = TensorMapSize.Inputs.class
+)
 @Operator
 public final class TensorMapSize extends RawOp implements Operand<TInt32> {
   /**
@@ -45,8 +51,8 @@ public final class TensorMapSize extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private TensorMapSize(Operation operation) {
-    super(operation);
+  public TensorMapSize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -81,6 +87,9 @@ public final class TensorMapSize extends RawOp implements Operand<TInt32> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorMapSize.class
+  )
   public static class Inputs extends RawOpInputs<TensorMapSize> {
     /**
      * The inputHandle input

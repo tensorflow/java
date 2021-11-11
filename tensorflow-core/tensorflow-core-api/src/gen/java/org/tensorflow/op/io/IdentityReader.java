@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * To use, enqueue strings in a Queue.  ReaderRead will take the front
  * work string and output (work, work).
  */
+@OpMetadata(
+    opType = IdentityReader.OP_NAME,
+    inputsClass = IdentityReader.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -47,8 +53,8 @@ public final class IdentityReader extends RawOp implements Operand<TType> {
   private Output<? extends TType> readerHandle;
 
   @SuppressWarnings("unchecked")
-  private IdentityReader(Operation operation) {
-    super(operation);
+  public IdentityReader(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     readerHandle = operation.output(outputIdx++);
   }
@@ -151,6 +157,9 @@ public final class IdentityReader extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = IdentityReader.class
+  )
   public static class Inputs extends RawOpInputs<IdentityReader> {
     /**
      * If non-empty, this reader is placed in the given container.

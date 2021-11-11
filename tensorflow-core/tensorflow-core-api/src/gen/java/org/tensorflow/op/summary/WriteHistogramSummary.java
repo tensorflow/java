@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -35,14 +37,18 @@ import org.tensorflow.types.family.TType;
  * Writes a histogram summary.
  * Writes histogram {@code values} at {@code step} with {@code tag} using summary {@code writer}.
  */
+@OpMetadata(
+    opType = WriteHistogramSummary.OP_NAME,
+    inputsClass = WriteHistogramSummary.Inputs.class
+)
 public final class WriteHistogramSummary extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "WriteHistogramSummary";
 
-  private WriteHistogramSummary(Operation operation) {
-    super(operation);
+  public WriteHistogramSummary(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -68,6 +74,9 @@ public final class WriteHistogramSummary extends RawOp {
     return new WriteHistogramSummary(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = WriteHistogramSummary.class
+  )
   public static class Inputs extends RawOpInputs<WriteHistogramSummary> {
     /**
      * The writer input

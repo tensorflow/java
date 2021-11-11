@@ -31,12 +31,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Fetches multiple values from infeed as an XLA tuple.
  */
+@OpMetadata(
+    opType = InfeedDequeueTuple.OP_NAME,
+    inputsClass = InfeedDequeueTuple.Inputs.class
+)
 public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
   private List<Output<?>> outputs;
 
   @SuppressWarnings("unchecked")
-  private InfeedDequeueTuple(Operation operation) {
-    super(operation);
+  public InfeedDequeueTuple(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
     outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
@@ -92,6 +98,9 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
     return (Iterator) outputs.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = InfeedDequeueTuple.class
+  )
   public static class Inputs extends RawOpInputs<InfeedDequeueTuple> {
     /**
      * The element types of each element in `outputs`.

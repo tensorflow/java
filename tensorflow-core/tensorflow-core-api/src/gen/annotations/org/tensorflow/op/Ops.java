@@ -367,9 +367,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final BitwiseOps bitwise;
-
   public final TpuOps tpu;
+
+  public final BitwiseOps bitwise;
 
   public final MathOps math;
 
@@ -383,7 +383,7 @@ public final class Ops {
 
   private final Scope scope;
 
-  private Ops(Scope scope) {
+  Ops(Scope scope) {
     this.scope = scope;
     nn = new NnOps(this);
     summary = new SummaryOps(this);
@@ -398,8 +398,8 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    bitwise = new BitwiseOps(this);
     tpu = new TpuOps(this);
+    bitwise = new BitwiseOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);

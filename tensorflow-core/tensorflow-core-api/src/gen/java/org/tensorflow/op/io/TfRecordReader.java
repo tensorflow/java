@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the records from a TensorFlow Records file.
  */
+@OpMetadata(
+    opType = TfRecordReader.OP_NAME,
+    inputsClass = TfRecordReader.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -45,8 +51,8 @@ public final class TfRecordReader extends RawOp implements Operand<TType> {
   private Output<? extends TType> readerHandle;
 
   @SuppressWarnings("unchecked")
-  private TfRecordReader(Operation operation) {
-    super(operation);
+  public TfRecordReader(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     readerHandle = operation.output(outputIdx++);
   }
@@ -175,6 +181,9 @@ public final class TfRecordReader extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TfRecordReader.class
+  )
   public static class Inputs extends RawOpInputs<TfRecordReader> {
     /**
      * If non-empty, this reader is placed in the given container.

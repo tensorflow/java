@@ -30,12 +30,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * An op which linearizes multiple Tensor values to an opaque variant tensor.
  */
+@OpMetadata(
+    opType = PrelinearizeTuple.OP_NAME,
+    inputsClass = PrelinearizeTuple.Inputs.class
+)
 public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
   private Output<? extends TType> output;
 
   @SuppressWarnings("unchecked")
-  private PrelinearizeTuple(Operation operation) {
-    super(operation);
+  public PrelinearizeTuple(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -165,6 +171,9 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = PrelinearizeTuple.class
+  )
   public static class Inputs extends RawOpInputs<PrelinearizeTuple> {
     /**
      * A list of tensors that will be provided using the infeed mechanism.

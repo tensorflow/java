@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -55,6 +57,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code y} output
  */
+@OpMetadata(
+    opType = DataFormatVecPermute.OP_NAME,
+    inputsClass = DataFormatVecPermute.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -66,8 +72,8 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
 
   private Output<T> y;
 
-  private DataFormatVecPermute(Operation operation) {
-    super(operation);
+  public DataFormatVecPermute(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -169,6 +175,9 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DataFormatVecPermute.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<DataFormatVecPermute<T>> {
     /**
      * Vector of size 4 or Tensor of shape (4, 2) in source data format.

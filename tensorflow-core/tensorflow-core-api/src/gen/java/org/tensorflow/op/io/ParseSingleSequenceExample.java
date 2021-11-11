@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a scalar brain.SequenceExample proto (as strings) into typed tensors.
  */
+@OpMetadata(
+    opType = ParseSingleSequenceExample.OP_NAME,
+    inputsClass = ParseSingleSequenceExample.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -65,8 +71,8 @@ public final class ParseSingleSequenceExample extends RawOp {
   private List<Output<?>> featureListDenseValues;
 
   @SuppressWarnings("unchecked")
-  private ParseSingleSequenceExample(Operation operation) {
-    super(operation);
+  public ParseSingleSequenceExample(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int contextSparseIndicesLength = operation.outputListLength("context_sparse_indices");
     contextSparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, contextSparseIndicesLength));
@@ -488,6 +494,9 @@ public final class ParseSingleSequenceExample extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParseSingleSequenceExample.class
+  )
   public static class Inputs extends RawOpInputs<ParseSingleSequenceExample> {
     /**
      * A scalar containing a binary serialized SequenceExample proto.

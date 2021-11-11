@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a vector of tf.Example protos (as strings) into typed tensors.
  */
+@OpMetadata(
+    opType = ParseExample.OP_NAME,
+    inputsClass = ParseExample.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -62,8 +68,8 @@ public final class ParseExample extends RawOp {
   private List<Output<?>> raggedRowSplits;
 
   @SuppressWarnings("unchecked")
-  private ParseExample(Operation operation) {
-    super(operation);
+  public ParseExample(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int sparseIndicesLength = operation.outputListLength("sparse_indices");
     sparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, sparseIndicesLength));
@@ -222,6 +228,9 @@ public final class ParseExample extends RawOp {
     return raggedRowSplits;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParseExample.class
+  )
   public static class Inputs extends RawOpInputs<ParseExample> {
     /**
      * A scalar or vector containing binary serialized Example protos.

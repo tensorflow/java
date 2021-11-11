@@ -31,12 +31,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Uncompresses a compressed dataset element.
  */
+@OpMetadata(
+    opType = UncompressElement.OP_NAME,
+    inputsClass = UncompressElement.Inputs.class
+)
 public final class UncompressElement extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private UncompressElement(Operation operation) {
-    super(operation);
+  public UncompressElement(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -94,6 +100,9 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
     return (Iterator) components.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = UncompressElement.class
+  )
   public static class Inputs extends RawOpInputs<UncompressElement> {
     /**
      * The compressed input

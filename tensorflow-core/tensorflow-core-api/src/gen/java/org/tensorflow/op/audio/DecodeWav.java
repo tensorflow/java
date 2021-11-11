@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -46,6 +48,10 @@ import org.tensorflow.types.TString;
  * number of samples. For example, a ten-sample-long stereo WAV file should give an
  * output shape of [10, 2].
  */
+@OpMetadata(
+    opType = DecodeWav.OP_NAME,
+    inputsClass = DecodeWav.Inputs.class
+)
 @Operator(
     group = "audio"
 )
@@ -59,8 +65,8 @@ public final class DecodeWav extends RawOp {
 
   private Output<TInt32> sampleRate;
 
-  private DecodeWav(Operation operation) {
-    super(operation);
+  public DecodeWav(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     audio = operation.output(outputIdx++);
     sampleRate = operation.output(outputIdx++);
@@ -165,6 +171,9 @@ public final class DecodeWav extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeWav.class
+  )
   public static class Inputs extends RawOpInputs<DecodeWav> {
     /**
      * The WAV-encoded audio, usually from a file.

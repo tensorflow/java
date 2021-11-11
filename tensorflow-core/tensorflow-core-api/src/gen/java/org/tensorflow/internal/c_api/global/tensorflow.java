@@ -11,6 +11,12 @@ import org.bytedeco.javacpp.annotation.*;
 public class tensorflow extends org.tensorflow.internal.c_api.presets.tensorflow {
     static { Loader.load(); }
 
+// Targeting ../NativeOutputVector.java
+
+
+// Targeting ../NameMap.java
+
+
 // Parsed from tensorflow/core/platform/ctstring_internal.h
 
 /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
@@ -982,9 +988,15 @@ public static native void TF_SetConfig(TF_SessionOptions options,
 
 // Destroy an options object.
 public static native void TF_DeleteSessionOptions(TF_SessionOptions arg0);
-// Targeting ../TF_Graph.java
 
+// TODO(jeff,sanjay):
+// - export functions to set Config fields
 
+// --------------------------------------------------------------------------
+// The new graph construction API, still under development.
+
+// Represents a computation graph.  Graphs may be shared between sessions.
+// Graphs are thread-safe when used as directed below.
 
 // Return a new graph object.
 public static native TF_Graph TF_NewGraph();
@@ -992,12 +1004,12 @@ public static native TF_Graph TF_NewGraph();
 // Destroy an options object.  Graph will be deleted once no more
 // TFSession's are referencing it.
 public static native void TF_DeleteGraph(TF_Graph arg0);
-// Targeting ../TF_OperationDescription.java
 
+// Operation being built. The underlying graph must outlive this.
 
-// Targeting ../TF_Operation.java
-
-
+// Operation that has been added to the graph. Valid until the graph is
+// deleted -- in particular adding a new operation to the graph does not
+// invalidate old TF_Operation* pointers.
 // Targeting ../TF_Input.java
 
 
@@ -1078,6 +1090,15 @@ public static native void TF_GraphGetTensorShape(TF_Graph graph,
                                                   @ByVal TF_Output output,
                                                   @Cast("int64_t*") long[] dims, int num_dims,
                                                   TF_Status status);
+
+// TF_NewOperation, but without locking the graph.
+// Should prefer TF_NewOperation when possible.
+public static native TF_OperationDescription TF_NewOperationLocked(TF_Graph graph,
+                                                                     @Cast("const char*") BytePointer op_type,
+                                                                     @Cast("const char*") BytePointer oper_name);
+public static native TF_OperationDescription TF_NewOperationLocked(TF_Graph graph,
+                                                                     String op_type,
+                                                                     String oper_name);
 
 // Operation will only be added to *graph when TF_FinishOperation() is
 // called (assuming TF_FinishOperation() does not return an error).
@@ -1417,6 +1438,11 @@ public static native void TF_SetAttrValueProto(TF_OperationDescription desc,
                                                 @Const Pointer proto,
                                                 @Cast("size_t") long proto_len,
                                                 TF_Status status);
+
+// TF_FinishOperation, but without locking the graph.
+// TF_FinishOperation should be preferred when possible.
+public static native TF_Operation TF_FinishOperationLocked(TF_OperationDescription desc,
+                                                             TF_Status status);
 
 // If this function succeeds:
 //   * *status is set to an OK value,
@@ -4084,6 +4110,26 @@ public static native void TF_DeleteDimensionHandle(TF_DimensionHandle handle);
 // #endif  // TENSORFLOW_C_OPS_H_
 
 
+// Parsed from tensorflow_adapters.h
+
+/*
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
+
+// #include "absl/types/span.h"
+
+
+
 // Parsed from tensorflow/c/eager/c_api.h
 
 /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
@@ -4781,6 +4827,308 @@ public static native void TFE_OpSetAttrValueProto(@Const TFE_Op op,
 // tensors/ops/etc. and usable in APIs like OpSetDevice/ResetOp/etc.
 
 public static final int TFE_CUSTOM_DEVICE_VERSION = 4;
+
+
+// Parsed from tensorflow/cc/framework/scope.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CC_FRAMEWORK_SCOPE_H_
+// #define TENSORFLOW_CC_FRAMEWORK_SCOPE_H_
+
+// #include <memory>
+// #include <string>
+// #include <unordered_map>
+// #include <unordered_set>
+// #include <vector>
+
+// #include "absl/strings/str_cat.h"
+// #include "tensorflow/cc/framework/ops.h"
+// #include "tensorflow/core/common_runtime/graph_constructor.h"
+// #include "tensorflow/core/lib/core/status.h"
+// #include "tensorflow/core/lib/gtl/array_slice.h"
+// Targeting ../NativeGraphPointer.java
+
+
+// Targeting ../NodeBuilder.java
+
+
+// Targeting ../TF_Scope.java
+
+
+
+/** A helper struct to hold the scopes that would be used by a function
+ *  constructing a composite op. */
+
+// Creates a node of the given operation, with the given inputs, and assigns the
+// result to output. This does not support the ability to add additional
+// attributes.
+
+/** \} */
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CC_FRAMEWORK_SCOPE_H_
+
+
+// Parsed from tensorflow/cc/framework/grad_op_registry.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CC_FRAMEWORK_GRAD_OP_REGISTRY_H_
+// #define TENSORFLOW_CC_FRAMEWORK_GRAD_OP_REGISTRY_H_
+
+// #include <unordered_map>
+
+// #include "tensorflow/cc/framework/ops.h"
+// #include "tensorflow/cc/framework/scope.h"
+// Targeting ../GradFunc.java
+
+
+// Targeting ../GradOpRegistry.java
+
+
+
+  // namespace ops
+
+// Macros used to define gradient functions for ops.
+// #define REGISTER_GRADIENT_OP(name, fn)
+//   REGISTER_GRADIENT_OP_UNIQ_HELPER(__COUNTER__, name, fn)
+
+// #define REGISTER_NO_GRADIENT_OP(name)
+//   REGISTER_GRADIENT_OP_UNIQ_HELPER(__COUNTER__, name, nullptr)
+
+// #define REGISTER_GRADIENT_OP_UNIQ_HELPER(ctr, name, fn)
+//   REGISTER_GRADIENT_OP_UNIQ(ctr, name, fn)
+
+// #define REGISTER_GRADIENT_OP_UNIQ(ctr, name, fn)
+//   static bool unused_ret_val_##ctr =
+//       ::tensorflow::ops::GradOpRegistry::Global()->Register(name, fn)
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CC_FRAMEWORK_GRAD_OP_REGISTRY_H_
+
+
+// Parsed from tensorflow/core/platform/status.h
+
+/* Copyright 2015 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CORE_PLATFORM_STATUS_H_
+// #define TENSORFLOW_CORE_PLATFORM_STATUS_H_
+
+// #include <functional>
+// #include <iosfwd>
+// #include <memory>
+// #include <string>
+// #include <unordered_map>
+
+// #include "tensorflow/core/platform/logging.h"
+// #include "tensorflow/core/platform/macros.h"
+// #include "tensorflow/core/platform/stack_frame.h"
+// #include "tensorflow/core/platform/stringpiece.h"
+// #include "tensorflow/core/platform/types.h"
+// #include "tensorflow/core/protobuf/error_codes.pb.h"
+
+// #if defined(__clang__)
+// Only clang supports warn_unused_result as a type annotation.
+// Targeting ../NativeStatus.java
+
+
+
+// Helper class to manage multiple child status values.
+
+
+
+
+
+// #ifndef SWIG
+
+
+
+// #endif  // SWIG
+
+
+
+
+
+/** \ingroup core */
+@Namespace("tensorflow") public static native @Cast("std::ostream*") @ByRef @Name("operator <<") Pointer shiftLeft(@Cast("std::ostream*") @ByRef Pointer os, @Const @ByRef NativeStatus x);
+
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelperOutOfLine(
+    @Const @ByRef NativeStatus v, @Cast("const char*") BytePointer msg);
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelperOutOfLine(
+    @Const @ByRef NativeStatus v, String msg);
+
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelper(@ByVal NativeStatus v,
+                                           @Cast("const char*") BytePointer msg);
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelper(@ByVal NativeStatus v,
+                                           String msg);
+
+// #define TF_DO_CHECK_OK(val, level)
+//   while (auto _result = ::tensorflow::TfCheckOpHelper(val, #val))
+//   LOG(level) << *(_result)
+
+// #define TF_CHECK_OK(val) TF_DO_CHECK_OK(val, FATAL)
+// #define TF_QCHECK_OK(val) TF_DO_CHECK_OK(val, QFATAL)
+
+// DEBUG only version of TF_CHECK_OK.  Compiler still parses 'val' even in opt
+// mode.
+// #ifndef NDEBUG
+// #define TF_DCHECK_OK(val) TF_CHECK_OK(val)
+// #else
+// #define TF_DCHECK_OK(val)
+//   while (false && (::tensorflow::Status::OK() == (val))) LOG(FATAL)
+// #endif
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CORE_PLATFORM_STATUS_H_
+
+
+// Targeting ../Node.java
+
+
+
+// Stores debug information associated with the Node.
+
+
+// Parsed from tensorflow/c/tf_status_helper.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_C_TF_STATUS_HELPER_H_
+// #define TENSORFLOW_C_TF_STATUS_HELPER_H_
+
+// #include "tensorflow/c/tf_status.h"
+// #include "tensorflow/core/platform/status.h"
+
+// Set the attribute of "tf_status" from the attributes of "status".
+@Namespace("tensorflow") public static native void Set_TF_Status_from_Status(TF_Status tf_status,
+                               @Const @ByRef NativeStatus status);
+
+// Returns a "status" from "tf_status".
+@Namespace("tensorflow") public static native @ByVal NativeStatus StatusFromTF_Status(@Const TF_Status tf_status);
+  // namespace internal
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_C_TF_STATUS_HELPER_H_
+
+
+// Parsed from tensorflow/cc/framework/ops.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CC_FRAMEWORK_OPS_H_
+// #define TENSORFLOW_CC_FRAMEWORK_OPS_H_
+
+// #include <type_traits>
+
+// #include "tensorflow/core/framework/tensor.h"
+// #include "tensorflow/core/framework/tensor.pb.h"
+// #include "tensorflow/core/graph/graph.h"
+// #include "tensorflow/core/lib/hash/hash.h"
+// #include "tensorflow/core/lib/strings/strcat.h"
+
+/** \defgroup core Core Tensorflow API */
+// Targeting ../NativeOperation.java
+
+
+// Targeting ../NativeOutput.java
+
+
+
+/** Hash class that can be used for e.g. storing Outputs in an unordered_map */
+
+/** Represents a tensor value that can be used as an operand to an Operation. */
+
+/** A type for representing the output of ops that produce more than one output,
+ *  or a list of tensors. */
+
+/** A type for representing the input to ops that require a list of tensors. */
+
+/** \} */
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CC_FRAMEWORK_OPS_H_
+
+
+// Targeting ../TF_Graph.java
+
+
+// Targeting ../TF_OperationDescription.java
+
+
+// Targeting ../TF_Operation.java
+
+
 
 
 }

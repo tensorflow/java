@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * <p><strong>NOTE</strong>: This operation must run on the same device as its input.  This may
  * be enforced via the {@code colocate_with} mechanism.
  */
+@OpMetadata(
+    opType = ConsumeMutexLock.OP_NAME,
+    inputsClass = ConsumeMutexLock.Inputs.class
+)
 @Operator
 public final class ConsumeMutexLock extends RawOp {
   /**
@@ -45,8 +51,8 @@ public final class ConsumeMutexLock extends RawOp {
    */
   public static final String OP_NAME = "ConsumeMutexLock";
 
-  private ConsumeMutexLock(Operation operation) {
-    super(operation);
+  public ConsumeMutexLock(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -65,6 +71,9 @@ public final class ConsumeMutexLock extends RawOp {
     return new ConsumeMutexLock(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ConsumeMutexLock.class
+  )
   public static class Inputs extends RawOpInputs<ConsumeMutexLock> {
     /**
      * A tensor returned by {@code MutexLock}.

@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * The BatchFFT operation
  */
+@OpMetadata(
+    opType = BatchFft.OP_NAME,
+    inputsClass = BatchFft.Inputs.class
+)
 @Operator(
     group = "signal"
 )
@@ -45,8 +51,8 @@ public final class BatchFft extends RawOp implements Operand<TType> {
   private Output<? extends TType> output;
 
   @SuppressWarnings("unchecked")
-  private BatchFft(Operation operation) {
-    super(operation);
+  public BatchFft(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -82,6 +88,9 @@ public final class BatchFft extends RawOp implements Operand<TType> {
     return (Output<TType>) output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchFft.class
+  )
   public static class Inputs extends RawOpInputs<BatchFft> {
     /**
      * The input input

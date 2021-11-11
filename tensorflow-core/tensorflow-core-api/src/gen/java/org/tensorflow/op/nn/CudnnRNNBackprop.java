@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -83,6 +85,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code input_backprop} output
  */
+@OpMetadata(
+    opType = CudnnRNNBackprop.OP_NAME,
+    inputsClass = CudnnRNNBackprop.Inputs.class
+)
 public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -97,8 +103,8 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
 
   private Output<T> paramsBackprop;
 
-  private CudnnRNNBackprop(Operation operation) {
-    super(operation);
+  public CudnnRNNBackprop(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     inputBackprop = operation.output(outputIdx++);
     inputHBackprop = operation.output(outputIdx++);
@@ -408,6 +414,9 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CudnnRNNBackprop.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<CudnnRNNBackprop<T>> {
     /**
      * The input input

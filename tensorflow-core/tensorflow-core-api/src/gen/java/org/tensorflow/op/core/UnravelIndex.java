@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -53,6 +55,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = UnravelIndex.OP_NAME,
+    inputsClass = UnravelIndex.Inputs.class
+)
 @Operator
 public final class UnravelIndex<T extends TNumber> extends RawOp implements Operand<T> {
   /**
@@ -62,8 +68,8 @@ public final class UnravelIndex<T extends TNumber> extends RawOp implements Oper
 
   private Output<T> output;
 
-  private UnravelIndex(Operation operation) {
-    super(operation);
+  public UnravelIndex(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -105,6 +111,9 @@ public final class UnravelIndex<T extends TNumber> extends RawOp implements Oper
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = UnravelIndex.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<UnravelIndex<T>> {
     /**
      * An 0-D or 1-D {@code int} Tensor whose elements are indices into the

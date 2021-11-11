@@ -147,7 +147,7 @@ public class GraphTest {
   public void iterateOverOperations() {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Iterator<Operation> iterator = g.operations();
+      Iterator<GraphOperation> iterator = g.operations();
       HashSet<Operation> operations;
 
       assertFalse(iterator.hasNext());
@@ -275,7 +275,6 @@ public class GraphTest {
                       .fetch(grads1[0])
                       .fetch(grads1[1])
                       .run())) {
-
         assertEquals(3, outputs.size());
         assertEquals(108.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
         assertEquals(6.0f, ((TFloat32) outputs.get(1)).getFloat(), 0.0f);

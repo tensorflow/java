@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -44,6 +46,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code d_values} output
  */
+@OpMetadata(
+    opType = SparseFillEmptyRowsGrad.OP_NAME,
+    inputsClass = SparseFillEmptyRowsGrad.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -57,8 +63,8 @@ public final class SparseFillEmptyRowsGrad<T extends TType> extends RawOp {
 
   private Output<T> dDefaultValue;
 
-  private SparseFillEmptyRowsGrad(Operation operation) {
-    super(operation);
+  public SparseFillEmptyRowsGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     dValues = operation.output(outputIdx++);
     dDefaultValue = operation.output(outputIdx++);
@@ -102,6 +108,9 @@ public final class SparseFillEmptyRowsGrad<T extends TType> extends RawOp {
     return dDefaultValue;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseFillEmptyRowsGrad.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseFillEmptyRowsGrad<T>> {
     /**
      * 1-D.  The reverse index map from SparseFillEmptyRows.

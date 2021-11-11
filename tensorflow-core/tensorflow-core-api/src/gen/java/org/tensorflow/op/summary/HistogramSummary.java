@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TNumber;
  * has one summary value containing a histogram for {@code values}.
  * <p>This op reports an {@code InvalidArgument} error if any value is not finite.
  */
+@OpMetadata(
+    opType = HistogramSummary.OP_NAME,
+    inputsClass = HistogramSummary.Inputs.class
+)
 @Operator(
     group = "summary"
 )
@@ -50,8 +56,8 @@ public final class HistogramSummary extends RawOp implements Operand<TString> {
 
   private Output<TString> summary;
 
-  private HistogramSummary(Operation operation) {
-    super(operation);
+  public HistogramSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -89,6 +95,9 @@ public final class HistogramSummary extends RawOp implements Operand<TString> {
     return summary;
   }
 
+  @OpInputsMetadata(
+      outputsClass = HistogramSummary.class
+  )
   public static class Inputs extends RawOpInputs<HistogramSummary> {
     /**
      * Scalar.  Tag to use for the {@code Summary.Value}.

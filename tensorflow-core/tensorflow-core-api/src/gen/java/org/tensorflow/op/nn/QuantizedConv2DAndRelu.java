@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = QuantizedConv2DAndRelu.OP_NAME,
+    inputsClass = QuantizedConv2DAndRelu.Inputs.class
+)
 public final class QuantizedConv2DAndRelu<V extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -50,8 +56,8 @@ public final class QuantizedConv2DAndRelu<V extends TNumber> extends RawOp {
 
   private Output<TFloat32> maxOutput;
 
-  private QuantizedConv2DAndRelu(Operation operation) {
-    super(operation);
+  public QuantizedConv2DAndRelu(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     minOutput = operation.output(outputIdx++);
@@ -241,6 +247,9 @@ public final class QuantizedConv2DAndRelu<V extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QuantizedConv2DAndRelu.class
+  )
   public static class Inputs extends RawOpInputs<QuantizedConv2DAndRelu<?>> {
     /**
      * The input input

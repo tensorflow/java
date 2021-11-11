@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -36,6 +38,10 @@ import org.tensorflow.types.TBool;
  * If {@code condition} evaluates to false, print the list of tensors in {@code data}.
  * {@code summarize} determines how many entries of the tensors to print.
  */
+@OpMetadata(
+    opType = AssertThat.OP_NAME,
+    inputsClass = AssertThat.Inputs.class
+)
 @Operator
 public final class AssertThat extends RawOp {
   /**
@@ -43,8 +49,8 @@ public final class AssertThat extends RawOp {
    */
   public static final String OP_NAME = "Assert";
 
-  private AssertThat(Operation operation) {
-    super(operation);
+  public AssertThat(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -105,6 +111,9 @@ public final class AssertThat extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = AssertThat.class
+  )
   public static class Inputs extends RawOpInputs<AssertThat> {
     /**
      * The condition to evaluate.

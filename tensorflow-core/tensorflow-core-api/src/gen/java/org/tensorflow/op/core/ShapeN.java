@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = ShapeN.OP_NAME,
+    inputsClass = ShapeN.Inputs.class
+)
 @Operator
 public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<Operand<U>> {
   /**
@@ -52,8 +58,8 @@ public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<O
   private List<Output<U>> output;
 
   @SuppressWarnings("unchecked")
-  private ShapeN(Operation operation) {
-    super(operation);
+  public ShapeN(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList((Output<U>[]) operation.outputList(outputIdx, outputLength));
@@ -109,6 +115,9 @@ public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<O
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = ShapeN.class
+  )
   public static class Inputs extends RawOpInputs<ShapeN<?>> {
     /**
      * The input input

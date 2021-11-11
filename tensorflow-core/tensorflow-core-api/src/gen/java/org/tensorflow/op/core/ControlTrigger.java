@@ -25,12 +25,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 
 /**
  * Does nothing. Serves as a control trigger for scheduling.
  * Only useful as a placeholder for control edges.
  */
+@OpMetadata(
+    opType = ControlTrigger.OP_NAME,
+    inputsClass = ControlTrigger.Inputs.class
+)
 @Operator
 public final class ControlTrigger extends RawOp {
   /**
@@ -38,8 +44,8 @@ public final class ControlTrigger extends RawOp {
    */
   public static final String OP_NAME = "ControlTrigger";
 
-  private ControlTrigger(Operation operation) {
-    super(operation);
+  public ControlTrigger(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -56,6 +62,9 @@ public final class ControlTrigger extends RawOp {
     return new ControlTrigger(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ControlTrigger.class
+  )
   public static class Inputs extends RawOpInputs<ControlTrigger> {
     public Inputs(GraphOperation op) {
       super(new ControlTrigger(op), op, Arrays.asList());

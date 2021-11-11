@@ -26,20 +26,26 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Enqueue a Tensor on the computation outfeed.
  */
+@OpMetadata(
+    opType = OutfeedEnqueue.OP_NAME,
+    inputsClass = OutfeedEnqueue.Inputs.class
+)
 public final class OutfeedEnqueue extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "OutfeedEnqueue";
 
-  private OutfeedEnqueue(Operation operation) {
-    super(operation);
+  public OutfeedEnqueue(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -58,6 +64,9 @@ public final class OutfeedEnqueue extends RawOp {
     return new OutfeedEnqueue(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = OutfeedEnqueue.class
+  )
   public static class Inputs extends RawOpInputs<OutfeedEnqueue> {
     /**
      * A tensor that will be inserted into the outfeed queue.

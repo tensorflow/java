@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * <p><strong>NOTE</strong> even if {@code b} is zero, the sparsity structure of the output does not
  * change.
  */
+@OpMetadata(
+    opType = SparseMatrixMul.OP_NAME,
+    inputsClass = SparseMatrixMul.Inputs.class
+)
 public final class SparseMatrixMul extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -48,8 +54,8 @@ public final class SparseMatrixMul extends RawOp implements Operand<TType> {
   private Output<? extends TType> output;
 
   @SuppressWarnings("unchecked")
-  private SparseMatrixMul(Operation operation) {
-    super(operation);
+  public SparseMatrixMul(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class SparseMatrixMul extends RawOp implements Operand<TType> {
     return (Output<TType>) output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixMul.class
+  )
   public static class Inputs extends RawOpInputs<SparseMatrixMul> {
     /**
      * A CSRSparseMatrix.

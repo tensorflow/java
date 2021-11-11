@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -90,6 +92,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code merged} output
  */
+@OpMetadata(
+    opType = ParallelDynamicStitch.OP_NAME,
+    inputsClass = ParallelDynamicStitch.Inputs.class
+)
 @Operator
 public final class ParallelDynamicStitch<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -99,8 +105,8 @@ public final class ParallelDynamicStitch<T extends TType> extends RawOp implemen
 
   private Output<T> merged;
 
-  private ParallelDynamicStitch(Operation operation) {
-    super(operation);
+  public ParallelDynamicStitch(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     merged = operation.output(outputIdx++);
   }
@@ -139,6 +145,9 @@ public final class ParallelDynamicStitch<T extends TType> extends RawOp implemen
     return merged;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParallelDynamicStitch.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ParallelDynamicStitch<T>> {
     /**
      * The indices input

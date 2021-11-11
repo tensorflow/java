@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.TString;
  * pending device interactions fail.
  * <p>'compilation_status' is a serialized CompilationResultProto.
  */
+@OpMetadata(
+    opType = CompileSucceededAssert.OP_NAME,
+    inputsClass = CompileSucceededAssert.Inputs.class
+)
 @Operator(
     group = "tpu"
 )
@@ -44,8 +50,8 @@ public final class CompileSucceededAssert extends RawOp {
    */
   public static final String OP_NAME = "TPUCompileSucceededAssert";
 
-  private CompileSucceededAssert(Operation operation) {
-    super(operation);
+  public CompileSucceededAssert(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -64,6 +70,9 @@ public final class CompileSucceededAssert extends RawOp {
     return new CompileSucceededAssert(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = CompileSucceededAssert.class
+  )
   public static class Inputs extends RawOpInputs<CompileSucceededAssert> {
     /**
      * The compilationStatus input

@@ -26,19 +26,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * Set a summary_writer_interface to record statistics using given stats_aggregator.
  */
+@OpMetadata(
+    opType = StatsAggregatorSetSummaryWriter.OP_NAME,
+    inputsClass = StatsAggregatorSetSummaryWriter.Inputs.class
+)
 public final class StatsAggregatorSetSummaryWriter extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "StatsAggregatorSetSummaryWriter";
 
-  private StatsAggregatorSetSummaryWriter(Operation operation) {
-    super(operation);
+  public StatsAggregatorSetSummaryWriter(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -60,6 +66,9 @@ public final class StatsAggregatorSetSummaryWriter extends RawOp {
     return new StatsAggregatorSetSummaryWriter(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatsAggregatorSetSummaryWriter.class
+  )
   public static class Inputs extends RawOpInputs<StatsAggregatorSetSummaryWriter> {
     /**
      * The statsAggregator input

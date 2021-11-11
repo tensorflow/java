@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = DenseBincount.OP_NAME,
+    inputsClass = DenseBincount.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -53,8 +59,8 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
 
   private Output<U> output;
 
-  private DenseBincount(Operation operation) {
-    super(operation);
+  public DenseBincount(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -138,6 +144,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DenseBincount.class
+  )
   public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<DenseBincount<U>> {
     /**
      * 1D or 2D int {@code Tensor}.

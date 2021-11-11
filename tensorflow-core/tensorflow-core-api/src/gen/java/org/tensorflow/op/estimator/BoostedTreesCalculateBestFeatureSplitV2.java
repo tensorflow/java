@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -39,6 +41,10 @@ import org.tensorflow.types.TString;
  * <p>In this manner, the output is the best split per features and per node, so that it needs to be combined later to produce the best split for each node (among all possible features).
  * <p>The output shapes are compatible in a way that the first dimension of all tensors are the same and equal to the number of possible split nodes for each feature.
  */
+@OpMetadata(
+    opType = BoostedTreesCalculateBestFeatureSplitV2.OP_NAME,
+    inputsClass = BoostedTreesCalculateBestFeatureSplitV2.Inputs.class
+)
 public final class BoostedTreesCalculateBestFeatureSplitV2 extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -61,8 +67,8 @@ public final class BoostedTreesCalculateBestFeatureSplitV2 extends RawOp {
 
   private Output<TString> splitWithDefaultDirections;
 
-  private BoostedTreesCalculateBestFeatureSplitV2(Operation operation) {
-    super(operation);
+  public BoostedTreesCalculateBestFeatureSplitV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     nodeIds = operation.output(outputIdx++);
     gains = operation.output(outputIdx++);
@@ -184,6 +190,9 @@ public final class BoostedTreesCalculateBestFeatureSplitV2 extends RawOp {
     return splitWithDefaultDirections;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesCalculateBestFeatureSplitV2.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesCalculateBestFeatureSplitV2> {
     /**
      * A Rank 1 tensor (shape=[2]) to specify the range [first, last) of node ids to process within {@code stats_summary_list}. The nodes are iterated between the two nodes specified by the tensor, as like {@code for node_id in range(node_id_range[0], node_id_range[1])} (Note that the last index node_id_range[1] is exclusive).

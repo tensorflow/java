@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * Any ReadVariableOp with a control dependency on this op is guaranteed to
  * see the incremented value or a subsequent newer one.
  */
+@OpMetadata(
+    opType = AssignAddVariableOp.OP_NAME,
+    inputsClass = AssignAddVariableOp.Inputs.class
+)
 @Operator
 public final class AssignAddVariableOp extends RawOp {
   /**
@@ -42,8 +48,8 @@ public final class AssignAddVariableOp extends RawOp {
    */
   public static final String OP_NAME = "AssignAddVariableOp";
 
-  private AssignAddVariableOp(Operation operation) {
-    super(operation);
+  public AssignAddVariableOp(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -65,6 +71,9 @@ public final class AssignAddVariableOp extends RawOp {
     return new AssignAddVariableOp(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = AssignAddVariableOp.class
+  )
   public static class Inputs extends RawOpInputs<AssignAddVariableOp> {
     /**
      * handle to the resource in which to store the variable.

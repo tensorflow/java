@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code value} output
  */
+@OpMetadata(
+    opType = ReadVariableOp.OP_NAME,
+    inputsClass = ReadVariableOp.Inputs.class
+)
 @Operator
 public final class ReadVariableOp<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -51,8 +57,8 @@ public final class ReadVariableOp<T extends TType> extends RawOp implements Oper
 
   private Output<T> value;
 
-  private ReadVariableOp(Operation operation) {
-    super(operation);
+  public ReadVariableOp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
   }
@@ -91,6 +97,9 @@ public final class ReadVariableOp<T extends TType> extends RawOp implements Oper
     return value;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReadVariableOp.class
+  )
   public static class Inputs extends RawOpInputs<ReadVariableOp<?>> {
     /**
      * handle to the resource in which to store the variable.

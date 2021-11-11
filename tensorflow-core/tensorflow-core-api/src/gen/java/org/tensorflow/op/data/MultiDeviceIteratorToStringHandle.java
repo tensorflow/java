@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Produces a string handle for the given MultiDeviceIterator.
  */
+@OpMetadata(
+    opType = MultiDeviceIteratorToStringHandle.OP_NAME,
+    inputsClass = MultiDeviceIteratorToStringHandle.Inputs.class
+)
 public final class MultiDeviceIteratorToStringHandle extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class MultiDeviceIteratorToStringHandle extends RawOp implements Op
 
   private Output<TString> stringHandle;
 
-  private MultiDeviceIteratorToStringHandle(Operation operation) {
-    super(operation);
+  public MultiDeviceIteratorToStringHandle(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     stringHandle = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class MultiDeviceIteratorToStringHandle extends RawOp implements Op
     return stringHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = MultiDeviceIteratorToStringHandle.class
+  )
   public static class Inputs extends RawOpInputs<MultiDeviceIteratorToStringHandle> {
     /**
      * A MultiDeviceIterator resource.

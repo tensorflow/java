@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code logsoftmax} output
  */
+@OpMetadata(
+    opType = LogSoftmax.OP_NAME,
+    inputsClass = LogSoftmax.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -51,8 +57,8 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
 
   private Output<T> logsoftmax;
 
-  private LogSoftmax(Operation operation) {
-    super(operation);
+  public LogSoftmax(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     logsoftmax = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
     return logsoftmax;
   }
 
+  @OpInputsMetadata(
+      outputsClass = LogSoftmax.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<LogSoftmax<T>> {
     /**
      * 2-D with shape {@code [batch_size, num_classes]}.

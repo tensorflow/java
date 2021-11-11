@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = CropAndResizeGradImage.OP_NAME,
+    inputsClass = CropAndResizeGradImage.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -50,8 +56,8 @@ public final class CropAndResizeGradImage<T extends TNumber> extends RawOp imple
 
   private Output<T> output;
 
-  private CropAndResizeGradImage(Operation operation) {
-    super(operation);
+  public CropAndResizeGradImage(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -146,6 +152,9 @@ public final class CropAndResizeGradImage<T extends TNumber> extends RawOp imple
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CropAndResizeGradImage.class
+  )
   public static class Inputs extends RawOpInputs<CropAndResizeGradImage<?>> {
     /**
      * A 4-D tensor of shape {@code [num_boxes, crop_height, crop_width, depth]}.

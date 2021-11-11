@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that uses a custom thread pool to compute {@code input_dataset}.
  */
+@OpMetadata(
+    opType = ThreadPoolHandle.OP_NAME,
+    inputsClass = ThreadPoolHandle.Inputs.class
+)
 public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private ThreadPoolHandle(Operation operation) {
-    super(operation);
+  public ThreadPoolHandle(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -177,6 +183,9 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ThreadPoolHandle.class
+  )
   public static class Inputs extends RawOpInputs<ThreadPoolHandle> {
     /**
      * The number of threads in the thread pool.

@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -100,6 +102,10 @@ import org.tensorflow.types.family.TType;
  * adjoint_a: If True, {@code a} adjointed before multiplication.
  * adjoint_b: If True, {@code b} adjointed before multiplication.
  */
+@OpMetadata(
+    opType = SparseMatrixSparseMatMul.OP_NAME,
+    inputsClass = SparseMatrixSparseMatMul.Inputs.class
+)
 public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -109,8 +115,8 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
   private Output<? extends TType> c;
 
   @SuppressWarnings("unchecked")
-  private SparseMatrixSparseMatMul(Operation operation) {
-    super(operation);
+  public SparseMatrixSparseMatMul(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     c = operation.output(outputIdx++);
   }
@@ -269,6 +275,9 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixSparseMatMul.class
+  )
   public static class Inputs extends RawOpInputs<SparseMatrixSparseMatMul> {
     /**
      * A CSRSparseMatrix.

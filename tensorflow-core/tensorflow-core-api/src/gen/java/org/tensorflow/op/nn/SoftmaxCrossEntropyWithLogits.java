@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code loss} output
  */
+@OpMetadata(
+    opType = SoftmaxCrossEntropyWithLogits.OP_NAME,
+    inputsClass = SoftmaxCrossEntropyWithLogits.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -50,8 +56,8 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
 
   private Output<T> backprop;
 
-  private SoftmaxCrossEntropyWithLogits(Operation operation) {
-    super(operation);
+  public SoftmaxCrossEntropyWithLogits(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
     backprop = operation.output(outputIdx++);
@@ -97,6 +103,9 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
     return backprop;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SoftmaxCrossEntropyWithLogits.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<SoftmaxCrossEntropyWithLogits<T>> {
     /**
      * batch_size x num_classes matrix

@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -51,6 +53,10 @@ import org.tensorflow.types.family.TType;
  * strings and correspondingly well-formed.
  * <p>Callers must ensure all the named tensors are indeed stored in the checkpoint.
  */
+@OpMetadata(
+    opType = Restore.OP_NAME,
+    inputsClass = Restore.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -63,8 +69,8 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> tensors;
 
   @SuppressWarnings("unchecked")
-  private Restore(Operation operation) {
-    super(operation);
+  public Restore(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int tensorsLength = operation.outputListLength("tensors");
     tensors = Arrays.asList(operation.outputList(outputIdx, tensorsLength));
@@ -112,6 +118,9 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
     return (Iterator) tensors.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = Restore.class
+  )
   public static class Inputs extends RawOpInputs<Restore> {
     /**
      * Must have a single element.  The prefix of a V2 checkpoint.

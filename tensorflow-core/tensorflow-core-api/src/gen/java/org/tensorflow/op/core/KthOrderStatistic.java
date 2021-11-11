@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
@@ -47,6 +49,10 @@ import org.tensorflow.types.TFloat32;
  * equal to the Kth order statistic. The semantics are not the same as
  * top_k_unique.
  */
+@OpMetadata(
+    opType = KthOrderStatistic.OP_NAME,
+    inputsClass = KthOrderStatistic.Inputs.class
+)
 @Operator
 public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> {
   /**
@@ -56,8 +62,8 @@ public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> 
 
   private Output<TFloat32> output;
 
-  private KthOrderStatistic(Operation operation) {
-    super(operation);
+  public KthOrderStatistic(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -94,6 +100,9 @@ public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> 
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = KthOrderStatistic.class
+  )
   public static class Inputs extends RawOpInputs<KthOrderStatistic> {
     /**
      * The input input

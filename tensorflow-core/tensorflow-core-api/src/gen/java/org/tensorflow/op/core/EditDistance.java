@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * (truth_indices, truth_values, truth_shape).
  * <p>The inputs are:
  */
+@OpMetadata(
+    opType = EditDistance.OP_NAME,
+    inputsClass = EditDistance.Inputs.class
+)
 @Operator
 public final class EditDistance extends RawOp implements Operand<TFloat32> {
   /**
@@ -50,8 +56,8 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> output;
 
-  private EditDistance(Operation operation) {
-    super(operation);
+  public EditDistance(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -175,6 +181,9 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EditDistance.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<EditDistance> {
     /**
      * The indices of the hypothesis list SparseTensor.

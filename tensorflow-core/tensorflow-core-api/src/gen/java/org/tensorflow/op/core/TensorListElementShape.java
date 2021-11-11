@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code element_shape} output
  */
+@OpMetadata(
+    opType = TensorListElementShape.OP_NAME,
+    inputsClass = TensorListElementShape.Inputs.class
+)
 @Operator
 public final class TensorListElementShape<T extends TNumber> extends RawOp implements Operand<T> {
   /**
@@ -49,8 +55,8 @@ public final class TensorListElementShape<T extends TNumber> extends RawOp imple
 
   private Output<T> elementShape;
 
-  private TensorListElementShape(Operation operation) {
-    super(operation);
+  public TensorListElementShape(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     elementShape = operation.output(outputIdx++);
   }
@@ -89,6 +95,9 @@ public final class TensorListElementShape<T extends TNumber> extends RawOp imple
     return elementShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListElementShape.class
+  )
   public static class Inputs extends RawOpInputs<TensorListElementShape<?>> {
     /**
      * The inputHandle input

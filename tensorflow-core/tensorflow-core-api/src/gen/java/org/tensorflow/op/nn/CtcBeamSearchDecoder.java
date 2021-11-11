@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -44,6 +46,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code log_probability} output
  */
+@OpMetadata(
+    opType = CtcBeamSearchDecoder.OP_NAME,
+    inputsClass = CtcBeamSearchDecoder.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -62,8 +68,8 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
   private Output<T> logProbability;
 
   @SuppressWarnings("unchecked")
-  private CtcBeamSearchDecoder(Operation operation) {
-    super(operation);
+  public CtcBeamSearchDecoder(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int decodedIndicesLength = operation.outputListLength("decoded_indices");
     decodedIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, decodedIndicesLength));
@@ -183,6 +189,9 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CtcBeamSearchDecoder.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<CtcBeamSearchDecoder<T>> {
     /**
      * 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.

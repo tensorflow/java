@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = TruncatedNormal.OP_NAME,
+    inputsClass = TruncatedNormal.Inputs.class
+)
 @Operator(
     group = "random"
 )
@@ -51,8 +57,8 @@ public final class TruncatedNormal<U extends TNumber> extends RawOp implements O
 
   private Output<U> output;
 
-  private TruncatedNormal(Operation operation) {
-    super(operation);
+  public TruncatedNormal(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -161,6 +167,9 @@ public final class TruncatedNormal<U extends TNumber> extends RawOp implements O
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TruncatedNormal.class
+  )
   public static class Inputs extends RawOpInputs<TruncatedNormal<?>> {
     /**
      * The shape of the output tensor.

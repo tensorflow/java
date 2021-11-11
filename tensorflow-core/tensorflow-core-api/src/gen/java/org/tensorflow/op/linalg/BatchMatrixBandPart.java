@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code band} output
  */
+@OpMetadata(
+    opType = BatchMatrixBandPart.OP_NAME,
+    inputsClass = BatchMatrixBandPart.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -48,8 +54,8 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
 
   private Output<T> band;
 
-  private BatchMatrixBandPart(Operation operation) {
-    super(operation);
+  public BatchMatrixBandPart(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     band = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
     return band;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchMatrixBandPart.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<BatchMatrixBandPart<T>> {
     /**
      * The input input

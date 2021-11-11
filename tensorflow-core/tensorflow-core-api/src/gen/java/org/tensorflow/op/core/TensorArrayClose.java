@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
  * This enables the user to close and release the resource in the middle
  * of a step/run.
  */
+@OpMetadata(
+    opType = TensorArrayClose.OP_NAME,
+    inputsClass = TensorArrayClose.Inputs.class
+)
 @Operator
 public final class TensorArrayClose extends RawOp {
   /**
@@ -41,8 +47,8 @@ public final class TensorArrayClose extends RawOp {
    */
   public static final String OP_NAME = "TensorArrayCloseV3";
 
-  private TensorArrayClose(Operation operation) {
-    super(operation);
+  public TensorArrayClose(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -61,6 +67,9 @@ public final class TensorArrayClose extends RawOp {
     return new TensorArrayClose(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArrayClose.class
+  )
   public static class Inputs extends RawOpInputs<TensorArrayClose> {
     /**
      * The handle to a TensorArray (output of TensorArray or TensorArrayGrad).

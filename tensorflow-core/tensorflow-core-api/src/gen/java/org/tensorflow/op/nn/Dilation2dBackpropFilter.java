@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code filter_backprop} output
  */
+@OpMetadata(
+    opType = Dilation2dBackpropFilter.OP_NAME,
+    inputsClass = Dilation2dBackpropFilter.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -48,8 +54,8 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
 
   private Output<T> filterBackprop;
 
-  private Dilation2dBackpropFilter(Operation operation) {
-    super(operation);
+  public Dilation2dBackpropFilter(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     filterBackprop = operation.output(outputIdx++);
   }
@@ -107,6 +113,9 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
     return filterBackprop;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Dilation2dBackpropFilter.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Dilation2dBackpropFilter<T>> {
     /**
      * 4-D with shape {@code [batch, in_height, in_width, depth]}.

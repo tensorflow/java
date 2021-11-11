@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -48,6 +50,10 @@ import org.tensorflow.types.TInt64;
  * <p> <a href="https://arxiv.org/abs/1502.08053">Stochastic Dual Coordinate Ascent with Adaptive Probabilities</a> .<br>
  * Dominik Csiba, Zheng Qu, Peter Richtarik. 2015
  */
+@OpMetadata(
+    opType = SdcaOptimizer.OP_NAME,
+    inputsClass = SdcaOptimizer.Inputs.class
+)
 public final class SdcaOptimizer extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -61,8 +67,8 @@ public final class SdcaOptimizer extends RawOp {
   private List<Output<TFloat32>> outDeltaDenseWeights;
 
   @SuppressWarnings("unchecked")
-  private SdcaOptimizer(Operation operation) {
-    super(operation);
+  public SdcaOptimizer(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outExampleStateData = operation.output(outputIdx++);
     int outDeltaSparseWeightsLength = operation.outputListLength("out_delta_sparse_weights");
@@ -200,6 +206,9 @@ public final class SdcaOptimizer extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SdcaOptimizer.class
+  )
   public static class Inputs extends RawOpInputs<SdcaOptimizer> {
     /**
      * a list of vectors which contain example indices.

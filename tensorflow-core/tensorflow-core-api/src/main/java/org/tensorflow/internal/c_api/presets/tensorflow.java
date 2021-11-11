@@ -1,4 +1,5 @@
-/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+/*
+Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,10 +16,17 @@ limitations under the License.
 */
 package org.tensorflow.internal.c_api.presets;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 import org.bytedeco.javacpp.ClassProperties;
 import org.bytedeco.javacpp.LoadEnabled;
 import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.annotation.Adapter;
+import org.bytedeco.javacpp.annotation.Cast;
 import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
@@ -46,8 +54,16 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
+            "tensorflow_adapters.h",
             "tensorflow/c/eager/c_api.h",
-            "tensorflow/c/eager/c_api_experimental.h"
+            "tensorflow/c/eager/c_api_experimental.h",
+            "tensorflow/cc/framework/scope.h",
+            "tensorflow/cc/framework/grad_op_registry.h",
+            "tensorflow/core/platform/status.h",
+            "tensorflow/core/graph/graph.h",
+            "tensorflow/c/tf_status_helper.h",
+            "tensorflow/cc/framework/ops.h",
+            "tensorflow/c/c_api_internal.h",
           },
           link = "tensorflow_cc@.2",
           preload = {"iomp5", "mklml", "mklml_intel", "tensorflow_framework@.2"},
@@ -273,11 +289,59 @@ public class tensorflow implements LoadEnabled, InfoMapper {
   public void map(InfoMap infoMap) {
     infoMap
         .put(
+            new Info("c_api_internal.h")
+                .linePatterns(
+                    "struct TF_OperationDescription \\{",
+                    "\\};",
+                    "struct TF_Graph \\{",
+                    "\\};",
+                    "struct TF_Operation \\{",
+                    "\\};",
+                    "// Exposed helper functions",
+                    "// End Exposed helper functions"))
+        .put(
+            new Info("graph.h")
+                .linePatterns(
+                    "class Node \\{", "// Stores debug information associated with the Node."))
+        .put(new Info("Node").cppTypes("tensorflow::Node").purify())
+        .put(
+            new Info(
+                    "tensorflow::NodeDef",
+                    "tensorflow::OpDef",
+                    "tensorflow::AttrSlice",
+                    "tensorflow::Edge",
+                    "tensorflow::EdgeSet",
+                    "tensorflow::WhileContext",
+                    "tensorflow::NodeProperties",
+                    "protobuf::RepeatedPtrField",
+                    "gtl::iterator_range<NeighborIter>",
+                    "tensorflow::DataType",
+                    "tensorflow::DataTypeVector",
+                    "tensorflow::Node::set_original_node_names",
+                    "tensorflow::Node::AddAttr",
+                    "tensorflow::Node::ClearAttr",
+                    "tensorflow::Node::input_node")
+                .skip())
+        .put(
+            new Info("c_api.cc")
+                .linePatterns(
+                    "// Helper functions -+",
+                    "// Shape functions -+",
+                    "static TF_OperationDescription\\* TF_NewOperationLocked\\(TF_Graph\\* graph,",
+                    "\\}",
+                    "static TF_Operation\\* TF_FinishOperationLocked\\(TF_OperationDescription\\* desc,",
+                    "\\}"))
+        .put(new Info("OutputTensor", "TensorId", "tensorflow::AttrValue").skip())
+        .put(
             new Info("c_api_experimental.h")
                 .linePatterns(
                     "typedef struct TFE_OpAttrs TFE_OpAttrs;",
                     "#define TFE_CUSTOM_DEVICE_VERSION 4"))
-        .put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
+        .put(
+            new Info("TF_CAPI_EXPORT", "TF_Bool", "TF_GUARDED_BY", "TF_MUST_USE_RESULT")
+                .cppTypes()
+                .annotations())
+        .put(new Info("TF_DISALLOW_COPY_AND_ASSIGN").skip())
         .put(
             new Info("TF_Buffer::data")
                 .javaText(
@@ -305,13 +369,24 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         .put(
             new Info("TF_Graph")
                 .pointerTypes("TF_Graph")
-                .base("org.tensorflow.internal.c_api.AbstractTF_Graph"))
+                .base("org.tensorflow.internal.c_api.AbstractTF_Graph")
+                .purify())
+        .put(new Info("tensorflow::Graph").javaNames("NativeGraphPointer"))
         .put(
             new Info("TF_Graph::graph")
-                .javaText("public native @MemberGetter @ByRef Graph graph();"))
+                .javaText("public native @MemberGetter @ByRef NativeGraphPointer graph();"))
         .put(
-            new Info("TF_Graph::refiner")
-                .javaText("public native @MemberGetter @ByRef ShapeRefiner refiner();"))
+            new Info(
+                    "TF_Graph::refiner",
+                    "TF_Graph::mu",
+                    "TF_Graph::sessions",
+                    "TF_Graph::delete_requested")
+                .skip())
+        .put(
+            new Info("std::unordered_map<tensorflow::string,tensorflow::Node*>")
+                .pointerTypes("NameMap")
+                .define()
+                .javaText("public native long erase(@StdString BytePointer key);"))
         .put(
             new Info("TF_Function")
                 .pointerTypes("TF_Function")
@@ -320,7 +395,8 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             new Info("TF_ImportGraphDefOptions")
                 .pointerTypes("TF_ImportGraphDefOptions")
                 .base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
-        .put(new Info("TF_Operation", "TF_WhileParams").purify())
+        .put(new Info("TF_WhileParams").purify())
+        .put(new Info("TF_Operation").purify())
         .put(
             new Info("TF_Operation::node")
                 .javaText("public native @MemberGetter @ByRef Node node();"))
@@ -374,6 +450,79 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "TFE_MonitoringSampler2",
                     "TFE_CustomDeviceTensorHandle",
                     "TFE_CustomDevice")
+                .skip())
+        .put(new Info("TF_OperationDescription").pointerTypes("TF_OperationDescription").purify())
+        .put(new Info("tensorflow::Scope").javaNames("TF_Scope"))
+        .put(new Info("tensorflow::NodeBuilder").pointerTypes("NodeBuilder"))
+        .put(
+            new Info("string", "tensorflow::string")
+                .annotations("@StdString")
+                .valueTypes("BytePointer", "String")
+                .pointerTypes("BytePointer"))
+        .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
+        .put(
+            new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
+        .put(new Info("tensorflow::Output").javaNames("NativeOutput"))
+        .put(new Info("tensorflow::Operation").javaNames("NativeOperation"))
+        .put(new Info("tensorflow::Status").javaNames("NativeStatus").purify())
+        .put(
+            new Info("tensorflow::int32")
+                .cast()
+                .valueTypes("int")
+                .pointerTypes("IntPointer", "IntBuffer", "int[]"))
+        .put(
+            new Info(
+                    "tensorflow::CompositeOpScopes",
+                    "tensorflow::Input",
+                    "tensorflow::InputList",
+                    "tensorflow::OutputHash",
+                    "tensorflow::StackFrame",
+                    "tensorflow::StatusGroup",
+                    "tensorflow::internal::TF_StatusDeleter",
+                    "tensorflow::GraphDef",
+                    "tensorflow::Scope::graph_as_shared_ptr",
+                    "tensorflow::Scope::ToGraphDef",
+                    "tensorflow::Scope::ToGraph",
+                    "tensorflow::Scope::DoShapeInference",
+                    "tensorflow::Scope::DisabledShapeInferenceScope",
+                    "tensorflow::Scope::control_deps",
+                    "tensorflow::Scope::WithKernelLabel",
+                    "tensorflow::Scope::ClearColocation",
+                    "tensorflow::Scope::ColocateWith",
+                    "tensorflow::Scope::ColocateWith",
+                    "tensorflow::Scope::WithXlaCluster",
+                    "tensorflow::Scope::WithAssignedDevice",
+                    "tensorflow::Scope::status",
+                    "tensorflow::Scope::UpdateStatus",
+                    "tensorflow::Status::code",
+                    "tensorflow::CreateOutputWithScope",
+                    "TF_OperationDescription::colocation_constraints",
+                    "tensorflow::Operation::num_inputs",
+                    "tensorflow::Operation::input_type",
+                    "tensorflow::Operation::input",
+                    "tensorflow::Operation::num_outputs",
+                    "tensorflow::Operation::output_type",
+                    "tensorflow::Operation::output",
+                    "tensorflow::Operation::hash",
+                    "tensorflow::Output::hash",
+                    "tensorflow::Output::type",
+                    "tensorflow::Status::GetAllPayloads",
+                    "tensorflow::Status::ReplaceAllPayloads",
+                    "tensorflow::Status::ErasePayload",
+                    "tensorflow::Status::SetPayload",
+                    "tensorflow::Status::GetPayload",
+                    "tensorflow::Node::SetStackTrace",
+                    "tensorflow::Node::GetStackTrace")
                 .skip());
+  }
+
+  @Documented
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target({ElementType.METHOD, ElementType.PARAMETER})
+  @Cast({"absl::Span", "&"})
+  @Adapter("SpanAdapter")
+  public @interface Span {
+
+    String value() default "";
   }
 }

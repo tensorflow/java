@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -33,6 +35,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Writes the given dataset to the given file using the TFRecord format.
  */
+@OpMetadata(
+    opType = DatasetToTfRecord.OP_NAME,
+    inputsClass = DatasetToTfRecord.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -42,8 +48,8 @@ public final class DatasetToTfRecord extends RawOp {
    */
   public static final String OP_NAME = "DatasetToTFRecord";
 
-  private DatasetToTfRecord(Operation operation) {
-    super(operation);
+  public DatasetToTfRecord(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -68,6 +74,9 @@ public final class DatasetToTfRecord extends RawOp {
     return new DatasetToTfRecord(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DatasetToTfRecord.class
+  )
   public static class Inputs extends RawOpInputs<DatasetToTfRecord> {
     /**
      * A variant tensor representing the dataset to write.

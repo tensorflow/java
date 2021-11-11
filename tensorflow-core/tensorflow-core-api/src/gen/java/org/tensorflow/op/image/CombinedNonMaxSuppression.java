@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -47,6 +49,10 @@ import org.tensorflow.types.TInt32;
  * The output of this operation is the final boxes, scores and classes tensor
  * returned after performing non_max_suppression.
  */
+@OpMetadata(
+    opType = CombinedNonMaxSuppression.OP_NAME,
+    inputsClass = CombinedNonMaxSuppression.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -64,8 +70,8 @@ public final class CombinedNonMaxSuppression extends RawOp {
 
   private Output<TInt32> validDetections;
 
-  private CombinedNonMaxSuppression(Operation operation) {
-    super(operation);
+  public CombinedNonMaxSuppression(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     nmsedBoxes = operation.output(outputIdx++);
     nmsedScores = operation.output(outputIdx++);
@@ -228,6 +234,9 @@ public final class CombinedNonMaxSuppression extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CombinedNonMaxSuppression.class
+  )
   public static class Inputs extends RawOpInputs<CombinedNonMaxSuppression> {
     /**
      * A 4-D float tensor of shape {@code [batch_size, num_boxes, q, 4]}. If {@code q} is 1 then

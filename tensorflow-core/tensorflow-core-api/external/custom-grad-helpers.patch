@@ -1,0 +1,57 @@
+diff --git a/tensorflow/c/c_api.cc b/tensorflow/c/c_api.cc
+index f3bf7b98a1e6b..c9194c36c116b 100644
+--- a/tensorflow/c/c_api.cc
++++ b/tensorflow/c/c_api.cc
+@@ -782,9 +782,9 @@ void TF_GraphGetTensorShape(TF_Graph* graph, TF_Output output, int64_t* dims,
+ 
+ extern "C" {
+ 
+-static TF_OperationDescription* TF_NewOperationLocked(TF_Graph* graph,
+-                                                      const char* op_type,
+-                                                      const char* oper_name)
++TF_OperationDescription* TF_NewOperationLocked(TF_Graph* graph,
++                                               const char* op_type,
++                                               const char* oper_name)
+     TF_EXCLUSIVE_LOCKS_REQUIRED(graph->mu) {
+   return new TF_OperationDescription(graph, op_type, oper_name);
+ }
+@@ -1041,8 +1041,8 @@ void TF_SetAttrValueProto(TF_OperationDescription* desc, const char* attr_name,
+   status->status = Status::OK();
+ }
+ 
+-static TF_Operation* TF_FinishOperationLocked(TF_OperationDescription* desc,
+-                                              TF_Status* status)
++TF_Operation* TF_FinishOperationLocked(TF_OperationDescription* desc,
++                                       TF_Status* status)
+     TF_EXCLUSIVE_LOCKS_REQUIRED(desc->graph->mu) {
+   Node* ret = nullptr;
+ 
+diff --git a/tensorflow/c/c_api.h b/tensorflow/c/c_api.h
+index 705cf85e0512f..fb746dd4af94f 100644
+--- a/tensorflow/c/c_api.h
++++ b/tensorflow/c/c_api.h
+@@ -255,6 +255,12 @@ TF_CAPI_EXPORT extern void TF_GraphGetTensorShape(TF_Graph* graph,
+                                                   int64_t* dims, int num_dims,
+                                                   TF_Status* status);
+ 
++// TF_NewOperation, but without locking the graph.
++// Should prefer TF_NewOperation when possible.
++TF_CAPI_EXPORT extern TF_OperationDescription* TF_NewOperationLocked(TF_Graph* graph,
++                                                                     const char* op_type,
++                                                                     const char* oper_name);
++
+ // Operation will only be added to *graph when TF_FinishOperation() is
+ // called (assuming TF_FinishOperation() does not return an error).
+ // *graph must not be deleted until after TF_FinishOperation() is
+@@ -406,6 +412,11 @@ TF_CAPI_EXPORT extern void TF_SetAttrValueProto(TF_OperationDescription* desc,
+                                                 size_t proto_len,
+                                                 TF_Status* status);
+ 
++// TF_FinishOperation, but without locking the graph.
++// TF_FinishOperation should be preferred when possible.
++TF_CAPI_EXPORT extern TF_Operation* TF_FinishOperationLocked(TF_OperationDescription* desc,
++                                                             TF_Status* status);
++
+ // If this function succeeds:
+ //   * *status is set to an OK value,
+ //   * a TF_Operation is added to the graph,

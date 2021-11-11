@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output_values} output
  */
+@OpMetadata(
+    opType = SparseSparseMinimum.OP_NAME,
+    inputsClass = SparseSparseMinimum.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -51,8 +57,8 @@ public final class SparseSparseMinimum<T extends TType> extends RawOp {
 
   private Output<T> outputValues;
 
-  private SparseSparseMinimum(Operation operation) {
-    super(operation);
+  public SparseSparseMinimum(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
@@ -106,6 +112,9 @@ public final class SparseSparseMinimum<T extends TType> extends RawOp {
     return outputValues;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseSparseMinimum.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseSparseMinimum<T>> {
     /**
      * 2-D.  {@code N x R} matrix with the indices of non-empty values in a

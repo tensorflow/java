@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = AvgPool3dGrad.OP_NAME,
+    inputsClass = AvgPool3dGrad.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -49,8 +55,8 @@ public final class AvgPool3dGrad<T extends TNumber> extends RawOp implements Ope
 
   private Output<T> output;
 
-  private AvgPool3dGrad(Operation operation) {
-    super(operation);
+  public AvgPool3dGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -153,6 +159,9 @@ public final class AvgPool3dGrad<T extends TNumber> extends RawOp implements Ope
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = AvgPool3dGrad.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<AvgPool3dGrad<T>> {
     /**
      * The original input dimensions.

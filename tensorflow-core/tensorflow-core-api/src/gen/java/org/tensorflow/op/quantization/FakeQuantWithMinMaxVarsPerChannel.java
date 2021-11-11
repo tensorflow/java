@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
@@ -57,6 +59,10 @@ import org.tensorflow.types.TFloat32;
  * <p>This operation has a gradient and thus allows for training {@code min} and {@code max}
  * values.
  */
+@OpMetadata(
+    opType = FakeQuantWithMinMaxVarsPerChannel.OP_NAME,
+    inputsClass = FakeQuantWithMinMaxVarsPerChannel.Inputs.class
+)
 @Operator(
     group = "quantization"
 )
@@ -68,8 +74,8 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
 
   private Output<TFloat32> outputs;
 
-  private FakeQuantWithMinMaxVarsPerChannel(Operation operation) {
-    super(operation);
+  public FakeQuantWithMinMaxVarsPerChannel(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputs = operation.output(outputIdx++);
   }
@@ -174,6 +180,9 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FakeQuantWithMinMaxVarsPerChannel.class
+  )
   public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxVarsPerChannel> {
     /**
      * The inputs input

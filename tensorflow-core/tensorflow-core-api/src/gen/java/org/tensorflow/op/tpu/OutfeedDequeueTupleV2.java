@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * This operation will block indefinitely until data is available. Output {@code i}
  * corresponds to XLA tuple element {@code i}.
  */
+@OpMetadata(
+    opType = OutfeedDequeueTupleV2.OP_NAME,
+    inputsClass = OutfeedDequeueTupleV2.Inputs.class
+)
 public final class OutfeedDequeueTupleV2 extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -50,8 +56,8 @@ public final class OutfeedDequeueTupleV2 extends RawOp implements Iterable<Opera
   private List<Output<?>> outputs;
 
   @SuppressWarnings("unchecked")
-  private OutfeedDequeueTupleV2(Operation operation) {
-    super(operation);
+  public OutfeedDequeueTupleV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
     outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
@@ -100,6 +106,9 @@ public final class OutfeedDequeueTupleV2 extends RawOp implements Iterable<Opera
     return (Iterator) outputs.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = OutfeedDequeueTupleV2.class
+  )
   public static class Inputs extends RawOpInputs<OutfeedDequeueTupleV2> {
     /**
      * An int scalar tensor, representing the TPU device to use. This should be -1 when

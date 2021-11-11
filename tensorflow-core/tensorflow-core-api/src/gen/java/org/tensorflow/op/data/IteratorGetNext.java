@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Gets the next output from the given iterator .
  */
+@OpMetadata(
+    opType = IteratorGetNext.OP_NAME,
+    inputsClass = IteratorGetNext.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -50,8 +56,8 @@ public final class IteratorGetNext extends RawOp implements Iterable<Operand<TTy
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private IteratorGetNext(Operation operation) {
-    super(operation);
+  public IteratorGetNext(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -98,6 +104,9 @@ public final class IteratorGetNext extends RawOp implements Iterable<Operand<TTy
     return (Iterator) components.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = IteratorGetNext.class
+  )
   public static class Inputs extends RawOpInputs<IteratorGetNext> {
     /**
      * The iterator input

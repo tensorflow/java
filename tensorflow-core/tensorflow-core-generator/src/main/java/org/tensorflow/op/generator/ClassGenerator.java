@@ -34,6 +34,7 @@ import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -70,6 +71,7 @@ final class ClassGenerator {
   }
 
   private static final String OP_NAME_FIELD = "OP_NAME";
+  private static final String INPUTS_CLASS_NAME = "Inputs";
 
   /** The in-progress class builder for the top level op class. */
   private final TypeSpec.Builder builder;
@@ -214,12 +216,29 @@ final class ClassGenerator {
     return fullPackage + "." + className;
   }
 
+  private ClassName className() {
+    return ClassName.get(fullPackage, className);
+  }
+
+  private ClassName inputsClassName() {
+    return ClassName.get(fullPackage, className, INPUTS_CLASS_NAME);
+  }
+
+  private TypeName maybeParameterize(
+      ClassName baseType, Collection<? extends TypeName> parameters) {
+    if (parameters.isEmpty()) {
+      return baseType;
+    } else {
+      return ParameterizedTypeName.get(baseType, parameters.toArray(new TypeName[0]));
+    }
+  }
+
   /** Build the class. */
   void buildClass() {
     builder.addModifiers(Modifier.PUBLIC);
     if (!isStateSelector) {
       builder.addModifiers(Modifier.FINAL);
-      builder.superclass(Names.RawOp);
+      addInputsMetadataAnnotation();
     }
 
     if (isStateSubclass) {
@@ -341,6 +360,7 @@ final class ClassGenerator {
 
       buildConstructor();
       buildInputsClass();
+      builder.superclass(Names.RawOp);
     }
   }
 
@@ -866,7 +886,7 @@ final class ClassGenerator {
 
   /** Add a constructor to get the outputs from an operation */
   private void buildConstructor() {
-    MethodSpec.Builder ctor = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE);
+    MethodSpec.Builder ctor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
 
     ctor.addParameter(Names.Operation, "operation");
 
@@ -881,7 +901,7 @@ final class ClassGenerator {
       }
     }
     CodeBlock.Builder body = CodeBlock.builder();
-    body.addStatement("super(operation)");
+    body.addStatement("super(operation, $L)", OP_NAME_FIELD);
 
     if (op.getOutputArgCount() > 0) {
       body.addStatement("int outputIdx = 0");
@@ -919,9 +939,9 @@ final class ClassGenerator {
     builder.addMethod(ctor.build());
   }
 
-  private void buildInputsClass() {
+  private Set<TypeVariableName> buildInputsClass() {
     TypeSpec.Builder inputsBuilder =
-        TypeSpec.classBuilder("Inputs").addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        TypeSpec.classBuilder(INPUTS_CLASS_NAME).addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     MethodSpec.Builder ctor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
     ctor.addParameter(Names.GraphOperation, "op");
 
@@ -1008,7 +1028,7 @@ final class ClassGenerator {
       }
     }
 
-    TypeName outputClass = ClassName.get(fullPackage, className);
+    TypeName outputClass = className();
     if (!this.builder.typeVariables.isEmpty()) {
       outputClass =
           ParameterizedTypeName.get(
@@ -1029,6 +1049,25 @@ final class ClassGenerator {
 
     inputsBuilder.addMethod(ctor.build());
     inputsBuilder.addTypeVariables(typeVars);
+    addInputsMetadataAnnotation(inputsBuilder);
     this.builder.addType(inputsBuilder.build());
+    return typeVars;
+  }
+
+  /** Adds the GeneratedOpMetadata annotation to the op class. */
+  private void addInputsMetadataAnnotation() {
+    builder.addAnnotation(
+        AnnotationSpec.builder(Names.OpMetadata)
+            .addMember("opType", "$L", className + ".OP_NAME")
+            .addMember("inputsClass", "$T.class", inputsClassName())
+            .build());
+  }
+
+  /** Adds the GeneratedOpInputsMetadata annotation to the op input class. */
+  private void addInputsMetadataAnnotation(TypeSpec.Builder inputsBuilder) {
+    inputsBuilder.addAnnotation(
+        AnnotationSpec.builder(Names.OpInputsMetadata)
+            .addMember("outputsClass", "$T.class", className())
+            .build());
   }
 }

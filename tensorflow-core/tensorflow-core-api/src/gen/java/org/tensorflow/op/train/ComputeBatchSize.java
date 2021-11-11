@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Computes the static batch size of a dataset sans partial batches.
  */
+@OpMetadata(
+    opType = ComputeBatchSize.OP_NAME,
+    inputsClass = ComputeBatchSize.Inputs.class
+)
 public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
 
   private Output<TInt64> batchSize;
 
-  private ComputeBatchSize(Operation operation) {
-    super(operation);
+  public ComputeBatchSize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     batchSize = operation.output(outputIdx++);
   }
@@ -77,6 +83,9 @@ public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
     return batchSize;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ComputeBatchSize.class
+  )
   public static class Inputs extends RawOpInputs<ComputeBatchSize> {
     /**
      * The inputDataset input

@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingMDLAdagradLightParameters.OP_NAME,
+    inputsClass = LoadTPUEmbeddingMDLAdagradLightParameters.Inputs.class
+)
 public final class LoadTPUEmbeddingMDLAdagradLightParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingMDLAdagradLightParameters";
 
-  private LoadTPUEmbeddingMDLAdagradLightParameters(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingMDLAdagradLightParameters(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -165,6 +171,9 @@ public final class LoadTPUEmbeddingMDLAdagradLightParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingMDLAdagradLightParameters.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingMDLAdagradLightParameters> {
     /**
      * Value of parameters used in the MDL Adagrad Light optimization algorithm.

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The TensorListPushBackBatch operation
  */
+@OpMetadata(
+    opType = TensorListPushBackBatch.OP_NAME,
+    inputsClass = TensorListPushBackBatch.Inputs.class
+)
 @Operator
 public final class TensorListPushBackBatch extends RawOp implements Operand<TType> {
   /**
@@ -44,8 +50,8 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<TTyp
   private Output<? extends TType> outputHandles;
 
   @SuppressWarnings("unchecked")
-  private TensorListPushBackBatch(Operation operation) {
-    super(operation);
+  public TensorListPushBackBatch(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandles = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<TTyp
     return (Output<TType>) outputHandles;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListPushBackBatch.class
+  )
   public static class Inputs extends RawOpInputs<TensorListPushBackBatch> {
     /**
      * The inputHandles input

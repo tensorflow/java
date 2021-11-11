@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.TInt64;
  * of the k-MC^2 algorithm and returns the index of one candidate point to be added
  * as an additional cluster center.
  */
+@OpMetadata(
+    opType = KMC2ChainInitialization.OP_NAME,
+    inputsClass = KMC2ChainInitialization.Inputs.class
+)
 public final class KMC2ChainInitialization extends RawOp implements Operand<TInt64> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class KMC2ChainInitialization extends RawOp implements Operand<TInt
 
   private Output<TInt64> index;
 
-  private KMC2ChainInitialization(Operation operation) {
-    super(operation);
+  public KMC2ChainInitialization(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     index = operation.output(outputIdx++);
   }
@@ -85,6 +91,9 @@ public final class KMC2ChainInitialization extends RawOp implements Operand<TInt
     return index;
   }
 
+  @OpInputsMetadata(
+      outputsClass = KMC2ChainInitialization.class
+  )
   public static class Inputs extends RawOpInputs<KMC2ChainInitialization> {
     /**
      * Vector with squared distances to the closest previously sampled cluster center

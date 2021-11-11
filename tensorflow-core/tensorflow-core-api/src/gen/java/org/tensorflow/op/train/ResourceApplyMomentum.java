@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * <p>accum = accum * momentum + grad
  * var -= lr * accum
  */
+@OpMetadata(
+    opType = ResourceApplyMomentum.OP_NAME,
+    inputsClass = ResourceApplyMomentum.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -45,8 +51,8 @@ public final class ResourceApplyMomentum extends RawOp {
    */
   public static final String OP_NAME = "ResourceApplyMomentum";
 
-  private ResourceApplyMomentum(Operation operation) {
-    super(operation);
+  public ResourceApplyMomentum(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -149,6 +155,9 @@ public final class ResourceApplyMomentum extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyMomentum.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyMomentum> {
     /**
      * Should be from a Variable().

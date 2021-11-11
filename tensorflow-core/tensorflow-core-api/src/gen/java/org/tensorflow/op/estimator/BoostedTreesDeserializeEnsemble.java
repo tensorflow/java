@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -34,14 +36,18 @@ import org.tensorflow.types.family.TType;
  * Deserializes a serialized tree ensemble config and replaces current tree
  * ensemble.
  */
+@OpMetadata(
+    opType = BoostedTreesDeserializeEnsemble.OP_NAME,
+    inputsClass = BoostedTreesDeserializeEnsemble.Inputs.class
+)
 public final class BoostedTreesDeserializeEnsemble extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "BoostedTreesDeserializeEnsemble";
 
-  private BoostedTreesDeserializeEnsemble(Operation operation) {
-    super(operation);
+  public BoostedTreesDeserializeEnsemble(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -66,6 +72,9 @@ public final class BoostedTreesDeserializeEnsemble extends RawOp {
     return new BoostedTreesDeserializeEnsemble(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesDeserializeEnsemble.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesDeserializeEnsemble> {
     /**
      * Handle to the tree ensemble.

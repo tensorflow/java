@@ -26,19 +26,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * The DeleteMemoryCache operation
  */
+@OpMetadata(
+    opType = DeleteMemoryCache.OP_NAME,
+    inputsClass = DeleteMemoryCache.Inputs.class
+)
 public final class DeleteMemoryCache extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "DeleteMemoryCache";
 
-  private DeleteMemoryCache(Operation operation) {
-    super(operation);
+  public DeleteMemoryCache(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -60,6 +66,9 @@ public final class DeleteMemoryCache extends RawOp {
     return new DeleteMemoryCache(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DeleteMemoryCache.class
+  )
   public static class Inputs extends RawOpInputs<DeleteMemoryCache> {
     /**
      * The handle input

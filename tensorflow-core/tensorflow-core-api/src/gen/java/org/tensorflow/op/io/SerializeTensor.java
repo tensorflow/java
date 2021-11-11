@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a Tensor into a serialized TensorProto proto.
  */
+@OpMetadata(
+    opType = SerializeTensor.OP_NAME,
+    inputsClass = SerializeTensor.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -46,8 +52,8 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
 
   private Output<TString> serialized;
 
-  private SerializeTensor(Operation operation) {
-    super(operation);
+  public SerializeTensor(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     serialized = operation.output(outputIdx++);
   }
@@ -82,6 +88,9 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
     return serialized;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SerializeTensor.class
+  )
   public static class Inputs extends RawOpInputs<SerializeTensor> {
     /**
      * A Tensor of type {@code T}.

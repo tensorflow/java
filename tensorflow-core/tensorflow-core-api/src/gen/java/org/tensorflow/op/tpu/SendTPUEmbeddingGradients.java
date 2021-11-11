@@ -27,19 +27,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Performs gradient updates of embedding tables.
  */
+@OpMetadata(
+    opType = SendTPUEmbeddingGradients.OP_NAME,
+    inputsClass = SendTPUEmbeddingGradients.Inputs.class
+)
 public final class SendTPUEmbeddingGradients extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "SendTPUEmbeddingGradients";
 
-  private SendTPUEmbeddingGradients(Operation operation) {
-    super(operation);
+  public SendTPUEmbeddingGradients(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -112,6 +118,9 @@ public final class SendTPUEmbeddingGradients extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SendTPUEmbeddingGradients.class
+  )
   public static class Inputs extends RawOpInputs<SendTPUEmbeddingGradients> {
     /**
      * A TensorList of gradients with which to update embedding tables.

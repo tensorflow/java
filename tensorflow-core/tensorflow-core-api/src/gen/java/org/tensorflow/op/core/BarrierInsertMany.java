@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * already has a value at component_index, this operation will fail with
  * INVALID_ARGUMENT, and leave the barrier in an undefined state.
  */
+@OpMetadata(
+    opType = BarrierInsertMany.OP_NAME,
+    inputsClass = BarrierInsertMany.Inputs.class
+)
 @Operator
 public final class BarrierInsertMany extends RawOp {
   /**
@@ -45,8 +51,8 @@ public final class BarrierInsertMany extends RawOp {
    */
   public static final String OP_NAME = "BarrierInsertMany";
 
-  private BarrierInsertMany(Operation operation) {
-    super(operation);
+  public BarrierInsertMany(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -73,6 +79,9 @@ public final class BarrierInsertMany extends RawOp {
     return new BarrierInsertMany(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = BarrierInsertMany.class
+  )
   public static class Inputs extends RawOpInputs<BarrierInsertMany> {
     /**
      * The handle to a barrier.

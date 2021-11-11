@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * element_dtype: the type of elements in the list.
  * element_shape: a shape compatible with that of elements in the list.
  */
+@OpMetadata(
+    opType = TensorListPushBack.OP_NAME,
+    inputsClass = TensorListPushBack.Inputs.class
+)
 @Operator
 public final class TensorListPushBack extends RawOp implements Operand<TType> {
   /**
@@ -49,8 +55,8 @@ public final class TensorListPushBack extends RawOp implements Operand<TType> {
   private Output<? extends TType> outputHandle;
 
   @SuppressWarnings("unchecked")
-  private TensorListPushBack(Operation operation) {
-    super(operation);
+  public TensorListPushBack(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
   }
@@ -89,6 +95,9 @@ public final class TensorListPushBack extends RawOp implements Operand<TType> {
     return (Output<TType>) outputHandle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListPushBack.class
+  )
   public static class Inputs extends RawOpInputs<TensorListPushBack> {
     /**
      * The inputHandle input

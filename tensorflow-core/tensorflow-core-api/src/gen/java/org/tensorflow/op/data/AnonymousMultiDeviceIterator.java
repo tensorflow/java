@@ -29,12 +29,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * A container for a multi device iterator resource.
  */
+@OpMetadata(
+    opType = AnonymousMultiDeviceIterator.OP_NAME,
+    inputsClass = AnonymousMultiDeviceIterator.Inputs.class
+)
 public final class AnonymousMultiDeviceIterator extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class AnonymousMultiDeviceIterator extends RawOp {
   private Output<? extends TType> deleter;
 
   @SuppressWarnings("unchecked")
-  private AnonymousMultiDeviceIterator(Operation operation) {
-    super(operation);
+  public AnonymousMultiDeviceIterator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
     deleter = operation.output(outputIdx++);
@@ -103,6 +109,9 @@ public final class AnonymousMultiDeviceIterator extends RawOp {
     return deleter;
   }
 
+  @OpInputsMetadata(
+      outputsClass = AnonymousMultiDeviceIterator.class
+  )
   public static class Inputs extends RawOpInputs<AnonymousMultiDeviceIterator> {
     /**
      * The devices attribute

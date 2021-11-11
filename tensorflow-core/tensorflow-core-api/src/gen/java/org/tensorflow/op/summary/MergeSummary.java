@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -40,6 +42,10 @@ import org.tensorflow.types.TString;
  * <p>When the Op is run, it reports an {@code InvalidArgument} error if multiple values
  * in the summaries to merge use the same tag.
  */
+@OpMetadata(
+    opType = MergeSummary.OP_NAME,
+    inputsClass = MergeSummary.Inputs.class
+)
 @Operator(
     group = "summary"
 )
@@ -51,8 +57,8 @@ public final class MergeSummary extends RawOp implements Operand<TString> {
 
   private Output<TString> summary;
 
-  private MergeSummary(Operation operation) {
-    super(operation);
+  public MergeSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class MergeSummary extends RawOp implements Operand<TString> {
     return summary;
   }
 
+  @OpInputsMetadata(
+      outputsClass = MergeSummary.class
+  )
   public static class Inputs extends RawOpInputs<MergeSummary> {
     /**
      * Can be of any shape.  Each must contain serialized {@code Summary} protocol

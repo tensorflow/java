@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code w} output
  */
+@OpMetadata(
+    opType = SelfAdjointEig.OP_NAME,
+    inputsClass = SelfAdjointEig.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -53,8 +59,8 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
 
   private Output<T> v;
 
-  private SelfAdjointEig(Operation operation) {
-    super(operation);
+  public SelfAdjointEig(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     w = operation.output(outputIdx++);
     v = operation.output(outputIdx++);
@@ -108,6 +114,9 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
     return v;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SelfAdjointEig.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SelfAdjointEig<T>> {
     /**
      * the input tensor.

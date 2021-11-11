@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -52,6 +54,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output_dense_values} output
  */
+@OpMetadata(
+    opType = RaggedTensorFromVariant.OP_NAME,
+    inputsClass = RaggedTensorFromVariant.Inputs.class
+)
 public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -63,8 +69,8 @@ public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> e
   private Output<U> outputDenseValues;
 
   @SuppressWarnings("unchecked")
-  private RaggedTensorFromVariant(Operation operation) {
-    super(operation);
+  public RaggedTensorFromVariant(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputNestedSplitsLength = operation.outputListLength("output_nested_splits");
     outputNestedSplits = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputNestedSplitsLength));
@@ -143,6 +149,9 @@ public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> e
     return outputDenseValues;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RaggedTensorFromVariant.class
+  )
   public static class Inputs extends RawOpInputs<RaggedTensorFromVariant<?, ?>> {
     /**
      * A {@code variant} Tensor containing encoded {@code RaggedTensor}s.

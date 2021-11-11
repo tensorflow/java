@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = StatelessRandomGamma.OP_NAME,
+    inputsClass = StatelessRandomGamma.Inputs.class
+)
 public final class StatelessRandomGamma<V extends TNumber> extends RawOp implements Operand<V> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
 
   private Output<V> output;
 
-  private StatelessRandomGamma(Operation operation) {
-    super(operation);
+  public StatelessRandomGamma(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessRandomGamma.class
+  )
   public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessRandomGamma<V>> {
     /**
      * The shape of the output tensor.

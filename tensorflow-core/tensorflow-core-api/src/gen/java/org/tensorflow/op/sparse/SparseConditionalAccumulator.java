@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  * resets the aggregate to 0, and increments the global_step recorded by
  * the accumulator.
  */
+@OpMetadata(
+    opType = SparseConditionalAccumulator.OP_NAME,
+    inputsClass = SparseConditionalAccumulator.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -54,8 +60,8 @@ public final class SparseConditionalAccumulator extends RawOp implements Operand
 
   private Output<TString> handle;
 
-  private SparseConditionalAccumulator(Operation operation) {
-    super(operation);
+  public SparseConditionalAccumulator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -189,6 +195,9 @@ public final class SparseConditionalAccumulator extends RawOp implements Operand
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseConditionalAccumulator.class
+  )
   public static class Inputs extends RawOpInputs<SparseConditionalAccumulator> {
     /**
      * The type of the value being accumulated.

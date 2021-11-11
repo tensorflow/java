@@ -26,19 +26,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * The CloseSummaryWriter operation
  */
+@OpMetadata(
+    opType = CloseSummaryWriter.OP_NAME,
+    inputsClass = CloseSummaryWriter.Inputs.class
+)
 public final class CloseSummaryWriter extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "CloseSummaryWriter";
 
-  private CloseSummaryWriter(Operation operation) {
-    super(operation);
+  public CloseSummaryWriter(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -57,6 +63,9 @@ public final class CloseSummaryWriter extends RawOp {
     return new CloseSummaryWriter(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = CloseSummaryWriter.class
+  )
   public static class Inputs extends RawOpInputs<CloseSummaryWriter> {
     /**
      * The writer input

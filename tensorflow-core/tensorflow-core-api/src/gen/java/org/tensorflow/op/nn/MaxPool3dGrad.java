@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = MaxPool3dGrad.OP_NAME,
+    inputsClass = MaxPool3dGrad.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -48,8 +54,8 @@ public final class MaxPool3dGrad<U extends TNumber> extends RawOp implements Ope
 
   private Output<U> output;
 
-  private MaxPool3dGrad(Operation operation) {
-    super(operation);
+  public MaxPool3dGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -155,6 +161,9 @@ public final class MaxPool3dGrad<U extends TNumber> extends RawOp implements Ope
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MaxPool3dGrad.class
+  )
   public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<MaxPool3dGrad<U>> {
     /**
      * The original input tensor.

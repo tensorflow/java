@@ -30,12 +30,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that contains the unique elements of {@code input_dataset}.
  */
+@OpMetadata(
+    opType = UniqueDataset.OP_NAME,
+    inputsClass = UniqueDataset.Inputs.class
+)
 public final class UniqueDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class UniqueDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private UniqueDataset(Operation operation) {
-    super(operation);
+  public UniqueDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -91,6 +97,9 @@ public final class UniqueDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = UniqueDataset.class
+  )
   public static class Inputs extends RawOpInputs<UniqueDataset> {
     /**
      * The inputDataset input

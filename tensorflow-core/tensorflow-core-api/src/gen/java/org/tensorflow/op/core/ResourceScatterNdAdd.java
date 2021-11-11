@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -60,6 +62,10 @@ import org.tensorflow.types.family.TType;
  * <p>See {@code tf.scatter_nd} for more details about how to make updates to
  * slices.
  */
+@OpMetadata(
+    opType = ResourceScatterNdAdd.OP_NAME,
+    inputsClass = ResourceScatterNdAdd.Inputs.class
+)
 @Operator
 public final class ResourceScatterNdAdd extends RawOp {
   /**
@@ -67,8 +73,8 @@ public final class ResourceScatterNdAdd extends RawOp {
    */
   public static final String OP_NAME = "ResourceScatterNdAdd";
 
-  private ResourceScatterNdAdd(Operation operation) {
-    super(operation);
+  public ResourceScatterNdAdd(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -137,6 +143,9 @@ public final class ResourceScatterNdAdd extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceScatterNdAdd.class
+  )
   public static class Inputs extends RawOpInputs<ResourceScatterNdAdd> {
     /**
      * A resource handle. Must be from a VarHandleOp.

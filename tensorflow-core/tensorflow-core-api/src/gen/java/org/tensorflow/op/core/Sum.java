@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Sum.OP_NAME,
+    inputsClass = Sum.Inputs.class
+)
 @Operator
 public final class Sum<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -50,8 +56,8 @@ public final class Sum<T extends TType> extends RawOp implements Operand<T> {
 
   private Output<T> output;
 
-  private Sum(Operation operation) {
-    super(operation);
+  public Sum(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -130,6 +136,9 @@ public final class Sum<T extends TType> extends RawOp implements Operand<T> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Sum.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<Sum<T>> {
     /**
      * The tensor to reduce.

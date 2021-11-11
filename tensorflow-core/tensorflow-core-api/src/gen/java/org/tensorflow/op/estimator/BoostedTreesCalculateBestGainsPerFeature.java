@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -40,6 +42,10 @@ import org.tensorflow.types.TInt32;
  * <p>The length of output lists are all of the same length, {@code num_features}.
  * The output shapes are compatible in a way that the first dimension of all tensors of all lists are the same and equal to the number of possible split nodes for each feature.
  */
+@OpMetadata(
+    opType = BoostedTreesCalculateBestGainsPerFeature.OP_NAME,
+    inputsClass = BoostedTreesCalculateBestGainsPerFeature.Inputs.class
+)
 public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -57,8 +63,8 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
   private List<Output<TFloat32>> rightNodeContribsList;
 
   @SuppressWarnings("unchecked")
-  private BoostedTreesCalculateBestGainsPerFeature(Operation operation) {
-    super(operation);
+  public BoostedTreesCalculateBestGainsPerFeature(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int nodeIdsListLength = operation.outputListLength("node_ids_list");
     nodeIdsList = Arrays.asList((Output<TInt32>[]) operation.outputList(outputIdx, nodeIdsListLength));
@@ -153,6 +159,9 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
     return rightNodeContribsList;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesCalculateBestGainsPerFeature.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesCalculateBestGainsPerFeature> {
     /**
      * A Rank 1 tensor (shape=[2]) to specify the range [first, last) of node ids to process within {@code stats_summary_list}. The nodes are iterated between the two nodes specified by the tensor, as like {@code for node_id in range(node_id_range[0], node_id_range[1])} (Note that the last index node_id_range[1] is exclusive).

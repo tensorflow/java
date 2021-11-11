@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -46,6 +48,10 @@ import org.tensorflow.types.family.TType;
  * tf.math.equal(x, y) ==&gt; array([True,  True])
  * </pre>
  */
+@OpMetadata(
+    opType = Equal.OP_NAME,
+    inputsClass = Equal.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -57,8 +63,8 @@ public final class Equal extends RawOp implements Operand<TBool> {
 
   private Output<TBool> z;
 
-  private Equal(Operation operation) {
-    super(operation);
+  public Equal(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -136,6 +142,9 @@ public final class Equal extends RawOp implements Operand<TBool> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Equal.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<Equal> {
     /**
      * The x input

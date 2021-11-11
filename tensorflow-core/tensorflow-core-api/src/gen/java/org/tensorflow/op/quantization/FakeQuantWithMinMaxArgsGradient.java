@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Compute gradients for a FakeQuantWithMinMaxArgs operation.
  */
+@OpMetadata(
+    opType = FakeQuantWithMinMaxArgsGradient.OP_NAME,
+    inputsClass = FakeQuantWithMinMaxArgsGradient.Inputs.class
+)
 @Operator(
     group = "quantization"
 )
@@ -44,8 +50,8 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
 
   private Output<TFloat32> backprops;
 
-  private FakeQuantWithMinMaxArgsGradient(Operation operation) {
-    super(operation);
+  public FakeQuantWithMinMaxArgsGradient(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     backprops = operation.output(outputIdx++);
   }
@@ -201,6 +207,9 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FakeQuantWithMinMaxArgsGradient.class
+  )
   public static class Inputs extends RawOpInputs<FakeQuantWithMinMaxArgsGradient> {
     /**
      * Backpropagated gradients above the FakeQuantWithMinMaxArgs operation.

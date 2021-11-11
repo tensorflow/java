@@ -45,6 +45,7 @@ public class GraphOperationTest {
   public void outputListLengthFailsOnInvalidName() {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
+
       Operation op = tf.math.add(tf.constant(1), tf.constant(2)).op();
       assertEquals(1, op.outputListLength("z"));
 

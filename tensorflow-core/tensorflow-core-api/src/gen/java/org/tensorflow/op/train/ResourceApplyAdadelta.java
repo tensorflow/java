@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * update_accum = rho() * update_accum + (1 - rho()) * update.square();
  * var -= update;
  */
+@OpMetadata(
+    opType = ResourceApplyAdadelta.OP_NAME,
+    inputsClass = ResourceApplyAdadelta.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -46,8 +52,8 @@ public final class ResourceApplyAdadelta extends RawOp {
    */
   public static final String OP_NAME = "ResourceApplyAdadelta";
 
-  private ResourceApplyAdadelta(Operation operation) {
-    super(operation);
+  public ResourceApplyAdadelta(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -123,6 +129,9 @@ public final class ResourceApplyAdadelta extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyAdadelta.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyAdadelta> {
     /**
      * Should be from a Variable().

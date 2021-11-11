@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TType;
  * allows the training step to proceed so long as some data is available.
  * <p>!! WARNING !! This dataset is not deterministic!
  */
+@OpMetadata(
+    opType = ParallelInterleaveDataset.OP_NAME,
+    inputsClass = ParallelInterleaveDataset.Inputs.class
+)
 public final class ParallelInterleaveDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -54,8 +60,8 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private ParallelInterleaveDataset(Operation operation) {
-    super(operation);
+  public ParallelInterleaveDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -119,6 +125,9 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParallelInterleaveDataset.class
+  )
   public static class Inputs extends RawOpInputs<ParallelInterleaveDataset> {
     /**
      * The inputDataset input

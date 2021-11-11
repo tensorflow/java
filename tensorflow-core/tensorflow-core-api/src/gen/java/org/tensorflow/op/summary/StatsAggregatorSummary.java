@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Produces a summary of any statistics recorded by the given statistics manager.
  */
+@OpMetadata(
+    opType = StatsAggregatorSummary.OP_NAME,
+    inputsClass = StatsAggregatorSummary.Inputs.class
+)
 public final class StatsAggregatorSummary extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class StatsAggregatorSummary extends RawOp implements Operand<TStri
 
   private Output<TString> summary;
 
-  private StatsAggregatorSummary(Operation operation) {
-    super(operation);
+  public StatsAggregatorSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -77,6 +83,9 @@ public final class StatsAggregatorSummary extends RawOp implements Operand<TStri
     return summary;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatsAggregatorSummary.class
+  )
   public static class Inputs extends RawOpInputs<StatsAggregatorSummary> {
     /**
      * The iterator input

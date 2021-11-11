@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.TBool;
  * <em>NOTE</em>: {@code math.LogicalAnd} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
  */
+@OpMetadata(
+    opType = LogicalAnd.OP_NAME,
+    inputsClass = LogicalAnd.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -46,8 +52,8 @@ public final class LogicalAnd extends RawOp implements Operand<TBool> {
 
   private Output<TBool> z;
 
-  private LogicalAnd(Operation operation) {
-    super(operation);
+  public LogicalAnd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class LogicalAnd extends RawOp implements Operand<TBool> {
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = LogicalAnd.class
+  )
   public static class Inputs extends RawOpInputs<LogicalAnd> {
     /**
      * The x input

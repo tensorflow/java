@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 
 /**
  * Metadata indicating how the TPU computation should be replicated.
@@ -33,6 +35,10 @@ import org.tensorflow.op.annotation.Endpoint;
  *
  * @deprecated use {@link org.tensorflow.op.tpu.ReplicateMetadata} instead
  */
+@OpMetadata(
+    opType = TPUReplicateMetadata.OP_NAME,
+    inputsClass = TPUReplicateMetadata.Inputs.class
+)
 @Deprecated
 public final class TPUReplicateMetadata extends RawOp {
   /**
@@ -40,8 +46,8 @@ public final class TPUReplicateMetadata extends RawOp {
    */
   public static final String OP_NAME = "TPUReplicateMetadata";
 
-  private TPUReplicateMetadata(Operation operation) {
-    super(operation);
+  public TPUReplicateMetadata(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -433,6 +439,9 @@ public final class TPUReplicateMetadata extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TPUReplicateMetadata.class
+  )
   public static class Inputs extends RawOpInputs<TPUReplicateMetadata> {
     /**
      * Number of replicas of the computation

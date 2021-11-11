@@ -26,20 +26,26 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Writes the given dataset to the given file using the TFRecord format.
  */
+@OpMetadata(
+    opType = DatasetToTFRecord.OP_NAME,
+    inputsClass = DatasetToTFRecord.Inputs.class
+)
 public final class DatasetToTFRecord extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ExperimentalDatasetToTFRecord";
 
-  private DatasetToTFRecord(Operation operation) {
-    super(operation);
+  public DatasetToTFRecord(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -64,6 +70,9 @@ public final class DatasetToTFRecord extends RawOp {
     return new DatasetToTFRecord(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = DatasetToTFRecord.class
+  )
   public static class Inputs extends RawOpInputs<DatasetToTFRecord> {
     /**
      * A variant tensor representing the dataset to write.

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = StatefulUniformInt.OP_NAME,
+    inputsClass = StatefulUniformInt.Inputs.class
+)
 public final class StatefulUniformInt<U extends TType> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -50,8 +56,8 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
 
   private Output<U> output;
 
-  private StatefulUniformInt(Operation operation) {
-    super(operation);
+  public StatefulUniformInt(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -97,6 +103,9 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatefulUniformInt.class
+  )
   public static class Inputs<U extends TType> extends RawOpInputs<StatefulUniformInt<U>> {
     /**
      * The handle of the resource variable that stores the state of the RNG.

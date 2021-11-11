@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * A Reader that outputs the records from a LMDB file.
  */
+@OpMetadata(
+    opType = LmdbReader.OP_NAME,
+    inputsClass = LmdbReader.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -44,8 +50,8 @@ public final class LmdbReader extends RawOp implements Operand<TString> {
 
   private Output<TString> readerHandle;
 
-  private LmdbReader(Operation operation) {
-    super(operation);
+  public LmdbReader(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     readerHandle = operation.output(outputIdx++);
   }
@@ -147,6 +153,9 @@ public final class LmdbReader extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LmdbReader.class
+  )
   public static class Inputs extends RawOpInputs<LmdbReader> {
     /**
      * If non-empty, this reader is placed in the given container.

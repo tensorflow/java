@@ -32,6 +32,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * output = input; While (Cond(output)) { output = Body(output) }
  */
+@OpMetadata(
+    opType = StatefulWhile.OP_NAME,
+    inputsClass = StatefulWhile.Inputs.class
+)
 @Operator
 public final class StatefulWhile extends RawOp implements While {
   /**
@@ -49,8 +55,8 @@ public final class StatefulWhile extends RawOp implements While {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private StatefulWhile(Operation operation) {
-    super(operation);
+  public StatefulWhile(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
@@ -121,6 +127,9 @@ public final class StatefulWhile extends RawOp implements While {
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatefulWhile.class
+  )
   public static class Inputs extends RawOpInputs<StatefulWhile> {
     /**
      * A list of input tensors whose types are T.

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <V> data type for {@code output} output
  */
+@OpMetadata(
+    opType = StatelessRandomUniformInt.OP_NAME,
+    inputsClass = StatelessRandomUniformInt.Inputs.class
+)
 public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp implements Operand<V> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp im
 
   private Output<V> output;
 
-  private StatelessRandomUniformInt(Operation operation) {
-    super(operation);
+  public StatelessRandomUniformInt(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp im
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessRandomUniformInt.class
+  )
   public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessRandomUniformInt<V>> {
     /**
      * The shape of the output tensor.

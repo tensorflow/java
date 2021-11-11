@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
@@ -49,6 +51,10 @@ import org.tensorflow.types.TUint8;
  * <p>This op also supports decoding PNGs and non-animated GIFs since the interface is
  * the same, though it is cleaner to use {@code tf.io.decode_image}.
  */
+@OpMetadata(
+    opType = DecodeJpeg.OP_NAME,
+    inputsClass = DecodeJpeg.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -60,8 +66,8 @@ public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
 
   private Output<TUint8> image;
 
-  private DecodeJpeg(Operation operation) {
-    super(operation);
+  public DecodeJpeg(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     image = operation.output(outputIdx++);
   }
@@ -279,6 +285,9 @@ public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeJpeg.class
+  )
   public static class Inputs extends RawOpInputs<DecodeJpeg> {
     /**
      * 0-D.  The JPEG-encoded image.

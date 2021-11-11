@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output_values} output
  */
+@OpMetadata(
+    opType = DenseCountSparseOutput.OP_NAME,
+    inputsClass = DenseCountSparseOutput.Inputs.class
+)
 public final class DenseCountSparseOutput<U extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -49,8 +55,8 @@ public final class DenseCountSparseOutput<U extends TNumber> extends RawOp {
 
   private Output<TInt64> outputDenseShape;
 
-  private DenseCountSparseOutput(Operation operation) {
-    super(operation);
+  public DenseCountSparseOutput(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
@@ -173,6 +179,9 @@ public final class DenseCountSparseOutput<U extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DenseCountSparseOutput.class
+  )
   public static class Inputs<U extends TNumber> extends RawOpInputs<DenseCountSparseOutput<U>> {
     /**
      * Tensor containing data to count.

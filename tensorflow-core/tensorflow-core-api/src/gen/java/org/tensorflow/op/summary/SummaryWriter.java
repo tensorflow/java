@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * The SummaryWriter operation
  */
+@OpMetadata(
+    opType = SummaryWriter.OP_NAME,
+    inputsClass = SummaryWriter.Inputs.class
+)
 public final class SummaryWriter extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class SummaryWriter extends RawOp implements Operand<TType> {
   private Output<? extends TType> writer;
 
   @SuppressWarnings("unchecked")
-  private SummaryWriter(Operation operation) {
-    super(operation);
+  public SummaryWriter(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     writer = operation.output(outputIdx++);
   }
@@ -141,6 +147,9 @@ public final class SummaryWriter extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SummaryWriter.class
+  )
   public static class Inputs extends RawOpInputs<SummaryWriter> {
     /**
      * The sharedName attribute

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * Returns a serialized GraphDef representing {@code input_dataset}.
  * Returns a graph representation for {@code input_dataset}.
  */
+@OpMetadata(
+    opType = DatasetToGraph.OP_NAME,
+    inputsClass = DatasetToGraph.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -46,8 +52,8 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
 
   private Output<TString> graph;
 
-  private DatasetToGraph(Operation operation) {
-    super(operation);
+  public DatasetToGraph(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     graph = operation.output(outputIdx++);
   }
@@ -148,6 +154,9 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DatasetToGraph.class
+  )
   public static class Inputs extends RawOpInputs<DatasetToGraph> {
     /**
      * A variant tensor representing the dataset to return the graph representation for.

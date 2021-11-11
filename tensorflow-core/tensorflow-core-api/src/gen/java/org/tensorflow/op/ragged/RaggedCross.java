@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code output_row_splits} output
  */
+@OpMetadata(
+    opType = RaggedCross.OP_NAME,
+    inputsClass = RaggedCross.Inputs.class
+)
 public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -51,8 +57,8 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
 
   private Output<U> outputRowSplits;
 
-  private RaggedCross(Operation operation) {
-    super(operation);
+  public RaggedCross(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputValues = operation.output(outputIdx++);
     outputRowSplits = operation.output(outputIdx++);
@@ -124,6 +130,9 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
     return outputRowSplits;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RaggedCross.class
+  )
   public static class Inputs extends RawOpInputs<RaggedCross<?, ?>> {
     /**
      * The values tensor for each RaggedTensor input.

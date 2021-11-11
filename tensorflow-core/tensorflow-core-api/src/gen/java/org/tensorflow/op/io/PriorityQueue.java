@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TType;
  * and DequeueMany) on a PriorityQueue will all require (resp. output) one extra
  * entry in their input (resp. output) lists.
  */
+@OpMetadata(
+    opType = PriorityQueue.OP_NAME,
+    inputsClass = PriorityQueue.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -54,8 +60,8 @@ public final class PriorityQueue extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private PriorityQueue(Operation operation) {
-    super(operation);
+  public PriorityQueue(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -198,6 +204,9 @@ public final class PriorityQueue extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = PriorityQueue.class
+  )
   public static class Inputs extends RawOpInputs<PriorityQueue> {
     /**
      * The type of each component in a value.

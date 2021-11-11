@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -34,6 +36,10 @@ import org.tensorflow.types.TString;
 /**
  * Computes the number of incomplete elements in the given barrier.
  */
+@OpMetadata(
+    opType = BarrierIncompleteSize.OP_NAME,
+    inputsClass = BarrierIncompleteSize.Inputs.class
+)
 @Operator
 public final class BarrierIncompleteSize extends RawOp implements Operand<TInt32> {
   /**
@@ -43,8 +49,8 @@ public final class BarrierIncompleteSize extends RawOp implements Operand<TInt32
 
   private Output<TInt32> output;
 
-  private BarrierIncompleteSize(Operation operation) {
-    super(operation);
+  public BarrierIncompleteSize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class BarrierIncompleteSize extends RawOp implements Operand<TInt32
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BarrierIncompleteSize.class
+  )
   public static class Inputs extends RawOpInputs<BarrierIncompleteSize> {
     /**
      * The handle to a barrier.

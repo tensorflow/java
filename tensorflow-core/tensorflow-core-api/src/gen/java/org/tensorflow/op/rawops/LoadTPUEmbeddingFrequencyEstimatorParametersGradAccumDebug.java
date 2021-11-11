@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug.OP_NAME,
+    inputsClass = LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug.Inputs.class
+)
 public final class LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug";
 
-  private LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -164,6 +170,9 @@ public final class LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug ex
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug> {
     /**
      * Value of parameters used in the frequency estimator optimization algorithm.

@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -34,14 +36,18 @@ import org.tensorflow.types.family.TType;
  * The tensor {@code keys} must of the same type as the keys of the table. Keys not
  * already in the table are silently ignored.
  */
+@OpMetadata(
+    opType = LookupTableRemove.OP_NAME,
+    inputsClass = LookupTableRemove.Inputs.class
+)
 public final class LookupTableRemove extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LookupTableRemoveV2";
 
-  private LookupTableRemove(Operation operation) {
-    super(operation);
+  public LookupTableRemove(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -63,6 +69,9 @@ public final class LookupTableRemove extends RawOp {
     return new LookupTableRemove(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = LookupTableRemove.class
+  )
   public static class Inputs extends RawOpInputs<LookupTableRemove> {
     /**
      * Handle to the table.

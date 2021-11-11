@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * The basic functionality is similar to dequeue with many fewer
  * capabilities and options.  This Op is optimized for performance.
  */
+@OpMetadata(
+    opType = Unstage.OP_NAME,
+    inputsClass = Unstage.Inputs.class
+)
 @Operator
 public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -49,8 +55,8 @@ public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> values;
 
   @SuppressWarnings("unchecked")
-  private Unstage(Operation operation) {
-    super(operation);
+  public Unstage(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int valuesLength = operation.outputListLength("values");
     values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
@@ -206,6 +212,9 @@ public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Unstage.class
+  )
   public static class Inputs extends RawOpInputs<Unstage> {
     /**
      * The capacity attribute

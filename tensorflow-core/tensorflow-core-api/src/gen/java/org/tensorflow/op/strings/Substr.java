@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -102,6 +104,10 @@ import org.tensorflow.types.family.TNumber;
  * <li>{@code ValueError}: If {@code pos} and {@code len} are not the same shape.</li>
  * </ul>
  */
+@OpMetadata(
+    opType = Substr.OP_NAME,
+    inputsClass = Substr.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -113,8 +119,8 @@ public final class Substr extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private Substr(Operation operation) {
-    super(operation);
+  public Substr(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -202,6 +208,9 @@ public final class Substr extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Substr.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Substr> {
     /**
      * Tensor of strings

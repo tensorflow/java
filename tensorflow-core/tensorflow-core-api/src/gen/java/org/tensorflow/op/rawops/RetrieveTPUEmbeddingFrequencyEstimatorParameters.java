@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -35,6 +37,10 @@ import org.tensorflow.types.TFloat32;
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
+@OpMetadata(
+    opType = RetrieveTPUEmbeddingFrequencyEstimatorParameters.OP_NAME,
+    inputsClass = RetrieveTPUEmbeddingFrequencyEstimatorParameters.Inputs.class
+)
 public final class RetrieveTPUEmbeddingFrequencyEstimatorParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class RetrieveTPUEmbeddingFrequencyEstimatorParameters extends RawO
 
   private Output<TFloat32> lastHitStep;
 
-  private RetrieveTPUEmbeddingFrequencyEstimatorParameters(Operation operation) {
-    super(operation);
+  public RetrieveTPUEmbeddingFrequencyEstimatorParameters(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     parameters = operation.output(outputIdx++);
     lastHitStep = operation.output(outputIdx++);
@@ -181,6 +187,9 @@ public final class RetrieveTPUEmbeddingFrequencyEstimatorParameters extends RawO
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RetrieveTPUEmbeddingFrequencyEstimatorParameters.class
+  )
   public static class Inputs extends RawOpInputs<RetrieveTPUEmbeddingFrequencyEstimatorParameters> {
     /**
      * The tableId attribute

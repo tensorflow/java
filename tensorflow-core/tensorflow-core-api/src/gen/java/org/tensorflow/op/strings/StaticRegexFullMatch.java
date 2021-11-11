@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TString;
 
@@ -38,6 +40,10 @@ import org.tensorflow.types.TString;
  * if the input matches the regex pattern provided.
  * <p>The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
+@OpMetadata(
+    opType = StaticRegexFullMatch.OP_NAME,
+    inputsClass = StaticRegexFullMatch.Inputs.class
+)
 public final class StaticRegexFullMatch extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class StaticRegexFullMatch extends RawOp implements Operand<TBool> 
 
   private Output<TBool> output;
 
-  private StaticRegexFullMatch(Operation operation) {
-    super(operation);
+  public StaticRegexFullMatch(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -84,6 +90,9 @@ public final class StaticRegexFullMatch extends RawOp implements Operand<TBool> 
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StaticRegexFullMatch.class
+  )
   public static class Inputs extends RawOpInputs<StaticRegexFullMatch> {
     /**
      * A string tensor of the text to be processed.

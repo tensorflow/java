@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * computes the logits. It is designed to be used during prediction.
  * It traverses all the trees and calculates the final score for each instance.
  */
+@OpMetadata(
+    opType = BoostedTreesPredict.OP_NAME,
+    inputsClass = BoostedTreesPredict.Inputs.class
+)
 public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32
 
   private Output<TFloat32> logits;
 
-  private BoostedTreesPredict(Operation operation) {
-    super(operation);
+  public BoostedTreesPredict(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     logits = operation.output(outputIdx++);
   }
@@ -88,6 +94,9 @@ public final class BoostedTreesPredict extends RawOp implements Operand<TFloat32
     return logits;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesPredict.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesPredict> {
     /**
      * The treeEnsembleHandle input

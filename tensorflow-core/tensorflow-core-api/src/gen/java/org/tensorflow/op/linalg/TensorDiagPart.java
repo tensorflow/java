@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -50,6 +52,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code diagonal} output
  */
+@OpMetadata(
+    opType = TensorDiagPart.OP_NAME,
+    inputsClass = TensorDiagPart.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -61,8 +67,8 @@ public final class TensorDiagPart<T extends TType> extends RawOp implements Oper
 
   private Output<T> diagonal;
 
-  private TensorDiagPart(Operation operation) {
-    super(operation);
+  public TensorDiagPart(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     diagonal = operation.output(outputIdx++);
   }
@@ -98,6 +104,9 @@ public final class TensorDiagPart<T extends TType> extends RawOp implements Oper
     return diagonal;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorDiagPart.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<TensorDiagPart<T>> {
     /**
      * Rank k tensor where k is even and not zero.

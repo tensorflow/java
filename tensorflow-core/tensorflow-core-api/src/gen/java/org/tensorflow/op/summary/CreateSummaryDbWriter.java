@@ -26,20 +26,26 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * The CreateSummaryDbWriter operation
  */
+@OpMetadata(
+    opType = CreateSummaryDbWriter.OP_NAME,
+    inputsClass = CreateSummaryDbWriter.Inputs.class
+)
 public final class CreateSummaryDbWriter extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "CreateSummaryDbWriter";
 
-  private CreateSummaryDbWriter(Operation operation) {
-    super(operation);
+  public CreateSummaryDbWriter(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -68,6 +74,9 @@ public final class CreateSummaryDbWriter extends RawOp {
     return new CreateSummaryDbWriter(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = CreateSummaryDbWriter.class
+  )
   public static class Inputs extends RawOpInputs<CreateSummaryDbWriter> {
     /**
      * The writer input

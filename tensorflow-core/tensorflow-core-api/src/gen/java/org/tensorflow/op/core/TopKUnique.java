@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -46,6 +48,10 @@ import org.tensorflow.types.TInt32;
  * padding value will be returned. The semantics are not the same as
  * kth_order_statistic.
  */
+@OpMetadata(
+    opType = TopKUnique.OP_NAME,
+    inputsClass = TopKUnique.Inputs.class
+)
 @Operator
 public final class TopKUnique extends RawOp {
   /**
@@ -57,8 +63,8 @@ public final class TopKUnique extends RawOp {
 
   private Output<TInt32> topkIndices;
 
-  private TopKUnique(Operation operation) {
-    super(operation);
+  public TopKUnique(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     topk = operation.output(outputIdx++);
     topkIndices = operation.output(outputIdx++);
@@ -100,6 +106,9 @@ public final class TopKUnique extends RawOp {
     return topkIndices;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TopKUnique.class
+  )
   public static class Inputs extends RawOpInputs<TopKUnique> {
     /**
      * The input input

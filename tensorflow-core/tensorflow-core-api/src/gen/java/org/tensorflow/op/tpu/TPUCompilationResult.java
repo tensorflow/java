@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TString;
 
 /**
@@ -37,6 +39,10 @@ import org.tensorflow.types.TString;
  *
  * @deprecated use {@link org.tensorflow.op.tpu.CompilationResult} instead
  */
+@OpMetadata(
+    opType = TPUCompilationResult.OP_NAME,
+    inputsClass = TPUCompilationResult.Inputs.class
+)
 @Deprecated
 public final class TPUCompilationResult extends RawOp implements Operand<TString> {
   /**
@@ -46,8 +52,8 @@ public final class TPUCompilationResult extends RawOp implements Operand<TString
 
   private Output<TString> output;
 
-  private TPUCompilationResult(Operation operation) {
-    super(operation);
+  public TPUCompilationResult(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class TPUCompilationResult extends RawOp implements Operand<TString
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TPUCompilationResult.class
+  )
   public static class Inputs extends RawOpInputs<TPUCompilationResult> {
     public Inputs(GraphOperation op) {
       super(new TPUCompilationResult(op), op, Arrays.asList());

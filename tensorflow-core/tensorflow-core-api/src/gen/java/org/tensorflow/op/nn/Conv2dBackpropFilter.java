@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = Conv2dBackpropFilter.OP_NAME,
+    inputsClass = Conv2dBackpropFilter.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -49,8 +55,8 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
 
   private Output<T> output;
 
-  private Conv2dBackpropFilter(Operation operation) {
-    super(operation);
+  public Conv2dBackpropFilter(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -310,6 +316,9 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Conv2dBackpropFilter.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2dBackpropFilter<T>> {
     /**
      * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.

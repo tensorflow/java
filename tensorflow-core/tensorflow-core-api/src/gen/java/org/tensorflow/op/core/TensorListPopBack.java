@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code tensor} output
  */
+@OpMetadata(
+    opType = TensorListPopBack.OP_NAME,
+    inputsClass = TensorListPopBack.Inputs.class
+)
 @Operator
 public final class TensorListPopBack<T extends TType> extends RawOp {
   /**
@@ -55,8 +61,8 @@ public final class TensorListPopBack<T extends TType> extends RawOp {
   private Output<T> tensor;
 
   @SuppressWarnings("unchecked")
-  private TensorListPopBack(Operation operation) {
-    super(operation);
+  public TensorListPopBack(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
     tensor = operation.output(outputIdx++);
@@ -102,6 +108,9 @@ public final class TensorListPopBack<T extends TType> extends RawOp {
     return tensor;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorListPopBack.class
+  )
   public static class Inputs extends RawOpInputs<TensorListPopBack<?>> {
     /**
      * The inputHandle input

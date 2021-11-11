@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -42,6 +44,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code transformed_images} output
  */
+@OpMetadata(
+    opType = ImageProjectiveTransformV3.OP_NAME,
+    inputsClass = ImageProjectiveTransformV3.Inputs.class
+)
 public final class ImageProjectiveTransformV3<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -50,8 +56,8 @@ public final class ImageProjectiveTransformV3<T extends TNumber> extends RawOp i
 
   private Output<T> transformedImages;
 
-  private ImageProjectiveTransformV3(Operation operation) {
-    super(operation);
+  public ImageProjectiveTransformV3(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     transformedImages = operation.output(outputIdx++);
   }
@@ -139,6 +145,9 @@ public final class ImageProjectiveTransformV3<T extends TNumber> extends RawOp i
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ImageProjectiveTransformV3.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<ImageProjectiveTransformV3<T>> {
     /**
      * 4-D with shape {@code [batch, height, width, channels]}.

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code bins} output
  */
+@OpMetadata(
+    opType = Bincount.OP_NAME,
+    inputsClass = Bincount.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -54,8 +60,8 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
 
   private Output<T> bins;
 
-  private Bincount(Operation operation) {
-    super(operation);
+  public Bincount(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     bins = operation.output(outputIdx++);
   }
@@ -99,6 +105,9 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
     return bins;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Bincount.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<Bincount<T>> {
     /**
      * int32 {@code Tensor}.

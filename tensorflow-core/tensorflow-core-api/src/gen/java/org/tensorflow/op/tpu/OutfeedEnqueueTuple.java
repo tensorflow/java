@@ -27,19 +27,25 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 
 /**
  * Enqueue multiple Tensor values on the computation outfeed.
  */
+@OpMetadata(
+    opType = OutfeedEnqueueTuple.OP_NAME,
+    inputsClass = OutfeedEnqueueTuple.Inputs.class
+)
 public final class OutfeedEnqueueTuple extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "OutfeedEnqueueTuple";
 
-  private OutfeedEnqueueTuple(Operation operation) {
-    super(operation);
+  public OutfeedEnqueueTuple(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -59,6 +65,9 @@ public final class OutfeedEnqueueTuple extends RawOp {
     return new OutfeedEnqueueTuple(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = OutfeedEnqueueTuple.class
+  )
   public static class Inputs extends RawOpInputs<OutfeedEnqueueTuple> {
     /**
      * A list of tensors that will be inserted into the outfeed queue as an

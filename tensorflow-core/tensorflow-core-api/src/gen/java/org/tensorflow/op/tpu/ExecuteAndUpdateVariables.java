@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TType;
  * program outputs are consumed by these variables will not appear in the op
  * output. For the internal use of the distributed TPU compiler.
  */
+@OpMetadata(
+    opType = ExecuteAndUpdateVariables.OP_NAME,
+    inputsClass = ExecuteAndUpdateVariables.Inputs.class
+)
 @Operator(
     group = "tpu"
 )
@@ -57,8 +63,8 @@ public final class ExecuteAndUpdateVariables extends RawOp implements Iterable<O
   private List<Output<?>> results;
 
   @SuppressWarnings("unchecked")
-  private ExecuteAndUpdateVariables(Operation operation) {
-    super(operation);
+  public ExecuteAndUpdateVariables(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int resultsLength = operation.outputListLength("results");
     results = Arrays.asList(operation.outputList(outputIdx, resultsLength));
@@ -114,6 +120,9 @@ public final class ExecuteAndUpdateVariables extends RawOp implements Iterable<O
     return (Iterator) results.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = ExecuteAndUpdateVariables.class
+  )
   public static class Inputs extends RawOpInputs<ExecuteAndUpdateVariables> {
     /**
      * The args input

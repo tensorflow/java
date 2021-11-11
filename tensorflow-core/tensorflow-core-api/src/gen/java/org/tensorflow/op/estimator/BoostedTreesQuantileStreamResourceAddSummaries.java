@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -36,14 +38,18 @@ import org.tensorflow.types.family.TType;
  * summary Tensor is rank 2, containing summaries (value, weight, min_rank, max_rank)
  * for a single feature.
  */
+@OpMetadata(
+    opType = BoostedTreesQuantileStreamResourceAddSummaries.OP_NAME,
+    inputsClass = BoostedTreesQuantileStreamResourceAddSummaries.Inputs.class
+)
 public final class BoostedTreesQuantileStreamResourceAddSummaries extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "BoostedTreesQuantileStreamResourceAddSummaries";
 
-  private BoostedTreesQuantileStreamResourceAddSummaries(Operation operation) {
-    super(operation);
+  public BoostedTreesQuantileStreamResourceAddSummaries(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -66,6 +72,9 @@ public final class BoostedTreesQuantileStreamResourceAddSummaries extends RawOp 
     return new BoostedTreesQuantileStreamResourceAddSummaries(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesQuantileStreamResourceAddSummaries.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesQuantileStreamResourceAddSummaries> {
     /**
      * resource handle referring to a QuantileStreamResource.

@@ -144,6 +144,19 @@
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>javacpp-parser</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
         <executions>
@@ -212,6 +225,11 @@
           <includePaths>
             <includePath>${project.basedir}/</includePath>
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>
+            <includePath>${project.basedir}/target/classes/org/tensorflow/internal/c_api/include/</includePath>
           </includePaths>
           <linkPaths>
             <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -37,6 +39,10 @@ import org.tensorflow.types.TFloat32;
  * differentiation of graphs containing embeddings via the TPU Embedding Python
  * libraries.
  */
+@OpMetadata(
+    opType = EmbeddingActivations.OP_NAME,
+    inputsClass = EmbeddingActivations.Inputs.class
+)
 public final class EmbeddingActivations extends RawOp implements Operand<TFloat32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class EmbeddingActivations extends RawOp implements Operand<TFloat3
 
   private Output<TFloat32> output;
 
-  private EmbeddingActivations(Operation operation) {
-    super(operation);
+  public EmbeddingActivations(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -90,6 +96,9 @@ public final class EmbeddingActivations extends RawOp implements Operand<TFloat3
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = EmbeddingActivations.class
+  )
   public static class Inputs extends RawOpInputs<EmbeddingActivations> {
     /**
      * A trainable variable, enabling optimizers to find this op.

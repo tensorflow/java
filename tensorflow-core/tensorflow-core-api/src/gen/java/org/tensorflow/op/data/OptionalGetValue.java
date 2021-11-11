@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Returns the value stored in an Optional variant or raises an error if none exists.
  */
+@OpMetadata(
+    opType = OptionalGetValue.OP_NAME,
+    inputsClass = OptionalGetValue.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -50,8 +56,8 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<TT
   private List<Output<?>> components;
 
   @SuppressWarnings("unchecked")
-  private OptionalGetValue(Operation operation) {
-    super(operation);
+  public OptionalGetValue(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
@@ -98,6 +104,9 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<TT
     return (Iterator) components.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = OptionalGetValue.class
+  )
   public static class Inputs extends RawOpInputs<OptionalGetValue> {
     /**
      * The optional input

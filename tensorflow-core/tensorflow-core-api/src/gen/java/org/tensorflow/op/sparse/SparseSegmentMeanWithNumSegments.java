@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = SparseSegmentMeanWithNumSegments.OP_NAME,
+    inputsClass = SparseSegmentMeanWithNumSegments.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -52,8 +58,8 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
 
   private Output<T> output;
 
-  private SparseSegmentMeanWithNumSegments(Operation operation) {
-    super(operation);
+  public SparseSegmentMeanWithNumSegments(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -98,6 +104,9 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseSegmentMeanWithNumSegments.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<SparseSegmentMeanWithNumSegments<T>> {
     /**
      * The data input

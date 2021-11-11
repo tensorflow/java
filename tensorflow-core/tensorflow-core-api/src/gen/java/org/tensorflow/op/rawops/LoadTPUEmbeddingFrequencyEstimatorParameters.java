@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingFrequencyEstimatorParameters.OP_NAME,
+    inputsClass = LoadTPUEmbeddingFrequencyEstimatorParameters.Inputs.class
+)
 public final class LoadTPUEmbeddingFrequencyEstimatorParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingFrequencyEstimatorParameters";
 
-  private LoadTPUEmbeddingFrequencyEstimatorParameters(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingFrequencyEstimatorParameters(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -161,6 +167,9 @@ public final class LoadTPUEmbeddingFrequencyEstimatorParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingFrequencyEstimatorParameters.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingFrequencyEstimatorParameters> {
     /**
      * Value of parameters used in the frequency estimator optimization algorithm.

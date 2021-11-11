@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * this op will block until it does.   This Op is optimized for
  * performance.
  */
+@OpMetadata(
+    opType = StagePeek.OP_NAME,
+    inputsClass = StagePeek.Inputs.class
+)
 @Operator
 public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -51,8 +57,8 @@ public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> values;
 
   @SuppressWarnings("unchecked")
-  private StagePeek(Operation operation) {
-    super(operation);
+  public StagePeek(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int valuesLength = operation.outputListLength("values");
     values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
@@ -210,6 +216,9 @@ public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = StagePeek.class
+  )
   public static class Inputs extends RawOpInputs<StagePeek> {
     /**
      * The index input

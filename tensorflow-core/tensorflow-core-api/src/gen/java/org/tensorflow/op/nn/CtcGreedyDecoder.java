@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -46,6 +48,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code log_probability} output
  */
+@OpMetadata(
+    opType = CtcGreedyDecoder.OP_NAME,
+    inputsClass = CtcGreedyDecoder.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -63,8 +69,8 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
 
   private Output<T> logProbability;
 
-  private CtcGreedyDecoder(Operation operation) {
-    super(operation);
+  public CtcGreedyDecoder(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     decodedIndices = operation.output(outputIdx++);
     decodedValues = operation.output(outputIdx++);
@@ -197,6 +203,9 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = CtcGreedyDecoder.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<CtcGreedyDecoder<T>> {
     /**
      * 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.

@@ -27,20 +27,26 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
 /**
  * An op that enqueues a list of input batch tensors to TPUEmbedding.
  */
+@OpMetadata(
+    opType = EnqueueTPUEmbeddingIntegerBatch.OP_NAME,
+    inputsClass = EnqueueTPUEmbeddingIntegerBatch.Inputs.class
+)
 public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "EnqueueTPUEmbeddingIntegerBatch";
 
-  private EnqueueTPUEmbeddingIntegerBatch(Operation operation) {
-    super(operation);
+  public EnqueueTPUEmbeddingIntegerBatch(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -107,6 +113,9 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EnqueueTPUEmbeddingIntegerBatch.class
+  )
   public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingIntegerBatch> {
     /**
      * A list of 1D tensors, one for each embedding table, containing the

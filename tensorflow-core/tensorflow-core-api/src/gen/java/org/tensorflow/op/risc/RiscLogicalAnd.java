@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TBool;
 
 /**
  * The RiscLogicalAnd operation
  */
+@OpMetadata(
+    opType = RiscLogicalAnd.OP_NAME,
+    inputsClass = RiscLogicalAnd.Inputs.class
+)
 public final class RiscLogicalAnd extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -40,8 +46,8 @@ public final class RiscLogicalAnd extends RawOp implements Operand<TBool> {
 
   private Output<TBool> z;
 
-  private RiscLogicalAnd(Operation operation) {
-    super(operation);
+  public RiscLogicalAnd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -78,6 +84,9 @@ public final class RiscLogicalAnd extends RawOp implements Operand<TBool> {
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RiscLogicalAnd.class
+  )
   public static class Inputs extends RawOpInputs<RiscLogicalAnd> {
     /**
      * The x input

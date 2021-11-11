@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Emits randomized records.
  */
+@OpMetadata(
+    opType = RecordInput.OP_NAME,
+    inputsClass = RecordInput.Inputs.class
+)
 @Operator(
     group = "random"
 )
@@ -44,8 +50,8 @@ public final class RecordInput extends RawOp implements Operand<TString> {
 
   private Output<TString> records;
 
-  private RecordInput(Operation operation) {
-    super(operation);
+  public RecordInput(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     records = operation.output(outputIdx++);
   }
@@ -253,6 +259,9 @@ public final class RecordInput extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RecordInput.class
+  )
   public static class Inputs extends RawOpInputs<RecordInput> {
     /**
      * Glob pattern for the data files.

@@ -28,12 +28,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Compresses a dataset element.
  */
+@OpMetadata(
+    opType = CompressElement.OP_NAME,
+    inputsClass = CompressElement.Inputs.class
+)
 public final class CompressElement extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class CompressElement extends RawOp implements Operand<TType> {
   private Output<? extends TType> compressed;
 
   @SuppressWarnings("unchecked")
-  private CompressElement(Operation operation) {
-    super(operation);
+  public CompressElement(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     compressed = operation.output(outputIdx++);
   }
@@ -80,6 +86,9 @@ public final class CompressElement extends RawOp implements Operand<TType> {
     return (Output<TType>) compressed;
   }
 
+  @OpInputsMetadata(
+      outputsClass = CompressElement.class
+  )
   public static class Inputs extends RawOpInputs<CompressElement> {
     /**
      * The components input

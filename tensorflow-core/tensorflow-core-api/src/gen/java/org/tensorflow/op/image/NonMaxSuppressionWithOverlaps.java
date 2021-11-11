@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -46,6 +48,10 @@ import org.tensorflow.types.TInt32;
  * overlaps, scores, max_output_size, overlap_threshold, score_threshold)
  * selected_boxes = tf.gather(boxes, selected_indices)
  */
+@OpMetadata(
+    opType = NonMaxSuppressionWithOverlaps.OP_NAME,
+    inputsClass = NonMaxSuppressionWithOverlaps.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -57,8 +63,8 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
 
   private Output<TInt32> selectedIndices;
 
-  private NonMaxSuppressionWithOverlaps(Operation operation) {
-    super(operation);
+  public NonMaxSuppressionWithOverlaps(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     selectedIndices = operation.output(outputIdx++);
   }
@@ -109,6 +115,9 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
     return selectedIndices;
   }
 
+  @OpInputsMetadata(
+      outputsClass = NonMaxSuppressionWithOverlaps.class
+  )
   public static class Inputs extends RawOpInputs<NonMaxSuppressionWithOverlaps> {
     /**
      * A 2-D float tensor of shape {@code [num_boxes, num_boxes]} representing

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code resized_images} output
  */
+@OpMetadata(
+    opType = ResizeNearestNeighbor.OP_NAME,
+    inputsClass = ResizeNearestNeighbor.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -48,8 +54,8 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
 
   private Output<T> resizedImages;
 
-  private ResizeNearestNeighbor(Operation operation) {
-    super(operation);
+  public ResizeNearestNeighbor(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     resizedImages = operation.output(outputIdx++);
   }
@@ -157,6 +163,9 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResizeNearestNeighbor.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<ResizeNearestNeighbor<T>> {
     /**
      * 4-D with shape {@code [batch, height, width, channels]}.

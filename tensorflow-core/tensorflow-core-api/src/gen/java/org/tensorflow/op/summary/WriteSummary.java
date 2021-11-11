@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -35,14 +37,18 @@ import org.tensorflow.types.family.TType;
  * Writes a tensor summary.
  * Writes {@code tensor} at {@code step} with {@code tag} using summary {@code writer}.
  */
+@OpMetadata(
+    opType = WriteSummary.OP_NAME,
+    inputsClass = WriteSummary.Inputs.class
+)
 public final class WriteSummary extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "WriteSummary";
 
-  private WriteSummary(Operation operation) {
-    super(operation);
+  public WriteSummary(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -71,6 +77,9 @@ public final class WriteSummary extends RawOp {
     return new WriteSummary(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = WriteSummary.class
+  )
   public static class Inputs extends RawOpInputs<WriteSummary> {
     /**
      * The writer input

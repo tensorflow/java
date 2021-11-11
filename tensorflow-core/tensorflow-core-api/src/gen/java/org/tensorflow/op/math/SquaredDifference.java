@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code z} output
  */
+@OpMetadata(
+    opType = SquaredDifference.OP_NAME,
+    inputsClass = SquaredDifference.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -49,8 +55,8 @@ public final class SquaredDifference<T extends TType> extends RawOp implements O
 
   private Output<T> z;
 
-  private SquaredDifference(Operation operation) {
-    super(operation);
+  public SquaredDifference(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     z = operation.output(outputIdx++);
   }
@@ -89,6 +95,9 @@ public final class SquaredDifference<T extends TType> extends RawOp implements O
     return z;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SquaredDifference.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SquaredDifference<T>> {
     /**
      * The x input

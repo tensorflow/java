@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -50,6 +52,10 @@ import org.tensorflow.types.TUint8;
  * <p>It is equivalent to a combination of decode and crop, but much faster by only
  * decoding partial jpeg image.
  */
+@OpMetadata(
+    opType = DecodeAndCropJpeg.OP_NAME,
+    inputsClass = DecodeAndCropJpeg.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -61,8 +67,8 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
 
   private Output<TUint8> image;
 
-  private DecodeAndCropJpeg(Operation operation) {
-    super(operation);
+  public DecodeAndCropJpeg(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     image = operation.output(outputIdx++);
   }
@@ -283,6 +289,9 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = DecodeAndCropJpeg.class
+  )
   public static class Inputs extends RawOpInputs<DecodeAndCropJpeg> {
     /**
      * 0-D.  The JPEG-encoded image.

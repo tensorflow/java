@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The ResourceScatterNdMax operation
  */
+@OpMetadata(
+    opType = ResourceScatterNdMax.OP_NAME,
+    inputsClass = ResourceScatterNdMax.Inputs.class
+)
 @Operator
 public final class ResourceScatterNdMax extends RawOp {
   /**
@@ -41,8 +47,8 @@ public final class ResourceScatterNdMax extends RawOp {
    */
   public static final String OP_NAME = "ResourceScatterNdMax";
 
-  private ResourceScatterNdMax(Operation operation) {
-    super(operation);
+  public ResourceScatterNdMax(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -111,6 +117,9 @@ public final class ResourceScatterNdMax extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceScatterNdMax.class
+  )
   public static class Inputs extends RawOpInputs<ResourceScatterNdMax> {
     /**
      * A resource handle. Must be from a VarHandleOp.

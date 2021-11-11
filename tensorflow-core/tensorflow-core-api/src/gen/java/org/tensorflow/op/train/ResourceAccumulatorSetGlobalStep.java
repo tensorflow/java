@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -34,14 +36,18 @@ import org.tensorflow.types.family.TType;
  * Logs warning if the accumulator's value is already higher than
  * new_global_step.
  */
+@OpMetadata(
+    opType = ResourceAccumulatorSetGlobalStep.OP_NAME,
+    inputsClass = ResourceAccumulatorSetGlobalStep.Inputs.class
+)
 public final class ResourceAccumulatorSetGlobalStep extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "ResourceAccumulatorSetGlobalStep";
 
-  private ResourceAccumulatorSetGlobalStep(Operation operation) {
-    super(operation);
+  public ResourceAccumulatorSetGlobalStep(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -63,6 +69,9 @@ public final class ResourceAccumulatorSetGlobalStep extends RawOp {
     return new ResourceAccumulatorSetGlobalStep(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceAccumulatorSetGlobalStep.class
+  )
   public static class Inputs extends RawOpInputs<ResourceAccumulatorSetGlobalStep> {
     /**
      * The handle to an accumulator.

@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The LoadDataset operation
  */
+@OpMetadata(
+    opType = LoadDataset.OP_NAME,
+    inputsClass = LoadDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -51,8 +57,8 @@ public final class LoadDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private LoadDataset(Operation operation) {
-    super(operation);
+  public LoadDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -141,6 +147,9 @@ public final class LoadDataset extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadDataset.class
+  )
   public static class Inputs extends RawOpInputs<LoadDataset> {
     /**
      * The path input

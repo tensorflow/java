@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code s} output
  */
+@OpMetadata(
+    opType = BatchSvd.OP_NAME,
+    inputsClass = BatchSvd.Inputs.class
+)
 @Operator(
     group = "linalg"
 )
@@ -51,8 +57,8 @@ public final class BatchSvd<T extends TType> extends RawOp {
 
   private Output<T> v;
 
-  private BatchSvd(Operation operation) {
-    super(operation);
+  public BatchSvd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     s = operation.output(outputIdx++);
     u = operation.output(outputIdx++);
@@ -169,6 +175,9 @@ public final class BatchSvd<T extends TType> extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchSvd.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<BatchSvd<T>> {
     /**
      * The input input

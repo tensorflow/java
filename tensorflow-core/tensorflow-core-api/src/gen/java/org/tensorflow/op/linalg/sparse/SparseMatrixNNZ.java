@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
  * Returns the number of nonzeroes of {@code sparse_matrix}.
  */
+@OpMetadata(
+    opType = SparseMatrixNNZ.OP_NAME,
+    inputsClass = SparseMatrixNNZ.Inputs.class
+)
 public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> nnz;
 
-  private SparseMatrixNNZ(Operation operation) {
-    super(operation);
+  public SparseMatrixNNZ(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     nnz = operation.output(outputIdx++);
   }
@@ -77,6 +83,9 @@ public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
     return nnz;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixNNZ.class
+  )
   public static class Inputs extends RawOpInputs<SparseMatrixNNZ> {
     /**
      * A CSRSparseMatrix.

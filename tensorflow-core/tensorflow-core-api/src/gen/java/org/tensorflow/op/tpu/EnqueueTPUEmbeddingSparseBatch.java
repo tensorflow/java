@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -43,14 +45,18 @@ import org.tensorflow.types.family.TNumber;
  * must have the same shape, i.e. rank 1 with dim_size() equal to the total
  * number of lookups into the table described by the corresponding table_id.
  */
+@OpMetadata(
+    opType = EnqueueTPUEmbeddingSparseBatch.OP_NAME,
+    inputsClass = EnqueueTPUEmbeddingSparseBatch.Inputs.class
+)
 public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "EnqueueTPUEmbeddingSparseBatch";
 
-  private EnqueueTPUEmbeddingSparseBatch(Operation operation) {
-    super(operation);
+  public EnqueueTPUEmbeddingSparseBatch(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -199,6 +205,9 @@ public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = EnqueueTPUEmbeddingSparseBatch.class
+  )
   public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingSparseBatch> {
     /**
      * A list of rank 1 Tensors specifying the training example and

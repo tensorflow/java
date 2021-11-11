@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  * If not, it will run the preprocessing pipeline as usual, and write out a
  * snapshot of the data processed for future use.
  */
+@OpMetadata(
+    opType = SnapshotDataset.OP_NAME,
+    inputsClass = SnapshotDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -55,8 +61,8 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private SnapshotDataset(Operation operation) {
-    super(operation);
+  public SnapshotDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -257,6 +263,9 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SnapshotDataset.class
+  )
   public static class Inputs extends RawOpInputs<SnapshotDataset> {
     /**
      * A variant tensor representing the input dataset.

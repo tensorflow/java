@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TType;
  * prox_v = var - lr * grad * (1 / sqrt(accum))
  * var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
  */
+@OpMetadata(
+    opType = ResourceApplyProximalAdagrad.OP_NAME,
+    inputsClass = ResourceApplyProximalAdagrad.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -45,8 +51,8 @@ public final class ResourceApplyProximalAdagrad extends RawOp {
    */
   public static final String OP_NAME = "ResourceApplyProximalAdagrad";
 
-  private ResourceApplyProximalAdagrad(Operation operation) {
-    super(operation);
+  public ResourceApplyProximalAdagrad(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -119,6 +125,9 @@ public final class ResourceApplyProximalAdagrad extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyProximalAdagrad.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyProximalAdagrad> {
     /**
      * Should be from a Variable().

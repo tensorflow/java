@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * The DummySeedGenerator operation
  */
+@OpMetadata(
+    opType = DummySeedGenerator.OP_NAME,
+    inputsClass = DummySeedGenerator.Inputs.class
+)
 public final class DummySeedGenerator extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class DummySeedGenerator extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private DummySeedGenerator(Operation operation) {
-    super(operation);
+  public DummySeedGenerator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -76,6 +82,9 @@ public final class DummySeedGenerator extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = DummySeedGenerator.class
+  )
   public static class Inputs extends RawOpInputs<DummySeedGenerator> {
     public Inputs(GraphOperation op) {
       super(new DummySeedGenerator(op), op, Arrays.asList());

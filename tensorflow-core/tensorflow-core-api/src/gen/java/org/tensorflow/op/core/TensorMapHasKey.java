@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * key: the key to check
  * has_key: whether the key is already in the map or not
  */
+@OpMetadata(
+    opType = TensorMapHasKey.OP_NAME,
+    inputsClass = TensorMapHasKey.Inputs.class
+)
 @Operator
 public final class TensorMapHasKey extends RawOp implements Operand<TBool> {
   /**
@@ -47,8 +53,8 @@ public final class TensorMapHasKey extends RawOp implements Operand<TBool> {
 
   private Output<TBool> hasKey;
 
-  private TensorMapHasKey(Operation operation) {
-    super(operation);
+  public TensorMapHasKey(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     hasKey = operation.output(outputIdx++);
   }
@@ -86,6 +92,9 @@ public final class TensorMapHasKey extends RawOp implements Operand<TBool> {
     return hasKey;
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorMapHasKey.class
+  )
   public static class Inputs extends RawOpInputs<TensorMapHasKey> {
     /**
      * The inputHandle input

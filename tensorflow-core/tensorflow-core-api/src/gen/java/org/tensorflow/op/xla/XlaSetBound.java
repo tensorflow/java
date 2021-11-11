@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
@@ -36,6 +38,10 @@ import org.tensorflow.types.TInt32;
  *     returns the same value.
  * </pre>
  */
+@OpMetadata(
+    opType = XlaSetBound.OP_NAME,
+    inputsClass = XlaSetBound.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -47,8 +53,8 @@ public final class XlaSetBound extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private XlaSetBound(Operation operation) {
-    super(operation);
+  public XlaSetBound(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -85,6 +91,9 @@ public final class XlaSetBound extends RawOp implements Operand<TInt32> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = XlaSetBound.class
+  )
   public static class Inputs extends RawOpInputs<XlaSetBound> {
     /**
      * The input input

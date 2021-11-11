@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingStochasticGradientDescentParameters.OP_NAME,
+    inputsClass = LoadTPUEmbeddingStochasticGradientDescentParameters.Inputs.class
+)
 public final class LoadTPUEmbeddingStochasticGradientDescentParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingStochasticGradientDescentParameters";
 
-  private LoadTPUEmbeddingStochasticGradientDescentParameters(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingStochasticGradientDescentParameters(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -158,6 +164,9 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParameters extends R
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingStochasticGradientDescentParameters.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingStochasticGradientDescentParameters> {
     /**
      * Value of parameters used in the stochastic gradient descent optimization algorithm.

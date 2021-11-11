@@ -29,6 +29,9 @@ public class Names {
 
   public static final ClassName Operator = ClassName.get(OpPackage + ".annotation", "Operator");
   public static final ClassName Endpoint = ClassName.get(OpPackage + ".annotation", "Endpoint");
+  public static final ClassName OpMetadata = ClassName.get(OpPackage + ".annotation", "OpMetadata");
+  public static final ClassName OpInputsMetadata =
+      ClassName.get(OpPackage + ".annotation", "OpInputsMetadata");
 
   public static final ClassName TType = ClassName.get(TypesPackage + ".family", "TType");
   public static final ClassName TString = ClassName.get(TypesPackage, "TString");
@@ -71,6 +74,7 @@ public class Names {
       ClassName.get(TensorflowPackage, "ConcreteFunction");
 
   public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
+  public static final ClassName OpScope = ClassName.get(OpPackage, "OpScope");
   public static final TypeName DeviceSpec = ClassName.get(TensorflowPackage, "DeviceSpec");
   public static final ClassName Ops = ClassName.get(OpPackage, "Ops");
 

@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  * An array of Tensors of given size.
  * Write data via Write and read via Read or Pack.
  */
+@OpMetadata(
+    opType = TensorArray.OP_NAME,
+    inputsClass = TensorArray.Inputs.class
+)
 @Operator
 public final class TensorArray extends RawOp {
   /**
@@ -51,8 +57,8 @@ public final class TensorArray extends RawOp {
   private Output<TFloat32> flow;
 
   @SuppressWarnings("unchecked")
-  private TensorArray(Operation operation) {
-    super(operation);
+  public TensorArray(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
     flow = operation.output(outputIdx++);
@@ -263,6 +269,9 @@ public final class TensorArray extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = TensorArray.class
+  )
   public static class Inputs extends RawOpInputs<TensorArray> {
     /**
      * The size of the array.

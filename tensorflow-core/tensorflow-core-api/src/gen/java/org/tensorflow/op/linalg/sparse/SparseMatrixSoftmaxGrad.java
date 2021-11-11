@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Calculates the gradient of the SparseMatrixSoftmax op.
  */
+@OpMetadata(
+    opType = SparseMatrixSoftmaxGrad.OP_NAME,
+    inputsClass = SparseMatrixSoftmaxGrad.Inputs.class
+)
 public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -44,8 +50,8 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
   private Output<? extends TType> gradient;
 
   @SuppressWarnings("unchecked")
-  private SparseMatrixSoftmaxGrad(Operation operation) {
-    super(operation);
+  public SparseMatrixSoftmaxGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     gradient = operation.output(outputIdx++);
   }
@@ -87,6 +93,9 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
     return (Output<TType>) gradient;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixSoftmaxGrad.class
+  )
   public static class Inputs extends RawOpInputs<SparseMatrixSoftmaxGrad> {
     /**
      * A CSRSparseMatrix.

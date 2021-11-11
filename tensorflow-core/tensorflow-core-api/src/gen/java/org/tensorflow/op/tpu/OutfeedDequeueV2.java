@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = OutfeedDequeueV2.OP_NAME,
+    inputsClass = OutfeedDequeueV2.Inputs.class
+)
 public final class OutfeedDequeueV2<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -48,8 +54,8 @@ public final class OutfeedDequeueV2<T extends TType> extends RawOp implements Op
 
   private Output<T> output;
 
-  private OutfeedDequeueV2(Operation operation) {
-    super(operation);
+  public OutfeedDequeueV2(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -92,6 +98,9 @@ public final class OutfeedDequeueV2<T extends TType> extends RawOp implements Op
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = OutfeedDequeueV2.class
+  )
   public static class Inputs extends RawOpInputs<OutfeedDequeueV2<?>> {
     /**
      * An int scalar tensor, representing the TPU device to use. This should be -1 when

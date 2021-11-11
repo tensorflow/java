@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Op removes all elements in the underlying container.
  */
+@OpMetadata(
+    opType = MapClear.OP_NAME,
+    inputsClass = MapClear.Inputs.class
+)
 @Operator
 public final class MapClear extends RawOp {
   /**
@@ -41,8 +47,8 @@ public final class MapClear extends RawOp {
    */
   public static final String OP_NAME = "MapClear";
 
-  private MapClear(Operation operation) {
-    super(operation);
+  public MapClear(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -179,6 +185,9 @@ public final class MapClear extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MapClear.class
+  )
   public static class Inputs extends RawOpInputs<MapClear> {
     /**
      * The capacity attribute

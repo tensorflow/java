@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The FixedLengthRecordDatasetV2 operation
  */
+@OpMetadata(
+    opType = FixedLengthRecordDataset.OP_NAME,
+    inputsClass = FixedLengthRecordDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -47,8 +53,8 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private FixedLengthRecordDataset(Operation operation) {
-    super(operation);
+  public FixedLengthRecordDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -96,6 +102,9 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = FixedLengthRecordDataset.class
+  )
   public static class Inputs extends RawOpInputs<FixedLengthRecordDataset> {
     /**
      * The filenames input

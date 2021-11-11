@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -45,6 +47,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code outputs} output
  */
+@OpMetadata(
+    opType = ReplicatedOutput.OP_NAME,
+    inputsClass = ReplicatedOutput.Inputs.class
+)
 public final class ReplicatedOutput<T extends TType> extends RawOp implements Iterable<Operand<T>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -54,8 +60,8 @@ public final class ReplicatedOutput<T extends TType> extends RawOp implements It
   private List<Output<T>> outputs;
 
   @SuppressWarnings("unchecked")
-  private ReplicatedOutput(Operation operation) {
-    super(operation);
+  public ReplicatedOutput(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
     outputs = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputsLength));
@@ -97,6 +103,9 @@ public final class ReplicatedOutput<T extends TType> extends RawOp implements It
     return (Iterator) outputs.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = ReplicatedOutput.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ReplicatedOutput<T>> {
     /**
      * The input input

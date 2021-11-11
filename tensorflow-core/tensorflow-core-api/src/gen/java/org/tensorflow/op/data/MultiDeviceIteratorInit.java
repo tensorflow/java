@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Initializes the multi device iterator with the given dataset.
  */
+@OpMetadata(
+    opType = MultiDeviceIteratorInit.OP_NAME,
+    inputsClass = MultiDeviceIteratorInit.Inputs.class
+)
 public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt64> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
 
   private Output<TInt64> incarnationId;
 
-  private MultiDeviceIteratorInit(Operation operation) {
-    super(operation);
+  public MultiDeviceIteratorInit(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     incarnationId = operation.output(outputIdx++);
   }
@@ -83,6 +89,9 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
     return incarnationId;
   }
 
+  @OpInputsMetadata(
+      outputsClass = MultiDeviceIteratorInit.class
+  )
   public static class Inputs extends RawOpInputs<MultiDeviceIteratorInit> {
     /**
      * Dataset to be iterated upon.

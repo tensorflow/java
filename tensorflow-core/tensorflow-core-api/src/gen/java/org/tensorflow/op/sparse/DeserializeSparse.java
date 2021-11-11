@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -77,6 +79,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code sparse_values} output
  */
+@OpMetadata(
+    opType = DeserializeSparse.OP_NAME,
+    inputsClass = DeserializeSparse.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -92,8 +98,8 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
 
   private Output<TInt64> sparseShape;
 
-  private DeserializeSparse(Operation operation) {
-    super(operation);
+  public DeserializeSparse(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sparseIndices = operation.output(outputIdx++);
     sparseValues = operation.output(outputIdx++);
@@ -148,6 +154,9 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
     return sparseShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = DeserializeSparse.class
+  )
   public static class Inputs extends RawOpInputs<DeserializeSparse<?>> {
     /**
      * The serialized {@code SparseTensor} objects. The last dimension

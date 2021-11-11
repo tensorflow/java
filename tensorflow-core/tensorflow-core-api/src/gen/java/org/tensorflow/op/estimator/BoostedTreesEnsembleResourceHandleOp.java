@@ -27,11 +27,17 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a handle to a BoostedTreesEnsembleResource
  */
+@OpMetadata(
+    opType = BoostedTreesEnsembleResourceHandleOp.OP_NAME,
+    inputsClass = BoostedTreesEnsembleResourceHandleOp.Inputs.class
+)
 public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -41,8 +47,8 @@ public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements
   private Output<? extends TType> resource;
 
   @SuppressWarnings("unchecked")
-  private BoostedTreesEnsembleResourceHandleOp(Operation operation) {
-    super(operation);
+  public BoostedTreesEnsembleResourceHandleOp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     resource = operation.output(outputIdx++);
   }
@@ -141,6 +147,9 @@ public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesEnsembleResourceHandleOp.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesEnsembleResourceHandleOp> {
     /**
      * The container attribute

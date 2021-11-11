@@ -26,20 +26,26 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * Sends the named tensor from send_device to recv_device.
  */
+@OpMetadata(
+    opType = Send.OP_NAME,
+    inputsClass = Send.Inputs.class
+)
 public final class Send extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "Send";
 
-  private Send(Operation operation) {
-    super(operation);
+  public Send(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -112,6 +118,9 @@ public final class Send extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Send.class
+  )
   public static class Inputs extends RawOpInputs<Send> {
     /**
      * The tensor to send.

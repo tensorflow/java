@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code patches} output
  */
+@OpMetadata(
+    opType = ExtractVolumePatches.OP_NAME,
+    inputsClass = ExtractVolumePatches.Inputs.class
+)
 @Operator
 public final class ExtractVolumePatches<T extends TNumber> extends RawOp implements Operand<T> {
   /**
@@ -46,8 +52,8 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
 
   private Output<T> patches;
 
-  private ExtractVolumePatches(Operation operation) {
-    super(operation);
+  public ExtractVolumePatches(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     patches = operation.output(outputIdx++);
   }
@@ -107,6 +113,9 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
     return patches;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ExtractVolumePatches.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<ExtractVolumePatches<T>> {
     /**
      * 5-D Tensor with shape {@code [batch, in_planes, in_rows, in_cols, depth]}.

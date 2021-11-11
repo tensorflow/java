@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
@@ -37,6 +39,10 @@ import org.tensorflow.types.TFloat32;
  * of the corresponding output element. Behavior for infinite elements is
  * undefined. Behavior for subnormal elements is undefined.
  */
+@OpMetadata(
+    opType = MakeUnique.OP_NAME,
+    inputsClass = MakeUnique.Inputs.class
+)
 @Operator
 public final class MakeUnique extends RawOp implements Operand<TFloat32> {
   /**
@@ -46,8 +52,8 @@ public final class MakeUnique extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> output;
 
-  private MakeUnique(Operation operation) {
-    super(operation);
+  public MakeUnique(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -82,6 +88,9 @@ public final class MakeUnique extends RawOp implements Operand<TFloat32> {
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = MakeUnique.class
+  )
   public static class Inputs extends RawOpInputs<MakeUnique> {
     /**
      * The input input

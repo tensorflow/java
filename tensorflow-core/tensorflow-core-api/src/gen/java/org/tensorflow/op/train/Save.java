@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -37,6 +39,10 @@ import org.tensorflow.types.TString;
  * specific slices of full tensors, &quot;shape_and_slices&quot; should be non-empty strings
  * and correspondingly well-formed.
  */
+@OpMetadata(
+    opType = Save.OP_NAME,
+    inputsClass = Save.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -46,8 +52,8 @@ public final class Save extends RawOp {
    */
   public static final String OP_NAME = "SaveV2";
 
-  private Save(Operation operation) {
-    super(operation);
+  public Save(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -75,6 +81,9 @@ public final class Save extends RawOp {
     return new Save(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = Save.class
+  )
   public static class Inputs extends RawOpInputs<Save> {
     /**
      * Must have a single element. The prefix of the V2 checkpoint to which we

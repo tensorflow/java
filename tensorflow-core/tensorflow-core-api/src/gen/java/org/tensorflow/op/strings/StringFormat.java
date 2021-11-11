@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -36,6 +38,10 @@ import org.tensorflow.types.TString;
  * Formats a string template using a list of tensors.
  * Formats a string template using a list of tensors, pretty-printing tensor summaries.
  */
+@OpMetadata(
+    opType = StringFormat.OP_NAME,
+    inputsClass = StringFormat.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -47,8 +53,8 @@ public final class StringFormat extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private StringFormat(Operation operation) {
-    super(operation);
+  public StringFormat(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -174,6 +180,9 @@ public final class StringFormat extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = StringFormat.class
+  )
   public static class Inputs extends RawOpInputs<StringFormat> {
     /**
      * The list of tensors to format into the placeholder string.

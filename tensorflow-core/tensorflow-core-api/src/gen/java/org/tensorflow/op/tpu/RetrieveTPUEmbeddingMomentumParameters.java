@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -35,6 +37,10 @@ import org.tensorflow.types.TFloat32;
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
+@OpMetadata(
+    opType = RetrieveTPUEmbeddingMomentumParameters.OP_NAME,
+    inputsClass = RetrieveTPUEmbeddingMomentumParameters.Inputs.class
+)
 public final class RetrieveTPUEmbeddingMomentumParameters extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -45,8 +51,8 @@ public final class RetrieveTPUEmbeddingMomentumParameters extends RawOp {
 
   private Output<TFloat32> momenta;
 
-  private RetrieveTPUEmbeddingMomentumParameters(Operation operation) {
-    super(operation);
+  public RetrieveTPUEmbeddingMomentumParameters(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     parameters = operation.output(outputIdx++);
     momenta = operation.output(outputIdx++);
@@ -180,6 +186,9 @@ public final class RetrieveTPUEmbeddingMomentumParameters extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RetrieveTPUEmbeddingMomentumParameters.class
+  )
   public static class Inputs extends RawOpInputs<RetrieveTPUEmbeddingMomentumParameters> {
     /**
      * The tableId attribute

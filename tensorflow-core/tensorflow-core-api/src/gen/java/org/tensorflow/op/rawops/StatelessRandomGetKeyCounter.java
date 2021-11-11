@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
@@ -35,6 +37,10 @@ import org.tensorflow.types.family.TType;
  * Scrambles seed into key and counter, using the best algorithm based on device.
  * This op scrambles a shape-[2] seed into a key and a counter, both needed by counter-based RNG algorithms. The scrambing uses the best algorithm based on device. The scrambling is opaque but approximately satisfies the property that different seed results in different key/counter pair (which will in turn result in different random numbers).
  */
+@OpMetadata(
+    opType = StatelessRandomGetKeyCounter.OP_NAME,
+    inputsClass = StatelessRandomGetKeyCounter.Inputs.class
+)
 public final class StatelessRandomGetKeyCounter extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class StatelessRandomGetKeyCounter extends RawOp {
   private Output<? extends TType> counter;
 
   @SuppressWarnings("unchecked")
-  private StatelessRandomGetKeyCounter(Operation operation) {
-    super(operation);
+  public StatelessRandomGetKeyCounter(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     key = operation.output(outputIdx++);
     counter = operation.output(outputIdx++);
@@ -87,6 +93,9 @@ public final class StatelessRandomGetKeyCounter extends RawOp {
     return counter;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessRandomGetKeyCounter.class
+  )
   public static class Inputs extends RawOpInputs<StatelessRandomGetKeyCounter> {
     /**
      * 2 seeds (shape [2]).

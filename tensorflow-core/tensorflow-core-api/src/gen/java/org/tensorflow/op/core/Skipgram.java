@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -34,6 +36,10 @@ import org.tensorflow.types.TString;
 /**
  * Parses a text file and creates a batch of examples.
  */
+@OpMetadata(
+    opType = Skipgram.OP_NAME,
+    inputsClass = Skipgram.Inputs.class
+)
 @Operator
 public final class Skipgram extends RawOp {
   /**
@@ -55,8 +61,8 @@ public final class Skipgram extends RawOp {
 
   private Output<TInt32> labels;
 
-  private Skipgram(Operation operation) {
-    super(operation);
+  public Skipgram(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     vocabWord = operation.output(outputIdx++);
     vocabFreq = operation.output(outputIdx++);
@@ -243,6 +249,9 @@ public final class Skipgram extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = Skipgram.class
+  )
   public static class Inputs extends RawOpInputs<Skipgram> {
     /**
      * The corpus's text file name.

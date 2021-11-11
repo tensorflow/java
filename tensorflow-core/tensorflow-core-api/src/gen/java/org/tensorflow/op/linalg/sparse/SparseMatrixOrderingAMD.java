@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -74,6 +76,10 @@ import org.tensorflow.types.family.TType;
  * <p>{@code ordering_amd_value} stores the AMD ordering: {@code [1 2 3 0]}.
  * <p>input: A {@code CSRSparseMatrix}.
  */
+@OpMetadata(
+    opType = SparseMatrixOrderingAMD.OP_NAME,
+    inputsClass = SparseMatrixOrderingAMD.Inputs.class
+)
 public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -82,8 +88,8 @@ public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt
 
   private Output<TInt32> output;
 
-  private SparseMatrixOrderingAMD(Operation operation) {
-    super(operation);
+  public SparseMatrixOrderingAMD(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -118,6 +124,9 @@ public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseMatrixOrderingAMD.class
+  )
   public static class Inputs extends RawOpInputs<SparseMatrixOrderingAMD> {
     /**
      * A {@code CSRSparseMatrix}.

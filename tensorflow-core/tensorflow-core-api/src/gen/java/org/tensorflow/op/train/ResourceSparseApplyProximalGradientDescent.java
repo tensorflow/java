@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  * prox_v = var - alpha * grad
  * var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
  */
+@OpMetadata(
+    opType = ResourceSparseApplyProximalGradientDescent.OP_NAME,
+    inputsClass = ResourceSparseApplyProximalGradientDescent.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -46,8 +52,8 @@ public final class ResourceSparseApplyProximalGradientDescent extends RawOp {
    */
   public static final String OP_NAME = "ResourceSparseApplyProximalGradientDescent";
 
-  private ResourceSparseApplyProximalGradientDescent(Operation operation) {
-    super(operation);
+  public ResourceSparseApplyProximalGradientDescent(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -120,6 +126,9 @@ public final class ResourceSparseApplyProximalGradientDescent extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceSparseApplyProximalGradientDescent.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceSparseApplyProximalGradientDescent> {
     /**
      * Should be from a Variable().

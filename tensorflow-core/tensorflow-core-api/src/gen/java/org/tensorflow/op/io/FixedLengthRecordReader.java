@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs fixed-length records from a file.
  */
+@OpMetadata(
+    opType = FixedLengthRecordReader.OP_NAME,
+    inputsClass = FixedLengthRecordReader.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -45,8 +51,8 @@ public final class FixedLengthRecordReader extends RawOp implements Operand<TTyp
   private Output<? extends TType> readerHandle;
 
   @SuppressWarnings("unchecked")
-  private FixedLengthRecordReader(Operation operation) {
-    super(operation);
+  public FixedLengthRecordReader(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     readerHandle = operation.output(outputIdx++);
   }
@@ -259,6 +265,9 @@ public final class FixedLengthRecordReader extends RawOp implements Operand<TTyp
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = FixedLengthRecordReader.class
+  )
   public static class Inputs extends RawOpInputs<FixedLengthRecordReader> {
     /**
      * Number of bytes in the header, defaults to 0.

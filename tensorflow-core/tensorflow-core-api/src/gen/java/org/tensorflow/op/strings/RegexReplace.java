@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -35,6 +37,10 @@ import org.tensorflow.types.TString;
  * replacement string provided in {@code rewrite}.
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
+@OpMetadata(
+    opType = RegexReplace.OP_NAME,
+    inputsClass = RegexReplace.Inputs.class
+)
 @Operator(
     group = "strings"
 )
@@ -46,8 +52,8 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
 
   private Output<TString> output;
 
-  private RegexReplace(Operation operation) {
-    super(operation);
+  public RegexReplace(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -131,6 +137,9 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = RegexReplace.class
+  )
   public static class Inputs extends RawOpInputs<RegexReplace> {
     /**
      * The text to be processed.

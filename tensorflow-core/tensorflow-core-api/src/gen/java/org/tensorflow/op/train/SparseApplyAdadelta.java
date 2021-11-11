@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code out} output
  */
+@OpMetadata(
+    opType = SparseApplyAdadelta.OP_NAME,
+    inputsClass = SparseApplyAdadelta.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -48,8 +54,8 @@ public final class SparseApplyAdadelta<T extends TType> extends RawOp implements
 
   private Output<T> out;
 
-  private SparseApplyAdadelta(Operation operation) {
-    super(operation);
+  public SparseApplyAdadelta(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -142,6 +148,9 @@ public final class SparseApplyAdadelta<T extends TType> extends RawOp implements
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseApplyAdadelta.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SparseApplyAdadelta<T>> {
     /**
      * The var input

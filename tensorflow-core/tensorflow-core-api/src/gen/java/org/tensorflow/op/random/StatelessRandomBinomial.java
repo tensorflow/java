@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <W> data type for {@code output} output
  */
+@OpMetadata(
+    opType = StatelessRandomBinomial.OP_NAME,
+    inputsClass = StatelessRandomBinomial.Inputs.class
+)
 public final class StatelessRandomBinomial<W extends TNumber> extends RawOp implements Operand<W> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -47,8 +53,8 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
 
   private Output<W> output;
 
-  private StatelessRandomBinomial(Operation operation) {
-    super(operation);
+  public StatelessRandomBinomial(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -119,6 +125,9 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = StatelessRandomBinomial.class
+  )
   public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessRandomBinomial<?>> {
     /**
      * The shape of the output tensor.

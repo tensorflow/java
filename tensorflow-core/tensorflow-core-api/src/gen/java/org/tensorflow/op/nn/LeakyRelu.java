@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -36,6 +38,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code activations} output
  */
+@OpMetadata(
+    opType = LeakyRelu.OP_NAME,
+    inputsClass = LeakyRelu.Inputs.class
+)
 @Operator(
     group = "nn"
 )
@@ -47,8 +53,8 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
 
   private Output<T> activations;
 
-  private LeakyRelu(Operation operation) {
-    super(operation);
+  public LeakyRelu(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
   }
@@ -124,6 +130,9 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LeakyRelu.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<LeakyRelu<T>> {
     /**
      * The features input

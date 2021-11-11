@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <U> data type for {@code sparse_values} output
  */
+@OpMetadata(
+    opType = RaggedTensorToSparse.OP_NAME,
+    inputsClass = RaggedTensorToSparse.Inputs.class
+)
 public final class RaggedTensorToSparse<U extends TType> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -53,8 +59,8 @@ public final class RaggedTensorToSparse<U extends TType> extends RawOp {
 
   private Output<TInt64> sparseDenseShape;
 
-  private RaggedTensorToSparse(Operation operation) {
-    super(operation);
+  public RaggedTensorToSparse(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     sparseIndices = operation.output(outputIdx++);
     sparseValues = operation.output(outputIdx++);
@@ -108,6 +114,9 @@ public final class RaggedTensorToSparse<U extends TType> extends RawOp {
     return sparseDenseShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = RaggedTensorToSparse.class
+  )
   public static class Inputs<U extends TType> extends RawOpInputs<RaggedTensorToSparse<U>> {
     /**
      * The {@code row_splits} for the {@code RaggedTensor}.

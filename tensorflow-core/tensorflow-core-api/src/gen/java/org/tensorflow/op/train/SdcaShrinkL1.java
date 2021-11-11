@@ -27,12 +27,18 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Applies L1 regularization shrink step on the parameters.
  */
+@OpMetadata(
+    opType = SdcaShrinkL1.OP_NAME,
+    inputsClass = SdcaShrinkL1.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -42,8 +48,8 @@ public final class SdcaShrinkL1 extends RawOp {
    */
   public static final String OP_NAME = "SdcaShrinkL1";
 
-  private SdcaShrinkL1(Operation operation) {
-    super(operation);
+  public SdcaShrinkL1(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -68,6 +74,9 @@ public final class SdcaShrinkL1 extends RawOp {
     return new SdcaShrinkL1(opBuilder.build());
   }
 
+  @OpInputsMetadata(
+      outputsClass = SdcaShrinkL1.class
+  )
   public static class Inputs extends RawOpInputs<SdcaShrinkL1> {
     /**
      * a list of vectors where each value is the weight associated with a

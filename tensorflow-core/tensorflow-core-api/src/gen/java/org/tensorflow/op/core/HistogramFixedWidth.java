@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -52,6 +54,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code out} output
  */
+@OpMetadata(
+    opType = HistogramFixedWidth.OP_NAME,
+    inputsClass = HistogramFixedWidth.Inputs.class
+)
 @Operator
 public final class HistogramFixedWidth<U extends TNumber> extends RawOp implements Operand<U> {
   /**
@@ -61,8 +67,8 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
 
   private Output<U> out;
 
-  private HistogramFixedWidth(Operation operation) {
-    super(operation);
+  public HistogramFixedWidth(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     out = operation.output(outputIdx++);
   }
@@ -128,6 +134,9 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
     return out;
   }
 
+  @OpInputsMetadata(
+      outputsClass = HistogramFixedWidth.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<HistogramFixedWidth<?>> {
     /**
      * Numeric {@code Tensor}.

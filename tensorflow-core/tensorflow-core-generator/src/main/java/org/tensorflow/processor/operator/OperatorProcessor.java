@@ -155,6 +155,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static class OpsSpec {
+
     private static final Comparator<MethodSpec> PARAMETER_SPEC_COMPARATOR =
         (o1, o2) -> {
           if (o1.parameters.size() > o2.parameters.size()) {
@@ -495,7 +496,6 @@ public final class OperatorProcessor extends AbstractProcessor {
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
             .addParameter(Names.Scope, "scope")
-            .addModifiers(Modifier.PRIVATE)
             .addStatement("this.scope = scope", Names.Scope);
 
     TypeSpec.Builder opsBuilder =
@@ -675,7 +675,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addParameter(Names.ExecutionEnvironment, "env")
             .returns(Names.Ops)
-            .addStatement("return new Ops(env.baseScope())", Names.Scope)
+            .addStatement("return new Ops(env.baseScope())")
             .addJavadoc(
                 "Creates an API for building operations in the provided execution environment\n")
             .build());

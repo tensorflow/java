@@ -22,6 +22,7 @@ import org.tensorflow.EagerSession;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -34,7 +35,7 @@ public class ShapesTest {
   public void testFlatten_Operand() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Shape<TInt64> expResult = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> reshaped =
@@ -43,12 +44,11 @@ public class ShapesTest {
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
-      try (TInt64 result1 = (TInt64)session.runner().fetch(tfshape.asOutput()).run().get(0);
-          TInt64 result2 = (TInt64)session.runner().fetch(expResult.asOutput()).run().get(0)) {
+      try (TInt64 result1 = (TInt64) session.runner().fetch(tfshape.asOutput()).run().get(0);
+          TInt64 result2 = (TInt64) session.runner().fetch(expResult.asOutput()).run().get(0)) {
         result1
             .scalars()
-            .forEach(
-                s -> assertEquals(result2.getLong(index.getAndIncrement()), s.getLong()));
+            .forEach(s -> assertEquals(result2.getLong(index.getAndIncrement()), s.getLong()));
       }
     }
   }
@@ -57,7 +57,7 @@ public class ShapesTest {
   @Test
   public void testFlatten_Shape() {
     try (EagerSession session = EagerSession.create()) {
-      Scope scope = new Scope(session);
+      Scope scope = new OpScope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Shape<TInt64> expShape = Shape.create(scope, operand, TInt64.class);
       Operand<TFloat32> actual =
@@ -70,9 +70,7 @@ public class ShapesTest {
           .asTensor()
           .scalars()
           .forEach(
-              s ->
-                  assertEquals(
-                      expShape.asTensor().getLong(index.getAndIncrement()), s.getLong()));
+              s -> assertEquals(expShape.asTensor().getLong(index.getAndIncrement()), s.getLong()));
     }
   }
 
@@ -81,7 +79,7 @@ public class ShapesTest {
   public void testSize_Shape() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
@@ -89,7 +87,7 @@ public class ShapesTest {
       Operand<TInt64> size = Shapes.size(scope, tfshape, TInt64.class);
 
       AtomicInteger index = new AtomicInteger();
-      try (TInt64 result1 = (TInt64)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt64 result1 = (TInt64) session.runner().fetch(size.asOutput()).run().get(0)) {
         result1.scalars().forEach(s -> assertEquals(8, s.getLong()));
       }
     }
@@ -100,24 +98,24 @@ public class ShapesTest {
   public void testSize_Shape_Operand() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
       Operand<TInt32> size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 0));
-      try (TInt32 result = (TInt32)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(size.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(4, s.getInt()));
       }
 
       size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 1));
-      try (TInt32 result = (TInt32)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(size.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(2, s.getInt()));
       }
 
       size = Shapes.size(scope, tfshape, Constant.scalarOf(scope, 2));
-      try (TInt32 result = (TInt32)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(size.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(1, s.getInt()));
       }
     }
@@ -128,23 +126,23 @@ public class ShapesTest {
   public void testSize_Operand_Operand() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
 
       Operand<TInt32> size = Shapes.size(scope, actual, Constant.scalarOf(scope, 0));
-      try (TInt32 result = (TInt32)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(size.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(4, s.getInt()));
       }
 
       size = Shapes.size(scope, actual, Constant.scalarOf(scope, 1));
-      try (TInt32 result = (TInt32)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(size.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(2, s.getInt()));
       }
 
       size = Shapes.size(scope, actual, Constant.scalarOf(scope, 2));
-      try (TInt32 result = (TInt32)session.runner().fetch(size.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(size.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(1, s.getInt()));
       }
     }
@@ -155,14 +153,14 @@ public class ShapesTest {
   public void testNumDimensions() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2, 1}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
       Operand<TInt32> nDims = Shapes.numDimensions(scope, tfshape);
-      try (TInt32 result = (TInt32)session.runner().fetch(nDims.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(nDims.asOutput()).run().get(0)) {
         result.scalars().forEach(s -> assertEquals(3, s.getInt()));
       }
     }
@@ -172,7 +170,7 @@ public class ShapesTest {
   @Test
   public void testReduceDims_Operand_Operand() {
     try (EagerSession session = EagerSession.create()) {
-      Scope scope = new Scope(session);
+      Scope scope = new OpScope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {2, 2, 2}));
@@ -197,7 +195,7 @@ public class ShapesTest {
   @Test
   public void testReduceDims_Shape_Operand() {
     try (EagerSession session = EagerSession.create()) {
-      Scope scope = new Scope(session);
+      Scope scope = new OpScope(session);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {2, 2, 2}));
@@ -249,7 +247,7 @@ public class ShapesTest {
   public void testSqueeze() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -258,7 +256,7 @@ public class ShapesTest {
       Operand<TInt32> squeezed = Shapes.squeeze(scope, tfshape);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2};
-      try (TInt32 result = (TInt32)session.runner().fetch(squeezed.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(squeezed.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -274,7 +272,7 @@ public class ShapesTest {
   public void testHead() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -283,7 +281,7 @@ public class ShapesTest {
       Operand<TInt32> head = Shapes.head(scope, tfshape);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4};
-      try (TInt32 result = (TInt32)session.runner().fetch(head.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(head.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -299,7 +297,7 @@ public class ShapesTest {
   public void testTake() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -308,7 +306,7 @@ public class ShapesTest {
       Operand<TInt32> take = Shapes.take(scope, tfshape, Constant.scalarOf(scope, 2));
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 1};
-      try (TInt32 result = (TInt32)session.runner().fetch(take.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(take.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -324,7 +322,7 @@ public class ShapesTest {
   public void testTail() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -333,7 +331,7 @@ public class ShapesTest {
       Operand<TInt32> tail = Shapes.tail(scope, tfshape);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {1};
-      try (TInt32 result = (TInt32)session.runner().fetch(tail.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(tail.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -349,7 +347,7 @@ public class ShapesTest {
   public void testTakeLast() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual =
           Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 1, 2, 1}));
@@ -358,7 +356,7 @@ public class ShapesTest {
       Operand<TInt32> takeLast = Shapes.takeLast(scope, tfshape, Constant.scalarOf(scope, 3));
       AtomicInteger index = new AtomicInteger();
       int[] expected = {1, 2, 1};
-      try (TInt32 result = (TInt32)session.runner().fetch(takeLast.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(takeLast.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -374,15 +372,16 @@ public class ShapesTest {
   public void testPrependInt() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Operand<TFloat32> actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
+      Operand<TFloat32> actual =
+          Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
       Operand<TInt32> prepend = Shapes.prepend(scope, tfshape, 3);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {3, 4, 2};
-      try (TInt32 result = (TInt32)session.runner().fetch(prepend.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(prepend.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -398,15 +397,16 @@ public class ShapesTest {
   public void testPrependLong() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Operand<TFloat32> actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
+      Operand<TFloat32> actual =
+          Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       Operand<TInt64> prepend = Shapes.prepend(scope, tfshape, 1L);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {1, 4, 2};
-      try (TInt64 result = (TInt64)session.runner().fetch(prepend.asOutput()).run().get(0)) {
+      try (TInt64 result = (TInt64) session.runner().fetch(prepend.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -422,7 +422,7 @@ public class ShapesTest {
   public void testPrependShapeTInt32() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -435,7 +435,7 @@ public class ShapesTest {
       Operand<TInt32> prepend = Shapes.prepend(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {2, 4, 4, 2};
-      try (TInt32 result = (TInt32)session.runner().fetch(prepend.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(prepend.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -451,7 +451,7 @@ public class ShapesTest {
   public void testPrependShapeTInt64() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -464,7 +464,7 @@ public class ShapesTest {
       Operand<TInt64> prepend = Shapes.prepend(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {2, 4, 4, 2};
-      try (TInt64 result = (TInt64)session.runner().fetch(prepend.asOutput()).run().get(0)) {
+      try (TInt64 result = (TInt64) session.runner().fetch(prepend.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -480,15 +480,16 @@ public class ShapesTest {
   public void testAppendLong() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Operand<TFloat32> actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
+      Operand<TFloat32> actual =
+          Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt64> tfshape = Shape.create(scope, actual, TInt64.class);
 
       Operand<TInt64> append = Shapes.append(scope, tfshape, 2L);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {4L, 2L, 2L};
-      try (TInt64 result = (TInt64)session.runner().fetch(append.asOutput()).run().get(0)) {
+      try (TInt64 result = (TInt64) session.runner().fetch(append.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -504,15 +505,16 @@ public class ShapesTest {
   public void testAppendInt() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
-      Operand<TFloat32> actual = Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
+      Operand<TFloat32> actual =
+          Reshape.create(scope, operand, Constant.vectorOf(scope, new long[] {4, 2}));
       Shape<TInt32> tfshape = Shape.create(scope, actual);
 
       Operand<TInt32> append = Shapes.append(scope, tfshape, 2);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2, 2};
-      try (TInt32 result = (TInt32)session.runner().fetch(append.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(append.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -528,7 +530,7 @@ public class ShapesTest {
   public void testAppendShapeTInt32() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -541,7 +543,7 @@ public class ShapesTest {
       Operand<TInt32> append = Shapes.append(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       int[] expected = {4, 2, 2, 4};
-      try (TInt32 result = (TInt32)session.runner().fetch(append.asOutput()).run().get(0)) {
+      try (TInt32 result = (TInt32) session.runner().fetch(append.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(
@@ -557,7 +559,7 @@ public class ShapesTest {
   public void testAppendShapeTInt64() {
     try (Graph g = new Graph();
         Session session = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new OpScope(g);
       Operand<TFloat32> operand1 = Constant.arrayOf(scope, new float[] {1, 2, 3, 4, 5, 6, 7, 8});
       Operand<TFloat32> actual1 =
           Reshape.create(scope, operand1, Constant.vectorOf(scope, new long[] {4, 2}));
@@ -570,7 +572,7 @@ public class ShapesTest {
       Operand<TInt64> append = Shapes.append(scope, tfshape1, tfshape2);
       AtomicInteger index = new AtomicInteger();
       long[] expected = {4, 2, 2, 4};
-      try (TInt64 result = (TInt64)session.runner().fetch(append.asOutput()).run().get(0)) {
+      try (TInt64 result = (TInt64) session.runner().fetch(append.asOutput()).run().get(0)) {
         result
             .scalars()
             .forEach(

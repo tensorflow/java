@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  * Resize {@code images} to {@code size} using bicubic interpolation.
  * Input images can be of different types but output images are always float.
  */
+@OpMetadata(
+    opType = ResizeBicubic.OP_NAME,
+    inputsClass = ResizeBicubic.Inputs.class
+)
 @Operator(
     group = "image"
 )
@@ -48,8 +54,8 @@ public final class ResizeBicubic extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> resizedImages;
 
-  private ResizeBicubic(Operation operation) {
-    super(operation);
+  public ResizeBicubic(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     resizedImages = operation.output(outputIdx++);
   }
@@ -156,6 +162,9 @@ public final class ResizeBicubic extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResizeBicubic.class
+  )
   public static class Inputs extends RawOpInputs<ResizeBicubic> {
     /**
      * 4-D with shape {@code [batch, height, width, channels]}.

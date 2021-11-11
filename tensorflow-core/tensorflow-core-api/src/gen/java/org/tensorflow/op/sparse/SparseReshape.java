@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 
@@ -45,6 +47,10 @@ import org.tensorflow.types.TInt64;
  * {@code input_shape} has length {@code R_in}, {@code output_indices} has shape {@code [N, R_out]}, and
  * {@code output_shape} has length {@code R_out}.
  */
+@OpMetadata(
+    opType = SparseReshape.OP_NAME,
+    inputsClass = SparseReshape.Inputs.class
+)
 @Operator(
     group = "sparse"
 )
@@ -58,8 +64,8 @@ public final class SparseReshape extends RawOp {
 
   private Output<TInt64> outputShape;
 
-  private SparseReshape(Operation operation) {
-    super(operation);
+  public SparseReshape(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputShape = operation.output(outputIdx++);
@@ -108,6 +114,9 @@ public final class SparseReshape extends RawOp {
     return outputShape;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SparseReshape.class
+  )
   public static class Inputs extends RawOpInputs<SparseReshape> {
     /**
      * 2-D.  {@code N x R_in} matrix with the indices of non-empty values in a

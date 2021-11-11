@@ -31,6 +31,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -70,6 +72,10 @@ import org.tensorflow.types.family.TType;
  * <p>SparseTensor is not supported. The return value of the decorated function
  * must be a Tensor or a list/tuple of Tensors.
  */
+@OpMetadata(
+    opType = BatchFunction.OP_NAME,
+    inputsClass = BatchFunction.Inputs.class
+)
 @Operator
 public final class BatchFunction extends RawOp implements Iterable<Operand<TType>> {
   /**
@@ -80,8 +86,8 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
   private List<Output<?>> outTensors;
 
   @SuppressWarnings("unchecked")
-  private BatchFunction(Operation operation) {
-    super(operation);
+  public BatchFunction(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outTensorsLength = operation.outputListLength("out_tensors");
     outTensors = Arrays.asList(operation.outputList(outputIdx, outTensorsLength));
@@ -353,6 +359,9 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = BatchFunction.class
+  )
   public static class Inputs extends RawOpInputs<BatchFunction> {
     /**
      * The tensors to be batched.

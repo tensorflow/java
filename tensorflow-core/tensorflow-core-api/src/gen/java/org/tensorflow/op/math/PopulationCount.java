@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TUint8;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TNumber;
  * {@code int32} or {@code int64} and perform the bitcount on the result, than to feed in
  * 8- or 16-bit inputs and then aggregate the resulting counts.
  */
+@OpMetadata(
+    opType = PopulationCount.OP_NAME,
+    inputsClass = PopulationCount.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -51,8 +57,8 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
 
   private Output<TUint8> y;
 
-  private PopulationCount(Operation operation) {
-    super(operation);
+  public PopulationCount(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
   }
@@ -87,6 +93,9 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
     return y;
   }
 
+  @OpInputsMetadata(
+      outputsClass = PopulationCount.class
+  )
   public static class Inputs extends RawOpInputs<PopulationCount> {
     /**
      * The x input

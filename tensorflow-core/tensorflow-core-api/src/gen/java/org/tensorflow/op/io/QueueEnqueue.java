@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * <p>N.B. If the queue is full, this operation will block until the given
  * element has been enqueued (or 'timeout_ms' elapses, if specified).
  */
+@OpMetadata(
+    opType = QueueEnqueue.OP_NAME,
+    inputsClass = QueueEnqueue.Inputs.class
+)
 @Operator(
     group = "io"
 )
@@ -47,8 +53,8 @@ public final class QueueEnqueue extends RawOp {
    */
   public static final String OP_NAME = "QueueEnqueueV2";
 
-  private QueueEnqueue(Operation operation) {
-    super(operation);
+  public QueueEnqueue(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -113,6 +119,9 @@ public final class QueueEnqueue extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = QueueEnqueue.class
+  )
   public static class Inputs extends RawOpInputs<QueueEnqueue> {
     /**
      * The handle to a queue.

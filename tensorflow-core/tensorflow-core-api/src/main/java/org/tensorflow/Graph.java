@@ -39,6 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
@@ -46,6 +47,7 @@ import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.exceptions.TensorFlowException;
+import org.tensorflow.internal.c_api.NativeGraphPointer;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
@@ -56,6 +58,7 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Constant;
@@ -81,14 +84,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /** Create an empty Graph. */
   public Graph() {
-    nativeHandle = allocate();
-    this.baseScope = new Scope(this);
+    this(allocate());
   }
 
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
-    this.baseScope = new Scope(this);
+    this.baseScope = new OpScope(this);
+    allGraphs.add(this);
   }
 
   Graph(TF_Graph nativeHandle, SaverDef saverDef) {
@@ -119,6 +122,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
       delete(nativeHandle);
       nativeHandle = null;
+      allGraphs.remove(this);
     }
   }
 
@@ -215,7 +219,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * <p>The order of iteration is unspecified. Consumers of the iterator will receive no
    * notification should the underlying graph change during iteration.
    */
-  public Iterator<Operation> operations() {
+  public Iterator<GraphOperation> operations() {
     return new OperationIterator(this);
   }
 
@@ -366,12 +370,22 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return downstream;
   }
 
+  /**
+   * Returns a builder to add {@link Operation}s to the Graph.
+   *
+   * @param type of the Operation (i.e., identifies the computation to be performed)
+   * @param name to refer to the created Operation in the graph.
+   * @param scope the scope to use for the operation
+   * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
+   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
+   *     then some resources may leak.
+   */
   @Override
   public GraphOperationBuilder opBuilder(String type, String name, Scope scope) {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-    return new GraphOperationBuilder(this, type, name, scope);
+    return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
   }
 
   @Override
@@ -652,7 +666,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param dx if not null, the partial derivatives of some loss function {@code L} w.r.t. {@code y}
    * @return the partial derivatives {@code dy} with the size of {@code x}
    */
-  public Output<?>[] addGradients(String prefix, Output<?>[] y, Output<?>[] x, Output<?>[] dx) {
+  public synchronized Output<?>[] addGradients(
+      String prefix, Output<?>[] y, Output<?>[] x, Output<?>[] dx) {
     Output<?>[] dy = new Output<?>[x.length];
     final TF_Operation[] yHandles = new TF_Operation[y.length];
     final int[] yIndices = new int[y.length];
@@ -847,6 +862,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Return the {@link SaverDef} instance used to save the state of all variables present in this
    * graph.
    *
+   * <p>
+   *
    * <p>The first time this method is called it builds the {@link SaverDef}. If this graph already
    * contains a "save/restore_all" operation then it is assumed to contain all necessary saving and
    * restoring operations. If that operation does not exist then the graph is mutated to add all the
@@ -882,8 +899,20 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private SaverDef saverDef;
   private final Scope baseScope;
 
+  private boolean dangerousGradientBuilder;
+
   private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
   private boolean newInitializers = false;
+
+  /**
+   * Use builders without locking. This should only be used during custom gradient building.
+   *
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
+   */
+  synchronized void setDangerousGradientBuilder(boolean dangerous) {
+    dangerousGradientBuilder = dangerous;
+  }
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not
@@ -930,7 +959,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return new Reference();
   }
 
-  private static final class OperationIterator implements Iterator<Operation> {
+  private static final class OperationIterator implements Iterator<GraphOperation> {
 
     OperationIterator(Graph g) {
       this.graph = g;
@@ -964,8 +993,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     @Override
-    public Operation next() {
-      Operation rhett = this.operation;
+    public GraphOperation next() {
+      GraphOperation rhett = this.operation;
       this.advance();
       return rhett;
     }
@@ -976,7 +1005,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     private final Graph graph;
-    private Operation operation;
+    private GraphOperation operation;
     private int position;
   }
 
@@ -1246,7 +1275,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     List<Operand<?>> varOutputs = new ArrayList<>();
     List<Class<? extends TType>> varTypes = new ArrayList<>();
 
-    for (Iterator<Operation> iter = graph.operations(); iter.hasNext(); ) {
+    for (Iterator<GraphOperation> iter = graph.operations(); iter.hasNext(); ) {
       Operation op = iter.next();
       if (op.type().equals("VariableV2")) {
         varNames.add(op.name());
@@ -1285,6 +1314,25 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .setSaveTensorName(save.op().name())
         .setRestoreOpName(restore.op().name())
         .build();
+  }
+
+  private static Set<Graph> allGraphs =
+      Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+
+  /**
+   * Find the graph with the matching underlying native pointer.
+   *
+   * @return the graph if there is one, else null.
+   */
+  public static Graph findGraphForPointer(NativeGraphPointer pointer) {
+    for (Graph g : allGraphs) {
+      if (g.nativeHandle != null
+          && !g.nativeHandle.isNull()
+          && g.nativeHandle.graph().equals(pointer)) {
+        return g;
+      }
+    }
+    return null;
   }
 
   static {

@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -43,6 +45,10 @@ import org.tensorflow.types.family.TType;
  * This is a resource version of ConditionalAccumulator that will work in TF2.0
  * with tf.cond version 2.
  */
+@OpMetadata(
+    opType = ResourceConditionalAccumulator.OP_NAME,
+    inputsClass = ResourceConditionalAccumulator.Inputs.class
+)
 public final class ResourceConditionalAccumulator extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -52,8 +58,8 @@ public final class ResourceConditionalAccumulator extends RawOp implements Opera
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private ResourceConditionalAccumulator(Operation operation) {
-    super(operation);
+  public ResourceConditionalAccumulator(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -188,6 +194,9 @@ public final class ResourceConditionalAccumulator extends RawOp implements Opera
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceConditionalAccumulator.class
+  )
   public static class Inputs extends RawOpInputs<ResourceConditionalAccumulator> {
     /**
      * The type of the value being accumulated.

@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a handle to a Variable resource.
  */
+@OpMetadata(
+    opType = VarHandleOp.OP_NAME,
+    inputsClass = VarHandleOp.Inputs.class
+)
 @Operator
 public final class VarHandleOp extends RawOp implements Operand<TType> {
   /**
@@ -47,8 +53,8 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
   private Output<? extends TType> resource;
 
   @SuppressWarnings("unchecked")
-  private VarHandleOp(Operation operation) {
-    super(operation);
+  public VarHandleOp(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     resource = operation.output(outputIdx++);
   }
@@ -209,6 +215,9 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = VarHandleOp.class
+  )
   public static class Inputs extends RawOpInputs<VarHandleOp> {
     /**
      * the container this variable is placed in.

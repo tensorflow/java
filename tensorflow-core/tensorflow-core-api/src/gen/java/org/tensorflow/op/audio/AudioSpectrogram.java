@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
@@ -54,6 +56,10 @@ import org.tensorflow.types.TFloat32;
  * tensorflow/examples/wav_to_spectrogram to read in an audio file and save out the
  * resulting spectrogram as a PNG image.
  */
+@OpMetadata(
+    opType = AudioSpectrogram.OP_NAME,
+    inputsClass = AudioSpectrogram.Inputs.class
+)
 @Operator(
     group = "audio"
 )
@@ -65,8 +71,8 @@ public final class AudioSpectrogram extends RawOp implements Operand<TFloat32> {
 
   private Output<TFloat32> spectrogram;
 
-  private AudioSpectrogram(Operation operation) {
-    super(operation);
+  public AudioSpectrogram(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     spectrogram = operation.output(outputIdx++);
   }
@@ -148,6 +154,9 @@ public final class AudioSpectrogram extends RawOp implements Operand<TFloat32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = AudioSpectrogram.class
+  )
   public static class Inputs extends RawOpInputs<AudioSpectrogram> {
     /**
      * Float representation of audio data.

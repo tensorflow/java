@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -34,6 +36,10 @@ import org.tensorflow.types.family.TType;
 /**
  * Update '*var' according to the proximal adagrad scheme.
  */
+@OpMetadata(
+    opType = ResourceApplyAdagradDa.OP_NAME,
+    inputsClass = ResourceApplyAdagradDa.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -43,8 +49,8 @@ public final class ResourceApplyAdagradDa extends RawOp {
    */
   public static final String OP_NAME = "ResourceApplyAdagradDA";
 
-  private ResourceApplyAdagradDa(Operation operation) {
-    super(operation);
+  public ResourceApplyAdagradDa(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -122,6 +128,9 @@ public final class ResourceApplyAdagradDa extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ResourceApplyAdagradDa.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<ResourceApplyAdagradDa> {
     /**
      * Should be from a Variable().

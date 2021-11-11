@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
@@ -38,6 +40,10 @@ import org.tensorflow.types.TString;
  * path in the input checkpoint_prefixes.  This is useful when those paths are non
  * user-facing temporary locations.
  */
+@OpMetadata(
+    opType = MergeV2Checkpoints.OP_NAME,
+    inputsClass = MergeV2Checkpoints.Inputs.class
+)
 @Operator(
     group = "train"
 )
@@ -47,8 +53,8 @@ public final class MergeV2Checkpoints extends RawOp {
    */
   public static final String OP_NAME = "MergeV2Checkpoints";
 
-  private MergeV2Checkpoints(Operation operation) {
-    super(operation);
+  public MergeV2Checkpoints(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -110,6 +116,9 @@ public final class MergeV2Checkpoints extends RawOp {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = MergeV2Checkpoints.class
+  )
   public static class Inputs extends RawOpInputs<MergeV2Checkpoints> {
     /**
      * prefixes of V2 checkpoints to merge.

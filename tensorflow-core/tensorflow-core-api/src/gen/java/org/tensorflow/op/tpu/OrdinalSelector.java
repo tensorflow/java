@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -35,6 +37,10 @@ import org.tensorflow.types.TInt32;
  * (for regular inference) to execute the TPU program on. The output is
  * consumed by TPUPartitionedCall.
  */
+@OpMetadata(
+    opType = OrdinalSelector.OP_NAME,
+    inputsClass = OrdinalSelector.Inputs.class
+)
 public final class OrdinalSelector extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -43,8 +49,8 @@ public final class OrdinalSelector extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> deviceOrdinals;
 
-  private OrdinalSelector(Operation operation) {
-    super(operation);
+  public OrdinalSelector(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     deviceOrdinals = operation.output(outputIdx++);
   }
@@ -77,6 +83,9 @@ public final class OrdinalSelector extends RawOp implements Operand<TInt32> {
     return deviceOrdinals;
   }
 
+  @OpInputsMetadata(
+      outputsClass = OrdinalSelector.class
+  )
   public static class Inputs extends RawOpInputs<OrdinalSelector> {
     public Inputs(GraphOperation op) {
       super(new OrdinalSelector(op), op, Arrays.asList());

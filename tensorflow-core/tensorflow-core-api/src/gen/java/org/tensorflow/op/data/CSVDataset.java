@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
 /**
  * The CSVDatasetV2 operation
  */
+@OpMetadata(
+    opType = CSVDataset.OP_NAME,
+    inputsClass = CSVDataset.Inputs.class
+)
 @Operator(
     group = "data"
 )
@@ -52,8 +58,8 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private CSVDataset(Operation operation) {
-    super(operation);
+  public CSVDataset(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
@@ -117,6 +123,9 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
     return (Output<TType>) handle;
   }
 
+  @OpInputsMetadata(
+      outputsClass = CSVDataset.class
+  )
   public static class Inputs extends RawOpInputs<CSVDataset> {
     /**
      * The filenames input

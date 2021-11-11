@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -37,6 +39,10 @@ import org.tensorflow.types.family.TNumber;
  * The input {@code tags} and {@code values} must have the same shape.  The generated summary
  * has a summary value for each tag-value pair in {@code tags} and {@code values}.
  */
+@OpMetadata(
+    opType = ScalarSummary.OP_NAME,
+    inputsClass = ScalarSummary.Inputs.class
+)
 @Operator(
     group = "summary"
 )
@@ -48,8 +54,8 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
 
   private Output<TString> summary;
 
-  private ScalarSummary(Operation operation) {
-    super(operation);
+  public ScalarSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -87,6 +93,9 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
     return summary;
   }
 
+  @OpInputsMetadata(
+      outputsClass = ScalarSummary.class
+  )
   public static class Inputs extends RawOpInputs<ScalarSummary> {
     /**
      * Tags for the summary.

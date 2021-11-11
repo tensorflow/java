@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output_false} output
  */
+@OpMetadata(
+    opType = SwitchCond.OP_NAME,
+    inputsClass = SwitchCond.Inputs.class
+)
 @Operator
 public final class SwitchCond<T extends TType> extends RawOp {
   /**
@@ -51,8 +57,8 @@ public final class SwitchCond<T extends TType> extends RawOp {
 
   private Output<T> outputTrue;
 
-  private SwitchCond(Operation operation) {
-    super(operation);
+  public SwitchCond(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     outputFalse = operation.output(outputIdx++);
     outputTrue = operation.output(outputIdx++);
@@ -96,6 +102,9 @@ public final class SwitchCond<T extends TType> extends RawOp {
     return outputTrue;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SwitchCond.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SwitchCond<T>> {
     /**
      * The tensor to be forwarded to the appropriate output.

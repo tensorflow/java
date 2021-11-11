@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -38,6 +40,10 @@ import org.tensorflow.types.TInt32;
  * An op that returns a list of float tensors, where each tensor represents the
  * bucketized values for a single feature.
  */
+@OpMetadata(
+    opType = BoostedTreesBucketize.OP_NAME,
+    inputsClass = BoostedTreesBucketize.Inputs.class
+)
 public final class BoostedTreesBucketize extends RawOp implements Iterable<Operand<TInt32>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -47,8 +53,8 @@ public final class BoostedTreesBucketize extends RawOp implements Iterable<Opera
   private List<Output<TInt32>> buckets;
 
   @SuppressWarnings("unchecked")
-  private BoostedTreesBucketize(Operation operation) {
-    super(operation);
+  public BoostedTreesBucketize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int bucketsLength = operation.outputListLength("buckets");
     buckets = Arrays.asList((Output<TInt32>[]) operation.outputList(outputIdx, bucketsLength));
@@ -90,6 +96,9 @@ public final class BoostedTreesBucketize extends RawOp implements Iterable<Opera
     return (Iterator) buckets.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesBucketize.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesBucketize> {
     /**
      * float; List of Rank 1 Tensor each containing float values for a single feature.

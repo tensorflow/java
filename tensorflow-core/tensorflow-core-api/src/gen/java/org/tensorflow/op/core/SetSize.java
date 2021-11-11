@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TType;
  * <p>If {@code validate_indices} is {@code True}, this op validates the order and range of {@code set}
  * indices.
  */
+@OpMetadata(
+    opType = SetSize.OP_NAME,
+    inputsClass = SetSize.Inputs.class
+)
 @Operator
 public final class SetSize extends RawOp implements Operand<TInt32> {
   /**
@@ -50,8 +56,8 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
 
   private Output<TInt32> output;
 
-  private SetSize(Operation operation) {
-    super(operation);
+  public SetSize(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -132,6 +138,9 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = SetSize.class
+  )
   public static class Inputs extends RawOpInputs<SetSize> {
     /**
      * 2D {@code Tensor}, indices of a {@code SparseTensor}.

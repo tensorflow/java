@@ -264,7 +264,7 @@ public class SessionTest {
 
   private static int numOperations(Graph g) {
     int numOperations = 0;
-    for (Iterator<Operation> it = g.operations(); it.hasNext(); ) {
+    for (Iterator<GraphOperation> it = g.operations(); it.hasNext(); ) {
       Operation o = it.next();
       numOperations++;
     }

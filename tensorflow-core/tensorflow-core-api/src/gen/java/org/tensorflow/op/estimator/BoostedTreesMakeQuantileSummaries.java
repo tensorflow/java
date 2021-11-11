@@ -30,6 +30,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -37,6 +39,10 @@ import org.tensorflow.types.TFloat32;
  * An op that takes a list of tensors (one tensor per feature) and outputs the
  * quantile summaries for each tensor.
  */
+@OpMetadata(
+    opType = BoostedTreesMakeQuantileSummaries.OP_NAME,
+    inputsClass = BoostedTreesMakeQuantileSummaries.Inputs.class
+)
 public final class BoostedTreesMakeQuantileSummaries extends RawOp implements Iterable<Operand<TFloat32>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -46,8 +52,8 @@ public final class BoostedTreesMakeQuantileSummaries extends RawOp implements It
   private List<Output<TFloat32>> summaries;
 
   @SuppressWarnings("unchecked")
-  private BoostedTreesMakeQuantileSummaries(Operation operation) {
-    super(operation);
+  public BoostedTreesMakeQuantileSummaries(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int summariesLength = operation.outputListLength("summaries");
     summaries = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, summariesLength));
@@ -92,6 +98,9 @@ public final class BoostedTreesMakeQuantileSummaries extends RawOp implements It
     return (Iterator) summaries.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesMakeQuantileSummaries.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesMakeQuantileSummaries> {
     /**
      * float; List of Rank 1 Tensors each containing values for a single feature.

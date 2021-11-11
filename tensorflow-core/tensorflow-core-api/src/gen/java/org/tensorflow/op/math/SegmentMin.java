@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -53,6 +55,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = SegmentMin.OP_NAME,
+    inputsClass = SegmentMin.Inputs.class
+)
 @Operator(
     group = "math"
 )
@@ -64,8 +70,8 @@ public final class SegmentMin<T extends TNumber> extends RawOp implements Operan
 
   private Output<T> output;
 
-  private SegmentMin(Operation operation) {
-    super(operation);
+  public SegmentMin(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -106,6 +112,9 @@ public final class SegmentMin<T extends TNumber> extends RawOp implements Operan
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = SegmentMin.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<SegmentMin<T>> {
     /**
      * The data input

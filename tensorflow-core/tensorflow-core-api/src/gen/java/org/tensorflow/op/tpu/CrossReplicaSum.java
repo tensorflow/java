@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -41,6 +43,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = CrossReplicaSum.OP_NAME,
+    inputsClass = CrossReplicaSum.Inputs.class
+)
 public final class CrossReplicaSum<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -49,8 +55,8 @@ public final class CrossReplicaSum<T extends TNumber> extends RawOp implements O
 
   private Output<T> output;
 
-  private CrossReplicaSum(Operation operation) {
-    super(operation);
+  public CrossReplicaSum(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -91,6 +97,9 @@ public final class CrossReplicaSum<T extends TNumber> extends RawOp implements O
     return output;
   }
 
+  @OpInputsMetadata(
+      outputsClass = CrossReplicaSum.class
+  )
   public static class Inputs<T extends TNumber> extends RawOpInputs<CrossReplicaSum<T>> {
     /**
      * The local input to the sum.

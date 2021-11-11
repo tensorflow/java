@@ -29,6 +29,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
@@ -40,6 +42,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
+@OpMetadata(
+    opType = SplitV.OP_NAME,
+    inputsClass = SplitV.Inputs.class
+)
 @Operator
 public final class SplitV<T extends TType> extends RawOp implements Iterable<Operand<T>> {
   /**
@@ -50,8 +56,8 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
   private List<Output<T>> output;
 
   @SuppressWarnings("unchecked")
-  private SplitV(Operation operation) {
-    super(operation);
+  public SplitV(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputLength));
@@ -102,6 +108,9 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
     return (Iterator) output.iterator();
   }
 
+  @OpInputsMetadata(
+      outputsClass = SplitV.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<SplitV<T>> {
     /**
      * The tensor to split.

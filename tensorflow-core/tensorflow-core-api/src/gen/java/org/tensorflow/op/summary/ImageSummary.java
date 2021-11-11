@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
@@ -71,6 +73,10 @@ import org.tensorflow.types.family.TNumber;
  * replaced by this tensor in the output image.  The default value is the color
  * red.
  */
+@OpMetadata(
+    opType = ImageSummary.OP_NAME,
+    inputsClass = ImageSummary.Inputs.class
+)
 @Operator(
     group = "summary"
 )
@@ -82,8 +88,8 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
 
   private Output<TString> summary;
 
-  private ImageSummary(Operation operation) {
-    super(operation);
+  public ImageSummary(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     summary = operation.output(outputIdx++);
   }
@@ -187,6 +193,9 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ImageSummary.class
+  )
   public static class Inputs extends RawOpInputs<ImageSummary> {
     /**
      * Scalar. Used to build the {@code tag} attribute of the summary values.

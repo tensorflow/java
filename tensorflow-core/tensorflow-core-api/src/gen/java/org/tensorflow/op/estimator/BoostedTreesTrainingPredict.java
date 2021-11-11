@@ -28,6 +28,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TType;
  * It traverses the trees starting from cached tree id and cached node id and
  * calculates the updates to be pushed to the cache.
  */
+@OpMetadata(
+    opType = BoostedTreesTrainingPredict.OP_NAME,
+    inputsClass = BoostedTreesTrainingPredict.Inputs.class
+)
 public final class BoostedTreesTrainingPredict extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -50,8 +56,8 @@ public final class BoostedTreesTrainingPredict extends RawOp {
 
   private Output<TInt32> nodeIds;
 
-  private BoostedTreesTrainingPredict(Operation operation) {
-    super(operation);
+  public BoostedTreesTrainingPredict(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     partialLogits = operation.output(outputIdx++);
     treeIds = operation.output(outputIdx++);
@@ -117,6 +123,9 @@ public final class BoostedTreesTrainingPredict extends RawOp {
     return nodeIds;
   }
 
+  @OpInputsMetadata(
+      outputsClass = BoostedTreesTrainingPredict.class
+  )
   public static class Inputs extends RawOpInputs<BoostedTreesTrainingPredict> {
     /**
      * The treeEnsembleHandle input

@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
@@ -39,6 +41,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code s} output
  */
+@OpMetadata(
+    opType = Svd.OP_NAME,
+    inputsClass = Svd.Inputs.class
+)
 @Operator(
     group = "xla"
 )
@@ -54,8 +60,8 @@ public final class Svd<T extends TType> extends RawOp {
 
   private Output<T> v;
 
-  private Svd(Operation operation) {
-    super(operation);
+  public Svd(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     s = operation.output(outputIdx++);
     u = operation.output(outputIdx++);
@@ -117,6 +123,9 @@ public final class Svd<T extends TType> extends RawOp {
     return v;
   }
 
+  @OpInputsMetadata(
+      outputsClass = Svd.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<Svd<T>> {
     /**
      * the input tensor.

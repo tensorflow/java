@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
@@ -50,6 +52,10 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code batched_grad} output
  */
+@OpMetadata(
+    opType = UnbatchGrad.OP_NAME,
+    inputsClass = UnbatchGrad.Inputs.class
+)
 @Operator
 public final class UnbatchGrad<T extends TType> extends RawOp implements Operand<T> {
   /**
@@ -59,8 +65,8 @@ public final class UnbatchGrad<T extends TType> extends RawOp implements Operand
 
   private Output<T> batchedGrad;
 
-  private UnbatchGrad(Operation operation) {
-    super(operation);
+  public UnbatchGrad(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     batchedGrad = operation.output(outputIdx++);
   }
@@ -168,6 +174,9 @@ public final class UnbatchGrad<T extends TType> extends RawOp implements Operand
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = UnbatchGrad.class
+  )
   public static class Inputs<T extends TType> extends RawOpInputs<UnbatchGrad<T>> {
     /**
      * The originalInput input

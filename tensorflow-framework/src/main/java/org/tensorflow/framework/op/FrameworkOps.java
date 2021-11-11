@@ -18,6 +18,7 @@ import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 
@@ -71,7 +72,7 @@ public class FrameworkOps {
    * @return the FrameworkOps
    */
   public static FrameworkOps create(ExecutionEnvironment env) {
-    return new FrameworkOps(new Scope(env));
+    return new FrameworkOps(new OpScope(env));
   }
 
   /**
@@ -83,7 +84,7 @@ public class FrameworkOps {
    * @return the FrameworkOps
    */
   public static FrameworkOps create() {
-    return new FrameworkOps(new Scope(EagerSession.getDefault()));
+    return new FrameworkOps(new OpScope(EagerSession.getDefault()));
   }
 
   /**

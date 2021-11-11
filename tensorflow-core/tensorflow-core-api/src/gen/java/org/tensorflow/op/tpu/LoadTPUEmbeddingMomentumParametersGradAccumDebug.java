@@ -26,6 +26,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -36,14 +38,18 @@ import org.tensorflow.types.TFloat32;
  * parameters that are loaded from a checkpoint before a training loop is
  * executed.
  */
+@OpMetadata(
+    opType = LoadTPUEmbeddingMomentumParametersGradAccumDebug.OP_NAME,
+    inputsClass = LoadTPUEmbeddingMomentumParametersGradAccumDebug.Inputs.class
+)
 public final class LoadTPUEmbeddingMomentumParametersGradAccumDebug extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "LoadTPUEmbeddingMomentumParametersGradAccumDebug";
 
-  private LoadTPUEmbeddingMomentumParametersGradAccumDebug(Operation operation) {
-    super(operation);
+  public LoadTPUEmbeddingMomentumParametersGradAccumDebug(Operation operation) {
+    super(operation, OP_NAME);
   }
 
   /**
@@ -163,6 +169,9 @@ public final class LoadTPUEmbeddingMomentumParametersGradAccumDebug extends RawO
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = LoadTPUEmbeddingMomentumParametersGradAccumDebug.class
+  )
   public static class Inputs extends RawOpInputs<LoadTPUEmbeddingMomentumParametersGradAccumDebug> {
     /**
      * Value of parameters used in the Momentum optimization algorithm.

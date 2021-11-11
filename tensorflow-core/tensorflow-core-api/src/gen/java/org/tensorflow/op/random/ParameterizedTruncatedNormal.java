@@ -27,6 +27,8 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TNumber;
@@ -38,6 +40,10 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <U> data type for {@code output} output
  */
+@OpMetadata(
+    opType = ParameterizedTruncatedNormal.OP_NAME,
+    inputsClass = ParameterizedTruncatedNormal.Inputs.class
+)
 @Operator(
     group = "random"
 )
@@ -49,8 +55,8 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
 
   private Output<U> output;
 
-  private ParameterizedTruncatedNormal(Operation operation) {
-    super(operation);
+  public ParameterizedTruncatedNormal(Operation operation) {
+    super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
@@ -167,6 +173,9 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
     }
   }
 
+  @OpInputsMetadata(
+      outputsClass = ParameterizedTruncatedNormal.class
+  )
   public static class Inputs<U extends TNumber> extends RawOpInputs<ParameterizedTruncatedNormal<U>> {
     /**
      * The shape of the output tensor. Batches are indexed by the 0th dimension.
