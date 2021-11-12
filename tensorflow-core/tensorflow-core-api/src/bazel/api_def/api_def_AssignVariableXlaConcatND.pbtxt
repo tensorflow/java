@@ -1,6 +1,6 @@
 op {
   graph_op_name: "AssignVariableXlaConcatND"
   endpoint {
-    name: "rawops.AssignVariableXlaConcatND"
+    name: "xla.AssignVariableConcatND"
   }
 }

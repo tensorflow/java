@@ -71,13 +71,15 @@ public final class RangeDataset extends RawOp implements Operand<TType> {
    * @param step corresponds to step in python's xrange().
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of RangeDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static RangeDataset create(Scope scope, Operand<TInt64> start, Operand<TInt64> stop,
-      Operand<TInt64> step, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      Operand<TInt64> step, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RangeDataset");
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
@@ -88,7 +90,24 @@ public final class RangeDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new RangeDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -104,6 +123,27 @@ public final class RangeDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.RangeDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -135,14 +175,20 @@ public final class RangeDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new RangeDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      super(new RangeDataset(op), op, Arrays.asList("output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       start = (Operand<TInt64>) op.input(inputIndex++);
       stop = (Operand<TInt64>) op.input(inputIndex++);
       step = (Operand<TInt64>) op.input(inputIndex++);
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

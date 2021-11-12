@@ -41,10 +41,8 @@ import org.tensorflow.types.family.TType;
  * Wraps the variadic XLA Reduce operator.
  * Semantics are documented at
  * https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
- * <p>This version is limited to operands of the same dtype.
- * XlaVariadicReduceV2 is a version that supports heterogeneous operands.
- *
- * @param <T> data type for {@code output} output
+ * <p>This is an expanded version of XlaVariadicReduce, with support for
+ * operands of different dtypes, and improved shape inference.
  */
 @OpMetadata(
     opType = XlaVariadicReduce.OP_NAME,
@@ -53,85 +51,83 @@ import org.tensorflow.types.family.TType;
 @Operator(
     group = "xla"
 )
-public final class XlaVariadicReduce<T extends TType> extends RawOp implements Iterable<Operand<T>> {
+public final class XlaVariadicReduce extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaVariadicReduce";
+  public static final String OP_NAME = "XlaVariadicReduceV2";
 
-  private List<Output<T>> output;
+  private List<Output<?>> outputs;
 
   @SuppressWarnings("unchecked")
   public XlaVariadicReduce(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
-    int outputLength = operation.outputListLength("output");
-    output = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputLength));
-    outputIdx += outputLength;
+    int outputsLength = operation.outputListLength("outputs");
+    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
+    outputIdx += outputsLength;
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaVariadicReduce operation.
+   * Factory method to create a class wrapping a new XlaVariadicReduceV2 operation.
    *
    * @param scope current scope
-   * @param input the input tensor(s)
-   * @param initValue scalar initial value(s) for the reduction
+   * @param inputs the input tensor(s)
+   * @param initValues scalar initial value(s) for the reduction
    * @param dimensionsToReduce dimension numbers over which to reduce
    * @param reducer a reducer function to apply
-   * @param <T> data type for {@code XlaVariadicReduce} output and operands
    * @return a new instance of XlaVariadicReduce
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> XlaVariadicReduce<T> create(Scope scope,
-      Iterable<Operand<T>> input, Iterable<Operand<T>> initValue, List<Long> dimensionsToReduce,
-      ConcreteFunction reducer) {
+  public static XlaVariadicReduce create(Scope scope, Iterable<Operand<?>> inputs,
+      Iterable<Operand<?>> initValues, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaVariadicReduce");
-    opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder.addInputList(Operands.asOutputs(initValue));
+    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder.addInputList(Operands.asOutputs(initValues));
     long[] dimensionsToReduceArray = new long[dimensionsToReduce.size()];
     for (int i = 0 ; i < dimensionsToReduceArray.length ; i++) {
       dimensionsToReduceArray[i] = dimensionsToReduce.get(i);
     }
     opBuilder.setAttr("dimensions_to_reduce", dimensionsToReduceArray);
     opBuilder.setAttr("reducer", reducer);
-    return new XlaVariadicReduce<>(opBuilder.build());
+    return new XlaVariadicReduce(opBuilder.build());
   }
 
   /**
-   * Gets output.
+   * Gets outputs.
    *
-   * @return output.
+   * @return outputs.
    */
-  public List<Output<T>> output() {
-    return output;
+  public List<Output<?>> outputs() {
+    return outputs;
   }
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<T>> iterator() {
-    return (Iterator) output.iterator();
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) outputs.iterator();
   }
 
   @OpInputsMetadata(
       outputsClass = XlaVariadicReduce.class
   )
-  public static class Inputs<T extends TType> extends RawOpInputs<XlaVariadicReduce<T>> {
+  public static class Inputs extends RawOpInputs<XlaVariadicReduce> {
     /**
      * the input tensor(s)
      */
-    public final Iterable<Operand<T>> input;
+    public final Iterable<Operand<?>> inputs;
 
     /**
      * scalar initial value(s) for the reduction
      */
-    public final Iterable<Operand<T>> initValue;
+    public final Iterable<Operand<?>> initValues;
 
     /**
      * The T attribute
      */
-    public final DataType T;
+    public final DataType[] T;
 
     /**
      * dimension numbers over which to reduce
@@ -139,15 +135,15 @@ public final class XlaVariadicReduce<T extends TType> extends RawOp implements I
     public final long[] dimensionsToReduce;
 
     public Inputs(GraphOperation op) {
-      super(new XlaVariadicReduce<>(op), op, Arrays.asList("T", "dimensions_to_reduce"));
+      super(new XlaVariadicReduce(op), op, Arrays.asList("T", "dimensions_to_reduce"));
       int inputIndex = 0;
-      int inputLength = op.inputListLength("input");
-      input = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, inputLength));
-      inputIndex += inputLength;
-      int initValueLength = op.inputListLength("init_value");
-      initValue = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, initValueLength));
-      inputIndex += initValueLength;
-      T = op.attributes().getAttrType("T");
+      int inputsLength = op.inputListLength("inputs");
+      inputs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputsLength));
+      inputIndex += inputsLength;
+      int initValuesLength = op.inputListLength("init_values");
+      initValues = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, initValuesLength));
+      inputIndex += initValuesLength;
+      T = op.attributes().getAttrTypeList("T");
       dimensionsToReduce = op.attributes().getAttrIntList("dimensions_to_reduce");
     }
   }

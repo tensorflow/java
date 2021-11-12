@@ -1,6 +1,4 @@
 op {
   graph_op_name: "CollectiveReduceV2"
-  endpoint {
-    name: "collective.ReduceV2"
-  }
+  visibility: SKIP
 }

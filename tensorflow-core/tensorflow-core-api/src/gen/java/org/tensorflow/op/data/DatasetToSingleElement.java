@@ -71,13 +71,14 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
    * @param dataset A handle to a dataset that contains a single element.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of DatasetToSingleElement
    */
   @Endpoint(
       describeByClass = true
   )
   public static DatasetToSingleElement create(Scope scope, Operand<? extends TType> dataset,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetToSingleElement");
     opBuilder.addInput(dataset.asOutput());
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
@@ -86,7 +87,24 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new DatasetToSingleElement(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -102,6 +120,27 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.DatasetToSingleElement}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -123,12 +162,18 @@ public final class DatasetToSingleElement extends RawOp implements Iterable<Oper
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new DatasetToSingleElement(op), op, Arrays.asList("output_types", "output_shapes"));
+      super(new DatasetToSingleElement(op), op, Arrays.asList("output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       dataset = (Operand<? extends TType>) op.input(inputIndex++);
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

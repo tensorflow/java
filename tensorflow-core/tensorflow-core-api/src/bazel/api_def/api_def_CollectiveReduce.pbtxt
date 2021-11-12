@@ -1,10 +1,4 @@
 op {
   graph_op_name: "CollectiveReduce"
-  endpoint {
-    name: "collective.Reduce"
-  }
-  endpoint {
-    name: "collective.AllReduce"
-    deprecated: true
-  }
+  visibility: SKIP
 }

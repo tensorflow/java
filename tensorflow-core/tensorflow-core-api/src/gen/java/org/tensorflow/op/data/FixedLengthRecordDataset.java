@@ -69,6 +69,7 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
    * @param footerBytes The footerBytes value
    * @param bufferSize The bufferSize value
    * @param compressionType The compressionType value
+   * @param options carries optional attribute values
    * @return a new instance of FixedLengthRecordDataset
    */
   @Endpoint(
@@ -76,7 +77,7 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
   )
   public static FixedLengthRecordDataset create(Scope scope, Operand<TString> filenames,
       Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes,
-      Operand<TInt64> bufferSize, Operand<TString> compressionType) {
+      Operand<TInt64> bufferSize, Operand<TString> compressionType, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FixedLengthRecordDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(headerBytes.asOutput());
@@ -84,7 +85,24 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
     opBuilder.addInput(footerBytes.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder.addInput(compressionType.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new FixedLengthRecordDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -100,6 +118,27 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.FixedLengthRecordDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -136,8 +175,13 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
      */
     public final Operand<TString> compressionType;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new FixedLengthRecordDataset(op), op, Arrays.asList());
+      super(new FixedLengthRecordDataset(op), op, Arrays.asList("metadata"));
       int inputIndex = 0;
       filenames = (Operand<TString>) op.input(inputIndex++);
       headerBytes = (Operand<TInt64>) op.input(inputIndex++);
@@ -145,6 +189,7 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
       footerBytes = (Operand<TInt64>) op.input(inputIndex++);
       bufferSize = (Operand<TInt64>) op.input(inputIndex++);
       compressionType = (Operand<TString>) op.input(inputIndex++);
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

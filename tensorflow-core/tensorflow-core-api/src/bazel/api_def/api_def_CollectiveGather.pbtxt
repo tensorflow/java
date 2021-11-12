@@ -1,10 +1,4 @@
 op {
   graph_op_name: "CollectiveGather"
-  endpoint: {
-    name: "collective.Gather"
-  }
-  endpoint: {
-    name: "CollectiveGather"
-    deprecated: true
-  }
+  visibility: SKIP
 }

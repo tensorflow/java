@@ -1,6 +1,6 @@
 op {
   graph_op_name: "LoadTPUEmbeddingAdagradMomentumParameters"
   endpoint {
-    name: "rawops.LoadTPUEmbeddingAdagradMomentumParameters"
+    name: "tpu.LoadTPUEmbeddingAdagradMomentumParameters"
   }
 }

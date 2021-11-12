@@ -1,6 +1,4 @@
 op {
   graph_op_name: "CollectiveBcastRecv"
-  endpoint {
-    name: "collective.BroadcastRecv"
-  }
+  visibility: SKIP
 }

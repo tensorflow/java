@@ -1424,19 +1424,22 @@ public final class DataOps {
   }
 
   /**
-   * The SaveDataset operation
+   * The SaveDatasetV2 operation
    *
    * @param inputDataset The inputDataset value
    * @param path The path value
    * @param shardFuncOtherArgs The shardFuncOtherArgs value
    * @param shardFunc The value of the shardFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of SaveDataset
    */
   public SaveDataset saveDataset(Operand<? extends TType> inputDataset, Operand<TString> path,
       Iterable<Operand<?>> shardFuncOtherArgs, ConcreteFunction shardFunc,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       SaveDataset.Options... options) {
-    return SaveDataset.create(scope, inputDataset, path, shardFuncOtherArgs, shardFunc, options);
+    return SaveDataset.create(scope, inputDataset, path, shardFuncOtherArgs, shardFunc, outputTypes, outputShapes, options);
   }
 
   /**

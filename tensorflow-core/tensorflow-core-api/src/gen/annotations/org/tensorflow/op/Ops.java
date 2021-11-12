@@ -296,10 +296,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
-import org.tensorflow.op.core.XlaAllReduce;
-import org.tensorflow.op.core.XlaReduceScatter;
-import org.tensorflow.op.core.XlaRngBitGenerator;
-import org.tensorflow.op.core.XlaVariadicReduceV2;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -381,9 +377,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -407,8 +403,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    train = new TrainOps(this);
   }
 
   /**
@@ -8046,77 +8042,6 @@ public final class Ops {
   public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
       While.Options... options) {
     return While.create(scope, input, cond, body, options);
-  }
-
-  /**
-   * Wraps the XLA AllReduce operator
-   *  documented at https://www.tensorflow.org/xla/operation_semantics#allreduce.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input Array or a non-empty tuple of arrays to reduce across replicas.
-   * @param groupAssignment Groups between which the reductions are performed.
-   * @param reduceOp Reduction computation.
-   * @param <T> data type for {@code XlaAllReduce} output and operands
-   * @return a new instance of XlaAllReduce
-   */
-  public <T extends TNumber> XlaAllReduce<T> xlaAllReduce(Operand<T> input,
-      Operand<TInt32> groupAssignment, String reduceOp) {
-    return XlaAllReduce.create(scope, input, groupAssignment, reduceOp);
-  }
-
-  /**
-   * Wraps the XLA ReduceScatter operator
-   *  documented at https://www.tensorflow.org/xla/operation_semantics#reducescatter.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input Array or a non-empty tuple of arrays to reduce across replicas.
-   * @param groupAssignment Groups between which the reductions are performed.
-   * @param scatterDimension Dimension to scatter.
-   * @param reduceOp Reduction computation.
-   * @param <T> data type for {@code XlaReduceScatter} output and operands
-   * @return a new instance of XlaReduceScatter
-   */
-  public <T extends TNumber> XlaReduceScatter<T> xlaReduceScatter(Operand<T> input,
-      Operand<TInt32> groupAssignment, Operand<TInt32> scatterDimension, String reduceOp) {
-    return XlaReduceScatter.create(scope, input, groupAssignment, scatterDimension, reduceOp);
-  }
-
-  /**
-   * Stateless PRNG bit generator.
-   *  Wraps the XLA RngBitGenerator operator, documented at
-   *  https://www.tensorflow.org/performance/xla/operation_semantics#rngbitgenerator.
-   *
-   * @param <U> data type for {@code output} output
-   * @param algorithm The PRNG algorithm to use, one of
-   *  tf.random.Algorithm.{PHILOX, THREEFRY, AUTO_SELECT}.
-   * @param initialState Initial state for the PRNG algorithm. For THREEFRY, it should be
-   *  a u64[2] and for PHILOX a u64[3].
-   * @param shape The output shape of the generated data.
-   * @param dtype The type of the tensor.
-   * @param <U> data type for {@code XlaRngBitGenerator} output and operands
-   * @return a new instance of XlaRngBitGenerator
-   */
-  public <U extends TNumber> XlaRngBitGenerator<U> xlaRngBitGenerator(Operand<TInt32> algorithm,
-      Operand<? extends TType> initialState, Operand<? extends TNumber> shape, Class<U> dtype) {
-    return XlaRngBitGenerator.create(scope, algorithm, initialState, shape, dtype);
-  }
-
-  /**
-   * Wraps the variadic XLA Reduce operator.
-   *  Semantics are documented at
-   *  https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
-   *  <p>This is an expanded version of XlaVariadicReduce, with support for
-   *  operands of different dtypes, and improved shape inference.
-   *
-   * @param inputs the input tensor(s)
-   * @param initValues scalar initial value(s) for the reduction
-   * @param dimensionsToReduce dimension numbers over which to reduce
-   * @param reducer a reducer function to apply
-   * @return a new instance of XlaVariadicReduceV2
-   */
-  public XlaVariadicReduceV2 xlaVariadicReduceV2(Iterable<Operand<?>> inputs,
-      Iterable<Operand<?>> initValues, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
-    return XlaVariadicReduceV2.create(scope, inputs, initValues, dimensionsToReduce, reducer);
   }
 
   /**

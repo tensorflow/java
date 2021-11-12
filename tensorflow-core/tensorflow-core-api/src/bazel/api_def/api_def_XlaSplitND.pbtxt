@@ -1,6 +1,6 @@
 op {
   graph_op_name: "XlaSplitND"
   endpoint {
-    name: "rawops.XlaSplitND"
+    name: "xla.SplitND"
   }
 }

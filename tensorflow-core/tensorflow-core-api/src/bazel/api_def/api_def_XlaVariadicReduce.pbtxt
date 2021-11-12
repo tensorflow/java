@@ -1,6 +1,4 @@
 op {
   graph_op_name: "XlaVariadicReduce"
-  endpoint: {
-    name: "xla.XlaVariadicReduce"
-  }
+  visibility: SKIP
 }

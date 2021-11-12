@@ -1,6 +1,6 @@
 op {
   graph_op_name: "StatelessRandomGetAlg"
   endpoint {
-    name: "rawops.StatelessRandomGetAlg"
+    name: "random.StatelessRandomGetAlg"
   }
 }

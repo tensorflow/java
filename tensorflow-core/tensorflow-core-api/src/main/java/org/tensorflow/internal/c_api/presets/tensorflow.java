@@ -511,6 +511,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tensorflow::Status::ErasePayload",
                     "tensorflow::Status::SetPayload",
                     "tensorflow::Status::GetPayload",
+                    "tensorflow::Status::ForEachPayload",
                     "tensorflow::Node::SetStackTrace",
                     "tensorflow::Node::GetStackTrace")
                 .skip());

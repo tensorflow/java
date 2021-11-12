@@ -67,13 +67,14 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
    * @param scope current scope
    * @param components The components value
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TensorSliceDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static TensorSliceDataset create(Scope scope, Iterable<Operand<?>> components,
-      List<Shape> outputShapes) {
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorSliceDataset");
     opBuilder.addInputList(Operands.asOutputs(components));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
@@ -81,7 +82,37 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.isFiles != null) {
+          opBuilder.setAttr("is_files", opts.isFiles);
+        }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new TensorSliceDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the isFiles option.
+   *
+   * @param isFiles the isFiles option
+   * @return this Options instance.
+   */
+  public static Options isFiles(Boolean isFiles) {
+    return new Options().isFiles(isFiles);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -97,6 +128,40 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.TensorSliceDataset}
+   */
+  public static class Options {
+    private Boolean isFiles;
+
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the isFiles option.
+     *
+     * @param isFiles the isFiles option
+     * @return this Options instance.
+     */
+    public Options isFiles(Boolean isFiles) {
+      this.isFiles = isFiles;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -118,14 +183,26 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The isFiles attribute
+     */
+    public final boolean isFiles;
+
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new TensorSliceDataset(op), op, Arrays.asList("Toutput_types", "output_shapes"));
+      super(new TensorSliceDataset(op), op, Arrays.asList("Toutput_types", "output_shapes", "is_files", "metadata"));
       int inputIndex = 0;
       int componentsLength = op.inputListLength("components");
       components = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, componentsLength));
       inputIndex += componentsLength;
       ToutputTypes = op.attributes().getAttrTypeList("Toutput_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      isFiles = op.attributes().getAttrBool("is_files");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }
