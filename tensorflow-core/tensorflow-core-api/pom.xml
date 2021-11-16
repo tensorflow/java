@@ -147,9 +147,13 @@
         <artifactId>maven-resources-plugin</artifactId>
         <version>3.1.0</version>
         <executions>
+          <!--
+            Important: Use a phase before "generate-sources" like "initialize" or Maven may move
+            its execution after JavaCPP when profiles override its configuration
+          -->
           <execution>
             <id>javacpp-parser</id>
-            <phase>generate-sources</phase>
+            <phase>initialize</phase>
             <goals>
               <goal>resources</goal>
             </goals>
@@ -184,12 +188,14 @@
           </execution>
           <!--
           Compile JavaCPP presets
-            This must be done prematurely, at the generate-sources phase, since the javacpp-plugin
+            This must be done prematurely, before the generate-sources phase, since the javacpp-plugin
             will parse the compiled presets for generating Java bindings to the native APIs
+            Important: Use a phase before "generate-sources" like "initialize" or Maven may move
+            its execution after JavaCPP when profiles override its configuration
           -->
           <execution>
             <id>javacpp-parser</id>
-            <phase>generate-sources</phase>
+            <phase>initialize</phase>
             <goals>
               <goal>compile</goal>
             </goals>

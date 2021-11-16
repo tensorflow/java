@@ -1103,6 +1103,16 @@ public static native void TF_GraphGetTensorShape(TF_Graph graph,
                                                   @Cast("int64_t*") long[] dims, int num_dims,
                                                   TF_Status status);
 
+// Creates a new operation - see `TF_NewOperation` for more details.
+//
+// The lock for `graph` must be held when calling this function.
+//
+// Unless implementing advanced behavior, like custom gradient functions, you
+// most likely need to call `TF_NewOperation` instead.
+public static native TF_OperationDescription TF_NewOperationLocked(
+    TF_Graph graph, @Cast("const char*") BytePointer op_type, @Cast("const char*") BytePointer oper_name);
+public static native TF_OperationDescription TF_NewOperationLocked(
+    TF_Graph graph, String op_type, String oper_name);
 
 // Operation will only be added to *graph when TF_FinishOperation() is
 // called (assuming TF_FinishOperation() does not return an error).
@@ -1442,6 +1452,15 @@ public static native void TF_SetAttrValueProto(TF_OperationDescription desc,
                                                 @Const Pointer proto,
                                                 @Cast("size_t") long proto_len,
                                                 TF_Status status);
+
+// Adds this operation to the graph - see `TF_FinishOperation` for more details.
+//
+// The lock for `graph` must be held when calling this function.
+//
+// Unless implementing advanced behavior, like custom gradient functions, you
+// most likely need to call `TF_FinishOperation` instead.
+public static native TF_Operation TF_FinishOperationLocked(
+    TF_OperationDescription desc, TF_Status status);
 
 // If this function succeeds:
 //   * *status is set to an OK value,
