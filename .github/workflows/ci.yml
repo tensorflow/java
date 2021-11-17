@@ -203,7 +203,7 @@ jobs:
         run: |
           set "PATH=C:\msys64\usr\bin;%PATH%"
           echo Removing broken stuff from WSL and MSYS2
-          rm "C:/WINDOWS/system32/bash.EXE" "C:/msys64/usr/bin/python.exe"
+          rm "C:/WINDOWS/system32/bash.EXE" "C:/msys64/usr/bin/python.exe" "C:/msys64/usr/bin/python3.exe"
           python -m pip install numpy six
           echo Removing old versions of MSVC that interfere with Bazel
           bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
