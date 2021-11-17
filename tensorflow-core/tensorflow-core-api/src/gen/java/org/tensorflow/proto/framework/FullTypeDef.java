@@ -79,6 +79,11 @@ private static final long serialVersionUID = 0L;
             attr_ = s;
             break;
           }
+          case 32: {
+            attrCase_ = 4;
+            attr_ = input.readInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -119,6 +124,7 @@ private static final long serialVersionUID = 0L;
   public enum AttrCase
       implements com.google.protobuf.Internal.EnumLite {
     S(3),
+    I(4),
     ATTR_NOT_SET(0);
     private final int value;
     private AttrCase(int value) {
@@ -135,6 +141,7 @@ private static final long serialVersionUID = 0L;
     public static AttrCase forNumber(int value) {
       switch (value) {
         case 3: return S;
+        case 4: return I;
         case 0: return ATTR_NOT_SET;
         default: return null;
       }
@@ -257,6 +264,21 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int I_FIELD_NUMBER = 4;
+  /**
+   * <pre>
+   * TODO(mdan): list/tensor, map? Need to reconcile with TFT_RECORD, etc.
+   * </pre>
+   *
+   * <code>int64 i = 4;</code>
+   */
+  public long getI() {
+    if (attrCase_ == 4) {
+      return (java.lang.Long) attr_;
+    }
+    return 0L;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -280,6 +302,10 @@ private static final long serialVersionUID = 0L;
     if (attrCase_ == 3) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, attr_);
     }
+    if (attrCase_ == 4) {
+      output.writeInt64(
+          4, (long)((java.lang.Long) attr_));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -299,6 +325,11 @@ private static final long serialVersionUID = 0L;
     }
     if (attrCase_ == 3) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, attr_);
+    }
+    if (attrCase_ == 4) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(
+            4, (long)((java.lang.Long) attr_));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -324,6 +355,10 @@ private static final long serialVersionUID = 0L;
         if (!getS()
             .equals(other.getS())) return false;
         break;
+      case 4:
+        if (getI()
+            != other.getI()) return false;
+        break;
       case 0:
       default:
     }
@@ -348,6 +383,11 @@ private static final long serialVersionUID = 0L;
       case 3:
         hash = (37 * hash) + S_FIELD_NUMBER;
         hash = (53 * hash) + getS().hashCode();
+        break;
+      case 4:
+        hash = (37 * hash) + I_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getI());
         break;
       case 0:
       default:
@@ -543,6 +583,9 @@ private static final long serialVersionUID = 0L;
       if (attrCase_ == 3) {
         result.attr_ = attr_;
       }
+      if (attrCase_ == 4) {
+        result.attr_ = attr_;
+      }
       result.attrCase_ = attrCase_;
       onBuilt();
       return result;
@@ -626,6 +669,10 @@ private static final long serialVersionUID = 0L;
           attrCase_ = 3;
           attr_ = other.attr_;
           onChanged();
+          break;
+        }
+        case I: {
+          setI(other.getI());
           break;
         }
         case ATTR_NOT_SET: {
@@ -1069,6 +1116,48 @@ private static final long serialVersionUID = 0L;
       attrCase_ = 3;
       attr_ = value;
       onChanged();
+      return this;
+    }
+
+    /**
+     * <pre>
+     * TODO(mdan): list/tensor, map? Need to reconcile with TFT_RECORD, etc.
+     * </pre>
+     *
+     * <code>int64 i = 4;</code>
+     */
+    public long getI() {
+      if (attrCase_ == 4) {
+        return (java.lang.Long) attr_;
+      }
+      return 0L;
+    }
+    /**
+     * <pre>
+     * TODO(mdan): list/tensor, map? Need to reconcile with TFT_RECORD, etc.
+     * </pre>
+     *
+     * <code>int64 i = 4;</code>
+     */
+    public Builder setI(long value) {
+      attrCase_ = 4;
+      attr_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * TODO(mdan): list/tensor, map? Need to reconcile with TFT_RECORD, etc.
+     * </pre>
+     *
+     * <code>int64 i = 4;</code>
+     */
+    public Builder clearI() {
+      if (attrCase_ == 4) {
+        attrCase_ = 0;
+        attr_ = null;
+        onChanged();
+      }
       return this;
     }
     @java.lang.Override

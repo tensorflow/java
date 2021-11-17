@@ -103,6 +103,9 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
         if (opts.useInterOpParallelism != null) {
           opBuilder.setAttr("use_inter_op_parallelism", opts.useInterOpParallelism);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new ReduceDataset(opBuilder.build());
@@ -116,6 +119,16 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
    */
   public static Options useInterOpParallelism(Boolean useInterOpParallelism) {
     return new Options().useInterOpParallelism(useInterOpParallelism);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -139,6 +152,8 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
   public static class Options {
     private Boolean useInterOpParallelism;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -150,6 +165,17 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
      */
     public Options useInterOpParallelism(Boolean useInterOpParallelism) {
       this.useInterOpParallelism = useInterOpParallelism;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -199,8 +225,13 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
      */
     public final boolean useInterOpParallelism;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new ReduceDataset(op), op, Arrays.asList("Tstate", "Targuments", "output_types", "output_shapes", "use_inter_op_parallelism"));
+      super(new ReduceDataset(op), op, Arrays.asList("Tstate", "Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int initialStateLength = op.inputListLength("initial_state");
@@ -214,6 +245,7 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       useInterOpParallelism = op.attributes().getAttrBool("use_inter_op_parallelism");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

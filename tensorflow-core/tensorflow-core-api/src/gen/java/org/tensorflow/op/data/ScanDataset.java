@@ -100,6 +100,9 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
         if (opts.useDefaultDevice != null) {
           opBuilder.setAttr("use_default_device", opts.useDefaultDevice);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new ScanDataset(opBuilder.build());
@@ -126,6 +129,16 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -147,6 +160,8 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
     private Boolean preserveCardinality;
 
     private Boolean useDefaultDevice;
+
+    private String metadata;
 
     private Options() {
     }
@@ -170,6 +185,17 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
      */
     public Options useDefaultDevice(Boolean useDefaultDevice) {
       this.useDefaultDevice = useDefaultDevice;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -223,8 +249,13 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
      */
     public final boolean useDefaultDevice;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new ScanDataset(op), op, Arrays.asList("Tstate", "Targuments", "output_types", "output_shapes", "preserve_cardinality", "use_default_device"));
+      super(new ScanDataset(op), op, Arrays.asList("Tstate", "Targuments", "output_types", "output_shapes", "preserve_cardinality", "use_default_device", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int initialStateLength = op.inputListLength("initial_state");
@@ -239,6 +270,7 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       preserveCardinality = op.attributes().getAttrBool("preserve_cardinality");
       useDefaultDevice = op.attributes().getAttrBool("use_default_device");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

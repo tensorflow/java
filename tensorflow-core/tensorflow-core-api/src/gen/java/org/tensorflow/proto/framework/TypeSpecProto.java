@@ -79,6 +79,11 @@ private static final long serialVersionUID = 0L;
             typeSpecClassName_ = s;
             break;
           }
+          case 32: {
+
+            numFlatComponents_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -510,6 +515,19 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int NUM_FLAT_COMPONENTS_FIELD_NUMBER = 4;
+  private int numFlatComponents_;
+  /**
+   * <pre>
+   * The number of flat tensor components required by this TypeSpec.
+   * </pre>
+   *
+   * <code>int32 num_flat_components = 4;</code>
+   */
+  public int getNumFlatComponents() {
+    return numFlatComponents_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -533,6 +551,9 @@ private static final long serialVersionUID = 0L;
     if (!getTypeSpecClassNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, typeSpecClassName_);
     }
+    if (numFlatComponents_ != 0) {
+      output.writeInt32(4, numFlatComponents_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -552,6 +573,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getTypeSpecClassNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, typeSpecClassName_);
+    }
+    if (numFlatComponents_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(4, numFlatComponents_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -576,6 +601,8 @@ private static final long serialVersionUID = 0L;
     }
     if (!getTypeSpecClassName()
         .equals(other.getTypeSpecClassName())) return false;
+    if (getNumFlatComponents()
+        != other.getNumFlatComponents()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -595,6 +622,8 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + TYPE_SPEC_CLASS_NAME_FIELD_NUMBER;
     hash = (53 * hash) + getTypeSpecClassName().hashCode();
+    hash = (37 * hash) + NUM_FLAT_COMPONENTS_FIELD_NUMBER;
+    hash = (53 * hash) + getNumFlatComponents();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -742,6 +771,8 @@ private static final long serialVersionUID = 0L;
       }
       typeSpecClassName_ = "";
 
+      numFlatComponents_ = 0;
+
       return this;
     }
 
@@ -775,6 +806,7 @@ private static final long serialVersionUID = 0L;
         result.typeState_ = typeStateBuilder_.build();
       }
       result.typeSpecClassName_ = typeSpecClassName_;
+      result.numFlatComponents_ = numFlatComponents_;
       onBuilt();
       return result;
     }
@@ -832,6 +864,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getTypeSpecClassName().isEmpty()) {
         typeSpecClassName_ = other.typeSpecClassName_;
         onChanged();
+      }
+      if (other.getNumFlatComponents() != 0) {
+        setNumFlatComponents(other.getNumFlatComponents());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1180,6 +1215,44 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       typeSpecClassName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int numFlatComponents_ ;
+    /**
+     * <pre>
+     * The number of flat tensor components required by this TypeSpec.
+     * </pre>
+     *
+     * <code>int32 num_flat_components = 4;</code>
+     */
+    public int getNumFlatComponents() {
+      return numFlatComponents_;
+    }
+    /**
+     * <pre>
+     * The number of flat tensor components required by this TypeSpec.
+     * </pre>
+     *
+     * <code>int32 num_flat_components = 4;</code>
+     */
+    public Builder setNumFlatComponents(int value) {
+      
+      numFlatComponents_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * The number of flat tensor components required by this TypeSpec.
+     * </pre>
+     *
+     * <code>int32 num_flat_components = 4;</code>
+     */
+    public Builder clearNumFlatComponents() {
+      
+      numFlatComponents_ = 0;
       onChanged();
       return this;
     }

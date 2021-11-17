@@ -72,4 +72,13 @@ public interface TypeSpecProtoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getTypeSpecClassNameBytes();
+
+  /**
+   * <pre>
+   * The number of flat tensor components required by this TypeSpec.
+   * </pre>
+   *
+   * <code>int32 num_flat_components = 4;</code>
+   */
+  int getNumFlatComponents();
 }

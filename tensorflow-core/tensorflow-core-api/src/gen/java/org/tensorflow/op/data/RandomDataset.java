@@ -80,13 +80,14 @@ public final class RandomDataset extends RawOp implements Operand<TType> {
    * @param seed2 A second scalar seed to avoid seed collision.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of RandomDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RandomDataset");
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
@@ -96,7 +97,24 @@ public final class RandomDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new RandomDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -112,6 +130,27 @@ public final class RandomDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.RandomDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -140,13 +179,19 @@ public final class RandomDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new RandomDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      super(new RandomDataset(op), op, Arrays.asList("output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       seed = (Operand<TInt64>) op.input(inputIndex++);
       seed2 = (Operand<TInt64>) op.input(inputIndex++);
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

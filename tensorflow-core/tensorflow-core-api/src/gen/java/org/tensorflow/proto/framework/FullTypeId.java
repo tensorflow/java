@@ -62,13 +62,33 @@ public enum FullTypeId
   TFT_PRODUCT(3),
   /**
    * <pre>
+   * Represents a named field, with the name stored in the attribute.
+   * Parametrization:
+   *   TFT_NAMED[&lt;type&gt;]{&lt;name&gt;}
+   *   * &lt;type&gt; is the type of the field
+   *   * &lt;name&gt; is the field name, as string (thpugh can theoretically be an int
+   *     as well)
+   * Example:
+   *   TFT_RECORD[
+   *     TFT_NAMED[TFT_TENSOR[TFT_INT32]]{'foo'},
+   *     TFT_NAMED[TFT_TENSOR[TFT_FLOAT32]]{'bar'},
+   *   ]
+   *     is a structure with two fields, an int tensor "foo" and a float tensor
+   *     "bar".
+   * </pre>
+   *
+   * <code>TFT_NAMED = 4;</code>
+   */
+  TFT_NAMED(4),
+  /**
+   * <pre>
    * Callable types describe functions and ops.
    * Parametrization:
    *   TFT_CALLABLE[&lt;arg type&gt;, &lt;return type&gt;]
-   *   * &lt;arg_type&gt; is the type of the arguments; TFT_PRODUCT represents
+   *   * &lt;arg type&gt; is the type of the arguments; TFT_PRODUCT represents
    *   multiple
    *     arguments.
-   *   * &lt;return_type&gt; is the return type; TFT_PRODUCT represents multiple
+   *   * &lt;return type&gt; is the return type; TFT_PRODUCT represents multiple
    *     return values (that means that callables returning multiple things
    *     don't necessarily return a single tuple).
    * Example:
@@ -88,9 +108,9 @@ public enum FullTypeId
    * The usual Tensor. This is a parametric type.
    * Parametrization:
    *   TFT_TENSOR[&lt;element type&gt;, &lt;shape type&gt;]
-   *   * &lt;element_type&gt; is currently limited to one of the element types
+   *   * &lt;element type&gt; is currently limited to one of the element types
    *     defined below.
-   *   * &lt;shape_type&gt; is not yet defined, and may only be TFT_UNKNOWN for now.
+   *   * &lt;shape type&gt; is not yet defined, and may only be TFT_UNKNOWN for now.
    * A TFT_SHAPE type will be defined in the future.
    * Example:
    *   TFT_TENSOR[TFT_INT32, TFT_UNKNOWN]
@@ -113,7 +133,7 @@ public enum FullTypeId
    * The element type may be generic or even TFT_ANY for a heterogenous list.
    * Parametrization:
    *   TFT_ARRAY[&lt;element type&gt;]
-   *   * &lt;element_type&gt; may be any concrete type.
+   *   * &lt;element type&gt; may be any concrete type.
    * Examples:
    *   TFT_ARRAY[TFT_TENSOR[TFT_INT32]] is a TensorArray holding int32 Tensors
    *     of any shape.
@@ -134,7 +154,7 @@ public enum FullTypeId
    * specified type, or nothing at all.
    * Parametrization:
    *   TFT_OPTIONAL[&lt;element type&gt;]
-   *   * &lt;element_type&gt; may be any concrete type.
+   *   * &lt;element type&gt; may be any concrete type.
    * Examples:
    *   TFT_OPTIONAL[TFT_TENSOR[TFT_INT32]] is an Optional holding an int32
    *     Tensor of any shape.
@@ -145,6 +165,21 @@ public enum FullTypeId
   TFT_OPTIONAL(1002),
   /**
    * <pre>
+   * Literal types describe compile-time constant values.
+   * Literal types may also participate in dependent types.
+   * Parametrization:
+   *   TFT_LITERAL[&lt;value type&gt;]{&lt;value&gt;}
+   *   * &lt;value type&gt; may be any concrete type compatible that can hold &lt;value&gt;
+   *   * &lt;value&gt; is the type's attribute, and holds the actual literal value
+   * Examples:
+   *   TFT_LITERAL[TFT_INT32]{1} is the compile-time constant 1.
+   * </pre>
+   *
+   * <code>TFT_LITERAL = 1003;</code>
+   */
+  TFT_LITERAL(1003),
+  /**
+   * <pre>
    * Datasets created by tf.data ops and APIs. Datasets have generator/iterable
    * semantics, that is, one can construct an iterator from them. Like
    * Array, they are considered to return elements that can be described
@@ -153,14 +188,13 @@ public enum FullTypeId
    * A datasets can produce logical structures (e.g. multiple elements). This
    * is expressed using TFT_PRODUCT.
    * Parametrization: TFT_ARRAY[&lt;element type&gt;].
-   * &lt;element_type&gt; may be a concrete type or a type symbol. It represents the
-   *   data type of the elements produced by the dataset.
+   *   * &lt;element type&gt; may be a concrete type or a type symbol. It represents
+   *     the data type of the elements produced by the dataset.
    * Examples:
    *   TFT_DATSET[TFT_TENSOR[TFT_INT32]] is a Dataset producing single int32
    *     Tensors of unknown shape.
    *   TFT_DATSET[TFT_PRODUCT[TFT_TENSOR[TFT_INT32], TFT_TENSOR[TFT_FLOAT32]] is
-   *   a
-   *     Dataset producing pairs of Tensors, one integer and one float.
+   *     a Dataset producing pairs of Tensors, one integer and one float.
    * Note: The high ID number is to prepare for the eventuality that Datasets
    * will be supported by user types in the future.
    * </pre>
@@ -168,6 +202,21 @@ public enum FullTypeId
    * <code>TFT_DATASET = 10102;</code>
    */
   TFT_DATASET(10102),
+  /**
+   * <pre>
+   * A mutex lock tensor, produced by tf.raw_ops.MutexLock.
+   * Unlike strict execution models, where ownership of a lock is denoted by
+   * "running after the lock has been acquired", in non-strict mode, lock
+   * ownership is in the true sense: "the op argument representing the lock is
+   * available".
+   * Mutex locks are the dynamic counterpart of control dependencies.
+   * TODO(mdan): Properly document this thing.
+   * Parametrization: TFT_MUTEX_LOCK[].
+   * </pre>
+   *
+   * <code>TFT_MUTEX_LOCK = 10202;</code>
+   */
+  TFT_MUTEX_LOCK(10202),
   /**
    * <pre>
    * The bool element type.
@@ -307,13 +356,33 @@ public enum FullTypeId
   public static final int TFT_PRODUCT_VALUE = 3;
   /**
    * <pre>
+   * Represents a named field, with the name stored in the attribute.
+   * Parametrization:
+   *   TFT_NAMED[&lt;type&gt;]{&lt;name&gt;}
+   *   * &lt;type&gt; is the type of the field
+   *   * &lt;name&gt; is the field name, as string (thpugh can theoretically be an int
+   *     as well)
+   * Example:
+   *   TFT_RECORD[
+   *     TFT_NAMED[TFT_TENSOR[TFT_INT32]]{'foo'},
+   *     TFT_NAMED[TFT_TENSOR[TFT_FLOAT32]]{'bar'},
+   *   ]
+   *     is a structure with two fields, an int tensor "foo" and a float tensor
+   *     "bar".
+   * </pre>
+   *
+   * <code>TFT_NAMED = 4;</code>
+   */
+  public static final int TFT_NAMED_VALUE = 4;
+  /**
+   * <pre>
    * Callable types describe functions and ops.
    * Parametrization:
    *   TFT_CALLABLE[&lt;arg type&gt;, &lt;return type&gt;]
-   *   * &lt;arg_type&gt; is the type of the arguments; TFT_PRODUCT represents
+   *   * &lt;arg type&gt; is the type of the arguments; TFT_PRODUCT represents
    *   multiple
    *     arguments.
-   *   * &lt;return_type&gt; is the return type; TFT_PRODUCT represents multiple
+   *   * &lt;return type&gt; is the return type; TFT_PRODUCT represents multiple
    *     return values (that means that callables returning multiple things
    *     don't necessarily return a single tuple).
    * Example:
@@ -333,9 +402,9 @@ public enum FullTypeId
    * The usual Tensor. This is a parametric type.
    * Parametrization:
    *   TFT_TENSOR[&lt;element type&gt;, &lt;shape type&gt;]
-   *   * &lt;element_type&gt; is currently limited to one of the element types
+   *   * &lt;element type&gt; is currently limited to one of the element types
    *     defined below.
-   *   * &lt;shape_type&gt; is not yet defined, and may only be TFT_UNKNOWN for now.
+   *   * &lt;shape type&gt; is not yet defined, and may only be TFT_UNKNOWN for now.
    * A TFT_SHAPE type will be defined in the future.
    * Example:
    *   TFT_TENSOR[TFT_INT32, TFT_UNKNOWN]
@@ -358,7 +427,7 @@ public enum FullTypeId
    * The element type may be generic or even TFT_ANY for a heterogenous list.
    * Parametrization:
    *   TFT_ARRAY[&lt;element type&gt;]
-   *   * &lt;element_type&gt; may be any concrete type.
+   *   * &lt;element type&gt; may be any concrete type.
    * Examples:
    *   TFT_ARRAY[TFT_TENSOR[TFT_INT32]] is a TensorArray holding int32 Tensors
    *     of any shape.
@@ -379,7 +448,7 @@ public enum FullTypeId
    * specified type, or nothing at all.
    * Parametrization:
    *   TFT_OPTIONAL[&lt;element type&gt;]
-   *   * &lt;element_type&gt; may be any concrete type.
+   *   * &lt;element type&gt; may be any concrete type.
    * Examples:
    *   TFT_OPTIONAL[TFT_TENSOR[TFT_INT32]] is an Optional holding an int32
    *     Tensor of any shape.
@@ -390,6 +459,21 @@ public enum FullTypeId
   public static final int TFT_OPTIONAL_VALUE = 1002;
   /**
    * <pre>
+   * Literal types describe compile-time constant values.
+   * Literal types may also participate in dependent types.
+   * Parametrization:
+   *   TFT_LITERAL[&lt;value type&gt;]{&lt;value&gt;}
+   *   * &lt;value type&gt; may be any concrete type compatible that can hold &lt;value&gt;
+   *   * &lt;value&gt; is the type's attribute, and holds the actual literal value
+   * Examples:
+   *   TFT_LITERAL[TFT_INT32]{1} is the compile-time constant 1.
+   * </pre>
+   *
+   * <code>TFT_LITERAL = 1003;</code>
+   */
+  public static final int TFT_LITERAL_VALUE = 1003;
+  /**
+   * <pre>
    * Datasets created by tf.data ops and APIs. Datasets have generator/iterable
    * semantics, that is, one can construct an iterator from them. Like
    * Array, they are considered to return elements that can be described
@@ -398,14 +482,13 @@ public enum FullTypeId
    * A datasets can produce logical structures (e.g. multiple elements). This
    * is expressed using TFT_PRODUCT.
    * Parametrization: TFT_ARRAY[&lt;element type&gt;].
-   * &lt;element_type&gt; may be a concrete type or a type symbol. It represents the
-   *   data type of the elements produced by the dataset.
+   *   * &lt;element type&gt; may be a concrete type or a type symbol. It represents
+   *     the data type of the elements produced by the dataset.
    * Examples:
    *   TFT_DATSET[TFT_TENSOR[TFT_INT32]] is a Dataset producing single int32
    *     Tensors of unknown shape.
    *   TFT_DATSET[TFT_PRODUCT[TFT_TENSOR[TFT_INT32], TFT_TENSOR[TFT_FLOAT32]] is
-   *   a
-   *     Dataset producing pairs of Tensors, one integer and one float.
+   *     a Dataset producing pairs of Tensors, one integer and one float.
    * Note: The high ID number is to prepare for the eventuality that Datasets
    * will be supported by user types in the future.
    * </pre>
@@ -413,6 +496,21 @@ public enum FullTypeId
    * <code>TFT_DATASET = 10102;</code>
    */
   public static final int TFT_DATASET_VALUE = 10102;
+  /**
+   * <pre>
+   * A mutex lock tensor, produced by tf.raw_ops.MutexLock.
+   * Unlike strict execution models, where ownership of a lock is denoted by
+   * "running after the lock has been acquired", in non-strict mode, lock
+   * ownership is in the true sense: "the op argument representing the lock is
+   * available".
+   * Mutex locks are the dynamic counterpart of control dependencies.
+   * TODO(mdan): Properly document this thing.
+   * Parametrization: TFT_MUTEX_LOCK[].
+   * </pre>
+   *
+   * <code>TFT_MUTEX_LOCK = 10202;</code>
+   */
+  public static final int TFT_MUTEX_LOCK_VALUE = 10202;
   /**
    * <pre>
    * The bool element type.
@@ -523,11 +621,14 @@ public enum FullTypeId
       case 1: return TFT_VAR;
       case 2: return TFT_ANY;
       case 3: return TFT_PRODUCT;
+      case 4: return TFT_NAMED;
       case 100: return TFT_CALLABLE;
       case 1000: return TFT_TENSOR;
       case 1001: return TFT_ARRAY;
       case 1002: return TFT_OPTIONAL;
+      case 1003: return TFT_LITERAL;
       case 10102: return TFT_DATASET;
+      case 10202: return TFT_MUTEX_LOCK;
       case 200: return TFT_BOOL;
       case 201: return TFT_UINT8;
       case 202: return TFT_UINT16;

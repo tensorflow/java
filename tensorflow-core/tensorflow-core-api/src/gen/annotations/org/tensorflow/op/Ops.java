@@ -377,9 +377,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -403,8 +403,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    train = new TrainOps(this);
   }
 
   /**
@@ -4798,9 +4798,7 @@ public final class Ops {
 
   /**
    * Reverses specific dimensions of a tensor.
-   *  NOTE {@code tf.reverse} has now changed behavior in preparation for 1.0.
-   *  {@code tf.reverse_v2} is currently an alias that will be deprecated before TF 1.0.
-   *  <p>Given a {@code tensor}, and a {@code int32} tensor {@code axis} representing the set of
+   *  Given a {@code tensor}, and a {@code int32} tensor {@code axis} representing the set of
    *  dimensions of {@code tensor} to reverse. This operation reverses each dimension
    *  {@code i} for which there exists {@code j} s.t. {@code axis[j] == i}.
    *  <p>{@code tensor} can have up to 8 dimensions. The number of dimensions specified
@@ -5126,34 +5124,37 @@ public final class Ops {
   }
 
   /**
-   * Scatter {@code updates} into a new tensor according to {@code indices}.
-   *  Creates a new tensor by applying sparse {@code updates} to individual values or
-   *  slices within a tensor (initially zero for numeric, empty for string) of
-   *  the given {@code shape} according to indices.  This operator is the inverse of the
-   *  {@code tf.gather_nd} operator which extracts values or slices from a given tensor.
-   *  <p>This operation is similar to tensor_scatter_add, except that the tensor is
-   *  zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)} is identical
-   *  to {@code tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)}
-   *  <p>If {@code indices} contains duplicates, then their updates are accumulated (summed).
+   * Scatters {@code updates} into a tensor of shape {@code shape} according to {@code indices}.
+   *  Update the input tensor by scattering sparse {@code updates} according to individual values at the specified {@code indices}.
+   *  This op returns an {@code output} tensor with the {@code shape} you specify. This op is the
+   *  inverse of the {@code tf.gather_nd} operator which extracts values or slices from a
+   *  given tensor.
+   *  <p>This operation is similar to {@code tf.tensor_scatter_add}, except that the tensor is
+   *  zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
+   *  is identical to calling
+   *  {@code tf.tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)}.
+   *  <p>If {@code indices} contains duplicates, the duplicate {@code values} are accumulated
+   *  (summed).
    *  <p><strong>WARNING</strong>: The order in which updates are applied is nondeterministic, so the
-   *  output will be nondeterministic if {@code indices} contains duplicates -- because
-   *  of some numerical approximation issues, numbers summed in different order
-   *  may yield different results.
-   *  <p>{@code indices} is an integer tensor containing indices into a new tensor of shape
-   *  {@code shape}.  The last dimension of {@code indices} can be at most the rank of {@code shape}:
+   *  output will be nondeterministic if {@code indices} contains duplicates;
+   *  numbers summed in different order may yield different results because of some
+   *  numerical approximation issues.
+   *  <p>{@code indices} is an integer tensor of shape {@code shape}. The last dimension
+   *  of {@code indices} can be at most the rank of {@code shape}:
    *  <pre>
    *  indices.shape[-1] &lt;= shape.rank
    *  </pre>
-   *  <p>The last dimension of {@code indices} corresponds to indices into elements
+   *  <p>The last dimension of {@code indices} corresponds to indices of elements
    *  (if {@code indices.shape[-1] = shape.rank}) or slices
    *  (if {@code indices.shape[-1] < shape.rank}) along dimension {@code indices.shape[-1]} of
-   *  {@code shape}.  {@code updates} is a tensor with shape
+   *  {@code shape}.
+   *  <p>{@code updates} is a tensor with shape:
    *  <pre>
    *  indices.shape[:-1] + shape[indices.shape[-1]:]
    *  </pre>
-   *  <p>The simplest form of scatter is to insert individual elements in a tensor by
-   *  index. For example, say we want to insert 4 scattered elements in a rank-1
-   *  tensor with 8 elements.
+   *  <p>The simplest form of the scatter op is to insert individual elements in
+   *  a tensor by index. Consider an example where you want to insert 4 scattered
+   *  elements in a rank-1 tensor with 8 elements.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd1.png" alt>
    *  </div>
@@ -5169,9 +5170,9 @@ public final class Ops {
    *  <pre>
    *  [0, 11, 0, 10, 9, 0, 0, 12]
    *  </pre>
-   *  <p>We can also, insert entire slices of a higher rank tensor all at once. For
-   *  example, if we wanted to insert two slices in the first dimension of a
-   *  rank-3 tensor with two matrices of new values.
+   *  <p>You can also insert entire slices of a higher rank tensor all at once. For
+   *  example, you can insert two slices in the first dimension of a rank-3 tensor
+   *  with two matrices of new values.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd2.png" alt>
    *  </div>
@@ -5197,9 +5198,9 @@ public final class Ops {
    *  On GPU, if an out of bound index is found, the index is ignored.
    *
    * @param <U> data type for {@code output} output
-   * @param indices Index tensor.
-   * @param updates Updates to scatter into output.
-   * @param shape 1-D. The shape of the resulting tensor.
+   * @param indices Tensor of indices.
+   * @param updates Values to scatter into the output tensor.
+   * @param shape 1-D. The shape of the output tensor.
    * @param <U> data type for {@code ScatterNd} output and operands
    * @param <T> data type for {@code ScatterNd} output and operands
    * @return a new instance of ScatterNd

@@ -66,19 +66,38 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
    * @param address The address value
    * @param protocol The protocol value
    * @param externalStatePolicy The value of the externalStatePolicy attribute
+   * @param options carries optional attribute values
    * @return a new instance of RegisterDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static RegisterDataset create(Scope scope, Operand<? extends TType> dataset,
-      Operand<TString> address, Operand<TString> protocol, Long externalStatePolicy) {
+      Operand<TString> address, Operand<TString> protocol, Long externalStatePolicy,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RegisterDataset");
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(address.asOutput());
     opBuilder.addInput(protocol.asOutput());
     opBuilder.setAttr("external_state_policy", externalStatePolicy);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.elementSpec != null) {
+          opBuilder.setAttr("element_spec", opts.elementSpec);
+        }
+      }
+    }
     return new RegisterDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the elementSpec option.
+   *
+   * @param elementSpec the elementSpec option
+   * @return this Options instance.
+   */
+  public static Options elementSpec(String elementSpec) {
+    return new Options().elementSpec(elementSpec);
   }
 
   /**
@@ -93,6 +112,27 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
   @Override
   public Output<TInt64> asOutput() {
     return datasetId;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.RegisterDataset}
+   */
+  public static class Options {
+    private String elementSpec;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the elementSpec option.
+     *
+     * @param elementSpec the elementSpec option
+     * @return this Options instance.
+     */
+    public Options elementSpec(String elementSpec) {
+      this.elementSpec = elementSpec;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -119,13 +159,19 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
      */
     public final long externalStatePolicy;
 
+    /**
+     * The elementSpec attribute
+     */
+    public final String elementSpec;
+
     public Inputs(GraphOperation op) {
-      super(new RegisterDataset(op), op, Arrays.asList("external_state_policy"));
+      super(new RegisterDataset(op), op, Arrays.asList("external_state_policy", "element_spec"));
       int inputIndex = 0;
       dataset = (Operand<? extends TType>) op.input(inputIndex++);
       address = (Operand<TString>) op.input(inputIndex++);
       protocol = (Operand<TString>) op.input(inputIndex++);
       externalStatePolicy = op.attributes().getAttrInt("external_state_policy");
+      elementSpec = op.attributes().getAttrString("element_spec");
     }
   }
 }

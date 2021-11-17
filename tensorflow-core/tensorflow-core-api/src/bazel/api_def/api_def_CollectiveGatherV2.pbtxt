@@ -1,6 +1,6 @@
 op {
   graph_op_name: "CollectiveGatherV2"
   endpoint: {
-    name: "collective.GatherV2"
+    name: "collective.CollectiveGather"
   }
 }

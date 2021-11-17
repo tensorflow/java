@@ -18,6 +18,7 @@ limitations under the License.
 package org.tensorflow.op.xla;
 
 import java.util.Arrays;
+import java.util.List;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -38,7 +39,8 @@ import org.tensorflow.types.family.TType;
  * An op used by XLA SPMD partitioner to switch from manual partitioning to
  * automatic partitioning. It converts the shard-shaped, manually partitioned input
  * into full-shaped tensor to be partitioned automatically with the same sharding
- * used by manual partitioning.
+ * used by manual partitioning. The conversion can happen partially in subgroups,
+ * by specifying the dim attribute, where only that dim will be converted.
  *
  * @param <T> data type for {@code output} output
  */
@@ -70,6 +72,7 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
    * @param input The input value
    * @param manualSharding The value of the manualSharding attribute
    * @param fullShape The value of the fullShape attribute
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
    * @return a new instance of SpmdShardToFullShape
    */
@@ -77,12 +80,56 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
       describeByClass = true
   )
   public static <T extends TType> SpmdShardToFullShape<T> create(Scope scope, Operand<T> input,
-      String manualSharding, Shape fullShape) {
+      String manualSharding, Shape fullShape, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SpmdShardToFullShape");
     opBuilder.addInput(input.asOutput());
     opBuilder.setAttr("manual_sharding", manualSharding);
     opBuilder.setAttr("full_shape", fullShape);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.dim != null) {
+          opBuilder.setAttr("dim", opts.dim);
+        }
+        if (opts.unspecifiedDims != null) {
+          long[] unspecifiedDimsArray = new long[opts.unspecifiedDims.size()];
+          for (int i = 0 ; i < unspecifiedDimsArray.length ; i++) {
+            unspecifiedDimsArray[i] = opts.unspecifiedDims.get(i);
+          }
+          opBuilder.setAttr("unspecified_dims", unspecifiedDimsArray);
+        }
+      }
+    }
     return new SpmdShardToFullShape<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the dim option.
+   *
+   * @param dim the dim option
+   * @return this Options instance.
+   */
+  public static Options dim(Long dim) {
+    return new Options().dim(dim);
+  }
+
+  /**
+   * Sets the unspecifiedDims option.
+   *
+   * @param unspecifiedDims the unspecifiedDims option
+   * @return this Options instance.
+   */
+  public static Options unspecifiedDims(List<Long> unspecifiedDims) {
+    return new Options().unspecifiedDims(unspecifiedDims);
+  }
+
+  /**
+   * Sets the unspecifiedDims option.
+   *
+   * @param unspecifiedDims the unspecifiedDims option
+   * @return this Options instance.
+   */
+  public static Options unspecifiedDims(Long... unspecifiedDims) {
+    return new Options().unspecifiedDims(unspecifiedDims);
   }
 
   /**
@@ -97,6 +144,51 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.xla.SpmdShardToFullShape}
+   */
+  public static class Options {
+    private Long dim;
+
+    private List<Long> unspecifiedDims;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dim option.
+     *
+     * @param dim the dim option
+     * @return this Options instance.
+     */
+    public Options dim(Long dim) {
+      this.dim = dim;
+      return this;
+    }
+
+    /**
+     * Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
+     */
+    public Options unspecifiedDims(List<Long> unspecifiedDims) {
+      this.unspecifiedDims = unspecifiedDims;
+      return this;
+    }
+
+    /**
+     * Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
+     */
+    public Options unspecifiedDims(Long... unspecifiedDims) {
+      this.unspecifiedDims = Arrays.asList(unspecifiedDims);
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -123,13 +215,25 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
      */
     public final Shape fullShape;
 
+    /**
+     * The dim attribute
+     */
+    public final long dim;
+
+    /**
+     * The unspecifiedDims attribute
+     */
+    public final long[] unspecifiedDims;
+
     public Inputs(GraphOperation op) {
-      super(new SpmdShardToFullShape<>(op), op, Arrays.asList("T", "manual_sharding", "full_shape"));
+      super(new SpmdShardToFullShape<>(op), op, Arrays.asList("T", "manual_sharding", "full_shape", "dim", "unspecified_dims"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       manualSharding = op.attributes().getAttrString("manual_sharding");
       fullShape = op.attributes().getAttrShape("full_shape");
+      dim = op.attributes().getAttrInt("dim");
+      unspecifiedDims = op.attributes().getAttrIntList("unspecified_dims");
     }
   }
 }

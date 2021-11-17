@@ -18,6 +18,7 @@ private static final long serialVersionUID = 0L;
   private SavedObject() {
     children_ = java.util.Collections.emptyList();
     slotVariables_ = java.util.Collections.emptyList();
+    registeredName_ = "";
   }
 
   @java.lang.Override
@@ -192,6 +193,25 @@ private static final long serialVersionUID = 0L;
               kind_ = subBuilder.buildPartial();
             }
             kindCase_ = 12;
+            break;
+          }
+          case 106: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            registeredName_ = s;
+            break;
+          }
+          case 114: {
+            com.google.protobuf.Any.Builder subBuilder = null;
+            if (serializedUserProto_ != null) {
+              subBuilder = serializedUserProto_.toBuilder();
+            }
+            serializedUserProto_ = input.readMessage(com.google.protobuf.Any.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(serializedUserProto_);
+              serializedUserProto_ = subBuilder.buildPartial();
+            }
+
             break;
           }
           default: {
@@ -713,6 +733,95 @@ private static final long serialVersionUID = 0L;
     return map.get(key);
   }
 
+  public static final int REGISTERED_NAME_FIELD_NUMBER = 13;
+  private volatile java.lang.Object registeredName_;
+  /**
+   * <pre>
+   * The fields below are filled when the user serializes a registered Trackable
+   * class. Registered classes may save additional metadata and supersede the
+   * default loading process where nodes are recreated from the proto.
+   * The name of the registered class of the form "{package}.{class_name}".
+   * This field is used to search for the registered class at loading time.
+   * </pre>
+   *
+   * <code>string registered_name = 13;</code>
+   */
+  public java.lang.String getRegisteredName() {
+    java.lang.Object ref = registeredName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      registeredName_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * The fields below are filled when the user serializes a registered Trackable
+   * class. Registered classes may save additional metadata and supersede the
+   * default loading process where nodes are recreated from the proto.
+   * The name of the registered class of the form "{package}.{class_name}".
+   * This field is used to search for the registered class at loading time.
+   * </pre>
+   *
+   * <code>string registered_name = 13;</code>
+   */
+  public com.google.protobuf.ByteString
+      getRegisteredNameBytes() {
+    java.lang.Object ref = registeredName_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      registeredName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int SERIALIZED_USER_PROTO_FIELD_NUMBER = 14;
+  private com.google.protobuf.Any serializedUserProto_;
+  /**
+   * <pre>
+   * The user-generated proto storing metadata for this object, to be passed to
+   * the registered classes's _deserialize_from_proto method when this object is
+   * loaded from the SavedModel.
+   * </pre>
+   *
+   * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+   */
+  public boolean hasSerializedUserProto() {
+    return serializedUserProto_ != null;
+  }
+  /**
+   * <pre>
+   * The user-generated proto storing metadata for this object, to be passed to
+   * the registered classes's _deserialize_from_proto method when this object is
+   * loaded from the SavedModel.
+   * </pre>
+   *
+   * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+   */
+  public com.google.protobuf.Any getSerializedUserProto() {
+    return serializedUserProto_ == null ? com.google.protobuf.Any.getDefaultInstance() : serializedUserProto_;
+  }
+  /**
+   * <pre>
+   * The user-generated proto storing metadata for this object, to be passed to
+   * the registered classes's _deserialize_from_proto method when this object is
+   * loaded from the SavedModel.
+   * </pre>
+   *
+   * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+   */
+  public com.google.protobuf.AnyOrBuilder getSerializedUserProtoOrBuilder() {
+    return getSerializedUserProto();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -762,6 +871,12 @@ private static final long serialVersionUID = 0L;
         11);
     if (kindCase_ == 12) {
       output.writeMessage(12, (org.tensorflow.proto.framework.CapturedTensor) kind_);
+    }
+    if (!getRegisteredNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 13, registeredName_);
+    }
+    if (serializedUserProto_ != null) {
+      output.writeMessage(14, getSerializedUserProto());
     }
     unknownFields.writeTo(output);
   }
@@ -822,6 +937,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(12, (org.tensorflow.proto.framework.CapturedTensor) kind_);
     }
+    if (!getRegisteredNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, registeredName_);
+    }
+    if (serializedUserProto_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(14, getSerializedUserProto());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -843,6 +965,13 @@ private static final long serialVersionUID = 0L;
         .equals(other.getSlotVariablesList())) return false;
     if (!internalGetSaveableObjects().equals(
         other.internalGetSaveableObjects())) return false;
+    if (!getRegisteredName()
+        .equals(other.getRegisteredName())) return false;
+    if (hasSerializedUserProto() != other.hasSerializedUserProto()) return false;
+    if (hasSerializedUserProto()) {
+      if (!getSerializedUserProto()
+          .equals(other.getSerializedUserProto())) return false;
+    }
     if (!getKindCase().equals(other.getKindCase())) return false;
     switch (kindCase_) {
       case 4:
@@ -902,6 +1031,12 @@ private static final long serialVersionUID = 0L;
     if (!internalGetSaveableObjects().getMap().isEmpty()) {
       hash = (37 * hash) + SAVEABLE_OBJECTS_FIELD_NUMBER;
       hash = (53 * hash) + internalGetSaveableObjects().hashCode();
+    }
+    hash = (37 * hash) + REGISTERED_NAME_FIELD_NUMBER;
+    hash = (53 * hash) + getRegisteredName().hashCode();
+    if (hasSerializedUserProto()) {
+      hash = (37 * hash) + SERIALIZED_USER_PROTO_FIELD_NUMBER;
+      hash = (53 * hash) + getSerializedUserProto().hashCode();
     }
     switch (kindCase_) {
       case 4:
@@ -1109,6 +1244,14 @@ private static final long serialVersionUID = 0L;
         slotVariablesBuilder_.clear();
       }
       internalGetMutableSaveableObjects().clear();
+      registeredName_ = "";
+
+      if (serializedUserProtoBuilder_ == null) {
+        serializedUserProto_ = null;
+      } else {
+        serializedUserProto_ = null;
+        serializedUserProtoBuilder_ = null;
+      }
       kindCase_ = 0;
       kind_ = null;
       return this;
@@ -1214,6 +1357,12 @@ private static final long serialVersionUID = 0L;
       }
       result.saveableObjects_ = internalGetSaveableObjects();
       result.saveableObjects_.makeImmutable();
+      result.registeredName_ = registeredName_;
+      if (serializedUserProtoBuilder_ == null) {
+        result.serializedUserProto_ = serializedUserProto_;
+      } else {
+        result.serializedUserProto_ = serializedUserProtoBuilder_.build();
+      }
       result.kindCase_ = kindCase_;
       onBuilt();
       return result;
@@ -1317,6 +1466,13 @@ private static final long serialVersionUID = 0L;
       }
       internalGetMutableSaveableObjects().mergeFrom(
           other.internalGetSaveableObjects());
+      if (!other.getRegisteredName().isEmpty()) {
+        registeredName_ = other.registeredName_;
+        onChanged();
+      }
+      if (other.hasSerializedUserProto()) {
+        mergeSerializedUserProto(other.getSerializedUserProto());
+      }
       switch (other.getKindCase()) {
         case USER_OBJECT: {
           mergeUserObject(other.getUserObject());
@@ -3322,6 +3478,286 @@ private static final long serialVersionUID = 0L;
       internalGetMutableSaveableObjects().getMutableMap()
           .putAll(values);
       return this;
+    }
+
+    private java.lang.Object registeredName_ = "";
+    /**
+     * <pre>
+     * The fields below are filled when the user serializes a registered Trackable
+     * class. Registered classes may save additional metadata and supersede the
+     * default loading process where nodes are recreated from the proto.
+     * The name of the registered class of the form "{package}.{class_name}".
+     * This field is used to search for the registered class at loading time.
+     * </pre>
+     *
+     * <code>string registered_name = 13;</code>
+     */
+    public java.lang.String getRegisteredName() {
+      java.lang.Object ref = registeredName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        registeredName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * The fields below are filled when the user serializes a registered Trackable
+     * class. Registered classes may save additional metadata and supersede the
+     * default loading process where nodes are recreated from the proto.
+     * The name of the registered class of the form "{package}.{class_name}".
+     * This field is used to search for the registered class at loading time.
+     * </pre>
+     *
+     * <code>string registered_name = 13;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRegisteredNameBytes() {
+      java.lang.Object ref = registeredName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        registeredName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * The fields below are filled when the user serializes a registered Trackable
+     * class. Registered classes may save additional metadata and supersede the
+     * default loading process where nodes are recreated from the proto.
+     * The name of the registered class of the form "{package}.{class_name}".
+     * This field is used to search for the registered class at loading time.
+     * </pre>
+     *
+     * <code>string registered_name = 13;</code>
+     */
+    public Builder setRegisteredName(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      registeredName_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * The fields below are filled when the user serializes a registered Trackable
+     * class. Registered classes may save additional metadata and supersede the
+     * default loading process where nodes are recreated from the proto.
+     * The name of the registered class of the form "{package}.{class_name}".
+     * This field is used to search for the registered class at loading time.
+     * </pre>
+     *
+     * <code>string registered_name = 13;</code>
+     */
+    public Builder clearRegisteredName() {
+      
+      registeredName_ = getDefaultInstance().getRegisteredName();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * The fields below are filled when the user serializes a registered Trackable
+     * class. Registered classes may save additional metadata and supersede the
+     * default loading process where nodes are recreated from the proto.
+     * The name of the registered class of the form "{package}.{class_name}".
+     * This field is used to search for the registered class at loading time.
+     * </pre>
+     *
+     * <code>string registered_name = 13;</code>
+     */
+    public Builder setRegisteredNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      registeredName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.Any serializedUserProto_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Any, com.google.protobuf.Any.Builder, com.google.protobuf.AnyOrBuilder> serializedUserProtoBuilder_;
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public boolean hasSerializedUserProto() {
+      return serializedUserProtoBuilder_ != null || serializedUserProto_ != null;
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public com.google.protobuf.Any getSerializedUserProto() {
+      if (serializedUserProtoBuilder_ == null) {
+        return serializedUserProto_ == null ? com.google.protobuf.Any.getDefaultInstance() : serializedUserProto_;
+      } else {
+        return serializedUserProtoBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public Builder setSerializedUserProto(com.google.protobuf.Any value) {
+      if (serializedUserProtoBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        serializedUserProto_ = value;
+        onChanged();
+      } else {
+        serializedUserProtoBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public Builder setSerializedUserProto(
+        com.google.protobuf.Any.Builder builderForValue) {
+      if (serializedUserProtoBuilder_ == null) {
+        serializedUserProto_ = builderForValue.build();
+        onChanged();
+      } else {
+        serializedUserProtoBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public Builder mergeSerializedUserProto(com.google.protobuf.Any value) {
+      if (serializedUserProtoBuilder_ == null) {
+        if (serializedUserProto_ != null) {
+          serializedUserProto_ =
+            com.google.protobuf.Any.newBuilder(serializedUserProto_).mergeFrom(value).buildPartial();
+        } else {
+          serializedUserProto_ = value;
+        }
+        onChanged();
+      } else {
+        serializedUserProtoBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public Builder clearSerializedUserProto() {
+      if (serializedUserProtoBuilder_ == null) {
+        serializedUserProto_ = null;
+        onChanged();
+      } else {
+        serializedUserProto_ = null;
+        serializedUserProtoBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public com.google.protobuf.Any.Builder getSerializedUserProtoBuilder() {
+      
+      onChanged();
+      return getSerializedUserProtoFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    public com.google.protobuf.AnyOrBuilder getSerializedUserProtoOrBuilder() {
+      if (serializedUserProtoBuilder_ != null) {
+        return serializedUserProtoBuilder_.getMessageOrBuilder();
+      } else {
+        return serializedUserProto_ == null ?
+            com.google.protobuf.Any.getDefaultInstance() : serializedUserProto_;
+      }
+    }
+    /**
+     * <pre>
+     * The user-generated proto storing metadata for this object, to be passed to
+     * the registered classes's _deserialize_from_proto method when this object is
+     * loaded from the SavedModel.
+     * </pre>
+     *
+     * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Any, com.google.protobuf.Any.Builder, com.google.protobuf.AnyOrBuilder> 
+        getSerializedUserProtoFieldBuilder() {
+      if (serializedUserProtoBuilder_ == null) {
+        serializedUserProtoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Any, com.google.protobuf.Any.Builder, com.google.protobuf.AnyOrBuilder>(
+                getSerializedUserProto(),
+                getParentForChildren(),
+                isClean());
+        serializedUserProto_ = null;
+      }
+      return serializedUserProtoBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

@@ -29,10 +29,10 @@ public class NativeOutput extends Pointer {
   private native void allocate();
   public NativeOutput(Node n) { super((Pointer)null); allocate(n); }
   private native void allocate(Node n);
-  public NativeOutput(Node n, @Cast("tensorflow::int32") int index) { super((Pointer)null); allocate(n, index); }
-  private native void allocate(Node n, @Cast("tensorflow::int32") int index);
-  public NativeOutput(@Const @ByRef NativeOperation op, @Cast("tensorflow::int32") int index) { super((Pointer)null); allocate(op, index); }
-  private native void allocate(@Const @ByRef NativeOperation op, @Cast("tensorflow::int32") int index);
+  public NativeOutput(Node n, int index) { super((Pointer)null); allocate(n, index); }
+  private native void allocate(Node n, int index);
+  public NativeOutput(@Const @ByRef NativeOperation op, int index) { super((Pointer)null); allocate(op, index); }
+  private native void allocate(@Const @ByRef NativeOperation op, int index);
 
   public native @ByVal NativeOperation op();
   public native Node node();

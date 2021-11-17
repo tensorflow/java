@@ -65,7 +65,7 @@ public static native @Cast("uint32_t") int TF_swap32(@Cast("uint32_t") int host_
 // #endif
 
 // #if TF_TSTRING_LITTLE_ENDIAN
-// #define TF_le32toh(x) TF_swap32(x)
+// #define TF_le32toh(x) x
 // #else  // TF_TSTRING_LITTLE_ENDIAN
 // #endif  // TF_TSTRING_LITTLE_ENDIAN
 
@@ -584,6 +584,14 @@ public static native void TF_SetStatus(TF_Status s, @Cast("TF_Code") int code,
 public static native void TF_SetStatus(TF_Status s, @Cast("TF_Code") int code,
                                         String msg);
 
+// Record <key, value> as a payload in *s. The previous payload having the
+// same key (if any) is overwritten. Payload will not be added if the Status
+// is OK.
+public static native void TF_SetPayload(TF_Status s, @Cast("const char*") BytePointer key,
+                                  @Cast("const char*") BytePointer value);
+public static native void TF_SetPayload(TF_Status s, String key,
+                                  String value);
+
 // Convert from an I/O error code (e.g., errno) to a TF_Status value.
 // Any previous information is lost. Prefer to use this instead of TF_SetStatus
 // when the error comes from I/O operations.
@@ -957,6 +965,10 @@ public static native TF_Buffer TF_NewBuffer();
 public static native void TF_DeleteBuffer(TF_Buffer arg0);
 
 public static native @ByVal TF_Buffer TF_GetBuffer(TF_Buffer buffer);
+
+// Parsing a serialized TensorProto into a TF_Tensor.
+public static native void TF_TensorFromProto(@Const TF_Buffer from,
+                                              TF_Tensor to, TF_Status status);
 // Targeting ../TF_StringView.java
 
 
@@ -1091,14 +1103,16 @@ public static native void TF_GraphGetTensorShape(TF_Graph graph,
                                                   @Cast("int64_t*") long[] dims, int num_dims,
                                                   TF_Status status);
 
-// TF_NewOperation, but without locking the graph.
-// Should prefer TF_NewOperation when possible.
-public static native TF_OperationDescription TF_NewOperationLocked(TF_Graph graph,
-                                                                     @Cast("const char*") BytePointer op_type,
-                                                                     @Cast("const char*") BytePointer oper_name);
-public static native TF_OperationDescription TF_NewOperationLocked(TF_Graph graph,
-                                                                     String op_type,
-                                                                     String oper_name);
+// Creates a new operation - see `TF_NewOperation` for more details.
+//
+// The lock for `graph` must be held when calling this function.
+//
+// Unless implementing advanced behavior, like custom gradient functions, you
+// most likely need to call `TF_NewOperation` instead.
+public static native TF_OperationDescription TF_NewOperationLocked(
+    TF_Graph graph, @Cast("const char*") BytePointer op_type, @Cast("const char*") BytePointer oper_name);
+public static native TF_OperationDescription TF_NewOperationLocked(
+    TF_Graph graph, String op_type, String oper_name);
 
 // Operation will only be added to *graph when TF_FinishOperation() is
 // called (assuming TF_FinishOperation() does not return an error).
@@ -1439,10 +1453,14 @@ public static native void TF_SetAttrValueProto(TF_OperationDescription desc,
                                                 @Cast("size_t") long proto_len,
                                                 TF_Status status);
 
-// TF_FinishOperation, but without locking the graph.
-// TF_FinishOperation should be preferred when possible.
-public static native TF_Operation TF_FinishOperationLocked(TF_OperationDescription desc,
-                                                             TF_Status status);
+// Adds this operation to the graph - see `TF_FinishOperation` for more details.
+//
+// The lock for `graph` must be held when calling this function.
+//
+// Unless implementing advanced behavior, like custom gradient functions, you
+// most likely need to call `TF_FinishOperation` instead.
+public static native TF_Operation TF_FinishOperationLocked(
+    TF_OperationDescription desc, TF_Status status);
 
 // If this function succeeds:
 //   * *status is set to an OK value,
@@ -1969,6 +1987,26 @@ public static native void TF_OperationGetAttrValueProto(
 public static native void TF_OperationGetAttrValueProto(
     TF_Operation oper, String attr_name, TF_Buffer output_attr_value,
     TF_Status status);
+
+// Get the number of attributes the operation has.
+public static native int TF_OperationGetNumAttrs(TF_Operation oper);
+
+// Get the length of the name of the ith attribute, or -1 if there is not an
+// ith attribute.
+public static native int TF_OperationGetAttrNameLength(TF_Operation oper,
+                                                        int i);
+
+// Get the name of the ith attribute.  output should have the size of
+// TF_OperationGetAttrNameLength(oper, i).
+public static native void TF_OperationGetAttrName(TF_Operation oper, int i,
+                                                   @Cast("char*") BytePointer output,
+                                                   TF_Status status);
+public static native void TF_OperationGetAttrName(TF_Operation oper, int i,
+                                                   @Cast("char*") ByteBuffer output,
+                                                   TF_Status status);
+public static native void TF_OperationGetAttrName(TF_Operation oper, int i,
+                                                   @Cast("char*") byte[] output,
+                                                   TF_Status status);
 
 // Returns the operation in the graph with `oper_name`. Returns nullptr if
 // no operation found.
@@ -3650,15 +3688,15 @@ public static native @ByVal TF_StringView TF_OpKernelConstruction_GetName(
 // compute function.
 public static native TF_Tensor TF_AllocateOutput(TF_OpKernelContext context,
                                             int index, @Cast("TF_DataType") int dtype,
-                                            @Cast("int64_t*") LongPointer dims, int num_dims,
+                                            @Cast("const int64_t*") LongPointer dims, int num_dims,
                                             @Cast("size_t") long len, TF_Status status);
 public static native TF_Tensor TF_AllocateOutput(TF_OpKernelContext context,
                                             int index, @Cast("TF_DataType") int dtype,
-                                            @Cast("int64_t*") LongBuffer dims, int num_dims,
+                                            @Cast("const int64_t*") LongBuffer dims, int num_dims,
                                             @Cast("size_t") long len, TF_Status status);
 public static native TF_Tensor TF_AllocateOutput(TF_OpKernelContext context,
                                             int index, @Cast("TF_DataType") int dtype,
-                                            @Cast("int64_t*") long[] dims, int num_dims,
+                                            @Cast("const int64_t*") long[] dims, int num_dims,
                                             @Cast("size_t") long len, TF_Status status);
 
 // Tries to forward one of the inputs given in input_indices to
@@ -3669,16 +3707,19 @@ public static native TF_Tensor TF_AllocateOutput(TF_OpKernelContext context,
 // -1.
 public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
     TF_OpKernelContext context, IntPointer candidate_input_indices,
-    int num_candidate_input_indices, int output_index, @Cast("int64_t*") LongPointer output_dims,
-    int output_num_dims, IntPointer forwarded_input, TF_Status status);
+    int num_candidate_input_indices, int output_index,
+    @Cast("const int64_t*") LongPointer output_dims, int output_num_dims, IntPointer forwarded_input,
+    TF_Status status);
 public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
     TF_OpKernelContext context, IntBuffer candidate_input_indices,
-    int num_candidate_input_indices, int output_index, @Cast("int64_t*") LongBuffer output_dims,
-    int output_num_dims, IntBuffer forwarded_input, TF_Status status);
+    int num_candidate_input_indices, int output_index,
+    @Cast("const int64_t*") LongBuffer output_dims, int output_num_dims, IntBuffer forwarded_input,
+    TF_Status status);
 public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
     TF_OpKernelContext context, int[] candidate_input_indices,
-    int num_candidate_input_indices, int output_index, @Cast("int64_t*") long[] output_dims,
-    int output_num_dims, int[] forwarded_input, TF_Status status);
+    int num_candidate_input_indices, int output_index,
+    @Cast("const int64_t*") long[] output_dims, int output_num_dims, int[] forwarded_input,
+    TF_Status status);
 
 // Allocates a temporary Tensor of the specified type and shape. The
 // Tensor must not be used after kernel construction is
@@ -3686,14 +3727,14 @@ public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
 //
 // num_dims must equal the size of array dims
 public static native TF_Tensor TF_AllocateTemp(
-    TF_OpKernelContext context, @Cast("TF_DataType") int dtype, @Cast("int64_t*") LongPointer dims, int num_dims,
-    TF_AllocatorAttributes alloc_attrs, TF_Status status);
+    TF_OpKernelContext context, @Cast("TF_DataType") int dtype, @Cast("const int64_t*") LongPointer dims,
+    int num_dims, TF_AllocatorAttributes alloc_attrs, TF_Status status);
 public static native TF_Tensor TF_AllocateTemp(
-    TF_OpKernelContext context, @Cast("TF_DataType") int dtype, @Cast("int64_t*") LongBuffer dims, int num_dims,
-    TF_AllocatorAttributes alloc_attrs, TF_Status status);
+    TF_OpKernelContext context, @Cast("TF_DataType") int dtype, @Cast("const int64_t*") LongBuffer dims,
+    int num_dims, TF_AllocatorAttributes alloc_attrs, TF_Status status);
 public static native TF_Tensor TF_AllocateTemp(
-    TF_OpKernelContext context, @Cast("TF_DataType") int dtype, @Cast("int64_t*") long[] dims, int num_dims,
-    TF_AllocatorAttributes alloc_attrs, TF_Status status);
+    TF_OpKernelContext context, @Cast("TF_DataType") int dtype, @Cast("const int64_t*") long[] dims,
+    int num_dims, TF_AllocatorAttributes alloc_attrs, TF_Status status);
 
 // #ifdef __cplusplus /* end extern "C" */
 // #endif
@@ -4959,9 +5000,11 @@ limitations under the License.
 // #include <functional>
 // #include <iosfwd>
 // #include <memory>
+// #include <set>
 // #include <string>
 // #include <unordered_map>
 
+// #include "absl/types/optional.h"
 // #include "tensorflow/core/platform/logging.h"
 // #include "tensorflow/core/platform/macros.h"
 // #include "tensorflow/core/platform/stack_frame.h"

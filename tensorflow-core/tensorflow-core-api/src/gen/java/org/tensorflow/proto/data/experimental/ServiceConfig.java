@@ -78,7 +78,64 @@ public final class ServiceConfig {
 
     /**
      * <pre>
-     * How often the dispatcher should scan through to delete old and unused jobs.
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    java.util.List<java.lang.String>
+        getWorkerAddressesList();
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    int getWorkerAddressesCount();
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    java.lang.String getWorkerAddresses(int index);
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getWorkerAddressesBytes(int index);
+
+    /**
+     * <pre>
+     * How often the dispatcher should scan through to delete old and unused
+     * jobs. A value of 0 indicates that the decision should be left up to the
+     * runtime.
      * </pre>
      *
      * <code>int64 job_gc_check_interval_ms = 5;</code>
@@ -89,16 +146,29 @@ public final class ServiceConfig {
      * <pre>
      * How long a job needs to be unused before it becomes a candidate for garbage
      * collection. A value of -1 indicates that jobs should never be garbage
-     * collected.
+     * collected. A value of 0 indicates that the decision should be left up to
+     * the runtime.
      * </pre>
      *
      * <code>int64 job_gc_timeout_ms = 6;</code>
      */
     long getJobGcTimeoutMs();
+
+    /**
+     * <pre>
+     * How long to wait before garbage-collecting a client that hasn't
+     * heartbeated to the dispatcher. A value of 0 indicates that the timeout
+     * should be left to the runtime.
+     * </pre>
+     *
+     * <code>int64 client_timeout_ms = 8;</code>
+     */
+    long getClientTimeoutMs();
   }
   /**
    * <pre>
    * Configuration for a tf.data service DispatchServer.
+   * Next id: 9
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.experimental.DispatcherConfig}
@@ -115,6 +185,7 @@ public final class ServiceConfig {
     private DispatcherConfig() {
       protocol_ = "";
       workDir_ = "";
+      workerAddresses_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -137,6 +208,7 @@ public final class ServiceConfig {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -179,6 +251,20 @@ public final class ServiceConfig {
               jobGcTimeoutMs_ = input.readInt64();
               break;
             }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                workerAddresses_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              workerAddresses_.add(s);
+              break;
+            }
+            case 64: {
+
+              clientTimeoutMs_ = input.readInt64();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -194,6 +280,9 @@ public final class ServiceConfig {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          workerAddresses_ = workerAddresses_.getUnmodifiableView();
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -325,11 +414,78 @@ public final class ServiceConfig {
       return faultTolerantMode_;
     }
 
+    public static final int WORKER_ADDRESSES_FIELD_NUMBER = 7;
+    private com.google.protobuf.LazyStringList workerAddresses_;
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getWorkerAddressesList() {
+      return workerAddresses_;
+    }
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    public int getWorkerAddressesCount() {
+      return workerAddresses_.size();
+    }
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    public java.lang.String getWorkerAddresses(int index) {
+      return workerAddresses_.get(index);
+    }
+    /**
+     * <pre>
+     * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+     * of worker addresses that will register with the dispatcher. The worker
+     * addresses should be in the format "host" or "host:port", where "port" is an
+     * integer, named port, or %port% to match any port.
+     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+     * allowed in the "COLOCATED" mode.
+     * </pre>
+     *
+     * <code>repeated string worker_addresses = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getWorkerAddressesBytes(int index) {
+      return workerAddresses_.getByteString(index);
+    }
+
     public static final int JOB_GC_CHECK_INTERVAL_MS_FIELD_NUMBER = 5;
     private long jobGcCheckIntervalMs_;
     /**
      * <pre>
-     * How often the dispatcher should scan through to delete old and unused jobs.
+     * How often the dispatcher should scan through to delete old and unused
+     * jobs. A value of 0 indicates that the decision should be left up to the
+     * runtime.
      * </pre>
      *
      * <code>int64 job_gc_check_interval_ms = 5;</code>
@@ -344,13 +500,29 @@ public final class ServiceConfig {
      * <pre>
      * How long a job needs to be unused before it becomes a candidate for garbage
      * collection. A value of -1 indicates that jobs should never be garbage
-     * collected.
+     * collected. A value of 0 indicates that the decision should be left up to
+     * the runtime.
      * </pre>
      *
      * <code>int64 job_gc_timeout_ms = 6;</code>
      */
     public long getJobGcTimeoutMs() {
       return jobGcTimeoutMs_;
+    }
+
+    public static final int CLIENT_TIMEOUT_MS_FIELD_NUMBER = 8;
+    private long clientTimeoutMs_;
+    /**
+     * <pre>
+     * How long to wait before garbage-collecting a client that hasn't
+     * heartbeated to the dispatcher. A value of 0 indicates that the timeout
+     * should be left to the runtime.
+     * </pre>
+     *
+     * <code>int64 client_timeout_ms = 8;</code>
+     */
+    public long getClientTimeoutMs() {
+      return clientTimeoutMs_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -385,6 +557,12 @@ public final class ServiceConfig {
       if (jobGcTimeoutMs_ != 0L) {
         output.writeInt64(6, jobGcTimeoutMs_);
       }
+      for (int i = 0; i < workerAddresses_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, workerAddresses_.getRaw(i));
+      }
+      if (clientTimeoutMs_ != 0L) {
+        output.writeInt64(8, clientTimeoutMs_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -416,6 +594,18 @@ public final class ServiceConfig {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(6, jobGcTimeoutMs_);
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < workerAddresses_.size(); i++) {
+          dataSize += computeStringSizeNoTag(workerAddresses_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getWorkerAddressesList().size();
+      }
+      if (clientTimeoutMs_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(8, clientTimeoutMs_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -439,10 +629,14 @@ public final class ServiceConfig {
           .equals(other.getWorkDir())) return false;
       if (getFaultTolerantMode()
           != other.getFaultTolerantMode()) return false;
+      if (!getWorkerAddressesList()
+          .equals(other.getWorkerAddressesList())) return false;
       if (getJobGcCheckIntervalMs()
           != other.getJobGcCheckIntervalMs()) return false;
       if (getJobGcTimeoutMs()
           != other.getJobGcTimeoutMs()) return false;
+      if (getClientTimeoutMs()
+          != other.getClientTimeoutMs()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -464,12 +658,19 @@ public final class ServiceConfig {
       hash = (37 * hash) + FAULT_TOLERANT_MODE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getFaultTolerantMode());
+      if (getWorkerAddressesCount() > 0) {
+        hash = (37 * hash) + WORKER_ADDRESSES_FIELD_NUMBER;
+        hash = (53 * hash) + getWorkerAddressesList().hashCode();
+      }
       hash = (37 * hash) + JOB_GC_CHECK_INTERVAL_MS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getJobGcCheckIntervalMs());
       hash = (37 * hash) + JOB_GC_TIMEOUT_MS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getJobGcTimeoutMs());
+      hash = (37 * hash) + CLIENT_TIMEOUT_MS_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getClientTimeoutMs());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -568,6 +769,7 @@ public final class ServiceConfig {
     /**
      * <pre>
      * Configuration for a tf.data service DispatchServer.
+     * Next id: 9
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.experimental.DispatcherConfig}
@@ -615,9 +817,13 @@ public final class ServiceConfig {
 
         faultTolerantMode_ = false;
 
+        workerAddresses_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
         jobGcCheckIntervalMs_ = 0L;
 
         jobGcTimeoutMs_ = 0L;
+
+        clientTimeoutMs_ = 0L;
 
         return this;
       }
@@ -645,12 +851,19 @@ public final class ServiceConfig {
       @java.lang.Override
       public org.tensorflow.proto.data.experimental.ServiceConfig.DispatcherConfig buildPartial() {
         org.tensorflow.proto.data.experimental.ServiceConfig.DispatcherConfig result = new org.tensorflow.proto.data.experimental.ServiceConfig.DispatcherConfig(this);
+        int from_bitField0_ = bitField0_;
         result.port_ = port_;
         result.protocol_ = protocol_;
         result.workDir_ = workDir_;
         result.faultTolerantMode_ = faultTolerantMode_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          workerAddresses_ = workerAddresses_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.workerAddresses_ = workerAddresses_;
         result.jobGcCheckIntervalMs_ = jobGcCheckIntervalMs_;
         result.jobGcTimeoutMs_ = jobGcTimeoutMs_;
+        result.clientTimeoutMs_ = clientTimeoutMs_;
         onBuilt();
         return result;
       }
@@ -713,11 +926,24 @@ public final class ServiceConfig {
         if (other.getFaultTolerantMode() != false) {
           setFaultTolerantMode(other.getFaultTolerantMode());
         }
+        if (!other.workerAddresses_.isEmpty()) {
+          if (workerAddresses_.isEmpty()) {
+            workerAddresses_ = other.workerAddresses_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureWorkerAddressesIsMutable();
+            workerAddresses_.addAll(other.workerAddresses_);
+          }
+          onChanged();
+        }
         if (other.getJobGcCheckIntervalMs() != 0L) {
           setJobGcCheckIntervalMs(other.getJobGcCheckIntervalMs());
         }
         if (other.getJobGcTimeoutMs() != 0L) {
           setJobGcTimeoutMs(other.getJobGcTimeoutMs());
+        }
+        if (other.getClientTimeoutMs() != 0L) {
+          setClientTimeoutMs(other.getClientTimeoutMs());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -747,6 +973,7 @@ public final class ServiceConfig {
         }
         return this;
       }
+      private int bitField0_;
 
       private long port_ ;
       /**
@@ -1013,10 +1240,187 @@ public final class ServiceConfig {
         return this;
       }
 
+      private com.google.protobuf.LazyStringList workerAddresses_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureWorkerAddressesIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          workerAddresses_ = new com.google.protobuf.LazyStringArrayList(workerAddresses_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getWorkerAddressesList() {
+        return workerAddresses_.getUnmodifiableView();
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public int getWorkerAddressesCount() {
+        return workerAddresses_.size();
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public java.lang.String getWorkerAddresses(int index) {
+        return workerAddresses_.get(index);
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getWorkerAddressesBytes(int index) {
+        return workerAddresses_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public Builder setWorkerAddresses(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWorkerAddressesIsMutable();
+        workerAddresses_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public Builder addWorkerAddresses(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWorkerAddressesIsMutable();
+        workerAddresses_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public Builder addAllWorkerAddresses(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureWorkerAddressesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, workerAddresses_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public Builder clearWorkerAddresses() {
+        workerAddresses_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * (Optional.) If the job uses auto-sharding, it needs to specify a fixed list
+       * of worker addresses that will register with the dispatcher. The worker
+       * addresses should be in the format "host" or "host:port", where "port" is an
+       * integer, named port, or %port% to match any port.
+       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
+       * allowed in the "COLOCATED" mode.
+       * </pre>
+       *
+       * <code>repeated string worker_addresses = 7;</code>
+       */
+      public Builder addWorkerAddressesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureWorkerAddressesIsMutable();
+        workerAddresses_.add(value);
+        onChanged();
+        return this;
+      }
+
       private long jobGcCheckIntervalMs_ ;
       /**
        * <pre>
-       * How often the dispatcher should scan through to delete old and unused jobs.
+       * How often the dispatcher should scan through to delete old and unused
+       * jobs. A value of 0 indicates that the decision should be left up to the
+       * runtime.
        * </pre>
        *
        * <code>int64 job_gc_check_interval_ms = 5;</code>
@@ -1026,7 +1430,9 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * How often the dispatcher should scan through to delete old and unused jobs.
+       * How often the dispatcher should scan through to delete old and unused
+       * jobs. A value of 0 indicates that the decision should be left up to the
+       * runtime.
        * </pre>
        *
        * <code>int64 job_gc_check_interval_ms = 5;</code>
@@ -1039,7 +1445,9 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * How often the dispatcher should scan through to delete old and unused jobs.
+       * How often the dispatcher should scan through to delete old and unused
+       * jobs. A value of 0 indicates that the decision should be left up to the
+       * runtime.
        * </pre>
        *
        * <code>int64 job_gc_check_interval_ms = 5;</code>
@@ -1056,7 +1464,8 @@ public final class ServiceConfig {
        * <pre>
        * How long a job needs to be unused before it becomes a candidate for garbage
        * collection. A value of -1 indicates that jobs should never be garbage
-       * collected.
+       * collected. A value of 0 indicates that the decision should be left up to
+       * the runtime.
        * </pre>
        *
        * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1068,7 +1477,8 @@ public final class ServiceConfig {
        * <pre>
        * How long a job needs to be unused before it becomes a candidate for garbage
        * collection. A value of -1 indicates that jobs should never be garbage
-       * collected.
+       * collected. A value of 0 indicates that the decision should be left up to
+       * the runtime.
        * </pre>
        *
        * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1083,7 +1493,8 @@ public final class ServiceConfig {
        * <pre>
        * How long a job needs to be unused before it becomes a candidate for garbage
        * collection. A value of -1 indicates that jobs should never be garbage
-       * collected.
+       * collected. A value of 0 indicates that the decision should be left up to
+       * the runtime.
        * </pre>
        *
        * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1091,6 +1502,50 @@ public final class ServiceConfig {
       public Builder clearJobGcTimeoutMs() {
         
         jobGcTimeoutMs_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long clientTimeoutMs_ ;
+      /**
+       * <pre>
+       * How long to wait before garbage-collecting a client that hasn't
+       * heartbeated to the dispatcher. A value of 0 indicates that the timeout
+       * should be left to the runtime.
+       * </pre>
+       *
+       * <code>int64 client_timeout_ms = 8;</code>
+       */
+      public long getClientTimeoutMs() {
+        return clientTimeoutMs_;
+      }
+      /**
+       * <pre>
+       * How long to wait before garbage-collecting a client that hasn't
+       * heartbeated to the dispatcher. A value of 0 indicates that the timeout
+       * should be left to the runtime.
+       * </pre>
+       *
+       * <code>int64 client_timeout_ms = 8;</code>
+       */
+      public Builder setClientTimeoutMs(long value) {
+        
+        clientTimeoutMs_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * How long to wait before garbage-collecting a client that hasn't
+       * heartbeated to the dispatcher. A value of 0 indicates that the timeout
+       * should be left to the runtime.
+       * </pre>
+       *
+       * <code>int64 client_timeout_ms = 8;</code>
+       */
+      public Builder clearClientTimeoutMs() {
+        
+        clientTimeoutMs_ = 0L;
         onChanged();
         return this;
       }
@@ -1221,7 +1676,55 @@ public final class ServiceConfig {
 
     /**
      * <pre>
-     * How often the worker should heartbeat to the master.
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    java.util.List<java.lang.String>
+        getWorkerTagsList();
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    int getWorkerTagsCount();
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    java.lang.String getWorkerTags(int index);
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getWorkerTagsBytes(int index);
+
+    /**
+     * <pre>
+     * How often the worker should heartbeat to the master. A value of 0 indicates
+     * that the decision should be left up to the runtime.
      * </pre>
      *
      * <code>int64 heartbeat_interval_ms = 5;</code>
@@ -1231,7 +1734,8 @@ public final class ServiceConfig {
     /**
      * <pre>
      * How long to retry requests to the dispatcher before giving up and reporting
-     * an error.
+     * an error. A value of 0 indicates that the decision should be left up to the
+     * runtime.
      * </pre>
      *
      * <code>int64 dispatcher_timeout_ms = 6;</code>
@@ -1292,6 +1796,7 @@ public final class ServiceConfig {
   /**
    * <pre>
    * Configuration for a tf.data service WorkerServer.
+   * Next id: 11
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.experimental.WorkerConfig}
@@ -1309,6 +1814,7 @@ public final class ServiceConfig {
       protocol_ = "";
       dispatcherAddress_ = "";
       workerAddress_ = "";
+      workerTags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       dataTransferProtocol_ = "";
       dataTransferAddress_ = "";
     }
@@ -1333,6 +1839,7 @@ public final class ServiceConfig {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1393,6 +1900,15 @@ public final class ServiceConfig {
               shutdownQuietPeriodMs_ = input.readInt64();
               break;
             }
+            case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                workerTags_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              workerTags_.add(s);
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -1408,6 +1924,9 @@ public final class ServiceConfig {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          workerTags_ = workerTags_.getUnmodifiableView();
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -1569,11 +2088,69 @@ public final class ServiceConfig {
       }
     }
 
+    public static final int WORKER_TAGS_FIELD_NUMBER = 10;
+    private com.google.protobuf.LazyStringList workerTags_;
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getWorkerTagsList() {
+      return workerTags_;
+    }
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    public int getWorkerTagsCount() {
+      return workerTags_.size();
+    }
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    public java.lang.String getWorkerTags(int index) {
+      return workerTags_.get(index);
+    }
+    /**
+     * <pre>
+     * Tags attached to the worker. This allows reading from selected workers.
+     * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+     * from the local tf.data worker if one exists, then from off-TF-host workers,
+     * to avoid cross-TF-host reads.
+     * </pre>
+     *
+     * <code>repeated string worker_tags = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getWorkerTagsBytes(int index) {
+      return workerTags_.getByteString(index);
+    }
+
     public static final int HEARTBEAT_INTERVAL_MS_FIELD_NUMBER = 5;
     private long heartbeatIntervalMs_;
     /**
      * <pre>
-     * How often the worker should heartbeat to the master.
+     * How often the worker should heartbeat to the master. A value of 0 indicates
+     * that the decision should be left up to the runtime.
      * </pre>
      *
      * <code>int64 heartbeat_interval_ms = 5;</code>
@@ -1587,7 +2164,8 @@ public final class ServiceConfig {
     /**
      * <pre>
      * How long to retry requests to the dispatcher before giving up and reporting
-     * an error.
+     * an error. A value of 0 indicates that the decision should be left up to the
+     * runtime.
      * </pre>
      *
      * <code>int64 dispatcher_timeout_ms = 6;</code>
@@ -1740,6 +2318,9 @@ public final class ServiceConfig {
       if (shutdownQuietPeriodMs_ != 0L) {
         output.writeInt64(9, shutdownQuietPeriodMs_);
       }
+      for (int i = 0; i < workerTags_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, workerTags_.getRaw(i));
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1780,6 +2361,14 @@ public final class ServiceConfig {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(9, shutdownQuietPeriodMs_);
       }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < workerTags_.size(); i++) {
+          dataSize += computeStringSizeNoTag(workerTags_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getWorkerTagsList().size();
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1803,6 +2392,8 @@ public final class ServiceConfig {
           .equals(other.getDispatcherAddress())) return false;
       if (!getWorkerAddress()
           .equals(other.getWorkerAddress())) return false;
+      if (!getWorkerTagsList()
+          .equals(other.getWorkerTagsList())) return false;
       if (getHeartbeatIntervalMs()
           != other.getHeartbeatIntervalMs()) return false;
       if (getDispatcherTimeoutMs()
@@ -1833,6 +2424,10 @@ public final class ServiceConfig {
       hash = (53 * hash) + getDispatcherAddress().hashCode();
       hash = (37 * hash) + WORKER_ADDRESS_FIELD_NUMBER;
       hash = (53 * hash) + getWorkerAddress().hashCode();
+      if (getWorkerTagsCount() > 0) {
+        hash = (37 * hash) + WORKER_TAGS_FIELD_NUMBER;
+        hash = (53 * hash) + getWorkerTagsList().hashCode();
+      }
       hash = (37 * hash) + HEARTBEAT_INTERVAL_MS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getHeartbeatIntervalMs());
@@ -1944,6 +2539,7 @@ public final class ServiceConfig {
     /**
      * <pre>
      * Configuration for a tf.data service WorkerServer.
+     * Next id: 11
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.experimental.WorkerConfig}
@@ -1991,6 +2587,8 @@ public final class ServiceConfig {
 
         workerAddress_ = "";
 
+        workerTags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
         heartbeatIntervalMs_ = 0L;
 
         dispatcherTimeoutMs_ = 0L;
@@ -2027,10 +2625,16 @@ public final class ServiceConfig {
       @java.lang.Override
       public org.tensorflow.proto.data.experimental.ServiceConfig.WorkerConfig buildPartial() {
         org.tensorflow.proto.data.experimental.ServiceConfig.WorkerConfig result = new org.tensorflow.proto.data.experimental.ServiceConfig.WorkerConfig(this);
+        int from_bitField0_ = bitField0_;
         result.port_ = port_;
         result.protocol_ = protocol_;
         result.dispatcherAddress_ = dispatcherAddress_;
         result.workerAddress_ = workerAddress_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          workerTags_ = workerTags_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.workerTags_ = workerTags_;
         result.heartbeatIntervalMs_ = heartbeatIntervalMs_;
         result.dispatcherTimeoutMs_ = dispatcherTimeoutMs_;
         result.dataTransferProtocol_ = dataTransferProtocol_;
@@ -2099,6 +2703,16 @@ public final class ServiceConfig {
           workerAddress_ = other.workerAddress_;
           onChanged();
         }
+        if (!other.workerTags_.isEmpty()) {
+          if (workerTags_.isEmpty()) {
+            workerTags_ = other.workerTags_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureWorkerTagsIsMutable();
+            workerTags_.addAll(other.workerTags_);
+          }
+          onChanged();
+        }
         if (other.getHeartbeatIntervalMs() != 0L) {
           setHeartbeatIntervalMs(other.getHeartbeatIntervalMs());
         }
@@ -2144,6 +2758,7 @@ public final class ServiceConfig {
         }
         return this;
       }
+      private int bitField0_;
 
       private long port_ ;
       /**
@@ -2463,10 +3078,168 @@ public final class ServiceConfig {
         return this;
       }
 
+      private com.google.protobuf.LazyStringList workerTags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureWorkerTagsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          workerTags_ = new com.google.protobuf.LazyStringArrayList(workerTags_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getWorkerTagsList() {
+        return workerTags_.getUnmodifiableView();
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public int getWorkerTagsCount() {
+        return workerTags_.size();
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public java.lang.String getWorkerTags(int index) {
+        return workerTags_.get(index);
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getWorkerTagsBytes(int index) {
+        return workerTags_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public Builder setWorkerTags(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWorkerTagsIsMutable();
+        workerTags_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public Builder addWorkerTags(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWorkerTagsIsMutable();
+        workerTags_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public Builder addAllWorkerTags(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureWorkerTagsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, workerTags_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public Builder clearWorkerTags() {
+        workerTags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Tags attached to the worker. This allows reading from selected workers.
+       * For example, by applying a "COLOCATED" tag, tf.data service is able to read
+       * from the local tf.data worker if one exists, then from off-TF-host workers,
+       * to avoid cross-TF-host reads.
+       * </pre>
+       *
+       * <code>repeated string worker_tags = 10;</code>
+       */
+      public Builder addWorkerTagsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureWorkerTagsIsMutable();
+        workerTags_.add(value);
+        onChanged();
+        return this;
+      }
+
       private long heartbeatIntervalMs_ ;
       /**
        * <pre>
-       * How often the worker should heartbeat to the master.
+       * How often the worker should heartbeat to the master. A value of 0 indicates
+       * that the decision should be left up to the runtime.
        * </pre>
        *
        * <code>int64 heartbeat_interval_ms = 5;</code>
@@ -2476,7 +3249,8 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * How often the worker should heartbeat to the master.
+       * How often the worker should heartbeat to the master. A value of 0 indicates
+       * that the decision should be left up to the runtime.
        * </pre>
        *
        * <code>int64 heartbeat_interval_ms = 5;</code>
@@ -2489,7 +3263,8 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * How often the worker should heartbeat to the master.
+       * How often the worker should heartbeat to the master. A value of 0 indicates
+       * that the decision should be left up to the runtime.
        * </pre>
        *
        * <code>int64 heartbeat_interval_ms = 5;</code>
@@ -2505,7 +3280,8 @@ public final class ServiceConfig {
       /**
        * <pre>
        * How long to retry requests to the dispatcher before giving up and reporting
-       * an error.
+       * an error. A value of 0 indicates that the decision should be left up to the
+       * runtime.
        * </pre>
        *
        * <code>int64 dispatcher_timeout_ms = 6;</code>
@@ -2516,7 +3292,8 @@ public final class ServiceConfig {
       /**
        * <pre>
        * How long to retry requests to the dispatcher before giving up and reporting
-       * an error.
+       * an error. A value of 0 indicates that the decision should be left up to the
+       * runtime.
        * </pre>
        *
        * <code>int64 dispatcher_timeout_ms = 6;</code>
@@ -2530,7 +3307,8 @@ public final class ServiceConfig {
       /**
        * <pre>
        * How long to retry requests to the dispatcher before giving up and reporting
-       * an error.
+       * an error. A value of 0 indicates that the decision should be left up to the
+       * runtime.
        * </pre>
        *
        * <code>int64 dispatcher_timeout_ms = 6;</code>
@@ -2846,21 +3624,23 @@ public final class ServiceConfig {
   static {
     java.lang.String[] descriptorData = {
       "\n-tensorflow/core/protobuf/service_confi" +
-      "g.proto\022\034tensorflow.data.experimental\"\236\001" +
+      "g.proto\022\034tensorflow.data.experimental\"\323\001" +
       "\n\020DispatcherConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010prot" +
       "ocol\030\002 \001(\t\022\020\n\010work_dir\030\003 \001(\t\022\033\n\023fault_to" +
-      "lerant_mode\030\004 \001(\010\022 \n\030job_gc_check_interv" +
-      "al_ms\030\005 \001(\003\022\031\n\021job_gc_timeout_ms\030\006 \001(\003\"\201" +
-      "\002\n\014WorkerConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010protoco" +
-      "l\030\002 \001(\t\022\032\n\022dispatcher_address\030\003 \001(\t\022\026\n\016w" +
-      "orker_address\030\004 \001(\t\022\035\n\025heartbeat_interva" +
-      "l_ms\030\005 \001(\003\022\035\n\025dispatcher_timeout_ms\030\006 \001(" +
-      "\003\022\036\n\026data_transfer_protocol\030\007 \001(\t\022\035\n\025dat" +
-      "a_transfer_address\030\010 \001(\t\022 \n\030shutdown_qui" +
-      "et_period_ms\030\t \001(\003B\177\n&org.tensorflow.pro" +
-      "to.data.experimentalZUgithub.com/tensorf" +
-      "low/tensorflow/tensorflow/go/core/protob" +
-      "uf/for_core_protos_go_protob\006proto3"
+      "lerant_mode\030\004 \001(\010\022\030\n\020worker_addresses\030\007 " +
+      "\003(\t\022 \n\030job_gc_check_interval_ms\030\005 \001(\003\022\031\n" +
+      "\021job_gc_timeout_ms\030\006 \001(\003\022\031\n\021client_timeo" +
+      "ut_ms\030\010 \001(\003\"\226\002\n\014WorkerConfig\022\014\n\004port\030\001 \001" +
+      "(\003\022\020\n\010protocol\030\002 \001(\t\022\032\n\022dispatcher_addre" +
+      "ss\030\003 \001(\t\022\026\n\016worker_address\030\004 \001(\t\022\023\n\013work" +
+      "er_tags\030\n \003(\t\022\035\n\025heartbeat_interval_ms\030\005" +
+      " \001(\003\022\035\n\025dispatcher_timeout_ms\030\006 \001(\003\022\036\n\026d" +
+      "ata_transfer_protocol\030\007 \001(\t\022\035\n\025data_tran" +
+      "sfer_address\030\010 \001(\t\022 \n\030shutdown_quiet_per" +
+      "iod_ms\030\t \001(\003B\177\n&org.tensorflow.proto.dat" +
+      "a.experimentalZUgithub.com/tensorflow/te" +
+      "nsorflow/tensorflow/go/core/protobuf/for" +
+      "_core_protos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2871,13 +3651,13 @@ public final class ServiceConfig {
     internal_static_tensorflow_data_experimental_DispatcherConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_DispatcherConfig_descriptor,
-        new java.lang.String[] { "Port", "Protocol", "WorkDir", "FaultTolerantMode", "JobGcCheckIntervalMs", "JobGcTimeoutMs", });
+        new java.lang.String[] { "Port", "Protocol", "WorkDir", "FaultTolerantMode", "WorkerAddresses", "JobGcCheckIntervalMs", "JobGcTimeoutMs", "ClientTimeoutMs", });
     internal_static_tensorflow_data_experimental_WorkerConfig_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_tensorflow_data_experimental_WorkerConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_WorkerConfig_descriptor,
-        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "ShutdownQuietPeriodMs", });
+        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "WorkerTags", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "ShutdownQuietPeriodMs", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

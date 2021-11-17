@@ -74,6 +74,7 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
    * @param finalizeFunc The value of the finalizeFunc attribute
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of GeneratorDataset
    */
   @Endpoint(
@@ -82,7 +83,7 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
   public static GeneratorDataset create(Scope scope, Iterable<Operand<?>> initFuncOtherArgs,
       Iterable<Operand<?>> nextFuncOtherArgs, Iterable<Operand<?>> finalizeFuncOtherArgs,
       ConcreteFunction initFunc, ConcreteFunction nextFunc, ConcreteFunction finalizeFunc,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GeneratorDataset");
     opBuilder.addInputList(Operands.asOutputs(initFuncOtherArgs));
     opBuilder.addInputList(Operands.asOutputs(nextFuncOtherArgs));
@@ -96,7 +97,24 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new GeneratorDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -112,6 +130,27 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.GeneratorDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -158,8 +197,13 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new GeneratorDataset(op), op, Arrays.asList("Tinit_func_args", "Tnext_func_args", "Tfinalize_func_args", "output_types", "output_shapes"));
+      super(new GeneratorDataset(op), op, Arrays.asList("Tinit_func_args", "Tnext_func_args", "Tfinalize_func_args", "output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       int initFuncOtherArgsLength = op.inputListLength("init_func_other_args");
       initFuncOtherArgs = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, initFuncOtherArgsLength));
@@ -175,6 +219,7 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
       TfinalizeFuncArgs = op.attributes().getAttrTypeList("Tfinalize_func_args");
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

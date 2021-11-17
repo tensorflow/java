@@ -21,6 +21,7 @@ import java.util.List;
 import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.xla.AllReduce;
 import org.tensorflow.op.xla.BroadcastHelper;
 import org.tensorflow.op.xla.ClusterOutput;
 import org.tensorflow.op.xla.Conv;
@@ -35,9 +36,11 @@ import org.tensorflow.op.xla.KeyValueSort;
 import org.tensorflow.op.xla.Pad;
 import org.tensorflow.op.xla.Recv;
 import org.tensorflow.op.xla.Reduce;
+import org.tensorflow.op.xla.ReduceScatter;
 import org.tensorflow.op.xla.ReduceWindow;
 import org.tensorflow.op.xla.RemoveDynamicDimensionSize;
 import org.tensorflow.op.xla.ReplicaId;
+import org.tensorflow.op.xla.RngBitGenerator;
 import org.tensorflow.op.xla.Scatter;
 import org.tensorflow.op.xla.SelectAndScatter;
 import org.tensorflow.op.xla.SelfAdjointEig;
@@ -73,6 +76,22 @@ public final class XlaOps {
   XlaOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+  }
+
+  /**
+   * Wraps the XLA AllReduce operator
+   *  documented at https://www.tensorflow.org/xla/operation_semantics#allreduce.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input Array or a non-empty tuple of arrays to reduce across replicas.
+   * @param groupAssignment Groups between which the reductions are performed.
+   * @param reduceOp Reduction computation.
+   * @param <T> data type for {@code XlaAllReduce} output and operands
+   * @return a new instance of AllReduce
+   */
+  public <T extends TNumber> AllReduce<T> allReduce(Operand<T> input,
+      Operand<TInt32> groupAssignment, String reduceOp) {
+    return AllReduce.create(scope, input, groupAssignment, reduceOp);
   }
 
   /**
@@ -347,6 +366,23 @@ public final class XlaOps {
   }
 
   /**
+   * Wraps the XLA ReduceScatter operator
+   *  documented at https://www.tensorflow.org/xla/operation_semantics#reducescatter.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input Array or a non-empty tuple of arrays to reduce across replicas.
+   * @param groupAssignment Groups between which the reductions are performed.
+   * @param scatterDimension Dimension to scatter.
+   * @param reduceOp Reduction computation.
+   * @param <T> data type for {@code XlaReduceScatter} output and operands
+   * @return a new instance of ReduceScatter
+   */
+  public <T extends TNumber> ReduceScatter<T> reduceScatter(Operand<T> input,
+      Operand<TInt32> groupAssignment, Operand<TInt32> scatterDimension, String reduceOp) {
+    return ReduceScatter.create(scope, input, groupAssignment, scatterDimension, reduceOp);
+  }
+
+  /**
    * Wraps the XLA ReduceWindow operator, documented at
    *  https://www.tensorflow.org/performance/xla/operation_semantics#reducewindow .
    *
@@ -371,11 +407,9 @@ public final class XlaOps {
   }
 
   /**
-   * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
-   *  <pre>
-   *      dynamic dimension into a static dimension. The bound of the size of
-   *      dimension `dim_index` becomes the static dimension size.
-   *  </pre>
+   * Inverse of XlaSetDynamicDimensionSize.
+   *  Make an xla bounded dynamic dimension into a static dimension. The bound of the
+   *  size of dimension {@code dim_index} becomes the static dimension size.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
@@ -395,6 +429,26 @@ public final class XlaOps {
    */
   public ReplicaId replicaId() {
     return ReplicaId.create(scope);
+  }
+
+  /**
+   * Stateless PRNG bit generator.
+   *  Wraps the XLA RngBitGenerator operator, documented at
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#rngbitgenerator.
+   *
+   * @param <U> data type for {@code output} output
+   * @param algorithm The PRNG algorithm to use, one of
+   *  tf.random.Algorithm.{PHILOX, THREEFRY, AUTO_SELECT}.
+   * @param initialState Initial state for the PRNG algorithm. For THREEFRY, it should be
+   *  a u64[2] and for PHILOX a u64[3].
+   * @param shape The output shape of the generated data.
+   * @param dtype The type of the tensor.
+   * @param <U> data type for {@code XlaRngBitGenerator} output and operands
+   * @return a new instance of RngBitGenerator
+   */
+  public <U extends TNumber> RngBitGenerator<U> rngBitGenerator(Operand<TInt32> algorithm,
+      Operand<? extends TType> initialState, Operand<? extends TNumber> shape, Class<U> dtype) {
+    return RngBitGenerator.create(scope, algorithm, initialState, shape, dtype);
   }
 
   /**
@@ -500,7 +554,9 @@ public final class XlaOps {
   }
 
   /**
-   * An op which shards the input based on the given sharding attribute.
+   * An op which shards the input based on the given sharding attribute. It can
+   *  selectively annotate a subset of tensor dimensions by skipping unspecified_dims,
+   *  and the sharding annotation should be replicated in those dims.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
@@ -533,34 +589,39 @@ public final class XlaOps {
    *  partitioned) with the same sharding used by manual partitioning, and outputs a
    *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
    *  shape is not evenly partitionable, the padding region will be masked with 0s.
+   *  The conversion can happen partially in subgroups, by specifying the dim
+   *  attribute, where only that dim will be converted.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
    * @param manualSharding The value of the manualSharding attribute
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSpmdFullToShardShape} output and operands
    * @return a new instance of SpmdFullToShardShape
    */
   public <T extends TType> SpmdFullToShardShape<T> spmdFullToShardShape(Operand<T> input,
-      String manualSharding) {
-    return SpmdFullToShardShape.create(scope, input, manualSharding);
+      String manualSharding, SpmdFullToShardShape.Options... options) {
+    return SpmdFullToShardShape.create(scope, input, manualSharding, options);
   }
 
   /**
    * An op used by XLA SPMD partitioner to switch from manual partitioning to
    *  automatic partitioning. It converts the shard-shaped, manually partitioned input
    *  into full-shaped tensor to be partitioned automatically with the same sharding
-   *  used by manual partitioning.
+   *  used by manual partitioning. The conversion can happen partially in subgroups,
+   *  by specifying the dim attribute, where only that dim will be converted.
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
    * @param manualSharding The value of the manualSharding attribute
    * @param fullShape The value of the fullShape attribute
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
    * @return a new instance of SpmdShardToFullShape
    */
   public <T extends TType> SpmdShardToFullShape<T> spmdShardToFullShape(Operand<T> input,
-      String manualSharding, Shape fullShape) {
-    return SpmdShardToFullShape.create(scope, input, manualSharding, fullShape);
+      String manualSharding, Shape fullShape, SpmdShardToFullShape.Options... options) {
+    return SpmdShardToFullShape.create(scope, input, manualSharding, fullShape, options);
   }
 
   /**
@@ -691,18 +752,18 @@ public final class XlaOps {
    * Wraps the variadic XLA Reduce operator.
    *  Semantics are documented at
    *  https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
+   *  <p>This is an expanded version of XlaVariadicReduce, with support for
+   *  operands of different dtypes, and improved shape inference.
    *
-   * @param <T> data type for {@code output} output
-   * @param input the input tensor(s)
-   * @param initValue scalar initial value(s) for the reduction
+   * @param inputs the input tensor(s)
+   * @param initValues scalar initial value(s) for the reduction
    * @param dimensionsToReduce dimension numbers over which to reduce
    * @param reducer a reducer function to apply
-   * @param <T> data type for {@code XlaVariadicReduce} output and operands
    * @return a new instance of XlaVariadicReduce
    */
-  public <T extends TType> XlaVariadicReduce<T> xlaVariadicReduce(Iterable<Operand<T>> input,
-      Iterable<Operand<T>> initValue, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
-    return XlaVariadicReduce.create(scope, input, initValue, dimensionsToReduce, reducer);
+  public XlaVariadicReduce xlaVariadicReduce(Iterable<Operand<?>> inputs,
+      Iterable<Operand<?>> initValues, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
+    return XlaVariadicReduce.create(scope, inputs, initValues, dimensionsToReduce, reducer);
   }
 
   /**

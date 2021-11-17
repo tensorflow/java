@@ -1,6 +1,6 @@
 op {
   graph_op_name: "LoadTPUEmbeddingFrequencyEstimatorParameters"
   endpoint {
-    name: "rawops.LoadTPUEmbeddingFrequencyEstimatorParameters"
+    name: "tpu.LoadTPUEmbeddingFrequencyEstimatorParameters"
   }
 }

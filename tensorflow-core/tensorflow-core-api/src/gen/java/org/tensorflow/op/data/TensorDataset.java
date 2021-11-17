@@ -67,13 +67,14 @@ public final class TensorDataset extends RawOp implements Operand<TType> {
    * @param scope current scope
    * @param components The components value
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TensorDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static TensorDataset create(Scope scope, Iterable<Operand<?>> components,
-      List<Shape> outputShapes) {
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorDataset");
     opBuilder.addInputList(Operands.asOutputs(components));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
@@ -81,7 +82,24 @@ public final class TensorDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new TensorDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -97,6 +115,27 @@ public final class TensorDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.TensorDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -118,14 +157,20 @@ public final class TensorDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new TensorDataset(op), op, Arrays.asList("Toutput_types", "output_shapes"));
+      super(new TensorDataset(op), op, Arrays.asList("Toutput_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       int componentsLength = op.inputListLength("components");
       components = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, componentsLength));
       inputIndex += componentsLength;
       ToutputTypes = op.attributes().getAttrTypeList("Toutput_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

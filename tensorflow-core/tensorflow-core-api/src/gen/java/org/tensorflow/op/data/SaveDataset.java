@@ -18,11 +18,14 @@ limitations under the License.
 package org.tensorflow.op.data;
 
 import java.util.Arrays;
+import java.util.List;
 import org.tensorflow.ConcreteFunction;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
@@ -36,7 +39,7 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * The SaveDataset operation
+ * The SaveDatasetV2 operation
  */
 @OpMetadata(
     opType = SaveDataset.OP_NAME,
@@ -45,24 +48,31 @@ import org.tensorflow.types.family.TType;
 @Operator(
     group = "data"
 )
-public final class SaveDataset extends RawOp {
+public final class SaveDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "SaveDataset";
+  public static final String OP_NAME = "SaveDatasetV2";
 
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
   public SaveDataset(Operation operation) {
     super(operation, OP_NAME);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new SaveDataset operation.
+   * Factory method to create a class wrapping a new SaveDatasetV2 operation.
    *
    * @param scope current scope
    * @param inputDataset The inputDataset value
    * @param path The path value
    * @param shardFuncOtherArgs The shardFuncOtherArgs value
    * @param shardFunc The value of the shardFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of SaveDataset
    */
@@ -71,12 +81,18 @@ public final class SaveDataset extends RawOp {
   )
   public static SaveDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> path, Iterable<Operand<?>> shardFuncOtherArgs, ConcreteFunction shardFunc,
-      Options... options) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SaveDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(path.asOutput());
     opBuilder.addInputList(Operands.asOutputs(shardFuncOtherArgs));
     opBuilder.setAttr("shard_func", shardFunc);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    Shape[] outputShapesArray = new Shape[outputShapes.size()];
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
+      outputShapesArray[i] = outputShapes.get(i);
+    }
+    opBuilder.setAttr("output_shapes", outputShapesArray);
     if (options != null) {
       for (Options opts : options) {
         if (opts.compression != null) {
@@ -108,6 +124,21 @@ public final class SaveDataset extends RawOp {
    */
   public static Options useShardFunc(Boolean useShardFunc) {
     return new Options().useShardFunc(useShardFunc);
+  }
+
+  /**
+   * Gets handle.
+   *
+   * @return handle.
+   */
+  public Output<? extends TType> handle() {
+    return handle;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
 
   /**
@@ -178,8 +209,18 @@ public final class SaveDataset extends RawOp {
      */
     public final DataType[] TshardFuncArgs;
 
+    /**
+     * The outputTypes attribute
+     */
+    public final DataType[] outputTypes;
+
+    /**
+     * The outputShapes attribute
+     */
+    public final Shape[] outputShapes;
+
     public Inputs(GraphOperation op) {
-      super(new SaveDataset(op), op, Arrays.asList("compression", "use_shard_func", "Tshard_func_args"));
+      super(new SaveDataset(op), op, Arrays.asList("compression", "use_shard_func", "Tshard_func_args", "output_types", "output_shapes"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       path = (Operand<TString>) op.input(inputIndex++);
@@ -189,6 +230,8 @@ public final class SaveDataset extends RawOp {
       compression = op.attributes().getAttrString("compression");
       useShardFunc = op.attributes().getAttrBool("use_shard_func");
       TshardFuncArgs = op.attributes().getAttrTypeList("Tshard_func_args");
+      outputTypes = op.attributes().getAttrTypeList("output_types");
+      outputShapes = op.attributes().getAttrShapeList("output_shapes");
     }
   }
 }

@@ -69,18 +69,36 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
    * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar representing the number of bytes to buffer. A value of
    * 0 means no buffering will be performed.
+   * @param options carries optional attribute values
    * @return a new instance of TfRecordDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static TfRecordDataset create(Scope scope, Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize) {
+      Operand<TString> compressionType, Operand<TInt64> bufferSize, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TfRecordDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new TfRecordDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -96,6 +114,27 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.TfRecordDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -120,12 +159,18 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
      */
     public final Operand<TInt64> bufferSize;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new TfRecordDataset(op), op, Arrays.asList());
+      super(new TfRecordDataset(op), op, Arrays.asList("metadata"));
       int inputIndex = 0;
       filenames = (Operand<TString>) op.input(inputIndex++);
       compressionType = (Operand<TString>) op.input(inputIndex++);
       bufferSize = (Operand<TInt64>) op.input(inputIndex++);
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

@@ -1,6 +1,6 @@
 op {
   graph_op_name: "RetrieveTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug"
   endpoint {
-    name: "rawops.RetrieveTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug"
+    name: "tpu.RetrieveTPUEmbeddingFrequencyEstimatorParametersGradAccumDebug"
   }
 }

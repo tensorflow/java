@@ -86,6 +86,11 @@ private static final long serialVersionUID = 0L;
             maxFoldedConstantInBytes_ = input.readInt64();
             break;
           }
+          case 56: {
+
+            cpuGlobalJit_ = input.readBool();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -489,6 +494,21 @@ private static final long serialVersionUID = 0L;
     return result == null ? org.tensorflow.proto.framework.OptimizerOptions.GlobalJitLevel.UNRECOGNIZED : result;
   }
 
+  public static final int CPU_GLOBAL_JIT_FIELD_NUMBER = 7;
+  private boolean cpuGlobalJit_;
+  /**
+   * <pre>
+   * CPU code will be autoclustered only if global_jit_level &gt;= ON_1 and either:
+   *  - this flag is true, or
+   *  - TF_XLA_FLAGS contains --tf_xla_cpu_global_jit=true.
+   * </pre>
+   *
+   * <code>bool cpu_global_jit = 7;</code>
+   */
+  public boolean getCpuGlobalJit() {
+    return cpuGlobalJit_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -520,6 +540,9 @@ private static final long serialVersionUID = 0L;
     }
     if (maxFoldedConstantInBytes_ != 0L) {
       output.writeInt64(6, maxFoldedConstantInBytes_);
+    }
+    if (cpuGlobalJit_ != false) {
+      output.writeBool(7, cpuGlobalJit_);
     }
     unknownFields.writeTo(output);
   }
@@ -554,6 +577,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(6, maxFoldedConstantInBytes_);
     }
+    if (cpuGlobalJit_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(7, cpuGlobalJit_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -579,6 +606,8 @@ private static final long serialVersionUID = 0L;
         != other.getDoFunctionInlining()) return false;
     if (optLevel_ != other.optLevel_) return false;
     if (globalJitLevel_ != other.globalJitLevel_) return false;
+    if (getCpuGlobalJit()
+        != other.getCpuGlobalJit()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -606,6 +635,9 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + optLevel_;
     hash = (37 * hash) + GLOBAL_JIT_LEVEL_FIELD_NUMBER;
     hash = (53 * hash) + globalJitLevel_;
+    hash = (37 * hash) + CPU_GLOBAL_JIT_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getCpuGlobalJit());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -755,6 +787,8 @@ private static final long serialVersionUID = 0L;
 
       globalJitLevel_ = 0;
 
+      cpuGlobalJit_ = false;
+
       return this;
     }
 
@@ -787,6 +821,7 @@ private static final long serialVersionUID = 0L;
       result.doFunctionInlining_ = doFunctionInlining_;
       result.optLevel_ = optLevel_;
       result.globalJitLevel_ = globalJitLevel_;
+      result.cpuGlobalJit_ = cpuGlobalJit_;
       onBuilt();
       return result;
     }
@@ -852,6 +887,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.globalJitLevel_ != 0) {
         setGlobalJitLevelValue(other.getGlobalJitLevelValue());
+      }
+      if (other.getCpuGlobalJit() != false) {
+        setCpuGlobalJit(other.getCpuGlobalJit());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1172,6 +1210,50 @@ private static final long serialVersionUID = 0L;
     public Builder clearGlobalJitLevel() {
       
       globalJitLevel_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean cpuGlobalJit_ ;
+    /**
+     * <pre>
+     * CPU code will be autoclustered only if global_jit_level &gt;= ON_1 and either:
+     *  - this flag is true, or
+     *  - TF_XLA_FLAGS contains --tf_xla_cpu_global_jit=true.
+     * </pre>
+     *
+     * <code>bool cpu_global_jit = 7;</code>
+     */
+    public boolean getCpuGlobalJit() {
+      return cpuGlobalJit_;
+    }
+    /**
+     * <pre>
+     * CPU code will be autoclustered only if global_jit_level &gt;= ON_1 and either:
+     *  - this flag is true, or
+     *  - TF_XLA_FLAGS contains --tf_xla_cpu_global_jit=true.
+     * </pre>
+     *
+     * <code>bool cpu_global_jit = 7;</code>
+     */
+    public Builder setCpuGlobalJit(boolean value) {
+      
+      cpuGlobalJit_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * CPU code will be autoclustered only if global_jit_level &gt;= ON_1 and either:
+     *  - this flag is true, or
+     *  - TF_XLA_FLAGS contains --tf_xla_cpu_global_jit=true.
+     * </pre>
+     *
+     * <code>bool cpu_global_jit = 7;</code>
+     */
+    public Builder clearCpuGlobalJit() {
+      
+      cpuGlobalJit_ = false;
       onChanged();
       return this;
     }

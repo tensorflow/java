@@ -100,6 +100,9 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
         if (opts.bufferSizeMin != null) {
           opBuilder.setAttr("buffer_size_min", opts.bufferSizeMin);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new PrefetchDataset(opBuilder.build());
@@ -136,6 +139,16 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -159,6 +172,8 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
     private Boolean legacyAutotune;
 
     private Long bufferSizeMin;
+
+    private String metadata;
 
     private Options() {
     }
@@ -193,6 +208,17 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
      */
     public Options bufferSizeMin(Long bufferSizeMin) {
       this.bufferSizeMin = bufferSizeMin;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -237,8 +263,13 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
      */
     public final long bufferSizeMin;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new PrefetchDataset(op), op, Arrays.asList("output_types", "output_shapes", "slack_period", "legacy_autotune", "buffer_size_min"));
+      super(new PrefetchDataset(op), op, Arrays.asList("output_types", "output_shapes", "slack_period", "legacy_autotune", "buffer_size_min", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       bufferSize = (Operand<TInt64>) op.input(inputIndex++);
@@ -247,6 +278,7 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
       slackPeriod = op.attributes().getAttrInt("slack_period");
       legacyAutotune = op.attributes().getAttrBool("legacy_autotune");
       bufferSizeMin = op.attributes().getAttrInt("buffer_size_min");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

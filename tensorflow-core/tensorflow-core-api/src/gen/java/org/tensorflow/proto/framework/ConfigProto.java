@@ -533,15 +533,14 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * Whether the remote devices in the cluster should be fetched during setup
-     * of multi-client cluster. If enabled, the workers will run an extra device
-     * information exchange step during startup and the workers' EagerContexts
-     * will become aware of remote devices in the cluster as well.
+     * Whether functional control flow op lowering should be disabled. This is
+     * useful when executing within a portable runtime where control flow op
+     * kernels may not be loaded due to selective registration.
      * </pre>
      *
-     * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+     * <code>bool disable_functional_ops_lowering = 21;</code>
      */
-    boolean getFetchRemoteDevicesInMultiClient();
+    boolean getDisableFunctionalOpsLowering();
   }
   /**
    * <pre>
@@ -700,9 +699,9 @@ private static final long serialVersionUID = 0L;
               coordinationService_ = s;
               break;
             }
-            case 160: {
+            case 168: {
 
-              fetchRemoteDevicesInMultiClient_ = input.readBool();
+              disableFunctionalOpsLowering_ = input.readBool();
               break;
             }
             default: {
@@ -1344,20 +1343,19 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static final int FETCH_REMOTE_DEVICES_IN_MULTI_CLIENT_FIELD_NUMBER = 20;
-    private boolean fetchRemoteDevicesInMultiClient_;
+    public static final int DISABLE_FUNCTIONAL_OPS_LOWERING_FIELD_NUMBER = 21;
+    private boolean disableFunctionalOpsLowering_;
     /**
      * <pre>
-     * Whether the remote devices in the cluster should be fetched during setup
-     * of multi-client cluster. If enabled, the workers will run an extra device
-     * information exchange step during startup and the workers' EagerContexts
-     * will become aware of remote devices in the cluster as well.
+     * Whether functional control flow op lowering should be disabled. This is
+     * useful when executing within a portable runtime where control flow op
+     * kernels may not be loaded due to selective registration.
      * </pre>
      *
-     * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+     * <code>bool disable_functional_ops_lowering = 21;</code>
      */
-    public boolean getFetchRemoteDevicesInMultiClient() {
-      return fetchRemoteDevicesInMultiClient_;
+    public boolean getDisableFunctionalOpsLowering() {
+      return disableFunctionalOpsLowering_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1428,8 +1426,8 @@ private static final long serialVersionUID = 0L;
       if (!getCoordinationServiceBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 19, coordinationService_);
       }
-      if (fetchRemoteDevicesInMultiClient_ != false) {
-        output.writeBool(20, fetchRemoteDevicesInMultiClient_);
+      if (disableFunctionalOpsLowering_ != false) {
+        output.writeBool(21, disableFunctionalOpsLowering_);
       }
       unknownFields.writeTo(output);
     }
@@ -1509,9 +1507,9 @@ private static final long serialVersionUID = 0L;
       if (!getCoordinationServiceBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(19, coordinationService_);
       }
-      if (fetchRemoteDevicesInMultiClient_ != false) {
+      if (disableFunctionalOpsLowering_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(20, fetchRemoteDevicesInMultiClient_);
+          .computeBoolSize(21, disableFunctionalOpsLowering_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1566,8 +1564,8 @@ private static final long serialVersionUID = 0L;
           != other.getUseTfrt()) return false;
       if (!getCoordinationService()
           .equals(other.getCoordinationService())) return false;
-      if (getFetchRemoteDevicesInMultiClient()
-          != other.getFetchRemoteDevicesInMultiClient()) return false;
+      if (getDisableFunctionalOpsLowering()
+          != other.getDisableFunctionalOpsLowering()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1629,9 +1627,9 @@ private static final long serialVersionUID = 0L;
           getUseTfrt());
       hash = (37 * hash) + COORDINATION_SERVICE_FIELD_NUMBER;
       hash = (53 * hash) + getCoordinationService().hashCode();
-      hash = (37 * hash) + FETCH_REMOTE_DEVICES_IN_MULTI_CLIENT_FIELD_NUMBER;
+      hash = (37 * hash) + DISABLE_FUNCTIONAL_OPS_LOWERING_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getFetchRemoteDevicesInMultiClient());
+          getDisableFunctionalOpsLowering());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1811,7 +1809,7 @@ private static final long serialVersionUID = 0L;
 
         coordinationService_ = "";
 
-        fetchRemoteDevicesInMultiClient_ = false;
+        disableFunctionalOpsLowering_ = false;
 
         return this;
       }
@@ -1861,7 +1859,7 @@ private static final long serialVersionUID = 0L;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
         result.useTfrt_ = useTfrt_;
         result.coordinationService_ = coordinationService_;
-        result.fetchRemoteDevicesInMultiClient_ = fetchRemoteDevicesInMultiClient_;
+        result.disableFunctionalOpsLowering_ = disableFunctionalOpsLowering_;
         onBuilt();
         return result;
       }
@@ -1967,8 +1965,8 @@ private static final long serialVersionUID = 0L;
           coordinationService_ = other.coordinationService_;
           onChanged();
         }
-        if (other.getFetchRemoteDevicesInMultiClient() != false) {
-          setFetchRemoteDevicesInMultiClient(other.getFetchRemoteDevicesInMultiClient());
+        if (other.getDisableFunctionalOpsLowering() != false) {
+          setDisableFunctionalOpsLowering(other.getDisableFunctionalOpsLowering());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3175,49 +3173,46 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private boolean fetchRemoteDevicesInMultiClient_ ;
+      private boolean disableFunctionalOpsLowering_ ;
       /**
        * <pre>
-       * Whether the remote devices in the cluster should be fetched during setup
-       * of multi-client cluster. If enabled, the workers will run an extra device
-       * information exchange step during startup and the workers' EagerContexts
-       * will become aware of remote devices in the cluster as well.
+       * Whether functional control flow op lowering should be disabled. This is
+       * useful when executing within a portable runtime where control flow op
+       * kernels may not be loaded due to selective registration.
        * </pre>
        *
-       * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+       * <code>bool disable_functional_ops_lowering = 21;</code>
        */
-      public boolean getFetchRemoteDevicesInMultiClient() {
-        return fetchRemoteDevicesInMultiClient_;
+      public boolean getDisableFunctionalOpsLowering() {
+        return disableFunctionalOpsLowering_;
       }
       /**
        * <pre>
-       * Whether the remote devices in the cluster should be fetched during setup
-       * of multi-client cluster. If enabled, the workers will run an extra device
-       * information exchange step during startup and the workers' EagerContexts
-       * will become aware of remote devices in the cluster as well.
+       * Whether functional control flow op lowering should be disabled. This is
+       * useful when executing within a portable runtime where control flow op
+       * kernels may not be loaded due to selective registration.
        * </pre>
        *
-       * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+       * <code>bool disable_functional_ops_lowering = 21;</code>
        */
-      public Builder setFetchRemoteDevicesInMultiClient(boolean value) {
+      public Builder setDisableFunctionalOpsLowering(boolean value) {
         
-        fetchRemoteDevicesInMultiClient_ = value;
+        disableFunctionalOpsLowering_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * Whether the remote devices in the cluster should be fetched during setup
-       * of multi-client cluster. If enabled, the workers will run an extra device
-       * information exchange step during startup and the workers' EagerContexts
-       * will become aware of remote devices in the cluster as well.
+       * Whether functional control flow op lowering should be disabled. This is
+       * useful when executing within a portable runtime where control flow op
+       * kernels may not be loaded due to selective registration.
        * </pre>
        *
-       * <code>bool fetch_remote_devices_in_multi_client = 20;</code>
+       * <code>bool disable_functional_ops_lowering = 21;</code>
        */
-      public Builder clearFetchRemoteDevicesInMultiClient() {
+      public Builder clearDisableFunctionalOpsLowering() {
         
-        fetchRemoteDevicesInMultiClient_ = false;
+        disableFunctionalOpsLowering_ = false;
         onChanged();
         return this;
       }

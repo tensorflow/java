@@ -105,6 +105,9 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
         if (opts.parallelCopy != null) {
           opBuilder.setAttr("parallel_copy", opts.parallelCopy);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new PaddedBatchDataset(opBuilder.build());
@@ -118,6 +121,16 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
    */
   public static Options parallelCopy(Boolean parallelCopy) {
     return new Options().parallelCopy(parallelCopy);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -141,6 +154,8 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
   public static class Options {
     private Boolean parallelCopy;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -152,6 +167,17 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
      */
     public Options parallelCopy(Boolean parallelCopy) {
       this.parallelCopy = parallelCopy;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -206,8 +232,13 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new PaddedBatchDataset(op), op, Arrays.asList("parallel_copy", "Toutput_types", "output_shapes"));
+      super(new PaddedBatchDataset(op), op, Arrays.asList("parallel_copy", "Toutput_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       batchSize = (Operand<TInt64>) op.input(inputIndex++);
@@ -221,6 +252,7 @@ public final class PaddedBatchDataset extends RawOp implements Operand<TType> {
       parallelCopy = op.attributes().getAttrBool("parallel_copy");
       ToutputTypes = op.attributes().getAttrTypeList("Toutput_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

@@ -39,7 +39,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
     value = {
       @Platform(
           value = {"linux", "macosx", "windows"},
-          compiler = "cpp11",
+          compiler = "cpp14",
           include = {
             "tensorflow/core/platform/ctstring_internal.h",
             "tensorflow/core/platform/ctstring.h",
@@ -317,6 +317,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "gtl::iterator_range<NeighborIter>",
                     "tensorflow::DataType",
                     "tensorflow::DataTypeVector",
+                    "tensorflow::Node::set_original_func_names",
                     "tensorflow::Node::set_original_node_names",
                     "tensorflow::Node::AddAttr",
                     "tensorflow::Node::ClearAttr",
@@ -511,6 +512,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tensorflow::Status::ErasePayload",
                     "tensorflow::Status::SetPayload",
                     "tensorflow::Status::GetPayload",
+                    "tensorflow::Status::ForEachPayload",
                     "tensorflow::Node::SetStackTrace",
                     "tensorflow::Node::GetStackTrace")
                 .skip());

@@ -36,9 +36,7 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reverses specific dimensions of a tensor.
- * NOTE {@code tf.reverse} has now changed behavior in preparation for 1.0.
- * {@code tf.reverse_v2} is currently an alias that will be deprecated before TF 1.0.
- * <p>Given a {@code tensor}, and a {@code int32} tensor {@code axis} representing the set of
+ * Given a {@code tensor}, and a {@code int32} tensor {@code axis} representing the set of
  * dimensions of {@code tensor} to reverse. This operation reverses each dimension
  * {@code i} for which there exists {@code j} s.t. {@code axis[j] == i}.
  * <p>{@code tensor} can have up to 8 dimensions. The number of dimensions specified

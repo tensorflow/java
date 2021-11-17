@@ -107,4 +107,15 @@ public interface DeviceAttributesOrBuilder extends
    */
   com.google.protobuf.ByteString
       getPhysicalDeviceDescBytes();
+
+  /**
+   * <pre>
+   * A physical device ID for use in XLA DeviceAssignments, unique across
+   * clients in a multi-client setup. Set to -1 if unavailable, non-negative
+   * otherwise.
+   * </pre>
+   *
+   * <code>int64 xla_global_id = 8;</code>
+   */
+  long getXlaGlobalId();
 }

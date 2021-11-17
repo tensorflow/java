@@ -81,6 +81,9 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
         if (opts.compilationFailureClosesChips != null) {
           opBuilder.setAttr("compilation_failure_closes_chips", opts.compilationFailureClosesChips);
         }
+        if (opts.tpuCancellationClosesChips != null) {
+          opBuilder.setAttr("tpu_cancellation_closes_chips", opts.tpuCancellationClosesChips);
+        }
       }
     }
     return new ConfigureDistributedTPU(opBuilder.build());
@@ -138,6 +141,16 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
   }
 
   /**
+   * Sets the tpuCancellationClosesChips option.
+   *
+   * @param tpuCancellationClosesChips the tpuCancellationClosesChips option
+   * @return this Options instance.
+   */
+  public static Options tpuCancellationClosesChips(Long tpuCancellationClosesChips) {
+    return new Options().tpuCancellationClosesChips(tpuCancellationClosesChips);
+  }
+
+  /**
    * Gets topology.
    * A serialized tensorflow.tpu.TopologyProto that describes the TPU
    * topology.
@@ -165,6 +178,8 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
     private Boolean enableWholeMeshCompilations;
 
     private Boolean compilationFailureClosesChips;
+
+    private Long tpuCancellationClosesChips;
 
     private Options() {
     }
@@ -224,6 +239,17 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
       this.compilationFailureClosesChips = compilationFailureClosesChips;
       return this;
     }
+
+    /**
+     * Sets the tpuCancellationClosesChips option.
+     *
+     * @param tpuCancellationClosesChips the tpuCancellationClosesChips option
+     * @return this Options instance.
+     */
+    public Options tpuCancellationClosesChips(Long tpuCancellationClosesChips) {
+      this.tpuCancellationClosesChips = tpuCancellationClosesChips;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -256,14 +282,20 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
      */
     public final boolean compilationFailureClosesChips;
 
+    /**
+     * The tpuCancellationClosesChips attribute
+     */
+    public final long tpuCancellationClosesChips;
+
     public Inputs(GraphOperation op) {
-      super(new ConfigureDistributedTPU(op), op, Arrays.asList("embedding_config", "tpu_embedding_config", "is_global_init", "enable_whole_mesh_compilations", "compilation_failure_closes_chips"));
+      super(new ConfigureDistributedTPU(op), op, Arrays.asList("embedding_config", "tpu_embedding_config", "is_global_init", "enable_whole_mesh_compilations", "compilation_failure_closes_chips", "tpu_cancellation_closes_chips"));
       int inputIndex = 0;
       embeddingConfig = op.attributes().getAttrString("embedding_config");
       tpuEmbeddingConfig = op.attributes().getAttrString("tpu_embedding_config");
       isGlobalInit = op.attributes().getAttrBool("is_global_init");
       enableWholeMeshCompilations = op.attributes().getAttrBool("enable_whole_mesh_compilations");
       compilationFailureClosesChips = op.attributes().getAttrBool("compilation_failure_closes_chips");
+      tpuCancellationClosesChips = op.attributes().getAttrInt("tpu_cancellation_closes_chips");
     }
   }
 }

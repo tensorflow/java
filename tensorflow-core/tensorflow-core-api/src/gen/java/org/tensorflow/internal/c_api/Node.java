@@ -67,6 +67,7 @@ public class Node extends Pointer {
   // Sets 'original_node_names' field of this node's DebugInfo proto to
   // 'names'.
   
+  
 
   // Read only access to attributes
 

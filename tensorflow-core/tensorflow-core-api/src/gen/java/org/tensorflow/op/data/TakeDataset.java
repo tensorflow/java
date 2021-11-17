@@ -72,13 +72,15 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
    * is taken.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TakeDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static TakeDataset create(Scope scope, Operand<? extends TType> inputDataset,
-      Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TakeDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(count.asOutput());
@@ -88,7 +90,24 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new TakeDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -104,6 +123,27 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.TakeDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -132,13 +172,19 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new TakeDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      super(new TakeDataset(op), op, Arrays.asList("output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       count = (Operand<TInt64>) op.input(inputIndex++);
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

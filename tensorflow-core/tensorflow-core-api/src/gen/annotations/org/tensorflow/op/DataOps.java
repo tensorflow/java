@@ -275,12 +275,13 @@ public final class DataOps {
    * @param cache The cache value
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of CacheDataset
    */
   public CacheDataset cacheDataset(Operand<? extends TType> inputDataset, Operand<TString> filename,
       Operand<? extends TType> cache, List<Class<? extends TType>> outputTypes,
-      List<Shape> outputShapes) {
-    return CacheDataset.create(scope, inputDataset, filename, cache, outputTypes, outputShapes);
+      List<Shape> outputShapes, CacheDataset.Options... options) {
+    return CacheDataset.create(scope, inputDataset, filename, cache, outputTypes, outputShapes, options);
   }
 
   /**
@@ -326,12 +327,13 @@ public final class DataOps {
    * @param anotherDataset The anotherDataset value
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of ConcatenateDataset
    */
   public ConcatenateDataset concatenateDataset(Operand<? extends TType> inputDataset,
       Operand<? extends TType> anotherDataset, List<Class<? extends TType>> outputTypes,
-      List<Shape> outputShapes) {
-    return ConcatenateDataset.create(scope, inputDataset, anotherDataset, outputTypes, outputShapes);
+      List<Shape> outputShapes, ConcatenateDataset.Options... options) {
+    return ConcatenateDataset.create(scope, inputDataset, anotherDataset, outputTypes, outputShapes, options);
   }
 
   /**
@@ -401,11 +403,13 @@ public final class DataOps {
    * @param dataset A handle to a dataset that contains a single element.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of DatasetToSingleElement
    */
   public DatasetToSingleElement datasetToSingleElement(Operand<? extends TType> dataset,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return DatasetToSingleElement.create(scope, dataset, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      DatasetToSingleElement.Options... options) {
+    return DatasetToSingleElement.create(scope, dataset, outputTypes, outputShapes, options);
   }
 
   /**
@@ -515,12 +519,14 @@ public final class DataOps {
    * @param predicate A function returning a scalar boolean.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of FilterDataset
    */
   public FilterDataset filterDataset(Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, ConcreteFunction predicate,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return FilterDataset.create(scope, inputDataset, otherArguments, predicate, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      FilterDataset.Options... options) {
+    return FilterDataset.create(scope, inputDataset, otherArguments, predicate, outputTypes, outputShapes, options);
   }
 
   /**
@@ -547,12 +553,14 @@ public final class DataOps {
    * @param footerBytes The footerBytes value
    * @param bufferSize The bufferSize value
    * @param compressionType The compressionType value
+   * @param options carries optional attribute values
    * @return a new instance of FixedLengthRecordDataset
    */
   public FixedLengthRecordDataset fixedLengthRecordDataset(Operand<TString> filenames,
       Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes,
-      Operand<TInt64> bufferSize, Operand<TString> compressionType) {
-    return FixedLengthRecordDataset.create(scope, filenames, headerBytes, recordBytes, footerBytes, bufferSize, compressionType);
+      Operand<TInt64> bufferSize, Operand<TString> compressionType,
+      FixedLengthRecordDataset.Options... options) {
+    return FixedLengthRecordDataset.create(scope, filenames, headerBytes, recordBytes, footerBytes, bufferSize, compressionType, options);
   }
 
   /**
@@ -568,12 +576,14 @@ public final class DataOps {
    *  {@code output_types} and {@code output_shapes}.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of FlatMapDataset
    */
   public FlatMapDataset flatMapDataset(Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, ConcreteFunction f,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return FlatMapDataset.create(scope, inputDataset, otherArguments, f, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      FlatMapDataset.Options... options) {
+    return FlatMapDataset.create(scope, inputDataset, otherArguments, f, outputTypes, outputShapes, options);
   }
 
   /**
@@ -587,13 +597,15 @@ public final class DataOps {
    * @param finalizeFunc The value of the finalizeFunc attribute
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of GeneratorDataset
    */
   public GeneratorDataset generatorDataset(Iterable<Operand<?>> initFuncOtherArgs,
       Iterable<Operand<?>> nextFuncOtherArgs, Iterable<Operand<?>> finalizeFuncOtherArgs,
       ConcreteFunction initFunc, ConcreteFunction nextFunc, ConcreteFunction finalizeFunc,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return GeneratorDataset.create(scope, initFuncOtherArgs, nextFuncOtherArgs, finalizeFuncOtherArgs, initFunc, nextFunc, finalizeFunc, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      GeneratorDataset.Options... options) {
+    return GeneratorDataset.create(scope, initFuncOtherArgs, nextFuncOtherArgs, finalizeFuncOtherArgs, initFunc, nextFunc, finalizeFunc, outputTypes, outputShapes, options);
   }
 
   /**
@@ -643,14 +655,16 @@ public final class DataOps {
    * @param windowSizeFunc The value of the windowSizeFunc attribute
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of GroupByWindowDataset
    */
   public GroupByWindowDataset groupByWindowDataset(Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> keyFuncOtherArguments, Iterable<Operand<?>> reduceFuncOtherArguments,
       Iterable<Operand<?>> windowSizeFuncOtherArguments, ConcreteFunction keyFunc,
       ConcreteFunction reduceFunc, ConcreteFunction windowSizeFunc,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return GroupByWindowDataset.create(scope, inputDataset, keyFuncOtherArguments, reduceFuncOtherArguments, windowSizeFuncOtherArguments, keyFunc, reduceFunc, windowSizeFunc, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      GroupByWindowDataset.Options... options) {
+    return GroupByWindowDataset.create(scope, inputDataset, keyFuncOtherArguments, reduceFuncOtherArguments, windowSizeFuncOtherArguments, keyFunc, reduceFunc, windowSizeFunc, outputTypes, outputShapes, options);
   }
 
   /**
@@ -697,12 +711,14 @@ public final class DataOps {
    *  {@code output_types} and {@code output_shapes}.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of InterleaveDataset
    */
   public InterleaveDataset interleaveDataset(Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, Operand<TInt64> cycleLength, Operand<TInt64> blockLength,
-      ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return InterleaveDataset.create(scope, inputDataset, otherArguments, cycleLength, blockLength, f, outputTypes, outputShapes);
+      ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      InterleaveDataset.Options... options) {
+    return InterleaveDataset.create(scope, inputDataset, otherArguments, cycleLength, blockLength, f, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1076,12 +1092,13 @@ public final class DataOps {
    * @param serializedOptions A {@code tf.string} scalar {@code tf.Tensor} of serialized {@code tf.data.Options} protocol buffer.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of OptionsDataset
    */
   public OptionsDataset optionsDataset(Operand<? extends TType> inputDataset,
-      String serializedOptions, List<Class<? extends TType>> outputTypes,
-      List<Shape> outputShapes) {
-    return OptionsDataset.create(scope, inputDataset, serializedOptions, outputTypes, outputShapes);
+      String serializedOptions, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      OptionsDataset.Options... options) {
+    return OptionsDataset.create(scope, inputDataset, serializedOptions, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1284,11 +1301,13 @@ public final class DataOps {
    * @param seed2 A second scalar seed to avoid seed collision.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of RandomDataset
    */
   public RandomDataset randomDataset(Operand<TInt64> seed, Operand<TInt64> seed2,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return RandomDataset.create(scope, seed, seed2, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      RandomDataset.Options... options) {
+    return RandomDataset.create(scope, seed, seed2, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1299,11 +1318,13 @@ public final class DataOps {
    * @param step corresponds to step in python's xrange().
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of RangeDataset
    */
   public RangeDataset rangeDataset(Operand<TInt64> start, Operand<TInt64> stop,
-      Operand<TInt64> step, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return RangeDataset.create(scope, start, stop, step, outputTypes, outputShapes);
+      Operand<TInt64> step, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      RangeDataset.Options... options) {
+    return RangeDataset.create(scope, start, stop, step, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1354,11 +1375,12 @@ public final class DataOps {
    * @param address The address value
    * @param protocol The protocol value
    * @param externalStatePolicy The value of the externalStatePolicy attribute
+   * @param options carries optional attribute values
    * @return a new instance of RegisterDataset
    */
   public RegisterDataset registerDataset(Operand<? extends TType> dataset, Operand<TString> address,
-      Operand<TString> protocol, Long externalStatePolicy) {
-    return RegisterDataset.create(scope, dataset, address, protocol, externalStatePolicy);
+      Operand<TString> protocol, Long externalStatePolicy, RegisterDataset.Options... options) {
+    return RegisterDataset.create(scope, dataset, address, protocol, externalStatePolicy, options);
   }
 
   /**
@@ -1369,11 +1391,13 @@ public final class DataOps {
    *  be repeated. A value of {@code -1} indicates that it should be repeated infinitely.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of RepeatDataset
    */
   public RepeatDataset repeatDataset(Operand<? extends TType> inputDataset, Operand<TInt64> count,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return RepeatDataset.create(scope, inputDataset, count, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      RepeatDataset.Options... options) {
+    return RepeatDataset.create(scope, inputDataset, count, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1400,19 +1424,22 @@ public final class DataOps {
   }
 
   /**
-   * The SaveDataset operation
+   * The SaveDatasetV2 operation
    *
    * @param inputDataset The inputDataset value
    * @param path The path value
    * @param shardFuncOtherArgs The shardFuncOtherArgs value
    * @param shardFunc The value of the shardFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of SaveDataset
    */
   public SaveDataset saveDataset(Operand<? extends TType> inputDataset, Operand<TString> path,
       Iterable<Operand<?>> shardFuncOtherArgs, ConcreteFunction shardFunc,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       SaveDataset.Options... options) {
-    return SaveDataset.create(scope, inputDataset, path, shardFuncOtherArgs, shardFunc, options);
+    return SaveDataset.create(scope, inputDataset, path, shardFuncOtherArgs, shardFunc, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1531,11 +1558,13 @@ public final class DataOps {
    *  that should be skipped.  If count is -1, skips everything.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of SkipDataset
    */
   public SkipDataset skipDataset(Operand<? extends TType> inputDataset, Operand<TInt64> count,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return SkipDataset.create(scope, inputDataset, count, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      SkipDataset.Options... options) {
+    return SkipDataset.create(scope, inputDataset, count, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1636,11 +1665,13 @@ public final class DataOps {
    *  is taken.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TakeDataset
    */
   public TakeDataset takeDataset(Operand<? extends TType> inputDataset, Operand<TInt64> count,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return TakeDataset.create(scope, inputDataset, count, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      TakeDataset.Options... options) {
+    return TakeDataset.create(scope, inputDataset, count, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1658,12 +1689,14 @@ public final class DataOps {
    * @param predicate A function returning a scalar boolean.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TakeWhileDataset
    */
   public TakeWhileDataset takeWhileDataset(Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, ConcreteFunction predicate,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return TakeWhileDataset.create(scope, inputDataset, otherArguments, predicate, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      TakeWhileDataset.Options... options) {
+    return TakeWhileDataset.create(scope, inputDataset, otherArguments, predicate, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1671,10 +1704,12 @@ public final class DataOps {
    *
    * @param components The components value
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TensorDataset
    */
-  public TensorDataset tensorDataset(Iterable<Operand<?>> components, List<Shape> outputShapes) {
-    return TensorDataset.create(scope, components, outputShapes);
+  public TensorDataset tensorDataset(Iterable<Operand<?>> components, List<Shape> outputShapes,
+      TensorDataset.Options... options) {
+    return TensorDataset.create(scope, components, outputShapes, options);
   }
 
   /**
@@ -1682,11 +1717,12 @@ public final class DataOps {
    *
    * @param components The components value
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of TensorSliceDataset
    */
   public TensorSliceDataset tensorSliceDataset(Iterable<Operand<?>> components,
-      List<Shape> outputShapes) {
-    return TensorSliceDataset.create(scope, components, outputShapes);
+      List<Shape> outputShapes, TensorSliceDataset.Options... options) {
+    return TensorSliceDataset.create(scope, components, outputShapes, options);
   }
 
   /**
@@ -1697,11 +1733,13 @@ public final class DataOps {
    * @param compressionType A scalar containing either (i) the empty string (no
    *  compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar containing the number of bytes to buffer.
+   * @param options carries optional attribute values
    * @return a new instance of TextLineDataset
    */
   public TextLineDataset textLineDataset(Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize) {
-    return TextLineDataset.create(scope, filenames, compressionType, bufferSize);
+      Operand<TString> compressionType, Operand<TInt64> bufferSize,
+      TextLineDataset.Options... options) {
+    return TextLineDataset.create(scope, filenames, compressionType, bufferSize, options);
   }
 
   /**
@@ -1713,11 +1751,13 @@ public final class DataOps {
    *  compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar representing the number of bytes to buffer. A value of
    *  0 means no buffering will be performed.
+   * @param options carries optional attribute values
    * @return a new instance of TfRecordDataset
    */
   public TfRecordDataset tfRecordDataset(Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize) {
-    return TfRecordDataset.create(scope, filenames, compressionType, bufferSize);
+      Operand<TString> compressionType, Operand<TInt64> bufferSize,
+      TfRecordDataset.Options... options) {
+    return TfRecordDataset.create(scope, filenames, compressionType, bufferSize, options);
   }
 
   /**
@@ -1741,11 +1781,13 @@ public final class DataOps {
    * @param inputDataset The inputDataset value
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of UnbatchDataset
    */
   public UnbatchDataset unbatchDataset(Operand<? extends TType> inputDataset,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return UnbatchDataset.create(scope, inputDataset, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      UnbatchDataset.Options... options) {
+    return UnbatchDataset.create(scope, inputDataset, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1754,11 +1796,13 @@ public final class DataOps {
    * @param inputDataset The inputDataset value
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of UniqueDataset
    */
   public UniqueDataset uniqueDataset(Operand<? extends TType> inputDataset,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return UniqueDataset.create(scope, inputDataset, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      UniqueDataset.Options... options) {
+    return UniqueDataset.create(scope, inputDataset, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1822,13 +1866,14 @@ public final class DataOps {
    *  dropped if its size is smaller than {@code window_size}.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of WindowDataset
    */
   public WindowDataset windowDataset(Operand<? extends TType> inputDataset,
       Operand<TInt64> sizeOutput, Operand<TInt64> shift, Operand<TInt64> stride,
       Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes,
-      List<Shape> outputShapes) {
-    return WindowDataset.create(scope, inputDataset, sizeOutput, shift, stride, dropRemainder, outputTypes, outputShapes);
+      List<Shape> outputShapes, WindowDataset.Options... options) {
+    return WindowDataset.create(scope, inputDataset, sizeOutput, shift, stride, dropRemainder, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1851,11 +1896,13 @@ public final class DataOps {
    * @param inputDatasets List of {@code N} variant Tensors representing datasets to be zipped together.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of ZipDataset
    */
   public ZipDataset zipDataset(Iterable<Operand<? extends TType>> inputDatasets,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return ZipDataset.create(scope, inputDatasets, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      ZipDataset.Options... options) {
+    return ZipDataset.create(scope, inputDatasets, outputTypes, outputShapes, options);
   }
 
   /**

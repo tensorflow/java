@@ -95,6 +95,9 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
         if (opts.requireNonEmpty != null) {
           opBuilder.setAttr("require_non_empty", opts.requireNonEmpty);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new ShardDataset(opBuilder.build());
@@ -108,6 +111,16 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
    */
   public static Options requireNonEmpty(Boolean requireNonEmpty) {
     return new Options().requireNonEmpty(requireNonEmpty);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -131,6 +144,8 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
   public static class Options {
     private Boolean requireNonEmpty;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -142,6 +157,17 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
      */
     public Options requireNonEmpty(Boolean requireNonEmpty) {
       this.requireNonEmpty = requireNonEmpty;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -180,8 +206,13 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new ShardDataset(op), op, Arrays.asList("require_non_empty", "output_types", "output_shapes"));
+      super(new ShardDataset(op), op, Arrays.asList("require_non_empty", "output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       numShards = (Operand<TInt64>) op.input(inputIndex++);
@@ -189,6 +220,7 @@ public final class ShardDataset extends RawOp implements Operand<TType> {
       requireNonEmpty = op.attributes().getAttrBool("require_non_empty");
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

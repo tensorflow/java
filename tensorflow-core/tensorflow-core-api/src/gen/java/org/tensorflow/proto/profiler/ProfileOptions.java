@@ -159,6 +159,10 @@ private static final long serialVersionUID = 0L;
      * <code>TPU = 3;</code>
      */
     TPU(3),
+    /**
+     * <code>PLUGGABLE_DEVICE = 4;</code>
+     */
+    PLUGGABLE_DEVICE(4),
     UNRECOGNIZED(-1),
     ;
 
@@ -178,6 +182,10 @@ private static final long serialVersionUID = 0L;
      * <code>TPU = 3;</code>
      */
     public static final int TPU_VALUE = 3;
+    /**
+     * <code>PLUGGABLE_DEVICE = 4;</code>
+     */
+    public static final int PLUGGABLE_DEVICE_VALUE = 4;
 
 
     public final int getNumber() {
@@ -202,6 +210,7 @@ private static final long serialVersionUID = 0L;
         case 1: return CPU;
         case 2: return GPU;
         case 3: return TPU;
+        case 4: return PLUGGABLE_DEVICE;
         default: return null;
       }
     }
@@ -278,6 +287,8 @@ private static final long serialVersionUID = 0L;
    * DeviceType::CPU: only CPU will be profiled.
    * DeviceType::GPU: only CPU/GPU will be profiled.
    * DeviceType::TPU: only CPU/TPU will be profiled.
+   * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+   * will be profiled.
    * </pre>
    *
    * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -292,6 +303,8 @@ private static final long serialVersionUID = 0L;
    * DeviceType::CPU: only CPU will be profiled.
    * DeviceType::GPU: only CPU/GPU will be profiled.
    * DeviceType::TPU: only CPU/TPU will be profiled.
+   * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+   * will be profiled.
    * </pre>
    *
    * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -963,6 +976,8 @@ private static final long serialVersionUID = 0L;
      * DeviceType::CPU: only CPU will be profiled.
      * DeviceType::GPU: only CPU/GPU will be profiled.
      * DeviceType::TPU: only CPU/TPU will be profiled.
+     * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+     * will be profiled.
      * </pre>
      *
      * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -977,6 +992,8 @@ private static final long serialVersionUID = 0L;
      * DeviceType::CPU: only CPU will be profiled.
      * DeviceType::GPU: only CPU/GPU will be profiled.
      * DeviceType::TPU: only CPU/TPU will be profiled.
+     * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+     * will be profiled.
      * </pre>
      *
      * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -993,6 +1010,8 @@ private static final long serialVersionUID = 0L;
      * DeviceType::CPU: only CPU will be profiled.
      * DeviceType::GPU: only CPU/GPU will be profiled.
      * DeviceType::TPU: only CPU/TPU will be profiled.
+     * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+     * will be profiled.
      * </pre>
      *
      * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -1009,6 +1028,8 @@ private static final long serialVersionUID = 0L;
      * DeviceType::CPU: only CPU will be profiled.
      * DeviceType::GPU: only CPU/GPU will be profiled.
      * DeviceType::TPU: only CPU/TPU will be profiled.
+     * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+     * will be profiled.
      * </pre>
      *
      * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>
@@ -1029,6 +1050,8 @@ private static final long serialVersionUID = 0L;
      * DeviceType::CPU: only CPU will be profiled.
      * DeviceType::GPU: only CPU/GPU will be profiled.
      * DeviceType::TPU: only CPU/TPU will be profiled.
+     * DeviceType::PLUGGABLE_DEVICE: only CPU/pluggable devices with profilers
+     * will be profiled.
      * </pre>
      *
      * <code>.tensorflow.ProfileOptions.DeviceType device_type = 6;</code>

@@ -258,5 +258,62 @@ public interface SavedObjectOrBuilder extends
   org.tensorflow.proto.framework.SaveableObject getSaveableObjectsOrThrow(
       java.lang.String key);
 
+  /**
+   * <pre>
+   * The fields below are filled when the user serializes a registered Trackable
+   * class. Registered classes may save additional metadata and supersede the
+   * default loading process where nodes are recreated from the proto.
+   * The name of the registered class of the form "{package}.{class_name}".
+   * This field is used to search for the registered class at loading time.
+   * </pre>
+   *
+   * <code>string registered_name = 13;</code>
+   */
+  java.lang.String getRegisteredName();
+  /**
+   * <pre>
+   * The fields below are filled when the user serializes a registered Trackable
+   * class. Registered classes may save additional metadata and supersede the
+   * default loading process where nodes are recreated from the proto.
+   * The name of the registered class of the form "{package}.{class_name}".
+   * This field is used to search for the registered class at loading time.
+   * </pre>
+   *
+   * <code>string registered_name = 13;</code>
+   */
+  com.google.protobuf.ByteString
+      getRegisteredNameBytes();
+
+  /**
+   * <pre>
+   * The user-generated proto storing metadata for this object, to be passed to
+   * the registered classes's _deserialize_from_proto method when this object is
+   * loaded from the SavedModel.
+   * </pre>
+   *
+   * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+   */
+  boolean hasSerializedUserProto();
+  /**
+   * <pre>
+   * The user-generated proto storing metadata for this object, to be passed to
+   * the registered classes's _deserialize_from_proto method when this object is
+   * loaded from the SavedModel.
+   * </pre>
+   *
+   * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+   */
+  com.google.protobuf.Any getSerializedUserProto();
+  /**
+   * <pre>
+   * The user-generated proto storing metadata for this object, to be passed to
+   * the registered classes's _deserialize_from_proto method when this object is
+   * loaded from the SavedModel.
+   * </pre>
+   *
+   * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
+   */
+  com.google.protobuf.AnyOrBuilder getSerializedUserProtoOrBuilder();
+
   public org.tensorflow.proto.framework.SavedObject.KindCase getKindCase();
 }

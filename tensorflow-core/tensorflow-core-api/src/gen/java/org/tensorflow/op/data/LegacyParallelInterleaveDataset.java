@@ -115,6 +115,9 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
         if (opts.deterministic != null) {
           opBuilder.setAttr("deterministic", opts.deterministic);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new LegacyParallelInterleaveDataset(opBuilder.build());
@@ -128,6 +131,16 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
    */
   public static Options deterministic(String deterministic) {
     return new Options().deterministic(deterministic);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -151,6 +164,8 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
   public static class Options {
     private String deterministic;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -162,6 +177,17 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
      */
     public Options deterministic(String deterministic) {
       this.deterministic = deterministic;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -220,8 +246,13 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
      */
     public final Shape[] outputShapes;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new LegacyParallelInterleaveDataset(op), op, Arrays.asList("deterministic", "Targuments", "output_types", "output_shapes"));
+      super(new LegacyParallelInterleaveDataset(op), op, Arrays.asList("deterministic", "Targuments", "output_types", "output_shapes", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int otherArgumentsLength = op.inputListLength("other_arguments");
@@ -235,6 +266,7 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
       Targuments = op.attributes().getAttrTypeList("Targuments");
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

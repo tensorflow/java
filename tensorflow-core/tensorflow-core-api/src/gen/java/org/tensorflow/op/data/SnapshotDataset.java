@@ -120,6 +120,9 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
         if (opts.hash != null) {
           opBuilder.setAttr("hash", opts.hash);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new SnapshotDataset(opBuilder.build());
@@ -176,6 +179,16 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -203,6 +216,8 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
     private Boolean hashValid;
 
     private Long hash;
+
+    private String metadata;
 
     private Options() {
     }
@@ -259,6 +274,17 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
      */
     public Options hash(Long hash) {
       this.hash = hash;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -332,8 +358,13 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
      */
     public final DataType[] TshardFuncArgs;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new SnapshotDataset(op), op, Arrays.asList("output_types", "output_shapes", "compression", "reader_prefix", "writer_prefix", "hash_valid", "hash", "Treader_func_args", "Tshard_func_args"));
+      super(new SnapshotDataset(op), op, Arrays.asList("output_types", "output_shapes", "compression", "reader_prefix", "writer_prefix", "hash_valid", "hash", "Treader_func_args", "Tshard_func_args", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       path = (Operand<TString>) op.input(inputIndex++);
@@ -352,6 +383,7 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
       hash = op.attributes().getAttrInt("hash");
       TreaderFuncArgs = op.attributes().getAttrTypeList("Treader_func_args");
       TshardFuncArgs = op.attributes().getAttrTypeList("Tshard_func_args");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

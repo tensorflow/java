@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ReadVariableXlaSplitND"
+  endpoint {
+    name: "xla.ReadVariableSplitND"
+  }
+}

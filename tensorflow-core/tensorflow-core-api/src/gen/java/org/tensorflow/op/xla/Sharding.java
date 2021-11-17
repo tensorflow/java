@@ -18,6 +18,7 @@ limitations under the License.
 package org.tensorflow.op.xla;
 
 import java.util.Arrays;
+import java.util.List;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -34,7 +35,9 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
- * An op which shards the input based on the given sharding attribute.
+ * An op which shards the input based on the given sharding attribute. It can
+ * selectively annotate a subset of tensor dimensions by skipping unspecified_dims,
+ * and the sharding annotation should be replicated in those dims.
  *
  * @param <T> data type for {@code output} output
  */
@@ -80,6 +83,13 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
         if (opts.sharding != null) {
           opBuilder.setAttr("sharding", opts.sharding);
         }
+        if (opts.unspecifiedDims != null) {
+          long[] unspecifiedDimsArray = new long[opts.unspecifiedDims.size()];
+          for (int i = 0 ; i < unspecifiedDimsArray.length ; i++) {
+            unspecifiedDimsArray[i] = opts.unspecifiedDims.get(i);
+          }
+          opBuilder.setAttr("unspecified_dims", unspecifiedDimsArray);
+        }
       }
     }
     return new Sharding<>(opBuilder.build());
@@ -93,6 +103,26 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
    */
   public static Options sharding(String sharding) {
     return new Options().sharding(sharding);
+  }
+
+  /**
+   * Sets the unspecifiedDims option.
+   *
+   * @param unspecifiedDims the unspecifiedDims option
+   * @return this Options instance.
+   */
+  public static Options unspecifiedDims(List<Long> unspecifiedDims) {
+    return new Options().unspecifiedDims(unspecifiedDims);
+  }
+
+  /**
+   * Sets the unspecifiedDims option.
+   *
+   * @param unspecifiedDims the unspecifiedDims option
+   * @return this Options instance.
+   */
+  public static Options unspecifiedDims(Long... unspecifiedDims) {
+    return new Options().unspecifiedDims(unspecifiedDims);
   }
 
   /**
@@ -115,6 +145,8 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
   public static class Options {
     private String sharding;
 
+    private List<Long> unspecifiedDims;
+
     private Options() {
     }
 
@@ -126,6 +158,28 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
      */
     public Options sharding(String sharding) {
       this.sharding = sharding;
+      return this;
+    }
+
+    /**
+     * Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
+     */
+    public Options unspecifiedDims(List<Long> unspecifiedDims) {
+      this.unspecifiedDims = unspecifiedDims;
+      return this;
+    }
+
+    /**
+     * Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
+     */
+    public Options unspecifiedDims(Long... unspecifiedDims) {
+      this.unspecifiedDims = Arrays.asList(unspecifiedDims);
       return this;
     }
   }
@@ -149,12 +203,18 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
      */
     public final String sharding;
 
+    /**
+     * The unspecifiedDims attribute
+     */
+    public final long[] unspecifiedDims;
+
     public Inputs(GraphOperation op) {
-      super(new Sharding<>(op), op, Arrays.asList("T", "sharding"));
+      super(new Sharding<>(op), op, Arrays.asList("T", "sharding", "unspecified_dims"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       sharding = op.attributes().getAttrString("sharding");
+      unspecifiedDims = op.attributes().getAttrIntList("unspecified_dims");
     }
   }
 }

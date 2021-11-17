@@ -12,7 +12,7 @@ package org.tensorflow.proto.framework;
  * The per-client-language ApiDefs will inherit values from the
  * common ApiDefs which it can either replace or modify.
  * We separate the API definition from the OpDef so we can evolve the
- * API while remaining backwards compatible when interpretting old
+ * API while remaining backwards compatible when interpreting old
  * graphs.  Overrides go in an "api_def.pbtxt" file with a text-format
  * ApiDefs message.
  * WARNING: Be *very* careful changing the API for any existing op --
@@ -4133,7 +4133,7 @@ private static final long serialVersionUID = 0L;
    * The per-client-language ApiDefs will inherit values from the
    * common ApiDefs which it can either replace or modify.
    * We separate the API definition from the OpDef so we can evolve the
-   * API while remaining backwards compatible when interpretting old
+   * API while remaining backwards compatible when interpreting old
    * graphs.  Overrides go in an "api_def.pbtxt" file with a text-format
    * ApiDefs message.
    * WARNING: Be *very* careful changing the API for any existing op --

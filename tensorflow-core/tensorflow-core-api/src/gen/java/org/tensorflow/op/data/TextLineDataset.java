@@ -68,18 +68,36 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
    * @param compressionType A scalar containing either (i) the empty string (no
    * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar containing the number of bytes to buffer.
+   * @param options carries optional attribute values
    * @return a new instance of TextLineDataset
    */
   @Endpoint(
       describeByClass = true
   )
   public static TextLineDataset create(Scope scope, Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize) {
+      Operand<TString> compressionType, Operand<TInt64> bufferSize, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TextLineDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
+      }
+    }
     return new TextLineDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -95,6 +113,27 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.TextLineDataset}
+   */
+  public static class Options {
+    private String metadata;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -118,12 +157,18 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
      */
     public final Operand<TInt64> bufferSize;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new TextLineDataset(op), op, Arrays.asList());
+      super(new TextLineDataset(op), op, Arrays.asList("metadata"));
       int inputIndex = 0;
       filenames = (Operand<TString>) op.input(inputIndex++);
       compressionType = (Operand<TString>) op.input(inputIndex++);
       bufferSize = (Operand<TInt64>) op.input(inputIndex++);
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

@@ -101,6 +101,9 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
         if (opts.deterministic != null) {
           opBuilder.setAttr("deterministic", opts.deterministic);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new ParallelBatchDataset(opBuilder.build());
@@ -127,6 +130,16 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
   }
 
   /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -148,6 +161,8 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
     private Boolean parallelCopy;
 
     private String deterministic;
+
+    private String metadata;
 
     private Options() {
     }
@@ -171,6 +186,17 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
      */
     public Options deterministic(String deterministic) {
       this.deterministic = deterministic;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -219,8 +245,13 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
      */
     public final String deterministic;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new ParallelBatchDataset(op), op, Arrays.asList("parallel_copy", "output_types", "output_shapes", "deterministic"));
+      super(new ParallelBatchDataset(op), op, Arrays.asList("parallel_copy", "output_types", "output_shapes", "deterministic", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       batchSize = (Operand<TInt64>) op.input(inputIndex++);
@@ -230,6 +261,7 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       deterministic = op.attributes().getAttrString("deterministic");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

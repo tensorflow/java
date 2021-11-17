@@ -106,6 +106,19 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 58: {
+            org.tensorflow.proto.framework.FullTypeDef.Builder subBuilder = null;
+            if (experimentalType_ != null) {
+              subBuilder = experimentalType_.toBuilder();
+            }
+            experimentalType_ = input.readMessage(org.tensorflow.proto.framework.FullTypeDef.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(experimentalType_);
+              experimentalType_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -1667,6 +1680,48 @@ private static final long serialVersionUID = 0L;
     return getExperimentalDebugInfo();
   }
 
+  public static final int EXPERIMENTAL_TYPE_FIELD_NUMBER = 7;
+  private org.tensorflow.proto.framework.FullTypeDef experimentalType_;
+  /**
+   * <pre>
+   * The complete type of this node. Experimental and subject to change.
+   * Currently, the field only contains the return types of the node. That will
+   * extend in the future to contain the entire signature of the node, as a
+   * function type.
+   * </pre>
+   *
+   * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+   */
+  public boolean hasExperimentalType() {
+    return experimentalType_ != null;
+  }
+  /**
+   * <pre>
+   * The complete type of this node. Experimental and subject to change.
+   * Currently, the field only contains the return types of the node. That will
+   * extend in the future to contain the entire signature of the node, as a
+   * function type.
+   * </pre>
+   *
+   * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+   */
+  public org.tensorflow.proto.framework.FullTypeDef getExperimentalType() {
+    return experimentalType_ == null ? org.tensorflow.proto.framework.FullTypeDef.getDefaultInstance() : experimentalType_;
+  }
+  /**
+   * <pre>
+   * The complete type of this node. Experimental and subject to change.
+   * Currently, the field only contains the return types of the node. That will
+   * extend in the future to contain the entire signature of the node, as a
+   * function type.
+   * </pre>
+   *
+   * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+   */
+  public org.tensorflow.proto.framework.FullTypeDefOrBuilder getExperimentalTypeOrBuilder() {
+    return getExperimentalType();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -1701,6 +1756,9 @@ private static final long serialVersionUID = 0L;
         5);
     if (experimentalDebugInfo_ != null) {
       output.writeMessage(6, getExperimentalDebugInfo());
+    }
+    if (experimentalType_ != null) {
+      output.writeMessage(7, getExperimentalType());
     }
     unknownFields.writeTo(output);
   }
@@ -1742,6 +1800,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, getExperimentalDebugInfo());
     }
+    if (experimentalType_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getExperimentalType());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -1772,6 +1834,11 @@ private static final long serialVersionUID = 0L;
       if (!getExperimentalDebugInfo()
           .equals(other.getExperimentalDebugInfo())) return false;
     }
+    if (hasExperimentalType() != other.hasExperimentalType()) return false;
+    if (hasExperimentalType()) {
+      if (!getExperimentalType()
+          .equals(other.getExperimentalType())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -1800,6 +1867,10 @@ private static final long serialVersionUID = 0L;
     if (hasExperimentalDebugInfo()) {
       hash = (37 * hash) + EXPERIMENTAL_DEBUG_INFO_FIELD_NUMBER;
       hash = (53 * hash) + getExperimentalDebugInfo().hashCode();
+    }
+    if (hasExperimentalType()) {
+      hash = (37 * hash) + EXPERIMENTAL_TYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getExperimentalType().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1971,6 +2042,12 @@ private static final long serialVersionUID = 0L;
         experimentalDebugInfo_ = null;
         experimentalDebugInfoBuilder_ = null;
       }
+      if (experimentalTypeBuilder_ == null) {
+        experimentalType_ = null;
+      } else {
+        experimentalType_ = null;
+        experimentalTypeBuilder_ = null;
+      }
       return this;
     }
 
@@ -2012,6 +2089,11 @@ private static final long serialVersionUID = 0L;
         result.experimentalDebugInfo_ = experimentalDebugInfo_;
       } else {
         result.experimentalDebugInfo_ = experimentalDebugInfoBuilder_.build();
+      }
+      if (experimentalTypeBuilder_ == null) {
+        result.experimentalType_ = experimentalType_;
+      } else {
+        result.experimentalType_ = experimentalTypeBuilder_.build();
       }
       onBuilt();
       return result;
@@ -2087,6 +2169,9 @@ private static final long serialVersionUID = 0L;
           other.internalGetAttr());
       if (other.hasExperimentalDebugInfo()) {
         mergeExperimentalDebugInfo(other.getExperimentalDebugInfo());
+      }
+      if (other.hasExperimentalType()) {
+        mergeExperimentalType(other.getExperimentalType());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -3020,6 +3105,186 @@ private static final long serialVersionUID = 0L;
         experimentalDebugInfo_ = null;
       }
       return experimentalDebugInfoBuilder_;
+    }
+
+    private org.tensorflow.proto.framework.FullTypeDef experimentalType_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.FullTypeDef, org.tensorflow.proto.framework.FullTypeDef.Builder, org.tensorflow.proto.framework.FullTypeDefOrBuilder> experimentalTypeBuilder_;
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public boolean hasExperimentalType() {
+      return experimentalTypeBuilder_ != null || experimentalType_ != null;
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public org.tensorflow.proto.framework.FullTypeDef getExperimentalType() {
+      if (experimentalTypeBuilder_ == null) {
+        return experimentalType_ == null ? org.tensorflow.proto.framework.FullTypeDef.getDefaultInstance() : experimentalType_;
+      } else {
+        return experimentalTypeBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public Builder setExperimentalType(org.tensorflow.proto.framework.FullTypeDef value) {
+      if (experimentalTypeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        experimentalType_ = value;
+        onChanged();
+      } else {
+        experimentalTypeBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public Builder setExperimentalType(
+        org.tensorflow.proto.framework.FullTypeDef.Builder builderForValue) {
+      if (experimentalTypeBuilder_ == null) {
+        experimentalType_ = builderForValue.build();
+        onChanged();
+      } else {
+        experimentalTypeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public Builder mergeExperimentalType(org.tensorflow.proto.framework.FullTypeDef value) {
+      if (experimentalTypeBuilder_ == null) {
+        if (experimentalType_ != null) {
+          experimentalType_ =
+            org.tensorflow.proto.framework.FullTypeDef.newBuilder(experimentalType_).mergeFrom(value).buildPartial();
+        } else {
+          experimentalType_ = value;
+        }
+        onChanged();
+      } else {
+        experimentalTypeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public Builder clearExperimentalType() {
+      if (experimentalTypeBuilder_ == null) {
+        experimentalType_ = null;
+        onChanged();
+      } else {
+        experimentalType_ = null;
+        experimentalTypeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public org.tensorflow.proto.framework.FullTypeDef.Builder getExperimentalTypeBuilder() {
+      
+      onChanged();
+      return getExperimentalTypeFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    public org.tensorflow.proto.framework.FullTypeDefOrBuilder getExperimentalTypeOrBuilder() {
+      if (experimentalTypeBuilder_ != null) {
+        return experimentalTypeBuilder_.getMessageOrBuilder();
+      } else {
+        return experimentalType_ == null ?
+            org.tensorflow.proto.framework.FullTypeDef.getDefaultInstance() : experimentalType_;
+      }
+    }
+    /**
+     * <pre>
+     * The complete type of this node. Experimental and subject to change.
+     * Currently, the field only contains the return types of the node. That will
+     * extend in the future to contain the entire signature of the node, as a
+     * function type.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_type = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.FullTypeDef, org.tensorflow.proto.framework.FullTypeDef.Builder, org.tensorflow.proto.framework.FullTypeDefOrBuilder> 
+        getExperimentalTypeFieldBuilder() {
+      if (experimentalTypeBuilder_ == null) {
+        experimentalTypeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.framework.FullTypeDef, org.tensorflow.proto.framework.FullTypeDef.Builder, org.tensorflow.proto.framework.FullTypeDefOrBuilder>(
+                getExperimentalType(),
+                getParentForChildren(),
+                isClean());
+        experimentalType_ = null;
+      }
+      return experimentalTypeBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

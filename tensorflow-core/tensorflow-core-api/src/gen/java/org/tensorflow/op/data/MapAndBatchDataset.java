@@ -114,6 +114,9 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
         if (opts.preserveCardinality != null) {
           opBuilder.setAttr("preserve_cardinality", opts.preserveCardinality);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new MapAndBatchDataset(opBuilder.build());
@@ -127,6 +130,16 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
    */
   public static Options preserveCardinality(Boolean preserveCardinality) {
     return new Options().preserveCardinality(preserveCardinality);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -150,6 +163,8 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
   public static class Options {
     private Boolean preserveCardinality;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -161,6 +176,17 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
      */
     public Options preserveCardinality(Boolean preserveCardinality) {
       this.preserveCardinality = preserveCardinality;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -220,8 +246,13 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
      */
     public final boolean preserveCardinality;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new MapAndBatchDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "preserve_cardinality"));
+      super(new MapAndBatchDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "preserve_cardinality", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int otherArgumentsLength = op.inputListLength("other_arguments");
@@ -234,6 +265,7 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       preserveCardinality = op.attributes().getAttrBool("preserve_cardinality");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

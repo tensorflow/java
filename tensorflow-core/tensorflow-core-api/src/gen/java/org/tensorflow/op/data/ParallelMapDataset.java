@@ -107,6 +107,9 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
         if (opts.preserveCardinality != null) {
           opBuilder.setAttr("preserve_cardinality", opts.preserveCardinality);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new ParallelMapDataset(opBuilder.build());
@@ -143,6 +146,16 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -166,6 +179,8 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
     private String deterministic;
 
     private Boolean preserveCardinality;
+
+    private String metadata;
 
     private Options() {
     }
@@ -200,6 +215,17 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
      */
     public Options preserveCardinality(Boolean preserveCardinality) {
       this.preserveCardinality = preserveCardinality;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -254,8 +280,13 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
      */
     public final boolean preserveCardinality;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new ParallelMapDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "deterministic", "preserve_cardinality"));
+      super(new ParallelMapDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "deterministic", "preserve_cardinality", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int otherArgumentsLength = op.inputListLength("other_arguments");
@@ -268,6 +299,7 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
       useInterOpParallelism = op.attributes().getAttrBool("use_inter_op_parallelism");
       deterministic = op.attributes().getAttrString("deterministic");
       preserveCardinality = op.attributes().getAttrBool("preserve_cardinality");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

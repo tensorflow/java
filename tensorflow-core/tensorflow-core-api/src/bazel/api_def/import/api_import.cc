@@ -177,7 +177,7 @@ int main(int argc, char* argv[]) {
   python_api_map.UpdateDocs();
 
   // Load golden API member names with their module path
-  string golden_api_path = tf_src_dir + "/tensorflow/tools/api/golden/v1/*.pbtxt";
+  string golden_api_path = tf_src_dir + "/tensorflow/tools/api/golden/v2/*.pbtxt";
   vector<pair<string, string>> golden_api_names;
   vector<string> golden_api_files;
   TF_CHECK_OK(env->GetMatchingPaths(golden_api_path, &golden_api_files));
