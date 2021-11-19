@@ -26,14 +26,14 @@ jobs:
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-11-openjdk-devel devtoolset-7
+          yum -y install java-11-openjdk-devel devtoolset-9
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
       - name: Build project
         run: |
-          source scl_source enable devtoolset-7 || true 
+          source scl_source enable devtoolset-9 || true 
           export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
@@ -52,14 +52,14 @@ jobs:
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-11-openjdk-devel devtoolset-7
+          yum -y install java-11-openjdk-devel devtoolset-9
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
       - name: Build project
         run: |
-          source scl_source enable devtoolset-7 || true
+          source scl_source enable devtoolset-9 || true
           export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
@@ -99,7 +99,7 @@ jobs:
           yum --disablerepo updates -y install $GLIBC
           yum -x "$GLIBC" -y update
           yum -x "$GLIBC" -y install centos-release-scl-rh epel-release
-          yum -x "$GLIBC" -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch perl-Data-Dumper python36-devel python36-numpy python36-pip python36-six
+          yum -x "$GLIBC" -y install java-1.8.0-openjdk-devel devtoolset-9 rh-git218 patch perl-Data-Dumper python36-devel python36-numpy python36-pip python36-six
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
@@ -128,7 +128,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Build project
         run: |
-          source scl_source enable devtoolset-7 rh-git218 || true
+          source scl_source enable devtoolset-9 rh-git218 || true
           git --version
           gcc --version
           mvn -version
