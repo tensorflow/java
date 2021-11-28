@@ -56,12 +56,12 @@ systems, you should add the following dependencies:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
   <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 ```
@@ -72,24 +72,24 @@ native dependencies as follows:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
   <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
   <classifier>macosx-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
   <classifier>windows-x86_64${javacpp.platform.extension}</classifier>
 </dependency>
 ```
@@ -102,7 +102,7 @@ artifact includes transitively all the artifacts above as a single dependency:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
@@ -148,7 +148,7 @@ This table shows the mapping between different version of TensorFlow for Java an
 | 0.3.1  | 2.4.1  |
 | 0.3.2  | 2.4.1  |
 | 0.3.3  | 2.4.1  |
-| 0.4.0-SNAPSHOT | 2.7.0
+| 0.4.0  | 2.7.0  |
 
 ## How to Contribute?
 
