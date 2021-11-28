@@ -367,19 +367,19 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final TpuOps tpu;
-
   public final BitwiseOps bitwise;
 
-  public final MathOps math;
+  public final TpuOps tpu;
 
   public final AudioOps audio;
 
+  public final MathOps math;
+
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -398,13 +398,13 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
-    math = new MathOps(this);
+    tpu = new TpuOps(this);
     audio = new AudioOps(this);
+    math = new MathOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
