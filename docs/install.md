@@ -41,14 +41,8 @@ TensorFlow Java to your project. The easiest one is to add a dependency on the
 Core API and the native dependencies it requires to run on all supported
 platforms.
 
-You can also select one of the following extensions instead of the pure CPU
-version:
-
-*   `tensorflow-core-platform-mkl`: Support for Intel® MKL-DNN on all platforms
-*   `tensorflow-core-platform-gpu`: Support for CUDA® on Linux and Windows
-    platforms
-*   `tensorflow-core-platform-mkl-gpu`: Support for Intel® MKL-DNN and CUDA® on
-    Linux platform.
+You can also select the `tensorflow-core-platform-gpu` extension instead, which
+supports CUDA® on Linux and Windows platforms.
 
 In addition, a separate dependency on the `tensorflow-framework` library can be
 added to benefit from a rich set of utilities for TensorFlow-based machine
@@ -64,7 +58,7 @@ For example,
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>0.3.3</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
@@ -107,7 +101,7 @@ snapshots repository in your `pom.xml`.
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>0.4.0-SNAPSHOT</version>
+        <version>0.5.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -124,7 +118,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.3.3'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.4.0'
 }
 ```
 
@@ -170,7 +164,7 @@ add the TensorFlow dependency to the project's `pom.xml` file:
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow-core-platform</artifactId>
-            <version>0.3.3</version>
+            <version>0.4.0</version>
         </dependency>
     </dependencies>
 </project>
