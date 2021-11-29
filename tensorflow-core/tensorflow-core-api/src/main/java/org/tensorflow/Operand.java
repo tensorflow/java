@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
+import org.tensorflow.Tensor.ToStringOptions;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.op.Op;
@@ -63,6 +64,17 @@ public interface Operand<T extends TType> extends Op, Shaped {
    */
   default T asTensor() {
     return asOutput().asTensor();
+  }
+
+  /**
+   * Returns the String representation of the tensor elements at this operand.
+   *
+   * @param options overrides the default configuration
+   * @return the String representation of the tensor elements
+   * @throws IllegalStateException if this is an operand of a graph
+   */
+  default String dataToString(ToStringOptions... options) {
+    return asTensor().dataToString(options);
   }
 
   /**

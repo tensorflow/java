@@ -340,7 +340,7 @@ public class TensorTest {
     }
 
     LongNdArray threeD = StdArrays.ndCopyOf(new long[][][]{
-      {{1}, {3}, {5}, {7}, {9}}, {{2}, {4}, {6}, {8}, {0}},
+        {{1}, {3}, {5}, {7}, {9}}, {{2}, {4}, {6}, {8}, {0}},
     });
     try (TInt64 t = TInt64.tensorOf(threeD)) {
       assertEquals(TInt64.class, t.type());
@@ -353,9 +353,9 @@ public class TensorTest {
     }
 
     BooleanNdArray fourD = StdArrays.ndCopyOf(new boolean[][][][]{
-      {{{false, false, false, true}, {false, false, true, false}}},
-      {{{false, false, true, true}, {false, true, false, false}}},
-      {{{false, true, false, true}, {false, true, true, false}}},
+        {{{false, false, false, true}, {false, false, true, false}}},
+        {{{false, false, true, true}, {false, true, false, false}}},
+        {{{false, true, false, true}, {false, true, true, false}}},
     });
     try (TBool t = TBool.tensorOf(fourD)) {
       assertEquals(TBool.class, t.type());
@@ -514,7 +514,8 @@ public class TensorTest {
     // close() on both Tensors.
     final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][]{{1, 2, 3}, {4, 5, 6}});
     try (TFloat32 src = TFloat32.tensorOf(matrix)) {
-      TFloat32 cpy = (TFloat32)RawTensor.fromHandle(src.asRawTensor().nativeHandle()).asTypedTensor();
+      TFloat32 cpy = (TFloat32) RawTensor.fromHandle(src.asRawTensor().nativeHandle())
+          .asTypedTensor();
       assertEquals(src.type(), cpy.type());
       assertEquals(src.dataType(), cpy.dataType());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());
@@ -538,6 +539,61 @@ public class TensorTest {
       TUint8.tensorOf(StdArrays.ndCopyOf(array));
     } catch (IllegalStateException e) {
       // expected.
+    }
+  }
+
+  @Test
+  public void dataToString() {
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1)) {
+      String actual = t.dataToString();
+      assertEquals("[3, 0, 1]", actual);
+    }
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1)) {
+      String actual = t.dataToString(Tensor.maxWidth(5));
+      // Cannot remove first or last element
+      assertEquals("[3, 0, 1]", actual);
+    }
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1)) {
+      String actual = t.dataToString(Tensor.maxWidth(6));
+      // Do not insert ellipses if it increases the length
+      assertEquals("[3, 0, 1]", actual);
+    }
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1, 2)) {
+      String actual = t.dataToString(Tensor.maxWidth(11));
+      // Limit may be surpassed if first or last element are too long
+      assertEquals("[3, ..., 2]", actual);
+    }
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1, 2)) {
+      String actual = t.dataToString(Tensor.maxWidth(12));
+      assertEquals("[3, 0, 1, 2]", actual);
+    }
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{1, 2, 3}, {3, 2, 1}}))) {
+      String actual = t.dataToString(Tensor.maxWidth(12));
+      assertEquals("[\n"
+          + "  [1, 2, 3]\n"
+          + "  [3, 2, 1]\n"
+          + "]", actual);
+    }
+    try (RawTensor t = TInt32.vectorOf(3, 0, 1, 2).asRawTensor()) {
+      String actual = t.dataToString(Tensor.maxWidth(12));
+      assertEquals("[3, 0, 1, 2]", actual);
+    }
+    // different data types
+    try (RawTensor t = TFloat32.vectorOf(3.0101f, 0, 1.5f, 2).asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[3.0101, 0.0, 1.5, 2.0]", actual);
+    }
+    try (RawTensor t = TFloat64.vectorOf(3.0101, 0, 1.5, 2).asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[3.0101, 0.0, 1.5, 2.0]", actual);
+    }
+    try (RawTensor t = TBool.vectorOf(true, true, false, true).asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[true, true, false, true]", actual);
+    }
+    try (RawTensor t = TString.vectorOf("a", "b", "c").asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[\"a\", \"b\", \"c\"]", actual);
     }
   }
 
