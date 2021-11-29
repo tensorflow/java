@@ -41,8 +41,8 @@ TensorFlow Java to your project. The easiest one is to add a dependency on the
 Core API and the native dependencies it requires to run on all supported
 platforms.
 
-You can also select one of the `tensorflow-core-platform-gpu` instead of the pure CPU
-version, that support for CUDA® on Linux and Windows platforms.
+You can also select the `tensorflow-core-platform-gpu` extension instead, which
+supports CUDA® on Linux and Windows platforms.
 
 In addition, a separate dependency on the `tensorflow-framework` library can be
 added to benefit from a rich set of utilities for TensorFlow-based machine
