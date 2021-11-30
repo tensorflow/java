@@ -68,8 +68,6 @@ def main(unused_argv):
             merged_source/'java/org/tensorflow')
   shutil.copytree(REPO_ROOT/'tensorflow-framework/src/main/java/org/tensorflow/framework',
                   merged_source/'java/org/tensorflow/framework')
-  shutil.copytree(REPO_ROOT/'ndarray/src/main/java/org/tensorflow/ndarray',
-                  merged_source/'java/org/tensorflow/ndarray')
 
   gen_java.gen_java_docs(
       package='org.tensorflow',
