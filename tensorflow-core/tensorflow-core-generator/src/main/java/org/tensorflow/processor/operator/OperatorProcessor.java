@@ -15,14 +15,12 @@ limitations under the License.
 */
 package org.tensorflow.processor.operator;
 
-import com.squareup.javapoet.ArrayTypeName;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.tensorflow.Names;
@@ -227,18 +225,6 @@ public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
             .addParameter(Names.IterableOp, "controls")
             .returns(Names.Ops)
             .addStatement("return new Ops(scope.withControlDependencies(controls))")
-            .addJavadoc("{@inheritDoc}")
-            .build());
-
-    opsBuilder.addMethod(
-        MethodSpec.methodBuilder("withControlDependencies")
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Override.class)
-            .addParameter(ArrayTypeName.of(Names.Op), "controls")
-            .varargs()
-            .returns(Names.Ops)
-            .addStatement(
-                "return withControlDependencies($T.asList(controls))", ClassName.get(Arrays.class))
             .addJavadoc("{@inheritDoc}")
             .build());
 

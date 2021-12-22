@@ -1812,55 +1812,6 @@ public final class NnOps {
   }
 
   /**
-   * Computes sigmoid cross entropy given <code>logits</code>.
-   *
-   *  <p>Measures the probability error in discrete classification tasks in which each class is
-   *  independent and not mutually exclusive. For instance, one could perform multilabel
-   *  classification where a picture can contain both an elephant and a dog at the same time.
-   *
-   *  <p>For brevity, let <code>x = logits</code>, <code>z = labels</code>. The logistic loss in
-   *  pseudo-code is
-   *
-   *  <pre>
-   *  z * -log(sigmoid(x)) + (1 - z) * -log(1 - sigmoid(x))
-   *   = z * -log(1 / (1 + exp(-x))) + (1 - z) * -log(exp(-x) / (1 + exp(-x)))
-   *   = z * log(1 + exp(-x)) + (1 - z) * (-log(exp(-x)) + log(1 + exp(-x)))
-   *   = z * log(1 + exp(-x)) + (1 - z) * (x + log(1 + exp(-x))
-   *   = (1 - z) * x + log(1 + exp(-x))
-   *   = x - x * z + log(1 + exp(-x))
-   *  </pre>
-   *
-   *  <p>For <code>x < 0</code>, to avoid overflow in <code>exp(-x)</code>, we reformulate the above
-   *
-   *  <pre>
-   *  x - x * z + log(1 + exp(-x))
-   *   = log(exp(x)) - x * z + log(1 + exp(-x))
-   *   = - x * z + log(1 + exp(x))
-   *  </pre>
-   *
-   *  <p>Hence, to ensure stability and avoid overflow, the implementation uses this equivalent
-   *  formulation
-   *
-   *  <pre>
-   *    max(x, 0) - x * z + log(1 + exp(-abs(x)))
-   *  </pre>
-   *
-   *  <p></ode>logits</code> and <code>labels</code> must have the same type and shape.
-   *
-   *  <p>
-   *
-   * @param labels the labels
-   * @param logits the logits of type float32 or float64
-   * @param <T> the type of labels and logits
-   * @return the component-wise logistic losses.
-   * @throws IllegalArgumentException if logits' and labels' do not have the same shape
-   */
-  public <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(Operand<T> labels,
-      Operand<T> logits) {
-    return SigmoidCrossEntropyWithLogits.sigmoidCrossEntropyWithLogits(scope, labels, logits);
-  }
-
-  /**
    * Computes softmax activations.
    *  For each batch {@code i} and class {@code j} we have
    *  <pre>
@@ -2084,30 +2035,12 @@ public final class NnOps {
    *  given row.
    *  <p>Inputs are the logits, not probabilities.
    *
-   *  <p>This op expects unscaled logits, since it performs a <code>softmax</code> on <code>logits
-   *  </code> internally for efficiency. Do not call this op with the output of <code>softmax</code>,
-   *  as it will produce incorrect results.
-   *
-   *  <p>A common use case is to have logits of shape <code>[batchSize, numClasses]</code> and have
-   *  labels of shape <code>[batchSize]</code>, but higher dimensions are supported, in which case
-   *  the <code>dim</code>-th dimension is assumed to be of size <code>numClasses</code>. <code>
-   *  logits</code> must have the <cod>dataType</cod> of <code>TFloat16</code>, <code>TFloat32</code>
-   *  , or <code>TFloat64</code>, and <code>labels</code> must have the dtype of <code>TInt32</code>
-   *  or <code>TInt64</code>.
-   *
-   * @param labels <code>Tensor</code> of shape <code>[d_0, d_1, ..., d_{r-1}]</code> (where <code>r
-   *      </code> is rank of <code>labels</code> and result) and the dataType is <code>TInt32</code>
-   *      or <code>TInt64</code>. Each entry in <code>labels</code> must be an index in <code>[0,
-   *      numClasses)</code>. Other values will raise an exception when this op is run on CPU, and
-   *      return <code>NaN</code> for corresponding loss and gradient rows on GPU.
-   * @param logits Per-label activations (typically a linear output) of shape <code>[d_0, d_1, ...,
-   *      d_{r-1}, numClasses]</code> and dataType of <code>TFloat16</code>, <code>TFloat32</code>,
-   *      or <code>TFloat64</code>. These activation energies are interpreted as unnormalized log
-   *      probabilities.
-   * @return A <code>Tensor</code> of the same shape as <code>labels</code> and of the same type as
-   *      <code>logits</code> with the softmax cross entropy loss.
-   * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the rank
-   *      of the labels is not equal to the rank of the logits minus one.
+   * @param <T> data type for {@code loss} output
+   * @param features batch_size x num_classes matrix
+   * @param labels batch_size vector with values in [0, num_classes).
+   *  This is the label for the given minibatch entry.
+   * @param <T> data type for {@code SparseSoftmaxCrossEntropyWithLogits} output and operands
+   * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
   public <T extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
       Operand<T> features, Operand<? extends TNumber> labels) {
