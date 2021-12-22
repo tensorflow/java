@@ -39,7 +39,7 @@
     <dependency>
       <groupId>org.jetbrains.kotlinx</groupId>
       <artifactId>kotlin-jupyter-api</artifactId>
-      <version>0.10.0-53</version>
+      <version>${kotlin_jupyter.version}</version>
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>

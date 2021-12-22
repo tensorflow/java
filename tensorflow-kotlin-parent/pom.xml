@@ -48,7 +48,9 @@
   </dependencies>
 
   <properties>
-    <kotlin.version>1.5.10</kotlin.version>
+    <kotlin.version>1.6.10</kotlin.version>
+    <kotlin_jupyter.version>0.11.0-40</kotlin_jupyter.version>
+    <ktfmt.version>0.30</ktfmt.version>
     <kotlin.jvmTarget>1.8</kotlin.jvmTarget>
   </properties>
 
@@ -93,7 +95,9 @@
         <version>${spotless.version}</version>
         <configuration>
           <kotlin>
-            <ktfmt/>
+            <ktfmt>
+              <version>${ktfmt.version}</version>
+            </ktfmt>
           </kotlin>
         </configuration>
       </plugin>
