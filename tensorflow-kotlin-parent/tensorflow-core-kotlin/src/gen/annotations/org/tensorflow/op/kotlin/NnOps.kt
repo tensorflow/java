@@ -20,7 +20,6 @@ package org.tensorflow.op.kotlin
 import kotlin.Array
 import kotlin.Boolean
 import kotlin.Float
-import kotlin.Int
 import kotlin.Long
 import kotlin.String
 import kotlin.jvm.JvmName
@@ -91,9 +90,11 @@ import org.tensorflow.op.nn.Relu
 import org.tensorflow.op.nn.Relu6
 import org.tensorflow.op.nn.Selu
 import org.tensorflow.op.nn.Softmax
+import org.tensorflow.op.nn.SoftmaxCrossEntropyWithLogits
 import org.tensorflow.op.nn.Softsign
 import org.tensorflow.op.nn.SpaceToBatch
 import org.tensorflow.op.nn.SpaceToDepth
+import org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits
 import org.tensorflow.op.nn.TopK
 import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
@@ -118,8 +119,6 @@ public class NnOps(
      * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
-
-    public val raw: NnRawOps = NnRawOps(ops)
 
     /**
      * Performs average pooling on the input.
@@ -893,16 +892,22 @@ public class NnOps(
      *
      * @param mergeRepeated If True, merge repeated classes in output.
      * @return this Options instance.
+     * @param blankIndex Sets the blankIndex option.
+     *
+     * @param blankIndex the blankIndex option
+     * @return this Options instance.
      */
     public fun <T : TNumber> ctcGreedyDecoder(
         inputs: Operand<T>,
         sequenceLength: Operand<TInt32>,
-        mergeRepeated: Boolean? = null
+        mergeRepeated: Boolean? = null,
+        blankIndex: Long? = null
     ): CtcGreedyDecoder<T> = java.ctcGreedyDecoder<T>(    
         inputs,
         sequenceLength,
         *listOfNotNull(
-            mergeRepeated?.let{ org.tensorflow.op.nn.CtcGreedyDecoder.mergeRepeated(it) }
+            mergeRepeated?.let{ org.tensorflow.op.nn.CtcGreedyDecoder.mergeRepeated(it) },
+            blankIndex?.let{ org.tensorflow.op.nn.CtcGreedyDecoder.blankIndex(it) }
         ).toTypedArray()
         )
 
@@ -997,11 +1002,11 @@ public class NnOps(
      *  no projection is performed.
      *
      * @param <T> data type for `params` output
-     * @param numLayers the numLayers value
-     * @param numUnits the numUnits value
-     * @param inputSize the inputSize value
-     * @param weights the weights value
-     * @param biases the biases value
+     * @param numLayers The numLayers value
+     * @param numUnits The numUnits value
+     * @param inputSize The inputSize value
+     * @param weights The weights value
+     * @param biases The biases value
      * @param options carries optional attribute values
      * @param <T> data type for `CudnnRNNCanonicalToParamsV2` output and operands
      * @return a new instance of CudnnRNNCanonicalToParams
@@ -1099,12 +1104,12 @@ public class NnOps(
      *  no projection is performed.
      *
      * @param <T> data type for `weights` output
-     * @param numLayers the numLayers value
-     * @param numUnits the numUnits value
-     * @param inputSize the inputSize value
-     * @param params the params value
-     * @param numParamsWeights the value of the numParamsWeights property
-     * @param numParamsBiases the value of the numParamsBiases property
+     * @param numLayers The numLayers value
+     * @param numUnits The numUnits value
+     * @param inputSize The inputSize value
+     * @param params The params value
+     * @param numParamsWeights The value of the numParamsWeights attribute
+     * @param numParamsBiases The value of the numParamsBiases attribute
      * @param options carries optional attribute values
      * @param <T> data type for `CudnnRNNParamsToCanonicalV2` output and operands
      * @return a new instance of CudnnRNNParamsToCanonical
@@ -1195,11 +1200,11 @@ public class NnOps(
      *  across different runs.
      *
      * @param <T> data type for `params_size` output
-     * @param numLayers the numLayers value
-     * @param numUnits the numUnits value
-     * @param inputSize the inputSize value
-     * @param T the value of the T property
-     * @param S the value of the S property
+     * @param numLayers The numLayers value
+     * @param numUnits The numUnits value
+     * @param inputSize The inputSize value
+     * @param T The value of the T attribute
+     * @param S The value of the S attribute
      * @param options carries optional attribute values
      * @param <T> data type for `CudnnRNNParamsSize` output and operands
      * @param <U> data type for `CudnnRNNParamsSize` output and operands
@@ -1448,7 +1453,7 @@ public class NnOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param blockSize The size of the spatial block, same as in Space2Depth.
      * @param options carries optional attribute values
      * @param <T> data type for `DepthToSpace` output and operands
@@ -1493,8 +1498,8 @@ public class NnOps(
      *  horizontal and vertices strides, `strides = &#91;1, stride, stride, 1&#93;`.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param filter the filter value
+     * @param input The input value
+     * @param filter The filter value
      * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
      *  of `input`.
      * @param padding The type of padding algorithm to use.
@@ -1813,7 +1818,7 @@ public class NnOps(
      *  ](http://arxiv.org/abs/1511.07289)
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param <T> data type for `Elu` output and operands
      * @return a new instance of Elu
      * @see org.tensorflow.op.NnOps.elu
@@ -2259,7 +2264,7 @@ public class NnOps(
      *  rows must be the same as the rank of `input`.
      * @param filter 4-D with shape
      *  `&#91;filter_height, filter_width, in_channels, out_channels&#93;`.
-     * @param mode the value of the mode property
+     * @param mode The value of the mode attribute
      * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
      *  of `input`. Must be in the same order as the dimension specified with format.
      * @param padding The type of padding algorithm to use.
@@ -2304,7 +2309,7 @@ public class NnOps(
      *  rows must be the same as the rank of `input`.
      * @param filter 4-D with shape
      *  `&#91;filter_height, filter_width, in_channels, out_channels&#93;`.
-     * @param mode the value of the mode property
+     * @param mode The value of the mode attribute
      * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
      *  of `input`. Must be in the same order as the dimension specified with format.
      * @param padding The type of padding algorithm to use.
@@ -2397,7 +2402,7 @@ public class NnOps(
      * Computes rectified linear: `max(features, features * alpha)`.
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param options carries optional attribute values
      * @param <T> data type for `LeakyRelu` output and operands
      * @return a new instance of LeakyRelu
@@ -2898,7 +2903,7 @@ public class NnOps(
      * @param ksize The size of the window for each dimension of the input tensor.
      * @param strides The stride of the sliding window for each dimension of the
      *  input tensor.
-     * @param Targmax the value of the Targmax property
+     * @param Targmax The value of the Targmax attribute
      * @param padding The type of padding algorithm to use.
      * @param options carries optional attribute values
      * @param <T> data type for `MaxPoolWithArgmax` output and operands
@@ -3026,7 +3031,7 @@ public class NnOps(
      *  with the normalized tensor.
      * @param gammaMin The value represented by the lowest quantized gamma.
      * @param gammaMax The value represented by the highest quantized gamma.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param varianceEpsilon A small float number to avoid dividing by 0.
      * @param scaleAfterNormalization A bool indicating whether the resulted tensor
      *  needs to be multiplied with gamma.
@@ -3081,13 +3086,13 @@ public class NnOps(
      *  Broadcasts the values of bias on dimensions 0..N-2 of 'input'.
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
      * @param minInput The float value that the lowest quantized input value represents.
      * @param maxInput The float value that the highest quantized input value represents.
      * @param minBias The float value that the lowest quantized bias value represents.
      * @param maxBias The float value that the highest quantized bias value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <V> data type for `QuantizedBiasAdd` output and operands
      * @return a new instance of QuantizedBiasAdd
      * @see org.tensorflow.op.NnOps.quantizedBiasAdd
@@ -3118,13 +3123,13 @@ public class NnOps(
      *  taking the returned minimum and maximum values into account.
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param filter filter's input_depth dimension must match input's depth dimensions.
      * @param minInput The float value that the lowest quantized input value represents.
      * @param maxInput The float value that the highest quantized input value represents.
      * @param minFilter The float value that the lowest quantized filter value represents.
      * @param maxFilter The float value that the highest quantized filter value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param strides The stride of the sliding window for each dimension of the input
      *  tensor.
      * @param padding The type of padding algorithm to use.
@@ -3259,10 +3264,10 @@ public class NnOps(
      * Computes Quantized Rectified Linear: `max(features, 0)`
      *
      * @param <U> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param minFeatures The float value that the lowest quantized value represents.
      * @param maxFeatures The float value that the highest quantized value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <U> data type for `QuantizedRelu` output and operands
      * @return a new instance of QuantizedRelu
      * @see org.tensorflow.op.NnOps.quantizedRelu
@@ -3283,10 +3288,10 @@ public class NnOps(
      * Computes Quantized Rectified Linear 6: `min(max(features, 0), 6)`
      *
      * @param <U> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param minFeatures The float value that the lowest quantized value represents.
      * @param maxFeatures The float value that the highest quantized value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <U> data type for `QuantizedRelu6` output and operands
      * @return a new instance of QuantizedRelu6
      * @see org.tensorflow.op.NnOps.quantizedRelu6
@@ -3307,11 +3312,11 @@ public class NnOps(
      * Computes Quantized Rectified Linear X: `min(max(features, 0), max_value)`
      *
      * @param <U> data type for `activations` output
-     * @param features the features value
-     * @param maxValue the maxValue value
+     * @param features The features value
+     * @param maxValue The maxValue value
      * @param minFeatures The float value that the lowest quantized value represents.
      * @param maxFeatures The float value that the highest quantized value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <U> data type for `QuantizedReluX` output and operands
      * @return a new instance of QuantizedReluX
      * @see org.tensorflow.op.NnOps.quantizedReluX
@@ -3341,7 +3346,7 @@ public class NnOps(
      * ```
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param <T> data type for `Relu` output and operands
      * @return a new instance of Relu
      * @see org.tensorflow.op.NnOps.relu
@@ -3354,7 +3359,7 @@ public class NnOps(
      * Computes rectified linear 6: `min(max(features, 0), 6)`.
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param <T> data type for `Relu6` output and operands
      * @return a new instance of Relu6
      * @see org.tensorflow.op.NnOps.relu6
@@ -3374,73 +3379,13 @@ public class NnOps(
      * See  [Self-Normalizing Neural Networks](https://arxiv.org/abs/1706.02515)
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param <T> data type for `Selu` output and operands
      * @return a new instance of Selu
      * @see org.tensorflow.op.NnOps.selu
      */
     public fun <T : TNumber> selu(features: Operand<T>): Selu<T> = java.selu<T>(    
         features
-        )
-
-    /**
-     * Computes sigmoid cross entropy given <code>logits</code>.
-     *
-     *  
-     * Measures the probability error in discrete classification tasks in which each class is
-     *  independent and not mutually exclusive. For instance, one could perform multilabel
-     *  classification where a picture can contain both an elephant and a dog at the same time.
-     *
-     *  
-     * For brevity, let <code>x = logits</code>, <code>z = labels</code>. The logistic loss in
-     *  pseudo-code is
-     *
-     *  ```
-     * z * -log(sigmoid(x)) + (1 - z) * -log(1 - sigmoid(x))
-     *   = z * -log(1 / (1 + exp(-x))) + (1 - z) * -log(exp(-x) / (1 + exp(-x)))
-     *   = z * log(1 + exp(-x)) + (1 - z) * (-log(exp(-x)) + log(1 + exp(-x)))
-     *   = z * log(1 + exp(-x)) + (1 - z) * (x + log(1 + exp(-x))
-     *   = (1 - z) * x + log(1 + exp(-x))
-     *   = x - x * z + log(1 + exp(-x))
-     *  
-     * ```
-     *
-     *  
-     * For <code>x < 0</code>, to avoid overflow in <code>exp(-x)</code>, we reformulate the above
-     *
-     *  ```
-     * x - x * z + log(1 + exp(-x))
-     *   = log(exp(x)) - x * z + log(1 + exp(-x))
-     *   = - x * z + log(1 + exp(x))
-     *  
-     * ```
-     *
-     *  
-     * Hence, to ensure stability and avoid overflow, the implementation uses this equivalent
-     *  formulation
-     *
-     *  ```
-     * max(x, 0) - x * z + log(1 + exp(-abs(x)))
-     *  
-     * ```
-     *
-     *  
-     * </ode>logits</code> and <code>labels</code> must have the same type and shape.
-     *
-     *  
-     *
-     *
-     * @param labels the labels
-     * @param logits the logits of type float32 or float64
-     * @param <T> the type of labels and logits
-     * @return the component-wise logistic losses.
-     * @throws IllegalArgumentException if logits' and labels' do not have the same shape
-     * @see org.tensorflow.op.NnOps.sigmoidCrossEntropyWithLogits
-     */
-    public fun <T : TNumber> sigmoidCrossEntropyWithLogits(labels: Operand<T>, logits: Operand<T>):
-            Operand<T> = java.sigmoidCrossEntropyWithLogits<T>(    
-        labels,
-        logits
         )
 
     /**
@@ -3462,76 +3407,30 @@ public class NnOps(
         )
 
     /**
-     * Computes softmax cross entropy between <code>logits</code> and <code>labels</code>.
+     * Computes softmax cross entropy cost and gradients to backpropagate.
+     *  Inputs are the logits, not probabilities.
      *
-     *  
-     * Measures the probability error in discrete classification tasks in which the classes are
-     *  mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
-     *  labeled with one and only one label: an image can be a dog or a truck, but not both.
-     *
-     *  
-     * **NOTE:**
-     *
-     *  
-     * While the classes are mutually exclusive, their probabilities need not be. All that is
-     *  required is that each row of <code>labels</code> is a valid probability distribution. If
-     * they
-     *  are not, the computation of the gradient will be incorrect.
-     *
-     *  
-     * If using exclusive <code>labels</code> (wherein one and only one class is true at a time),
-     *  see [org.tensorflow.op.NnOps.sparseSoftmaxCrossEntropyWithLogits]
-     *
-     *  
-     * Usage:
-     *
-     *  ```
-     * Operand<TFloat32> logits =
-     *        tf.constant(new float[][] {{4.0F, 2.0F, 1.0F
-     * ```, {0.0F, 5.0F, 1.0F}} );
-     *    Operand<TFloat32> labels =
-     *        tf.constant(new float&#91;][&#93; {{1.0F, 0.0F, 0.0F}, {0.0F, 0.8F, 0.2F}} );
-     *    Operand<TFloat32> output =
-     *        tf.nn.softmaxCrossEntropyWithLogits(labels, logits, -1);
-     *    // output Shape = [2]
-     *    // dataType = FLOAT (1)
-     *    // values { 0.169846, 0.824745 }
-     *  }
-     *
-     *  
-     * Backpropagation will happen into both <code>logits</code> and <code>labels</code>. To
-     *  disallow backpropagation into <code>labels</code>, pass label tensors through <code>
-     *  tf.stopGradient</code> before feeding it to this function.
-     *
-     * @param labels Each vector along the class dimension should hold a valid probability
-     *      distribution e.g. for the case in which labels are of shape <code>&#91;batch_size,
-     * num_classes&#93;
-     *      </code>, each row of <code>labels[i]</code> must be a valid probability distribution.
-     * @param logits Per-label activations, typically a linear output. These activation energies are
-     *      interpreted as unnormalized log probabilities.
-     * @param axis The class dimension. -1 is the last dimension.
-     * @param <T> the number type of the operands
-     * @return the softmax cross entropy loss. Its type is the same as <code>logits</code> and its
-     *      shape is the same as <code>labels</code> except that it does not have the last dimension
-     * of
-     *      <code>labels</code>.
+     * @param <T> data type for `loss` output
+     * @param features batch_size x num_classes matrix
+     * @param labels batch_size x num_classes matrix
+     *  The caller must ensure that each batch of labels represents a valid
+     *  probability distribution.
+     * @param <T> data type for `SoftmaxCrossEntropyWithLogits` output and operands
+     * @return a new instance of SoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnOps.softmaxCrossEntropyWithLogits
      */
-    public fun <T : TNumber, U : TNumber> softmaxCrossEntropyWithLogits(
-        labels: Operand<U>,
-        logits: Operand<T>,
-        axis: Int
-    ): Operand<T> = java.softmaxCrossEntropyWithLogits<T, U>(    
-        labels,
-        logits,
-        axis
+    public fun <T : TNumber> softmaxCrossEntropyWithLogits(features: Operand<T>,
+            labels: Operand<T>): SoftmaxCrossEntropyWithLogits<T> =
+            java.softmaxCrossEntropyWithLogits<T>(    
+        features,
+        labels
         )
 
     /**
      * Computes softsign: `features / (abs(features) + 1)`.
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param <T> data type for `Softsign` output and operands
      * @return a new instance of Softsign
      * @see org.tensorflow.op.NnOps.softsign
@@ -3549,6 +3448,85 @@ public class NnOps(
      *  the `height` and `width` dimensions are moved to the `batch` dimension. After
      *  the zero-padding, both `height` and `width` of the input must be divisible by the
      *  block size.
+     *  
+     * The attr `block_size` must be greater than one. It indicates the block size.
+     *  <ul>
+     *  <li>Non-overlapping blocks of size `block_size x block size` in the height and
+     *  width dimensions are rearranged into the batch dimension at each location.</li>
+     *  <li>The batch of the output tensor is `batch * block_size * block_size`.</li>
+     *  <li>Both height_pad and width_pad must be divisible by block_size.</li>
+     *  </ul>
+     *  
+     * The shape of the output will be:
+     *  ```
+     * [batch*block_size*block_size, height_pad/block_size, width_pad/block_size,
+     *   depth]
+     *  
+     * ```
+     *  
+     * Some examples:
+     *  
+     * (1) For the following input of shape `&#91;1, 2, 2, 1&#93;` and block_size of 2:
+     *  ```
+     * x = [[[[1], [2]], [[3], [4]]]]
+     *  
+     * ```
+     *  
+     * The output tensor has shape `&#91;4, 1, 1, 1&#93;` and value:
+     *  ```
+     * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
+     *  
+     * ```
+     *  
+     * (2) For the following input of shape `&#91;1, 2, 2, 3&#93;` and block_size of 2:
+     *  ```
+     * x = [[[[1, 2, 3], [4, 5, 6]],
+     *        [[7, 8, 9], [10, 11, 12]]]]
+     *  
+     * ```
+     *  
+     * The output tensor has shape `&#91;4, 1, 1, 3&#93;` and value:
+     *  ```
+     * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
+     *  
+     * ```
+     *  
+     * (3) For the following input of shape `&#91;1, 4, 4, 1&#93;` and block_size of 2:
+     *  ```
+     * x = [[[[1],   [2],  [3],  [4]],
+     *        [[5],   [6],  [7],  [8]],
+     *        [[9],  [10], [11],  [12]],
+     *        [[13], [14], [15],  [16]]]]
+     *  
+     * ```
+     *  
+     * The output tensor has shape `&#91;4, 2, 2, 1&#93;` and value:
+     *  ```
+     * x = [[[[1], [3]], [[9], [11]]],
+     *       [[[2], [4]], [[10], [12]]],
+     *       [[[5], [7]], [[13], [15]]],
+     *       [[[6], [8]], [[14], [16]]]]
+     *  
+     * ```
+     *  
+     * (4) For the following input of shape `&#91;2, 2, 4, 1&#93;` and block_size of 2:
+     *  ```
+     * x = [[[[1],   [2],  [3],  [4]],
+     *        [[5],   [6],  [7],  [8]]],
+     *       [[[9],  [10], [11],  [12]],
+     *        [[13], [14], [15],  [16]]]]
+     *  
+     * ```
+     *  
+     * The output tensor has shape `&#91;8, 1, 2, 1&#93;` and value:
+     *  ```
+     * x = [[[[1], [3]]], [[[9], [11]]], [[[2], [4]]], [[[10], [12]]],
+     *       [[[5], [7]]], [[[13], [15]]], [[[6], [8]]], [[[14], [16]]]]
+     *  
+     * ```
+     *  
+     * Among others, this operation is useful for reducing atrous convolution into
+     *  regular convolution.
      *
      * @param <T> data type for `output` output
      * @param input 4-D with shape `&#91;batch, height, width, depth&#93;`.
@@ -3565,86 +3543,7 @@ public class NnOps(
      *    width_pad = pad_left + width + pad_right
      *  
      * `
-     *  
-     * The attr `block_size` must be greater than one. It indicates the block size.
-     *  <ul>
-     *  <li>Non-overlapping blocks of size `block_size x block size` in the height and
-     *  width dimensions are rearranged into the batch dimension at each location.</li>
-     *  <li>The batch of the output tensor is `batch * block_size * block_size`.</li>
-     *  <li>Both height_pad and width_pad must be divisible by block_size.</li>
-     *  </ul>
-     *  
-     * The shape of the output will be:
-     *  `
-     * [batch*block_size*block_size, height_pad/block_size, width_pad/block_size,
-     *   depth]
-     *  
-     * `
-     *  
-     * Some examples:
-     *  
-     * (1) For the following input of shape `&#91;1, 2, 2, 1&#93;` and block_size of 2:
-     *  `
-     * x = [[[[1], [2]], [[3], [4]]]]
-     *  
-     * `
-     *  
-     * The output tensor has shape `&#91;4, 1, 1, 1&#93;` and value:
-     *  `
-     * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-     *  
-     * `
-     *  
-     * (2) For the following input of shape `&#91;1, 2, 2, 3&#93;` and block_size of 2:
-     *  `
-     * x = [[[[1, 2, 3], [4, 5, 6]],
-     *        [[7, 8, 9], [10, 11, 12]]]]
-     *  
-     * `
-     *  
-     * The output tensor has shape `&#91;4, 1, 1, 3&#93;` and value:
-     *  `
-     * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-     *  
-     * `
-     *  
-     * (3) For the following input of shape `&#91;1, 4, 4, 1&#93;` and block_size of 2:
-     *  `
-     * x = [[[[1],   [2],  [3],  [4]],
-     *        [[5],   [6],  [7],  [8]],
-     *        [[9],  [10], [11],  [12]],
-     *        [[13], [14], [15],  [16]]]]
-     *  
-     * `
-     *  
-     * The output tensor has shape `&#91;4, 2, 2, 1&#93;` and value:
-     *  `
-     * x = [[[[1], [3]], [[9], [11]]],
-     *       [[[2], [4]], [[10], [12]]],
-     *       [[[5], [7]], [[13], [15]]],
-     *       [[[6], [8]], [[14], [16]]]]
-     *  
-     * `
-     *  
-     * (4) For the following input of shape `&#91;2, 2, 4, 1&#93;` and block_size of 2:
-     *  `
-     * x = [[[[1],   [2],  [3],  [4]],
-     *        [[5],   [6],  [7],  [8]]],
-     *       [[[9],  [10], [11],  [12]],
-     *        [[13], [14], [15],  [16]]]]
-     *  
-     * `
-     *  
-     * The output tensor has shape `&#91;8, 1, 2, 1&#93;` and value:
-     *  `
-     * x = [[[[1], [3]]], [[[9], [11]]], [[[2], [4]]], [[[10], [12]]],
-     *       [[[5], [7]]], [[[13], [15]]], [[[6], [8]]], [[[14], [16]]]]
-     *  
-     * `
-     *  
-     * Among others, this operation is useful for reducing atrous convolution into
-     *  regular convolution.
-     * @param blockSize the value of the blockSize property
+     * @param blockSize The value of the blockSize attribute
      * @param <T> data type for `SpaceToBatch` output and operands
      * @return a new instance of SpaceToBatch
      * @see org.tensorflow.op.NnOps.spaceToBatch
@@ -3748,7 +3647,7 @@ public class NnOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param blockSize The size of the spatial block.
      * @param options carries optional attribute values
      * @param <T> data type for `SpaceToDepth` output and operands
@@ -3772,70 +3671,27 @@ public class NnOps(
         )
 
     /**
-     * Computes sparse softmax cross entropy between <code>logits</code> and <code>labels</code>.
-     *
+     * Computes softmax cross entropy cost and gradients to backpropagate.
+     *  Unlike `SoftmaxCrossEntropyWithLogits`, this operation does not accept
+     *  a matrix of label probabilities, but rather a single label per row
+     *  of features.  This label is considered to have probability 1.0 for the
+     *  given row.
      *  
-     * Measures the probability error in discrete classification tasks in which the classes are
-     *  mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
-     *  labeled with one and only one label: an image can be a dog or a truck, but not both.
+     * Inputs are the logits, not probabilities.
      *
-     *  
-     * **NOTE:**
-     *
-     *  
-     * For this operation, the probability of a given label is considered exclusive. That is, soft
-     *  classes are not allowed, and the <code>labels</code> vector must provide a single specific
-     *  index for the true class for each row of <code>logits</code> (each minibatch entry). For
-     * soft
-     *  softmax classification with a probability distribution for each entry,
-     * [org.tensorflow.op.NnOps.softmaxCrossEntropyWithLogits].
-     *
-     *  
-     * **WARNING:**
-     *
-     *  
-     * This op expects unscaled logits, since it performs a <code>softmax</code> on <code>logits
-     *  </code> internally for efficiency. Do not call this op with the output of
-     * <code>softmax</code>,
-     *  as it will produce incorrect results.
-     *
-     *  
-     * A common use case is to have logits of shape <code>&#91;batchSize, numClasses&#93;</code> and
-     * have
-     *  labels of shape <code>&#91;batchSize&#93;</code>, but higher dimensions are supported, in
-     * which case
-     *  the <code>dim</code>-th dimension is assumed to be of size <code>numClasses</code>. <code>
-     *  logits</code> must have the <cod>dataType</cod> of <code>TFloat16</code>,
-     * <code>TFloat32</code>
-     *  , or <code>TFloat64</code>, and <code>labels</code> must have the dtype of
-     * <code>TInt32</code>
-     *  or <code>TInt64</code>.
-     *
-     * @param labels <code>Tensor</code> of shape <code>&#91;d_0, d_1, ..., d_{r-1}&#93;</code>
-     * (where <code>r
-     *      </code> is rank of <code>labels</code> and result) and the dataType is
-     * <code>TInt32</code>
-     *      or <code>TInt64</code>. Each entry in <code>labels</code> must be an index in <code>[0,
-     *      numClasses)</code>. Other values will raise an exception when this op is run on CPU, and
-     *      return <code>NaN</code> for corresponding loss and gradient rows on GPU.
-     * @param logits Per-label activations (typically a linear output) of shape <code>&#91;d_0, d_1,
-     * ...,
-     *      d_{r-1}, numClasses&#93;</code> and dataType of <code>TFloat16</code>,
-     * <code>TFloat32</code>,
-     *      or <code>TFloat64</code>. These activation energies are interpreted as unnormalized log
-     *      probabilities.
-     * @return A <code>Tensor</code> of the same shape as <code>labels</code> and of the same type
-     * as
-     *      <code>logits</code> with the softmax cross entropy loss.
-     * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the
-     * rank
-     *      of the labels is not equal to the rank of the logits minus one.
+     * @param <T> data type for `loss` output
+     * @param features batch_size x num_classes matrix
+     * @param labels batch_size vector with values in [0, num_classes).
+     *  This is the label for the given minibatch entry.
+     * @param <T> data type for `SparseSoftmaxCrossEntropyWithLogits` output and operands
+     * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnOps.sparseSoftmaxCrossEntropyWithLogits
      */
-    public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(labels: Operand<T>,
-            logits: Operand<U>): Operand<*> = java.sparseSoftmaxCrossEntropyWithLogits<T, U>(    
-        labels,
-        logits
+    public fun <T : TNumber> sparseSoftmaxCrossEntropyWithLogits(features: Operand<T>,
+            labels: Operand<out TNumber>): SparseSoftmaxCrossEntropyWithLogits<T> =
+            java.sparseSoftmaxCrossEntropyWithLogits<T>(    
+        features,
+        labels
         )
 
     /**
@@ -3904,11 +3760,11 @@ public class NnOps(
      *  across different runs.
      *
      * @param <T> data type for `params_size` output
-     * @param numLayers the numLayers value
-     * @param numUnits the numUnits value
-     * @param inputSize the inputSize value
-     * @param T the value of the T property
-     * @param S the value of the S property
+     * @param numLayers The numLayers value
+     * @param numUnits The numUnits value
+     * @param inputSize The inputSize value
+     * @param T The value of the T attribute
+     * @param S The value of the S attribute
      * @param options carries optional attribute values
      * @param <T> data type for `CudnnRNNParamsSize` output and operands
      * @param <U> data type for `CudnnRNNParamsSize` output and operands
@@ -3977,7 +3833,7 @@ public class NnOps(
      * @param ksize The size of the window for each dimension of the input tensor.
      * @param strides The stride of the sliding window for each dimension of the
      *  input tensor.
-     * @param Targmax the value of the Targmax property
+     * @param Targmax The value of the Targmax attribute
      * @param padding The type of padding algorithm to use.
      * @param options carries optional attribute values
      * @param <T> data type for `MaxPoolWithArgmax` output and operands
@@ -4027,7 +3883,7 @@ public class NnOps(
      *  with the normalized tensor.
      * @param gammaMin The value represented by the lowest quantized gamma.
      * @param gammaMax The value represented by the highest quantized gamma.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param varianceEpsilon A small float number to avoid dividing by 0.
      * @param scaleAfterNormalization A bool indicating whether the resulted tensor
      *  needs to be multiplied with gamma.
@@ -4064,13 +3920,13 @@ public class NnOps(
      *  Broadcasts the values of bias on dimensions 0..N-2 of 'input'.
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
      * @param minInput The float value that the lowest quantized input value represents.
      * @param maxInput The float value that the highest quantized input value represents.
      * @param minBias The float value that the lowest quantized bias value represents.
      * @param maxBias The float value that the highest quantized bias value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <V> data type for `QuantizedBiasAdd` output and operands
      * @return a new instance of QuantizedBiasAdd
      * @see org.tensorflow.op.NnOps.quantizedBiasAdd
@@ -4094,13 +3950,13 @@ public class NnOps(
      *  taking the returned minimum and maximum values into account.
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param filter filter's input_depth dimension must match input's depth dimensions.
      * @param minInput The float value that the lowest quantized input value represents.
      * @param maxInput The float value that the highest quantized input value represents.
      * @param minFilter The float value that the lowest quantized filter value represents.
      * @param maxFilter The float value that the highest quantized filter value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param strides The stride of the sliding window for each dimension of the input
      *  tensor.
      * @param padding The type of padding algorithm to use.
@@ -4135,10 +3991,10 @@ public class NnOps(
      * Computes Quantized Rectified Linear: `max(features, 0)`
      *
      * @param <U> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param minFeatures The float value that the lowest quantized value represents.
      * @param maxFeatures The float value that the highest quantized value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <U> data type for `QuantizedRelu` output and operands
      * @return a new instance of QuantizedRelu
      * @see org.tensorflow.op.NnOps.quantizedRelu
@@ -4154,10 +4010,10 @@ public class NnOps(
      * Computes Quantized Rectified Linear 6: `min(max(features, 0), 6)`
      *
      * @param <U> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param minFeatures The float value that the lowest quantized value represents.
      * @param maxFeatures The float value that the highest quantized value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <U> data type for `QuantizedRelu6` output and operands
      * @return a new instance of QuantizedRelu6
      * @see org.tensorflow.op.NnOps.quantizedRelu6
@@ -4173,11 +4029,11 @@ public class NnOps(
      * Computes Quantized Rectified Linear X: `min(max(features, 0), max_value)`
      *
      * @param <U> data type for `activations` output
-     * @param features the features value
-     * @param maxValue the maxValue value
+     * @param features The features value
+     * @param maxValue The maxValue value
      * @param minFeatures The float value that the lowest quantized value represents.
      * @param maxFeatures The float value that the highest quantized value represents.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param <U> data type for `QuantizedReluX` output and operands
      * @return a new instance of QuantizedReluX
      * @see org.tensorflow.op.NnOps.quantizedReluX

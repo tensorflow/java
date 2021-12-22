@@ -214,7 +214,7 @@ public class IoOps(
      * @param inputBytes Tensor of string to be decoded.
      * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
      *  of the size of the output type.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param options carries optional attribute values
      * @param <T> data type for `DecodePaddedRaw` output and operands
      * @return a new instance of DecodePaddedRaw
@@ -244,7 +244,7 @@ public class IoOps(
      *
      * @param <T> data type for `output` output
      * @param bytes All the elements must have the same length.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param options carries optional attribute values
      * @param <T> data type for `DecodeRaw` output and operands
      * @return a new instance of DecodeRaw
@@ -709,7 +709,7 @@ public class IoOps(
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
      * @param contextRaggedValueTypes RaggedTensor.value dtypes for the ragged context features.
      * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context features.
-     * @param featureListDenseTypes the value of the featureListDenseTypes property
+     * @param featureListDenseTypes The value of the featureListDenseTypes attribute
      * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
      *  of data in each FeatureList given in feature_list_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
@@ -892,7 +892,7 @@ public class IoOps(
      *  each context Feature given in context_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param featureListDenseTypes the value of the featureListDenseTypes property
+     * @param featureListDenseTypes The value of the featureListDenseTypes attribute
      * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
      *  of data in each FeatureList given in feature_list_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
@@ -1354,7 +1354,7 @@ public class IoOps(
     /**
      * Reads and outputs the entire contents of the input filename.
      *
-     * @param filename the filename value
+     * @param filename The filename value
      * @return a new instance of ReadFile
      * @see org.tensorflow.op.IoOps.readFile
      */
@@ -1589,9 +1589,9 @@ public class IoOps(
      * Generate a sharded filename. The filename is printf formatted as
      *  %s-%05d-of-%05d, basename, shard, num_shards.
      *
-     * @param basename the basename value
-     * @param shard the shard value
-     * @param numShards the numShards value
+     * @param basename The basename value
+     * @param shard The shard value
+     * @param numShards The numShards value
      * @return a new instance of ShardedFilename
      * @see org.tensorflow.op.IoOps.shardedFilename
      */
@@ -1608,8 +1608,8 @@ public class IoOps(
     /**
      * Generate a glob pattern matching all sharded file names.
      *
-     * @param basename the basename value
-     * @param numShards the numShards value
+     * @param basename The basename value
+     * @param numShards The numShards value
      * @return a new instance of ShardedFilespec
      * @see org.tensorflow.op.IoOps.shardedFilespec
      */
@@ -1737,7 +1737,7 @@ public class IoOps(
      * @param inputBytes Tensor of string to be decoded.
      * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
      *  of the size of the output type.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param options carries optional attribute values
      * @param <T> data type for `DecodePaddedRaw` output and operands
      * @return a new instance of DecodePaddedRaw
@@ -1760,7 +1760,7 @@ public class IoOps(
      *
      * @param <T> data type for `output` output
      * @param bytes All the elements must have the same length.
-     * @param outType the value of the outType property
+     * @param outType The value of the outType attribute
      * @param options carries optional attribute values
      * @param <T> data type for `DecodeRaw` output and operands
      * @return a new instance of DecodeRaw

@@ -18,13 +18,17 @@
 package org.tensorflow.op.kotlin
 
 import kotlin.Long
+import kotlin.String
+import org.tensorflow.ConcreteFunction
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
+import org.tensorflow.op.tpu.Compile
 import org.tensorflow.op.tpu.CompileSucceededAssert
 import org.tensorflow.op.tpu.Execute
 import org.tensorflow.op.tpu.ExecuteAndUpdateVariables
 import org.tensorflow.op.tpu.PartitionedInput
 import org.tensorflow.op.tpu.PartitionedOutput
+import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TType
 
@@ -47,12 +51,53 @@ public class TpuOps(
     public val scope: Scope = ops.scope
 
     /**
-     * Asserts that compilation succeeded. This op produces no output and closes the
-     *  device during failure to ensure all pending device interactions fail.
+     * Compiles a computations for execution on one or more TPU devices.
+     *  For the internal use of the distributed TPU compiler.
+     *  
+     * 'num_computations' is the number of computations to be compiled.
+     *  'function' is a function containing the computation to compile.
+     *  'dynamic_shapes' contains dynamic shapes of arguments whose shapes were not
+     *  known statically at TPUReplication rewrite time.
+     *  'guaranteed_constants' is a list of tensors which have been guaranteed to not
+     *  change their values during the session lifetime. These contain tensors marked as
+     *  constant using the GuaranteeConstOp.
+     *  'metadata' is a serialized TPUCompileMetadataProto describing
+     *  the shapes and types of the inputs to the computation, as well as a mapping onto
+     *  the TPU pod topology.
+     *  Each 'program' output is a string key that is passed to the _TPUExecute op and
+     *  used to look up the program in the compilation cache.
+     *  'may_modify_variables' indicates whether variables may be modified.
+     *
+     * @param dynamicShapes The dynamicShapes value
+     * @param guaranteedConstants The guaranteedConstants value
+     * @param numComputations The value of the numComputations attribute
+     * @param function The value of the function attribute
+     * @param metadata The value of the metadata attribute
+     * @return a new instance of Compile
+     * @see org.tensorflow.op.TpuOps.compile
+     */
+    public fun compile(
+        dynamicShapes: Iterable<Operand<TInt64>>,
+        guaranteedConstants: Iterable<Operand<*>>,
+        numComputations: Long,
+        function: ConcreteFunction,
+        metadata: String
+    ): Compile = java.compile(    
+        dynamicShapes,
+        guaranteedConstants,
+        numComputations,
+        function,
+        metadata
+        )
+
+    /**
+     * Asserts that compilation succeeded.
+     *  This op produces no output and closes the device during failure to ensure all
+     *  pending device interactions fail.
      *  
      * 'compilation_status' is a serialized CompilationResultProto.
      *
-     * @param compilationStatus the compilationStatus value
+     * @param compilationStatus The compilationStatus value
      * @return a new instance of CompileSucceededAssert
      * @see org.tensorflow.op.TpuOps.compileSucceededAssert
      */
@@ -65,9 +110,9 @@ public class TpuOps(
      * Op that loads and executes a TPU program on a TPU device.
      *  For the internal use of the distributed TPU compiler.
      *
-     * @param args the args value
-     * @param key the key value
-     * @param Tresults the value of the Tresults property
+     * @param args The args value
+     * @param key The key value
+     * @param Tresults The value of the Tresults attribute
      * @return a new instance of Execute
      * @see org.tensorflow.op.TpuOps.execute
      */
@@ -91,11 +136,11 @@ public class TpuOps(
      *  program outputs are consumed by these variables will not appear in the op
      *  output. For the internal use of the distributed TPU compiler.
      *
-     * @param args the args value
-     * @param key the key value
-     * @param Tresults the value of the Tresults property
-     * @param deviceVarReadsIndices the value of the deviceVarReadsIndices property
-     * @param deviceVarUpdatesIndices the value of the deviceVarUpdatesIndices property
+     * @param args The args value
+     * @param key The key value
+     * @param Tresults The value of the Tresults attribute
+     * @param deviceVarReadsIndices The value of the deviceVarReadsIndices attribute
+     * @param deviceVarUpdatesIndices The value of the deviceVarUpdatesIndices attribute
      * @return a new instance of ExecuteAndUpdateVariables
      * @see org.tensorflow.op.TpuOps.executeAndUpdateVariables
      */
@@ -142,7 +187,7 @@ public class TpuOps(
      *
      * @param <T> data type for `output` output
      * @param inputs A tensor which represents the full shape of partitioned tensors.
-     * @param numSplits the value of the numSplits property
+     * @param numSplits The value of the numSplits attribute
      * @param options carries optional attribute values
      * @param <T> data type for `TPUPartitionedOutput` output and operands
      * @return a new instance of PartitionedOutput

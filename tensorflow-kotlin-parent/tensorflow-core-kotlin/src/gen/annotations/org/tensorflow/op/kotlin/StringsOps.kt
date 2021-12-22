@@ -105,13 +105,14 @@ public class StringsOps(
      *  <tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'>
      * ```
      *
-     * @param input the input value
+     * @param input The input to be lower-cased.
      * @param options carries optional attribute values
      * @return a new instance of Lower
      * @see org.tensorflow.op.StringsOps.lower
      * @param encoding Sets the encoding option.
      *
-     * @param encoding the encoding option
+     * @param encoding Character encoding of `input`. Allowed values are '' and 'utf-8'.
+     *  Value '' is interpreted as ASCII.
      * @return this Options instance.
      */
     public fun lower(input: Operand<TString>, encoding: String? = null): Lower = java.lower(    
@@ -331,7 +332,7 @@ public class StringsOps(
      *  sequence. Note that padding will never be greater than 'ngram_widths'-1
      *  regardless of this value. If `pad_width=-1`, then add `max(ngram_widths)-1`
      *  elements.
-     * @param preserveShortSequences the value of the preserveShortSequences property
+     * @param preserveShortSequences The value of the preserveShortSequences attribute
      * @param <T> data type for `StringNGrams` output and operands
      * @return a new instance of StringNGrams
      * @see org.tensorflow.op.StringsOps.stringNGrams
@@ -408,6 +409,12 @@ public class StringsOps(
 
     /**
      * Strip leading and trailing whitespaces from the Tensor.
+     *  Examples:
+     *  ```
+     *
+     * tf.strings.strip([&quot;\nTensorFlow&quot;, &quot;     The python library    &quot;]).numpy()
+     *  array([b'TensorFlow', b'The python library'], dtype=object)
+     * ```
      *
      * @param input A string `Tensor` of any shape.
      * @return a new instance of Strip
@@ -540,7 +547,7 @@ public class StringsOps(
      *  This functionality will be deprecated and it's recommended to use
      *  `tf.string_to_hash_bucket_fast()` or `tf.string_to_hash_bucket_strong()`.
      *
-     * @param stringTensor the stringTensor value
+     * @param stringTensor The stringTensor value
      * @param numBuckets The number of buckets.
      * @return a new instance of ToHashBucket
      * @see org.tensorflow.op.StringsOps.toHashBucket
@@ -633,7 +640,7 @@ public class StringsOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param stringTensor the stringTensor value
+     * @param stringTensor The stringTensor value
      * @return a new instance of ToNumber, with default output types
      * @see org.tensorflow.op.StringsOps.toNumber
      */
@@ -655,7 +662,7 @@ public class StringsOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param stringTensor the stringTensor value
+     * @param stringTensor The stringTensor value
      * @param outType The numeric type to interpret each string in `string_tensor` as.
      * @param <T> data type for `StringToNumber` output and operands
      * @return a new instance of ToNumber
@@ -861,13 +868,14 @@ public class StringsOps(
      *  <tf.Tensor: shape=(), dtype=string, numpy=b'CAMELCASE STRING AND ALL CAPS'>
      * ```
      *
-     * @param input the input value
+     * @param input The input to be upper-cased.
      * @param options carries optional attribute values
      * @return a new instance of Upper
      * @see org.tensorflow.op.StringsOps.upper
      * @param encoding Sets the encoding option.
      *
-     * @param encoding the encoding option
+     * @param encoding Character encoding of `input`. Allowed values are '' and 'utf-8'.
+     *  Value '' is interpreted as ASCII.
      * @return this Options instance.
      */
     public fun upper(input: Operand<TString>, encoding: String? = null): Upper = java.upper(    
@@ -891,7 +899,7 @@ public class StringsOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param stringTensor the stringTensor value
+     * @param stringTensor The stringTensor value
      * @param outType The numeric type to interpret each string in `string_tensor` as.
      * @param <T> data type for `StringToNumber` output and operands
      * @return a new instance of ToNumber

@@ -203,7 +203,7 @@ public class RandomOps(
      * :&#93;`
      *  represents the unnormalized log probabilities for all classes.
      * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
-     * @param outputDtype the value of the outputDtype property
+     * @param outputDtype The value of the outputDtype attribute
      * @param options carries optional attribute values
      * @param <U> data type for `Multinomial` output and operands
      * @return a new instance of Multinomial
@@ -369,7 +369,7 @@ public class RandomOps(
      *  distribution described by the shape parameters given in rate.
      * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
      *  associated poisson distribution.
-     * @param dtype the value of the dtype property
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <V> data type for `RandomPoissonV2` output and operands
      * @return a new instance of RandomPoisson
@@ -618,11 +618,11 @@ public class RandomOps(
      * The StatefulRandomBinomial operation
      *
      * @param <V> data type for `output` output
-     * @param resource the resource value
-     * @param algorithm the algorithm value
-     * @param shape the shape value
-     * @param counts the counts value
-     * @param probs the probs value
+     * @param resource The resource value
+     * @param algorithm The algorithm value
+     * @param shape The shape value
+     * @param counts The counts value
+     * @param probs The probs value
      * @param <U> data type for `StatefulRandomBinomial` output and operands
      * @return a new instance of StatefulRandomBinomial, with default output types
      * @see org.tensorflow.op.RandomOps.statefulRandomBinomial
@@ -645,12 +645,12 @@ public class RandomOps(
      * The StatefulRandomBinomial operation
      *
      * @param <V> data type for `output` output
-     * @param resource the resource value
-     * @param algorithm the algorithm value
-     * @param shape the shape value
-     * @param counts the counts value
-     * @param probs the probs value
-     * @param dtype the value of the dtype property
+     * @param resource The resource value
+     * @param algorithm The algorithm value
+     * @param shape The shape value
+     * @param counts The counts value
+     * @param probs The probs value
+     * @param dtype The value of the dtype attribute
      * @param <V> data type for `StatefulRandomBinomial` output and operands
      * @param <U> data type for `StatefulRandomBinomial` output and operands
      * @return a new instance of StatefulRandomBinomial
@@ -749,7 +749,7 @@ public class RandomOps(
      *  represents the unnormalized log probabilities for all classes.
      * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
      * @param seed 2 seeds (shape [2]).
-     * @param outputDtype the value of the outputDtype property
+     * @param outputDtype The value of the outputDtype attribute
      * @param <V> data type for `StatelessMultinomial` output and operands
      * @return a new instance of StatelessMultinomial
      * @see org.tensorflow.op.RandomOps.statelessMultinomial
@@ -998,7 +998,7 @@ public class RandomOps(
      * :&#93;`
      *  represents the unnormalized log probabilities for all classes.
      * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
-     * @param outputDtype the value of the outputDtype property
+     * @param outputDtype The value of the outputDtype attribute
      * @param options carries optional attribute values
      * @param <U> data type for `Multinomial` output and operands
      * @return a new instance of Multinomial
@@ -1038,7 +1038,7 @@ public class RandomOps(
      *  distribution described by the shape parameters given in rate.
      * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
      *  associated poisson distribution.
-     * @param dtype the value of the dtype property
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <V> data type for `RandomPoissonV2` output and operands
      * @return a new instance of RandomPoisson
@@ -1125,12 +1125,12 @@ public class RandomOps(
      * The StatefulRandomBinomial operation
      *
      * @param <V> data type for `output` output
-     * @param resource the resource value
-     * @param algorithm the algorithm value
-     * @param shape the shape value
-     * @param counts the counts value
-     * @param probs the probs value
-     * @param dtype the value of the dtype property
+     * @param resource The resource value
+     * @param algorithm The algorithm value
+     * @param shape The shape value
+     * @param counts The counts value
+     * @param probs The probs value
+     * @param dtype The value of the dtype attribute
      * @param <V> data type for `StatefulRandomBinomial` output and operands
      * @param <U> data type for `StatefulRandomBinomial` output and operands
      * @return a new instance of StatefulRandomBinomial
@@ -1176,7 +1176,7 @@ public class RandomOps(
      *  represents the unnormalized log probabilities for all classes.
      * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
      * @param seed 2 seeds (shape [2]).
-     * @param outputDtype the value of the outputDtype property
+     * @param outputDtype The value of the outputDtype attribute
      * @param <V> data type for `StatelessMultinomial` output and operands
      * @return a new instance of StatelessMultinomial
      * @see org.tensorflow.op.RandomOps.statelessMultinomial

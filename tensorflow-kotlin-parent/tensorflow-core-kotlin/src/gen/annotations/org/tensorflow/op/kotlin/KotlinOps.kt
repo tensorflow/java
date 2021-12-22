@@ -32,7 +32,6 @@ import kotlin.IntArray
 import kotlin.Long
 import kotlin.LongArray
 import kotlin.String
-import kotlin.Unit
 import kotlin.jvm.JvmName
 import org.tensorflow.ConcreteFunction
 import org.tensorflow.Operand
@@ -52,7 +51,6 @@ import org.tensorflow.ndarray.buffer.FloatDataBuffer
 import org.tensorflow.ndarray.buffer.IntDataBuffer
 import org.tensorflow.ndarray.buffer.LongDataBuffer
 import org.tensorflow.ndarray.index.Index
-import org.tensorflow.op.Op
 import org.tensorflow.op.Ops
 import org.tensorflow.op.Scope
 import org.tensorflow.op.core.Abort
@@ -72,12 +70,14 @@ import org.tensorflow.op.core.BarrierInsertMany
 import org.tensorflow.op.core.BarrierReadySize
 import org.tensorflow.op.core.BarrierTakeMany
 import org.tensorflow.op.core.Batch
+import org.tensorflow.op.core.BatchFunction
 import org.tensorflow.op.core.BatchToSpace
 import org.tensorflow.op.core.BatchToSpaceNd
 import org.tensorflow.op.core.Bitcast
 import org.tensorflow.op.core.BroadcastDynamicShape
 import org.tensorflow.op.core.BroadcastTo
 import org.tensorflow.op.core.Bucketize
+import org.tensorflow.op.core.Case
 import org.tensorflow.op.core.ClipByValue
 import org.tensorflow.op.core.Concat
 import org.tensorflow.op.core.Constant
@@ -101,6 +101,7 @@ import org.tensorflow.op.core.ExpandDims
 import org.tensorflow.op.core.ExtractVolumePatches
 import org.tensorflow.op.core.Fill
 import org.tensorflow.op.core.Fingerprint
+import org.tensorflow.op.core.For
 import org.tensorflow.op.core.Gather
 import org.tensorflow.op.core.GatherNd
 import org.tensorflow.op.core.GetSessionHandle
@@ -111,8 +112,8 @@ import org.tensorflow.op.core.HashTable
 import org.tensorflow.op.core.HistogramFixedWidth
 import org.tensorflow.op.core.Identity
 import org.tensorflow.op.core.IdentityN
+import org.tensorflow.op.core.If
 import org.tensorflow.op.core.ImmutableConst
-import org.tensorflow.op.core.Init
 import org.tensorflow.op.core.InitializeTable
 import org.tensorflow.op.core.InitializeTableFromTextFile
 import org.tensorflow.op.core.InplaceAdd
@@ -159,6 +160,7 @@ import org.tensorflow.op.core.OrderedMapUnstageNoKey
 import org.tensorflow.op.core.Pad
 import org.tensorflow.op.core.ParallelConcat
 import org.tensorflow.op.core.ParallelDynamicStitch
+import org.tensorflow.op.core.PartitionedCall
 import org.tensorflow.op.core.Placeholder
 import org.tensorflow.op.core.PlaceholderWithDefault
 import org.tensorflow.op.core.Print
@@ -176,6 +178,7 @@ import org.tensorflow.op.core.ReduceSum
 import org.tensorflow.op.core.RefNextIteration
 import org.tensorflow.op.core.RefSelect
 import org.tensorflow.op.core.RefSwitch
+import org.tensorflow.op.core.RemoteCall
 import org.tensorflow.op.core.Reshape
 import org.tensorflow.op.core.ResourceCountUpTo
 import org.tensorflow.op.core.ResourceGather
@@ -225,6 +228,13 @@ import org.tensorflow.op.core.Stage
 import org.tensorflow.op.core.StageClear
 import org.tensorflow.op.core.StagePeek
 import org.tensorflow.op.core.StageSize
+import org.tensorflow.op.core.StatefulCase
+import org.tensorflow.op.core.StatefulIf
+import org.tensorflow.op.core.StatefulPartitionedCall
+import org.tensorflow.op.core.StatefulWhile
+import org.tensorflow.op.core.StatelessIf
+import org.tensorflow.op.core.StatelessPartitionedCall
+import org.tensorflow.op.core.StatelessWhile
 import org.tensorflow.op.core.StopGradient
 import org.tensorflow.op.core.StridedSlice
 import org.tensorflow.op.core.StridedSliceAssign
@@ -290,11 +300,7 @@ import org.tensorflow.op.core.VarIsInitializedOp
 import org.tensorflow.op.core.Variable
 import org.tensorflow.op.core.VariableShape
 import org.tensorflow.op.core.Where
-import org.tensorflow.op.core.XlaConvV2
-import org.tensorflow.op.core.XlaDotV2
-import org.tensorflow.op.core.XlaSetDynamicDimensionSize
-import org.tensorflow.op.core.XlaSpmdFullToShardShape
-import org.tensorflow.op.core.XlaSpmdShardToFullShape
+import org.tensorflow.op.core.While
 import org.tensorflow.op.core.Zeros
 import org.tensorflow.op.core.ZerosLike
 import org.tensorflow.types.TBool
@@ -308,7 +314,7 @@ import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
 
 /**
- * An API for building operations as [Op][Op]s
+ * An API for building operations as [Op][org.tensorflow.op.Op]s
  *
  * @see Ops
  */
@@ -937,11 +943,11 @@ public class KotlinOps(
      *  empty, the op name will be used as the shared name.
      *  T: the types of tensors to be batched.
      *
-     * @param inTensors the inTensors value
-     * @param numBatchThreads the value of the numBatchThreads property
-     * @param maxBatchSize the value of the maxBatchSize property
-     * @param batchTimeoutMicros the value of the batchTimeoutMicros property
-     * @param gradTimeoutMicros the value of the gradTimeoutMicros property
+     * @param inTensors The inTensors value
+     * @param numBatchThreads The value of the numBatchThreads attribute
+     * @param maxBatchSize The value of the maxBatchSize attribute
+     * @param batchTimeoutMicros The value of the batchTimeoutMicros attribute
+     * @param gradTimeoutMicros The value of the gradTimeoutMicros attribute
      * @param options carries optional attribute values
      * @return a new instance of Batch
      * @see org.tensorflow.op.Ops.batch
@@ -993,6 +999,124 @@ public class KotlinOps(
         )
 
     /**
+     * Batches all the inputs tensors to the computation done by the function.
+     *  So, for example, in the following code
+     *  ```
+     * # This input will be captured.
+     *  y = tf.placeholder_with_default(1.0, shape=[])
+     *
+     *  {@literal @
+     * ```tf.Defun(tf.float32)
+     *  def computation(a):
+     *    return tf.matmul(a, a) + y
+     *
+     *  b = gen_batch_ops.batch_function(
+     *          f=computation
+     *          in_tensors=[a],
+     *          captured_tensors=computation.captured_inputs,
+     *          Tout=&#91;o.type for o in computation.definition.signature.output_arg&#93;,
+     *          num_batch_threads=1,
+     *          max_batch_size=10,
+     *          batch_timeout_micros=100000,  # 100ms
+     *          allowed_batch_sizes=&#91;3, 10&#93;,
+     *          batching_queue=&quot;&quot;)
+     *  }
+     *  
+     * If more than one session.run call is simultaneously trying to compute `b`
+     *  the values of `a` will be gathered, non-deterministically concatenated
+     *  along the first axis, and only one thread will run the computation.
+     *  
+     * Assumes that all arguments of the function are Tensors which will be batched
+     *  along their first dimension.
+     *  
+     * Arguments that are captured, are not batched. The session.run call which does
+     *  the concatenation, will use the values of the captured tensors available to it.
+     *  Therefore, typical uses of captured tensors should involve values which remain
+     *  unchanged across session.run calls. Inference is a good example of this.
+     *  
+     * SparseTensor is not supported. The return value of the decorated function
+     *  must be a Tensor or a list/tuple of Tensors.
+     *
+     * @param inTensors The tensors to be batched.
+     * @param capturedTensors The tensors which are captured in the function, and don't need
+     *  to be batched.
+     * @param f The value of the f attribute
+     * @param numBatchThreads Number of scheduling threads for processing batches of work.
+     *  Determines the number of batches processed in parallel.
+     * @param maxBatchSize Batch sizes will never be bigger than this.
+     * @param batchTimeoutMicros Maximum number of microseconds to wait before outputting
+     *  an incomplete batch.
+     * @param Tout the types of the output tensors.
+     * @param options carries optional attribute values
+     * @return a new instance of BatchFunction
+     * @see org.tensorflow.op.Ops.batchFunction
+     * @param maxEnqueuedBatches Sets the maxEnqueuedBatches option.
+     *
+     * @param maxEnqueuedBatches Maximum number of batches enqueued. Default: 10.
+     * @return this Options instance.
+     * @param allowedBatchSizes Sets the allowedBatchSizes option.
+     *
+     * @param allowedBatchSizes Optional list of allowed batch sizes. If left empty, does
+     *  nothing. Otherwise, supplies a list of batch sizes, causing the op to pad
+     *  batches up to one of those sizes. The entries must increase monotonically.
+     *  If enable_large_batch_splitting is false (i.e., large-input-split is not
+     *  enabled) the final entry must equal max_batch_size.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
+     * @param container Controls the scope of sharing of this batch.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
+     * @param sharedName Concurrently running instances of batch in the same device with the
+     *  same container and shared_name will batch their elements together. If left
+     *  empty, the op name will be used as the shared name.
+     * @return this Options instance.
+     * @param batchingQueue Sets the batchingQueue option.
+     *
+     * @param batchingQueue the batchingQueue option
+     * @return this Options instance.
+     * @param enableLargeBatchSplitting Sets the enableLargeBatchSplitting option.
+     *
+     * @param enableLargeBatchSplitting input with a large size (i.e., larger than the largest value
+     * of
+     *  `allowed_batch_sizes`) will be splitted into multiple batches with batch size.
+     * @return this Options instance.
+     */
+    public fun batchFunction(
+        inTensors: Iterable<Operand<*>>,
+        capturedTensors: Iterable<Operand<*>>,
+        f: ConcreteFunction,
+        numBatchThreads: Long,
+        maxBatchSize: Long,
+        batchTimeoutMicros: Long,
+        Tout: List<Class<out TType>>,
+        maxEnqueuedBatches: Long? = null,
+        allowedBatchSizes: List<Long>? = null,
+        container: String? = null,
+        sharedName: String? = null,
+        batchingQueue: String? = null,
+        enableLargeBatchSplitting: Boolean? = null
+    ): BatchFunction = java.batchFunction(    
+        inTensors,
+        capturedTensors,
+        f,
+        numBatchThreads,
+        maxBatchSize,
+        batchTimeoutMicros,
+        Tout,
+        *listOfNotNull(
+            maxEnqueuedBatches?.let{ org.tensorflow.op.core.BatchFunction.maxEnqueuedBatches(it) },
+            allowedBatchSizes?.let{ org.tensorflow.op.core.BatchFunction.allowedBatchSizes(it) },
+            container?.let{ org.tensorflow.op.core.BatchFunction.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.BatchFunction.sharedName(it) },
+            batchingQueue?.let{ org.tensorflow.op.core.BatchFunction.batchingQueue(it) },
+            enableLargeBatchSplitting?.let{
+            org.tensorflow.op.core.BatchFunction.enableLargeBatchSplitting(it) }
+        ).toTypedArray()
+        )
+
+    /**
      * BatchToSpace for 4-D tensors of type T.
      *  This is a legacy version of the more general BatchToSpaceND.
      *  
@@ -1014,7 +1138,7 @@ public class KotlinOps(
      * crops = [[crop_top, crop_bottom], [crop_left, crop_right]]
      *  
      * `
-     * @param blockSize the value of the blockSize property
+     * @param blockSize The value of the blockSize attribute
      * @param <T> data type for `BatchToSpace` output and operands
      * @return a new instance of BatchToSpace
      * @see org.tensorflow.op.Ops.batchToSpace
@@ -1240,8 +1364,8 @@ public class KotlinOps(
      *  endian orderings will give different results.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param type the value of the type property
+     * @param input The input value
+     * @param type The value of the type attribute
      * @param <U> data type for `Bitcast` output and operands
      * @return a new instance of Bitcast
      * @see org.tensorflow.op.Ops.bitcast
@@ -1357,8 +1481,8 @@ public class KotlinOps(
      *  broadcasted shape. `s0`, `s1` and `r0` are all integer vectors.
      *
      * @param <T> data type for `r0` output
-     * @param s0 the s0 value
-     * @param s1 the s1 value
+     * @param s0 The s0 value
+     * @param s1 The s1 value
      * @param <T> data type for `BroadcastArgs` output and operands
      * @return a new instance of BroadcastDynamicShape
      * @see org.tensorflow.op.Ops.broadcastDynamicShape
@@ -1465,6 +1589,64 @@ public class KotlinOps(
             Operand<*>> = java.call(    
         function,
         arguments
+        )
+
+    /**
+     * An n-way switch statement which calls a single branch function.
+     *  ```
+     * An n-way switch statement, implementing the following:
+     *  ```
+     *  switch (branch_index) {
+     *    case 0:
+     *      output = branches[0](input);
+     *      break;
+     *    case 1:
+     *      output = branches[1](input);
+     *      break;
+     *    ...
+     *    case [[nbranches-1]]:
+     *    default:
+     *      output = branches[nbranches-1](input);
+     *      break;
+     *  
+     * ```
+     *  ```
+     *  }
+     *
+     *  
+     * Selects between [StatefulCase] and [StatelessCase] based on the statefulness of the function
+     * arguments.
+     *
+     * @param branchIndex The branch selector, an int32 Tensor.
+     * @param input A list of input tensors passed to the branch function.
+     * @param Tout A list of output types.
+     * @param branches `
+     * A list of functions each of which takes 'inputs' and returns a list of
+     *    tensors, whose types are the same as what every other branch returns.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of Case
+     * @see org.tensorflow.op.Ops.caseOp
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public fun caseOp(
+        branchIndex: Operand<TInt32>,
+        input: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        branches: List<ConcreteFunction>,
+        outputShapes: List<Shape>? = null
+    ): Case = java.caseOp(    
+        branchIndex,
+        input,
+        Tout,
+        branches,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.Case.outputShapes(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -2307,17 +2489,15 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a scalar of `type`, with the value of `number`. `number` may be truncated if it does
-     * not
-     *  fit in the target type.
+     * Creates a scalar of `type`, with the value of `number`. `number` may be
+     *  truncated if it does not fit in the target type.
      *
-     * @param type the type of tensor to create.  Must be concrete (i.e. not
+     * @param type the type of tensor to create. Must be concrete (i.e. not
      * [org.tensorflow.types.family.TFloating])
      * @param number the value of the tensor
      * @return a constant of the passed type
      * @throws IllegalArgumentException if the type is abstract (i.e.
-     * [org.tensorflow.types.family.TFloating]) or
-     *  unknown.
+     * [org.tensorflow.types.family.TFloating]) or unknown.
      * @see org.tensorflow.op.Ops.constant
      */
     public fun <T : TNumber> constant(type: Class<T>, number: Number): Constant<T> =
@@ -2369,9 +2549,8 @@ public class KotlinOps(
         )
 
     /**
-     * Create a constant by making an immutable copy of `tensor`. `tensor` may be closed afterwards
-     * without
-     *  issue.
+     * Create a constant by making an immutable copy of `tensor`. `tensor` may be closed
+     *  afterwards without issue.
      *
      *  
      * Note: this endpoint cannot be simply called `constant` since it will conflict with
@@ -2387,7 +2566,7 @@ public class KotlinOps(
 
     /**
      * Creates a scalar of the same type as `toMatch`, with the value of `number`. `number` may be
-     *  truncated if it does not fit in the target type.
+     * truncated if it does not fit in the target type.
      *
      * @param toMatch the operand providing the target type
      * @param number the value of the tensor
@@ -2669,7 +2848,7 @@ public class KotlinOps(
      *  </div>
      *
      * @param <T> data type for `outputs` output
-     * @param data the data value
+     * @param data The data value
      * @param partitions Any shape.  Indices in the range `[0, num_partitions)`.
      * @param numPartitions The number of partitions to output.
      * @param <T> data type for `DynamicPartition` output and operands
@@ -2753,8 +2932,8 @@ public class KotlinOps(
      *  </div>
      *
      * @param <T> data type for `merged` output
-     * @param indices the indices value
-     * @param data the data value
+     * @param indices The indices value
+     * @param data The data value
      * @param <T> data type for `DynamicStitch` output and operands
      * @return a new instance of DynamicStitch
      * @see org.tensorflow.op.Ops.dynamicStitch
@@ -2823,7 +3002,7 @@ public class KotlinOps(
      *
      * @param <T> data type for `output` output
      * @param shape 1-D. Represents the shape of the output tensor.
-     * @param dtype the value of the dtype property
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <T> data type for `Empty` output and operands
      * @return a new instance of Empty
@@ -2855,9 +3034,9 @@ public class KotlinOps(
      *  element_dtype: the type of elements in the list.
      *  element_shape: a shape compatible with that of elements in the list.
      *
-     * @param elementShape the elementShape value
-     * @param maxNumElements the maxNumElements value
-     * @param elementDtype the value of the elementDtype property
+     * @param elementShape The elementShape value
+     * @param maxNumElements The maxNumElements value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <U> data type for `EmptyTensorList` output and operands
      * @return a new instance of EmptyTensorList
      * @see org.tensorflow.op.Ops.emptyTensorList
@@ -3020,7 +3199,7 @@ public class KotlinOps(
      *  size 1.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param axis 0-D (scalar). Specifies the dimension index at which to
      *  expand the shape of `input`. Must be in the range
      *  `&#91;-rank(input) - 1, rank(input)&#93;`.
@@ -3153,6 +3332,40 @@ public class KotlinOps(
             java.fingerprint(    
         data,
         method
+        )
+
+    /**
+     * ```
+     * output = input;
+     *   for i in range(start, limit, delta)
+     *     output = body(i, output);
+     *  
+     * ```
+     *
+     * @param start The lower bound. An int32
+     * @param limit The upper bound. An int32
+     * @param delta The increment. An int32
+     * @param input A list of input tensors whose types are T.
+     * @param body `
+     * A function that takes a list of tensors (int32, T) and returns another
+     *  list of tensors (T).
+     *  
+     * `
+     * @return a new instance of For
+     * @see org.tensorflow.op.Ops.forOp
+     */
+    public fun forOp(
+        start: Operand<TInt32>,
+        limit: Operand<TInt32>,
+        delta: Operand<TInt32>,
+        input: Iterable<Operand<*>>,
+        body: ConcreteFunction
+    ): For = java.forOp(    
+        start,
+        limit,
+        delta,
+        input,
+        body
         )
 
     /**
@@ -3451,7 +3664,7 @@ public class KotlinOps(
      * Returns the input tensor without modification.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `GuaranteeConst` output and operands
      * @return a new instance of GuaranteeConst
      * @see org.tensorflow.op.Ops.guaranteeConst
@@ -3568,7 +3781,7 @@ public class KotlinOps(
      *  values <= value_range[0] will be mapped to hist[0],
      *  values >= value_range[1] will be mapped to hist&#91;-1&#93;.
      * @param nbins Scalar `int32 Tensor`.  Number of histogram bins.
-     * @param dtype the value of the dtype property
+     * @param dtype The value of the dtype attribute
      * @param <U> data type for `HistogramFixedWidth` output and operands
      * @param <T> data type for `HistogramFixedWidth` output and operands
      * @return a new instance of HistogramFixedWidth
@@ -3590,7 +3803,7 @@ public class KotlinOps(
      * Return a tensor with the same shape and contents as the input tensor or value.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `Identity` output and operands
      * @return a new instance of Identity
      * @see org.tensorflow.op.Ops.identity
@@ -3617,12 +3830,66 @@ public class KotlinOps(
      *    return &#91;None, g(dy)&#93;  # Do not backprop to f(x).
      *  }
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of IdentityN
      * @see org.tensorflow.op.Ops.identityN
      */
     public fun identityN(input: Iterable<Operand<*>>): IdentityN = java.identityN(    
         input
+        )
+
+    /**
+     * output = cond ? then_branch(input) : else_branch(input)
+     *
+     *  
+     * Selects between [StatefulIf] and [StatelessIf] based on the statefulness of the function
+     * arguments.
+     *
+     * @param cond `
+     * A Tensor. If the tensor is a scalar of non-boolean type, the
+     *    scalar is converted to a boolean according to the
+     *    following rule: if the scalar is a numerical value, non-zero means
+     *    `True` and zero means False; if the scalar is a string, non-empty
+     *    means `True` and empty means `False`. If the tensor is not a scalar,
+     *    being empty means False and being non-empty means True.
+     *  
+     * `
+     * @param input A list of input tensors.
+     * @param Tout A list of output types.
+     * @param thenBranch `
+     * A function that takes 'inputs' and returns a list of tensors, whose
+     *    types are the same as what else_branch returns.
+     *  
+     * `
+     * @param elseBranch `
+     * A function that takes 'inputs' and returns a list of tensors, whose
+     *  types are the same as what then_branch returns.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of If
+     * @see org.tensorflow.op.Ops.ifOp
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public fun ifOp(
+        cond: Operand<out TType>,
+        input: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        thenBranch: ConcreteFunction,
+        elseBranch: ConcreteFunction,
+        outputShapes: List<Shape>? = null
+    ): If = java.ifOp(    
+        cond,
+        input,
+        Tout,
+        thenBranch,
+        elseBranch,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.If.outputShapes(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -3646,94 +3913,6 @@ public class KotlinOps(
         dtype,
         shape,
         memoryRegionName
-        )
-
-    /**
-     * Factory method to create an operation executing all initializers of a graph.
-     *
-     *  
-     * All initializers added to a graph via
-     *  [Op)][org.tensorflow.op.core.Init.add] are grouped together as a single
-     *  unit of computation in the graph. This operation must then be added to any graph using one
-     * or
-     *  more [variables][Variable] and executed once before running the graph so the variable
-     *  states are initialized properly.
-     *
-     *
-     *  
-     * When the graph is built by the same process that is running the session, the initializers
-     *  can be invoked by executing this single endpoint. For example:
-     *
-     *  ```
-     * {@code
-     *  try (Graph g = new Graph()) {
-     *    Variable<TInt32> x = tf.variable(tf.constant(10));  // initAdd is called implicitly
-     *    Variable<TInt32> y = tf.variable(tf.constant(20));  // idem
-     *    Add<TInt32> z = tf.math.add(x, y);
-     *
-     *    try (Session s = new Session(g)) {
-     *      s.run(tf.init());  // initialize all variables
-     *
-     *      try (TInt32 t = (TInt32)s.runner().fetch(z).run().get(0)) {
-     *        assertEquals(30, t.data().getInt());
-     *      
-     * ```
-     *    }
-     *  }
-     *  }}
-     *
-     *  
-     * When the graph is built by a separate process, the initializers can be invoked by running
-     *  the init op by its name, which defaults to [org.tensorflow.op.core.Init.DEFAULT_NAME].
-     *  For example:
-     *
-     *  ```
-     * {@code
-     *  // Building the model
-     *  try (Graph g = new Graph()) {
-     *    Variable<TInt32> x = tf.variable(tf.constant(10));  // initAdd is called implicitly
-     *    Variable<TInt32> y = tf.variable(tf.constant(20));  // idem
-     *    Add<TInt32> z = tf.withName("z").math.add(x, y);
-     *
-     *    tf.init();  // add variables initializers to the graph, as Init.DEFAULT_NAME
-     *    // ...exporting graph as a saved model...
-     *  
-     * ```
-     *
-     *  ...
-     *
-     *  // Running the model
-     *  try (SavedModelBundle model = SavedModelBundle.load("/path/to/model", "train")) {
-     *    model.session().run(Init.DEFAULT_NAME);
-     *
-     *    try (TInt32 t = (TInt32)s.runner().fetch("z").run().get(0)) {
-     *      assertEquals(30, t.data().getInt());
-     *    }
-     *  }
-     *  }}
-     *
-     * @return an op grouping all initializers added to the graph
-     * @throws IllegalArgumentException if the execution environment in scope is not a graph
-     * @see org.tensorflow.op.Ops.init
-     */
-    public fun `init`(): Init = java.init(    
-        
-        )
-
-    /**
-     * Register an op as an initializer of the graph.
-     *
-     *  
-     * Registered initializers are then grouped as a single unit of computation by adding
-     *  and executing an [init][org.tensorflow.op.core.Init.create] operation from a graph
-     *  session.  This is a no-op if executed in an eager session.
-     *
-     * @param initializer 
-     * @see org.tensorflow.op.core.Init.create
-     * @see org.tensorflow.op.Ops.initAdd
-     */
-    public fun initAdd(initializer: Op): Unit = java.initAdd(    
-        initializer
         )
 
     /**
@@ -3919,8 +4098,8 @@ public class KotlinOps(
      *  equal to the Kth order statistic. The semantics are not the same as
      *  top_k_unique.
      *
-     * @param input the input value
-     * @param k the value of the k property
+     * @param input The input value
+     * @param k The value of the k attribute
      * @return a new instance of KthOrderStatistic
      * @see org.tensorflow.op.Ops.kthOrderStatistic
      */
@@ -3936,8 +4115,8 @@ public class KotlinOps(
      * @param <T> data type for `keys` output
      * @param <U> data type for `values` output
      * @param tableHandle Handle to the table.
-     * @param Tkeys the value of the Tkeys property
-     * @param Tvalues the value of the Tvalues property
+     * @param Tkeys The value of the Tkeys attribute
+     * @param Tvalues The value of the Tvalues attribute
      * @param <T> data type for `LookupTableExportV2` output and operands
      * @param <U> data type for `LookupTableExportV2` output and operands
      * @return a new instance of LookupTableExport
@@ -3964,7 +4143,7 @@ public class KotlinOps(
      * @param <U> data type for `values` output
      * @param tableHandle Handle to the table.
      * @param keys Any shape.  Keys to look up.
-     * @param defaultValue the defaultValue value
+     * @param defaultValue The defaultValue value
      * @param <U> data type for `LookupTableFindV2` output and operands
      * @return a new instance of LookupTableFind
      * @see org.tensorflow.op.Ops.lookupTableFind
@@ -4053,7 +4232,7 @@ public class KotlinOps(
      *  of the corresponding output element. Behavior for infinite elements is
      *  undefined. Behavior for subnormal elements is undefined.
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of MakeUnique
      * @see org.tensorflow.op.Ops.makeUnique
      */
@@ -4064,7 +4243,7 @@ public class KotlinOps(
     /**
      * Op removes all elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapClear
      * @see org.tensorflow.op.Ops.mapClear
@@ -4104,7 +4283,7 @@ public class KotlinOps(
     /**
      * Op returns the number of incomplete elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapIncompleteSize
      * @see org.tensorflow.op.Ops.mapIncompleteSize
@@ -4146,9 +4325,9 @@ public class KotlinOps(
      *  underlying container does not contain this key
      *  this op will block until it does.
      *
-     * @param key the key value
-     * @param indices the indices value
-     * @param dtypes the value of the dtypes property
+     * @param key The key value
+     * @param indices The indices value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapPeek
      * @see org.tensorflow.op.Ops.mapPeek
@@ -4192,7 +4371,7 @@ public class KotlinOps(
     /**
      * Op returns the number of elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapSize
      * @see org.tensorflow.op.Ops.mapSize
@@ -4233,10 +4412,10 @@ public class KotlinOps(
      * Stage (key, values) in the underlying container which behaves like a hashtable.
      *
      * @param key int64
-     * @param indices the indices value
+     * @param indices The indices value
      * @param values a list of tensors
      *  dtypes A list of data types that inserted values should adhere to.
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapStage
      * @see org.tensorflow.op.Ops.mapStage
@@ -4286,9 +4465,9 @@ public class KotlinOps(
      *  from the underlying container.   If the underlying container
      *  does not contain this key, the op will block until it does.
      *
-     * @param key the key value
-     * @param indices the indices value
-     * @param dtypes the value of the dtypes property
+     * @param key The key value
+     * @param indices The indices value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapUnstage
      * @see org.tensorflow.op.Ops.mapUnstage
@@ -4334,8 +4513,8 @@ public class KotlinOps(
      *  from the underlying container.   If the underlying container
      *  does not contain elements, the op will block until it does.
      *
-     * @param indices the indices value
-     * @param dtypes the value of the dtypes property
+     * @param indices The indices value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of MapUnstageNoKey
      * @see org.tensorflow.op.Ops.mapUnstageNoKey
@@ -4542,9 +4721,9 @@ public class KotlinOps(
      * tf.TensorSpec(&#91;10&#93;, tf.float32)).graph.as_graph_def()
      *  }
      *
-     * @param inputs the inputs value
-     * @param mlirModule the value of the mlirModule property
-     * @param Toutputs the value of the Toutputs property
+     * @param inputs The inputs value
+     * @param mlirModule The value of the mlirModule attribute
+     * @param Toutputs The value of the Toutputs attribute
      * @return a new instance of MlirPassthroughOp
      * @see org.tensorflow.op.Ops.mlirPassthroughOp
      */
@@ -4569,7 +4748,7 @@ public class KotlinOps(
      *
      * @param emptyKey The key used to represent empty key buckets internally. Must not
      *  be used in insert or lookup operations.
-     * @param deletedKey the deletedKey value
+     * @param deletedKey The deletedKey value
      * @param valueDtype Type of the table values.
      * @param options carries optional attribute values
      * @param <T> data type for `MutableDenseHashTableV2` output and operands
@@ -4980,7 +5159,7 @@ public class KotlinOps(
     /**
      * Op removes all elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapClear
      * @see org.tensorflow.op.Ops.orderedMapClear
@@ -5020,7 +5199,7 @@ public class KotlinOps(
     /**
      * Op returns the number of incomplete elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapIncompleteSize
      * @see org.tensorflow.op.Ops.orderedMapIncompleteSize
@@ -5063,9 +5242,9 @@ public class KotlinOps(
      *  this op will block until it does.   This Op is optimized for
      *  performance.
      *
-     * @param key the key value
-     * @param indices the indices value
-     * @param dtypes the value of the dtypes property
+     * @param key The key value
+     * @param indices The indices value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapPeek
      * @see org.tensorflow.op.Ops.orderedMapPeek
@@ -5109,7 +5288,7 @@ public class KotlinOps(
     /**
      * Op returns the number of elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapSize
      * @see org.tensorflow.op.Ops.orderedMapSize
@@ -5151,10 +5330,10 @@ public class KotlinOps(
      *  associative container.   Elements are ordered by key.
      *
      * @param key int64
-     * @param indices the indices value
+     * @param indices The indices value
      * @param values a list of tensors
      *  dtypes A list of data types that inserted values should adhere to.
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapStage
      * @see org.tensorflow.op.Ops.orderedMapStage
@@ -5204,9 +5383,9 @@ public class KotlinOps(
      *  from the underlying container.   If the underlying container
      *  does not contain this key, the op will block until it does.
      *
-     * @param key the key value
-     * @param indices the indices value
-     * @param dtypes the value of the dtypes property
+     * @param key The key value
+     * @param indices The indices value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapUnstage
      * @see org.tensorflow.op.Ops.orderedMapUnstage
@@ -5252,8 +5431,8 @@ public class KotlinOps(
      *  key from the underlying container.   If the underlying container
      *  does not contain elements, the op will block until it does.
      *
-     * @param indices the indices value
-     * @param dtypes the value of the dtypes property
+     * @param indices The indices value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of OrderedMapUnstageNoKey
      * @see org.tensorflow.op.Ops.orderedMapUnstageNoKey
@@ -5320,9 +5499,9 @@ public class KotlinOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param paddings the paddings value
-     * @param constantValues the constantValues value
+     * @param input The input value
+     * @param paddings The paddings value
+     * @param constantValues The constantValues value
      * @param <T> data type for `PadV2` output and operands
      * @return a new instance of Pad
      * @see org.tensorflow.op.Ops.pad
@@ -5437,8 +5616,8 @@ public class KotlinOps(
      *  </div>
      *
      * @param <T> data type for `merged` output
-     * @param indices the indices value
-     * @param data the data value
+     * @param indices The indices value
+     * @param data The data value
      * @param <T> data type for `ParallelDynamicStitch` output and operands
      * @return a new instance of ParallelDynamicStitch
      * @see org.tensorflow.op.Ops.parallelDynamicStitch
@@ -5448,6 +5627,57 @@ public class KotlinOps(
             java.parallelDynamicStitch<T>(    
         indices,
         data
+        )
+
+    /**
+     * returns `f(inputs)`, where `f`'s body is placed and partitioned.
+     *
+     *  
+     * Selects between [StatefulPartitionedCall] and [StatelessPartitionedCall] based on the
+     * statefulness of the function arguments.
+     *
+     * @param args A list of input tensors.
+     * @param Tout A list of output types.
+     * @param f `
+     * A function that takes 'args', a list of tensors, and returns 'output',
+     *    another list of tensors. Input and output types are specified by 'Tin'
+     *    and 'Tout'. The function body of f will be placed and partitioned across
+     *    devices, setting this op apart from the regular Call op. This op is
+     *    stateful.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of PartitionedCall
+     * @see org.tensorflow.op.Ops.partitionedCall
+     * @param config Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     * @param configProto Sets the configProto option.
+     *
+     * @param configProto the configProto option
+     * @return this Options instance.
+     * @param executorType Sets the executorType option.
+     *
+     * @param executorType the executorType option
+     * @return this Options instance.
+     */
+    public fun partitionedCall(
+        args: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        f: ConcreteFunction,
+        config: String? = null,
+        configProto: String? = null,
+        executorType: String? = null
+    ): PartitionedCall = java.partitionedCall(    
+        args,
+        Tout,
+        f,
+        *listOfNotNull(
+            config?.let{ org.tensorflow.op.core.PartitionedCall.config(it) },
+            configProto?.let{ org.tensorflow.op.core.PartitionedCall.configProto(it) },
+            executorType?.let{ org.tensorflow.op.core.PartitionedCall.executorType(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -5557,7 +5787,7 @@ public class KotlinOps(
      * Reshapes a quantized tensor as per the Reshape op.
      *
      * @param <T> data type for `output` output
-     * @param tensor the tensor value
+     * @param tensor The tensor value
      * @param shape Defines the shape of the output tensor.
      * @param inputMin The minimum value of the input.
      * @param inputMax The maximum value of the input.
@@ -5626,7 +5856,7 @@ public class KotlinOps(
      *  of the tensor. Rank is also known as &quot;order&quot;, &quot;degree&quot;, or
      * &quot;ndims.&quot;
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of Rank
      * @see org.tensorflow.op.Ops.rank
      */
@@ -5895,6 +6125,28 @@ public class KotlinOps(
         )
 
     /**
+     * Runs function `f` on a remote device indicated by `target`.
+     *
+     * @param target A fully specified device name where we want to run the function.
+     * @param args A list of arguments for the function.
+     * @param Tout The type list for the return values.
+     * @param f The function to run remotely.
+     * @return a new instance of RemoteCall
+     * @see org.tensorflow.op.Ops.remoteCall
+     */
+    public fun remoteCall(
+        target: Operand<TString>,
+        args: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        f: ConcreteFunction
+    ): RemoteCall = java.remoteCall(    
+        target,
+        args,
+        Tout,
+        f
+        )
+
+    /**
      * Reshapes a tensor.
      *  Given `tensor`, this operation returns a tensor that has the same values
      *  as `tensor` with shape `shape`.
@@ -5957,7 +6209,7 @@ public class KotlinOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param tensor the tensor value
+     * @param tensor The tensor value
      * @param shape Defines the shape of the output tensor.
      * @param <T> data type for `Reshape` output and operands
      * @return a new instance of Reshape
@@ -5976,7 +6228,7 @@ public class KotlinOps(
      * @param resource Should be from a scalar `Variable` node.
      * @param limit If incrementing ref would bring it above limit, instead generates an
      *  'OutOfRange' error.
-     * @param T the value of the T property
+     * @param T The value of the T attribute
      * @param <T> data type for `ResourceCountUpTo` output and operands
      * @return a new instance of ResourceCountUpTo
      * @see org.tensorflow.op.Ops.resourceCountUpTo
@@ -6008,9 +6260,9 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param resource the resource value
-     * @param indices the indices value
-     * @param dtype the value of the dtype property
+     * @param resource The resource value
+     * @param indices The indices value
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <U> data type for `ResourceGather` output and operands
      * @return a new instance of ResourceGather
@@ -6044,9 +6296,9 @@ public class KotlinOps(
      * The ResourceGatherNd operation
      *
      * @param <U> data type for `output` output
-     * @param resource the resource value
-     * @param indices the indices value
-     * @param dtype the value of the dtype property
+     * @param resource The resource value
+     * @param indices The indices value
+     * @param dtype The value of the dtype attribute
      * @param <U> data type for `ResourceGatherNd` output and operands
      * @return a new instance of ResourceGatherNd
      * @see org.tensorflow.op.Ops.resourceGatherNd
@@ -6596,11 +6848,11 @@ public class KotlinOps(
      * NOTE this op currently does not support broadcasting and so `value`'s
      *  shape must be exactly the shape produced by the slice of `ref`.
      *
-     * @param ref the ref value
-     * @param begin the begin value
-     * @param end the end value
-     * @param strides the strides value
-     * @param value the value value
+     * @param ref The ref value
+     * @param begin The begin value
+     * @param end The end value
+     * @param strides The strides value
+     * @param value The value value
      * @param options carries optional attribute values
      * @param <T> data type for `ResourceStridedSliceAssign` output and operands
      * @return a new instance of ResourceStridedSliceAssign
@@ -6654,10 +6906,7 @@ public class KotlinOps(
 
     /**
      * Reverses specific dimensions of a tensor.
-     *  NOTE `tf.reverse` has now changed behavior in preparation for 1.0.
-     *  `tf.reverse_v2` is currently an alias that will be deprecated before TF 1.0.
-     *  
-     * Given a `tensor`, and a `int32` tensor `axis` representing the set of
+     *  Given a `tensor`, and a `int32` tensor `axis` representing the set of
      *  dimensions of `tensor` to reverse. This operation reverses each dimension
      *  `i` for which there exists `j` s.t. `axis[j] == i`.
      *  
@@ -6824,7 +7073,7 @@ public class KotlinOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param shift Dimension must be 0-D or 1-D. `shift[i]` specifies the number of places by which
      *  elements are shifted positively (towards larger indices) along the dimension
      *  specified by `axis[i]`. Negative shifts will roll the elements in the opposite
@@ -7112,42 +7361,47 @@ public class KotlinOps(
         )
 
     /**
-     * Scatter `updates` into a new tensor according to `indices`.
-     *  Creates a new tensor by applying sparse `updates` to individual values or
-     *  slices within a tensor (initially zero for numeric, empty for string) of
-     *  the given `shape` according to indices.  This operator is the inverse of the
-     *  `tf.gather_nd` operator which extracts values or slices from a given tensor.
+     * Scatters `updates` into a tensor of shape `shape` according to `indices`.
+     *  Update the input tensor by scattering sparse `updates` according to individual values at the
+     * specified `indices`.
+     *  This op returns an `output` tensor with the `shape` you specify. This op is the
+     *  inverse of the `tf.gather_nd` operator which extracts values or slices from a
+     *  given tensor.
      *  
-     * This operation is similar to tensor_scatter_add, except that the tensor is
-     *  zero-initialized. Calling `tf.scatter_nd(indices, values, shape)` is identical
-     *  to `tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)`
+     * This operation is similar to `tf.tensor_scatter_add`, except that the tensor is
+     *  zero-initialized. Calling `tf.scatter_nd(indices, values, shape)`
+     *  is identical to calling
+     *  `tf.tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)`.
      *  
-     * If `indices` contains duplicates, then their updates are accumulated (summed).
+     * If `indices` contains duplicates, the duplicate `values` are accumulated
+     *  (summed).
      *  
      * **WARNING**: The order in which updates are applied is nondeterministic, so the
-     *  output will be nondeterministic if `indices` contains duplicates -- because
-     *  of some numerical approximation issues, numbers summed in different order
-     *  may yield different results.
+     *  output will be nondeterministic if `indices` contains duplicates;
+     *  numbers summed in different order may yield different results because of some
+     *  numerical approximation issues.
      *  
-     * `indices` is an integer tensor containing indices into a new tensor of shape
-     *  `shape`.  The last dimension of `indices` can be at most the rank of `shape`:
+     * `indices` is an integer tensor of shape `shape`. The last dimension
+     *  of `indices` can be at most the rank of `shape`:
      *  ```
      * indices.shape[-1] <= shape.rank
      *  
      * ```
      *  
-     * The last dimension of `indices` corresponds to indices into elements
+     * The last dimension of `indices` corresponds to indices of elements
      *  (if `indices.shape&#91;-1&#93; = shape.rank`) or slices
      *  (if `indices.shape&#91;-1&#93; < shape.rank`) along dimension `indices.shape&#91;-1&#93;` of
-     *  `shape`.  `updates` is a tensor with shape
+     *  `shape`.
+     *  
+     * `updates` is a tensor with shape:
      *  ```
      * indices.shape[:-1] + shape[indices.shape[-1]:]
      *  
      * ```
      *  
-     * The simplest form of scatter is to insert individual elements in a tensor by
-     *  index. For example, say we want to insert 4 scattered elements in a rank-1
-     *  tensor with 8 elements.
+     * The simplest form of the scatter op is to insert individual elements in
+     *  a tensor by index. Consider an example where you want to insert 4 scattered
+     *  elements in a rank-1 tensor with 8 elements.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd1.png" alt>
      *  </div>
@@ -7168,9 +7422,9 @@ public class KotlinOps(
      *  
      * ```
      *  
-     * We can also, insert entire slices of a higher rank tensor all at once. For
-     *  example, if we wanted to insert two slices in the first dimension of a
-     *  rank-3 tensor with two matrices of new values.
+     * You can also insert entire slices of a higher rank tensor all at once. For
+     *  example, you can insert two slices in the first dimension of a rank-3 tensor
+     *  with two matrices of new values.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd2.png" alt>
      *  </div>
@@ -7201,9 +7455,9 @@ public class KotlinOps(
      *  On GPU, if an out of bound index is found, the index is ignored.
      *
      * @param <U> data type for `output` output
-     * @param indices Index tensor.
-     * @param updates Updates to scatter into output.
-     * @param shape 1-D. The shape of the resulting tensor.
+     * @param indices Tensor of indices.
+     * @param updates Values to scatter into the output tensor.
+     * @param shape 1-D. The shape of the output tensor.
      * @param <U> data type for `ScatterNd` output and operands
      * @param <T> data type for `ScatterNd` output and operands
      * @return a new instance of ScatterNd
@@ -7599,9 +7853,9 @@ public class KotlinOps(
      * The SelectV2 operation
      *
      * @param <T> data type for `output` output
-     * @param condition the condition value
-     * @param t the t value
-     * @param e the e value
+     * @param condition The condition value
+     * @param t The t value
+     * @param e The e value
      * @param <T> data type for `SelectV2` output and operands
      * @return a new instance of Select
      * @see org.tensorflow.op.Ops.select
@@ -7682,7 +7936,7 @@ public class KotlinOps(
      * @param <U> data type for `idx` output
      * @param x 1-D. Values to keep.
      * @param y 1-D. Values to remove.
-     * @param outIdx the value of the outIdx property
+     * @param outIdx The value of the outIdx attribute
      * @param <T> data type for `ListDiff` output and operands
      * @param <U> data type for `ListDiff` output and operands
      * @return a new instance of SetDiff1d
@@ -7744,7 +7998,7 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of Shape, with default output types
      * @see org.tensorflow.op.Ops.shape
      */
@@ -7764,8 +8018,8 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <U> data type for `Shape` output and operands
      * @return a new instance of Shape
      * @see org.tensorflow.op.Ops.shape
@@ -7781,7 +8035,7 @@ public class KotlinOps(
      *  This operation returns N 1-D integer tensors representing shape of `input[i]s`.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of ShapeN, with default output types
      * @see org.tensorflow.op.Ops.shapeN
      */
@@ -7794,8 +8048,8 @@ public class KotlinOps(
      *  This operation returns N 1-D integer tensors representing shape of `input[i]s`.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <U> data type for `ShapeN` output and operands
      * @return a new instance of ShapeN
      * @see org.tensorflow.op.Ops.shapeN
@@ -7819,7 +8073,7 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of Size, with default output types
      * @see org.tensorflow.op.Ops.size
      */
@@ -7840,8 +8094,8 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <U> data type for `Size` output and operands
      * @return a new instance of Size
      * @see org.tensorflow.op.Ops.size
@@ -7901,7 +8155,7 @@ public class KotlinOps(
      *  0 <= begin[i] <= begin[i] + size[i] <= Di  for i in [0, n)
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param begin begin[i] specifies the offset into the 'i'th dimension of
      *  'input' to slice from.
      * @param sizeOutput size[i] specifies the number of elements of the 'i'th dimension
@@ -7927,7 +8181,7 @@ public class KotlinOps(
      * Returns a copy of the input tensor.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `Snapshot` output and operands
      * @return a new instance of Snapshot
      * @see org.tensorflow.op.Ops.snapshot
@@ -7945,18 +8199,8 @@ public class KotlinOps(
      *  `&#91;1, ..., M&#93;` correspond to the position within the grid, and the batch
      *  dimension combines both the position within a spatial block and the original
      *  batch position.  Prior to division into blocks, the spatial dimensions of the
-     *  input are optionally zero padded according to `paddings`.  See below for a
+     *  input are optionally zero padded according to `paddings`. See below for a
      *  precise description.
-     *
-     * @param <T> data type for `output` output
-     * @param input N-D with shape `input_shape = &#91;batch&#93; + spatial_shape +
-     * remaining_shape`,
-     *  where spatial_shape has `M` dimensions.
-     * @param blockShape 1-D with shape `[M]`, all values must be >= 1.
-     * @param paddings 2-D with shape `&#91;M, 2&#93;`, all values must be >= 0.
-     *  `paddings[i] = &#91;pad_start, pad_end&#93;` specifies the padding for input dimension
-     *  `i + 1`, which corresponds to spatial dimension `i`.  It is required that
-     *  `block_shape[i]` divides `input_shape&#91;i + 1&#93; + pad_start + pad_end`.
      *  
      * This operation is equivalent to the following steps:
      *  <ol>
@@ -8007,74 +8251,84 @@ public class KotlinOps(
      * (1) For the following input of shape `&#91;1, 2, 2, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `paddings = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
-     *  `
+     *  ```
      * x = [[[[1], [2]], [[3], [4]]]]
      *  
-     * `
+     * ```
      *  
      * The output tensor has shape `&#91;4, 1, 1, 1&#93;` and value:
-     *  `
+     *  ```
      * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
      *  
-     * `
+     * ```
      *  
      * (2) For the following input of shape `&#91;1, 2, 2, 3&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `paddings = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
-     *  `
+     *  ```
      * x = [[[[1, 2, 3], [4, 5, 6]],
      *        [[7, 8, 9], [10, 11, 12]]]]
      *  
-     * `
+     * ```
      *  
      * The output tensor has shape `&#91;4, 1, 1, 3&#93;` and value:
-     *  `
+     *  ```
      * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
      *  
-     * `
+     * ```
      *  
      * (3) For the following input of shape `&#91;1, 4, 4, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `paddings = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
-     *  `
+     *  ```
      * x = [[[[1],   [2],  [3],  [4]],
      *        [[5],   [6],  [7],  [8]],
      *        [[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
      *  
-     * `
+     * ```
      *  
      * The output tensor has shape `&#91;4, 2, 2, 1&#93;` and value:
-     *  `
+     *  ```
      * x = [[[[1], [3]], [[9], [11]]],
      *       [[[2], [4]], [[10], [12]]],
      *       [[[5], [7]], [[13], [15]]],
      *       [[[6], [8]], [[14], [16]]]]
      *  
-     * `
+     * ```
      *  
      * (4) For the following input of shape `&#91;2, 2, 4, 1&#93;`, block_shape = `&#91;2, 2&#93;`,
      * and
      *  paddings = `&#91;[0, 0&#93;, &#91;2, 0&#93;]`:
-     *  `
+     *  ```
      * x = [[[[1],   [2],  [3],  [4]],
      *        [[5],   [6],  [7],  [8]]],
      *       [[[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
      *  
-     * `
+     * ```
      *  
      * The output tensor has shape `&#91;8, 1, 3, 1&#93;` and value:
-     *  `
+     *  ```
      * x = [[[[0], [1], [3]]], [[[0], [9], [11]]],
      *       [[[0], [2], [4]]], [[[0], [10], [12]]],
      *       [[[0], [5], [7]]], [[[0], [13], [15]]],
      *       [[[0], [6], [8]]], [[[0], [14], [16]]]]
      *  
-     * `
+     * ```
      *  
      * Among others, this operation is useful for reducing atrous convolution into
      *  regular convolution.
+     *
+     * @param <T> data type for `output` output
+     * @param input N-D with shape `input_shape = &#91;batch&#93; + spatial_shape +
+     * remaining_shape`,
+     *  where spatial_shape has `M` dimensions.
+     * @param blockShape 1-D with shape `[M]`, all values must be >= 1.
+     * @param paddings 2-D with shape `&#91;M, 2&#93;`, all values must be >= 0.
+     *  `paddings[i] = &#91;pad_start, pad_end&#93;` specifies the padding for input dimension
+     *  `i + 1`, which corresponds to spatial dimension `i`.  It is required that
+     *  `block_shape[i]` divides `input_shape&#91;i + 1&#93; + pad_start + pad_end`.
      * @param <T> data type for `SpaceToBatchND` output and operands
      * @return a new instance of SpaceToBatchNd
      * @see org.tensorflow.op.Ops.spaceToBatchNd
@@ -8122,7 +8376,7 @@ public class KotlinOps(
      *  Can contain one -1 indicating that dimension is to be inferred.
      * @param axis 0-D.  The dimension along which to split.  Must be in the range
      *  `[-rank(value), rank(value))`.
-     * @param numSplit the value of the numSplit property
+     * @param numSplit The value of the numSplit attribute
      * @param <T> data type for `SplitV` output and operands
      * @return a new instance of SplitV
      * @see org.tensorflow.op.Ops.splitV
@@ -8272,7 +8526,7 @@ public class KotlinOps(
     /**
      * Op removes all elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of StageClear
      * @see org.tensorflow.op.Ops.stageClear
@@ -8315,8 +8569,8 @@ public class KotlinOps(
      *  this op will block until it does.   This Op is optimized for
      *  performance.
      *
-     * @param index the index value
-     * @param dtypes the value of the dtypes property
+     * @param index The index value
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of StagePeek
      * @see org.tensorflow.op.Ops.stagePeek
@@ -8358,7 +8612,7 @@ public class KotlinOps(
     /**
      * Op returns the number of elements in the underlying container.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of StageSize
      * @see org.tensorflow.op.Ops.stageSize
@@ -8392,6 +8646,358 @@ public class KotlinOps(
             memoryLimit?.let{ org.tensorflow.op.core.StageSize.memoryLimit(it) },
             container?.let{ org.tensorflow.op.core.StageSize.container(it) },
             sharedName?.let{ org.tensorflow.op.core.StageSize.sharedName(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * An n-way switch statement which calls a single branch function.
+     *  ```
+     * An n-way switch statement, implementing the following:
+     *  ```
+     *  switch (branch_index) {
+     *    case 0:
+     *      output = branches[0](input);
+     *      break;
+     *    case 1:
+     *      output = branches[1](input);
+     *      break;
+     *    ...
+     *    case [[nbranches-1]]:
+     *    default:
+     *      output = branches[nbranches-1](input);
+     *      break;
+     *  
+     * ```
+     *  ```
+     *  }
+     *
+     * @param branchIndex The branch selector, an int32 Tensor.
+     * @param input A list of input tensors passed to the branch function.
+     * @param Tout A list of output types.
+     * @param branches `
+     * A list of functions each of which takes 'inputs' and returns a list of
+     *    tensors, whose types are the same as what every other branch returns.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatefulCase
+     * @see org.tensorflow.op.Ops.statefulCase
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public fun statefulCase(
+        branchIndex: Operand<TInt32>,
+        input: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        branches: List<ConcreteFunction>,
+        outputShapes: List<Shape>? = null
+    ): StatefulCase = java.statefulCase(    
+        branchIndex,
+        input,
+        Tout,
+        branches,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.Case.outputShapes(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * output = cond ? then_branch(input) : else_branch(input)
+     *
+     * @param cond `
+     * A Tensor. If the tensor is a scalar of non-boolean type, the
+     *    scalar is converted to a boolean according to the
+     *    following rule: if the scalar is a numerical value, non-zero means
+     *    `True` and zero means False; if the scalar is a string, non-empty
+     *    means `True` and empty means `False`. If the tensor is not a scalar,
+     *    being empty means False and being non-empty means True.
+     *  
+     * `
+     * @param input A list of input tensors.
+     * @param Tout A list of output types.
+     * @param thenBranch `
+     * A function that takes 'inputs' and returns a list of tensors, whose
+     *    types are the same as what else_branch returns.
+     *  
+     * `
+     * @param elseBranch `
+     * A function that takes 'inputs' and returns a list of tensors, whose
+     *  types are the same as what then_branch returns.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatefulIf
+     * @see org.tensorflow.op.Ops.statefulIf
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public fun statefulIf(
+        cond: Operand<out TType>,
+        input: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        thenBranch: ConcreteFunction,
+        elseBranch: ConcreteFunction,
+        outputShapes: List<Shape>? = null
+    ): StatefulIf = java.statefulIf(    
+        cond,
+        input,
+        Tout,
+        thenBranch,
+        elseBranch,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.If.outputShapes(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * returns `f(inputs)`, where `f`'s body is placed and partitioned.
+     *
+     * @param args A list of input tensors.
+     * @param Tout A list of output types.
+     * @param f `
+     * A function that takes 'args', a list of tensors, and returns 'output',
+     *    another list of tensors. Input and output types are specified by 'Tin'
+     *    and 'Tout'. The function body of f will be placed and partitioned across
+     *    devices, setting this op apart from the regular Call op. This op is
+     *    stateful.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatefulPartitionedCall
+     * @see org.tensorflow.op.Ops.statefulPartitionedCall
+     * @param config Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     * @param configProto Sets the configProto option.
+     *
+     * @param configProto the configProto option
+     * @return this Options instance.
+     * @param executorType Sets the executorType option.
+     *
+     * @param executorType the executorType option
+     * @return this Options instance.
+     */
+    public fun statefulPartitionedCall(
+        args: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        f: ConcreteFunction,
+        config: String? = null,
+        configProto: String? = null,
+        executorType: String? = null
+    ): StatefulPartitionedCall = java.statefulPartitionedCall(    
+        args,
+        Tout,
+        f,
+        *listOfNotNull(
+            config?.let{ org.tensorflow.op.core.PartitionedCall.config(it) },
+            configProto?.let{ org.tensorflow.op.core.PartitionedCall.configProto(it) },
+            executorType?.let{ org.tensorflow.op.core.PartitionedCall.executorType(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * output = input; While (Cond(output)) { output = Body(output) }
+     *
+     * @param input A list of input tensors whose types are T.
+     * @param cond `
+     * A function takes 'input' and returns a tensor.  If the tensor is
+     *    a scalar of non-boolean, the scalar is converted to a boolean
+     *    according to the following rule: if the scalar is a numerical
+     *    value, non-zero means True and zero means False; if the scalar is
+     *    a string, non-empty means True and empty means False. If the
+     *    tensor is not a scalar, non-emptiness means True and False
+     *    otherwise.
+     *  
+     * `
+     * @param body `
+     * A function that takes a list of tensors and returns another
+     *    list of tensors. Both lists have the same types as specified
+     *    by T.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatefulWhile
+     * @see org.tensorflow.op.Ops.statefulWhile
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     * @param parallelIterations Sets the parallelIterations option.
+     *
+     * @param parallelIterations the parallelIterations option
+     * @return this Options instance.
+     */
+    public fun statefulWhile(
+        input: Iterable<Operand<*>>,
+        cond: ConcreteFunction,
+        body: ConcreteFunction,
+        outputShapes: List<Shape>? = null,
+        parallelIterations: Long? = null
+    ): StatefulWhile = java.statefulWhile(    
+        input,
+        cond,
+        body,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.While.outputShapes(it) },
+            parallelIterations?.let{ org.tensorflow.op.core.While.parallelIterations(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * output = cond ? then_branch(input) : else_branch(input)
+     *
+     * @param cond `
+     * A Tensor. If the tensor is a scalar of non-boolean type, the
+     *    scalar is converted to a boolean according to the
+     *    following rule: if the scalar is a numerical value, non-zero means
+     *    `True` and zero means False; if the scalar is a string, non-empty
+     *    means `True` and empty means `False`. If the tensor is not a scalar,
+     *    being empty means False and being non-empty means True.
+     *
+     *    This should only be used when the if then/else body functions do not
+     *    have stateful ops.
+     *  
+     * `
+     * @param input A list of input tensors.
+     * @param Tout A list of output types.
+     * @param thenBranch `
+     * A function that takes 'inputs' and returns a list of tensors, whose
+     *    types are the same as what else_branch returns.
+     *  
+     * `
+     * @param elseBranch `
+     * A function that takes 'inputs' and returns a list of tensors, whose
+     *  types are the same as what then_branch returns.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatelessIf
+     * @see org.tensorflow.op.Ops.statelessIf
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public fun statelessIf(
+        cond: Operand<out TType>,
+        input: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        thenBranch: ConcreteFunction,
+        elseBranch: ConcreteFunction,
+        outputShapes: List<Shape>? = null
+    ): StatelessIf = java.statelessIf(    
+        cond,
+        input,
+        Tout,
+        thenBranch,
+        elseBranch,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.If.outputShapes(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * returns `f(inputs)`, where `f`'s body is placed and partitioned.
+     *  Asynchronously executes a function, potentially across multiple devices but
+     *  within a single process. The kernel places and partitions a given function's
+     *  underlying graph, and executes each of the partitioned subgraphs as a function.
+     *
+     * @param args A list of input tensors.
+     * @param Tout A list of output types.
+     * @param f `
+     * A function that takes 'args', a list of tensors, and returns 'output',
+     *    another list of tensors. Input and output types are specified by 'Tin'
+     *    and 'Tout'. The function body of f will be placed and partitioned across
+     *    devices, setting this op apart from the regular Call op.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatelessPartitionedCall
+     * @see org.tensorflow.op.Ops.statelessPartitionedCall
+     * @param config Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     * @param configProto Sets the configProto option.
+     *
+     * @param configProto the configProto option
+     * @return this Options instance.
+     * @param executorType Sets the executorType option.
+     *
+     * @param executorType the executorType option
+     * @return this Options instance.
+     */
+    public fun statelessPartitionedCall(
+        args: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        f: ConcreteFunction,
+        config: String? = null,
+        configProto: String? = null,
+        executorType: String? = null
+    ): StatelessPartitionedCall = java.statelessPartitionedCall(    
+        args,
+        Tout,
+        f,
+        *listOfNotNull(
+            config?.let{ org.tensorflow.op.core.PartitionedCall.config(it) },
+            configProto?.let{ org.tensorflow.op.core.PartitionedCall.configProto(it) },
+            executorType?.let{ org.tensorflow.op.core.PartitionedCall.executorType(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * output = input; While (Cond(output)) { output = Body(output) }
+     *
+     * @param input A list of input tensors whose types are T.
+     * @param cond `
+     * A function takes 'input' and returns a tensor.  If the tensor is
+     *    a scalar of non-boolean, the scalar is converted to a boolean
+     *    according to the following rule: if the scalar is a numerical
+     *    value, non-zero means True and zero means False; if the scalar is
+     *    a string, non-empty means True and empty means False. If the
+     *    tensor is not a scalar, non-emptiness means True and False
+     *    otherwise.
+     *
+     *    This should only be used when the while condition and body functions
+     *    do not have stateful ops.
+     *  
+     * `
+     * @param body `
+     * A function that takes a list of tensors and returns another
+     *    list of tensors. Both lists have the same types as specified
+     *    by T.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of StatelessWhile
+     * @see org.tensorflow.op.Ops.statelessWhile
+     * @param outputShapes Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     * @param parallelIterations Sets the parallelIterations option.
+     *
+     * @param parallelIterations the parallelIterations option
+     * @return this Options instance.
+     */
+    public fun statelessWhile(
+        input: Iterable<Operand<*>>,
+        cond: ConcreteFunction,
+        body: ConcreteFunction,
+        outputShapes: List<Shape>? = null,
+        parallelIterations: Long? = null
+    ): StatelessWhile = java.statelessWhile(    
+        input,
+        cond,
+        body,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.While.outputShapes(it) },
+            parallelIterations?.let{ org.tensorflow.op.core.While.parallelIterations(it) }
         ).toTypedArray()
         )
 
@@ -8454,7 +9060,7 @@ public class KotlinOps(
      *  </ul>
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `StopGradient` output and operands
      * @return a new instance of StopGradient
      * @see org.tensorflow.op.Ops.stopGradient
@@ -8657,7 +9263,7 @@ public class KotlinOps(
      *  `ellipsis_mask must be a power of two (only one ellipsis)`
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param begin `begin[k]` specifies the offset into the `k`th range specification.
      *  The exact dimension this corresponds to will be determined by context.
      *  Out-of-bounds values will be silently clamped. If the `k`th bit of
@@ -8777,11 +9383,11 @@ public class KotlinOps(
      *  shape must be exactly the shape produced by the slice of `ref`.
      *
      * @param <T> data type for `output_ref` output
-     * @param ref the ref value
-     * @param begin the begin value
-     * @param end the end value
-     * @param strides the strides value
-     * @param value the value value
+     * @param ref The ref value
+     * @param begin The begin value
+     * @param end The end value
+     * @param strides The strides value
+     * @param value The value value
      * @param options carries optional attribute values
      * @param <T> data type for `StridedSliceAssign` output and operands
      * @param <U> data type for `StridedSliceAssign` output and operands
@@ -8846,11 +9452,11 @@ public class KotlinOps(
      *  shape of `StridedSlice`'s `input`.
      *
      * @param <U> data type for `output` output
-     * @param shape the shape value
-     * @param begin the begin value
-     * @param end the end value
-     * @param strides the strides value
-     * @param dy the dy value
+     * @param shape The shape value
+     * @param begin The begin value
+     * @param end The end value
+     * @param strides The strides value
+     * @param dy The dy value
      * @param options carries optional attribute values
      * @param <U> data type for `StridedSliceGrad` output and operands
      * @param <T> data type for `StridedSliceGrad` output and operands
@@ -9244,9 +9850,9 @@ public class KotlinOps(
      * The TensorArrayPack operation
      *
      * @param <T> data type for `value` output
-     * @param handle the handle value
-     * @param flowIn the flowIn value
-     * @param dtype the value of the dtype property
+     * @param handle The handle value
+     * @param flowIn The flowIn value
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <T> data type for `TensorArrayPack` output and operands
      * @return a new instance of TensorArrayPack
@@ -9275,7 +9881,7 @@ public class KotlinOps(
      *
      * @param <T> data type for `value` output
      * @param handle The handle to a TensorArray.
-     * @param index the index value
+     * @param index The index value
      * @param flowIn A float scalar that enforces proper chaining of operations.
      * @param dtype The type of the elem that is returned.
      * @param <T> data type for `TensorArrayReadV3` output and operands
@@ -9374,9 +9980,9 @@ public class KotlinOps(
     /**
      * The TensorArrayUnpack operation
      *
-     * @param handle the handle value
-     * @param value the value value
-     * @param flowIn the flowIn value
+     * @param handle The handle value
+     * @param value The value value
+     * @param flowIn The flowIn value
      * @return a new instance of TensorArrayUnpack
      * @see org.tensorflow.op.Ops.tensorArrayUnpack
      */
@@ -9428,10 +10034,10 @@ public class KotlinOps(
      * for computing the gradient.
      *
      * @param <U> data type for `tensor` output
-     * @param inputHandle the inputHandle value
-     * @param elementShape the elementShape value
-     * @param leadingDims the leadingDims value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param elementShape The elementShape value
+     * @param leadingDims The leadingDims value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <U> data type for `TensorListConcatV2` output and operands
      * @return a new instance of TensorListConcat
      * @see org.tensorflow.op.Ops.tensorListConcat
@@ -9451,9 +10057,9 @@ public class KotlinOps(
     /**
      * The TensorListConcatLists operation
      *
-     * @param inputA the inputA value
-     * @param inputB the inputB value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputA The inputA value
+     * @param inputB The inputB value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListConcatLists` output and operands
      * @return a new instance of TensorListConcatLists
      * @see org.tensorflow.op.Ops.tensorListConcatLists
@@ -9474,8 +10080,8 @@ public class KotlinOps(
      *  element_shape: the shape of elements of the list
      *
      * @param <T> data type for `element_shape` output
-     * @param inputHandle the inputHandle value
-     * @param shapeType the value of the shapeType property
+     * @param inputHandle The inputHandle value
+     * @param shapeType The value of the shapeType attribute
      * @param <T> data type for `TensorListElementShape` output and operands
      * @return a new instance of TensorListElementShape
      * @see org.tensorflow.op.Ops.tensorListElementShape
@@ -9493,8 +10099,8 @@ public class KotlinOps(
      * tensor: The input tensor.
      *  output_handle: The list.
      *
-     * @param tensor the tensor value
-     * @param elementShape the elementShape value
+     * @param tensor The tensor value
+     * @param elementShape The elementShape value
      * @return a new instance of TensorListFromTensor
      * @see org.tensorflow.op.Ops.tensorListFromTensor
      */
@@ -9514,10 +10120,10 @@ public class KotlinOps(
      *  values: The tensor.
      *
      * @param <T> data type for `values` output
-     * @param inputHandle the inputHandle value
-     * @param indices the indices value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param indices The indices value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListGather` output and operands
      * @return a new instance of TensorListGather
      * @see org.tensorflow.op.Ops.tensorListGather
@@ -9538,10 +10144,10 @@ public class KotlinOps(
      * The TensorListGetItem operation
      *
      * @param <T> data type for `item` output
-     * @param inputHandle the inputHandle value
-     * @param index the index value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param index The index value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListGetItem` output and operands
      * @return a new instance of TensorListGetItem
      * @see org.tensorflow.op.Ops.tensorListGetItem
@@ -9563,7 +10169,7 @@ public class KotlinOps(
      *  input_handle: the input list
      *  length: the number of tensors in the list
      *
-     * @param inputHandle the inputHandle value
+     * @param inputHandle The inputHandle value
      * @return a new instance of TensorListLength
      * @see org.tensorflow.op.Ops.tensorListLength
      */
@@ -9582,9 +10188,9 @@ public class KotlinOps(
      *  element_shape: the shape of the output tensor
      *
      * @param <T> data type for `tensor` output
-     * @param inputHandle the inputHandle value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListPopBack` output and operands
      * @return a new instance of TensorListPopBack
      * @see org.tensorflow.op.Ops.tensorListPopBack
@@ -9608,8 +10214,8 @@ public class KotlinOps(
      *  element_dtype: the type of elements in the list.
      *  element_shape: a shape compatible with that of elements in the list.
      *
-     * @param inputHandle the inputHandle value
-     * @param tensor the tensor value
+     * @param inputHandle The inputHandle value
+     * @param tensor The tensor value
      * @return a new instance of TensorListPushBack
      * @see org.tensorflow.op.Ops.tensorListPushBack
      */
@@ -9622,8 +10228,8 @@ public class KotlinOps(
     /**
      * The TensorListPushBackBatch operation
      *
-     * @param inputHandles the inputHandles value
-     * @param tensor the tensor value
+     * @param inputHandles The inputHandles value
+     * @param tensor The tensor value
      * @return a new instance of TensorListPushBackBatch
      * @see org.tensorflow.op.Ops.tensorListPushBackBatch
      */
@@ -9640,9 +10246,9 @@ public class KotlinOps(
      *  handle: the output list
      *  element_dtype: the desired type of elements in the list.
      *
-     * @param elementShape the elementShape value
-     * @param numElements the numElements value
-     * @param elementDtype the value of the elementDtype property
+     * @param elementShape The elementShape value
+     * @param numElements The numElements value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <U> data type for `TensorListReserve` output and operands
      * @return a new instance of TensorListReserve
      * @see org.tensorflow.op.Ops.tensorListReserve
@@ -9662,8 +10268,8 @@ public class KotlinOps(
      *  input_handle: the input list
      *  size: size of the output list
      *
-     * @param inputHandle the inputHandle value
-     * @param sizeOutput the sizeOutput value
+     * @param inputHandle The inputHandle value
+     * @param sizeOutput The sizeOutput value
      * @return a new instance of TensorListResize
      * @see org.tensorflow.op.Ops.tensorListResize
      */
@@ -9687,10 +10293,10 @@ public class KotlinOps(
      *  the largest index in indices.
      *  output_handle: The TensorList.
      *
-     * @param tensor the tensor value
-     * @param indices the indices value
-     * @param elementShape the elementShape value
-     * @param numElements the numElements value
+     * @param tensor The tensor value
+     * @param indices The indices value
+     * @param elementShape The elementShape value
+     * @param numElements The numElements value
      * @return a new instance of TensorListScatter
      * @see org.tensorflow.op.Ops.tensorListScatter
      */
@@ -9716,9 +10322,9 @@ public class KotlinOps(
      *  indices: The indices used to index into the list.
      *  output_handle: The TensorList.
      *
-     * @param inputHandle the inputHandle value
-     * @param tensor the tensor value
-     * @param indices the indices value
+     * @param inputHandle The inputHandle value
+     * @param tensor The tensor value
+     * @param indices The indices value
      * @return a new instance of TensorListScatterIntoExistingList
      * @see org.tensorflow.op.Ops.tensorListScatterIntoExistingList
      */
@@ -9735,9 +10341,9 @@ public class KotlinOps(
     /**
      * The TensorListSetItem operation
      *
-     * @param inputHandle the inputHandle value
-     * @param index the index value
-     * @param item the item value
+     * @param inputHandle The inputHandle value
+     * @param index The index value
+     * @param item The item value
      * @return a new instance of TensorListSetItem
      * @see org.tensorflow.op.Ops.tensorListSetItem
      */
@@ -9761,9 +10367,9 @@ public class KotlinOps(
      *  lengths: Vector of sizes of the 0th dimension of tensors in the list.
      *  output_handle: The list.
      *
-     * @param tensor the tensor value
-     * @param elementShape the elementShape value
-     * @param lengths the lengths value
+     * @param tensor The tensor value
+     * @param elementShape The elementShape value
+     * @param lengths The lengths value
      * @return a new instance of TensorListSplit
      * @see org.tensorflow.op.Ops.tensorListSplit
      */
@@ -9786,9 +10392,9 @@ public class KotlinOps(
      *  num_elements: optional. If not -1, the number of elements in the list.
      *
      * @param <T> data type for `tensor` output
-     * @param inputHandle the inputHandle value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param options carries optional attribute values
      * @param <T> data type for `TensorListStack` output and operands
      * @return a new instance of TensorListStack
@@ -9818,9 +10424,9 @@ public class KotlinOps(
      *  output_handle: the map with value from given key removed
      *  key: the key of the value to be erased
      *
-     * @param inputHandle the inputHandle value
-     * @param key the key value
-     * @param valueDtype the value of the valueDtype property
+     * @param inputHandle The inputHandle value
+     * @param key The key value
+     * @param valueDtype The value of the valueDtype attribute
      * @param <U> data type for `TensorMapErase` output and operands
      * @return a new instance of TensorMapErase
      * @see org.tensorflow.op.Ops.tensorMapErase
@@ -9841,8 +10447,8 @@ public class KotlinOps(
      *  key: the key to check
      *  has_key: whether the key is already in the map or not
      *
-     * @param inputHandle the inputHandle value
-     * @param key the key value
+     * @param inputHandle The inputHandle value
+     * @param key The key value
      * @return a new instance of TensorMapHasKey
      * @see org.tensorflow.op.Ops.tensorMapHasKey
      */
@@ -9859,9 +10465,9 @@ public class KotlinOps(
      *  key: the key to be inserted
      *  value: the value to be inserted
      *
-     * @param inputHandle the inputHandle value
-     * @param key the key value
-     * @param value the value value
+     * @param inputHandle The inputHandle value
+     * @param key The key value
+     * @param value The value value
      * @return a new instance of TensorMapInsert
      * @see org.tensorflow.op.Ops.tensorMapInsert
      */
@@ -9882,9 +10488,9 @@ public class KotlinOps(
      *  value: the value found from the given key
      *
      * @param <U> data type for `value` output
-     * @param inputHandle the inputHandle value
-     * @param key the key value
-     * @param valueDtype the value of the valueDtype property
+     * @param inputHandle The inputHandle value
+     * @param key The key value
+     * @param valueDtype The value of the valueDtype attribute
      * @param <U> data type for `TensorMapLookup` output and operands
      * @return a new instance of TensorMapLookup
      * @see org.tensorflow.op.Ops.tensorMapLookup
@@ -9904,7 +10510,7 @@ public class KotlinOps(
      *  input_handle: the input map
      *  size: the number of tensors in the map
      *
-     * @param inputHandle the inputHandle value
+     * @param inputHandle The inputHandle value
      * @return a new instance of TensorMapSize
      * @see org.tensorflow.op.Ops.tensorMapSize
      */
@@ -9918,8 +10524,8 @@ public class KotlinOps(
      *  keys: the returned Tensor of all keys in the map
      *
      * @param <T> data type for `keys` output
-     * @param inputHandle the inputHandle value
-     * @param keyDtype the value of the keyDtype property
+     * @param inputHandle The inputHandle value
+     * @param keyDtype The value of the keyDtype attribute
      * @param <T> data type for `TensorMapStackKeys` output and operands
      * @return a new instance of TensorMapStackKeys
      * @see org.tensorflow.op.Ops.tensorMapStackKeys
@@ -9934,7 +10540,7 @@ public class KotlinOps(
      * Adds sparse `updates` to an existing tensor according to `indices`.
      *  This operation creates a new tensor by adding sparse `updates` to the passed
      *  in `tensor`.
-     *  This operation is very similar to `tf.scatter_nd_add`, except that the updates
+     *  This operation is very similar to `tf.compat.v1.scatter_nd_add`, except that the updates
      *  are added onto an existing tensor (as opposed to a variable). If the memory
      *  for the existing tensor cannot be re-used, a copy is made and updated.
      *  
@@ -10225,11 +10831,11 @@ public class KotlinOps(
      *  must be exactly the shape produced by the slice of `input`.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param begin the begin value
-     * @param end the end value
-     * @param strides the strides value
-     * @param value the value value
+     * @param input The input value
+     * @param begin The begin value
+     * @param end The end value
+     * @param strides The strides value
+     * @param value The value value
      * @param options carries optional attribute values
      * @param <T> data type for `TensorStridedSliceUpdate` output and operands
      * @param <U> data type for `TensorStridedSliceUpdate` output and operands
@@ -10355,8 +10961,8 @@ public class KotlinOps(
      *  padding value will be returned. The semantics are not the same as
      *  kth_order_statistic.
      *
-     * @param input the input value
-     * @param k the value of the k property
+     * @param input The input value
+     * @param k The value of the k attribute
      * @return a new instance of TopKUnique
      * @see org.tensorflow.op.Ops.topKUnique
      */
@@ -10373,8 +10979,8 @@ public class KotlinOps(
      *  of K and the input size. NaNs are never returned. Subnormal numbers are flushed
      *  to zero.
      *
-     * @param input the input value
-     * @param k the value of the k property
+     * @param input The input value
+     * @param k The value of the k attribute
      * @return a new instance of TopKWithUnique
      * @see org.tensorflow.op.Ops.topKWithUnique
      */
@@ -10406,10 +11012,10 @@ public class KotlinOps(
      *  be used as the shared name.
      *
      * @param <T> data type for `unbatched_tensor` output
-     * @param batchedTensor the batchedTensor value
-     * @param batchIndex the batchIndex value
-     * @param id the id value
-     * @param timeoutMicros the value of the timeoutMicros property
+     * @param batchedTensor The batchedTensor value
+     * @param batchIndex The batchIndex value
+     * @param id The id value
+     * @param timeoutMicros The value of the timeoutMicros attribute
      * @param options carries optional attribute values
      * @param <T> data type for `Unbatch` output and operands
      * @return a new instance of Unbatch
@@ -10459,10 +11065,10 @@ public class KotlinOps(
      *  will be used as the shared name.
      *
      * @param <T> data type for `batched_grad` output
-     * @param originalInput the originalInput value
-     * @param batchIndex the batchIndex value
-     * @param grad the grad value
-     * @param id the id value
+     * @param originalInput The originalInput value
+     * @param batchIndex The batchIndex value
+     * @param grad The grad value
+     * @param id The id value
      * @param options carries optional attribute values
      * @param <T> data type for `UnbatchGrad` output and operands
      * @return a new instance of UnbatchGrad
@@ -10606,7 +11212,7 @@ public class KotlinOps(
      * @param x A `Tensor`.
      * @param axis A `Tensor` of type `int32` (default: None). The axis of the Tensor to
      *  find the unique elements.
-     * @param outIdx the value of the outIdx property
+     * @param outIdx The value of the outIdx attribute
      * @param <T> data type for `UniqueV2` output and operands
      * @param <V> data type for `UniqueV2` output and operands
      * @return a new instance of Unique
@@ -10742,7 +11348,7 @@ public class KotlinOps(
      * @param x A `Tensor`.
      * @param axis A `Tensor` of type `int32` (default: None). The axis of the Tensor to
      *  find the unique elements.
-     * @param outIdx the value of the outIdx property
+     * @param outIdx The value of the outIdx attribute
      * @param <T> data type for `UniqueWithCountsV2` output and operands
      * @param <V> data type for `UniqueWithCountsV2` output and operands
      * @return a new instance of UniqueWithCounts
@@ -10814,7 +11420,7 @@ public class KotlinOps(
      *
      * @param <T> data type for `output` output
      * @param value 1-D or higher, with `axis` dimension size equal to `num`.
-     * @param num the value of the num property
+     * @param num The value of the num attribute
      * @param options carries optional attribute values
      * @param <T> data type for `Unpack` output and operands
      * @return a new instance of Unstack
@@ -10842,7 +11448,7 @@ public class KotlinOps(
      *  The basic functionality is similar to dequeue with many fewer
      *  capabilities and options.  This Op is optimized for performance.
      *
-     * @param dtypes the value of the dtypes property
+     * @param dtypes The value of the dtypes attribute
      * @param options carries optional attribute values
      * @return a new instance of Unstage
      * @see org.tensorflow.op.Ops.unstage
@@ -10933,11 +11539,13 @@ public class KotlinOps(
         )
 
     /**
-     * Factory method to create a new Variable with it's initializer.
-     *  
+     * Factory method to create a new Variable with its initializer. Both the creation and
+     * assignment
+     *  are done in the init scope.
      *
-     *  Only supported on Graph sessions as the [org.tensorflow.op.core.Assign] op
-     *  does not work in an EagerSession.
+     *  
+     * Only supported on Graph sessions as the [org.tensorflow.op.core.Assign] op does not
+     *  work in an EagerSession.
      *
      * @param init The op to use to initialise this variable.
      * @param options carries optional attributes values
@@ -11016,7 +11624,7 @@ public class KotlinOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of VariableShape, with default output types
      * @see org.tensorflow.op.Ops.variableShape
      */
@@ -11037,8 +11645,8 @@ public class KotlinOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <T> data type for `VariableShape` output and operands
      * @return a new instance of VariableShape
      * @see org.tensorflow.op.Ops.variableShape
@@ -11111,7 +11719,7 @@ public class KotlinOps(
      *  
      * ```
      *
-     * @param condition the condition value
+     * @param condition The condition value
      * @return a new instance of Where
      * @see org.tensorflow.op.Ops.where
      */
@@ -11120,147 +11728,55 @@ public class KotlinOps(
         )
 
     /**
-     * Wraps the XLA ConvGeneralDilated operator, documented at
-     *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
-     *  .
+     * output = input; While (Cond(output)) { output = Body(output) }
      *
-     * @param <W> data type for `output` output
-     * @param lhs the input tensor
-     * @param rhs the kernel tensor
-     * @param windowStrides the inter-window strides
-     * @param padding the padding to apply at the start and end of each input dimensions
-     * @param lhsDilation dilation to apply between input elements
-     * @param rhsDilation dilation to apply between kernel elements
-     * @param featureGroupCount number of feature groups for grouped convolution.
-     * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
-     * @param precisionConfig a serialized xla::PrecisionConfig proto.
-     * @param preferredElementType The type of the tensor.
-     * @param <W> data type for `XlaConvV2` output and operands
-     * @param <V> data type for `XlaConvV2` output and operands
-     * @return a new instance of XlaConvV2
-     * @see org.tensorflow.op.Ops.xlaConvV2
-     */
-    public fun <W : TType, V : TNumber> xlaConvV2(
-        lhs: Operand<out TType>,
-        rhs: Operand<out TType>,
-        windowStrides: Operand<V>,
-        padding: Operand<V>,
-        lhsDilation: Operand<V>,
-        rhsDilation: Operand<V>,
-        featureGroupCount: Operand<V>,
-        dimensionNumbers: String,
-        precisionConfig: String,
-        preferredElementType: Class<W>
-    ): XlaConvV2<W> = java.xlaConvV2<W, V>(    
-        lhs,
-        rhs,
-        windowStrides,
-        padding,
-        lhsDilation,
-        rhsDilation,
-        featureGroupCount,
-        dimensionNumbers,
-        precisionConfig,
-        preferredElementType
-        )
-
-    /**
-     * Wraps the XLA DotGeneral operator, documented at
-     *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
-     *  .
-     *
-     * @param <V> data type for `output` output
-     * @param lhs the LHS tensor
-     * @param rhs the RHS tensor
-     * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
-     * @param precisionConfig a serialized xla::PrecisionConfig proto.
-     * @param preferredElementType The type of the tensor.
-     * @param <V> data type for `XlaDotV2` output and operands
-     * @return a new instance of XlaDotV2
-     * @see org.tensorflow.op.Ops.xlaDotV2
-     */
-    public fun <V : TType> xlaDotV2(
-        lhs: Operand<out TType>,
-        rhs: Operand<out TType>,
-        dimensionNumbers: String,
-        precisionConfig: String,
-        preferredElementType: Class<V>
-    ): XlaDotV2<V> = java.xlaDotV2<V>(    
-        lhs,
-        rhs,
-        dimensionNumbers,
-        precisionConfig,
-        preferredElementType
-        )
-
-    /**
-     * Make a static dimension into a xla bounded dynamic dimension.
-     *  ```
-     * The current static dimension size will become the bound and the second
-     *      operand becomes the dynamic size of the dimension.
      *  
-     * ```
+     * Selects between [StatefulWhile] and [StatelessWhile] based on the statefulness of the
+     * function arguments.
      *
-     * @param <T> data type for `output` output
-     * @param input the input value
-     * @param dimIndex the dimIndex value
-     * @param sizeOutput the sizeOutput value
-     * @param <T> data type for `XlaSetDynamicDimensionSize` output and operands
-     * @return a new instance of XlaSetDynamicDimensionSize
-     * @see org.tensorflow.op.Ops.xlaSetDynamicDimensionSize
-     */
-    public fun <T : TType> xlaSetDynamicDimensionSize(
-        input: Operand<T>,
-        dimIndex: Operand<TInt32>,
-        sizeOutput: Operand<TInt32>
-    ): XlaSetDynamicDimensionSize<T> = java.xlaSetDynamicDimensionSize<T>(    
-        input,
-        dimIndex,
-        sizeOutput
-        )
-
-    /**
-     * An op used by XLA SPMD partitioner to switch from automatic partitioning to
-     *  manual partitioning. It annotates the input (full-shape, to be automatically
-     *  partitioned) with the same sharding used by manual partitioning, and outputs a
-     *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
-     *  shape is not evenly partitionable, the padding region will be masked with 0s.
+     * @param input A list of input tensors whose types are T.
+     * @param cond `
+     * A function takes 'input' and returns a tensor.  If the tensor is
+     *    a scalar of non-boolean, the scalar is converted to a boolean
+     *    according to the following rule: if the scalar is a numerical
+     *    value, non-zero means True and zero means False; if the scalar is
+     *    a string, non-empty means True and empty means False. If the
+     *    tensor is not a scalar, non-emptiness means True and False
+     *    otherwise.
+     *  
+     * `
+     * @param body `
+     * A function that takes a list of tensors and returns another
+     *    list of tensors. Both lists have the same types as specified
+     *    by T.
+     *  
+     * `
+     * @param options carries optional attribute values
+     * @return a new instance of While
+     * @see org.tensorflow.op.Ops.whileOp
+     * @param outputShapes Sets the outputShapes option.
      *
-     * @param <T> data type for `output` output
-     * @param input the input value
-     * @param manualSharding the value of the manualSharding property
-     * @param <T> data type for `XlaSpmdFullToShardShape` output and operands
-     * @return a new instance of XlaSpmdFullToShardShape
-     * @see org.tensorflow.op.Ops.xlaSpmdFullToShardShape
-     */
-    public fun <T : TType> xlaSpmdFullToShardShape(input: Operand<T>, manualSharding: String):
-            XlaSpmdFullToShardShape<T> = java.xlaSpmdFullToShardShape<T>(    
-        input,
-        manualSharding
-        )
-
-    /**
-     * An op used by XLA SPMD partitioner to switch from manual partitioning to
-     *  automatic partitioning. It converts the shard-shaped, manually partitioned input
-     *  into full-shaped tensor to be partitioned automatically with the same sharding
-     *  used by manual partitioning.
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     * @param parallelIterations Sets the parallelIterations option.
      *
-     * @param <T> data type for `output` output
-     * @param input the input value
-     * @param manualSharding the value of the manualSharding property
-     * @param fullShape the value of the fullShape property
-     * @param <T> data type for `XlaSpmdShardToFullShape` output and operands
-     * @return a new instance of XlaSpmdShardToFullShape
-     * @see org.tensorflow.op.Ops.xlaSpmdShardToFullShape
+     * @param parallelIterations the parallelIterations option
+     * @return this Options instance.
      */
-    public fun <T : TType> xlaSpmdShardToFullShape(
-        input: Operand<T>,
-        manualSharding: String,
-        fullShape: Shape
-    ): XlaSpmdShardToFullShape<T> = java.xlaSpmdShardToFullShape<T>(    
+    public fun whileOp(
+        input: Iterable<Operand<*>>,
+        cond: ConcreteFunction,
+        body: ConcreteFunction,
+        outputShapes: List<Shape>? = null,
+        parallelIterations: Long? = null
+    ): While = java.whileOp(    
         input,
-        manualSharding,
-        fullShape
+        cond,
+        body,
+        *listOfNotNull(
+            outputShapes?.let{ org.tensorflow.op.core.While.outputShapes(it) },
+            parallelIterations?.let{ org.tensorflow.op.core.While.parallelIterations(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -11352,8 +11868,8 @@ public class KotlinOps(
      *  endian orderings will give different results.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param type the value of the type property
+     * @param input The input value
+     * @param type The value of the type attribute
      * @param <U> data type for `Bitcast` output and operands
      * @return a new instance of Bitcast
      * @see org.tensorflow.op.Ops.bitcast
@@ -11363,17 +11879,15 @@ public class KotlinOps(
             bitcast<U>(input, U::class.java)
 
     /**
-     * Creates a scalar of `type`, with the value of `number`. `number` may be truncated if it does
-     * not
-     *  fit in the target type.
+     * Creates a scalar of `type`, with the value of `number`. `number` may be
+     *  truncated if it does not fit in the target type.
      *
-     * @param type the type of tensor to create.  Must be concrete (i.e. not
+     * @param type the type of tensor to create. Must be concrete (i.e. not
      * [org.tensorflow.types.family.TFloating])
      * @param number the value of the tensor
      * @return a constant of the passed type
      * @throws IllegalArgumentException if the type is abstract (i.e.
-     * [org.tensorflow.types.family.TFloating]) or
-     *  unknown.
+     * [org.tensorflow.types.family.TFloating]) or unknown.
      * @see org.tensorflow.op.Ops.constant
      */
     @JvmName("constantReified")
@@ -11403,7 +11917,7 @@ public class KotlinOps(
      *
      * @param <T> data type for `output` output
      * @param shape 1-D. Represents the shape of the output tensor.
-     * @param dtype the value of the dtype property
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <T> data type for `Empty` output and operands
      * @return a new instance of Empty
@@ -11427,9 +11941,9 @@ public class KotlinOps(
      *  element_dtype: the type of elements in the list.
      *  element_shape: a shape compatible with that of elements in the list.
      *
-     * @param elementShape the elementShape value
-     * @param maxNumElements the maxNumElements value
-     * @param elementDtype the value of the elementDtype property
+     * @param elementShape The elementShape value
+     * @param maxNumElements The maxNumElements value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <U> data type for `EmptyTensorList` output and operands
      * @return a new instance of EmptyTensorList
      * @see org.tensorflow.op.Ops.emptyTensorList
@@ -11515,7 +12029,7 @@ public class KotlinOps(
      *  values <= value_range[0] will be mapped to hist[0],
      *  values >= value_range[1] will be mapped to hist&#91;-1&#93;.
      * @param nbins Scalar `int32 Tensor`.  Number of histogram bins.
-     * @param dtype the value of the dtype property
+     * @param dtype The value of the dtype attribute
      * @param <U> data type for `HistogramFixedWidth` output and operands
      * @param <T> data type for `HistogramFixedWidth` output and operands
      * @return a new instance of HistogramFixedWidth
@@ -11551,8 +12065,8 @@ public class KotlinOps(
      * @param <T> data type for `keys` output
      * @param <U> data type for `values` output
      * @param tableHandle Handle to the table.
-     * @param Tkeys the value of the Tkeys property
-     * @param Tvalues the value of the Tvalues property
+     * @param Tkeys The value of the Tkeys attribute
+     * @param Tvalues The value of the Tvalues attribute
      * @param <T> data type for `LookupTableExportV2` output and operands
      * @param <U> data type for `LookupTableExportV2` output and operands
      * @return a new instance of LookupTableExport
@@ -11574,7 +12088,7 @@ public class KotlinOps(
      *
      * @param emptyKey The key used to represent empty key buckets internally. Must not
      *  be used in insert or lookup operations.
-     * @param deletedKey the deletedKey value
+     * @param deletedKey The deletedKey value
      * @param valueDtype Type of the table values.
      * @param options carries optional attribute values
      * @param <T> data type for `MutableDenseHashTableV2` output and operands
@@ -11766,7 +12280,7 @@ public class KotlinOps(
      * @param resource Should be from a scalar `Variable` node.
      * @param limit If incrementing ref would bring it above limit, instead generates an
      *  'OutOfRange' error.
-     * @param T the value of the T property
+     * @param T The value of the T attribute
      * @param <T> data type for `ResourceCountUpTo` output and operands
      * @return a new instance of ResourceCountUpTo
      * @see org.tensorflow.op.Ops.resourceCountUpTo
@@ -11793,9 +12307,9 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param resource the resource value
-     * @param indices the indices value
-     * @param dtype the value of the dtype property
+     * @param resource The resource value
+     * @param indices The indices value
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <U> data type for `ResourceGather` output and operands
      * @return a new instance of ResourceGather
@@ -11822,9 +12336,9 @@ public class KotlinOps(
      * The ResourceGatherNd operation
      *
      * @param <U> data type for `output` output
-     * @param resource the resource value
-     * @param indices the indices value
-     * @param dtype the value of the dtype property
+     * @param resource The resource value
+     * @param indices The indices value
+     * @param dtype The value of the dtype attribute
      * @param <U> data type for `ResourceGatherNd` output and operands
      * @return a new instance of ResourceGatherNd
      * @see org.tensorflow.op.Ops.resourceGatherNd
@@ -11862,7 +12376,7 @@ public class KotlinOps(
      * @param <U> data type for `idx` output
      * @param x 1-D. Values to keep.
      * @param y 1-D. Values to remove.
-     * @param outIdx the value of the outIdx property
+     * @param outIdx The value of the outIdx attribute
      * @param <T> data type for `ListDiff` output and operands
      * @param <U> data type for `ListDiff` output and operands
      * @return a new instance of SetDiff1d
@@ -11884,8 +12398,8 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <U> data type for `Shape` output and operands
      * @return a new instance of Shape
      * @see org.tensorflow.op.Ops.shape
@@ -11899,8 +12413,8 @@ public class KotlinOps(
      *  This operation returns N 1-D integer tensors representing shape of `input[i]s`.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <U> data type for `ShapeN` output and operands
      * @return a new instance of ShapeN
      * @see org.tensorflow.op.Ops.shapeN
@@ -11922,8 +12436,8 @@ public class KotlinOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <U> data type for `Size` output and operands
      * @return a new instance of Size
      * @see org.tensorflow.op.Ops.size
@@ -12091,9 +12605,9 @@ public class KotlinOps(
      * The TensorArrayPack operation
      *
      * @param <T> data type for `value` output
-     * @param handle the handle value
-     * @param flowIn the flowIn value
-     * @param dtype the value of the dtype property
+     * @param handle The handle value
+     * @param flowIn The flowIn value
+     * @param dtype The value of the dtype attribute
      * @param options carries optional attribute values
      * @param <T> data type for `TensorArrayPack` output and operands
      * @return a new instance of TensorArrayPack
@@ -12115,7 +12629,7 @@ public class KotlinOps(
      *
      * @param <T> data type for `value` output
      * @param handle The handle to a TensorArray.
-     * @param index the index value
+     * @param index The index value
      * @param flowIn A float scalar that enforces proper chaining of operations.
      * @param dtype The type of the elem that is returned.
      * @param <T> data type for `TensorArrayReadV3` output and operands
@@ -12145,10 +12659,10 @@ public class KotlinOps(
      * for computing the gradient.
      *
      * @param <U> data type for `tensor` output
-     * @param inputHandle the inputHandle value
-     * @param elementShape the elementShape value
-     * @param leadingDims the leadingDims value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param elementShape The elementShape value
+     * @param leadingDims The leadingDims value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <U> data type for `TensorListConcatV2` output and operands
      * @return a new instance of TensorListConcat
      * @see org.tensorflow.op.Ops.tensorListConcat
@@ -12164,9 +12678,9 @@ public class KotlinOps(
     /**
      * The TensorListConcatLists operation
      *
-     * @param inputA the inputA value
-     * @param inputB the inputB value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputA The inputA value
+     * @param inputB The inputB value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListConcatLists` output and operands
      * @return a new instance of TensorListConcatLists
      * @see org.tensorflow.op.Ops.tensorListConcatLists
@@ -12182,8 +12696,8 @@ public class KotlinOps(
      *  element_shape: the shape of elements of the list
      *
      * @param <T> data type for `element_shape` output
-     * @param inputHandle the inputHandle value
-     * @param shapeType the value of the shapeType property
+     * @param inputHandle The inputHandle value
+     * @param shapeType The value of the shapeType attribute
      * @param <T> data type for `TensorListElementShape` output and operands
      * @return a new instance of TensorListElementShape
      * @see org.tensorflow.op.Ops.tensorListElementShape
@@ -12202,10 +12716,10 @@ public class KotlinOps(
      *  values: The tensor.
      *
      * @param <T> data type for `values` output
-     * @param inputHandle the inputHandle value
-     * @param indices the indices value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param indices The indices value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListGather` output and operands
      * @return a new instance of TensorListGather
      * @see org.tensorflow.op.Ops.tensorListGather
@@ -12221,10 +12735,10 @@ public class KotlinOps(
      * The TensorListGetItem operation
      *
      * @param <T> data type for `item` output
-     * @param inputHandle the inputHandle value
-     * @param index the index value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param index The index value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListGetItem` output and operands
      * @return a new instance of TensorListGetItem
      * @see org.tensorflow.op.Ops.tensorListGetItem
@@ -12246,9 +12760,9 @@ public class KotlinOps(
      *  element_shape: the shape of the output tensor
      *
      * @param <T> data type for `tensor` output
-     * @param inputHandle the inputHandle value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <T> data type for `TensorListPopBack` output and operands
      * @return a new instance of TensorListPopBack
      * @see org.tensorflow.op.Ops.tensorListPopBack
@@ -12265,9 +12779,9 @@ public class KotlinOps(
      *  handle: the output list
      *  element_dtype: the desired type of elements in the list.
      *
-     * @param elementShape the elementShape value
-     * @param numElements the numElements value
-     * @param elementDtype the value of the elementDtype property
+     * @param elementShape The elementShape value
+     * @param numElements The numElements value
+     * @param elementDtype The value of the elementDtype attribute
      * @param <U> data type for `TensorListReserve` output and operands
      * @return a new instance of TensorListReserve
      * @see org.tensorflow.op.Ops.tensorListReserve
@@ -12286,9 +12800,9 @@ public class KotlinOps(
      *  num_elements: optional. If not -1, the number of elements in the list.
      *
      * @param <T> data type for `tensor` output
-     * @param inputHandle the inputHandle value
-     * @param elementShape the elementShape value
-     * @param elementDtype the value of the elementDtype property
+     * @param inputHandle The inputHandle value
+     * @param elementShape The elementShape value
+     * @param elementDtype The value of the elementDtype attribute
      * @param options carries optional attribute values
      * @param <T> data type for `TensorListStack` output and operands
      * @return a new instance of TensorListStack
@@ -12312,9 +12826,9 @@ public class KotlinOps(
      *  output_handle: the map with value from given key removed
      *  key: the key of the value to be erased
      *
-     * @param inputHandle the inputHandle value
-     * @param key the key value
-     * @param valueDtype the value of the valueDtype property
+     * @param inputHandle The inputHandle value
+     * @param key The key value
+     * @param valueDtype The value of the valueDtype attribute
      * @param <U> data type for `TensorMapErase` output and operands
      * @return a new instance of TensorMapErase
      * @see org.tensorflow.op.Ops.tensorMapErase
@@ -12331,9 +12845,9 @@ public class KotlinOps(
      *  value: the value found from the given key
      *
      * @param <U> data type for `value` output
-     * @param inputHandle the inputHandle value
-     * @param key the key value
-     * @param valueDtype the value of the valueDtype property
+     * @param inputHandle The inputHandle value
+     * @param key The key value
+     * @param valueDtype The value of the valueDtype attribute
      * @param <U> data type for `TensorMapLookup` output and operands
      * @return a new instance of TensorMapLookup
      * @see org.tensorflow.op.Ops.tensorMapLookup
@@ -12349,8 +12863,8 @@ public class KotlinOps(
      *  keys: the returned Tensor of all keys in the map
      *
      * @param <T> data type for `keys` output
-     * @param inputHandle the inputHandle value
-     * @param keyDtype the value of the keyDtype property
+     * @param inputHandle The inputHandle value
+     * @param keyDtype The value of the keyDtype attribute
      * @param <T> data type for `TensorMapStackKeys` output and operands
      * @return a new instance of TensorMapStackKeys
      * @see org.tensorflow.op.Ops.tensorMapStackKeys
@@ -12410,7 +12924,7 @@ public class KotlinOps(
      * @param x A `Tensor`.
      * @param axis A `Tensor` of type `int32` (default: None). The axis of the Tensor to
      *  find the unique elements.
-     * @param outIdx the value of the outIdx property
+     * @param outIdx The value of the outIdx attribute
      * @param <T> data type for `UniqueV2` output and operands
      * @param <V> data type for `UniqueV2` output and operands
      * @return a new instance of Unique
@@ -12475,7 +12989,7 @@ public class KotlinOps(
      * @param x A `Tensor`.
      * @param axis A `Tensor` of type `int32` (default: None). The axis of the Tensor to
      *  find the unique elements.
-     * @param outIdx the value of the outIdx property
+     * @param outIdx The value of the outIdx attribute
      * @param <T> data type for `UniqueWithCountsV2` output and operands
      * @param <V> data type for `UniqueWithCountsV2` output and operands
      * @return a new instance of UniqueWithCounts
@@ -12562,8 +13076,8 @@ public class KotlinOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param outType the value of the outType property
+     * @param input The input value
+     * @param outType The value of the outType attribute
      * @param <T> data type for `VariableShape` output and operands
      * @return a new instance of VariableShape
      * @see org.tensorflow.op.Ops.variableShape
@@ -12571,64 +13085,6 @@ public class KotlinOps(
     @JvmName("variableShapeReified")
     public inline fun <reified T : TNumber> variableShapeTyped(input: Operand<out TType>):
             VariableShape<T> = variableShape<T>(input, T::class.java)
-
-    /**
-     * Wraps the XLA ConvGeneralDilated operator, documented at
-     *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
-     *  .
-     *
-     * @param <W> data type for `output` output
-     * @param lhs the input tensor
-     * @param rhs the kernel tensor
-     * @param windowStrides the inter-window strides
-     * @param padding the padding to apply at the start and end of each input dimensions
-     * @param lhsDilation dilation to apply between input elements
-     * @param rhsDilation dilation to apply between kernel elements
-     * @param featureGroupCount number of feature groups for grouped convolution.
-     * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
-     * @param precisionConfig a serialized xla::PrecisionConfig proto.
-     * @param preferredElementType The type of the tensor.
-     * @param <W> data type for `XlaConvV2` output and operands
-     * @param <V> data type for `XlaConvV2` output and operands
-     * @return a new instance of XlaConvV2
-     * @see org.tensorflow.op.Ops.xlaConvV2
-     */
-    @JvmName("xlaConvV2Reified")
-    public inline fun <reified W : TType, V : TNumber> xlaConvV2(
-        lhs: Operand<out TType>,
-        rhs: Operand<out TType>,
-        windowStrides: Operand<V>,
-        padding: Operand<V>,
-        lhsDilation: Operand<V>,
-        rhsDilation: Operand<V>,
-        featureGroupCount: Operand<V>,
-        dimensionNumbers: String,
-        precisionConfig: String
-    ): XlaConvV2<W> = xlaConvV2<W, V>(lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation,
-            featureGroupCount, dimensionNumbers, precisionConfig, W::class.java)
-
-    /**
-     * Wraps the XLA DotGeneral operator, documented at
-     *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
-     *  .
-     *
-     * @param <V> data type for `output` output
-     * @param lhs the LHS tensor
-     * @param rhs the RHS tensor
-     * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
-     * @param precisionConfig a serialized xla::PrecisionConfig proto.
-     * @param preferredElementType The type of the tensor.
-     * @param <V> data type for `XlaDotV2` output and operands
-     * @return a new instance of XlaDotV2
-     * @see org.tensorflow.op.Ops.xlaDotV2
-     */
-    @JvmName("xlaDotV2Reified")
-    public inline fun <reified V : TType> xlaDotV2(
-        lhs: Operand<out TType>,
-        rhs: Operand<out TType>,
-        dimensionNumbers: String,
-        precisionConfig: String
-    ): XlaDotV2<V> = xlaDotV2<V>(lhs, rhs, dimensionNumbers, precisionConfig, V::class.java)
 
     /**
      * Creates a zeroed tensor given its type and shape.

@@ -41,7 +41,6 @@ import org.tensorflow.op.math.Atanh
 import org.tensorflow.op.math.Betainc
 import org.tensorflow.op.math.Bincount
 import org.tensorflow.op.math.Ceil
-import org.tensorflow.op.math.CompareAndBitpack
 import org.tensorflow.op.math.ComplexAbs
 import org.tensorflow.op.math.Conj
 import org.tensorflow.op.math.Cos
@@ -158,7 +157,7 @@ public class MathOps(
      *  an output element, this operation computes `\(y = |x|\)`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Abs` output and operands
      * @return a new instance of Abs
      * @see org.tensorflow.op.MathOps.abs
@@ -199,7 +198,7 @@ public class MathOps(
      * Input range is `&#91;-1, 1&#93;` and the output has a range of `&#91;0, pi&#93;`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Acos` output and operands
      * @return a new instance of Acos
      * @see org.tensorflow.op.MathOps.acos
@@ -219,7 +218,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Acosh` output and operands
      * @return a new instance of Acosh
      * @see org.tensorflow.op.MathOps.acosh
@@ -239,8 +238,8 @@ public class MathOps(
      * Both input and output have a range `(-inf, inf)`.
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Add` output and operands
      * @return a new instance of Add
      * @see org.tensorflow.op.MathOps.add
@@ -260,7 +259,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `sum` output
-     * @param inputs the inputs value
+     * @param inputs The inputs value
      * @param <T> data type for `AddN` output and operands
      * @return a new instance of AddN
      * @see org.tensorflow.op.MathOps.addN
@@ -292,7 +291,7 @@ public class MathOps(
      * `@`end_compatibility
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of Angle, with default output types
      * @see org.tensorflow.op.MathOps.angle
      */
@@ -323,8 +322,8 @@ public class MathOps(
      * `@`end_compatibility
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param Tout the value of the Tout property
+     * @param input The input value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Angle` output and operands
      * @return a new instance of Angle
      * @see org.tensorflow.op.MathOps.angle
@@ -338,8 +337,8 @@ public class MathOps(
     /**
      * Returns the truth value of abs(x-y) < tolerance element-wise.
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param options carries optional attribute values
      * @param <T> data type for `ApproximateEqual` output and operands
      * @return a new instance of ApproximateEqual
@@ -377,7 +376,7 @@ public class MathOps(
      * ```
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
      *  Describes which dimension of the input Tensor to reduce across. For vectors,
      *  use dimension = 0.
@@ -406,11 +405,11 @@ public class MathOps(
      * ```
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
      *  Describes which dimension of the input Tensor to reduce across. For vectors,
      *  use dimension = 0.
-     * @param outputType the value of the outputType property
+     * @param outputType The value of the outputType attribute
      * @param <V> data type for `ArgMax` output and operands
      * @return a new instance of ArgMax
      * @see org.tensorflow.op.MathOps.argMax
@@ -441,7 +440,7 @@ public class MathOps(
      * ```
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
      *  Describes which dimension of the input Tensor to reduce across. For vectors,
      *  use dimension = 0.
@@ -470,11 +469,11 @@ public class MathOps(
      * ```
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
      *  Describes which dimension of the input Tensor to reduce across. For vectors,
      *  use dimension = 0.
-     * @param outputType the value of the outputType property
+     * @param outputType The value of the outputType attribute
      * @param <V> data type for `ArgMin` output and operands
      * @return a new instance of ArgMin
      * @see org.tensorflow.op.MathOps.argMin
@@ -508,7 +507,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Asin` output and operands
      * @return a new instance of Asin
      * @see org.tensorflow.op.MathOps.asin
@@ -530,7 +529,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Asinh` output and operands
      * @return a new instance of Asinh
      * @see org.tensorflow.op.MathOps.asinh
@@ -558,7 +557,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Atan` output and operands
      * @return a new instance of Atan
      * @see org.tensorflow.op.MathOps.atan
@@ -569,15 +568,24 @@ public class MathOps(
 
     /**
      * Computes arctangent of `y/x` element-wise, respecting signs of the arguments.
-     *  This is the angle ( \theta \in &#91;-\pi, \pi&#93; ) such that
-     *  &#91; x = r \cos(\theta) &#93;
+     *  This is the angle `\( \theta \in &#91;-\pi, \pi&#93; \)` such that
+     *  \&#91; x = r \cos(\theta) \&#93;
      *  and
-     *  &#91; y = r \sin(\theta) &#93;
-     *  where (r = \sqrt(x^2 + y^2) ).
+     *  \&#91; y = r \sin(\theta) \&#93;
+     *  where `\(r = \sqrt{x^2 + y^2} \)`.
+     *  
+     * For example:
+     *  ```
+     *
+     * x = [1., 1.]
+     *  y = [1., -1.]
+     *  print((tf.math.atan2(y,x) * (180 / np.pi)).numpy())
+     *  [ 45. -45.]
+     * ```
      *
      * @param <T> data type for `z` output
-     * @param y the y value
-     * @param x the x value
+     * @param y The y value
+     * @param x The x value
      * @param <T> data type for `Atan2` output and operands
      * @return a new instance of Atan2
      * @see org.tensorflow.op.MathOps.atan2
@@ -601,7 +609,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Atanh` output and operands
      * @return a new instance of Atanh
      * @see org.tensorflow.op.MathOps.atanh
@@ -624,9 +632,9 @@ public class MathOps(
      *  beta function.
      *
      * @param <T> data type for `z` output
-     * @param a the a value
-     * @param b the b value
-     * @param x the x value
+     * @param a The a value
+     * @param b The b value
+     * @param x The x value
      * @param <T> data type for `Betainc` output and operands
      * @return a new instance of Betainc
      * @see org.tensorflow.op.MathOps.betainc
@@ -675,7 +683,7 @@ public class MathOps(
      * Returns element-wise smallest integer not less than x.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Ceil` output and operands
      * @return a new instance of Ceil
      * @see org.tensorflow.op.MathOps.ceil
@@ -685,52 +693,22 @@ public class MathOps(
         )
 
     /**
-     * Compare values of `input` to `threshold` and pack resulting bits into a `uint8`.
-     *  Each comparison returns a boolean `true` (if `input_value > threshold`)
-     *  or and `false` otherwise.
-     *  
-     * This operation is useful for Locality-Sensitive-Hashing (LSH) and other
-     *  algorithms that use hashing approximations of cosine and `L2` distances;
-     *  codes can be generated from an input via:
-     *  ```
-     * codebook_size = 50
-     *  codebook_bits = codebook_size * 32
-     *  codebook = tf.get_variable('codebook', [x.shape[-1].value, codebook_bits],
-     *                             dtype=x.dtype,
-     *                             initializer=tf.orthogonal_initializer())
-     *  codes = compare_and_threshold(tf.matmul(x, codebook), threshold=0.)
-     *  codes = tf.bitcast(codes, tf.int32)  # go from uint8 to int32
-     *  # now codes has shape x.shape[:-1] + [codebook_size]
-     *  
-     * ```
-     *  
-     * **NOTE**: Currently, the innermost dimension of the tensor must be divisible
-     *  by 8.
-     *  
-     * Given an `input` shaped `&#91;s0, s1, ..., s_n&#93;`, the output is
-     *  a `uint8` tensor shaped `&#91;s0, s1, ..., s_n / 8&#93;`.
-     *
-     * @param input Values to compare against `threshold` and bitpack.
-     * @param threshold Threshold to compare against.
-     * @param <T> data type for `CompareAndBitpack` output and operands
-     * @return a new instance of CompareAndBitpack
-     * @see org.tensorflow.op.MathOps.compareAndBitpack
-     */
-    public fun <T : TType> compareAndBitpack(input: Operand<T>, threshold: Operand<T>):
-            CompareAndBitpack = java.compareAndBitpack<T>(    
-        input,
-        threshold
-        )
-
-    /**
      * Computes the complex absolute value of a tensor.
      *  Given a tensor `x` of complex numbers, this operation returns a tensor of type
      *  `float` or `double` that is the absolute value of each element in `x`. All
      *  elements in `x` must be complex numbers of the form `\(a + bj\)`. The absolute
      *  value is computed as `\( \sqrt{a^2 + b^2}\)`.
+     *  
+     * For example:
+     *  ```
+     *
+     * x = tf.complex(3.0, 4.0)
+     *  print((tf.raw_ops.ComplexAbs(x=x, Tout=tf.dtypes.float32, name=None)).numpy())
+     *  5.0
+     * ```
      *
      * @param <U> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @return a new instance of ComplexAbs, with default output types
      * @see org.tensorflow.op.MathOps.complexAbs
      */
@@ -744,10 +722,18 @@ public class MathOps(
      *  `float` or `double` that is the absolute value of each element in `x`. All
      *  elements in `x` must be complex numbers of the form `\(a + bj\)`. The absolute
      *  value is computed as `\( \sqrt{a^2 + b^2}\)`.
+     *  
+     * For example:
+     *  ```
+     *
+     * x = tf.complex(3.0, 4.0)
+     *  print((tf.raw_ops.ComplexAbs(x=x, Tout=tf.dtypes.float32, name=None)).numpy())
+     *  5.0
+     * ```
      *
      * @param <U> data type for `y` output
-     * @param x the x value
-     * @param Tout the value of the Tout property
+     * @param x The x value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `ComplexAbs` output and operands
      * @return a new instance of ComplexAbs
      * @see org.tensorflow.op.MathOps.complexAbs
@@ -775,7 +761,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `Conj` output and operands
      * @return a new instance of Conj
      * @see org.tensorflow.op.MathOps.conj
@@ -799,7 +785,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Cos` output and operands
      * @return a new instance of Cos
      * @see org.tensorflow.op.MathOps.cos
@@ -821,7 +807,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Cosh` output and operands
      * @return a new instance of Cosh
      * @see org.tensorflow.op.MathOps.cosh
@@ -1004,7 +990,7 @@ public class MathOps(
      *  `Gamma(x)`), element-wise.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Digamma` output and operands
      * @return a new instance of Digamma
      * @see org.tensorflow.op.MathOps.digamma
@@ -1019,8 +1005,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Div` output and operands
      * @return a new instance of Div
      * @see org.tensorflow.op.MathOps.div
@@ -1036,8 +1022,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `DivNoNan` output and operands
      * @return a new instance of DivNoNan
      * @see org.tensorflow.op.MathOps.divNoNan
@@ -1062,8 +1048,8 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param options carries optional attribute values
      * @param <T> data type for `Equal` output and operands
      * @return a new instance of Equal
@@ -1086,10 +1072,14 @@ public class MathOps(
         )
 
     /**
-     * Computes the Gauss error function of `x` element-wise.
+     * Computes the  [Gauss error function](https://en.wikipedia.org/wiki/Error_function)  of `x`
+     * element-wise. In statistics, for non-negative values of $x$, the error function has the
+     * following interpretation: for a random variable $Y$ that is normally distributed with mean 0 and
+     * variance $1/\sqrt{2}$, $erf(x)$ is the probability that $Y$ falls in the range $&#91;−x,
+     * x&#93;$.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Erf` output and operands
      * @return a new instance of Erf
      * @see org.tensorflow.op.MathOps.erf
@@ -1102,7 +1092,7 @@ public class MathOps(
      * Computes the complementary error function of `x` element-wise.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Erfc` output and operands
      * @return a new instance of Erfc
      * @see org.tensorflow.op.MathOps.erfc
@@ -1115,7 +1105,7 @@ public class MathOps(
      * The Erfinv operation
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Erfinv` output and operands
      * @return a new instance of erfinv
      * @see org.tensorflow.op.MathOps.erfinv
@@ -1154,7 +1144,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Exp` output and operands
      * @return a new instance of Exp
      * @see org.tensorflow.op.MathOps.exp
@@ -1180,7 +1170,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Expm1` output and operands
      * @return a new instance of Expm1
      * @see org.tensorflow.op.MathOps.expm1
@@ -1203,7 +1193,7 @@ public class MathOps(
      * Returns element-wise largest integer not greater than x.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Floor` output and operands
      * @return a new instance of Floor
      * @see org.tensorflow.op.MathOps.floor
@@ -1218,8 +1208,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `FloorDiv` output and operands
      * @return a new instance of FloorDiv
      * @see org.tensorflow.op.MathOps.floorDiv
@@ -1238,8 +1228,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `FloorMod` output and operands
      * @return a new instance of FloorMod
      * @see org.tensorflow.op.MathOps.floorMod
@@ -1267,8 +1257,8 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Greater` output and operands
      * @return a new instance of Greater
      * @see org.tensorflow.op.MathOps.greater
@@ -1295,8 +1285,8 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `GreaterEqual` output and operands
      * @return a new instance of GreaterEqual
      * @see org.tensorflow.op.MathOps.greaterEqual
@@ -1323,8 +1313,8 @@ public class MathOps(
      *  Gamma function.
      *
      * @param <T> data type for `z` output
-     * @param a the a value
-     * @param x the x value
+     * @param a The a value
+     * @param x The x value
      * @param <T> data type for `Igamma` output and operands
      * @return a new instance of Igamma
      * @see org.tensorflow.op.MathOps.igamma
@@ -1342,16 +1332,16 @@ public class MathOps(
      *  
      * where
      *  
-     * `\(Gamma(a, x) = int_{x}^{\infty} t^{a-1} exp(-t) dt\)`
+     * `\(Gamma(a, x) = \int_{x}^{\infty} t^{a-1} exp(-t) dt\)`
      *  
-     * is the upper incomplete Gama function.
+     * is the upper incomplete Gamma function.
      *  
      * Note, above `P(a, x)` (`Igamma`) is the lower regularized complete
      *  Gamma function.
      *
      * @param <T> data type for `z` output
-     * @param a the a value
-     * @param x the x value
+     * @param a The a value
+     * @param x The x value
      * @param <T> data type for `Igammac` output and operands
      * @return a new instance of Igammac
      * @see org.tensorflow.op.MathOps.igammac
@@ -1376,7 +1366,7 @@ public class MathOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of Imag, with default output types
      * @see org.tensorflow.op.MathOps.imag
      */
@@ -1399,8 +1389,8 @@ public class MathOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param Tout the value of the Tout property
+     * @param input The input value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Imag` output and operands
      * @return a new instance of Imag
      * @see org.tensorflow.op.MathOps.imag
@@ -1455,7 +1445,7 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
+     * @param x The x value
      * @return a new instance of IsFinite
      * @see org.tensorflow.op.MathOps.isFinite
      */
@@ -1478,7 +1468,7 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
+     * @param x The x value
      * @return a new instance of IsInf
      * @see org.tensorflow.op.MathOps.isInf
      */
@@ -1501,7 +1491,7 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
+     * @param x The x value
      * @return a new instance of IsNan
      * @see org.tensorflow.op.MathOps.isNan
      */
@@ -1526,8 +1516,8 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Less` output and operands
      * @return a new instance of Less
      * @see org.tensorflow.op.MathOps.less
@@ -1554,8 +1544,8 @@ public class MathOps(
      *  
      * ```
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `LessEqual` output and operands
      * @return a new instance of LessEqual
      * @see org.tensorflow.op.MathOps.lessEqual
@@ -1580,7 +1570,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Lgamma` output and operands
      * @return a new instance of Lgamma
      * @see org.tensorflow.op.MathOps.lgamma
@@ -1601,7 +1591,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Log` output and operands
      * @return a new instance of Log
      * @see org.tensorflow.op.MathOps.log
@@ -1622,7 +1612,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Log1p` output and operands
      * @return a new instance of Log1p
      * @see org.tensorflow.op.MathOps.log1p
@@ -1636,8 +1626,8 @@ public class MathOps(
      *  _NOTE_: `math.LogicalAnd` supports broadcasting. More about
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @return a new instance of LogicalAnd
      * @see org.tensorflow.op.MathOps.logicalAnd
      */
@@ -1662,8 +1652,8 @@ public class MathOps(
      *  _NOTE_: `math.LogicalOr` supports broadcasting. More about
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @return a new instance of LogicalOr
      * @see org.tensorflow.op.MathOps.logicalOr
      */
@@ -1678,8 +1668,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Maximum` output and operands
      * @return a new instance of Maximum
      * @see org.tensorflow.op.MathOps.maximum
@@ -1727,8 +1717,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Minimum` output and operands
      * @return a new instance of Minimum
      * @see org.tensorflow.op.MathOps.minimum
@@ -1747,8 +1737,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Mod` output and operands
      * @return a new instance of Mod
      * @see org.tensorflow.op.MathOps.mod
@@ -1764,8 +1754,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Mul` output and operands
      * @return a new instance of Mul
      * @see org.tensorflow.op.MathOps.mul
@@ -1781,8 +1771,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `MulNoNan` output and operands
      * @return a new instance of MulNoNan
      * @see org.tensorflow.op.MathOps.mulNoNan
@@ -1796,7 +1786,7 @@ public class MathOps(
      * The Ndtri operation
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Ndtri` output and operands
      * @return a new instance of Ndtri
      * @see org.tensorflow.op.MathOps.ndtri
@@ -1810,7 +1800,7 @@ public class MathOps(
      *  I.e., `\(y = -x\)`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Neg` output and operands
      * @return a new instance of Neg
      * @see org.tensorflow.op.MathOps.neg
@@ -1832,8 +1822,8 @@ public class MathOps(
      * `@`end_compatibility
      *
      * @param <T> data type for `output` output
-     * @param x1 the x1 value
-     * @param x2 the x2 value
+     * @param x1 The x1 value
+     * @param x2 The x2 value
      * @param <T> data type for `NextAfter` output and operands
      * @return a new instance of NextAfter
      * @see org.tensorflow.op.MathOps.nextAfter
@@ -1849,8 +1839,8 @@ public class MathOps(
      *  _NOTE_: `math.NotEqual` supports broadcasting. More about
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param options carries optional attribute values
      * @param <T> data type for `NotEqual` output and operands
      * @return a new instance of NotEqual
@@ -1882,8 +1872,8 @@ public class MathOps(
      *  The polygamma function is defined only for non-negative integer orders \a\.
      *
      * @param <T> data type for `z` output
-     * @param a the a value
-     * @param x the x value
+     * @param a The a value
+     * @param x The x value
      * @param <T> data type for `Polygamma` output and operands
      * @return a new instance of Polygamma
      * @see org.tensorflow.op.MathOps.polygamma
@@ -1903,7 +1893,7 @@ public class MathOps(
      *  `int32` or `int64` and perform the bitcount on the result, than to feed in
      *  8- or 16-bit inputs and then aggregate the resulting counts.
      *
-     * @param x the x value
+     * @param x The x value
      * @return a new instance of PopulationCount
      * @see org.tensorflow.op.MathOps.populationCount
      */
@@ -1923,8 +1913,8 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Pow` output and operands
      * @return a new instance of Pow
      * @see org.tensorflow.op.MathOps.pow
@@ -1938,13 +1928,13 @@ public class MathOps(
      * Returns x + y element-wise, working on quantized buffers.
      *
      * @param <V> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param minX The float value that the lowest quantized `x` value represents.
      * @param maxX The float value that the highest quantized `x` value represents.
      * @param minY The float value that the lowest quantized `y` value represents.
      * @param maxY The float value that the highest quantized `y` value represents.
-     * @param Toutput the value of the Toutput property
+     * @param Toutput The value of the Toutput attribute
      * @param <V> data type for `QuantizedAdd` output and operands
      * @return a new instance of QuantizedAdd
      * @see org.tensorflow.op.MathOps.quantizedAdd
@@ -1971,13 +1961,13 @@ public class MathOps(
      * Returns x * y element-wise, working on quantized buffers.
      *
      * @param <V> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param minX The float value that the lowest quantized `x` value represents.
      * @param maxX The float value that the highest quantized `x` value represents.
      * @param minY The float value that the lowest quantized `y` value represents.
      * @param maxY The float value that the highest quantized `y` value represents.
-     * @param Toutput the value of the Toutput property
+     * @param Toutput The value of the Toutput attribute
      * @param <V> data type for `QuantizedMul` output and operands
      * @return a new instance of QuantizedMul
      * @see org.tensorflow.op.MathOps.quantizedMul
@@ -2015,7 +2005,7 @@ public class MathOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of Real, with default output types
      * @see org.tensorflow.op.MathOps.real
      */
@@ -2038,8 +2028,8 @@ public class MathOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param Tout the value of the Tout property
+     * @param input The input value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Real` output and operands
      * @return a new instance of Real
      * @see org.tensorflow.op.MathOps.real
@@ -2058,8 +2048,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `RealDiv` output and operands
      * @return a new instance of RealDiv
      * @see org.tensorflow.op.MathOps.realDiv
@@ -2074,7 +2064,7 @@ public class MathOps(
      *  I.e., `\(y = 1 / x\)`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Reciprocal` output and operands
      * @return a new instance of Reciprocal
      * @see org.tensorflow.op.MathOps.reciprocal
@@ -2096,7 +2086,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Rint` output and operands
      * @return a new instance of Rint
      * @see org.tensorflow.op.MathOps.rint
@@ -2111,7 +2101,7 @@ public class MathOps(
      *  according to the current system rounding mode use std::cint.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Round` output and operands
      * @return a new instance of Round
      * @see org.tensorflow.op.MathOps.round
@@ -2125,7 +2115,7 @@ public class MathOps(
      *  I.e., `\(y = 1 / \sqrt{x}\)`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Rsqrt` output and operands
      * @return a new instance of Rsqrt
      * @see org.tensorflow.op.MathOps.rsqrt
@@ -2159,7 +2149,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
      *  first dimension.  Values should be sorted and can be repeated.
      * @param <T> data type for `SegmentMax` output and operands
@@ -2198,7 +2188,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
      *  first dimension.  Values should be sorted and can be repeated.
      * @param <T> data type for `SegmentMean` output and operands
@@ -2236,7 +2226,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
      *  first dimension.  Values should be sorted and can be repeated.
      * @param <T> data type for `SegmentMin` output and operands
@@ -2274,7 +2264,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
      *  first dimension.  Values should be sorted and can be repeated.
      * @param <T> data type for `SegmentProd` output and operands
@@ -2312,7 +2302,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A 1-D tensor whose size is equal to the size of `data`'s
      *  first dimension.  Values should be sorted and can be repeated.
      * @param <T> data type for `SegmentSum` output and operands
@@ -2330,7 +2320,7 @@ public class MathOps(
      *  Specifically, `y = 1 / (1 + exp(-x))`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Sigmoid` output and operands
      * @return a new instance of Sigmoid
      * @see org.tensorflow.op.MathOps.sigmoid
@@ -2353,7 +2343,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Sign` output and operands
      * @return a new instance of Sign
      * @see org.tensorflow.op.MathOps.sign
@@ -2375,7 +2365,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Sin` output and operands
      * @return a new instance of Sin
      * @see org.tensorflow.op.MathOps.sin
@@ -2397,7 +2387,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Sinh` output and operands
      * @return a new instance of Sinh
      * @see org.tensorflow.op.MathOps.sinh
@@ -2410,7 +2400,7 @@ public class MathOps(
      * The Softplus operation
      *
      * @param <T> data type for `activations` output
-     * @param features the features value
+     * @param features The features value
      * @param <T> data type for `Softplus` output and operands
      * @return a new instance of Softplus
      * @see org.tensorflow.op.MathOps.softplus
@@ -2424,7 +2414,7 @@ public class MathOps(
      *  I.e., `\(y = \sqrt{x} = x^{1/2}\)`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Sqrt` output and operands
      * @return a new instance of Sqrt
      * @see org.tensorflow.op.MathOps.sqrt
@@ -2438,7 +2428,7 @@ public class MathOps(
      *  I.e., `\(y = x * x = x^2\)`.
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Square` output and operands
      * @return a new instance of Square
      * @see org.tensorflow.op.MathOps.square
@@ -2453,8 +2443,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `SquaredDifference` output and operands
      * @return a new instance of SquaredDifference
      * @see org.tensorflow.op.MathOps.squaredDifference
@@ -2471,8 +2461,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Sub` output and operands
      * @return a new instance of Sub
      * @see org.tensorflow.op.MathOps.sub
@@ -2496,7 +2486,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Tan` output and operands
      * @return a new instance of Tan
      * @see org.tensorflow.op.MathOps.tan
@@ -2520,7 +2510,7 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Tanh` output and operands
      * @return a new instance of Tanh
      * @see org.tensorflow.op.MathOps.tanh
@@ -2540,8 +2530,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `TruncateDiv` output and operands
      * @return a new instance of TruncateDiv
      * @see org.tensorflow.op.MathOps.truncateDiv
@@ -2561,8 +2551,8 @@ public class MathOps(
      * broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `TruncateMod` output and operands
      * @return a new instance of TruncateMod
      * @see org.tensorflow.op.MathOps.truncateMod
@@ -2606,9 +2596,9 @@ public class MathOps(
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-     * @param numSegments the numSegments value
+     * @param numSegments The numSegments value
      * @param <T> data type for `UnsortedSegmentMax` output and operands
      * @return a new instance of UnsortedSegmentMax
      * @see org.tensorflow.op.MathOps.unsortedSegmentMax
@@ -2653,9 +2643,9 @@ public class MathOps(
      *  dropped, and will not be included in the result.
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-     * @param numSegments the numSegments value
+     * @param numSegments The numSegments value
      * @param <T> data type for `UnsortedSegmentMin` output and operands
      * @return a new instance of UnsortedSegmentMin
      * @see org.tensorflow.op.MathOps.unsortedSegmentMin
@@ -2699,9 +2689,9 @@ public class MathOps(
      *  dropped, and will not be included in the result.
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-     * @param numSegments the numSegments value
+     * @param numSegments The numSegments value
      * @param <T> data type for `UnsortedSegmentProd` output and operands
      * @return a new instance of UnsortedSegmentProd
      * @see org.tensorflow.op.MathOps.unsortedSegmentProd
@@ -2738,16 +2728,16 @@ public class MathOps(
      *  </div>
      *  ```
      * c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
-     *  tf.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
-     *  # ==> [[ 5,  5, 5, 5],
-     *  #       [5,  6, 7, 8]]
+     *  tf.math.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
+     *  # ==> [[ 5, 5, 5, 5],
+     *  #       [5, 6, 7, 8]]
      *  
      * ```
      *
      * @param <T> data type for `output` output
-     * @param data the data value
+     * @param data The data value
      * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-     * @param numSegments the numSegments value
+     * @param numSegments The numSegments value
      * @param <T> data type for `UnsortedSegmentSum` output and operands
      * @return a new instance of UnsortedSegmentSum
      * @see org.tensorflow.op.MathOps.unsortedSegmentSum
@@ -2766,8 +2756,8 @@ public class MathOps(
      * Returns 0 if x == 0, and x / y otherwise, elementwise.
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Xdivy` output and operands
      * @return a new instance of Xdivy
      * @see org.tensorflow.op.MathOps.xdivy
@@ -2781,8 +2771,8 @@ public class MathOps(
      * Returns 0 if x == 0, and x * log1p(y) otherwise, elementwise.
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Xlog1py` output and operands
      * @return a new instance of Xlog1py
      * @see org.tensorflow.op.MathOps.xlog1py
@@ -2796,8 +2786,8 @@ public class MathOps(
      * Returns 0 if x == 0, and x * log(y) otherwise, elementwise.
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `Xlogy` output and operands
      * @return a new instance of Xlogy
      * @see org.tensorflow.op.MathOps.xlogy
@@ -2814,8 +2804,8 @@ public class MathOps(
      * `\(\zeta(x, q) = \sum_{n=0}^{\infty} (q + n)^{-x}\)`
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param q the q value
+     * @param x The x value
+     * @param q The q value
      * @param <T> data type for `Zeta` output and operands
      * @return a new instance of Zeta
      * @see org.tensorflow.op.MathOps.zeta
@@ -2848,8 +2838,8 @@ public class MathOps(
      * `@`end_compatibility
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param Tout the value of the Tout property
+     * @param input The input value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Angle` output and operands
      * @return a new instance of Angle
      * @see org.tensorflow.op.MathOps.angle
@@ -2874,11 +2864,11 @@ public class MathOps(
      * ```
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
      *  Describes which dimension of the input Tensor to reduce across. For vectors,
      *  use dimension = 0.
-     * @param outputType the value of the outputType property
+     * @param outputType The value of the outputType attribute
      * @param <V> data type for `ArgMax` output and operands
      * @return a new instance of ArgMax
      * @see org.tensorflow.op.MathOps.argMax
@@ -2903,11 +2893,11 @@ public class MathOps(
      * ```
      *
      * @param <V> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
      *  Describes which dimension of the input Tensor to reduce across. For vectors,
      *  use dimension = 0.
-     * @param outputType the value of the outputType property
+     * @param outputType The value of the outputType attribute
      * @param <V> data type for `ArgMin` output and operands
      * @return a new instance of ArgMin
      * @see org.tensorflow.op.MathOps.argMin
@@ -2922,10 +2912,18 @@ public class MathOps(
      *  `float` or `double` that is the absolute value of each element in `x`. All
      *  elements in `x` must be complex numbers of the form `\(a + bj\)`. The absolute
      *  value is computed as `\( \sqrt{a^2 + b^2}\)`.
+     *  
+     * For example:
+     *  ```
+     *
+     * x = tf.complex(3.0, 4.0)
+     *  print((tf.raw_ops.ComplexAbs(x=x, Tout=tf.dtypes.float32, name=None)).numpy())
+     *  5.0
+     * ```
      *
      * @param <U> data type for `y` output
-     * @param x the x value
-     * @param Tout the value of the Tout property
+     * @param x The x value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `ComplexAbs` output and operands
      * @return a new instance of ComplexAbs
      * @see org.tensorflow.op.MathOps.complexAbs
@@ -2949,8 +2947,8 @@ public class MathOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param Tout the value of the Tout property
+     * @param input The input value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Imag` output and operands
      * @return a new instance of Imag
      * @see org.tensorflow.op.MathOps.imag
@@ -2963,13 +2961,13 @@ public class MathOps(
      * Returns x + y element-wise, working on quantized buffers.
      *
      * @param <V> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param minX The float value that the lowest quantized `x` value represents.
      * @param maxX The float value that the highest quantized `x` value represents.
      * @param minY The float value that the lowest quantized `y` value represents.
      * @param maxY The float value that the highest quantized `y` value represents.
-     * @param Toutput the value of the Toutput property
+     * @param Toutput The value of the Toutput attribute
      * @param <V> data type for `QuantizedAdd` output and operands
      * @return a new instance of QuantizedAdd
      * @see org.tensorflow.op.MathOps.quantizedAdd
@@ -2988,13 +2986,13 @@ public class MathOps(
      * Returns x * y element-wise, working on quantized buffers.
      *
      * @param <V> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param minX The float value that the lowest quantized `x` value represents.
      * @param maxX The float value that the highest quantized `x` value represents.
      * @param minY The float value that the lowest quantized `y` value represents.
      * @param maxY The float value that the highest quantized `y` value represents.
-     * @param Toutput the value of the Toutput property
+     * @param Toutput The value of the Toutput attribute
      * @param <V> data type for `QuantizedMul` output and operands
      * @return a new instance of QuantizedMul
      * @see org.tensorflow.op.MathOps.quantizedMul
@@ -3024,8 +3022,8 @@ public class MathOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
-     * @param Tout the value of the Tout property
+     * @param input The input value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Real` output and operands
      * @return a new instance of Real
      * @see org.tensorflow.op.MathOps.real

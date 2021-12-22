@@ -120,7 +120,7 @@ public class QuantizationOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param minRange The minimum scalar value possibly produced for the input.
      * @param maxRange The maximum scalar value possibly produced for the input.
      * @param options carries optional attribute values
@@ -195,7 +195,7 @@ public class QuantizationOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param minRange The minimum scalar value possibly produced for the input.
      * @param maxRange The maximum scalar value possibly produced for the input.
      * @param dtype Type of the output tensor. Currently Dequantize supports float and bfloat16.
@@ -262,7 +262,7 @@ public class QuantizationOps(
      *  
      * Quantization is called fake since the output is still in floating point.
      *
-     * @param inputs the inputs value
+     * @param inputs The inputs value
      * @param options carries optional attribute values
      * @return a new instance of FakeQuantWithMinMaxArgs
      * @see org.tensorflow.op.QuantizationOps.fakeQuantWithMinMaxArgs
@@ -372,9 +372,9 @@ public class QuantizationOps(
      * This operation has a gradient and thus allows for training `min` and `max`
      *  values.
      *
-     * @param inputs the inputs value
-     * @param min the min value
-     * @param max the max value
+     * @param inputs The inputs value
+     * @param min The min value
+     * @param max The max value
      * @param options carries optional attribute values
      * @return a new instance of FakeQuantWithMinMaxVars
      * @see org.tensorflow.op.QuantizationOps.fakeQuantWithMinMaxVars
@@ -409,8 +409,8 @@ public class QuantizationOps(
      * @param gradients Backpropagated gradients above the FakeQuantWithMinMaxVars operation.
      * @param inputs Values passed as inputs to the FakeQuantWithMinMaxVars operation.
      *  min, max: Quantization interval, scalar floats.
-     * @param min the min value
-     * @param max the max value
+     * @param min The min value
+     * @param max The max value
      * @param options carries optional attribute values
      * @return a new instance of FakeQuantWithMinMaxVarsGradient
      * @see org.tensorflow.op.QuantizationOps.fakeQuantWithMinMaxVarsGradient
@@ -473,9 +473,9 @@ public class QuantizationOps(
      * This operation has a gradient and thus allows for training `min` and `max`
      *  values.
      *
-     * @param inputs the inputs value
-     * @param min the min value
-     * @param max the max value
+     * @param inputs The inputs value
+     * @param min The min value
+     * @param max The max value
      * @param options carries optional attribute values
      * @return a new instance of FakeQuantWithMinMaxVarsPerChannel
      * @see org.tensorflow.op.QuantizationOps.fakeQuantWithMinMaxVarsPerChannel
@@ -513,8 +513,8 @@ public class QuantizationOps(
      * @param inputs Values passed as inputs to the FakeQuantWithMinMaxVars operation, shape
      *  same as `gradients`.
      *  min, max: Quantization interval, floats of shape `[d]`.
-     * @param min the min value
-     * @param max the max value
+     * @param min The min value
+     * @param max The max value
      * @param options carries optional attribute values
      * @return a new instance of FakeQuantWithMinMaxVarsPerChannelGradient
      * @see org.tensorflow.op.QuantizationOps.fakeQuantWithMinMaxVarsPerChannelGradient
@@ -670,7 +670,7 @@ public class QuantizationOps(
      *  set it to 0 for new uses.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param minRange The minimum value of the quantization range. This value may be adjusted by
      * the
      *  op depending on other parameters. The adjusted value is written to `output_min`.
@@ -681,7 +681,7 @@ public class QuantizationOps(
      *  op depending on other parameters. The adjusted value is written to `output_max`.
      *  If the `axis` attribute is specified, this must be a 1-D tensor whose size
      *  matches the `axis` dimension of the input and output tensors.
-     * @param T the value of the T property
+     * @param T The value of the T attribute
      * @param options carries optional attribute values
      * @param <T> data type for `QuantizeV2` output and operands
      * @return a new instance of Quantize
@@ -737,10 +737,10 @@ public class QuantizationOps(
      *  tensor, so its value can change during training.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param inputMin the inputMin value
-     * @param inputMax the inputMax value
-     * @param numBits the numBits value
+     * @param input The input value
+     * @param inputMin The inputMin value
+     * @param inputMax The inputMax value
+     * @param numBits The numBits value
      * @param options carries optional attribute values
      * @param <T> data type for `QuantizeAndDequantizeV3` output and operands
      * @return a new instance of QuantizeAndDequantize
@@ -790,10 +790,10 @@ public class QuantizationOps(
      *  tensor, so its value can change during training.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param inputMin the inputMin value
-     * @param inputMax the inputMax value
-     * @param numBits the numBits value
+     * @param input The input value
+     * @param inputMin The inputMin value
+     * @param inputMax The inputMax value
+     * @param numBits The numBits value
      * @param options carries optional attribute values
      * @param <T> data type for `QuantizeAndDequantizeV3` output and operands
      * @return a new instance of QuantizeAndDequantizeV3
@@ -838,41 +838,60 @@ public class QuantizationOps(
         )
 
     /**
-     * Returns the gradient of `quantization.QuantizeAndDequantizeV4`.
+     * Quantizes then dequantizes a tensor.
      *  This is almost identical to QuantizeAndDequantizeV2, except that it returns a
      *  gradient of 1 for inputs that are within the quantization range, or 0 otherwise.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param inputMin the inputMin value
-     * @param inputMax the inputMax value
+     * @param input Tensor to quantize and then dequantize.
+     * @param inputMin If `range_given == True`, this specifies the minimum input value that needs
+     * to
+     *  be represented, otherwise it is determined from the min value of the `input`
+     *  tensor.
+     * @param inputMax If `range_given == True`, this specifies the maximum input value that needs
+     * to
+     *  be represented, otherwise it is determined from the max value of the `input`
+     *  tensor.
      * @param options carries optional attribute values
      * @param <T> data type for `QuantizeAndDequantizeV4` output and operands
      * @return a new instance of QuantizeAndDequantizeV4
      * @see org.tensorflow.op.QuantizationOps.quantizeAndDequantizeV4
      * @param signedInput Sets the signedInput option.
      *
-     * @param signedInput the signedInput option
+     * @param signedInput Whether the quantization is signed or unsigned. (actually this parameter
+     * should
+     *  have been called **`signed_output`**)
      * @return this Options instance.
      * @param numBits Sets the numBits option.
      *
-     * @param numBits the numBits option
+     * @param numBits The bitwidth of the quantization.
      * @return this Options instance.
      * @param rangeGiven Sets the rangeGiven option.
      *
-     * @param rangeGiven the rangeGiven option
+     * @param rangeGiven Whether the range is given or should be determined from the `input` tensor.
      * @return this Options instance.
      * @param roundMode Sets the roundMode option.
      *
-     * @param roundMode the roundMode option
+     * @param roundMode The 'round_mode' attribute controls which rounding tie-breaking algorithm is
+     *  used when rounding float values to their quantized equivalents. The following
+     *  rounding modes are currently supported:
+     *  <ul>
+     *  <li>HALF_TO_EVEN: this is the default round_mode.</li>
+     *  <li>HALF_UP: round towards positive. In this mode 7.5 rounds up to 8 and -7.5
+     *  rounds up to -7.</li>
+     *  </ul>
      * @return this Options instance.
      * @param narrowRange Sets the narrowRange option.
      *
-     * @param narrowRange the narrowRange option
+     * @param narrowRange If True, then the absolute value of the quantized minimum value is the
+     * same as
+     *  the quantized maximum value, instead of 1 greater.
+     *  i.e. for 8 bit quantization, the minimum value is -127 instead of -128.
      * @return this Options instance.
      * @param axis Sets the axis option.
      *
-     * @param axis the axis option
+     * @param axis If specified, this axis is treated as a channel or slice axis, and a separate
+     *  quantization range is used for each channel or slice along this axis.
      * @return this Options instance.
      */
     public fun <T : TNumber> quantizeAndDequantizeV4(
@@ -905,10 +924,10 @@ public class QuantizationOps(
      *  or 0 otherwise.
      *
      * @param <T> data type for `input_backprop` output
-     * @param gradients the gradients value
-     * @param input the input value
-     * @param inputMin the inputMin value
-     * @param inputMax the inputMax value
+     * @param gradients The gradients value
+     * @param input The input value
+     * @param inputMin The inputMin value
+     * @param inputMax The inputMax value
      * @param options carries optional attribute values
      * @param <T> data type for `QuantizeAndDequantizeV4Grad` output and operands
      * @return a new instance of QuantizeAndDequantizeV4Grad
@@ -960,7 +979,7 @@ public class QuantizationOps(
      *  minimal loss of accuracy.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param inputMin The float value that the minimum quantized input value represents.
      * @param inputMax The float value that the maximum quantized input value represents.
      * @param outType The type of the output. Should be a lower bit depth than Tinput.
@@ -1013,7 +1032,7 @@ public class QuantizationOps(
      *  used to produce the `requested_output_min` and `requested_output_max` for
      *  `Requantize`.
      *
-     * @param input the input value
+     * @param input The input value
      * @param inputMin The float value that the minimum quantized input value represents.
      * @param inputMax The float value that the maximum quantized input value represents.
      * @return a new instance of RequantizationRange
@@ -1040,7 +1059,7 @@ public class QuantizationOps(
      *  value in the 16-bit data should be interpreted as -1.0f, and a 65535 means 1.0f.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param inputMin The float value that the minimum quantized input value represents.
      * @param inputMax The float value that the maximum quantized input value represents.
      * @param requestedOutputMin The float value that the minimum quantized output value represents.
@@ -1122,7 +1141,7 @@ public class QuantizationOps(
      * ```
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param minRange The minimum scalar value possibly produced for the input.
      * @param maxRange The maximum scalar value possibly produced for the input.
      * @param dtype Type of the output tensor. Currently Dequantize supports float and bfloat16.
@@ -1277,7 +1296,7 @@ public class QuantizationOps(
      *  set it to 0 for new uses.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param minRange The minimum value of the quantization range. This value may be adjusted by
      * the
      *  op depending on other parameters. The adjusted value is written to `output_min`.
@@ -1288,7 +1307,7 @@ public class QuantizationOps(
      *  op depending on other parameters. The adjusted value is written to `output_max`.
      *  If the `axis` attribute is specified, this must be a 1-D tensor whose size
      *  matches the `axis` dimension of the input and output tensors.
-     * @param T the value of the T property
+     * @param T The value of the T attribute
      * @param options carries optional attribute values
      * @param <T> data type for `QuantizeV2` output and operands
      * @return a new instance of Quantize
@@ -1353,7 +1372,7 @@ public class QuantizationOps(
      *  minimal loss of accuracy.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param inputMin The float value that the minimum quantized input value represents.
      * @param inputMax The float value that the maximum quantized input value represents.
      * @param outType The type of the output. Should be a lower bit depth than Tinput.
@@ -1380,7 +1399,7 @@ public class QuantizationOps(
      *  value in the 16-bit data should be interpreted as -1.0f, and a 65535 means 1.0f.
      *
      * @param <U> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param inputMin The float value that the minimum quantized input value represents.
      * @param inputMax The float value that the maximum quantized input value represents.
      * @param requestedOutputMin The float value that the minimum quantized output value represents.

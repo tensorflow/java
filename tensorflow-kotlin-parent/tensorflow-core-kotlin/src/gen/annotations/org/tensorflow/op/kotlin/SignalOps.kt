@@ -64,7 +64,7 @@ public class SignalOps(
     /**
      * The BatchFFT operation
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of BatchFft
      * @see org.tensorflow.op.SignalOps.batchFft
      */
@@ -75,7 +75,7 @@ public class SignalOps(
     /**
      * The BatchFFT2D operation
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of BatchFft2d
      * @see org.tensorflow.op.SignalOps.batchFft2d
      */
@@ -86,7 +86,7 @@ public class SignalOps(
     /**
      * The BatchFFT3D operation
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of BatchFft3d
      * @see org.tensorflow.op.SignalOps.batchFft3d
      */
@@ -97,7 +97,7 @@ public class SignalOps(
     /**
      * The BatchIFFT operation
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of BatchIfft
      * @see org.tensorflow.op.SignalOps.batchIfft
      */
@@ -108,7 +108,7 @@ public class SignalOps(
     /**
      * The BatchIFFT2D operation
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of BatchIfft2d
      * @see org.tensorflow.op.SignalOps.batchIfft2d
      */
@@ -119,7 +119,7 @@ public class SignalOps(
     /**
      * The BatchIFFT3D operation
      *
-     * @param input the input value
+     * @param input The input value
      * @return a new instance of BatchIfft3d
      * @see org.tensorflow.op.SignalOps.batchIfft3d
      */
@@ -264,7 +264,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A complex tensor.
      * @param fftLength An int32 tensor of shape [1]. The FFT length.
-     * @param Treal the value of the Treal property
+     * @param Treal The value of the Treal attribute
      * @param <U> data type for `IRFFT` output and operands
      * @return a new instance of Irfft
      * @see org.tensorflow.op.SignalOps.irfft
@@ -328,7 +328,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A complex tensor.
      * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-     * @param Treal the value of the Treal property
+     * @param Treal The value of the Treal attribute
      * @param <U> data type for `IRFFT2D` output and operands
      * @return a new instance of Irfft2d
      * @see org.tensorflow.op.SignalOps.irfft2d
@@ -392,7 +392,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A complex tensor.
      * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-     * @param Treal the value of the Treal property
+     * @param Treal The value of the Treal attribute
      * @param <U> data type for `IRFFT3D` output and operands
      * @return a new instance of Irfft3d
      * @see org.tensorflow.op.SignalOps.irfft3d
@@ -423,7 +423,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A float32 tensor.
      * @param fftLength An int32 tensor of shape [1]. The FFT length.
-     * @param Tcomplex the value of the Tcomplex property
+     * @param Tcomplex The value of the Tcomplex attribute
      * @param <U> data type for `RFFT` output and operands
      * @return a new instance of Rfft
      * @see org.tensorflow.op.SignalOps.rfft
@@ -455,7 +455,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A float32 tensor.
      * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-     * @param Tcomplex the value of the Tcomplex property
+     * @param Tcomplex The value of the Tcomplex attribute
      * @param <U> data type for `RFFT2D` output and operands
      * @return a new instance of Rfft2d
      * @see org.tensorflow.op.SignalOps.rfft2d
@@ -487,7 +487,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A float32 tensor.
      * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-     * @param Tcomplex the value of the Tcomplex property
+     * @param Tcomplex The value of the Tcomplex attribute
      * @param <U> data type for `RFFT3D` output and operands
      * @return a new instance of Rfft3d
      * @see org.tensorflow.op.SignalOps.rfft3d
@@ -521,7 +521,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A complex tensor.
      * @param fftLength An int32 tensor of shape [1]. The FFT length.
-     * @param Treal the value of the Treal property
+     * @param Treal The value of the Treal attribute
      * @param <U> data type for `IRFFT` output and operands
      * @return a new instance of Irfft
      * @see org.tensorflow.op.SignalOps.irfft
@@ -550,7 +550,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A complex tensor.
      * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-     * @param Treal the value of the Treal property
+     * @param Treal The value of the Treal attribute
      * @param <U> data type for `IRFFT2D` output and operands
      * @return a new instance of Irfft2d
      * @see org.tensorflow.op.SignalOps.irfft2d
@@ -579,7 +579,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A complex tensor.
      * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-     * @param Treal the value of the Treal property
+     * @param Treal The value of the Treal attribute
      * @param <U> data type for `IRFFT3D` output and operands
      * @return a new instance of Irfft3d
      * @see org.tensorflow.op.SignalOps.irfft3d
@@ -604,7 +604,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A float32 tensor.
      * @param fftLength An int32 tensor of shape [1]. The FFT length.
-     * @param Tcomplex the value of the Tcomplex property
+     * @param Tcomplex The value of the Tcomplex attribute
      * @param <U> data type for `RFFT` output and operands
      * @return a new instance of Rfft
      * @see org.tensorflow.op.SignalOps.rfft
@@ -630,7 +630,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A float32 tensor.
      * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-     * @param Tcomplex the value of the Tcomplex property
+     * @param Tcomplex The value of the Tcomplex attribute
      * @param <U> data type for `RFFT2D` output and operands
      * @return a new instance of Rfft2d
      * @see org.tensorflow.op.SignalOps.rfft2d
@@ -656,7 +656,7 @@ public class SignalOps(
      * @param <U> data type for `output` output
      * @param input A float32 tensor.
      * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-     * @param Tcomplex the value of the Tcomplex property
+     * @param Tcomplex The value of the Tcomplex attribute
      * @param <U> data type for `RFFT3D` output and operands
      * @return a new instance of Rfft3d
      * @see org.tensorflow.op.SignalOps.rfft3d

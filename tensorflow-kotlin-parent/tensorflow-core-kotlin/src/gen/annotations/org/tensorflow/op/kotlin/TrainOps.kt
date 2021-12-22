@@ -22,6 +22,7 @@ import kotlin.Float
 import kotlin.Long
 import kotlin.String
 import kotlin.jvm.JvmName
+import org.tensorflow.ConcreteFunction
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
@@ -86,6 +87,7 @@ import org.tensorflow.op.train.SparseApplyMomentum
 import org.tensorflow.op.train.SparseApplyProximalAdagrad
 import org.tensorflow.op.train.SparseApplyProximalGradientDescent
 import org.tensorflow.op.train.SparseApplyRmsProp
+import org.tensorflow.op.train.SymbolicGradient
 import org.tensorflow.op.train.TileGrad
 import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
@@ -326,10 +328,12 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Adam algorithm.
-     *  $$lr_t := \text{learning_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
-     *  $$m_t := beta_1 * m_{t-1} + (1 - beta_1) * g$$
-     *  $$v_t := beta_2 * v_{t-1} + (1 - beta_2) * g * g$$
-     *  $$variable := variable - lr_t * m_t / (\sqrt{v_t} + \epsilon)$$
+     *  $$\text{lr}_t := \mathrm{lr} \cdot \frac{\sqrt{1 - \beta_2^t}}{1 - \beta_1^t}$$
+     *  $$m_t := \beta_1 \cdot m_{t-1} + (1 - \beta_1) \cdot g$$
+     *  $$v_t := \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g^2$$
+     *  $$\text{var} := \begin{cases} \text{var} - (m_t \beta_1 + g \cdot (1 -
+     * \beta_1))\cdot\text{lr}_t/(\sqrt{v_t} + \epsilon), &amp;\text{if use_nesterov}\\  \text{var} -
+     * m_t \cdot \text{lr}_t /(\sqrt{v_t} + \epsilon), &amp;\text{otherwise} \end{cases}$$
      *
      * @param <T> data type for `out` output
      * @param var Should be from a Variable().
@@ -520,7 +524,7 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage the l2Shrinkage value
+     * @param l2Shrinkage The l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
      * @param options carries optional attribute values
      * @param <T> data type for `ApplyFtrlV2` output and operands
@@ -794,7 +798,7 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum the momentum value
+     * @param momentum The momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param options carries optional attribute values
@@ -860,11 +864,12 @@ public class TrainOps(
      * _NOTE_: `train.BatchMatMul` supports broadcasting in the batch dimensions. More
      *  about broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html) .
      *
-     * @param <T> data type for `output` output
+     * @param <V> data type for `output` output
      * @param x 2-D or higher with shape `&#91;..., r_x, c_x&#93;`.
      * @param y 2-D or higher with shape `&#91;..., r_y, c_y&#93;`.
+     * @param Tout If not spcified, Tout is the same type to input type.
      * @param options carries optional attribute values
-     * @param <T> data type for `BatchMatMulV2` output and operands
+     * @param <V> data type for `BatchMatMulV3` output and operands
      * @return a new instance of BatchMatMul
      * @see org.tensorflow.op.TrainOps.batchMatMul
      * @param adjX Sets the adjX option.
@@ -876,14 +881,16 @@ public class TrainOps(
      * @param adjY If `True`, adjoint the slices of `y`. Defaults to `False`.
      * @return this Options instance.
      */
-    public fun <T : TType> batchMatMul(
-        x: Operand<T>,
-        y: Operand<T>,
+    public fun <V : TType> batchMatMul(
+        x: Operand<out TType>,
+        y: Operand<out TType>,
+        Tout: Class<V>,
         adjX: Boolean? = null,
         adjY: Boolean? = null
-    ): BatchMatMul<T> = java.batchMatMul<T>(    
+    ): BatchMatMul<V> = java.batchMatMul<V>(    
         x,
         y,
+        Tout,
         *listOfNotNull(
             adjX?.let{ org.tensorflow.op.train.BatchMatMul.adjX(it) },
             adjY?.let{ org.tensorflow.op.train.BatchMatMul.adjY(it) }
@@ -1038,7 +1045,7 @@ public class TrainOps(
      * @param wOut output word embedding.
      * @param examples A vector of word ids.
      * @param labels A vector of word ids.
-     * @param lr the lr value
+     * @param lr The lr value
      * @param vocabCount Count of words in the vocabulary.
      * @param numNegativeSamples Number of negative samples per example.
      * @return a new instance of NegTrain
@@ -1186,10 +1193,12 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Adam algorithm.
-     *  $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
-     *  $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
-     *  $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
-     *  $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{v_t} + \epsilon)$$
+     *  $$\text{lr}_t := \mathrm{lr} \cdot \frac{\sqrt{1 - \beta_2^t}}{1 - \beta_1^t}$$
+     *  $$m_t := \beta_1 \cdot m_{t-1} + (1 - \beta_1) \cdot g$$
+     *  $$v_t := \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g^2$$
+     *  $$\text{var} := \begin{cases} \text{var} - (m_t \beta_1 + g \cdot (1 -
+     * \beta_1))\cdot\text{lr}_t/(\sqrt{v_t} + \epsilon), &amp;\text{if use_nesterov}\\  \text{var} -
+     * m_t \cdot \text{lr}_t /(\sqrt{v_t} + \epsilon), &amp;\text{otherwise} \end{cases}$$
      *
      * @param var Should be from a Variable().
      * @param m Should be from a Variable().
@@ -1421,8 +1430,8 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Ftrl-proximal scheme.
+     *  accum_new = accum + grad * grad
      *  grad_with_shrinkage = grad + 2 * l2_shrinkage * var
-     *  accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
      *  linear += grad_with_shrinkage +
      *  (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
      *  quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
@@ -1436,7 +1445,7 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage the l2Shrinkage value
+     * @param l2Shrinkage The l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
      * @param options carries optional attribute values
      * @param <T> data type for `ResourceApplyFtrlV2` output and operands
@@ -1753,7 +1762,7 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum the momentum value
+     * @param momentum The momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param options carries optional attribute values
@@ -1794,7 +1803,7 @@ public class TrainOps(
     /**
      * var: Should be from a Variable().
      *
-     * @param var the var value
+     * @param var The var value
      * @param accum Should be from a Variable().
      * @param accumUpdate : Should be from a Variable().
      * @param lr Learning rate. Must be a scalar.
@@ -1955,7 +1964,7 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum the momentum value
+     * @param momentum The momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -2017,7 +2026,7 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage the l2Shrinkage value
+     * @param l2Shrinkage The l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
      * @param options carries optional attribute values
      * @param <T> data type for `ResourceSparseApplyFtrlV2` output and operands
@@ -2282,7 +2291,7 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum the momentum value
+     * @param momentum The momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -2514,7 +2523,7 @@ public class TrainOps(
      * var: Should be from a Variable().
      *
      * @param <T> data type for `out` output
-     * @param var the var value
+     * @param var The var value
      * @param accum Should be from a Variable().
      * @param accumUpdate : Should be from a Variable().
      * @param lr Learning rate. Must be a scalar.
@@ -2631,7 +2640,7 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum the momentum value
+     * @param momentum The momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -2694,7 +2703,7 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage the l2Shrinkage value
+     * @param l2Shrinkage The l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
      * @param options carries optional attribute values
      * @param <T> data type for `SparseApplyFtrlV2` output and operands
@@ -2906,7 +2915,7 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum the momentum value
+     * @param momentum The momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
@@ -2948,14 +2957,50 @@ public class TrainOps(
         )
 
     /**
+     * Computes the gradient function for function f via backpropagation.
+     *
+     * @param input a list of input tensors of size N + M;
+     * @param Tout the type list for the input list.
+     * @param f The function we want to compute the gradient for.
+     *  
+     * The function 'f' must be a numerical function which takes N inputs and
+     *  produces M outputs. Its gradient function 'g', which is computed by
+     *  this SymbolicGradient op is a function taking N + M inputs and
+     *  produces N outputs.
+     *  
+     * I.e. if we have
+     *  (y1, y2, ..., y_M) = f(x1, x2, ..., x_N),
+     *  then, g is
+     *  (dL/dx1, dL/dx2, ..., dL/dx_N) = g(x1, x2, ..., x_N,
+     *  dL/dy1, dL/dy2, ..., dL/dy_M),
+     *  
+     * where L is a scalar-value function of (x1, x2, ..., xN) (e.g., the
+     *  loss function). dL/dx_i is the partial derivative of L with respect
+     *  to x_i.
+     *  
+     * (Needs some math expert to say the comment above better.)
+     * @return a new instance of SymbolicGradient
+     * @see org.tensorflow.op.TrainOps.symbolicGradient
+     */
+    public fun symbolicGradient(
+        input: Iterable<Operand<*>>,
+        Tout: List<Class<out TType>>,
+        f: ConcreteFunction
+    ): SymbolicGradient = java.symbolicGradient(    
+        input,
+        Tout,
+        f
+        )
+
+    /**
      * Returns the gradient of `Tile`.
      *  Since `Tile` takes an input and repeats the input `multiples` times
      *  along each dimension, `train.TileGrad` takes in `multiples` and aggregates
      *  each repeated tile of `input` into `output`.
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param multiples the multiples value
+     * @param input The input value
+     * @param multiples The multiples value
      * @param <T> data type for `TileGrad` output and operands
      * @return a new instance of TileGrad
      * @see org.tensorflow.op.TrainOps.tileGrad
@@ -2987,6 +3032,59 @@ public class TrainOps(
     public inline fun <reified T : TType> accumulatorTakeGradient(handle: Operand<TString>,
             numRequired: Operand<TInt32>): AccumulatorTakeGradient<T> =
             accumulatorTakeGradient<T>(handle, numRequired, T::class.java)
+
+    /**
+     * Multiplies slices of two tensors in batches.
+     *  Multiplies all slices of `Tensor` `x` and `y` (each slice can be
+     *  viewed as an element of a batch), and arranges the individual results
+     *  in a single output tensor of the same batch size. Each of the
+     *  individual slices can optionally be adjointed (to adjoint a matrix
+     *  means to transpose and conjugate it) before multiplication by setting
+     *  the `adj_x` or `adj_y` flag to `True`, which are by default `False`.
+     *  
+     * The input tensors `x` and `y` are 2-D or higher with shape `&#91;..., r_x, c_x&#93;`
+     *  and `&#91;..., r_y, c_y&#93;`.
+     *  
+     * The output tensor is 2-D or higher with shape `&#91;..., r_o, c_o&#93;`, where:
+     *  ```
+     * r_o = c_x if adj_x else r_x
+     *  c_o = r_y if adj_y else c_y
+     *  
+     * ```
+     *  
+     * It is computed as:
+     *  ```
+     * output[..., :, :] = matrix(x[..., :, :]) * matrix(y[..., :, :])
+     *  
+     * ```
+     *  
+     * _NOTE_: `train.BatchMatMul` supports broadcasting in the batch dimensions. More
+     *  about broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html) .
+     *
+     * @param <V> data type for `output` output
+     * @param x 2-D or higher with shape `&#91;..., r_x, c_x&#93;`.
+     * @param y 2-D or higher with shape `&#91;..., r_y, c_y&#93;`.
+     * @param Tout If not spcified, Tout is the same type to input type.
+     * @param options carries optional attribute values
+     * @param <V> data type for `BatchMatMulV3` output and operands
+     * @return a new instance of BatchMatMul
+     * @see org.tensorflow.op.TrainOps.batchMatMul
+     * @param adjX Sets the adjX option.
+     *
+     * @param adjX If `True`, adjoint the slices of `x`. Defaults to `False`.
+     * @return this Options instance.
+     * @param adjY Sets the adjY option.
+     *
+     * @param adjY If `True`, adjoint the slices of `y`. Defaults to `False`.
+     * @return this Options instance.
+     */
+    @JvmName("batchMatMulReified")
+    public inline fun <reified V : TType> batchMatMul(
+        x: Operand<out TType>,
+        y: Operand<out TType>,
+        adjX: Boolean? = null,
+        adjY: Boolean? = null
+    ): BatchMatMul<V> = batchMatMul<V>(x, y, V::class.java, adjX, adjY)
 
     /**
      * A conditional accumulator for aggregating gradients.

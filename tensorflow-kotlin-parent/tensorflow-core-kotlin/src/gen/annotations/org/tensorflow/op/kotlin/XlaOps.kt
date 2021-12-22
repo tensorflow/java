@@ -22,9 +22,11 @@ import kotlin.Float
 import kotlin.Long
 import kotlin.String
 import kotlin.jvm.JvmName
+import org.tensorflow.ConcreteFunction
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
+import org.tensorflow.op.xla.AllReduce
 import org.tensorflow.op.xla.BroadcastHelper
 import org.tensorflow.op.xla.ClusterOutput
 import org.tensorflow.op.xla.Conv
@@ -34,18 +36,34 @@ import org.tensorflow.op.xla.DynamicSlice
 import org.tensorflow.op.xla.DynamicUpdateSlice
 import org.tensorflow.op.xla.Einsum
 import org.tensorflow.op.xla.Gather
+import org.tensorflow.op.xla.If
 import org.tensorflow.op.xla.KeyValueSort
 import org.tensorflow.op.xla.Pad
 import org.tensorflow.op.xla.Recv
+import org.tensorflow.op.xla.Reduce
+import org.tensorflow.op.xla.ReduceScatter
+import org.tensorflow.op.xla.ReduceWindow
+import org.tensorflow.op.xla.RemoveDynamicDimensionSize
 import org.tensorflow.op.xla.ReplicaId
+import org.tensorflow.op.xla.RngBitGenerator
+import org.tensorflow.op.xla.Scatter
+import org.tensorflow.op.xla.SelectAndScatter
 import org.tensorflow.op.xla.SelfAdjointEig
 import org.tensorflow.op.xla.Send
+import org.tensorflow.op.xla.SetDynamicDimensionSize
 import org.tensorflow.op.xla.Sharding
 import org.tensorflow.op.xla.Sort
+import org.tensorflow.op.xla.SpmdFullToShardShape
+import org.tensorflow.op.xla.SpmdShardToFullShape
 import org.tensorflow.op.xla.Svd
+import org.tensorflow.op.xla.While
+import org.tensorflow.op.xla.XlaHostCompute
+import org.tensorflow.op.xla.XlaLaunch
 import org.tensorflow.op.xla.XlaRecvFromHost
 import org.tensorflow.op.xla.XlaSendToHost
 import org.tensorflow.op.xla.XlaSetBound
+import org.tensorflow.op.xla.XlaVariadicReduce
+import org.tensorflow.op.xla.XlaVariadicSort
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
@@ -67,6 +85,28 @@ public class XlaOps(
      * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
+
+    /**
+     * Wraps the XLA AllReduce operator
+     *  documented at https://www.tensorflow.org/xla/operation_semantics#allreduce.
+     *
+     * @param <T> data type for `output` output
+     * @param input Array or a non-empty tuple of arrays to reduce across replicas.
+     * @param groupAssignment Groups between which the reductions are performed.
+     * @param reduceOp Reduction computation.
+     * @param <T> data type for `XlaAllReduce` output and operands
+     * @return a new instance of AllReduce
+     * @see org.tensorflow.op.XlaOps.allReduce
+     */
+    public fun <T : TNumber> allReduce(
+        input: Operand<T>,
+        groupAssignment: Operand<TInt32>,
+        reduceOp: String
+    ): AllReduce<T> = java.allReduce<T>(    
+        input,
+        groupAssignment,
+        reduceOp
+        )
 
     /**
      * Helper operator for performing XLA-style broadcasts
@@ -96,7 +136,7 @@ public class XlaOps(
      * Operator that connects the output of an XLA computation to other consumer graph nodes.
      *
      * @param <T> data type for `outputs` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `XlaClusterOutput` output and operands
      * @return a new instance of ClusterOutput
      * @see org.tensorflow.op.XlaOps.clusterOutput
@@ -111,7 +151,7 @@ public class XlaOps(
      *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
      *  .
      *
-     * @param <T> data type for `output` output
+     * @param <W> data type for `output` output
      * @param lhs the input tensor
      * @param rhs the kernel tensor
      * @param windowStrides the inter-window strides
@@ -121,22 +161,24 @@ public class XlaOps(
      * @param featureGroupCount number of feature groups for grouped convolution.
      * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
      * @param precisionConfig a serialized xla::PrecisionConfig proto.
-     * @param <T> data type for `XlaConv` output and operands
-     * @param <U> data type for `XlaConv` output and operands
+     * @param preferredElementType The type of the tensor.
+     * @param <W> data type for `XlaConvV2` output and operands
+     * @param <V> data type for `XlaConvV2` output and operands
      * @return a new instance of Conv
      * @see org.tensorflow.op.XlaOps.conv
      */
-    public fun <T : TType, U : TNumber> conv(
-        lhs: Operand<T>,
-        rhs: Operand<T>,
-        windowStrides: Operand<U>,
-        padding: Operand<U>,
-        lhsDilation: Operand<U>,
-        rhsDilation: Operand<U>,
-        featureGroupCount: Operand<U>,
+    public fun <W : TType, V : TNumber> conv(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        windowStrides: Operand<V>,
+        padding: Operand<V>,
+        lhsDilation: Operand<V>,
+        rhsDilation: Operand<V>,
+        featureGroupCount: Operand<V>,
         dimensionNumbers: String,
-        precisionConfig: String
-    ): Conv<T> = java.conv<T, U>(    
+        precisionConfig: String,
+        preferredElementType: Class<W>
+    ): Conv<W> = java.conv<W, V>(    
         lhs,
         rhs,
         windowStrides,
@@ -145,7 +187,8 @@ public class XlaOps(
         rhsDilation,
         featureGroupCount,
         dimensionNumbers,
-        precisionConfig
+        precisionConfig,
+        preferredElementType
         )
 
     /**
@@ -181,25 +224,28 @@ public class XlaOps(
      *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
      *  .
      *
-     * @param <T> data type for `output` output
+     * @param <V> data type for `output` output
      * @param lhs the LHS tensor
      * @param rhs the RHS tensor
      * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
      * @param precisionConfig a serialized xla::PrecisionConfig proto.
-     * @param <T> data type for `XlaDot` output and operands
+     * @param preferredElementType The type of the tensor.
+     * @param <V> data type for `XlaDotV2` output and operands
      * @return a new instance of Dot
      * @see org.tensorflow.op.XlaOps.dot
      */
-    public fun <T : TType> dot(
-        lhs: Operand<T>,
-        rhs: Operand<T>,
+    public fun <V : TType> dot(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
         dimensionNumbers: String,
-        precisionConfig: String
-    ): Dot<T> = java.dot<T>(    
+        precisionConfig: String,
+        preferredElementType: Class<V>
+    ): Dot<V> = java.dot<V>(    
         lhs,
         rhs,
         dimensionNumbers,
-        precisionConfig
+        precisionConfig,
+        preferredElementType
         )
 
     /**
@@ -219,7 +265,7 @@ public class XlaOps(
      *  dimension. Each value must be strictly greater than zero, and start + size
      *  must be less than or equal to the size of the dimension to avoid
      *  implementation defined behavior.
-     * @param sizeIndices the sizeIndices value
+     * @param sizeIndices The sizeIndices value
      * @param <T> data type for `XlaDynamicSlice` output and operands
      * @param <U> data type for `XlaDynamicSlice` output and operands
      * @return a new instance of DynamicSlice
@@ -272,9 +318,9 @@ public class XlaOps(
      *  transpose operations as tf.einsum does.
      *
      * @param <T> data type for `product` output
-     * @param a the a value
-     * @param b the b value
-     * @param equation the value of the equation property
+     * @param a The a value
+     * @param b The b value
+     * @param equation The value of the equation attribute
      * @param <T> data type for `XlaEinsum` output and operands
      * @return a new instance of Einsum
      * @see org.tensorflow.op.XlaOps.einsum
@@ -316,6 +362,33 @@ public class XlaOps(
         sliceSizes,
         dimensionNumbers,
         indicesAreSorted
+        )
+
+    /**
+     * output = cond ? then_branch(inputs) : else_branch(inputs).
+     *
+     * @param cond A boolean scalar.
+     * @param inputs A list of input tensors.
+     * @param thenBranch A function takes 'inputs' and returns a list of tensors,
+     *  whose types are the same as what else_branch returns.
+     * @param elseBranch A function takes 'inputs' and returns a list of tensors.
+     *  whose types are the same as what then_branch returns.
+     * @param Tout The value of the Tout attribute
+     * @return a new instance of If
+     * @see org.tensorflow.op.XlaOps.ifOp
+     */
+    public fun ifOp(
+        cond: Operand<out TType>,
+        inputs: Iterable<Operand<*>>,
+        thenBranch: ConcreteFunction,
+        elseBranch: ConcreteFunction,
+        Tout: List<Class<out TType>>
+    ): If = java.ifOp(    
+        cond,
+        inputs,
+        thenBranch,
+        elseBranch,
+        Tout
         )
 
     /**
@@ -398,6 +471,112 @@ public class XlaOps(
         )
 
     /**
+     * Wraps the XLA Reduce operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#reduce .
+     *
+     * @param <T> data type for `output` output
+     * @param input the input tensor
+     * @param initValue a scalar representing the initial value for the reduction
+     * @param dimensionsToReduce dimension numbers over which to reduce
+     * @param reducer a reducer function to apply
+     * @param <T> data type for `XlaReduce` output and operands
+     * @return a new instance of Reduce
+     * @see org.tensorflow.op.XlaOps.reduce
+     */
+    public fun <T : TType> reduce(
+        input: Operand<T>,
+        initValue: Operand<T>,
+        dimensionsToReduce: List<Long>,
+        reducer: ConcreteFunction
+    ): Reduce<T> = java.reduce<T>(    
+        input,
+        initValue,
+        dimensionsToReduce,
+        reducer
+        )
+
+    /**
+     * Wraps the XLA ReduceScatter operator
+     *  documented at https://www.tensorflow.org/xla/operation_semantics#reducescatter.
+     *
+     * @param <T> data type for `output` output
+     * @param input Array or a non-empty tuple of arrays to reduce across replicas.
+     * @param groupAssignment Groups between which the reductions are performed.
+     * @param scatterDimension Dimension to scatter.
+     * @param reduceOp Reduction computation.
+     * @param <T> data type for `XlaReduceScatter` output and operands
+     * @return a new instance of ReduceScatter
+     * @see org.tensorflow.op.XlaOps.reduceScatter
+     */
+    public fun <T : TNumber> reduceScatter(
+        input: Operand<T>,
+        groupAssignment: Operand<TInt32>,
+        scatterDimension: Operand<TInt32>,
+        reduceOp: String
+    ): ReduceScatter<T> = java.reduceScatter<T>(    
+        input,
+        groupAssignment,
+        scatterDimension,
+        reduceOp
+        )
+
+    /**
+     * Wraps the XLA ReduceWindow operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#reducewindow .
+     *
+     * @param <T> data type for `output` output
+     * @param input the input tensor
+     * @param initValue a scalar representing the initial value for the reduction
+     * @param windowDimensions the shape of the window
+     * @param windowStrides the inter-window strides
+     * @param baseDilations The baseDilations value
+     * @param windowDilations The windowDilations value
+     * @param padding the padding to apply at the start and end of each input dimensions
+     * @param computation a reducer function to apply
+     * @param <T> data type for `XlaReduceWindow` output and operands
+     * @param <U> data type for `XlaReduceWindow` output and operands
+     * @return a new instance of ReduceWindow
+     * @see org.tensorflow.op.XlaOps.reduceWindow
+     */
+    public fun <T : TType, U : TNumber> reduceWindow(
+        input: Operand<T>,
+        initValue: Operand<T>,
+        windowDimensions: Operand<U>,
+        windowStrides: Operand<U>,
+        baseDilations: Operand<U>,
+        windowDilations: Operand<U>,
+        padding: Operand<U>,
+        computation: ConcreteFunction
+    ): ReduceWindow<T> = java.reduceWindow<T, U>(    
+        input,
+        initValue,
+        windowDimensions,
+        windowStrides,
+        baseDilations,
+        windowDilations,
+        padding,
+        computation
+        )
+
+    /**
+     * Inverse of XlaSetDynamicDimensionSize.
+     *  Make an xla bounded dynamic dimension into a static dimension. The bound of the
+     *  size of dimension `dim_index` becomes the static dimension size.
+     *
+     * @param <T> data type for `output` output
+     * @param input The input value
+     * @param dimIndex The dimIndex value
+     * @param <T> data type for `XlaRemoveDynamicDimensionSize` output and operands
+     * @return a new instance of RemoveDynamicDimensionSize
+     * @see org.tensorflow.op.XlaOps.removeDynamicDimensionSize
+     */
+    public fun <T : TType> removeDynamicDimensionSize(input: Operand<T>, dimIndex: Operand<TInt32>):
+            RemoveDynamicDimensionSize<T> = java.removeDynamicDimensionSize<T>(    
+        input,
+        dimIndex
+        )
+
+    /**
      * Replica ID.
      *
      * @return a new instance of ReplicaId
@@ -405,6 +584,106 @@ public class XlaOps(
      */
     public fun replicaId(): ReplicaId = java.replicaId(    
         
+        )
+
+    /**
+     * Stateless PRNG bit generator.
+     *  Wraps the XLA RngBitGenerator operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#rngbitgenerator.
+     *
+     * @param <U> data type for `output` output
+     * @param algorithm The PRNG algorithm to use, one of
+     *  tf.random.Algorithm.{PHILOX, THREEFRY, AUTO_SELECT}.
+     * @param initialState Initial state for the PRNG algorithm. For THREEFRY, it should be
+     *  a u64[2] and for PHILOX a u64[3].
+     * @param shape The output shape of the generated data.
+     * @param dtype The type of the tensor.
+     * @param <U> data type for `XlaRngBitGenerator` output and operands
+     * @return a new instance of RngBitGenerator
+     * @see org.tensorflow.op.XlaOps.rngBitGenerator
+     */
+    public fun <U : TNumber> rngBitGenerator(
+        algorithm: Operand<TInt32>,
+        initialState: Operand<out TType>,
+        shape: Operand<out TNumber>,
+        dtype: Class<U>
+    ): RngBitGenerator<U> = java.rngBitGenerator<U>(    
+        algorithm,
+        initialState,
+        shape,
+        dtype
+        )
+
+    /**
+     * Wraps the XLA Scatter operator documented at
+     *  https://www.tensorflow.org/xla/operation_semantics#scatter.
+     *
+     * @param <T> data type for `output` output
+     * @param operand Array to be scattered into.
+     * @param scatterIndices Array containing the starting indices of the slices that must
+     *  be scattered to.
+     * @param updates Array containing the values that must be used for scattering.
+     * @param updateComputation Computation to be used for combining the existing values in
+     *  the input array and the updates during scatter.
+     * @param dimensionNumbers A serialized xla::ScatterDimensionNumbers proto.
+     * @param indicesAreSorted Boolean indicating if the indices are sorted.
+     * @param <T> data type for `XlaScatter` output and operands
+     * @return a new instance of Scatter
+     * @see org.tensorflow.op.XlaOps.scatter
+     */
+    public fun <T : TType> scatter(
+        operand: Operand<T>,
+        scatterIndices: Operand<out TNumber>,
+        updates: Operand<T>,
+        updateComputation: ConcreteFunction,
+        dimensionNumbers: String,
+        indicesAreSorted: Boolean
+    ): Scatter<T> = java.scatter<T>(    
+        operand,
+        scatterIndices,
+        updates,
+        updateComputation,
+        dimensionNumbers,
+        indicesAreSorted
+        )
+
+    /**
+     * Wraps the XLA SelectAndScatter operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#selectandscatter
+     *  .
+     *
+     * @param <T> data type for `output` output
+     * @param operand the input tensor
+     * @param windowDimensions the shape of the window
+     * @param windowStrides the inter-window strides
+     * @param padding the padding to apply at the start and end of each input dimensions
+     * @param source a tensor of values to scatter
+     * @param initValue a scalar representing the initial value for the output tensor
+     * @param select a selection function to apply
+     * @param scatter a scatter function to apply
+     * @param <T> data type for `XlaSelectAndScatter` output and operands
+     * @param <U> data type for `XlaSelectAndScatter` output and operands
+     * @return a new instance of SelectAndScatter
+     * @see org.tensorflow.op.XlaOps.selectAndScatter
+     */
+    public fun <T : TType, U : TNumber> selectAndScatter(
+        operand: Operand<T>,
+        windowDimensions: Operand<U>,
+        windowStrides: Operand<U>,
+        padding: Operand<U>,
+        source: Operand<T>,
+        initValue: Operand<T>,
+        select: ConcreteFunction,
+        scatter: ConcreteFunction
+    ): SelectAndScatter<T> = java.selectAndScatter<T, U>(    
+        operand,
+        windowDimensions,
+        windowStrides,
+        padding,
+        source,
+        initValue,
+        select,
+        scatter
         )
 
     /**
@@ -457,10 +736,38 @@ public class XlaOps(
         )
 
     /**
-     * An op which shards the input based on the given sharding attribute.
+     * Make a static dimension into a xla bounded dynamic dimension.
+     *  ```
+     * The current static dimension size will become the bound and the second
+     *      operand becomes the dynamic size of the dimension.
+     *  
+     * ```
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
+     * @param dimIndex The dimIndex value
+     * @param sizeOutput The sizeOutput value
+     * @param <T> data type for `XlaSetDynamicDimensionSize` output and operands
+     * @return a new instance of SetDynamicDimensionSize
+     * @see org.tensorflow.op.XlaOps.setDynamicDimensionSize
+     */
+    public fun <T : TType> setDynamicDimensionSize(
+        input: Operand<T>,
+        dimIndex: Operand<TInt32>,
+        sizeOutput: Operand<TInt32>
+    ): SetDynamicDimensionSize<T> = java.setDynamicDimensionSize<T>(    
+        input,
+        dimIndex,
+        sizeOutput
+        )
+
+    /**
+     * An op which shards the input based on the given sharding attribute. It can
+     *  selectively annotate a subset of tensor dimensions by skipping unspecified_dims,
+     *  and the sharding annotation should be replicated in those dims.
+     *
+     * @param <T> data type for `output` output
+     * @param input The input value
      * @param options carries optional attribute values
      * @param <T> data type for `XlaSharding` output and operands
      * @return a new instance of Sharding
@@ -469,12 +776,20 @@ public class XlaOps(
      *
      * @param sharding the sharding option
      * @return this Options instance.
+     * @param unspecifiedDims Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
      */
-    public fun <T : TType> sharding(input: Operand<T>, sharding: String? = null): Sharding<T> =
-            java.sharding<T>(    
+    public fun <T : TType> sharding(
+        input: Operand<T>,
+        sharding: String? = null,
+        unspecifiedDims: List<Long>? = null
+    ): Sharding<T> = java.sharding<T>(    
         input,
         *listOfNotNull(
-            sharding?.let{ org.tensorflow.op.xla.Sharding.sharding(it) }
+            sharding?.let{ org.tensorflow.op.xla.Sharding.sharding(it) },
+            unspecifiedDims?.let{ org.tensorflow.op.xla.Sharding.unspecifiedDims(it) }
         ).toTypedArray()
         )
 
@@ -493,6 +808,85 @@ public class XlaOps(
      */
     public fun <T : TType> sort(input: Operand<T>): Sort<T> = java.sort<T>(    
         input
+        )
+
+    /**
+     * An op used by XLA SPMD partitioner to switch from automatic partitioning to
+     *  manual partitioning. It annotates the input (full-shape, to be automatically
+     *  partitioned) with the same sharding used by manual partitioning, and outputs a
+     *  shard-shaped tensor to be consumed by later manually-partitioned ops. If the
+     *  shape is not evenly partitionable, the padding region will be masked with 0s.
+     *  The conversion can happen partially in subgroups, by specifying the dim
+     *  attribute, where only that dim will be converted.
+     *
+     * @param <T> data type for `output` output
+     * @param input The input value
+     * @param manualSharding The value of the manualSharding attribute
+     * @param options carries optional attribute values
+     * @param <T> data type for `XlaSpmdFullToShardShape` output and operands
+     * @return a new instance of SpmdFullToShardShape
+     * @see org.tensorflow.op.XlaOps.spmdFullToShardShape
+     * @param dim Sets the dim option.
+     *
+     * @param dim the dim option
+     * @return this Options instance.
+     * @param unspecifiedDims Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
+     */
+    public fun <T : TType> spmdFullToShardShape(
+        input: Operand<T>,
+        manualSharding: String,
+        dim: Long? = null,
+        unspecifiedDims: List<Long>? = null
+    ): SpmdFullToShardShape<T> = java.spmdFullToShardShape<T>(    
+        input,
+        manualSharding,
+        *listOfNotNull(
+            dim?.let{ org.tensorflow.op.xla.SpmdFullToShardShape.dim(it) },
+            unspecifiedDims?.let{ org.tensorflow.op.xla.SpmdFullToShardShape.unspecifiedDims(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * An op used by XLA SPMD partitioner to switch from manual partitioning to
+     *  automatic partitioning. It converts the shard-shaped, manually partitioned input
+     *  into full-shaped tensor to be partitioned automatically with the same sharding
+     *  used by manual partitioning. The conversion can happen partially in subgroups,
+     *  by specifying the dim attribute, where only that dim will be converted.
+     *
+     * @param <T> data type for `output` output
+     * @param input The input value
+     * @param manualSharding The value of the manualSharding attribute
+     * @param fullShape The value of the fullShape attribute
+     * @param options carries optional attribute values
+     * @param <T> data type for `XlaSpmdShardToFullShape` output and operands
+     * @return a new instance of SpmdShardToFullShape
+     * @see org.tensorflow.op.XlaOps.spmdShardToFullShape
+     * @param dim Sets the dim option.
+     *
+     * @param dim the dim option
+     * @return this Options instance.
+     * @param unspecifiedDims Sets the unspecifiedDims option.
+     *
+     * @param unspecifiedDims the unspecifiedDims option
+     * @return this Options instance.
+     */
+    public fun <T : TType> spmdShardToFullShape(
+        input: Operand<T>,
+        manualSharding: String,
+        fullShape: Shape,
+        dim: Long? = null,
+        unspecifiedDims: List<Long>? = null
+    ): SpmdShardToFullShape<T> = java.spmdShardToFullShape<T>(    
+        input,
+        manualSharding,
+        fullShape,
+        *listOfNotNull(
+            dim?.let{ org.tensorflow.op.xla.SpmdShardToFullShape.dim(it) },
+            unspecifiedDims?.let{ org.tensorflow.op.xla.SpmdShardToFullShape.unspecifiedDims(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -528,6 +922,114 @@ public class XlaOps(
         )
 
     /**
+     * output = input; While (Cond(output)) { output = Body(output) }
+     *
+     * @param input A list of input tensors whose types are T.
+     * @param cond A function takes 'input' and returns a tensor.  If the tensor is
+     *  a scalar of non-boolean, the scalar is converted to a boolean
+     *  according to the following rule: if the scalar is a numerical
+     *  value, non-zero means True and zero means False; if the scalar is
+     *  a string, non-empty means True and empty means False. If the
+     *  tensor is not a scalar, non-emptiness means True and False
+     *  otherwise.
+     * @param body A function that takes a list of tensors and returns another
+     *  list of tensors. Both lists have the same types as specified by T.
+     * @return a new instance of While
+     * @see org.tensorflow.op.XlaOps.whileOp
+     */
+    public fun whileOp(
+        input: Iterable<Operand<*>>,
+        cond: ConcreteFunction,
+        body: ConcreteFunction
+    ): While = java.whileOp(    
+        input,
+        cond,
+        body
+        )
+
+    /**
+     * A pseudo-op to represent host-side computation in an XLA program.
+     *
+     * @param inputs A list of tensors that will be sent to the host.
+     * @param Toutputs The element types of each element in `outputs`.
+     * @param ancestors A list of names of HostCompute computations that must be
+     *  sequenced before this computation.
+     * @param shapes If shape_inference_graph is empty, a list of the shapes of `outputs`.
+     * @param shapeInferenceGraph If non-empty, a serialized GraphDef representing a graph
+     *  that must be analyzed at compile time to determine the shapes of the outputs.
+     * @param key A unique identifier for this region used to match up host transfers.
+     * @param options carries optional attribute values
+     * @return a new instance of XlaHostCompute
+     * @see org.tensorflow.op.XlaOps.xlaHostCompute
+     * @param sendKey Sets the sendKey option.
+     *
+     * @param sendKey the sendKey option
+     * @return this Options instance.
+     * @param recvKey Sets the recvKey option.
+     *
+     * @param recvKey the recvKey option
+     * @return this Options instance.
+     * @param costEstimateNs Sets the costEstimateNs option.
+     *
+     * @param costEstimateNs Estimated duration of the host computation in nanoseconds.
+     * @return this Options instance.
+     * @param tpuCore Sets the tpuCore option.
+     *
+     * @param tpuCore Default core to use for host to device transfers.
+     * @return this Options instance.
+     */
+    public fun xlaHostCompute(
+        inputs: Iterable<Operand<*>>,
+        Toutputs: List<Class<out TType>>,
+        ancestors: List<String>,
+        shapes: List<Shape>,
+        shapeInferenceGraph: ConcreteFunction,
+        key: String,
+        sendKey: String? = null,
+        recvKey: String? = null,
+        costEstimateNs: Long? = null,
+        tpuCore: Long? = null
+    ): XlaHostCompute = java.xlaHostCompute(    
+        inputs,
+        Toutputs,
+        ancestors,
+        shapes,
+        shapeInferenceGraph,
+        key,
+        *listOfNotNull(
+            sendKey?.let{ org.tensorflow.op.xla.XlaHostCompute.sendKey(it) },
+            recvKey?.let{ org.tensorflow.op.xla.XlaHostCompute.recvKey(it) },
+            costEstimateNs?.let{ org.tensorflow.op.xla.XlaHostCompute.costEstimateNs(it) },
+            tpuCore?.let{ org.tensorflow.op.xla.XlaHostCompute.tpuCore(it) }
+        ).toTypedArray()
+        )
+
+    /**
+     * XLA Launch Op. For use by the XLA JIT only.
+     *
+     * @param constants The constants value
+     * @param args The args value
+     * @param resources The resources value
+     * @param Tresults The value of the Tresults attribute
+     * @param function The value of the function attribute
+     * @return a new instance of XlaLaunch
+     * @see org.tensorflow.op.XlaOps.xlaLaunch
+     */
+    public fun xlaLaunch(
+        constants: Iterable<Operand<*>>,
+        args: Iterable<Operand<*>>,
+        resources: Iterable<Operand<out TType>>,
+        Tresults: List<Class<out TType>>,
+        function: ConcreteFunction
+    ): XlaLaunch = java.xlaLaunch(    
+        constants,
+        args,
+        resources,
+        Tresults,
+        function
+        )
+
+    /**
      * An op to receive a tensor from the host.
      *  output: the tensor that will be received from the host.
      *  Toutput: element type for output.
@@ -535,9 +1037,9 @@ public class XlaOps(
      *  key: A unique identifier for this region used to match up host transfers.
      *
      * @param <T> data type for `output` output
-     * @param Toutput the value of the Toutput property
-     * @param shape the value of the shape property
-     * @param key the value of the key property
+     * @param Toutput The value of the Toutput attribute
+     * @param shape The value of the shape attribute
+     * @param key The value of the key attribute
      * @param <T> data type for `XlaRecvFromHost` output and operands
      * @return a new instance of XlaRecvFromHost
      * @see org.tensorflow.op.XlaOps.xlaRecvFromHost
@@ -558,8 +1060,8 @@ public class XlaOps(
      *  Tinput: element type for input.
      *  key: A unique identifier for this region used to match up host transfers.
      *
-     * @param input the input value
-     * @param key the value of the key property
+     * @param input The input value
+     * @param key The value of the key attribute
      * @return a new instance of XlaSendToHost
      * @see org.tensorflow.op.XlaOps.xlaSendToHost
      */
@@ -576,8 +1078,8 @@ public class XlaOps(
      *  
      * ```
      *
-     * @param input the input value
-     * @param bound the bound value
+     * @param input The input value
+     * @param bound The bound value
      * @return a new instance of XlaSetBound
      * @see org.tensorflow.op.XlaOps.xlaSetBound
      */
@@ -586,6 +1088,120 @@ public class XlaOps(
         input,
         bound
         )
+
+    /**
+     * Wraps the variadic XLA Reduce operator.
+     *  Semantics are documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
+     *  
+     * This is an expanded version of XlaVariadicReduce, with support for
+     *  operands of different dtypes, and improved shape inference.
+     *
+     * @param inputs the input tensor(s)
+     * @param initValues scalar initial value(s) for the reduction
+     * @param dimensionsToReduce dimension numbers over which to reduce
+     * @param reducer a reducer function to apply
+     * @return a new instance of XlaVariadicReduce
+     * @see org.tensorflow.op.XlaOps.xlaVariadicReduce
+     */
+    public fun xlaVariadicReduce(
+        inputs: Iterable<Operand<*>>,
+        initValues: Iterable<Operand<*>>,
+        dimensionsToReduce: List<Long>,
+        reducer: ConcreteFunction
+    ): XlaVariadicReduce = java.xlaVariadicReduce(    
+        inputs,
+        initValues,
+        dimensionsToReduce,
+        reducer
+        )
+
+    /**
+     * Wraps the XLA Sort operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
+     *  .
+     *  
+     * Sorts one or more tensors, with support for custom comparator, dimension, and
+     *  is_stable attributes.
+     *
+     * @param inputs A list of `Tensor` of identical shape but possibly different types.
+     * @param dimension The dimension along which to sort. Must be a compile-time constant.
+     * @param comparator A comparator function to apply to 2*N scalars and returning a
+     *  boolean. N is the number of sort inputs. If you want to sort in ascending
+     *  order then the comparator should perform a less-than comparison.
+     * @param isStable Whether to use stable sort.
+     * @return a new instance of XlaVariadicSort
+     * @see org.tensorflow.op.XlaOps.xlaVariadicSort
+     */
+    public fun xlaVariadicSort(
+        inputs: Iterable<Operand<*>>,
+        dimension: Operand<TInt32>,
+        comparator: ConcreteFunction,
+        isStable: Boolean
+    ): XlaVariadicSort = java.xlaVariadicSort(    
+        inputs,
+        dimension,
+        comparator,
+        isStable
+        )
+
+    /**
+     * Wraps the XLA ConvGeneralDilated operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
+     *  .
+     *
+     * @param <W> data type for `output` output
+     * @param lhs the input tensor
+     * @param rhs the kernel tensor
+     * @param windowStrides the inter-window strides
+     * @param padding the padding to apply at the start and end of each input dimensions
+     * @param lhsDilation dilation to apply between input elements
+     * @param rhsDilation dilation to apply between kernel elements
+     * @param featureGroupCount number of feature groups for grouped convolution.
+     * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
+     * @param precisionConfig a serialized xla::PrecisionConfig proto.
+     * @param preferredElementType The type of the tensor.
+     * @param <W> data type for `XlaConvV2` output and operands
+     * @param <V> data type for `XlaConvV2` output and operands
+     * @return a new instance of Conv
+     * @see org.tensorflow.op.XlaOps.conv
+     */
+    @JvmName("convReified")
+    public inline fun <reified W : TType, V : TNumber> conv(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        windowStrides: Operand<V>,
+        padding: Operand<V>,
+        lhsDilation: Operand<V>,
+        rhsDilation: Operand<V>,
+        featureGroupCount: Operand<V>,
+        dimensionNumbers: String,
+        precisionConfig: String
+    ): Conv<W> = conv<W, V>(lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation,
+            featureGroupCount, dimensionNumbers, precisionConfig, W::class.java)
+
+    /**
+     * Wraps the XLA DotGeneral operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
+     *  .
+     *
+     * @param <V> data type for `output` output
+     * @param lhs the LHS tensor
+     * @param rhs the RHS tensor
+     * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
+     * @param precisionConfig a serialized xla::PrecisionConfig proto.
+     * @param preferredElementType The type of the tensor.
+     * @param <V> data type for `XlaDotV2` output and operands
+     * @return a new instance of Dot
+     * @see org.tensorflow.op.XlaOps.dot
+     */
+    @JvmName("dotReified")
+    public inline fun <reified V : TType> dot(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        dimensionNumbers: String,
+        precisionConfig: String
+    ): Dot<V> = dot<V>(lhs, rhs, dimensionNumbers, precisionConfig, V::class.java)
 
     /**
      * Receives the named tensor from another XLA computation. Wraps the XLA Recv
@@ -605,6 +1221,29 @@ public class XlaOps(
             recv<T>(T::class.java, tensorName, shape)
 
     /**
+     * Stateless PRNG bit generator.
+     *  Wraps the XLA RngBitGenerator operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#rngbitgenerator.
+     *
+     * @param <U> data type for `output` output
+     * @param algorithm The PRNG algorithm to use, one of
+     *  tf.random.Algorithm.{PHILOX, THREEFRY, AUTO_SELECT}.
+     * @param initialState Initial state for the PRNG algorithm. For THREEFRY, it should be
+     *  a u64[2] and for PHILOX a u64[3].
+     * @param shape The output shape of the generated data.
+     * @param dtype The type of the tensor.
+     * @param <U> data type for `XlaRngBitGenerator` output and operands
+     * @return a new instance of RngBitGenerator
+     * @see org.tensorflow.op.XlaOps.rngBitGenerator
+     */
+    @JvmName("rngBitGeneratorReified")
+    public inline fun <reified U : TNumber> rngBitGenerator(
+        algorithm: Operand<TInt32>,
+        initialState: Operand<out TType>,
+        shape: Operand<out TNumber>
+    ): RngBitGenerator<U> = rngBitGenerator<U>(algorithm, initialState, shape, U::class.java)
+
+    /**
      * An op to receive a tensor from the host.
      *  output: the tensor that will be received from the host.
      *  Toutput: element type for output.
@@ -612,9 +1251,9 @@ public class XlaOps(
      *  key: A unique identifier for this region used to match up host transfers.
      *
      * @param <T> data type for `output` output
-     * @param Toutput the value of the Toutput property
-     * @param shape the value of the shape property
-     * @param key the value of the key property
+     * @param Toutput The value of the Toutput attribute
+     * @param shape The value of the shape attribute
+     * @param key The value of the key attribute
      * @param <T> data type for `XlaRecvFromHost` output and operands
      * @return a new instance of XlaRecvFromHost
      * @see org.tensorflow.op.XlaOps.xlaRecvFromHost

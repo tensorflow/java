@@ -65,7 +65,7 @@ public class DtypesOps(
      *  array([b'3.14', b'2.72'], dtype=object)
      * ```
      *
-     * @param input the input value
+     * @param input The input value
      * @param options carries optional attribute values
      * @return a new instance of AsString
      * @see org.tensorflow.op.DtypesOps.asString
@@ -117,8 +117,8 @@ public class DtypesOps(
      * Cast x of type SrcT to y of DstT.
      *
      * @param <U> data type for `y` output
-     * @param x the x value
-     * @param DstT the value of the DstT property
+     * @param x The x value
+     * @param DstT The value of the DstT attribute
      * @param options carries optional attribute values
      * @param <U> data type for `Cast` output and operands
      * @return a new instance of Cast
@@ -158,9 +158,9 @@ public class DtypesOps(
      * ```
      *
      * @param <U> data type for `out` output
-     * @param real the real value
-     * @param imag the imag value
-     * @param Tout the value of the Tout property
+     * @param real The real value
+     * @param imag The imag value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Complex` output and operands
      * @param <T> data type for `Complex` output and operands
      * @return a new instance of Complex
@@ -180,8 +180,8 @@ public class DtypesOps(
      * Cast x of type SrcT to y of DstT.
      *
      * @param <U> data type for `y` output
-     * @param x the x value
-     * @param DstT the value of the DstT property
+     * @param x The x value
+     * @param DstT The value of the DstT attribute
      * @param options carries optional attribute values
      * @param <U> data type for `Cast` output and operands
      * @return a new instance of Cast
@@ -213,9 +213,9 @@ public class DtypesOps(
      * ```
      *
      * @param <U> data type for `out` output
-     * @param real the real value
-     * @param imag the imag value
-     * @param Tout the value of the Tout property
+     * @param real The real value
+     * @param imag The imag value
+     * @param Tout The value of the Tout attribute
      * @param <U> data type for `Complex` output and operands
      * @param <T> data type for `Complex` output and operands
      * @return a new instance of Complex

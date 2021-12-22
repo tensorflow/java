@@ -68,8 +68,8 @@ public class BitwiseOps(
      * ```
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `BitwiseAnd` output and operands
      * @return a new instance of BitwiseAnd
      * @see org.tensorflow.op.BitwiseOps.bitwiseAnd
@@ -103,8 +103,8 @@ public class BitwiseOps(
      * ```
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `BitwiseOr` output and operands
      * @return a new instance of BitwiseOr
      * @see org.tensorflow.op.BitwiseOps.bitwiseOr
@@ -138,8 +138,8 @@ public class BitwiseOps(
      * ```
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `BitwiseXor` output and operands
      * @return a new instance of BitwiseXor
      * @see org.tensorflow.op.BitwiseOps.bitwiseXor
@@ -196,7 +196,7 @@ public class BitwiseOps(
      * ```
      *
      * @param <T> data type for `y` output
-     * @param x the x value
+     * @param x The x value
      * @param <T> data type for `Invert` output and operands
      * @return a new instance of Invert
      * @see org.tensorflow.op.BitwiseOps.invert
@@ -239,8 +239,8 @@ public class BitwiseOps(
      * ```
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `LeftShift` output and operands
      * @return a new instance of LeftShift
      * @see org.tensorflow.op.BitwiseOps.leftShift
@@ -288,8 +288,8 @@ public class BitwiseOps(
      * ```
      *
      * @param <T> data type for `z` output
-     * @param x the x value
-     * @param y the y value
+     * @param x The x value
+     * @param y The y value
      * @param <T> data type for `RightShift` output and operands
      * @return a new instance of RightShift
      * @see org.tensorflow.op.BitwiseOps.rightShift

@@ -51,7 +51,6 @@ public class ExampleTest {
       val output = DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(it) }
 
       useSession { session ->
-        session.runInit()
         val outputValue = session.runner().fetch(output).run()[0] as TFloat32
         assertEquals(Shape.of(1, 10), outputValue.shape())
         assertEquals(1.0f, outputValue.getFloat(0, 0))

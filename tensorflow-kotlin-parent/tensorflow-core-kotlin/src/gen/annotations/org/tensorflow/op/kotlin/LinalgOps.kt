@@ -157,7 +157,7 @@ public class LinalgOps(
      * The BatchCholesky operation
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `BatchCholesky` output and operands
      * @return a new instance of BatchCholesky
      * @see org.tensorflow.op.LinalgOps.batchCholesky
@@ -171,8 +171,8 @@ public class LinalgOps(
      * The BatchCholeskyGrad operation
      *
      * @param <T> data type for `output` output
-     * @param l the l value
-     * @param grad the grad value
+     * @param l The l value
+     * @param grad The grad value
      * @param <T> data type for `BatchCholeskyGrad` output and operands
      * @return a new instance of BatchCholeskyGrad
      * @see org.tensorflow.op.LinalgOps.batchCholeskyGrad
@@ -187,9 +187,9 @@ public class LinalgOps(
      * The BatchMatrixBandPart operation
      *
      * @param <T> data type for `band` output
-     * @param input the input value
-     * @param numLower the numLower value
-     * @param numUpper the numUpper value
+     * @param input The input value
+     * @param numLower The numLower value
+     * @param numUpper The numUpper value
      * @param <T> data type for `BatchMatrixBandPart` output and operands
      * @return a new instance of BatchMatrixBandPart
      * @see org.tensorflow.op.LinalgOps.batchMatrixBandPart
@@ -208,7 +208,7 @@ public class LinalgOps(
      * The BatchMatrixDeterminant operation
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `BatchMatrixDeterminant` output and operands
      * @return a new instance of BatchMatrixDeterminant
      * @see org.tensorflow.op.LinalgOps.batchMatrixDeterminant
@@ -222,7 +222,7 @@ public class LinalgOps(
      * The BatchMatrixDiag operation
      *
      * @param <T> data type for `output` output
-     * @param diagonal the diagonal value
+     * @param diagonal The diagonal value
      * @param <T> data type for `BatchMatrixDiag` output and operands
      * @return a new instance of BatchMatrixDiag
      * @see org.tensorflow.op.LinalgOps.batchMatrixDiag
@@ -236,7 +236,7 @@ public class LinalgOps(
      * The BatchMatrixDiagPart operation
      *
      * @param <T> data type for `diagonal` output
-     * @param input the input value
+     * @param input The input value
      * @param <T> data type for `BatchMatrixDiagPart` output and operands
      * @return a new instance of BatchMatrixDiagPart
      * @see org.tensorflow.op.LinalgOps.batchMatrixDiagPart
@@ -250,7 +250,7 @@ public class LinalgOps(
      * The BatchMatrixInverse operation
      *
      * @param <T> data type for `output` output
-     * @param input the input value
+     * @param input The input value
      * @param options carries optional attribute values
      * @param <T> data type for `BatchMatrixInverse` output and operands
      * @return a new instance of BatchMatrixInverse
@@ -272,8 +272,8 @@ public class LinalgOps(
      * The BatchMatrixSetDiag operation
      *
      * @param <T> data type for `output` output
-     * @param input the input value
-     * @param diagonal the diagonal value
+     * @param input The input value
+     * @param diagonal The diagonal value
      * @param <T> data type for `BatchMatrixSetDiag` output and operands
      * @return a new instance of BatchMatrixSetDiag
      * @see org.tensorflow.op.LinalgOps.batchMatrixSetDiag
@@ -288,8 +288,8 @@ public class LinalgOps(
      * The BatchMatrixSolve operation
      *
      * @param <T> data type for `output` output
-     * @param matrix the matrix value
-     * @param rhs the rhs value
+     * @param matrix The matrix value
+     * @param rhs The rhs value
      * @param options carries optional attribute values
      * @param <T> data type for `BatchMatrixSolve` output and operands
      * @return a new instance of BatchMatrixSolve
@@ -315,9 +315,9 @@ public class LinalgOps(
      * The BatchMatrixSolveLs operation
      *
      * @param <T> data type for `output` output
-     * @param matrix the matrix value
-     * @param rhs the rhs value
-     * @param l2Regularizer the l2Regularizer value
+     * @param matrix The matrix value
+     * @param rhs The rhs value
+     * @param l2Regularizer The l2Regularizer value
      * @param options carries optional attribute values
      * @param <T> data type for `BatchMatrixSolveLs` output and operands
      * @return a new instance of BatchMatrixSolveLs
@@ -345,8 +345,8 @@ public class LinalgOps(
      * The BatchMatrixTriangularSolve operation
      *
      * @param <T> data type for `output` output
-     * @param matrix the matrix value
-     * @param rhs the rhs value
+     * @param matrix The matrix value
+     * @param rhs The rhs value
      * @param options carries optional attribute values
      * @param <T> data type for `BatchMatrixTriangularSolve` output and operands
      * @return a new instance of BatchMatrixTriangularSolve
@@ -378,7 +378,7 @@ public class LinalgOps(
      * The BatchSelfAdjointEigV2 operation
      *
      * @param <T> data type for `e` output
-     * @param input the input value
+     * @param input The input value
      * @param options carries optional attribute values
      * @param <T> data type for `BatchSelfAdjointEigV2` output and operands
      * @return a new instance of BatchSelfAdjointEig
@@ -400,7 +400,7 @@ public class LinalgOps(
      * The BatchSvd operation
      *
      * @param <T> data type for `s` output
-     * @param input the input value
+     * @param input The input value
      * @param options carries optional attribute values
      * @param <T> data type for `BatchSvd` output and operands
      * @return a new instance of BatchSvd
@@ -482,8 +482,8 @@ public class LinalgOps(
      * perm[t], perm[u]])`
      *
      * @param <T> data type for `y` output
-     * @param x the x value
-     * @param perm the perm value
+     * @param x The x value
+     * @param perm The perm value
      * @param <T> data type for `ConjugateTranspose` output and operands
      * @return a new instance of ConjugateTranspose
      * @see org.tensorflow.op.LinalgOps.conjugateTranspose
@@ -545,7 +545,7 @@ public class LinalgOps(
      *
      * @param <U> data type for `e` output
      * @param input `Tensor` input of shape `&#91;N, N&#93;`.
-     * @param Tout the value of the Tout property
+     * @param Tout The value of the Tout attribute
      * @param options carries optional attribute values
      * @param <U> data type for `Eig` output and operands
      * @return a new instance of Eig
@@ -893,7 +893,7 @@ public class LinalgOps(
      * @param input A tensor of shape `&#91;..., M, M&#93;` whose inner-most 2 dimensions form
      * matrices of
      *  size `&#91;M, M&#93;`.
-     * @param outputIdxType the value of the outputIdxType property
+     * @param outputIdxType The value of the outputIdxType attribute
      * @param <T> data type for `Lu` output and operands
      * @param <U> data type for `Lu` output and operands
      * @return a new instance of Lu
@@ -916,8 +916,8 @@ public class LinalgOps(
      *  cublas.
      *
      * @param <T> data type for `product` output
-     * @param a the a value
-     * @param b the b value
+     * @param a The a value
+     * @param b The b value
      * @param options carries optional attribute values
      * @param <T> data type for `MatMul` output and operands
      * @return a new instance of MatMul
@@ -1743,7 +1743,7 @@ public class LinalgOps(
      * @param maxA The float value that the highest quantized `a` value represents.
      * @param minB The float value that the lowest quantized `b` value represents.
      * @param maxB The float value that the highest quantized `b` value represents.
-     * @param Toutput the value of the Toutput property
+     * @param Toutput The value of the Toutput attribute
      * @param Tactivation The type of output produced by activation function
      *  following this operation.
      * @param options carries optional attribute values
@@ -1999,8 +1999,8 @@ public class LinalgOps(
      *  `y.shape[i] == x.shape&#91;perm[i&#93;] for i in &#91;0, 1, ..., rank(x) - 1&#93;`
      *
      * @param <T> data type for `y` output
-     * @param x the x value
-     * @param perm the perm value
+     * @param x The x value
+     * @param perm The perm value
      * @param <T> data type for `Transpose` output and operands
      * @return a new instance of Transpose
      * @see org.tensorflow.op.LinalgOps.transpose
@@ -2115,7 +2115,7 @@ public class LinalgOps(
      *
      * @param <U> data type for `e` output
      * @param input `Tensor` input of shape `&#91;N, N&#93;`.
-     * @param Tout the value of the Tout property
+     * @param Tout The value of the Tout attribute
      * @param options carries optional attribute values
      * @param <U> data type for `Eig` output and operands
      * @return a new instance of Eig
@@ -2155,7 +2155,7 @@ public class LinalgOps(
      * @param input A tensor of shape `&#91;..., M, M&#93;` whose inner-most 2 dimensions form
      * matrices of
      *  size `&#91;M, M&#93;`.
-     * @param outputIdxType the value of the outputIdxType property
+     * @param outputIdxType The value of the outputIdxType attribute
      * @param <T> data type for `Lu` output and operands
      * @param <U> data type for `Lu` output and operands
      * @return a new instance of Lu
@@ -2179,7 +2179,7 @@ public class LinalgOps(
      * @param maxA The float value that the highest quantized `a` value represents.
      * @param minB The float value that the lowest quantized `b` value represents.
      * @param maxB The float value that the highest quantized `b` value represents.
-     * @param Toutput the value of the Toutput property
+     * @param Toutput The value of the Toutput attribute
      * @param Tactivation The type of output produced by activation function
      *  following this operation.
      * @param options carries optional attribute values
