@@ -17,4 +17,4 @@
 # */
 #
 unset BASH_ENV PROMPT_COMMAND ENV
-source scl_source enable devtoolset-7 rh-git218
+source scl_source enable devtoolset-9 rh-git218
