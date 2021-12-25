@@ -6,7 +6,7 @@ RUN yum -x "$GLIBC" -y update && yum -x "$GLIBC" -y install centos-release-scl-r
   scl-utils \
   epel-release \
   java-1.8.0-openjdk-devel \
-  devtoolset-7 \
+  devtoolset-9 \
   unzip \
   which \
   rh-git218 \
