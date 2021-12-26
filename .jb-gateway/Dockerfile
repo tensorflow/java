@@ -29,15 +29,17 @@ RUN echo "Downloading Bazel" && \
 ARG GPU=false
 
 ADD install_cuda.sh /install_cuda.sh
-RUN chmod +x /install_cuda.sh
+RUN chmod a+x /install_cuda.sh
 RUN /install_cuda.sh
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0
 
 ADD scl_enable.sh /scl_enable.sh
+RUN chmod a+x /scl_enable.sh
 
 ADD entrypoint.sh /entrypoint
 ENTRYPOINT [ "/entrypoint" ]
+RUN chmod a+x /entrypoint
 
 ENV CI=true
 
