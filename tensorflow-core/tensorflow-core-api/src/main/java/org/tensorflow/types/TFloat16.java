@@ -18,6 +18,7 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TFloat16Mapper;
@@ -36,7 +37,7 @@ import org.tensorflow.types.family.TFloating;
  * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with
  * potentially a precision loss) is required for each 32 bits value written or read on a tensor of
  * this type from the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor,
- * performances will be improved by working with {@link TFloat32} or {@link TFloat64} data types
+ * performances will be improved by working with {@link TFloat32} or {@link TFloat16} data types
  * whenever possible.
  *
  * <p>Also, {@code TFloat16} tensors normally perform better if they are located in GPU memory since
@@ -112,5 +113,28 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    */
   static TFloat16 tensorOf(Shape shape, Consumer<TFloat16> dataInit) {
     return Tensor.of(TFloat16.class, shape, dataInit);
+  }
+
+  /**
+   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense tensors, with
+   * a default value of zero.
+   *
+   * The returned instance also implements the {@link SparseTensor SparseTensor<TFloat16>} interface, allowing
+   * a user to access directly the dense tensors when needed.
+   *
+   * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
+   *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
+   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
+   *     {@code [1,3]} and {@code [2,4]} have non-default values.
+   * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each
+   *     element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter {@code
+   *     values=[18, 3.8]} specifies that element {@code [1,3]} of the sparse tensor has a value of
+   *     {@code 18}, and element {@code [2,4]} of the tensor has a value of {@code 3.8}.
+   * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
+   *     represents to total number of element in dimension {@code i} in a dense version of that tensor.
+   * @return the new sparse tensor
+   */
+  static TFloat16 sparseTensorOf(TInt64 indices, TFloat16 values, TInt64 denseShape) {
+    return SparseTensor.of(indices, values, denseShape).asTypedTensor();
   }
 }

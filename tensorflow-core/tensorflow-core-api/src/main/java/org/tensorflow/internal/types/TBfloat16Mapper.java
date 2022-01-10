@@ -17,12 +17,16 @@
 package org.tensorflow.internal.types;
 
 import org.tensorflow.RawTensor;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
+import org.tensorflow.ndarray.impl.sparse.FloatSparseNdArray;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBfloat16;
+import org.tensorflow.types.TInt64;
 
 /**
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BFLOAT16} tensors
@@ -36,11 +40,31 @@ public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
     return new DenseTBfloat16(tensor, buffer);
   }
 
+  @Override
+  protected SparseTensor<TBfloat16> mapSparse(TInt64 indices, TBfloat16 values, TInt64 denseShape) {
+    return new SparseTBfloat16(indices, values, denseShape);
+  }
+
   private static final class DenseTBfloat16 extends FloatDenseNdArray implements TBfloat16 {
 
     @Override
     public Class<TBfloat16> type() {
       return TBfloat16.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return asRawTensor().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return asRawTensor().numBytes();
+    }
+
+    @Override
+    public void close() {
+      asRawTensor().close();
     }
 
     @Override
@@ -54,5 +78,50 @@ public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
       super(buffer, rawTensor.shape());
       this.rawTensor = rawTensor;
     }
+  }
+
+  private static final class SparseTBfloat16 extends FloatSparseNdArray implements TBfloat16, SparseTensor<TBfloat16> {
+
+    @Override
+    public Class<TBfloat16> type() {
+      return TBfloat16.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return values().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return SparseHelpers.numBytes(this);
+    }
+
+    @Override
+    public void close() {
+      // sparse tensors do not own the dense tensors that compose them, nothing to close
+    }
+
+    @Override
+    public TInt64 indices() {
+      return (TInt64) getIndices();
+    }
+
+    @Override
+    public TBfloat16 values() {
+      return (TBfloat16) getValues();
+    }
+
+    @Override
+    public TInt64 denseShape() {
+      return denseShape;
+    }
+
+    SparseTBfloat16(TInt64 indices, TBfloat16 values, TInt64 denseShape) {
+      super(indices, values, 0.0f, SparseHelpers.toDimensionalSpace(denseShape));
+      this.denseShape = denseShape;
+    }
+
+    private final TInt64 denseShape;
   }
 }

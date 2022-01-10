@@ -18,6 +18,7 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TFloat64Mapper;
@@ -101,5 +102,28 @@ public interface TFloat64 extends DoubleNdArray, TFloating {
    */
   static TFloat64 tensorOf(Shape shape, Consumer<TFloat64> dataInit) {
     return Tensor.of(TFloat64.class, shape, dataInit);
+  }
+
+  /**
+   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense tensors, with
+   * a default value of zero.
+   *
+   * The returned instance also implements the {@link SparseTensor SparseTensor<TFloat64>} interface, allowing
+   * a user to access directly the dense tensors when needed.
+   *
+   * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
+   *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
+   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
+   *     {@code [1,3]} and {@code [2,4]} have non-default values.
+   * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each
+   *     element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter {@code
+   *     values=[18, 3.8]} specifies that element {@code [1,3]} of the sparse tensor has a value of
+   *     {@code 18}, and element {@code [2,4]} of the tensor has a value of {@code 3.8}.
+   * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
+   *     represents to total number of element in dimension {@code i} in a dense version of that tensor.
+   * @return the new sparse tensor
+   */
+  static TFloat64 sparseTensorOf(TInt64 indices, TFloat64 values, TInt64 denseShape) {
+    return SparseTensor.of(indices, values, denseShape).asTypedTensor();
   }
 }

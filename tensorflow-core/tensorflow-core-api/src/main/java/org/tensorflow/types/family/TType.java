@@ -18,7 +18,6 @@
 package org.tensorflow.types.family;
 
 import org.tensorflow.Tensor;
-import org.tensorflow.proto.framework.DataType;
 
 /**
  * Common interface for all typed tensors.
@@ -65,19 +64,4 @@ public interface TType extends Tensor {
    * Returns the type of this tensor as a registered subclass of {@code TType}
    */
   Class<? extends TType> type();
-
-  @Override
-  default DataType dataType() {
-    return asRawTensor().dataType();
-  }
-
-  @Override
-  default long numBytes() {
-    return asRawTensor().numBytes();
-  }
-
-  @Override
-  default void close() {
-    asRawTensor().close();
-  }
 }

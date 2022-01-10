@@ -17,11 +17,15 @@
 package org.tensorflow.internal.types;
 
 import org.tensorflow.RawTensor;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.impl.dense.IntDenseNdArray;
+import org.tensorflow.ndarray.impl.sparse.IntSparseNdArray;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 
 /**
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_INT32} tensors
@@ -35,11 +39,31 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
     return new DenseTInt32(tensor, buffer);
   }
 
+  @Override
+  protected SparseTensor<TInt32> mapSparse(TInt64 indices, TInt32 values, TInt64 denseShape) {
+    return new SparseTInt32(indices, values, denseShape);
+  }
+
   private static final class DenseTInt32 extends IntDenseNdArray implements TInt32 {
 
     @Override
     public Class<TInt32> type() {
       return TInt32.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return asRawTensor().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return asRawTensor().numBytes();
+    }
+
+    @Override
+    public void close() {
+      asRawTensor().close();
     }
 
     @Override
@@ -53,5 +77,50 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
       super(buffer, rawTensor.shape());
       this.rawTensor = rawTensor;
     }
+  }
+
+  private static final class SparseTInt32 extends IntSparseNdArray implements TInt32, SparseTensor<TInt32> {
+
+    @Override
+    public Class<TInt32> type() {
+      return TInt32.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return values().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return SparseHelpers.numBytes(this);
+    }
+
+    @Override
+    public void close() {
+      // sparse tensors do not own the dense tensors that compose them, nothing to close
+    }
+
+    @Override
+    public TInt64 indices() {
+      return (TInt64) getIndices();
+    }
+
+    @Override
+    public TInt32 values() {
+      return (TInt32) getValues();
+    }
+
+    @Override
+    public TInt64 denseShape() {
+      return denseShape;
+    }
+
+    SparseTInt32(TInt64 indices, TInt32 values, TInt64 denseShape) {
+      super(indices, values, 0, SparseHelpers.toDimensionalSpace(denseShape));
+      this.denseShape = denseShape;
+    }
+
+    private final TInt64 denseShape;
   }
 }

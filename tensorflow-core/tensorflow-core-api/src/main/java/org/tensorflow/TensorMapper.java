@@ -17,6 +17,7 @@
 package org.tensorflow;
 
 import org.tensorflow.internal.c_api.TF_Tensor;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -37,6 +38,16 @@ public abstract class TensorMapper<T extends TType> {
    * @return an instance of {@code T}
    */
   protected abstract T mapDense(RawTensor tensor);
+
+  /**
+   * Maps the provided dense {@code tensors} as a sparse tensor of type {@code T}.
+   *
+   * @param indices indices of the non-default values in a dense space
+   * @param values non-default values of the tensor
+   * @param denseShape size of the dimensions definining the shape of the sparse tensor in a dense space.
+   * @return an instance of {@code T}, that could also be casted to a {@link SparseTensor SparseTensor<T>}
+   */
+  protected abstract SparseTensor<T> mapSparse(TInt64 indices, T values, TInt64 denseShape);
 
   /**
    * Helper for retrieving the native handle of a raw tensor

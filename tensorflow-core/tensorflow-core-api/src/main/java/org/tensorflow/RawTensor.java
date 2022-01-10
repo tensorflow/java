@@ -28,6 +28,7 @@ import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -184,6 +185,13 @@ public final class RawTensor implements Tensor {
    */
   TType asTypedTensor() {
     return typeInfo.mapper().mapDense(this);
+  }
+
+  /**
+   * @return metadata about the type of this tensor.
+   */
+  TensorTypeInfo<? extends TType> typeInfo() {
+    return typeInfo;
   }
 
   private static TF_Tensor requireHandle(TF_Tensor handle) {

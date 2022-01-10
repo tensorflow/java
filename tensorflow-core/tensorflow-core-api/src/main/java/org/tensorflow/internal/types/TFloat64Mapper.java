@@ -17,11 +17,15 @@
 package org.tensorflow.internal.types;
 
 import org.tensorflow.RawTensor;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
+import org.tensorflow.ndarray.impl.sparse.DoubleSparseNdArray;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TInt64;
 
 /**
  * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_DOUBLE} tensors
@@ -35,11 +39,31 @@ public final class TFloat64Mapper extends TensorMapper<TFloat64> {
     return new DenseTFloat64(tensor, buffer);
   }
 
+  @Override
+  protected SparseTensor<TFloat64> mapSparse(TInt64 indices, TFloat64 values, TInt64 denseShape) {
+    return new SparseTFloat64(indices, values, denseShape);
+  }
+
   private static final class DenseTFloat64 extends DoubleDenseNdArray implements TFloat64 {
 
     @Override
     public Class<TFloat64> type() {
       return TFloat64.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return asRawTensor().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return asRawTensor().numBytes();
+    }
+
+    @Override
+    public void close() {
+      asRawTensor().close();
     }
 
     @Override
@@ -53,5 +77,50 @@ public final class TFloat64Mapper extends TensorMapper<TFloat64> {
       super(buffer, rawTensor.shape());
       this.rawTensor = rawTensor;
     }
+  }
+
+  private static final class SparseTFloat64 extends DoubleSparseNdArray implements TFloat64, SparseTensor<TFloat64> {
+
+    @Override
+    public Class<TFloat64> type() {
+      return TFloat64.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return values().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return SparseHelpers.numBytes(this);
+    }
+
+    @Override
+    public void close() {
+      // sparse tensors do not own the dense tensors that compose them, nothing to close
+    }
+
+    @Override
+    public TInt64 indices() {
+      return (TInt64) getIndices();
+    }
+
+    @Override
+    public TFloat64 values() {
+      return (TFloat64) getValues();
+    }
+
+    @Override
+    public TInt64 denseShape() {
+      return denseShape;
+    }
+
+    SparseTFloat64(TInt64 indices, TFloat64 values, TInt64 denseShape) {
+      super(indices, values, 0L, SparseHelpers.toDimensionalSpace(denseShape));
+      this.denseShape = denseShape;
+    }
+
+    private final TInt64 denseShape;
   }
 }

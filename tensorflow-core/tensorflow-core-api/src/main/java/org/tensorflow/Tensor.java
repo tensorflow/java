@@ -16,10 +16,13 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.function.Consumer;
+import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
