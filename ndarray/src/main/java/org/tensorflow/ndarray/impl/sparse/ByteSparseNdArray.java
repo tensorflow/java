@@ -63,6 +63,25 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
     implements ByteNdArray {
 
   /**
+   * Creates a ByteSparseNdArray with a default value of zero.
+   *
+   * @param indices A 2-D LongNdArray of shape {@code [N, ndims]}, that specifies the indices of the
+   *     elements in the sparse array that contain non-default values (elements are zero-indexed).
+   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
+   *     {@code [1,3]} and {@code [2,4]} have non-default values.
+   * @param values A 1-D NdArray of Byte type and shape {@code [N]}, which supplies the values for
+   *     each element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter
+   *     {@code values=[18, 3.6]} specifies that element {@code [1,3]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4]} of the NdArray has a value of {@code 3.6}.
+   * @param defaultValue Scalar value to set for indices not specified in {@link #getIndices()}
+   * @param dimensions the dimensional space for the dense object represented by this sparse array,
+   */
+  protected ByteSparseNdArray(
+      LongNdArray indices, ByteNdArray values, byte defaultValue, DimensionalSpace dimensions) {
+    super(indices, values, defaultValue, dimensions);
+  }
+
+  /**
    * Creates a ByteSparseNdArray
    *
    * @param indices A 2-D LongNdArray of shape {@code [N, ndims]}, that specifies the indices of the
@@ -77,25 +96,6 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
    */
   ByteSparseNdArray(LongNdArray indices, ByteNdArray values, DimensionalSpace dimensions) {
     this(indices, values, (byte) 0, dimensions);
-  }
-
-  /**
-   * Creates a ByteSparseNdArray with a default value of zero.
-   *
-   * @param indices A 2-D LongNdArray of shape {@code [N, ndims]}, that specifies the indices of the
-   *     elements in the sparse array that contain non-default values (elements are zero-indexed).
-   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
-   *     {@code [1,3]} and {@code [2,4]} have non-default values.
-   * @param values A 1-D NdArray of Byte type and shape {@code [N]}, which supplies the values for
-   *     each element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter
-   *     {@code values=[18, 3.6]} specifies that element {@code [1,3]} of the sparse NdArray has a
-   *     value of {@code 18}, and element {@code [2,4]} of the NdArray has a value of {@code 3.6}.
-   * @param defaultValue Scalar value to set for indices not specified in {@link #getIndices()}
-   * @param dimensions the dimensional space for the dense object represented by this sparse array,
-   */
-  ByteSparseNdArray(
-      LongNdArray indices, ByteNdArray values, byte defaultValue, DimensionalSpace dimensions) {
-    super(indices, values, defaultValue, dimensions);
   }
 
   /**

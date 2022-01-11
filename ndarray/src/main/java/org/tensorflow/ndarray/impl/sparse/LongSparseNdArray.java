@@ -62,6 +62,25 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
     implements LongNdArray {
 
   /**
+   * Creates a LongSparseNdArray
+   *
+   * @param indices A 2-D LongNdArray of shape {@code [N, ndims]}, that specifies the indices of the
+   *     elements in the sparse array that contain non-default values (elements are zero-indexed).
+   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
+   *     {@code [1,3]} and {@code [2,4]} have non-default values.
+   * @param values A 1-D LongNdArray of shape {@code [N]}, which supplies the values for each
+   *     element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter {@code
+   *     values=[18, 3.6]} specifies that element {@code [1,3]} of the sparse NdArray has a value of
+   *     {@code 18}, and element {@code [2,4]} of the NdArray has a value of {@code 3.6}.
+   * @param defaultValue Scalar value to set for indices not specified in {@link #getIndices()}
+   * @param dimensions the dimensional space for the dense object represented by this sparse array,
+   */
+  protected LongSparseNdArray(
+      LongNdArray indices, LongNdArray values, long defaultValue, DimensionalSpace dimensions) {
+    super(indices, values, defaultValue, dimensions);
+  }
+
+  /**
    * Creates a LongSparseNdArray with a default value of zero.
    *
    * @param indices A 2-D LongNdArray of shape {@code [N, ndims]}, that specifies the indices of the
@@ -76,25 +95,6 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
    */
   LongSparseNdArray(LongNdArray indices, LongNdArray values, DimensionalSpace dimensions) {
     this(indices, values, 0L, dimensions);
-  }
-
-  /**
-   * Creates a LongSparseNdArray
-   *
-   * @param indices A 2-D LongNdArray of shape {@code [N, ndims]}, that specifies the indices of the
-   *     elements in the sparse array that contain non-default values (elements are zero-indexed).
-   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
-   *     {@code [1,3]} and {@code [2,4]} have non-default values.
-   * @param values A 1-D LongNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter {@code
-   *     values=[18, 3.6]} specifies that element {@code [1,3]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4]} of the NdArray has a value of {@code 3.6}.
-   * @param defaultValue Scalar value to set for indices not specified in {@link #getIndices()}
-   * @param dimensions the dimensional space for the dense object represented by this sparse array,
-   */
-  LongSparseNdArray(
-      LongNdArray indices, LongNdArray values, long defaultValue, DimensionalSpace dimensions) {
-    super(indices, values, defaultValue, dimensions);
   }
 
   /**
