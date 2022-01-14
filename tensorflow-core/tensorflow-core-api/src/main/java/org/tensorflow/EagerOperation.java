@@ -190,9 +190,9 @@ class EagerOperation extends AbstractOperation {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
+      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status);
       status.throwExceptionIfNotOK();
-      return RawTensor.fromHandle(tensor, session).asTypedTensor();
+      return RawTensor.fromHandle(tensor.withDeallocator(), session).asTypedTensor();
     }
   }
 
