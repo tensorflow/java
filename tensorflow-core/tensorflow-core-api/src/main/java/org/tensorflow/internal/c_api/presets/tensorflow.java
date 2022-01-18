@@ -51,6 +51,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_tensor.h",
             "tensorflow/c/tf_tstring.h",
             "tensorflow/c/c_api.h",
+            "tensorflow/c/c_api_experimental.h",
             //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
@@ -333,11 +334,6 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "static TF_Operation\\* TF_FinishOperationLocked\\(TF_OperationDescription\\* desc,",
                     "\\}"))
         .put(new Info("OutputTensor", "TensorId", "tensorflow::AttrValue").skip())
-        .put(
-            new Info("c_api_experimental.h")
-                .linePatterns(
-                    "typedef struct TFE_OpAttrs TFE_OpAttrs;",
-                    "#define TFE_CUSTOM_DEVICE_VERSION 4"))
         .put(
             new Info("TF_CAPI_EXPORT", "TF_Bool", "TF_GUARDED_BY", "TF_MUST_USE_RESULT")
                 .cppTypes()
