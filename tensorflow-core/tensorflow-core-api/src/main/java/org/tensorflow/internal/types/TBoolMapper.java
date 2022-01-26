@@ -29,8 +29,8 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BOOL} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BOOL} tensors to a n-dimensional
+ * data space.
  */
 public final class TBoolMapper extends TensorMapper<TBool> {
 
@@ -41,7 +41,8 @@ public final class TBoolMapper extends TensorMapper<TBool> {
   }
 
   @Override
-  protected SparseTensor<TBool> mapSparse(TInt64 indices, TBool values, TInt64 denseShape, PointerScope tensorScope) {
+  protected SparseTensor<TBool> mapSparse(
+      TInt64 indices, TBool values, TInt64 denseShape, PointerScope tensorScope) {
     return new SparseTBool(indices, values, denseShape, tensorScope);
   }
 
@@ -80,7 +81,8 @@ public final class TBoolMapper extends TensorMapper<TBool> {
     }
   }
 
-  private static final class SparseTBool extends BooleanSparseNdArray implements TBool, SparseTensor<TBool> {
+  private static final class SparseTBool extends BooleanSparseNdArray
+      implements TBool, SparseTensor<TBool> {
 
     @Override
     public Class<TBool> type() {
@@ -100,6 +102,11 @@ public final class TBoolMapper extends TensorMapper<TBool> {
     @Override
     public void close() {
       tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
     }
 
     @Override

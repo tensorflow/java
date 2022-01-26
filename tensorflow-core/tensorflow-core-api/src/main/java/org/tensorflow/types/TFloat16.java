@@ -67,7 +67,8 @@ public interface TFloat16 extends FloatNdArray, TFloating {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TFloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(
+        TFloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -116,20 +117,20 @@ public interface TFloat16 extends FloatNdArray, TFloating {
   }
 
   /**
-   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense tensors, with
-   * a default value of zero.
+   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense
+   * tensors, with a default value of zero.
    *
-   * The returned instance also implements the {@link SparseTensor SparseTensor<TFloat16>} interface, allowing
-   * a user to access directly the dense tensors when needed.
+   * <p>The returned instance also implements the {@link SparseTensor SparseTensor<TFloat16>}
+   * interface, allowing a user to access directly the dense tensors when needed.
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
    *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
-   * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse tensor has a value of
-   *     {@code 18f}, and element {@code [2,4,0]} of the tensor has a value of {@code 3.8f}.
+   * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each element in
+   *     indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
+   *     values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse tensor has a value
+   *     of {@code 18f}, and element {@code [2,4,0]} of the tensor has a value of {@code 3.8f}.
    * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
    *     represents the size of dimension {@code i} in a dense version of that tensor.
    * @return the new sparse tensor

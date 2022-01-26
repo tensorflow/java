@@ -37,8 +37,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_STRING} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_STRING} tensors to a
+ * n-dimensional data space.
  */
 public final class TStringMapper extends TensorMapper<TString> {
 
@@ -47,19 +47,18 @@ public final class TStringMapper extends TensorMapper<TString> {
 
   @Override
   protected TString mapDense(RawTensor tensor) {
-    ByteSequenceTensorBuffer buffer = TensorBuffers.toStrings(nativeHandle(tensor), tensor.shape().size());
+    ByteSequenceTensorBuffer buffer =
+        TensorBuffers.toStrings(nativeHandle(tensor), tensor.shape().size());
     return new DenseTString(tensor, buffer, UTF_8_LAYOUT);
   }
 
   @Override
-  protected SparseTensor<TString> mapSparse(TInt64 indices, TString values, TInt64 denseShape,
-      PointerScope tensorScope) {
+  protected SparseTensor<TString> mapSparse(
+      TInt64 indices, TString values, TInt64 denseShape, PointerScope tensorScope) {
     return new SparseTString(indices, values, denseShape, tensorScope);
   }
 
-  /**
-   * Adds package-private methods to all instances of {@code TString}
-   */
+  /** Adds package-private methods to all instances of {@code TString} */
   interface TStringInternal extends TString {
 
     /**
@@ -119,15 +118,15 @@ public final class TStringMapper extends TensorMapper<TString> {
     DenseTString(
         RawTensor rawTensor,
         ByteSequenceTensorBuffer buffer,
-        DataLayout<DataBuffer<byte[]>, String> layout
-    ) {
+        DataLayout<DataBuffer<byte[]>, String> layout) {
       super(layout.applyTo(buffer), rawTensor.shape());
       this.rawTensor = rawTensor;
       this.buffer = buffer;
     }
   }
 
-  private static final class SparseTString extends SparseNdArray<String, TString> implements TString, SparseTensor<TString> {
+  private static final class SparseTString extends SparseNdArray<String, TString>
+      implements TString, SparseTensor<TString> {
 
     @Override
     public Class<TString> type() {
@@ -150,6 +149,11 @@ public final class TStringMapper extends TensorMapper<TString> {
     }
 
     @Override
+    public boolean isSparse() {
+      return true;
+    }
+
+    @Override
     public TInt64 indices() {
       return (TInt64) getIndices();
     }
@@ -166,7 +170,8 @@ public final class TStringMapper extends TensorMapper<TString> {
 
     @Override
     public TString using(Charset charset) {
-      return new SparseTString(indices(), values().using(charset), denseShape(), tensorScope, false);
+      return new SparseTString(
+          indices(), values().using(charset), denseShape(), tensorScope, false);
     }
 
     @Override
@@ -178,7 +183,12 @@ public final class TStringMapper extends TensorMapper<TString> {
       this(indices, values, denseShape, tensorScope, true);
     }
 
-    private SparseTString(TInt64 indices, TString values, TInt64 denseShape, PointerScope tensorScope, boolean extendScope) {
+    private SparseTString(
+        TInt64 indices,
+        TString values,
+        TInt64 denseShape,
+        PointerScope tensorScope,
+        boolean extendScope) {
       super(String.class, indices, values, "", SparseHelpers.toDimensionalSpace(denseShape));
       this.denseShape = denseShape;
       this.tensorScope = extendScope ? tensorScope.extend() : tensorScope;

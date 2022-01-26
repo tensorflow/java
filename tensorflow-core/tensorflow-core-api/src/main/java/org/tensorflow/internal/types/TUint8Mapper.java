@@ -29,8 +29,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_UINT8} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_UINT8} tensors to a
+ * n-dimensional data space.
  */
 public final class TUint8Mapper extends TensorMapper<TUint8> {
 
@@ -41,7 +41,8 @@ public final class TUint8Mapper extends TensorMapper<TUint8> {
   }
 
   @Override
-  protected SparseTensor<TUint8> mapSparse(TInt64 indices, TUint8 values, TInt64 denseShape, PointerScope tensorScope) {
+  protected SparseTensor<TUint8> mapSparse(
+      TInt64 indices, TUint8 values, TInt64 denseShape, PointerScope tensorScope) {
     return new TUint8Mapper.SparseTUint8(indices, values, denseShape, tensorScope);
   }
 
@@ -80,7 +81,8 @@ public final class TUint8Mapper extends TensorMapper<TUint8> {
     }
   }
 
-  private static final class SparseTUint8 extends ByteSparseNdArray implements TUint8, SparseTensor<TUint8> {
+  private static final class SparseTUint8 extends ByteSparseNdArray
+      implements TUint8, SparseTensor<TUint8> {
 
     @Override
     public Class<TUint8> type() {
@@ -100,6 +102,11 @@ public final class TUint8Mapper extends TensorMapper<TUint8> {
     @Override
     public void close() {
       tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
     }
 
     @Override

@@ -22,8 +22,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Maps the native memory of a {@link RawTensor} to a n-dimensional typed data space
- * accessible from the JVM.
+ * Maps the native memory of a {@link RawTensor} to a n-dimensional typed data space accessible from
+ * the JVM.
  *
  * <p>Usage of this class is reserved for internal purposes only.
  *
@@ -45,11 +45,15 @@ public abstract class TensorMapper<T extends TType> {
    *
    * @param indices indices of the non-default values in a dense space
    * @param values non-default values of the tensor
-   * @param denseShape size of the dimensions definining the shape of the sparse tensor in a dense space.
-   * @param tensorScope scope to extend to keep a reference on the sub-tensors composing this sparse tensor
-   * @return an instance of {@code T}, that could also be casted to a {@link SparseTensor SparseTensor<T>}
+   * @param denseShape size of the dimensions definining the shape of the sparse tensor in a dense
+   *     space.
+   * @param tensorScope scope to extend to keep a reference on the sub-tensors composing this sparse
+   *     tensor
+   * @return an instance of {@code T}, that could also be casted to a {@link SparseTensor
+   *     SparseTensor<T>}
    */
-  protected abstract SparseTensor<T> mapSparse(TInt64 indices, T values, TInt64 denseShape, PointerScope tensorScope);
+  protected abstract SparseTensor<T> mapSparse(
+      TInt64 indices, T values, TInt64 denseShape, PointerScope tensorScope);
 
   /**
    * Helper for retrieving the native handle of a raw tensor

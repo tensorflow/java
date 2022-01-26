@@ -30,20 +30,21 @@ import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BFLOAT16} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BFLOAT16} tensors to a
+ * n-dimensional data space.
  */
 public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
 
   @Override
   protected TBfloat16 mapDense(RawTensor tensor) {
-    FloatDataBuffer buffer = DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeHandle(tensor)));
+    FloatDataBuffer buffer =
+        DataLayouts.BFLOAT16.applyTo(TensorBuffers.toShorts(nativeHandle(tensor)));
     return new DenseTBfloat16(tensor, buffer);
   }
 
   @Override
-  protected SparseTensor<TBfloat16> mapSparse(TInt64 indices, TBfloat16 values, TInt64 denseShape,
-      PointerScope tensorScope) {
+  protected SparseTensor<TBfloat16> mapSparse(
+      TInt64 indices, TBfloat16 values, TInt64 denseShape, PointerScope tensorScope) {
     return new SparseTBfloat16(indices, values, denseShape, tensorScope);
   }
 
@@ -82,7 +83,8 @@ public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
     }
   }
 
-  private static final class SparseTBfloat16 extends FloatSparseNdArray implements TBfloat16, SparseTensor<TBfloat16> {
+  private static final class SparseTBfloat16 extends FloatSparseNdArray
+      implements TBfloat16, SparseTensor<TBfloat16> {
 
     @Override
     public Class<TBfloat16> type() {
@@ -102,6 +104,11 @@ public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
     @Override
     public void close() {
       tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
     }
 
     @Override

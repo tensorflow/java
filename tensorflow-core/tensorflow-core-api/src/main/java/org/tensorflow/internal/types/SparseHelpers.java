@@ -14,25 +14,18 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow.internal.types;
 
-import java.io.Closeable;
-import java.io.IOException;
-import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.SparseTensor;
-import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
 
-/**
- * Internal helper class for sparse tensor mappers
- */
+/** Internal helper class for sparse tensor mappers */
 abstract class SparseHelpers {
 
   /**
-   * Convert a 1-D dense tensor, where each scalar represents the size of a dimension, to a {@link DimensionalSpace} instance as expected
-   * by the NdArray library.
+   * Convert a 1-D dense tensor, where each scalar represents the size of a dimension, to a {@link
+   * DimensionalSpace} instance as expected by the NdArray library.
    *
    * @param denseShape 1-D dense tensor holding the size of each dimensions
    * @return a {@link DimensionalSpace} with these dimensions
@@ -42,12 +35,15 @@ abstract class SparseHelpers {
   }
 
   /**
-   * Compute the total number of bytes required to store a sparse tensor by adding the size of each of its dense sub-tensors.
+   * Compute the total number of bytes required to store a sparse tensor by adding the size of each
+   * of its dense sub-tensors.
    *
    * @param sparseTensor the sparse tensor
    * @return the total number of bytes
    */
   static long numBytes(SparseTensor<?> sparseTensor) {
-    return sparseTensor.indices().numBytes() + sparseTensor.values().numBytes() + sparseTensor.denseShape().numBytes();
+    return sparseTensor.indices().numBytes()
+        + sparseTensor.values().numBytes()
+        + sparseTensor.denseShape().numBytes();
   }
 }

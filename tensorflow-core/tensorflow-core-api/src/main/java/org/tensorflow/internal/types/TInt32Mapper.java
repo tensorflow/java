@@ -29,8 +29,8 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_INT32} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_INT32} tensors to a
+ * n-dimensional data space.
  */
 public final class TInt32Mapper extends TensorMapper<TInt32> {
 
@@ -41,7 +41,8 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
   }
 
   @Override
-  protected SparseTensor<TInt32> mapSparse(TInt64 indices, TInt32 values, TInt64 denseShape, PointerScope tensorScope) {
+  protected SparseTensor<TInt32> mapSparse(
+      TInt64 indices, TInt32 values, TInt64 denseShape, PointerScope tensorScope) {
     return new SparseTInt32(indices, values, denseShape, tensorScope);
   }
 
@@ -80,7 +81,8 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
     }
   }
 
-  private static final class SparseTInt32 extends IntSparseNdArray implements TInt32, SparseTensor<TInt32> {
+  private static final class SparseTInt32 extends IntSparseNdArray
+      implements TInt32, SparseTensor<TInt32> {
 
     @Override
     public Class<TInt32> type() {
@@ -100,6 +102,11 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
     @Override
     public void close() {
       tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
     }
 
     @Override

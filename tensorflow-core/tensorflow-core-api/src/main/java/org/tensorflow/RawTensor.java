@@ -34,12 +34,12 @@ import org.tensorflow.types.family.TType;
  * A tensor which memory has not been mapped to a data space directly accessible from the JVM.
  *
  * <p>A raw tensor is a minimalist representation of a tensor allocated in native memory by the
- * TensorFlow runtime library and it controls its lifetime within the current process. The data
- * is represented by a flat {@link ByteDataBuffer buffer of bytes}, until it is mapped in a
- * n-dimensional typed space by a {@link TType typed tensor}.</p>
+ * TensorFlow runtime library and it controls its lifetime within the current process. The data is
+ * represented by a flat {@link ByteDataBuffer buffer of bytes}, until it is mapped in a
+ * n-dimensional typed space by a {@link TType typed tensor}.
  *
- * <p>Instances of a RawTensor are <b>not</b> thread-safe and their resource must be released
- * by calling {@link #close()} explicitly or implicitly via try-with-resources.</p>
+ * <p>Instances of a RawTensor are <b>not</b> thread-safe and their resource must be released by
+ * calling {@link #close()} explicitly or implicitly via try-with-resources.
  */
 public final class RawTensor implements Tensor {
 
@@ -81,9 +81,7 @@ public final class RawTensor implements Tensor {
     return buffer;
   }
 
-  /**
-   * Returns a string describing the type and shape of the tensor.
-   */
+  /** Returns a string describing the type and shape of the tensor. */
   @Override
   public String toString() {
     return String.format("%s tensor with shape %s", typeInfo.dataType(), shape);
@@ -92,20 +90,20 @@ public final class RawTensor implements Tensor {
   /**
    * Allocates a new tensor in native memory of the given type, shape and size.
    *
-   * <p>The size of the tensor must be at least large enough to contain all scalars for the
-   * given type and shape. More memory can also be allocated to store also metadata within the
-   * tensor itself, e.g. a lookup table in a string tensor.
+   * <p>The size of the tensor must be at least large enough to contain all scalars for the given
+   * type and shape. More memory can also be allocated to store also metadata within the tensor
+   * itself, e.g. a lookup table in a string tensor.
    *
    * @param type tensor type class
    * @param shape shape of the tensor
    * @param size size in bytes of the tensor, or -1 to compute the size from the shape
    * @return allocated tensor
    * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
-   *                                  store the tensor data
-   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given
-   *                                  {@code type} are of variable length (e.g. strings)
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
+   *     store the tensor data
+   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given {@code
+   *     type} are of variable length (e.g. strings)
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link
+   *     Shape#hasUnknownDimension() unknown}
    * @throws IllegalStateException if tensor failed to be allocated
    */
   static RawTensor allocate(Class<? extends TType> type, Shape shape, long size) {
@@ -123,12 +121,14 @@ public final class RawTensor implements Tensor {
       allocatedSize = shape.size() * typeInfo.byteSize();
 
     } else if (!typeInfo.isVariableLength() && shape.size() * typeInfo.byteSize() > allocatedSize) {
-      // Minimum requirements for datatypes of variable length cannot be verified in a relevant way so
+      // Minimum requirements for datatypes of variable length cannot be verified in a relevant way
+      // so
       // we only validate them for fixed length datatypes
       throw new IllegalArgumentException(
           "Tensor size is not large enough to contain all scalar values");
     }
-    TF_Tensor nativeHandle = allocate(typeInfo.dataType().getNumber(), shape.asArray(), allocatedSize);
+    TF_Tensor nativeHandle =
+        allocate(typeInfo.dataType().getNumber(), shape.asArray(), allocatedSize);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(nativeHandle);
       RawTensor t = new RawTensor(typeInfo, shape);
@@ -147,9 +147,9 @@ public final class RawTensor implements Tensor {
     TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(DataType.forNumber(dtype(handle)));
     RawTensor t = new RawTensor(typeInfo, Shape.of(shape(handle)));
     try (PointerScope scope = new PointerScope()) {
-        scope.attach(handle);
-        t.tensorHandle = handle;
-        t.tensorScope = scope.extend();
+      scope.attach(handle);
+      t.tensorHandle = handle;
+      t.tensorScope = scope.extend();
     }
     return t;
   }
@@ -168,6 +168,7 @@ public final class RawTensor implements Tensor {
 
   /**
    * Returns the native handle to this tensor
+   *
    * @throws IllegalStateException if tensor has been closed
    */
   TF_Tensor nativeHandle() {
@@ -178,7 +179,8 @@ public final class RawTensor implements Tensor {
    * Returns a typed reference to this tensor
    *
    * <p>In some cases, it is more useful to keep a typed reference to a tensor rather than its raw
-   * nature to prevent mapping its memory on every access (e.g. when calling {@link Operand#asTensor()}).
+   * nature to prevent mapping its memory on every access (e.g. when calling {@link
+   * Operand#asTensor()}).
    *
    * @return typed reference to this tensor
    */
@@ -186,9 +188,7 @@ public final class RawTensor implements Tensor {
     return typeInfo.mapper().mapDense(this);
   }
 
-  /**
-   * @return metadata about the type of this tensor.
-   */
+  /** @return metadata about the type of this tensor. */
   TensorTypeInfo<? extends TType> typeInfo() {
     return typeInfo;
   }

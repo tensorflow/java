@@ -29,8 +29,8 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_DOUBLE} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_DOUBLE} tensors to a
+ * n-dimensional data space.
  */
 public final class TFloat64Mapper extends TensorMapper<TFloat64> {
 
@@ -41,8 +41,8 @@ public final class TFloat64Mapper extends TensorMapper<TFloat64> {
   }
 
   @Override
-  protected SparseTensor<TFloat64> mapSparse(TInt64 indices, TFloat64 values, TInt64 denseShape,
-      PointerScope tensorScope) {
+  protected SparseTensor<TFloat64> mapSparse(
+      TInt64 indices, TFloat64 values, TInt64 denseShape, PointerScope tensorScope) {
     return new SparseTFloat64(indices, values, denseShape, tensorScope);
   }
 
@@ -81,7 +81,8 @@ public final class TFloat64Mapper extends TensorMapper<TFloat64> {
     }
   }
 
-  private static final class SparseTFloat64 extends DoubleSparseNdArray implements TFloat64, SparseTensor<TFloat64> {
+  private static final class SparseTFloat64 extends DoubleSparseNdArray
+      implements TFloat64, SparseTensor<TFloat64> {
 
     @Override
     public Class<TFloat64> type() {
@@ -101,6 +102,11 @@ public final class TFloat64Mapper extends TensorMapper<TFloat64> {
     @Override
     public void close() {
       tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
     }
 
     @Override
