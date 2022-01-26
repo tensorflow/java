@@ -18,6 +18,7 @@ package org.tensorflow.internal.types;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.RawTensor;
 import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
@@ -51,8 +52,9 @@ public final class TStringMapper extends TensorMapper<TString> {
   }
 
   @Override
-  protected SparseTensor<TString> mapSparse(TInt64 indices, TString values, TInt64 denseShape) {
-    return new SparseTString(indices, values, denseShape);
+  protected SparseTensor<TString> mapSparse(TInt64 indices, TString values, TInt64 denseShape,
+      PointerScope tensorScope) {
+    return new SparseTString(indices, values, denseShape, tensorScope);
   }
 
   /**
@@ -144,7 +146,7 @@ public final class TStringMapper extends TensorMapper<TString> {
 
     @Override
     public void close() {
-      // sparse tensors do not own the dense tensors that compose them, nothing to close
+      tensorScope.close();
     }
 
     @Override
@@ -164,7 +166,7 @@ public final class TStringMapper extends TensorMapper<TString> {
 
     @Override
     public TString using(Charset charset) {
-      return new SparseTString(indices(), values().using(charset), denseShape());
+      return new SparseTString(indices(), values().using(charset), denseShape(), tensorScope, false);
     }
 
     @Override
@@ -172,11 +174,17 @@ public final class TStringMapper extends TensorMapper<TString> {
       return SparseNdArray.create(byte[].class, indices(), values().asBytes(), dimensions());
     }
 
-    SparseTString(TInt64 indices, TString values, TInt64 denseShape) {
-      super(String.class, indices, values, null, SparseHelpers.toDimensionalSpace(denseShape));
+    SparseTString(TInt64 indices, TString values, TInt64 denseShape, PointerScope tensorScope) {
+      this(indices, values, denseShape, tensorScope, true);
+    }
+
+    private SparseTString(TInt64 indices, TString values, TInt64 denseShape, PointerScope tensorScope, boolean extendScope) {
+      super(String.class, indices, values, "", SparseHelpers.toDimensionalSpace(denseShape));
       this.denseShape = denseShape;
+      this.tensorScope = extendScope ? tensorScope.extend() : tensorScope;
     }
 
     private final TInt64 denseShape;
+    private final PointerScope tensorScope;
   }
 }

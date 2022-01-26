@@ -16,6 +16,7 @@
  */
 package org.tensorflow.internal.types;
 
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.RawTensor;
 import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
@@ -41,8 +42,9 @@ public final class TFloat16Mapper extends TensorMapper<TFloat16> {
   }
 
   @Override
-  protected SparseTensor<TFloat16> mapSparse(TInt64 indices, TFloat16 values, TInt64 denseShape) {
-    return new TFloat16Mapper.SparseTFloat16(indices, values, denseShape);
+  protected SparseTensor<TFloat16> mapSparse(TInt64 indices, TFloat16 values, TInt64 denseShape,
+      PointerScope tensorScope) {
+    return new TFloat16Mapper.SparseTFloat16(indices, values, denseShape, tensorScope);
   }
 
   private static final class DenseTFloat16 extends FloatDenseNdArray implements TFloat16 {
@@ -99,7 +101,7 @@ public final class TFloat16Mapper extends TensorMapper<TFloat16> {
 
     @Override
     public void close() {
-      // sparse tensors do not own the dense tensors that compose them, nothing to close
+      tensorScope.close();
     }
 
     @Override
@@ -117,11 +119,13 @@ public final class TFloat16Mapper extends TensorMapper<TFloat16> {
       return denseShape;
     }
 
-    SparseTFloat16(TInt64 indices, TFloat16 values, TInt64 denseShape) {
+    SparseTFloat16(TInt64 indices, TFloat16 values, TInt64 denseShape, PointerScope tensorScope) {
       super(indices, values, 0.0f, SparseHelpers.toDimensionalSpace(denseShape));
       this.denseShape = denseShape;
+      this.tensorScope = tensorScope.extend();
     }
 
     private final TInt64 denseShape;
+    private final PointerScope tensorScope;
   }
 }

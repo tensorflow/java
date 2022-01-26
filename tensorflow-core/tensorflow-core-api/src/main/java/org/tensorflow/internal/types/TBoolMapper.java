@@ -16,6 +16,7 @@
  */
 package org.tensorflow.internal.types;
 
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.RawTensor;
 import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
@@ -40,8 +41,8 @@ public final class TBoolMapper extends TensorMapper<TBool> {
   }
 
   @Override
-  protected SparseTensor<TBool> mapSparse(TInt64 indices, TBool values, TInt64 denseShape) {
-    return new SparseTBool(indices, values, denseShape);
+  protected SparseTensor<TBool> mapSparse(TInt64 indices, TBool values, TInt64 denseShape, PointerScope tensorScope) {
+    return new SparseTBool(indices, values, denseShape, tensorScope);
   }
 
   private static final class DenseTBool extends BooleanDenseNdArray implements TBool {
@@ -98,7 +99,7 @@ public final class TBoolMapper extends TensorMapper<TBool> {
 
     @Override
     public void close() {
-      // sparse tensors do not own the dense tensors that compose them, nothing to close
+      tensorScope.close();
     }
 
     @Override
@@ -116,11 +117,13 @@ public final class TBoolMapper extends TensorMapper<TBool> {
       return denseShape;
     }
 
-    SparseTBool(TInt64 indices, TBool values, TInt64 denseShape) {
+    SparseTBool(TInt64 indices, TBool values, TInt64 denseShape, PointerScope tensorScope) {
       super(indices, values, false, SparseHelpers.toDimensionalSpace(denseShape));
       this.denseShape = denseShape;
+      this.tensorScope = tensorScope.extend();
     }
 
     private final TInt64 denseShape;
+    private final PointerScope tensorScope;
   }
 }

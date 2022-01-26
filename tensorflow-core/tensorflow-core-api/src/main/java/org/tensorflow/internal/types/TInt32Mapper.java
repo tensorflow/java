@@ -16,6 +16,7 @@
  */
 package org.tensorflow.internal.types;
 
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.RawTensor;
 import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
@@ -40,8 +41,8 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
   }
 
   @Override
-  protected SparseTensor<TInt32> mapSparse(TInt64 indices, TInt32 values, TInt64 denseShape) {
-    return new SparseTInt32(indices, values, denseShape);
+  protected SparseTensor<TInt32> mapSparse(TInt64 indices, TInt32 values, TInt64 denseShape, PointerScope tensorScope) {
+    return new SparseTInt32(indices, values, denseShape, tensorScope);
   }
 
   private static final class DenseTInt32 extends IntDenseNdArray implements TInt32 {
@@ -98,7 +99,7 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
 
     @Override
     public void close() {
-      // sparse tensors do not own the dense tensors that compose them, nothing to close
+      tensorScope.close();
     }
 
     @Override
@@ -116,11 +117,13 @@ public final class TInt32Mapper extends TensorMapper<TInt32> {
       return denseShape;
     }
 
-    SparseTInt32(TInt64 indices, TInt32 values, TInt64 denseShape) {
+    SparseTInt32(TInt64 indices, TInt32 values, TInt64 denseShape, PointerScope tensorScope) {
       super(indices, values, 0, SparseHelpers.toDimensionalSpace(denseShape));
       this.denseShape = denseShape;
+      this.tensorScope = tensorScope.extend();
     }
 
     private final TInt64 denseShape;
+    private final PointerScope tensorScope;
   }
 }

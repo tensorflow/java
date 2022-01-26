@@ -193,22 +193,23 @@ public interface TString extends NdArray<String>, TType {
 
   /**
    * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense tensors, with
-   * a default value of null.
+   * an empty string as the default value.
    *
    * The returned instance also implements the {@link SparseTensor SparseTensor<TString>} interface, allowing
    * a user to access directly the dense tensors when needed.
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
    *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
-   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
-   *     {@code [1,3]} and {@code [2,4]} have non-default values.
+   *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
+   *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter {@code
-   *     values=[18, 3.8]} specifies that element {@code [1,3]} of the sparse tensor has a value of
-   *     {@code 18}, and element {@code [2,4]} of the tensor has a value of {@code 3.8}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
+   *     values=["one", "two"]} specifies that element {@code [1,3,1]} of the sparse tensor has a value of
+   *     {@code "one"}, and element {@code [2,4,0]} of the tensor has a value of {@code "two"}.
    * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
-   *     represents to total number of element in dimension {@code i} in a dense version of that tensor.
+   *     represents the size of dimension {@code i} in a dense version of that tensor.
    * @return the new sparse tensor
+   * @see SparseTensor for more details on sparse tensors and how to release their memory properly
    */
   static TString sparseTensorOf(TInt64 indices, TString values, TInt64 denseShape) {
     return SparseTensor.of(indices, values, denseShape).asTypedTensor();

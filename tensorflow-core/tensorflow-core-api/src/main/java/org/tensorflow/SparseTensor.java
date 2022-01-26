@@ -1,5 +1,23 @@
+/* Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
 package org.tensorflow;
 
+import java.io.Closeable;
+import java.io.IOException;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -7,8 +25,26 @@ import org.tensorflow.types.family.TType;
  * A virtual type of {@link Tensor} composed of three dense tensors (indices, values and dimensions) used to represent
  * the sparse data into a multi-dimensional dense space.
  *
- * Any tensor returned by a sparse tensor factory (e.g. {@link TInt64#sparseTensorOf(TInt64, TInt64, TInt64)}) can be casted back
+ * <p>Any tensor returned by a sparse tensor factory (e.g. {@link TInt64#sparseTensorOf(TInt64, TInt64, TInt64)}) can be casted back
  * to this interface to access directly the dense tensors it is composed of.
+ *
+ * <p>A sparse tensor will keep strong references to its dense tensors to prevent them to be released before it is closed itself.
+ * Likewise, closing a sparse tensor won't release the memory of its dense tensors until they in turn are closed.
+ * It is then important to protect not only the dense tensors within a <i>try-with-resource</i> block but the sparse tensor itself.
+ *
+ * <p>For example, this code is perfectly safe:
+ * <pre>{@code
+ * TFloat64 createSparseTensor() {
+ *     try (TInt64 indices = TInt64.tensorOf(...);
+ *         TFloat64 values = TFloat64.vectorOf(...);
+ *         TInt64 denseShape = TInt64.vectorOf(...)) {
+ *         return TFloat64.sparseTensorOf(indices, values, denseShape);
+ *     }
+ * }
+ * try (TFloat64 sparseTensor = createSparseTensor()) {
+ *     ...
+ * }
+ * }</pre>
  *
  * @param <T> type of data stored in the tensor
  */
@@ -19,14 +55,14 @@ public interface SparseTensor<T extends TType> extends Tensor {
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
    *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
-   *     For example, {@code indices=[[1,3], [2,4]]} specifies that the elements with indexes of
-   *     {@code [1,3]} and {@code [2,4]} have non-default values.
+   *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
+   *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3], [2,4]]}, the parameter {@code
-   *     values=[18, 3.8]} specifies that element {@code [1,3]} of the sparse tensor has a value of
-   *     {@code 18}, and element {@code [2,4]} of the tensor has a value of {@code 3.8}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
+   *     values=[18, 3.8]} specifies that element {@code [1,3,1]} of the sparse tensor has a value of
+   *     {@code 18}, and element {@code [2,4,0]} of the tensor has a value of {@code 3.8}.
    * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
-   *     represents to total number of element in dimension {@code i} in a dense version of that tensor.
+   *     represents the size of dimension {@code i} in a dense version of that tensor.
    * @return the new sparse tensor
    * @throws IllegalArgumentException if shapes of the dense tensors are not compatible
    */
@@ -50,7 +86,14 @@ public interface SparseTensor<T extends TType> extends Tensor {
     }
     // Use mapper of the values tensor as this is the one giving the type of the sparse tensor as well
     TensorMapper<T> mapper = (TensorMapper<T>) values.asRawTensor().typeInfo().mapper();
-    return mapper.mapSparse(indices, values, denseShape);
+
+    // Keep a strong reference to all sub-tensors of the sparse tensor
+    try (PointerScope scope = new PointerScope()) {
+      scope.attach(indices.asRawTensor().nativeHandle());
+      scope.attach(values.asRawTensor().nativeHandle());
+      scope.attach(denseShape.asRawTensor().nativeHandle());
+      return mapper.mapSparse(indices, values, denseShape, scope);
+    }
   }
 
   @Override
