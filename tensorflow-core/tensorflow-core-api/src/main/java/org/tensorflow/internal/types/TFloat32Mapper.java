@@ -16,16 +16,21 @@
  */
 package org.tensorflow.internal.types;
 
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.RawTensor;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
+import org.tensorflow.ndarray.impl.sparse.FloatSparseNdArray;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_FLOAT} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_FLOAT} tensors to a
+ * n-dimensional data space.
  */
 public final class TFloat32Mapper extends TensorMapper<TFloat32> {
 
@@ -35,11 +40,32 @@ public final class TFloat32Mapper extends TensorMapper<TFloat32> {
     return new DenseTFloat32(tensor, buffer);
   }
 
+  @Override
+  protected SparseTensor<TFloat32> mapSparse(
+      TInt64 indices, TFloat32 values, TInt64 denseShape, PointerScope tensorScope) {
+    return new SparseTFloat32(indices, values, denseShape, tensorScope);
+  }
+
   private static final class DenseTFloat32 extends FloatDenseNdArray implements TFloat32 {
 
     @Override
     public Class<TFloat32> type() {
       return TFloat32.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return asRawTensor().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return asRawTensor().numBytes();
+    }
+
+    @Override
+    public void close() {
+      asRawTensor().close();
     }
 
     @Override
@@ -53,5 +79,58 @@ public final class TFloat32Mapper extends TensorMapper<TFloat32> {
       super(buffer, rawTensor.shape());
       this.rawTensor = rawTensor;
     }
+  }
+
+  private static final class SparseTFloat32 extends FloatSparseNdArray
+      implements TFloat32, SparseTensor<TFloat32> {
+
+    @Override
+    public Class<TFloat32> type() {
+      return TFloat32.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return values().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return SparseHelpers.numBytes(this);
+    }
+
+    @Override
+    public void close() {
+      tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
+    }
+
+    @Override
+    public TInt64 indices() {
+      return (TInt64) getIndices();
+    }
+
+    @Override
+    public TFloat32 values() {
+      return (TFloat32) getValues();
+    }
+
+    @Override
+    public TInt64 denseShape() {
+      return denseShape;
+    }
+
+    SparseTFloat32(TInt64 indices, TFloat32 values, TInt64 denseShape, PointerScope tensorScope) {
+      super(indices, values, 0.0f, SparseHelpers.toDimensionalSpace(denseShape));
+      this.denseShape = denseShape;
+      this.tensorScope = tensorScope.extend();
+    }
+
+    private final TInt64 denseShape;
+    private final PointerScope tensorScope;
   }
 }

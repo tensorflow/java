@@ -16,16 +16,21 @@
  */
 package org.tensorflow.internal.types;
 
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.RawTensor;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
+import org.tensorflow.ndarray.impl.sparse.ByteSparseNdArray;
+import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_UINT8} tensors
- * to a n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_UINT8} tensors to a
+ * n-dimensional data space.
  */
 public final class TUint8Mapper extends TensorMapper<TUint8> {
 
@@ -35,11 +40,32 @@ public final class TUint8Mapper extends TensorMapper<TUint8> {
     return new DenseTUint8(tensor, buffer);
   }
 
+  @Override
+  protected SparseTensor<TUint8> mapSparse(
+      TInt64 indices, TUint8 values, TInt64 denseShape, PointerScope tensorScope) {
+    return new TUint8Mapper.SparseTUint8(indices, values, denseShape, tensorScope);
+  }
+
   private static final class DenseTUint8 extends ByteDenseNdArray implements TUint8 {
 
     @Override
     public Class<TUint8> type() {
       return TUint8.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return asRawTensor().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return asRawTensor().numBytes();
+    }
+
+    @Override
+    public void close() {
+      asRawTensor().close();
     }
 
     @Override
@@ -53,5 +79,58 @@ public final class TUint8Mapper extends TensorMapper<TUint8> {
       super(buffer, rawTensor.shape());
       this.rawTensor = rawTensor;
     }
+  }
+
+  private static final class SparseTUint8 extends ByteSparseNdArray
+      implements TUint8, SparseTensor<TUint8> {
+
+    @Override
+    public Class<TUint8> type() {
+      return TUint8.class;
+    }
+
+    @Override
+    public DataType dataType() {
+      return values().dataType();
+    }
+
+    @Override
+    public long numBytes() {
+      return SparseHelpers.numBytes(this);
+    }
+
+    @Override
+    public void close() {
+      tensorScope.close();
+    }
+
+    @Override
+    public boolean isSparse() {
+      return true;
+    }
+
+    @Override
+    public TInt64 indices() {
+      return (TInt64) getIndices();
+    }
+
+    @Override
+    public TUint8 values() {
+      return (TUint8) getValues();
+    }
+
+    @Override
+    public TInt64 denseShape() {
+      return denseShape;
+    }
+
+    SparseTUint8(TInt64 indices, TUint8 values, TInt64 denseShape, PointerScope tensorScope) {
+      super(indices, values, (byte) 0, SparseHelpers.toDimensionalSpace(denseShape));
+      this.denseShape = denseShape;
+      this.tensorScope = tensorScope.extend();
+    }
+
+    private final TInt64 denseShape;
+    private final PointerScope tensorScope;
   }
 }

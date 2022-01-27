@@ -20,6 +20,7 @@ package org.tensorflow.types;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.internal.types.TStringInitializer;
 import org.tensorflow.internal.types.TStringMapper;
@@ -105,7 +106,8 @@ public interface TString extends NdArray<String>, TType {
    * @return the new tensor
    */
   static TString tensorOf(Charset charset, NdArray<String> src) {
-    TStringInitializer<String> initializer = new TStringInitializer<>(src, s -> s.getBytes(charset));
+    TStringInitializer<String> initializer =
+        new TStringInitializer<>(src, s -> s.getBytes(charset));
     return Tensor.of(TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
@@ -188,6 +190,31 @@ public interface TString extends NdArray<String>, TType {
    */
   static TString tensorOfBytes(Shape shape, DataBuffer<byte[]> data) {
     return tensorOfBytes(NdArrays.wrap(shape, data));
+  }
+
+  /**
+   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense
+   * tensors, with an empty string as the default value.
+   *
+   * <p>The returned instance also implements the {@link SparseTensor SparseTensor<TString>}
+   * interface, allowing a user to access directly the dense tensors when needed.
+   *
+   * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
+   *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
+   *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
+   *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
+   * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each element in
+   *     indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
+   *     values=["one", "two"]} specifies that element {@code [1,3,1]} of the sparse tensor has a
+   *     value of {@code "one"}, and element {@code [2,4,0]} of the tensor has a value of {@code
+   *     "two"}.
+   * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
+   *     represents the size of dimension {@code i} in a dense version of that tensor.
+   * @return the new sparse tensor
+   * @see SparseTensor for more details on sparse tensors and how to release their memory properly
+   */
+  static TString sparseTensorOf(TInt64 indices, TString values, TInt64 denseShape) {
+    return SparseTensor.of(indices, values, denseShape).asTypedTensor();
   }
 
   /**

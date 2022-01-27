@@ -18,6 +18,7 @@
 package org.tensorflow.types;
 
 import java.util.function.Consumer;
+import org.tensorflow.SparseTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TBfloat16Mapper;
@@ -40,7 +41,7 @@ import org.tensorflow.types.family.TFloating;
  * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with
  * potentially a precision loss) is required for each 32 bits value written or read on a tensor of
  * this type from the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor,
- * performances will be improved by working with {@link TFloat32} or {@link TFloat64} data types
+ * performances will be improved by working with {@link TFloat32} or {@link TBfloat16} data types
  * whenever possible.
  *
  * <p>Note that some CPUs support the bfloat16 format natively, which can result in faster
@@ -69,7 +70,8 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TBfloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(
+        TBfloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -116,5 +118,28 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
   static TBfloat16 tensorOf(Shape shape, Consumer<TBfloat16> dataInit) {
     return Tensor.of(TBfloat16.class, shape, dataInit);
   }
-}
 
+  /**
+   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense
+   * tensors, with a default value of zero.
+   *
+   * <p>The returned instance also implements the {@link SparseTensor SparseTensor<TBfloat16>}
+   * interface, allowing a user to access directly the dense tensors when needed.
+   *
+   * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
+   *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).
+   *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
+   *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
+   * @param values A 1-D tensor of shape {@code [N]}, which supplies the values for each element in
+   *     indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
+   *     values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse tensor has a value
+   *     of {@code 18f}, and element {@code [2,4,0]} of the tensor has a value of {@code 3.8f}.
+   * @param denseShape A 1-D tensor of shape {@code [ndims]} where each the value at index {@code i}
+   *     represents the size of dimension {@code i} in a dense version of that tensor.
+   * @return the new sparse tensor
+   * @see SparseTensor for more details on sparse tensors and how to release their memory properly
+   */
+  static TBfloat16 sparseTensorOf(TInt64 indices, TBfloat16 values, TInt64 denseShape) {
+    return SparseTensor.of(indices, values, denseShape).asTypedTensor();
+  }
+}
