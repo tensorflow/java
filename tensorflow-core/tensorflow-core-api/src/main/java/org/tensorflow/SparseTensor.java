@@ -97,7 +97,9 @@ public interface SparseTensor<T extends TType> extends Tensor {
     // well
     TensorMapper<T> mapper = (TensorMapper<T>) values.asRawTensor().typeInfo().mapper();
 
-    // Keep a strong reference to all sub-tensors of the sparse tensor
+    // Attach all tensors to a new pointer scope (this will increment their reference count) and
+    // preserve a strong reference to that scope inside the sparse tensor. This is done by
+    // extending this scope in the sparse tensor constructors, via mapSparse()
     try (PointerScope scope = new PointerScope()) {
       scope.attach(indices.asRawTensor().nativeHandle());
       scope.attach(values.asRawTensor().nativeHandle());
