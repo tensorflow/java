@@ -134,7 +134,7 @@ public class ZerosTest {
       long[] shape = {2, 2};
       Zeros<TFloat32> zeros =
           Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.class);
-      List<?> results =
+      Session.Result results =
           sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
     }
   }
