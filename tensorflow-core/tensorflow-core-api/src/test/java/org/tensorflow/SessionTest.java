@@ -26,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -38,6 +40,7 @@ import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.op.math.Add;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -69,8 +72,7 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       transpose_A_times_X(tf, new int[][] {{2}, {3}});
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
+          Session.Result outputs = s.runner().feed("X", x).fetch("Y").run()) {
         assertEquals(1, outputs.size());
         assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
       }
@@ -86,8 +88,7 @@ public class SessionTest {
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
+          Session.Result outputs = s.runner().feed(feed, x).fetch(fetch).run()) {
         assertEquals(1, outputs.size());
         assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
       }
@@ -124,20 +125,20 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       transpose_A_times_X(tf, new int[][] {{2}, {3}});
       try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}))) {
-        Session.Run result =
+        Session.Result result =
             s.runner()
                 .feed("X", x)
                 .fetch("Y")
                 .setOptions(fullTraceRunOptions())
                 .runAndFetchMetadata();
         // Sanity check on outputs.
-        AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(result.outputs);
-        assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
+        assertEquals(1, result.size());
+        assertEquals(31, ((TInt32) result.get(0)).getInt(0, 0));
         // Sanity check on metadata
-        assertNotNull(result.metadata);
-        assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
-        outputs.close();
+        Optional<RunMetadata> metadata = result.getMetadata();
+        assertTrue(metadata.isPresent());
+        assertTrue(metadata.get().hasStepStats(), metadata.get().toString());
+        result.close();
       }
     }
   }
@@ -149,8 +150,7 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       tf.withName("c1").constant(2718);
       tf.withName("c2").constant(31415);
-      AutoCloseableList<Tensor> outputs =
-          new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
+      Session.Result outputs = s.runner().fetch("c2").fetch("c1").run();
       assertEquals(2, outputs.size());
       assertEquals(31415, ((TInt32) outputs.get(0)).getInt());
       assertEquals(2718, ((TInt32) outputs.get(1)).getInt());
@@ -227,10 +227,8 @@ public class SessionTest {
           restoredGraph.importGraphDef(graphDef);
           try (Session restoredSession = new Session(restoredGraph)) {
             restoredSession.restore(testFolder.resolve("checkpoint").toString());
-            try (AutoCloseableList<Tensor> oldList =
-                    new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
-                AutoCloseableList<Tensor> newList =
-                    new AutoCloseableList<>(restoredSession.runner().fetch("x").fetch("y").run())) {
+            try (Session.Result oldList = s.runner().fetch("x").fetch("y").run();
+                Session.Result newList = restoredSession.runner().fetch("x").fetch("y").run()) {
               assertEquals(oldList.get(0), newList.get(0));
               assertEquals(oldList.get(1), newList.get(1));
             }

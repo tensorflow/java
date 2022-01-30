@@ -21,12 +21,19 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
+
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -490,13 +497,13 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner
      */
-    public List<Tensor> run() {
+    public Result run() {
       doInit();
       return runNoInit();
     }
 
-    List<Tensor> runNoInit() {
-      return runHelper(false).outputs;
+    Result runNoInit() {
+      return runHelper(false);
     }
 
     /**
@@ -509,18 +516,19 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
-    public Run runAndFetchMetadata() {
+    public Result runAndFetchMetadata() {
       doInit();
       return runHelper(true);
     }
 
-    private Run runHelper(boolean wantMetadata) {
+    private Result runHelper(boolean wantMetadata) {
       TF_Tensor[] inputTensorHandles = new TF_Tensor[inputTensors.size()];
       TF_Operation[] inputOpHandles = new TF_Operation[inputs.size()];
       int[] inputOpIndices = new int[inputs.size()];
       TF_Operation[] outputOpHandles = new TF_Operation[outputs.size()];
       int[] outputOpIndices = new int[outputs.size()];
       TF_Operation[] targetOpHandles = new TF_Operation[targets.size()];
+      List<String> outputNames = new ArrayList<>();
 
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
@@ -538,6 +546,7 @@ public final class Session implements AutoCloseable {
       for (Output<?> o : outputs) {
         outputOpHandles[idx] = (TF_Operation) o.getUnsafeNativeHandle();
         outputOpIndices[idx] = o.index();
+        outputNames.add(o.name());
         idx++;
       }
       idx = 0;
@@ -569,10 +578,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      Run ret = new Run();
-      ret.outputs = outputs;
-      ret.metadata = metadata;
-      return ret;
+      return new Result(outputNames,outputs,metadata);
     }
 
     private class Reference implements AutoCloseable {
@@ -699,14 +705,117 @@ public final class Session implements AutoCloseable {
   }
 
   /**
-   * Output tensors and metadata obtained when executing a session.
+   * An {@link AutoCloseable} wrapper around a {@link Map} containing {@link Tensor}s.
    *
-   * <p>See {@link Runner#runAndFetchMetadata()}
+   * <p>When this is closed it closes all the {@link Tensor}s inside it. If you maintain a
+   * reference to a value after this object has been closed it will throw an {@link
+   * IllegalStateException} upon access.
    */
-  public static final class Run {
+  public static class Result implements AutoCloseable, Iterable<Map.Entry<String, Tensor>> {
 
-    /** Tensors from requested fetches. */
-    public List<Tensor> outputs;
+    private static final Logger logger = Logger.getLogger(Result.class.getName());
+
+    private final Map<String, Tensor> map;
+
+    private final List<Tensor> list;
+
+    private final RunMetadata metadata;
+
+    private boolean closed;
+
+    /**
+     * Creates a Result from the names and values produced by {@link Session.Runner#run()}.
+     *
+     * @param names The output names.
+     * @param values The output values.
+     * @param metadata The run metadata, may be null.
+     */
+    Result(List<String> names, List<Tensor> values, RunMetadata metadata) {
+      this.map = new LinkedHashMap<>();
+      this.list = new ArrayList<>(values);
+
+      if (names.size() != values.size()) {
+        throw new IllegalArgumentException(
+                "Expected same number of names and values, found names.length = "
+                        + names.size()
+                        + ", values.length = "
+                        + values.size());
+      }
+
+      for (int i = 0; i < names.size(); i++) {
+        this.map.put(names.get(i), values.get(i));
+      }
+      this.metadata = metadata;
+      this.closed = false;
+    }
+
+    @Override
+    public void close() {
+      if (!closed) {
+        closed = true;
+        for (Tensor t : map.values()) {
+          t.close();
+        }
+      } else {
+        logger.warning("Closing an already closed Result");
+      }
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, Tensor>> iterator() {
+      if (!closed) {
+        return map.entrySet().iterator();
+      } else {
+        throw new IllegalStateException("Result is closed");
+      }
+    }
+
+    /**
+     * Gets the value from the container at the specified index.
+     *
+     * <p>Throws {@link IllegalStateException} if the container has been closed, and {@link
+     * IndexOutOfBoundsException} if the index is invalid.
+     *
+     * @param index The index to lookup.
+     * @return The value at the index.
+     */
+    public Tensor get(int index) {
+      if (!closed) {
+        return list.get(index);
+      } else {
+        throw new IllegalStateException("Result is closed");
+      }
+    }
+
+    /**
+     * Returns the number of outputs in this Result.
+     *
+     * @return The number of outputs.
+     */
+    public int size() {
+      return map.size();
+    }
+
+    /**
+     * Gets the value from the container assuming it's not been closed.
+     *
+     * <p>Throws {@link IllegalStateException} if the container has been closed.
+     *
+     * @param key The key to lookup.
+     * @return Optional.of the value if it exists.
+     */
+    public Optional<Tensor> get(String key) {
+      if (!closed) {
+        Tensor value = map.get(key);
+        if (value != null) {
+          return Optional.of(value);
+        } else {
+          return Optional.empty();
+        }
+      } else {
+        throw new IllegalStateException("Result is closed");
+      }
+    }
 
     /**
      * Metadata about the run.
@@ -715,7 +824,9 @@ public final class Session implements AutoCloseable {
      * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
      * protocol buffer</a>.
      */
-    public RunMetadata metadata;
+    public Optional<RunMetadata> getMetadata() {
+      return Optional.ofNullable(metadata);
+    }
   }
 
   Graph graph() {
