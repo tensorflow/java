@@ -712,43 +712,6 @@ public final class Session implements AutoCloseable {
    * IllegalStateException} upon access.
    */
   public static final class Result implements AutoCloseable, Iterable<Map.Entry<String, Tensor>> {
-
-    private static final Logger logger = Logger.getLogger(Result.class.getName());
-
-    private final Map<String, Tensor> map;
-
-    private final List<Tensor> list;
-
-    private final RunMetadata metadata;
-
-    private boolean closed;
-
-    /**
-     * Creates a Result from the names and values produced by {@link Session.Runner#run()}.
-     *
-     * @param names The output names.
-     * @param values The output values.
-     * @param metadata The run metadata, may be null.
-     */
-    Result(List<String> names, List<Tensor> values, RunMetadata metadata) {
-      this.map = new LinkedHashMap<>();
-      this.list = new ArrayList<>(values);
-
-      if (names.size() != values.size()) {
-        throw new IllegalArgumentException(
-                "Expected same number of names and values, found names.length = "
-                        + names.size()
-                        + ", values.length = "
-                        + values.size());
-      }
-
-      for (int i = 0; i < names.size(); i++) {
-        this.map.put(names.get(i), values.get(i));
-      }
-      this.metadata = metadata;
-      this.closed = false;
-    }
-
     @Override
     public void close() {
       if (!closed) {
@@ -827,6 +790,42 @@ public final class Session implements AutoCloseable {
     public Optional<RunMetadata> getMetadata() {
       return Optional.ofNullable(metadata);
     }
+
+    /**
+     * Creates a Result from the names and values produced by {@link Session.Runner#run()}.
+     *
+     * @param names The output names.
+     * @param values The output values.
+     * @param metadata The run metadata, may be null.
+     */
+    Result(List<String> names, List<Tensor> values, RunMetadata metadata) {
+      this.map = new LinkedHashMap<>();
+      this.list = new ArrayList<>(values);
+
+      if (names.size() != values.size()) {
+        throw new IllegalArgumentException(
+                "Expected same number of names and values, found names.length = "
+                        + names.size()
+                        + ", values.length = "
+                        + values.size());
+      }
+
+      for (int i = 0; i < names.size(); i++) {
+        this.map.put(names.get(i), values.get(i));
+      }
+      this.metadata = metadata;
+      this.closed = false;
+    }
+
+    private final Map<String, Tensor> map;
+
+    private final List<Tensor> list;
+
+    private final RunMetadata metadata;
+
+    private boolean closed;
+
+    private static final Logger logger = Logger.getLogger(Result.class.getName());
   }
 
   Graph graph() {
