@@ -711,7 +711,7 @@ public final class Session implements AutoCloseable {
    * reference to a value after this object has been closed it will throw an {@link
    * IllegalStateException} upon access.
    */
-  public static class Result implements AutoCloseable, Iterable<Map.Entry<String, Tensor>> {
+  public static final class Result implements AutoCloseable, Iterable<Map.Entry<String, Tensor>> {
 
     private static final Logger logger = Logger.getLogger(Result.class.getName());
 
