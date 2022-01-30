@@ -113,7 +113,7 @@ public class SessionFunction implements TensorFunction {
 
     signature.getOutputs().values().forEach(x -> runner.fetch(x.name));
 
-    List<Tensor> results = runner.run();
+    Session.Result results = runner.run();
 
     Map<String, Tensor> outputs = new LinkedHashMap<>(results.size());
     int i = 0;

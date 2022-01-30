@@ -16,6 +16,7 @@ package org.tensorflow.framework.metrics.impl;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
+import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Op;
@@ -69,10 +70,10 @@ public class AssertBroadcastableTest {
     Operand<T> weightsPlaceholder = tf.placeholder(type);
     Operand<T> valuesPlaceholder = tf.placeholder(type);
 
-    List<Tensor> tensors =
-        testSession.getGraphSession().runner().fetch(weights).fetch(values).run();
-    try (Tensor weightsTensor = tensors.get(0);
-        Tensor valuesTensor = tensors.get(1)) {
+    try (Session.Result tensors =
+        testSession.getGraphSession().runner().fetch(weights).fetch(values).run()) {
+      Tensor weightsTensor = tensors.get(0);
+      Tensor valuesTensor = tensors.get(1);
       Op dynamicOp = MetricsHelper.assertBroadcastable(tf, weightsPlaceholder, valuesPlaceholder);
 
       testSession

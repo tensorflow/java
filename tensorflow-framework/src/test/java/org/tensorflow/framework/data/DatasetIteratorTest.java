@@ -51,15 +51,10 @@ public class DatasetIteratorTest extends DatasetTestBase {
 
         int batches = 0;
         while (true) {
-          try {
-            List<?> outputs = session.runner().fetch(x).fetch(y).run();
-
-            try (TInt32 xBatch = (TInt32) outputs.get(0);
-                TInt32 yBatch = (TInt32) outputs.get(1)) {
-              assertEquals(testMatrix1.get(batches), xBatch);
-              assertEquals(testMatrix2.get(batches), yBatch);
-              batches++;
-            }
+          try (Session.Result outputs = session.runner().fetch(x).fetch(y).run()) {
+            assertEquals(testMatrix1.get(batches), outputs.get(0));
+            assertEquals(testMatrix2.get(batches), outputs.get(1));
+            batches++;
           } catch (TFOutOfRangeException e) {
             break;
           }
