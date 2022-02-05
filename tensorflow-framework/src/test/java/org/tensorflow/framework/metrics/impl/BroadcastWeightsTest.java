@@ -16,7 +16,7 @@ package org.tensorflow.framework.metrics.impl;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.Session;
+import org.tensorflow.Result;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
@@ -26,7 +26,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -79,7 +78,7 @@ public class BroadcastWeightsTest {
     Operand<T> weightsPlaceholder = tf.placeholder(type);
     Operand<T> valuesPlaceholder = tf.placeholder(type);
 
-    try (Session.Result tensors =
+    try (Result tensors =
         testSession.getGraphSession().runner().fetch(weights).fetch(values).run()) {
       Tensor weightsTensor = tensors.get(0);
       Tensor valuesTensor = tensors.get(1);
@@ -87,7 +86,7 @@ public class BroadcastWeightsTest {
       Operand<T> dynamicOp =
           MetricsHelper.broadcastWeights(tf, weightsPlaceholder, valuesPlaceholder);
 
-      try (Session.Result result =
+      try (Result result =
           testSession
               .getGraphSession()
               .runner()

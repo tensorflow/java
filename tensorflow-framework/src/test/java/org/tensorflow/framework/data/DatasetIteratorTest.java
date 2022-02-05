@@ -22,6 +22,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.exceptions.TFOutOfRangeException;
 import org.tensorflow.op.Ops;
@@ -51,7 +52,7 @@ public class DatasetIteratorTest extends DatasetTestBase {
 
         int batches = 0;
         while (true) {
-          try (Session.Result outputs = session.runner().fetch(x).fetch(y).run()) {
+          try (Result outputs = session.runner().fetch(x).fetch(y).run()) {
             assertEquals(testMatrix1.get(batches), outputs.get(0));
             assertEquals(testMatrix2.get(batches), outputs.get(1));
             batches++;

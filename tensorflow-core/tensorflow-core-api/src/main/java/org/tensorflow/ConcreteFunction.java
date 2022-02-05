@@ -1,4 +1,4 @@
-/* Copyright 2020-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -295,7 +295,7 @@ public final class ConcreteFunction implements AutoCloseable, TensorFunction {
   }
 
   @Override
-  public Map<String, Tensor> call(Map<String, Tensor> arguments) {
+  public Result call(Map<String, Tensor> arguments) {
     // FIXME need to manage input/output operand lifetimes
     Ops tf = Ops.create();
     Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
@@ -305,11 +305,11 @@ public final class ConcreteFunction implements AutoCloseable, TensorFunction {
       inputs.put(inputName, tf.constantOf((TType) argument));
     }
     Map<String, Operand<?>> outputs = tf.call(this, inputs);
-    Map<String, Tensor> tensorOutputs = new LinkedHashMap<>(outputs.size());
+    LinkedHashMap<String, Tensor> tensorOutputs = new LinkedHashMap<>(outputs.size());
     for (String outputName : outputs.keySet()) {
       tensorOutputs.put(outputName, outputs.get(outputName).asTensor());
     }
-    return tensorOutputs;
+    return new Result(tensorOutputs);
   }
 
   /**

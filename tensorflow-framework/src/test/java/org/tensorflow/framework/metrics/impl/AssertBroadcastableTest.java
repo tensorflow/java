@@ -16,7 +16,7 @@ package org.tensorflow.framework.metrics.impl;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.Session;
+import org.tensorflow.Result;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Op;
@@ -26,8 +26,6 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -70,7 +68,7 @@ public class AssertBroadcastableTest {
     Operand<T> weightsPlaceholder = tf.placeholder(type);
     Operand<T> valuesPlaceholder = tf.placeholder(type);
 
-    try (Session.Result tensors =
+    try (Result tensors =
         testSession.getGraphSession().runner().fetch(weights).fetch(values).run()) {
       Tensor weightsTensor = tensors.get(0);
       Tensor valuesTensor = tensors.get(1);

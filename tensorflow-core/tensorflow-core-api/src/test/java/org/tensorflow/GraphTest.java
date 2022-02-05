@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
@@ -85,7 +84,7 @@ public class GraphTest {
       Operand<TInt32> variable2 = init.withName("var2").variable(init.constant(4));
 
       try (Session s = new Session(g, true);
-        Session.Result results = s.runner().fetch("result").fetch("var2").run()) {
+        Result results = s.runner().fetch("result").fetch("var2").run()) {
         TInt32 result = (TInt32) results.get(0);
         assertEquals(6, result.getInt());
 
@@ -264,7 +263,7 @@ public class GraphTest {
 
       try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
           TFloat32 c2 = TFloat32.scalarOf(2.0f);
-          Session.Result outputs = s.runner()
+          Result outputs = s.runner()
                       .feed(x1, c1)
                       .feed(x2, c2)
                       .fetch(grads0[0])
@@ -414,7 +413,7 @@ public class GraphTest {
 
       try (TInt32 c1 = TInt32.scalarOf(2);
           TInt32 c2 = TInt32.scalarOf(5);
-          Session.Result outputs = s.runner()
+          Result outputs = s.runner()
                       .feed(input1, c1)
                       .feed(input2, c2)
                       .fetch(loopOutputs[0])

@@ -1,4 +1,4 @@
-/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021-2022 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.tensorflow;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -89,7 +88,7 @@ public class SessionFunction implements TensorFunction {
   }
 
   @Override
-  public Map<String, Tensor> call(Map<String, Tensor> arguments) {
+  public Result call(Map<String, Tensor> arguments) {
     Session.Runner runner = session.runner();
     signature
         .getInputs()
@@ -113,15 +112,6 @@ public class SessionFunction implements TensorFunction {
 
     signature.getOutputs().values().forEach(x -> runner.fetch(x.name));
 
-    Session.Result results = runner.run();
-
-    Map<String, Tensor> outputs = new LinkedHashMap<>(results.size());
-    int i = 0;
-    for (String outputName : signature.outputNames()) {
-      outputs.put(outputName, results.get(i));
-      i++;
-    }
-
-    return outputs;
+    return runner.run();
   }
 }

@@ -28,7 +28,7 @@ public interface TensorFunction {
   /**
    * Invokes a function using the default eager session.
    *
-   * <p>Caller is responsible for closing all Tensors.
+   * <p>Caller is responsible for close the result object.
    *
    * @param arguments list of tensors to pass in input to the function, mapped by their signature
    *     name
@@ -37,7 +37,7 @@ public interface TensorFunction {
    * @throws IllegalArgumentException if the passed arguments don't match up to the function's
    *     parameters.
    */
-  Map<String, Tensor> call(Map<String, Tensor> arguments);
+  Result call(Map<String, Tensor> arguments);
 
   /**
    * Invokes a function with a single input and output using the default eager session.
@@ -76,12 +76,11 @@ public interface TensorFunction {
     }
 
     String inputName = signature().inputNames().iterator().next();
-    String outputName = signature().outputNames().iterator().next();
 
     Map<String, Tensor> inputMap = new LinkedHashMap<>();
     inputMap.put(inputName, tensor);
 
-    return call(inputMap).get(outputName);
+    return call(inputMap).get(0);
   }
 
   static Operand<?> validateDescription(

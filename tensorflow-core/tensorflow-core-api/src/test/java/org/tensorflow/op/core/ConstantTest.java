@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -64,7 +65,7 @@ public class ConstantTest {
       Scope scope = new OpScope(g);
       Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);
-      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
+      try (Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -82,7 +83,7 @@ public class ConstantTest {
       Scope scope = new OpScope(g);
       Constant<TFloat32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TFloat32> op2 = Constant.tensorOf(scope, array);
-      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
+      try (Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -100,7 +101,7 @@ public class ConstantTest {
       Scope scope = new OpScope(g);
       Constant<TFloat64> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TFloat64> op2 = Constant.tensorOf(scope, array);
-      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
+      try (Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -118,7 +119,7 @@ public class ConstantTest {
       Scope scope = new OpScope(g);
       Constant<TInt64> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt64> op2 = Constant.tensorOf(scope, array);
-      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
+      try (Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -136,7 +137,7 @@ public class ConstantTest {
       Scope scope = new OpScope(g);
       Constant<TString> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TString> op2 = Constant.tensorOf(scope, array);
-      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
+      try (Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }

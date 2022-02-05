@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.initializers.Glorot;
@@ -191,7 +192,7 @@ public class GradientDescentTest {
         g.importGraphDef(def);
         s.initialize();
 
-        Session.Result initializationRes = s.runner()
+        Result initializationRes = s.runner()
                 .fetch(fcWeightName)
                 .fetch(fcBiasName)
                 .fetch(outputWeightName)
@@ -215,7 +216,7 @@ public class GradientDescentTest {
         initialLoss[i] = lossVal.getFloat();
         lossVal.close();
 
-        Session.Result trainedRes = s.runner()
+        Result trainedRes = s.runner()
                 .fetch(fcWeightName)
                 .fetch(fcBiasName)
                 .fetch(outputWeightName)

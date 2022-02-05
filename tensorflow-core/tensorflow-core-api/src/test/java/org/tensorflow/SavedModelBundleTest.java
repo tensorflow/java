@@ -293,9 +293,9 @@ public class SavedModelBundleTest {
         System.out.println(add.signature());
         args.put("a", a);
         args.put("b", b);
-        Map<String, Tensor> result = add.call(args);
+        Result result = add.call(args);
         assertEquals(result.size(), 1);
-        try (TFloat32 c = (TFloat32) result.values().iterator().next()) {
+        try (TFloat32 c = (TFloat32) result.get(0)) {
           assertEquals(25.5f, c.getFloat());
         }
       }
@@ -307,11 +307,7 @@ public class SavedModelBundleTest {
         args.put("dummy", dummy);
         // TF functions always require an input, so we supply a dummy one here
         // This test actually checks that resource variables can be loaded correctly.
-        try (TFloat32 v =
-            (TFloat32)
-                getVariable
-                    .call(args)
-                    .get(getVariable.signature().outputNames().iterator().next())) {
+        try (TFloat32 v = (TFloat32) getVariable.call(args).get(0)) {
           assertEquals(2f, v.getFloat());
         }
       }

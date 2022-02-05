@@ -1,4 +1,4 @@
-/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,17 +22,12 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
@@ -654,8 +649,9 @@ public final class Session implements AutoCloseable {
    *
    * @param signature the signature of the function
    * @param arguments the arguments to call with.
+   * @return The results of the function call.
    */
-  public Map<String, Tensor> run(Signature signature, Map<String, Tensor> arguments) {
+  public Result run(Signature signature, Map<String, Tensor> arguments) {
     return function(signature).call(arguments);
   }
 
@@ -702,130 +698,6 @@ public final class Session implements AutoCloseable {
         .runNoInit();
     // TODO better way of doing this, only count as ran assignments to the restored variables.
     setInitialized();
-  }
-
-  /**
-   * An {@link AutoCloseable} wrapper around a {@link Map} containing {@link Tensor}s.
-   *
-   * <p>When this is closed it closes all the {@link Tensor}s inside it. If you maintain a
-   * reference to a value after this object has been closed it will throw an {@link
-   * IllegalStateException} upon access.
-   */
-  public static final class Result implements AutoCloseable, Iterable<Map.Entry<String, Tensor>> {
-    @Override
-    public void close() {
-      if (!closed) {
-        closed = true;
-        for (Tensor t : map.values()) {
-          t.close();
-        }
-      } else {
-        logger.warning("Closing an already closed Result");
-      }
-    }
-
-    @Override
-    public Iterator<Map.Entry<String, Tensor>> iterator() {
-      if (!closed) {
-        return map.entrySet().iterator();
-      } else {
-        throw new IllegalStateException("Result is closed");
-      }
-    }
-
-    /**
-     * Gets the value from the container at the specified index.
-     *
-     * <p>Throws {@link IllegalStateException} if the container has been closed, and {@link
-     * IndexOutOfBoundsException} if the index is invalid.
-     *
-     * @param index The index to lookup.
-     * @return The value at the index.
-     */
-    public Tensor get(int index) {
-      if (!closed) {
-        return list.get(index);
-      } else {
-        throw new IllegalStateException("Result is closed");
-      }
-    }
-
-    /**
-     * Returns the number of outputs in this Result.
-     *
-     * @return The number of outputs.
-     */
-    public int size() {
-      return map.size();
-    }
-
-    /**
-     * Gets the value from the container assuming it's not been closed.
-     *
-     * <p>Throws {@link IllegalStateException} if the container has been closed.
-     *
-     * @param key The key to lookup.
-     * @return Optional.of the value if it exists.
-     */
-    public Optional<Tensor> get(String key) {
-      if (!closed) {
-        Tensor value = map.get(key);
-        if (value != null) {
-          return Optional.of(value);
-        } else {
-          return Optional.empty();
-        }
-      } else {
-        throw new IllegalStateException("Result is closed");
-      }
-    }
-
-    /**
-     * Metadata about the run.
-     *
-     * <p>A <a
-     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
-     * protocol buffer</a>.
-     */
-    public Optional<RunMetadata> getMetadata() {
-      return Optional.ofNullable(metadata);
-    }
-
-    /**
-     * Creates a Result from the names and values produced by {@link Session.Runner#run()}.
-     *
-     * @param names The output names.
-     * @param values The output values.
-     * @param metadata The run metadata, may be null.
-     */
-    Result(List<String> names, List<Tensor> values, RunMetadata metadata) {
-      this.map = new LinkedHashMap<>();
-      this.list = new ArrayList<>(values);
-
-      if (names.size() != values.size()) {
-        throw new IllegalArgumentException(
-                "Expected same number of names and values, found names.length = "
-                        + names.size()
-                        + ", values.length = "
-                        + values.size());
-      }
-
-      for (int i = 0; i < names.size(); i++) {
-        this.map.put(names.get(i), values.get(i));
-      }
-      this.metadata = metadata;
-      this.closed = false;
-    }
-
-    private final Map<String, Tensor> map;
-
-    private final List<Tensor> list;
-
-    private final RunMetadata metadata;
-
-    private boolean closed;
-
-    private static final Logger logger = Logger.getLogger(Result.class.getName());
   }
 
   Graph graph() {
