@@ -215,7 +215,7 @@ public class SavedModelBundleTest {
         // Now call the same function directly from the model
         try (TFloat32 zTensor =
             (TFloat32)
-                savedModel.call(Collections.singletonMap("input", xTensor)).get("reducedSum")) {
+                savedModel.call(Collections.singletonMap("input", xTensor)).get("reducedSum").get()) {
           assertEquals(reducedSum, zTensor.getFloat(), EPSILON);
         }
       }
