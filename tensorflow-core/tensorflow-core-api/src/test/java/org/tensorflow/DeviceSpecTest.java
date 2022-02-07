@@ -14,6 +14,11 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.tensorflow.DeviceSpec.DeviceType;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
@@ -21,90 +26,87 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.types.TInt32;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.tensorflow.DeviceSpec.DeviceType;
-
 /** Tests for {@link DeviceSpec}. */
 public class DeviceSpecTest {
   @Test
   public void withDeviceMethod() {
-    ConfigProto config = ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
+    ConfigProto config =
+        ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
             .setLogDevicePlacement(true)
             .build();
 
-    try (Graph g = new Graph(); Session session = new Session(g, config)) {
+    try (Graph g = new Graph();
+        Session session = new Session(g, config)) {
       Ops tf = Ops.create(g).withSubScope("testScope");
 
       Constant<TInt32> aOps = tf.constant(-1);
 
-      DeviceSpec deviceSpec = DeviceSpec.newBuilder()
+      DeviceSpec deviceSpec =
+          DeviceSpec.newBuilder()
               .job("localhost")
               .replica(0)
               .task(0)
               .deviceType(DeviceSpec.DeviceType.CPU)
               .build();
 
-      Output<TInt32> absOps = tf
-              .withName("absWithDevice")
-              .withDevice(deviceSpec)
-              .math
-              .abs(aOps)
-              .asOutput();
+      Output<TInt32> absOps =
+          tf.withName("absWithDevice").withDevice(deviceSpec).math.abs(aOps).asOutput();
 
       try (Result t = session.runner().fetch(absOps).run()) {
-        assertEquals(1, ((TInt32)t.get(0)).getInt());
+        assertEquals(1, ((TInt32) t.get(0)).getInt());
       }
     }
   }
 
   @Test
   public void withEmptyDeviceSpec() {
-    ConfigProto config = ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
+    ConfigProto config =
+        ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
             .setLogDevicePlacement(true)
             .build();
 
-    try (Graph g = new Graph(); Session session = new Session(g, config)) {
+    try (Graph g = new Graph();
+        Session session = new Session(g, config)) {
       Ops tf = Ops.create(g).withSubScope("testScope");
 
       Constant<TInt32> aOps = tf.constant(-1);
 
-      DeviceSpec deviceSpec = DeviceSpec.newBuilder()
+      DeviceSpec deviceSpec =
+          DeviceSpec.newBuilder()
               .job("localhost")
               .replica(0)
               .task(0)
               .deviceType(DeviceSpec.DeviceType.CPU)
               .build();
 
-      Output<TInt32> absOps = tf
-              .withName("absWithDevice")
-              .withDevice(deviceSpec)
-              .math
-              .abs(aOps)
-              .asOutput();
+      Output<TInt32> absOps =
+          tf.withName("absWithDevice").withDevice(deviceSpec).math.abs(aOps).asOutput();
 
       try (Result t = session.runner().fetch(absOps).run()) {
-        assertEquals(1, ((TInt32)t.get(0)).getInt());
+        assertEquals(1, ((TInt32) t.get(0)).getInt());
       }
     }
   }
 
   @Test
   public void withTwoScopes() {
-    ConfigProto config = ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
+    ConfigProto config =
+        ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
             .setLogDevicePlacement(true)
             .build();
 
-    try (Graph g = new Graph(); Session session = new Session(g, config)) {
-      DeviceSpec deviceSpec1 = DeviceSpec.newBuilder()
+    try (Graph g = new Graph();
+        Session session = new Session(g, config)) {
+      DeviceSpec deviceSpec1 =
+          DeviceSpec.newBuilder()
               .job("localhost")
               .replica(0)
               .task(0)
               .deviceType(DeviceSpec.DeviceType.CPU)
               .build();
 
-      DeviceSpec deviceSpec2 = DeviceSpec.newBuilder()
+      DeviceSpec deviceSpec2 =
+          DeviceSpec.newBuilder()
               .job("localhost")
               .replica(0)
               .task(0)
@@ -117,32 +119,27 @@ public class DeviceSpecTest {
       Constant<TInt32> aOps = tf1.constant(-1);
       Constant<TInt32> bOps = tf2.constant(10);
 
-      Output<TInt32> absOps = tf1
-              .withName("absWithDevice")
-              .math
-              .abs(aOps)
-              .asOutput();
+      Output<TInt32> absOps = tf1.withName("absWithDevice").math.abs(aOps).asOutput();
 
-      Output<TInt32> mulOps = tf2
-              .withName("mulWithDevice")
-              .math
-              .mul(absOps, bOps)
-              .asOutput();
+      Output<TInt32> mulOps = tf2.withName("mulWithDevice").math.mul(absOps, bOps).asOutput();
 
       try (Result t = session.runner().fetch(mulOps).run()) {
-        assertEquals(10, ((TInt32)t.get(0)).getInt());
+        assertEquals(10, ((TInt32) t.get(0)).getInt());
       }
     }
   }
 
   @Test
   public void withIncorrectDeviceSpec() {
-    ConfigProto config = ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
+    ConfigProto config =
+        ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
             .setLogDevicePlacement(true)
             .build();
 
-    try (Graph g = new Graph(); Session session = new Session(g, config)) {
-      DeviceSpec correctDeviceSpec = DeviceSpec.newBuilder()
+    try (Graph g = new Graph();
+        Session session = new Session(g, config)) {
+      DeviceSpec correctDeviceSpec =
+          DeviceSpec.newBuilder()
               .job("localhost")
               .replica(0)
               .task(0)
@@ -150,7 +147,8 @@ public class DeviceSpecTest {
               .build();
 
       // Incorrect device spec, it will never be executed
-      DeviceSpec incorrectDeviceSpec = DeviceSpec.newBuilder()
+      DeviceSpec incorrectDeviceSpec =
+          DeviceSpec.newBuilder()
               .job("UNKNOWN")
               .replica(1)
               .task(1000)
@@ -162,15 +160,11 @@ public class DeviceSpecTest {
       Constant<TInt32> aOps = tf.constant(-1);
       Constant<TInt32> bOps = tf.constant(10);
 
-      Output<TInt32> absOps = tf
-              .withName("absWithDevice")
-              .withDevice(incorrectDeviceSpec)
-              .math
-              .abs(aOps)
-              .asOutput();
+      Output<TInt32> absOps =
+          tf.withName("absWithDevice").withDevice(incorrectDeviceSpec).math.abs(aOps).asOutput();
 
-      Output<TInt32> mulOps = tf
-              .withName("mulWithDevice")
+      Output<TInt32> mulOps =
+          tf.withName("mulWithDevice")
               .withDevice(correctDeviceSpec)
               .math
               .mul(absOps, bOps)
@@ -186,12 +180,15 @@ public class DeviceSpecTest {
 
   @Test
   public void withDeviceSpecInScope() {
-    ConfigProto config = ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
+    ConfigProto config =
+        ConfigProto.newBuilder(ConfigProto.getDefaultInstance())
             .setLogDevicePlacement(true)
             .build();
 
-    try (Graph g = new Graph(); Session session = new Session(g, config)) {
-      DeviceSpec deviceSpec = DeviceSpec.newBuilder()
+    try (Graph g = new Graph();
+        Session session = new Session(g, config)) {
+      DeviceSpec deviceSpec =
+          DeviceSpec.newBuilder()
               .job("localhost")
               .replica(0)
               .task(0)
@@ -202,14 +199,10 @@ public class DeviceSpecTest {
 
       Constant<TInt32> aOps = tf.constant(-1);
 
-      Output<TInt32> absOps = tf
-              .withName("absWithDevice")
-              .math
-              .abs(aOps)
-              .asOutput();
+      Output<TInt32> absOps = tf.withName("absWithDevice").math.abs(aOps).asOutput();
 
       try (Result t = session.runner().fetch(absOps).run()) {
-        assertEquals(1, ((TInt32)t.get(0)).getInt());
+        assertEquals(1, ((TInt32) t.get(0)).getInt());
       }
     }
   }

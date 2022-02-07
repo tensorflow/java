@@ -205,13 +205,14 @@ public class ConcreteFunctionTest {
 
       try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
           TFloat32 c2 = TFloat32.scalarOf(2.0f);
-          Result outputs = s.runner()
-                      .feed(x1, c1)
-                      .feed(x2, c2)
-                      .fetch(grads0[0])
-                      .fetch(grads1[0])
-                      .fetch(grads1[1])
-                      .run()) {
+          Result outputs =
+              s.runner()
+                  .feed(x1, c1)
+                  .feed(x2, c2)
+                  .fetch(grads0[0])
+                  .fetch(grads1[0])
+                  .fetch(grads1[1])
+                  .run()) {
 
         assertEquals(3, outputs.size());
         assertEquals(108.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);

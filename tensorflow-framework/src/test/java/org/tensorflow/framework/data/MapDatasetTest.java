@@ -78,10 +78,10 @@ public class MapDatasetTest extends DatasetTestBase {
         int batches = 0;
         while (true) {
           try (Result outputs = session.runner().fetch(X).fetch(y).run()) {
-              assertEquals(mapped1.get(batches), outputs.get(0));
-              assertEquals(mapped2.get(batches), outputs.get(1));
+            assertEquals(mapped1.get(batches), outputs.get(0));
+            assertEquals(mapped2.get(batches), outputs.get(1));
 
-              batches++;
+            batches++;
           } catch (TFOutOfRangeException e) {
             break;
           }

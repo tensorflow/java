@@ -21,14 +21,12 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -308,7 +306,7 @@ public final class Session implements AutoCloseable {
      * @throws IllegalArgumentException if no output exists with the provided name
      */
     public Runner fetch(String operation) {
-      Runner r = fetch(graph.outputOrThrow(operation),false);
+      Runner r = fetch(graph.outputOrThrow(operation), false);
       outputNames.add(operation);
       return r;
     }
@@ -350,7 +348,7 @@ public final class Session implements AutoCloseable {
      *
      * @param output the node to fetch the tensor from
      * @param recordName Records the output name. If false the output name must be recorded by the
-     *                   calling method as otherwise the result object will throw on construction.
+     *     calling method as otherwise the result object will throw on construction.
      * @return this session runner
      */
     private Runner fetch(Output<?> output, boolean recordName) {
@@ -590,7 +588,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      return new Result(outputNames,outputs,metadata);
+      return new Result(outputNames, outputs, metadata);
     }
 
     private class Reference implements AutoCloseable {

@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -27,7 +26,6 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -228,7 +226,7 @@ public class SessionTest {
           try (Session restoredSession = new Session(restoredGraph)) {
             restoredSession.restore(testFolder.resolve("checkpoint").toString());
             try (Result oldList = s.runner().fetch("x").fetch("y").run();
-                 Result newList = restoredSession.runner().fetch("x").fetch("y").run()) {
+                Result newList = restoredSession.runner().fetch("x").fetch("y").run()) {
               assertEquals(oldList.get(0), newList.get(0));
               assertEquals(oldList.get(1), newList.get(1));
             }

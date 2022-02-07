@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -192,7 +191,8 @@ public class GradientDescentTest {
         g.importGraphDef(def);
         s.initialize();
 
-        Result initializationRes = s.runner()
+        Result initializationRes =
+            s.runner()
                 .fetch(fcWeightName)
                 .fetch(fcBiasName)
                 .fetch(outputWeightName)
@@ -216,7 +216,8 @@ public class GradientDescentTest {
         initialLoss[i] = lossVal.getFloat();
         lossVal.close();
 
-        Result trainedRes = s.runner()
+        Result trainedRes =
+            s.runner()
                 .fetch(fcWeightName)
                 .fetch(fcBiasName)
                 .fetch(outputWeightName)
