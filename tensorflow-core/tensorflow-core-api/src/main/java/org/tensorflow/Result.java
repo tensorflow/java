@@ -17,6 +17,7 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.proto.framework.RunMetadata;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -35,15 +37,27 @@ import java.util.logging.Logger;
  * <p>When this is closed it closes all the {@link Tensor}s inside it. If you maintain a
  * reference to a value after this object has been closed it will throw an {@link
  * IllegalStateException} upon access.
+ *
+ * <p>This class is not thread-safe with respect to the close operation. Multiple closers
+ * or one thread closing a tensor while another is reading may throw exceptions.
+ *
+ * <p>Note this class is used to manage the lifetimes of tensors produced by the
+ * TensorFlow runtime, from sessions and function calls. It is not used as an argument
+ * to {@code session.run} or function calls as users are in control of the creation
+ * of input tensors.
  */
 public final class Result implements AutoCloseable, Iterable<Map.Entry<String, Tensor>> {
     @Override
     public void close() {
         if (!closed) {
-            closed = true;
-            for (Tensor t : map.values()) {
-                t.close();
+            for (Tensor t : list) {
+                try {
+                    t.close();
+                } catch (TensorFlowException e) {
+                    logger.log(Level.WARNING, "Exception raised when closing tensor inside result.", e);
+                }
             }
+            closed = true;
         } else {
             logger.warning("Closing an already closed Result");
         }
@@ -111,12 +125,7 @@ public final class Result implements AutoCloseable, Iterable<Map.Entry<String, T
      */
     public Optional<Tensor> get(String key) {
         if (!closed) {
-            Tensor value = map.get(key);
-            if (value != null) {
-                return Optional.of(value);
-            } else {
-                return Optional.empty();
-            }
+            return Optional.ofNullable(map.get(key));
         } else {
             throw new IllegalStateException("Result is closed");
         }
@@ -153,7 +162,10 @@ public final class Result implements AutoCloseable, Iterable<Map.Entry<String, T
         }
 
         for (int i = 0; i < names.size(); i++) {
-            this.map.put(names.get(i), values.get(i));
+            Tensor old = this.map.put(names.get(i), values.get(i));
+            if (old != null) {
+                throw new IllegalArgumentException("Name collision in the result set, two outputs are named '" + names.get(i) + "'");
+            }
         }
         this.metadata = metadata;
         this.closed = false;

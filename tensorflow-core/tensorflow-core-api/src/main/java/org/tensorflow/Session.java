@@ -308,7 +308,9 @@ public final class Session implements AutoCloseable {
      * @throws IllegalArgumentException if no output exists with the provided name
      */
     public Runner fetch(String operation) {
-      return fetch(graph.outputOrThrow(operation));
+      Runner r = fetch(graph.outputOrThrow(operation),false);
+      outputNames.add(operation);
+      return r;
     }
 
     /**
@@ -338,6 +340,20 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(Output<?> output) {
+      return fetch(output, true);
+    }
+
+    /**
+     * Makes {@link #run()} return the Tensor referred to by {@code output}.
+     *
+     * <p>If {@code output} is a resource variable, will fetch the value.
+     *
+     * @param output the node to fetch the tensor from
+     * @param recordName Records the output name. If false the output name must be recorded by the
+     *                   calling method as otherwise the result object will throw on construction.
+     * @return this session runner
+     */
+    private Runner fetch(Output<?> output, boolean recordName) {
       if (output.env() != graph) {
         throw new IllegalStateException(
             "Can't fetch output "
@@ -379,6 +395,9 @@ public final class Session implements AutoCloseable {
         outputs.add(read.asOutput());
       } else {
         outputs.add(output);
+      }
+      if (recordName) {
+        outputNames.add(output.name());
       }
       return this;
     }
@@ -523,7 +542,6 @@ public final class Session implements AutoCloseable {
       TF_Operation[] outputOpHandles = new TF_Operation[outputs.size()];
       int[] outputOpIndices = new int[outputs.size()];
       TF_Operation[] targetOpHandles = new TF_Operation[targets.size()];
-      List<String> outputNames = new ArrayList<>();
 
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
@@ -541,7 +559,6 @@ public final class Session implements AutoCloseable {
       for (Output<?> o : outputs) {
         outputOpHandles[idx] = (TF_Operation) o.getUnsafeNativeHandle();
         outputOpIndices[idx] = o.index();
-        outputNames.add(o.name());
         idx++;
       }
       idx = 0;
@@ -603,6 +620,7 @@ public final class Session implements AutoCloseable {
     private final ArrayList<Output<?>> inputs = new ArrayList<>();
     private final ArrayList<Tensor> inputTensors = new ArrayList<>();
     private final ArrayList<Output<?>> outputs = new ArrayList<>();
+    private final ArrayList<String> outputNames = new ArrayList<>();
     private final ArrayList<GraphOperation> targets = new ArrayList<>();
     private RunOptions runOptions = null;
   }

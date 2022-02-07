@@ -112,6 +112,16 @@ public class SessionFunction implements TensorFunction {
 
     signature.getOutputs().values().forEach(x -> runner.fetch(x.name));
 
-    return runner.run();
+    Result results = runner.run();
+
+    // Unpack the result object and rebuild it with the expected names.
+    LinkedHashMap<String, Tensor> outputs = new LinkedHashMap<>(results.size());
+    int i = 0;
+    for (String outputName : signature.outputNames()) {
+      outputs.put(outputName, results.get(i));
+      i++;
+    }
+
+    return new Result(outputs);
   }
 }

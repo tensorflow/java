@@ -296,7 +296,7 @@ public final class ConcreteFunction implements AutoCloseable, TensorFunction {
 
   @Override
   public Result call(Map<String, Tensor> arguments) {
-    // FIXME need to manage input/output operand lifetimes
+    // FIXME need to manage input operand lifetimes
     Ops tf = Ops.create();
     Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
 
