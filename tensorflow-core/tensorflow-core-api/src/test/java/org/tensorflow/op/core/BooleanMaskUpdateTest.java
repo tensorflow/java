@@ -18,12 +18,11 @@ package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
@@ -50,7 +49,7 @@ public class BooleanMaskUpdateTest {
       Operand<TInt32> bcastOutput =
           BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
 
-      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
+      Result results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
           TInt32 bcastResult = (TInt32) results.get(1)) {
 
@@ -89,7 +88,7 @@ public class BooleanMaskUpdateTest {
       Operand<TInt32> bcastOutput =
           BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
 
-      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
+      Result results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
           TInt32 bcastResult = (TInt32) results.get(1)) {
 
@@ -131,7 +130,7 @@ public class BooleanMaskUpdateTest {
           BooleanMaskUpdate.create(
               scope, input, mask, Constant.scalarOf(scope, -1), BooleanMaskUpdate.axis(2));
 
-      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
+      Result results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
           TInt32 bcastResult = (TInt32) results.get(1)) {
 

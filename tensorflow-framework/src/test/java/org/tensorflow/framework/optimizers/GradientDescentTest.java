@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.initializers.Glorot;
@@ -189,13 +191,18 @@ public class GradientDescentTest {
         g.importGraphDef(def);
         s.initialize();
 
-        initialized.add(
+        Result initializationRes =
             s.runner()
                 .fetch(fcWeightName)
                 .fetch(fcBiasName)
                 .fetch(outputWeightName)
                 .fetch(outputBiasName)
-                .run());
+                .run();
+        List<Tensor> initializedRun = new ArrayList<>();
+        for (Map.Entry<String, Tensor> e : initializationRes) {
+          initializedRun.add(e.getValue());
+        }
+        initialized.add(initializedRun);
 
         TFloat32 lossVal =
             (TFloat32)
@@ -209,13 +216,18 @@ public class GradientDescentTest {
         initialLoss[i] = lossVal.getFloat();
         lossVal.close();
 
-        trained.add(
+        Result trainedRes =
             s.runner()
                 .fetch(fcWeightName)
                 .fetch(fcBiasName)
                 .fetch(outputWeightName)
                 .fetch(outputBiasName)
-                .run());
+                .run();
+        List<Tensor> trainedRun = new ArrayList<>();
+        for (Map.Entry<String, Tensor> e : trainedRes) {
+          trainedRun.add(e.getValue());
+        }
+        trained.add(trainedRun);
 
         lossVal =
             (TFloat32)

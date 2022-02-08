@@ -14,8 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
+import org.tensorflow.Result;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
@@ -24,12 +29,6 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BroadcastWeightsTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -78,55 +77,57 @@ public class BroadcastWeightsTest {
     Operand<T> weightsPlaceholder = tf.placeholder(type);
     Operand<T> valuesPlaceholder = tf.placeholder(type);
 
-    List<Tensor> tensors =
-        testSession.getGraphSession().runner().fetch(weights).fetch(values).run();
-    try (Tensor weightsTensor = tensors.get(0);
-        Tensor valuesTensor = tensors.get(1)) {
+    try (Result tensors =
+        testSession.getGraphSession().runner().fetch(weights).fetch(values).run()) {
+      Tensor weightsTensor = tensors.get(0);
+      Tensor valuesTensor = tensors.get(1);
 
       Operand<T> dynamicOp =
           MetricsHelper.broadcastWeights(tf, weightsPlaceholder, valuesPlaceholder);
 
-      List<Tensor> result =
+      try (Result result =
           testSession
               .getGraphSession()
               .runner()
               .feed(weightsPlaceholder, weightsTensor)
               .feed(valuesPlaceholder, valuesTensor)
               .fetch(dynamicOp)
-              .run();
+              .run()) {
 
-      if (expected != null) {
-        if (type.equals(TInt32.class)) {
-          TInt32 intT = (TInt32) result.get(0);
-          AtomicInteger i = new AtomicInteger();
-          intT.scalars()
-              .forEachIndexed(
-                  (idx, f) -> assertEquals(expected[i.getAndIncrement()].intValue(), f.getInt()));
-        } else if (type.equals(TInt64.class)) {
-          TInt64 floatT = (TInt64) result.get(0);
-          AtomicInteger i = new AtomicInteger();
-          floatT
-              .scalars()
-              .forEachIndexed(
-                  (idx, f) -> assertEquals(expected[i.getAndIncrement()].longValue(), f.getLong()));
-        } else if (type.equals(TFloat32.class)) {
-          TFloat32 floatT = (TFloat32) result.get(0);
-          AtomicInteger i = new AtomicInteger();
-          floatT
-              .scalars()
-              .forEachIndexed(
-                  (idx, f) ->
-                      assertEquals(
-                          expected[i.getAndIncrement()].floatValue(), f.getFloat(), 1e-5F));
-        } else if (type.equals(TFloat64.class)) {
-          TFloat64 doubleT = (TFloat64) result.get(0);
-          AtomicInteger i = new AtomicInteger();
-          doubleT
-              .scalars()
-              .forEachIndexed(
-                  (idx, f) ->
-                      assertEquals(
-                          expected[i.getAndIncrement()].doubleValue(), f.getDouble(), 1e-5F));
+        if (expected != null) {
+          if (type.equals(TInt32.class)) {
+            TInt32 intT = (TInt32) result.get(0);
+            AtomicInteger i = new AtomicInteger();
+            intT.scalars()
+                .forEachIndexed(
+                    (idx, f) -> assertEquals(expected[i.getAndIncrement()].intValue(), f.getInt()));
+          } else if (type.equals(TInt64.class)) {
+            TInt64 floatT = (TInt64) result.get(0);
+            AtomicInteger i = new AtomicInteger();
+            floatT
+                .scalars()
+                .forEachIndexed(
+                    (idx, f) ->
+                        assertEquals(expected[i.getAndIncrement()].longValue(), f.getLong()));
+          } else if (type.equals(TFloat32.class)) {
+            TFloat32 floatT = (TFloat32) result.get(0);
+            AtomicInteger i = new AtomicInteger();
+            floatT
+                .scalars()
+                .forEachIndexed(
+                    (idx, f) ->
+                        assertEquals(
+                            expected[i.getAndIncrement()].floatValue(), f.getFloat(), 1e-5F));
+          } else if (type.equals(TFloat64.class)) {
+            TFloat64 doubleT = (TFloat64) result.get(0);
+            AtomicInteger i = new AtomicInteger();
+            doubleT
+                .scalars()
+                .forEachIndexed(
+                    (idx, f) ->
+                        assertEquals(
+                            expected[i.getAndIncrement()].doubleValue(), f.getDouble(), 1e-5F));
+          }
         }
       }
     }
