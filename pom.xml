@@ -42,7 +42,7 @@
     <junit.version>5.6.2</junit.version>
     <jmh.version>1.21</jmh.version>
     <versions-plugin.version>2.7</versions-plugin.version>
-    <errorprone.version>2.6.0</errorprone.version>
+    <errorprone.version>2.10.0</errorprone.version>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
