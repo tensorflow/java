@@ -24,7 +24,6 @@ import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.random.RandomUniform;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -39,11 +38,11 @@ public class PrecisionAtRecallTest {
       PrecisionAtRecall<TFloat32> instance = new PrecisionAtRecall<>(0.7f, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions =
-          tf.random.randomUniform(
-              tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1L));
+          tf.random.statelessRandomUniform(
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
       Operand<TFloat32> labels =
-          tf.random.randomUniform(
-              tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1L));
+          tf.random.statelessRandomUniform(
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
 
       Op update = instance.updateState(tf, labels, predictions, null);
 

@@ -42,11 +42,11 @@ public class SpecificityAtSensitivityTest {
           new SpecificityAtSensitivity<>(0.7f, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions =
-          tf.random.randomUniform(
-              tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1L));
+          tf.random.statelessRandomUniform(
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
       Operand<TFloat32> labels =
-          tf.random.randomUniform(
-              tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1L));
+          tf.random.statelessRandomUniform(
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
 
       // instance.setDebug(session.getGraphSession());
       Op update = instance.updateState(tf, labels, predictions, null);
