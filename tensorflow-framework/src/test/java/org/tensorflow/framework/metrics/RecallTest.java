@@ -37,10 +37,10 @@ public class RecallTest {
 
       Operand<TFloat32> predictions =
           tf.random.statelessRandomUniform(
-              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1L, 0L}), TFloat32.class);
       Operand<TFloat32> labels =
           tf.random.statelessRandomUniform(
-              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1L, 0L}), TFloat32.class);
       Op update = instance.updateState(tf, labels, predictions, null);
 
       for (int i = 0; i < 10; i++) session.run(update);

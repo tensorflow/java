@@ -39,10 +39,10 @@ public class PrecisionTest {
           new Precision<>(new float[] {0.3f, 0.72f}, 1001L, TFloat64.class);
       Operand<TFloat32> predictions =
           tf.random.statelessRandomUniform(
-              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1001L, 0L}), TFloat32.class);
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1001L, 0L}), TFloat32.class);
       Operand<TFloat32> labels =
           tf.random.statelessRandomUniform(
-              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1001L, 0L}), TFloat32.class);
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1001L, 0L}), TFloat32.class);
 
       Op update = instance.updateState(tf, labels, predictions, null);
 
@@ -80,7 +80,11 @@ public class PrecisionTest {
       Precision<TFloat32> instance = new Precision<>(0.5f, 1001L, TFloat32.class);
 
       Operand<TInt32> predictions =
-          tf.random.statelessMultinomial(tf.constant(new float[][]{{0.5f,0.5f}}), tf.constant(100), tf.constant(new long[]{1001L,0L}), TInt32.class);
+          tf.random.statelessMultinomial(
+              tf.constant(new float[][] {{0.5f, 0.5f}}),
+              tf.constant(100),
+              tf.constant(new long[] {1001L, 0L}),
+              TInt32.class);
       Operand<TInt32> labels = tf.math.sub(tf.constant(1), predictions);
       Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);

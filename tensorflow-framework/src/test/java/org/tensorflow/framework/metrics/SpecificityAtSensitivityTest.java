@@ -24,7 +24,6 @@ import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.random.RandomUniform;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
@@ -43,10 +42,10 @@ public class SpecificityAtSensitivityTest {
 
       Operand<TFloat32> predictions =
           tf.random.statelessRandomUniform(
-              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1L, 0L}), TFloat32.class);
       Operand<TFloat32> labels =
           tf.random.statelessRandomUniform(
-              tf.constant(Shape.of(10, 3)), tf.constant(new long[]{1L, 0L}), TFloat32.class);
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1L, 0L}), TFloat32.class);
 
       // instance.setDebug(session.getGraphSession());
       Op update = instance.updateState(tf, labels, predictions, null);
