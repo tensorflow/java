@@ -75,6 +75,7 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
    * It must be positive.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of SlidingWindowDataset
    */
   @Endpoint(
@@ -82,7 +83,7 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
   )
   public static SlidingWindowDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> windowSize, Operand<TInt64> windowShift, Operand<TInt64> windowStride,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SlidingWindowDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(windowSize.asOutput());
@@ -94,7 +95,24 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.dropRemainder != null) {
+          opBuilder.setAttr("drop_remainder", opts.dropRemainder);
+        }
+      }
+    }
     return new SlidingWindowDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the dropRemainder option.
+   *
+   * @param dropRemainder the dropRemainder option
+   * @return this Options instance.
+   */
+  public static Options dropRemainder(Boolean dropRemainder) {
+    return new Options().dropRemainder(dropRemainder);
   }
 
   /**
@@ -110,6 +128,27 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.SlidingWindowDataset}
+   */
+  public static class Options {
+    private Boolean dropRemainder;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dropRemainder option.
+     *
+     * @param dropRemainder the dropRemainder option
+     * @return this Options instance.
+     */
+    public Options dropRemainder(Boolean dropRemainder) {
+      this.dropRemainder = dropRemainder;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -140,6 +179,11 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
     public final Operand<TInt64> windowStride;
 
     /**
+     * The dropRemainder attribute
+     */
+    public final boolean dropRemainder;
+
+    /**
      * The outputTypes attribute
      */
     public final DataType[] outputTypes;
@@ -150,12 +194,13 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
     public final Shape[] outputShapes;
 
     public Inputs(GraphOperation op) {
-      super(new SlidingWindowDataset(op), op, Arrays.asList("output_types", "output_shapes"));
+      super(new SlidingWindowDataset(op), op, Arrays.asList("drop_remainder", "output_types", "output_shapes"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       windowSize = (Operand<TInt64>) op.input(inputIndex++);
       windowShift = (Operand<TInt64>) op.input(inputIndex++);
       windowStride = (Operand<TInt64>) op.input(inputIndex++);
+      dropRemainder = op.attributes().getAttrBool("drop_remainder");
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
     }

@@ -39,7 +39,10 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The op extracts fields from a serialized protocol buffers message into tensors.
- * The {@code decode_proto} op extracts fields from a serialized protocol buffers
+ * Note: This API is designed for orthogonality rather than human-friendliness. It
+ * can be used to parse input protos by hand, but it is intended for use in
+ * generated code.
+ * <p>The {@code decode_proto} op extracts fields from a serialized protocol buffers
  * message into tensors.  The fields in {@code field_names} are decoded and converted
  * to the corresponding {@code output_types} if possible.
  * <p>A {@code message_type} name must be provided to give context for the field names.
@@ -68,6 +71,16 @@ import org.tensorflow.types.family.TType;
  * way). Unsigned int32 values can be represented exactly by specifying type
  * {@code DT_INT64}, or using twos-complement if the caller specifies {@code DT_INT32} in
  * the {@code output_types} attribute.
+ * </li>
+ * <li>
+ * <p>{@code map} fields are not directly decoded. They are treated as {@code repeated} fields,
+ * of the appropriate entry type. The proto-compiler defines entry types for each
+ * map field. The type-name is the field name, converted to &quot;CamelCase&quot; with
+ * &quot;Entry&quot; appended. The {@code tf.train.Features.FeatureEntry} message is an example of
+ * one of these implicit {@code Entry} types.
+ * </li>
+ * <li>
+ * <p>{@code enum} fields should be read as int32.
  * </li>
  * </ul>
  * <p>Both binary and text proto serializations are supported, and can be

@@ -68,6 +68,11 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
    * @param input Array or a non-empty tuple of arrays to reduce across replicas.
    * @param groupAssignment Groups between which the reductions are performed.
    * @param reduceOp Reduction computation.
+   * @param mode group mode.
+   * CrossReplica: group_assignment contains replica_id. Each group contains the
+   * replicas for the current partition.
+   * CrossReplicaAndPartition: group_assignment contains replica_id. Each group
+   * contains the replicas for all partitions.
    * @param <T> data type for {@code XlaAllReduce} output and operands
    * @return a new instance of AllReduce
    */
@@ -75,11 +80,12 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TNumber> AllReduce<T> create(Scope scope, Operand<T> input,
-      Operand<TInt32> groupAssignment, String reduceOp) {
+      Operand<TInt32> groupAssignment, String reduceOp, String mode) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AllReduce");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupAssignment.asOutput());
     opBuilder.setAttr("reduce_op", reduceOp);
+    opBuilder.setAttr("mode", mode);
     return new AllReduce<>(opBuilder.build());
   }
 
@@ -121,13 +127,23 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
      */
     public final String reduceOp;
 
+    /**
+     * group mode.
+     * CrossReplica: group_assignment contains replica_id. Each group contains the
+     *   replicas for the current partition.
+     * CrossReplicaAndPartition: group_assignment contains replica_id. Each group
+     *   contains the replicas for all partitions.
+     */
+    public final String mode;
+
     public Inputs(GraphOperation op) {
-      super(new AllReduce<>(op), op, Arrays.asList("T", "reduce_op"));
+      super(new AllReduce<>(op), op, Arrays.asList("T", "reduce_op", "mode"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       groupAssignment = (Operand<TInt32>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       reduceOp = op.attributes().getAttrString("reduce_op");
+      mode = op.attributes().getAttrString("mode");
     }
   }
 }

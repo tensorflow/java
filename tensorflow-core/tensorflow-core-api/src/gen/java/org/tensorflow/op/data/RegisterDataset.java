@@ -85,6 +85,9 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
         if (opts.elementSpec != null) {
           opBuilder.setAttr("element_spec", opts.elementSpec);
         }
+        if (opts.metadata != null) {
+          opBuilder.setAttr("metadata", opts.metadata);
+        }
       }
     }
     return new RegisterDataset(opBuilder.build());
@@ -98,6 +101,16 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
    */
   public static Options elementSpec(String elementSpec) {
     return new Options().elementSpec(elementSpec);
+  }
+
+  /**
+   * Sets the metadata option.
+   *
+   * @param metadata the metadata option
+   * @return this Options instance.
+   */
+  public static Options metadata(String metadata) {
+    return new Options().metadata(metadata);
   }
 
   /**
@@ -120,6 +133,8 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
   public static class Options {
     private String elementSpec;
 
+    private String metadata;
+
     private Options() {
     }
 
@@ -131,6 +146,17 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
      */
     public Options elementSpec(String elementSpec) {
       this.elementSpec = elementSpec;
+      return this;
+    }
+
+    /**
+     * Sets the metadata option.
+     *
+     * @param metadata the metadata option
+     * @return this Options instance.
+     */
+    public Options metadata(String metadata) {
+      this.metadata = metadata;
       return this;
     }
   }
@@ -164,14 +190,20 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
      */
     public final String elementSpec;
 
+    /**
+     * The metadata attribute
+     */
+    public final String metadata;
+
     public Inputs(GraphOperation op) {
-      super(new RegisterDataset(op), op, Arrays.asList("external_state_policy", "element_spec"));
+      super(new RegisterDataset(op), op, Arrays.asList("external_state_policy", "element_spec", "metadata"));
       int inputIndex = 0;
       dataset = (Operand<? extends TType>) op.input(inputIndex++);
       address = (Operand<TString>) op.input(inputIndex++);
       protocol = (Operand<TString>) op.input(inputIndex++);
       externalStatePolicy = op.attributes().getAttrInt("external_state_policy");
       elementSpec = op.attributes().getAttrString("element_spec");
+      metadata = op.attributes().getAttrString("metadata");
     }
   }
 }

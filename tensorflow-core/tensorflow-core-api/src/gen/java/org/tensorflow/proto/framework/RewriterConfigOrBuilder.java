@@ -320,6 +320,31 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
+   * Emulate a model using data type float16 on CPU (default is OFF).
+   * This will try to emulate the float16 inputs and outputs of an operator
+   * on CPU to have better correlation with float16 on GPU; however the
+   * computation in the operator is based on float32.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+   */
+  int getAutoMixedPrecisionCpuValue();
+  /**
+   * <pre>
+   * Emulate a model using data type float16 on CPU (default is OFF).
+   * This will try to emulate the float16 inputs and outputs of an operator
+   * on CPU to have better correlation with float16 on GPU; however the
+   * computation in the operator is based on float32.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionCpu();
+
+  /**
+   * <pre>
    * Disable the entire meta optimizer (off by default).
    * </pre>
    *

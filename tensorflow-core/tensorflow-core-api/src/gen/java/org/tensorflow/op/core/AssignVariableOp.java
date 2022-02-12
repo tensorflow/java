@@ -58,17 +58,56 @@ public final class AssignVariableOp extends RawOp {
    * @param scope current scope
    * @param resource handle to the resource in which to store the variable.
    * @param value the value to set the new tensor to use.
+   * @param options carries optional attribute values
    * @return a new instance of AssignVariableOp
    */
   @Endpoint(
       describeByClass = true
   )
   public static AssignVariableOp create(Scope scope, Operand<? extends TType> resource,
-      Operand<? extends TType> value) {
+      Operand<? extends TType> value, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssignVariableOp");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.validateShape != null) {
+          opBuilder.setAttr("validate_shape", opts.validateShape);
+        }
+      }
+    }
     return new AssignVariableOp(opBuilder.build());
+  }
+
+  /**
+   * Sets the validateShape option.
+   *
+   * @param validateShape the validateShape option
+   * @return this Options instance.
+   */
+  public static Options validateShape(Boolean validateShape) {
+    return new Options().validateShape(validateShape);
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.AssignVariableOp}
+   */
+  public static class Options {
+    private Boolean validateShape;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the validateShape option.
+     *
+     * @param validateShape the validateShape option
+     * @return this Options instance.
+     */
+    public Options validateShape(Boolean validateShape) {
+      this.validateShape = validateShape;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -90,12 +129,18 @@ public final class AssignVariableOp extends RawOp {
      */
     public final DataType dtype;
 
+    /**
+     * The validateShape attribute
+     */
+    public final boolean validateShape;
+
     public Inputs(GraphOperation op) {
-      super(new AssignVariableOp(op), op, Arrays.asList("dtype"));
+      super(new AssignVariableOp(op), op, Arrays.asList("dtype", "validate_shape"));
       int inputIndex = 0;
       resource = (Operand<? extends TType>) op.input(inputIndex++);
       value = (Operand<? extends TType>) op.input(inputIndex++);
       dtype = op.attributes().getAttrType("dtype");
+      validateShape = op.attributes().getAttrBool("validate_shape");
     }
   }
 }

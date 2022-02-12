@@ -78,12 +78,13 @@ public final class ModelProtos {
       "\n\tNodeClass\022\013\n\007UNKNOWN\020\000\022\023\n\017INTERLEAVE_M" +
       "ANY\020\001\022\031\n\025ASYNC_INTERLEAVE_MANY\020\002\022\017\n\013KNOW" +
       "N_RATIO\020\003\022\025\n\021ASYNC_KNOWN_RATIO\020\004\022\021\n\rUNKN" +
-      "OWN_RATIO\020\005*9\n\021AutotuneAlgorithm\022\016\n\nHILL" +
-      "_CLIMB\020\000\022\024\n\020GRADIENT_DESCENT\020\001B\201\001\n\037org.t" +
-      "ensorflow.proto.data.modelB\013ModelProtosP" +
-      "\001ZLgithub.com/tensorflow/tensorflow/tens" +
-      "orflow/go/core/framework/model_go_proto\370" +
-      "\001\001b\006proto3"
+      "OWN_RATIO\020\005*[\n\021AutotuneAlgorithm\022\013\n\007DEFA" +
+      "ULT\020\000\022\016\n\nHILL_CLIMB\020\001\022\024\n\020GRADIENT_DESCEN" +
+      "T\020\002\022\023\n\017MAX_PARALLELISM\020\003B\201\001\n\037org.tensorf" +
+      "low.proto.data.modelB\013ModelProtosP\001ZLgit" +
+      "hub.com/tensorflow/tensorflow/tensorflow" +
+      "/go/core/framework/model_go_proto\370\001\001b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

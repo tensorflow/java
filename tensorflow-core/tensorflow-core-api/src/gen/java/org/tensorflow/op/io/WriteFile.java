@@ -32,8 +32,8 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
- * Writes contents to the file at input filename. Creates file and recursively
- * creates directory if not existing.
+ * Writes {@code contents} to the file at input {@code filename}.
+ * Creates the file and recursively creates directory if it does not exist.
  */
 @OpMetadata(
     opType = WriteFile.OP_NAME,

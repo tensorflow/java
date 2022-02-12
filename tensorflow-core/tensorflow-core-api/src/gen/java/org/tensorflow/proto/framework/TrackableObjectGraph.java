@@ -229,6 +229,68 @@ private static final long serialVersionUID = 0L;
      */
     org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReferenceOrBuilder getSlotVariablesOrBuilder(
         int index);
+
+    /**
+     * <pre>
+     * The registered saver used to save this object. If this saver is not
+     * present when loading the checkpoint, then loading will fail.
+     * </pre>
+     *
+     * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+     */
+    boolean hasRegisteredSaver();
+    /**
+     * <pre>
+     * The registered saver used to save this object. If this saver is not
+     * present when loading the checkpoint, then loading will fail.
+     * </pre>
+     *
+     * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+     */
+    org.tensorflow.proto.framework.RegisteredSaver getRegisteredSaver();
+    /**
+     * <pre>
+     * The registered saver used to save this object. If this saver is not
+     * present when loading the checkpoint, then loading will fail.
+     * </pre>
+     *
+     * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+     */
+    org.tensorflow.proto.framework.RegisteredSaverOrBuilder getRegisteredSaverOrBuilder();
+
+    /**
+     * <pre>
+     * Whether this object has checkpoint values or descendants with checkpoint
+     * values. This is computed at save time to avoid traversing the entire
+     * object graph proto when restoring (which also has to traverse the live
+     * object graph).
+     * </pre>
+     *
+     * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+     */
+    boolean hasHasCheckpointValues();
+    /**
+     * <pre>
+     * Whether this object has checkpoint values or descendants with checkpoint
+     * values. This is computed at save time to avoid traversing the entire
+     * object graph proto when restoring (which also has to traverse the live
+     * object graph).
+     * </pre>
+     *
+     * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+     */
+    com.google.protobuf.BoolValue getHasCheckpointValues();
+    /**
+     * <pre>
+     * Whether this object has checkpoint values or descendants with checkpoint
+     * values. This is computed at save time to avoid traversing the entire
+     * object graph proto when restoring (which also has to traverse the live
+     * object graph).
+     * </pre>
+     *
+     * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+     */
+    com.google.protobuf.BoolValueOrBuilder getHasCheckpointValuesOrBuilder();
   }
   /**
    * Protobuf type {@code tensorflow.TrackableObjectGraph.TrackableObject}
@@ -304,6 +366,32 @@ private static final long serialVersionUID = 0L;
               }
               slotVariables_.add(
                   input.readMessage(org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference.parser(), extensionRegistry));
+              break;
+            }
+            case 34: {
+              org.tensorflow.proto.framework.RegisteredSaver.Builder subBuilder = null;
+              if (registeredSaver_ != null) {
+                subBuilder = registeredSaver_.toBuilder();
+              }
+              registeredSaver_ = input.readMessage(org.tensorflow.proto.framework.RegisteredSaver.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(registeredSaver_);
+                registeredSaver_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 42: {
+              com.google.protobuf.BoolValue.Builder subBuilder = null;
+              if (hasCheckpointValues_ != null) {
+                subBuilder = hasCheckpointValues_.toBuilder();
+              }
+              hasCheckpointValues_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(hasCheckpointValues_);
+                hasCheckpointValues_ = subBuilder.buildPartial();
+              }
+
               break;
             }
             default: {
@@ -3030,6 +3118,84 @@ private static final long serialVersionUID = 0L;
       return slotVariables_.get(index);
     }
 
+    public static final int REGISTERED_SAVER_FIELD_NUMBER = 4;
+    private org.tensorflow.proto.framework.RegisteredSaver registeredSaver_;
+    /**
+     * <pre>
+     * The registered saver used to save this object. If this saver is not
+     * present when loading the checkpoint, then loading will fail.
+     * </pre>
+     *
+     * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+     */
+    public boolean hasRegisteredSaver() {
+      return registeredSaver_ != null;
+    }
+    /**
+     * <pre>
+     * The registered saver used to save this object. If this saver is not
+     * present when loading the checkpoint, then loading will fail.
+     * </pre>
+     *
+     * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredSaver getRegisteredSaver() {
+      return registeredSaver_ == null ? org.tensorflow.proto.framework.RegisteredSaver.getDefaultInstance() : registeredSaver_;
+    }
+    /**
+     * <pre>
+     * The registered saver used to save this object. If this saver is not
+     * present when loading the checkpoint, then loading will fail.
+     * </pre>
+     *
+     * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+     */
+    public org.tensorflow.proto.framework.RegisteredSaverOrBuilder getRegisteredSaverOrBuilder() {
+      return getRegisteredSaver();
+    }
+
+    public static final int HAS_CHECKPOINT_VALUES_FIELD_NUMBER = 5;
+    private com.google.protobuf.BoolValue hasCheckpointValues_;
+    /**
+     * <pre>
+     * Whether this object has checkpoint values or descendants with checkpoint
+     * values. This is computed at save time to avoid traversing the entire
+     * object graph proto when restoring (which also has to traverse the live
+     * object graph).
+     * </pre>
+     *
+     * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+     */
+    public boolean hasHasCheckpointValues() {
+      return hasCheckpointValues_ != null;
+    }
+    /**
+     * <pre>
+     * Whether this object has checkpoint values or descendants with checkpoint
+     * values. This is computed at save time to avoid traversing the entire
+     * object graph proto when restoring (which also has to traverse the live
+     * object graph).
+     * </pre>
+     *
+     * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+     */
+    public com.google.protobuf.BoolValue getHasCheckpointValues() {
+      return hasCheckpointValues_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : hasCheckpointValues_;
+    }
+    /**
+     * <pre>
+     * Whether this object has checkpoint values or descendants with checkpoint
+     * values. This is computed at save time to avoid traversing the entire
+     * object graph proto when restoring (which also has to traverse the live
+     * object graph).
+     * </pre>
+     *
+     * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+     */
+    public com.google.protobuf.BoolValueOrBuilder getHasCheckpointValuesOrBuilder() {
+      return getHasCheckpointValues();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3053,6 +3219,12 @@ private static final long serialVersionUID = 0L;
       for (int i = 0; i < slotVariables_.size(); i++) {
         output.writeMessage(3, slotVariables_.get(i));
       }
+      if (registeredSaver_ != null) {
+        output.writeMessage(4, getRegisteredSaver());
+      }
+      if (hasCheckpointValues_ != null) {
+        output.writeMessage(5, getHasCheckpointValues());
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3073,6 +3245,14 @@ private static final long serialVersionUID = 0L;
       for (int i = 0; i < slotVariables_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, slotVariables_.get(i));
+      }
+      if (registeredSaver_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getRegisteredSaver());
+      }
+      if (hasCheckpointValues_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getHasCheckpointValues());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3095,6 +3275,16 @@ private static final long serialVersionUID = 0L;
           .equals(other.getAttributesList())) return false;
       if (!getSlotVariablesList()
           .equals(other.getSlotVariablesList())) return false;
+      if (hasRegisteredSaver() != other.hasRegisteredSaver()) return false;
+      if (hasRegisteredSaver()) {
+        if (!getRegisteredSaver()
+            .equals(other.getRegisteredSaver())) return false;
+      }
+      if (hasHasCheckpointValues() != other.hasHasCheckpointValues()) return false;
+      if (hasHasCheckpointValues()) {
+        if (!getHasCheckpointValues()
+            .equals(other.getHasCheckpointValues())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3117,6 +3307,14 @@ private static final long serialVersionUID = 0L;
       if (getSlotVariablesCount() > 0) {
         hash = (37 * hash) + SLOT_VARIABLES_FIELD_NUMBER;
         hash = (53 * hash) + getSlotVariablesList().hashCode();
+      }
+      if (hasRegisteredSaver()) {
+        hash = (37 * hash) + REGISTERED_SAVER_FIELD_NUMBER;
+        hash = (53 * hash) + getRegisteredSaver().hashCode();
+      }
+      if (hasHasCheckpointValues()) {
+        hash = (37 * hash) + HAS_CHECKPOINT_VALUES_FIELD_NUMBER;
+        hash = (53 * hash) + getHasCheckpointValues().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3272,6 +3470,18 @@ private static final long serialVersionUID = 0L;
         } else {
           slotVariablesBuilder_.clear();
         }
+        if (registeredSaverBuilder_ == null) {
+          registeredSaver_ = null;
+        } else {
+          registeredSaver_ = null;
+          registeredSaverBuilder_ = null;
+        }
+        if (hasCheckpointValuesBuilder_ == null) {
+          hasCheckpointValues_ = null;
+        } else {
+          hasCheckpointValues_ = null;
+          hasCheckpointValuesBuilder_ = null;
+        }
         return this;
       }
 
@@ -3325,6 +3535,16 @@ private static final long serialVersionUID = 0L;
           result.slotVariables_ = slotVariables_;
         } else {
           result.slotVariables_ = slotVariablesBuilder_.build();
+        }
+        if (registeredSaverBuilder_ == null) {
+          result.registeredSaver_ = registeredSaver_;
+        } else {
+          result.registeredSaver_ = registeredSaverBuilder_.build();
+        }
+        if (hasCheckpointValuesBuilder_ == null) {
+          result.hasCheckpointValues_ = hasCheckpointValues_;
+        } else {
+          result.hasCheckpointValues_ = hasCheckpointValuesBuilder_.build();
         }
         onBuilt();
         return result;
@@ -3451,6 +3671,12 @@ private static final long serialVersionUID = 0L;
               slotVariablesBuilder_.addAllMessages(other.slotVariables_);
             }
           }
+        }
+        if (other.hasRegisteredSaver()) {
+          mergeRegisteredSaver(other.getRegisteredSaver());
+        }
+        if (other.hasHasCheckpointValues()) {
+          mergeHasCheckpointValues(other.getHasCheckpointValues());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4416,6 +4642,348 @@ private static final long serialVersionUID = 0L;
           slotVariables_ = null;
         }
         return slotVariablesBuilder_;
+      }
+
+      private org.tensorflow.proto.framework.RegisteredSaver registeredSaver_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.framework.RegisteredSaver, org.tensorflow.proto.framework.RegisteredSaver.Builder, org.tensorflow.proto.framework.RegisteredSaverOrBuilder> registeredSaverBuilder_;
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public boolean hasRegisteredSaver() {
+        return registeredSaverBuilder_ != null || registeredSaver_ != null;
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public org.tensorflow.proto.framework.RegisteredSaver getRegisteredSaver() {
+        if (registeredSaverBuilder_ == null) {
+          return registeredSaver_ == null ? org.tensorflow.proto.framework.RegisteredSaver.getDefaultInstance() : registeredSaver_;
+        } else {
+          return registeredSaverBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public Builder setRegisteredSaver(org.tensorflow.proto.framework.RegisteredSaver value) {
+        if (registeredSaverBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          registeredSaver_ = value;
+          onChanged();
+        } else {
+          registeredSaverBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public Builder setRegisteredSaver(
+          org.tensorflow.proto.framework.RegisteredSaver.Builder builderForValue) {
+        if (registeredSaverBuilder_ == null) {
+          registeredSaver_ = builderForValue.build();
+          onChanged();
+        } else {
+          registeredSaverBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public Builder mergeRegisteredSaver(org.tensorflow.proto.framework.RegisteredSaver value) {
+        if (registeredSaverBuilder_ == null) {
+          if (registeredSaver_ != null) {
+            registeredSaver_ =
+              org.tensorflow.proto.framework.RegisteredSaver.newBuilder(registeredSaver_).mergeFrom(value).buildPartial();
+          } else {
+            registeredSaver_ = value;
+          }
+          onChanged();
+        } else {
+          registeredSaverBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public Builder clearRegisteredSaver() {
+        if (registeredSaverBuilder_ == null) {
+          registeredSaver_ = null;
+          onChanged();
+        } else {
+          registeredSaver_ = null;
+          registeredSaverBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public org.tensorflow.proto.framework.RegisteredSaver.Builder getRegisteredSaverBuilder() {
+        
+        onChanged();
+        return getRegisteredSaverFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      public org.tensorflow.proto.framework.RegisteredSaverOrBuilder getRegisteredSaverOrBuilder() {
+        if (registeredSaverBuilder_ != null) {
+          return registeredSaverBuilder_.getMessageOrBuilder();
+        } else {
+          return registeredSaver_ == null ?
+              org.tensorflow.proto.framework.RegisteredSaver.getDefaultInstance() : registeredSaver_;
+        }
+      }
+      /**
+       * <pre>
+       * The registered saver used to save this object. If this saver is not
+       * present when loading the checkpoint, then loading will fail.
+       * </pre>
+       *
+       * <code>.tensorflow.RegisteredSaver registered_saver = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.framework.RegisteredSaver, org.tensorflow.proto.framework.RegisteredSaver.Builder, org.tensorflow.proto.framework.RegisteredSaverOrBuilder> 
+          getRegisteredSaverFieldBuilder() {
+        if (registeredSaverBuilder_ == null) {
+          registeredSaverBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.tensorflow.proto.framework.RegisteredSaver, org.tensorflow.proto.framework.RegisteredSaver.Builder, org.tensorflow.proto.framework.RegisteredSaverOrBuilder>(
+                  getRegisteredSaver(),
+                  getParentForChildren(),
+                  isClean());
+          registeredSaver_ = null;
+        }
+        return registeredSaverBuilder_;
+      }
+
+      private com.google.protobuf.BoolValue hasCheckpointValues_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> hasCheckpointValuesBuilder_;
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public boolean hasHasCheckpointValues() {
+        return hasCheckpointValuesBuilder_ != null || hasCheckpointValues_ != null;
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public com.google.protobuf.BoolValue getHasCheckpointValues() {
+        if (hasCheckpointValuesBuilder_ == null) {
+          return hasCheckpointValues_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : hasCheckpointValues_;
+        } else {
+          return hasCheckpointValuesBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public Builder setHasCheckpointValues(com.google.protobuf.BoolValue value) {
+        if (hasCheckpointValuesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          hasCheckpointValues_ = value;
+          onChanged();
+        } else {
+          hasCheckpointValuesBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public Builder setHasCheckpointValues(
+          com.google.protobuf.BoolValue.Builder builderForValue) {
+        if (hasCheckpointValuesBuilder_ == null) {
+          hasCheckpointValues_ = builderForValue.build();
+          onChanged();
+        } else {
+          hasCheckpointValuesBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public Builder mergeHasCheckpointValues(com.google.protobuf.BoolValue value) {
+        if (hasCheckpointValuesBuilder_ == null) {
+          if (hasCheckpointValues_ != null) {
+            hasCheckpointValues_ =
+              com.google.protobuf.BoolValue.newBuilder(hasCheckpointValues_).mergeFrom(value).buildPartial();
+          } else {
+            hasCheckpointValues_ = value;
+          }
+          onChanged();
+        } else {
+          hasCheckpointValuesBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public Builder clearHasCheckpointValues() {
+        if (hasCheckpointValuesBuilder_ == null) {
+          hasCheckpointValues_ = null;
+          onChanged();
+        } else {
+          hasCheckpointValues_ = null;
+          hasCheckpointValuesBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public com.google.protobuf.BoolValue.Builder getHasCheckpointValuesBuilder() {
+        
+        onChanged();
+        return getHasCheckpointValuesFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      public com.google.protobuf.BoolValueOrBuilder getHasCheckpointValuesOrBuilder() {
+        if (hasCheckpointValuesBuilder_ != null) {
+          return hasCheckpointValuesBuilder_.getMessageOrBuilder();
+        } else {
+          return hasCheckpointValues_ == null ?
+              com.google.protobuf.BoolValue.getDefaultInstance() : hasCheckpointValues_;
+        }
+      }
+      /**
+       * <pre>
+       * Whether this object has checkpoint values or descendants with checkpoint
+       * values. This is computed at save time to avoid traversing the entire
+       * object graph proto when restoring (which also has to traverse the live
+       * object graph).
+       * </pre>
+       *
+       * <code>.google.protobuf.BoolValue has_checkpoint_values = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+          getHasCheckpointValuesFieldBuilder() {
+        if (hasCheckpointValuesBuilder_ == null) {
+          hasCheckpointValuesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
+                  getHasCheckpointValues(),
+                  getParentForChildren(),
+                  isClean());
+          hasCheckpointValues_ = null;
+        }
+        return hasCheckpointValuesBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(

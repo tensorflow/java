@@ -63,6 +63,60 @@ public interface SavedObjectOrBuilder extends
 
   /**
    * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference> 
+      getDependenciesList();
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference getDependencies(int index);
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  int getDependenciesCount();
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  java.util.List<? extends org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder> 
+      getDependenciesOrBuilderList();
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder getDependenciesOrBuilder(
+      int index);
+
+  /**
+   * <pre>
    * Slot variables owned by this object. This describes the three-way
    * (optimizer, variable, slot variable) relationship; none of the three
    * depend on the others directly.
@@ -225,10 +279,24 @@ public interface SavedObjectOrBuilder extends
   org.tensorflow.proto.framework.CapturedTensorOrBuilder getCapturedTensorOrBuilder();
 
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
   int getSaveableObjectsCount();
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
   boolean containsSaveableObjects(
@@ -240,11 +308,25 @@ public interface SavedObjectOrBuilder extends
   java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
   getSaveableObjects();
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
   java.util.Map<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
   getSaveableObjectsMap();
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
 
@@ -252,6 +334,13 @@ public interface SavedObjectOrBuilder extends
       java.lang.String key,
       org.tensorflow.proto.framework.SaveableObject defaultValue);
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
 
@@ -260,9 +349,6 @@ public interface SavedObjectOrBuilder extends
 
   /**
    * <pre>
-   * The fields below are filled when the user serializes a registered Trackable
-   * class. Registered classes may save additional metadata and supersede the
-   * default loading process where nodes are recreated from the proto.
    * The name of the registered class of the form "{package}.{class_name}".
    * This field is used to search for the registered class at loading time.
    * </pre>
@@ -272,9 +358,6 @@ public interface SavedObjectOrBuilder extends
   java.lang.String getRegisteredName();
   /**
    * <pre>
-   * The fields below are filled when the user serializes a registered Trackable
-   * class. Registered classes may save additional metadata and supersede the
-   * default loading process where nodes are recreated from the proto.
    * The name of the registered class of the form "{package}.{class_name}".
    * This field is used to search for the registered class at loading time.
    * </pre>
@@ -314,6 +397,26 @@ public interface SavedObjectOrBuilder extends
    * <code>.google.protobuf.Any serialized_user_proto = 14;</code>
    */
   com.google.protobuf.AnyOrBuilder getSerializedUserProtoOrBuilder();
+
+  /**
+   * <pre>
+   * String name of the registered saver. At most one of `saveable_objects` or
+   * `registered_saver` is defined for each SavedObject.
+   * </pre>
+   *
+   * <code>string registered_saver = 16;</code>
+   */
+  java.lang.String getRegisteredSaver();
+  /**
+   * <pre>
+   * String name of the registered saver. At most one of `saveable_objects` or
+   * `registered_saver` is defined for each SavedObject.
+   * </pre>
+   *
+   * <code>string registered_saver = 16;</code>
+   */
+  com.google.protobuf.ByteString
+      getRegisteredSaverBytes();
 
   public org.tensorflow.proto.framework.SavedObject.KindCase getKindCase();
 }

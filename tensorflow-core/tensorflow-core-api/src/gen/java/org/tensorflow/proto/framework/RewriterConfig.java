@@ -37,6 +37,7 @@ private static final long serialVersionUID = 0L;
     implementationSelector_ = 0;
     autoMixedPrecision_ = 0;
     autoMixedPrecisionMkl_ = 0;
+    autoMixedPrecisionCpu_ = 0;
     usePluginOptimizers_ = 0;
     metaOptimizerIterations_ = 0;
     memoryOptimization_ = 0;
@@ -249,6 +250,12 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
 
             usePluginOptimizers_ = rawValue;
+            break;
+          }
+          case 232: {
+            int rawValue = input.readEnum();
+
+            autoMixedPrecisionCpu_ = rawValue;
             break;
           }
           case 400: {
@@ -2211,6 +2218,39 @@ private static final long serialVersionUID = 0L;
     return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
   }
 
+  public static final int AUTO_MIXED_PRECISION_CPU_FIELD_NUMBER = 29;
+  private int autoMixedPrecisionCpu_;
+  /**
+   * <pre>
+   * Emulate a model using data type float16 on CPU (default is OFF).
+   * This will try to emulate the float16 inputs and outputs of an operator
+   * on CPU to have better correlation with float16 on GPU; however the
+   * computation in the operator is based on float32.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+   */
+  public int getAutoMixedPrecisionCpuValue() {
+    return autoMixedPrecisionCpu_;
+  }
+  /**
+   * <pre>
+   * Emulate a model using data type float16 on CPU (default is OFF).
+   * This will try to emulate the float16 inputs and outputs of an operator
+   * on CPU to have better correlation with float16 on GPU; however the
+   * computation in the operator is based on float32.
+   * Note that this can change the numerical stability of the graph.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionCpu() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionCpu_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+  }
+
   public static final int DISABLE_META_OPTIMIZER_FIELD_NUMBER = 19;
   private boolean disableMetaOptimizer_;
   /**
@@ -2799,6 +2839,9 @@ private static final long serialVersionUID = 0L;
     if (usePluginOptimizers_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
       output.writeEnum(28, usePluginOptimizers_);
     }
+    if (autoMixedPrecisionCpu_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      output.writeEnum(29, autoMixedPrecisionCpu_);
+    }
     if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
       output.writeEnum(50, cpuLayoutConversion_);
     }
@@ -2934,6 +2977,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(28, usePluginOptimizers_);
     }
+    if (autoMixedPrecisionCpu_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(29, autoMixedPrecisionCpu_);
+    }
     if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(50, cpuLayoutConversion_);
@@ -2991,6 +3038,7 @@ private static final long serialVersionUID = 0L;
     if (implementationSelector_ != other.implementationSelector_) return false;
     if (autoMixedPrecision_ != other.autoMixedPrecision_) return false;
     if (autoMixedPrecisionMkl_ != other.autoMixedPrecisionMkl_) return false;
+    if (autoMixedPrecisionCpu_ != other.autoMixedPrecisionCpu_) return false;
     if (getDisableMetaOptimizer()
         != other.getDisableMetaOptimizer()) return false;
     if (usePluginOptimizers_ != other.usePluginOptimizers_) return false;
@@ -3078,6 +3126,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + autoMixedPrecision_;
     hash = (37 * hash) + AUTO_MIXED_PRECISION_MKL_FIELD_NUMBER;
     hash = (53 * hash) + autoMixedPrecisionMkl_;
+    hash = (37 * hash) + AUTO_MIXED_PRECISION_CPU_FIELD_NUMBER;
+    hash = (53 * hash) + autoMixedPrecisionCpu_;
     hash = (37 * hash) + DISABLE_META_OPTIMIZER_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getDisableMetaOptimizer());
@@ -3300,6 +3350,8 @@ private static final long serialVersionUID = 0L;
 
       autoMixedPrecisionMkl_ = 0;
 
+      autoMixedPrecisionCpu_ = 0;
+
       disableMetaOptimizer_ = false;
 
       usePluginOptimizers_ = 0;
@@ -3396,6 +3448,7 @@ private static final long serialVersionUID = 0L;
       result.implementationSelector_ = implementationSelector_;
       result.autoMixedPrecision_ = autoMixedPrecision_;
       result.autoMixedPrecisionMkl_ = autoMixedPrecisionMkl_;
+      result.autoMixedPrecisionCpu_ = autoMixedPrecisionCpu_;
       result.disableMetaOptimizer_ = disableMetaOptimizer_;
       result.usePluginOptimizers_ = usePluginOptimizers_;
       result.metaOptimizerIterations_ = metaOptimizerIterations_;
@@ -3538,6 +3591,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.autoMixedPrecisionMkl_ != 0) {
         setAutoMixedPrecisionMklValue(other.getAutoMixedPrecisionMklValue());
+      }
+      if (other.autoMixedPrecisionCpu_ != 0) {
+        setAutoMixedPrecisionCpuValue(other.getAutoMixedPrecisionCpuValue());
       }
       if (other.getDisableMetaOptimizer() != false) {
         setDisableMetaOptimizer(other.getDisableMetaOptimizer());
@@ -4797,6 +4853,91 @@ private static final long serialVersionUID = 0L;
     public Builder clearAutoMixedPrecisionMkl() {
       
       autoMixedPrecisionMkl_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int autoMixedPrecisionCpu_ = 0;
+    /**
+     * <pre>
+     * Emulate a model using data type float16 on CPU (default is OFF).
+     * This will try to emulate the float16 inputs and outputs of an operator
+     * on CPU to have better correlation with float16 on GPU; however the
+     * computation in the operator is based on float32.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+     */
+    public int getAutoMixedPrecisionCpuValue() {
+      return autoMixedPrecisionCpu_;
+    }
+    /**
+     * <pre>
+     * Emulate a model using data type float16 on CPU (default is OFF).
+     * This will try to emulate the float16 inputs and outputs of an operator
+     * on CPU to have better correlation with float16 on GPU; however the
+     * computation in the operator is based on float32.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+     */
+    public Builder setAutoMixedPrecisionCpuValue(int value) {
+      autoMixedPrecisionCpu_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Emulate a model using data type float16 on CPU (default is OFF).
+     * This will try to emulate the float16 inputs and outputs of an operator
+     * on CPU to have better correlation with float16 on GPU; however the
+     * computation in the operator is based on float32.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionCpu() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionCpu_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Emulate a model using data type float16 on CPU (default is OFF).
+     * This will try to emulate the float16 inputs and outputs of an operator
+     * on CPU to have better correlation with float16 on GPU; however the
+     * computation in the operator is based on float32.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+     */
+    public Builder setAutoMixedPrecisionCpu(org.tensorflow.proto.framework.RewriterConfig.Toggle value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      autoMixedPrecisionCpu_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Emulate a model using data type float16 on CPU (default is OFF).
+     * This will try to emulate the float16 inputs and outputs of an operator
+     * on CPU to have better correlation with float16 on GPU; however the
+     * computation in the operator is based on float32.
+     * Note that this can change the numerical stability of the graph.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_cpu = 29;</code>
+     */
+    public Builder clearAutoMixedPrecisionCpu() {
+      
+      autoMixedPrecisionCpu_ = 0;
       onChanged();
       return this;
     }
