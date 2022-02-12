@@ -340,7 +340,7 @@ import org.tensorflow.types.family.TType;
  * }
  * }</pre>
  */
-public final class Ops {
+public final class Ops implements WithOps {
   public final NnOps nn;
 
   public final SummaryOps summary;
@@ -371,9 +371,9 @@ public final class Ops {
 
   public final TpuOps tpu;
 
-  public final AudioOps audio;
-
   public final MathOps math;
+
+  public final AudioOps audio;
 
   public final SignalOps signal;
 
@@ -400,8 +400,8 @@ public final class Ops {
     sparse = new SparseOps(this);
     bitwise = new BitwiseOps(this);
     tpu = new TpuOps(this);
-    audio = new AudioOps(this);
     math = new MathOps(this);
+    audio = new AudioOps(this);
     signal = new SignalOps(this);
     train = new TrainOps(this);
     quantization = new QuantizationOps(this);
@@ -8068,11 +8068,15 @@ public final class Ops {
     return ZerosLike.create(scope, x);
   }
 
+  @Override
+  public Ops tf() {
+    return this;
+  }
+
   /**
-   * Returns an API that builds operations with the provided name prefix.
-   *
-   * @see {@link Scope#withSubScope(String)}
+   * {@inheritDoc}
    */
+  @Override
   public Ops withSubScope(String childScopeName) {
     return new Ops(scope.withSubScope(childScopeName));
   }
@@ -8109,28 +8113,25 @@ public final class Ops {
   }
 
   /**
-   * Returns an API that uses the provided name for an op.
-   *
-   * @see {@link Scope#withName(String)}
+   * {@inheritDoc}
    */
+  @Override
   public Ops withName(String opName) {
     return new Ops(scope.withName(opName));
   }
 
   /**
-   * Returns an API that places the created operations on the device(s) matching the provided spec.
-   *
-   * @see {@link Scope#withDevice(DeviceSpec)}
+   * {@inheritDoc}
    */
+  @Override
   public Ops withDevice(DeviceSpec deviceSpec) {
     return new Ops(scope.withDevice(deviceSpec));
   }
 
   /**
-   * Returns an API that adds operations to the graph with the provided control dependencies.
-   *
-   * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
+   * {@inheritDoc}
    */
+  @Override
   public Ops withControlDependencies(Iterable<Op> controls) {
     return new Ops(scope.withControlDependencies(controls));
   }

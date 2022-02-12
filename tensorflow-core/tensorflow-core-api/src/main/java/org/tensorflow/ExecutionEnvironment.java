@@ -16,10 +16,12 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.WithOps;
 
 /** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
-public interface ExecutionEnvironment {
+public interface ExecutionEnvironment extends WithOps {
 
   enum Types {
     GRAPH,
@@ -126,4 +128,9 @@ public interface ExecutionEnvironment {
    * <p><b>Should generally only be used internally.</b>
    */
   boolean isInitOp(Operation op);
+
+  @Override
+  default Ops tf() {
+    return Ops.create(this);
+  }
 }

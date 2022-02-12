@@ -21,8 +21,13 @@ The following describes the layout of the repository and its different artifacts
 * `tensorflow-core`
   * All artifacts that build up the core language bindings of TensorFlow for Java
   * Intended audience: projects that provide their own APIs or frameworks on top of 
-    TensorFlow and just want a thin layer to access the TensorFlow runtime from the JVM 
+    TensorFlow and just want a thin layer to access the TensorFlow runtime from the JVM
     
+* `tensorflow-core-kotlin`
+  * Kotlin API bindings for `tensorflow-core`.  These are thin wrappers around the core APIs
+    to make them more idiomatic for use in Kotlin, such as using parameters with default values
+    operation builders instead of an `Options` vararg.
+  
 * `tensorflow-framework`
   * Primary API for building and training neural networks with TensorFlow
   * Intended audience: neural network developers
@@ -111,6 +116,12 @@ significantly increase  the size of your JAR. So it is good practice to limit yo
 the platforms you are targeting. For this purpose the `-platform` artifacts include profiles that follow
 the conventions established on this page:
 * [Reducing the Number of Dependencies](https://github.com/bytedeco/javacpp-presets/wiki/Reducing-the-Number-of-Dependencies)
+
+### Kotlin API
+
+Since the Kotlin API is just a wrapper of the Java API, it uses the Java platform artifacts instead of providing its own.
+To use, follow the instructions above for the Java API, but add `tensorflow-core-kotlin-api`, 
+replacing `tensorflow-core-api` if you have explicitly included it.
 
 ### Snapshots
 

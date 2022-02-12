@@ -65,6 +65,8 @@ public class Names {
   public static final TypeName ArrayOp = ArrayTypeName.of(Op);
   public static final TypeName ArrayOperation = ArrayTypeName.of(Operation);
 
+  public static final ClassName WithOps = ClassName.get(OpPackage, "WithOps");
+
   public static final ClassName Operand = ClassName.get(TensorflowPackage, "Operand");
   public static final ClassName Output = ClassName.get(TensorflowPackage, "Output");
 

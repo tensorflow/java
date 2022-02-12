@@ -170,10 +170,11 @@ For dependencies, we can use anything compliant with [this list](https://opensou
 
 ### Code generation
 
-Code generation for `Ops` and related classes is done during `tensorflow-core-api`'s `compile` phase, using the annotation processor in
-`tensorflow-core-generator`. If you change or add any operator classes (annotated with `org.tensorflow.op.annotation.Operator`), endpoint methods (
-annotated with `org.tensorflow.op.annotation.Endpoint`), or change the annotation processor, be sure to re-run a
-`mvn install` in `tensorflow-core-api` (`-Pdev` is fine for this, it just needs to run the annotation processor).
+Code generation for `Ops` and related classes is done during `tensorflow-core-api` and `tensorflow-core-kotlin`'s `compile` phase, 
+using the annotation processors in `tensorflow-core-generator` and `tensorflow-kotlin-generator`, respectively. If you change or add any 
+operator classes (annotated with `org.tensorflow.op.annotation.Operator`), endpoint methods (annotated with `org.tensorflow.op.annotation.Endpoint`), 
+or change the annotation processor, be sure to re-run a `mvn compile` in `tensorflow-core-api` **and** `tensorflow-core-kotlin` 
+(`-Pdev` is fine for this, it just needs to run the annotation processor).
 
 ### Working with Bazel generation
 
@@ -189,6 +190,19 @@ bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so --ou
 
 (called in `tensorflow-core-api`).
 
+### Kotlin API
+
+The Kotlin api should be kept to a thin wrapper of the Java API, using extension functions and codegen wherever possible.
+We do not want to get into a situation where we are maintaining two separate but related APIs.
+
+The codegen (`tensorflow-core-kotlin-generator`) is an annotation processor that reads the `@Operator` classes from the `tensorflow-core-api` Java sources.
+If you add operators or re-generate them from the native library, be sure to re-run a `mvn install` in `tensorflow-core-kotlin-api`.
+
+#### Formatting
+
+[ktfmt](https://github.com/facebookincubator/ktfmt) is used to format the Kotlin files.  This is
+checked and done via maven in the same way as Java formatting.  To do the formatting via IntelliJ see
+ktfmt's repo.
 
 ## Adding Gradients
 

@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Arrays;
+import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Reduction;
 import org.tensorflow.ndarray.Shape;
@@ -25,11 +29,6 @@ import org.tensorflow.op.core.Squeeze;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * These are helper methods for Losses and Metrics and will be module private when Java modularity
@@ -101,7 +100,7 @@ public class LossesHelper {
       long labelsRank = labelsShape.numDimensions();
       if (labelsRank != Shape.UNKNOWN_SIZE && predictionsRank != Shape.UNKNOWN_SIZE) {
         // Use static rank for 'label' and 'prediction'.
-        if (predictionsRank - labelsRank != 1 || predictionsShape.size(-1) == 1) {
+        if (predictionsRank - labelsRank != 1 || predictionsShape.get(-1) == 1) {
           lossTuple = removeSqueezableDimensions(tf, labels, predictions);
         }
       } else { // use dynamic rank
@@ -213,9 +212,9 @@ public class LossesHelper {
     if (predictionsRank != Shape.UNKNOWN_SIZE || labelsRank != Shape.UNKNOWN_SIZE) {
       // Use static rank.
       int rankDiff = predictionsRank - labelsRank;
-      if (rankDiff == expectedRankDiff + 1 && Shape.isCompatible(predictionsShape.size(-1), 1)) {
+      if (rankDiff == expectedRankDiff + 1 && Shape.isCompatible(predictionsShape.get(-1), 1)) {
         predictions = tf.squeeze(predictions);
-      } else if (rankDiff == expectedRankDiff - 1 && Shape.isCompatible(labelsShape.size(-1), 1)) {
+      } else if (rankDiff == expectedRankDiff - 1 && Shape.isCompatible(labelsShape.get(-1), 1)) {
         labels = tf.squeeze(labels);
       }
       return new LossTuple<>(labels, predictions);
@@ -224,7 +223,7 @@ public class LossesHelper {
 
     // TODO: hold for lazy select feature,
     //  Operand<TInt32> rankDiff = tf.math.sub(tf.rank(predictions), tf.rank(labels));
-    if (predictionsRank == Shape.UNKNOWN_SIZE && Shape.isCompatible(predictionsShape.size(-1), 1)) {
+    if (predictionsRank == Shape.UNKNOWN_SIZE && Shape.isCompatible(predictionsShape.get(-1), 1)) {
       /*
        * TODO, if we ever get a select that does lazy evaluation, but for now do the tf.squeeze
        * predictions = tf.select( tf.math.equal(tf.constant(expectedRankDiff+1),rankDiff ),
@@ -232,7 +231,7 @@ public class LossesHelper {
        */
       predictions = tf.squeeze(predictions, Squeeze.axis(Collections.singletonList(-1L)));
     }
-    if (labelsRank == Shape.UNKNOWN_SIZE && Shape.isCompatible(labelsShape.size(-1), 1)) {
+    if (labelsRank == Shape.UNKNOWN_SIZE && Shape.isCompatible(labelsShape.get(-1), 1)) {
       /*
        * TODO, if we ever get a select that does lazy evaluation labels = tf.select(
        * tf.math.equal(tf.constant(expectedRankDiff+1),rankDiff ), tf.squeeze(labels,
