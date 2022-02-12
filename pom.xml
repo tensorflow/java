@@ -46,7 +46,7 @@
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
-    <spotless.version>2.11.1</spotless.version>
+    <spotless.version>2.20.2</spotless.version>
   </properties>
 
   <repositories>
@@ -371,7 +371,9 @@
 
           <lineEndings/>
           <java>
-            <googleJavaFormat/>
+            <googleJavaFormat>
+              <version>1.14.0</version>
+            </googleJavaFormat>
 
             <removeUnusedImports/>
           </java>
