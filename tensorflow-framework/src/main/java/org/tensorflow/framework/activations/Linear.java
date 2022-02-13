@@ -14,6 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -33,16 +34,60 @@ import org.tensorflow.types.family.TNumber;
  *    // result is [-3.0f,-1.0f, 0.0f,1.0f,3.0f]
  * </pre>
  */
-public class Linear<U extends TNumber> extends AbstractActivation<U> {
+public class Linear extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "linear";
 
   /** Creates a linear activation. */
   public Linear() {
     super();
   }
 
+  /**
+   * Creates a new Exponential from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   */
+  @SuppressWarnings("unused")
+  public Linear(Map<String, Object> config) {
+    this();
+  }
+
+  /**
+   * Computes the linear activation function (pass-through).
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = Linear.linear(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  @SuppressWarnings("unused")
+  public static <T extends TNumber> Operand<T> linear(Ops tf, Operand<T> input) {
+    return input;
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<U> call(Ops tf, Operand<U> input) {
-    return input;
+  public Map<String, Object> getConfig() {
+    return getConfig(NAME);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U extends TNumber> Operand<U> call(Ops tf, Operand<U> input) {
+    return linear(tf, input);
+  }
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

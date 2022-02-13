@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -33,7 +38,7 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat32> instance = new HardSigmoid<>();
+        HardSigmoid instance = new HardSigmoid();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -47,9 +52,23 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat64> instance = new HardSigmoid<>();
+        HardSigmoid instance = new HardSigmoid();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(HardSigmoid.NAME);
+    assertTrue(instance instanceof HardSigmoid);
+    HardSigmoid hardSigmoid = new HardSigmoid(Collections.emptyMap());
+    assertNotNull(hardSigmoid);
+  }
+
+  @Test
+  public void testGetConfig() {
+    HardSigmoid instance = new HardSigmoid();
+    assertEquals(HardSigmoid.NAME, instance.getConfig().get("name"));
   }
 }

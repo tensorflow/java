@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -42,7 +45,7 @@ public class TanhTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Tanh<TFloat32> instance = new Tanh<>();
+        Tanh instance = new Tanh();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -65,9 +68,21 @@ public class TanhTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Tanh<TFloat64> instance = new Tanh<>();
+        Tanh instance = new Tanh();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Tanh.NAME);
+    assertTrue(instance instanceof Tanh);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Tanh instance = new Tanh();
+    assertEquals(Tanh.NAME, instance.getConfig().get("name"));
   }
 }

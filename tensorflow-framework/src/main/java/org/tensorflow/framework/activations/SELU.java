@@ -14,9 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Scaled Exponential Linear Unit (SELU).
@@ -42,19 +43,61 @@ import org.tensorflow.types.family.TFloating;
  * <p><b>Notes: </b> To be used together with the {@link
  * org.tensorflow.framework.initializers.LeCun} initializer with Normal Distribution.
  *
- * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1706.02515">Klambauer et al., 2017</a>
  */
-public class SELU<T extends TFloating> extends AbstractActivation<T> {
+public class SELU extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "selu";
 
   /** Creates a Scaled Exponential Linear Unit (SELU) activation. */
   public SELU() {
     super();
   }
 
+  /**
+   * Creates a new Exponential from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   */
+  @SuppressWarnings("unused")
+  public SELU(Map<String, Object> config) {
+    this();
+  }
+
+  /**
+   * Applies Scaled Exponential Linear Unit (SELU) activation function
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = SELU.selu(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  public static <T extends TNumber> Operand<T> selu(Ops tf, Operand<T> input) {
+    return tf.nn.selu(input);
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
-    return tf.nn.selu(input);
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return selu(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  public Map<String, Object> getConfig() {
+    return getConfig(NAME);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

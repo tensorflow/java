@@ -16,9 +16,10 @@ package org.tensorflow.framework.activations;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Hard sigmoid activation.
@@ -43,16 +44,42 @@ import org.tensorflow.types.family.TFloating;
  *     // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
  * </pre>
  */
-public class HardSigmoid<T extends TFloating> extends AbstractActivation<T> {
+public class HardSigmoid extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "hard_sigmoid";
 
   /** Creates Hard sigmoid activation. */
   public HardSigmoid() {
     super();
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
+  /**
+   * Creates a new Exponential from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   */
+  @SuppressWarnings("unused")
+  public HardSigmoid(Map<String, Object> config) {
+    this();
+  }
+
+  /**
+   * Computes the hard sigmoid activation function.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = HardSigmoid.hardSigmoid(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the exponential activation: {@code exp(x)}.
+   */
+  public static <T extends TNumber> Operand<T> hardSigmoid(Ops tf, Operand<T> input) {
     Class<T> inputType = input.type();
     Operand<T> point2 = cast(tf, tf.constant(0.2), inputType);
     Operand<T> point5 = cast(tf, tf.constant(0.5), inputType);
@@ -60,5 +87,23 @@ public class HardSigmoid<T extends TFloating> extends AbstractActivation<T> {
     Operand<T> x = tf.math.add(tf.math.mul(input, point2), point5);
     return tf.clipByValue(
         x, cast(tf, tf.constant(0), inputType), cast(tf, tf.constant(1), inputType));
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    return getConfig(NAME);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return hardSigmoid(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.op;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.op.nn.GELU;
 import org.tensorflow.framework.op.nn.SigmoidCrossEntropyWithLogits;
 import org.tensorflow.framework.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.framework.op.nn.SparseSoftmaxCrossEntropyWithLogits;
@@ -189,5 +190,36 @@ public class NnOps {
       Operand<U> labels, Operand<T> logits) {
     return SparseSoftmaxCrossEntropyWithLogits.sparseSoftmaxCrossEntropyWithLogits(
         scope, labels, logits);
+  }
+
+  /**
+   * Compute the Gaussian Error Linear Unit (GELU) activation function without approximation.
+   *
+   * <p>Gaussian error linear unit (GELU) computes {@code x * P(X <= x)}, where {@code P(X) ~ N(0,
+   * 1)}. The (GELU) nonlinearity weights inputs by their value, rather than gates inputs by their
+   * sign as in ReLU.
+   *
+   * @param input the input
+   * @param <T> the data type for the input and result
+   * @return The Gaussian Error Linear Unit computation
+   */
+  public <T extends TNumber> Operand<T> gelu(Operand<T> input) {
+    return GELU.gelu(scope, input);
+  }
+
+  /**
+   * Compute the Gaussian Error Linear Unit (GELU) activation function.
+   *
+   * <p>Gaussian error linear unit (GELU) computes {@code x * P(X <= x)}, where {@code P(X) ~ N(0,
+   * 1)}. The (GELU) nonlinearity weights inputs by their value, rather than gates inputs by their
+   * sign as in ReLU.
+   *
+   * @param input the input
+   * @param approximate Whether to enable approximation.
+   * @param <T> the data type for the input and result
+   * @return The Gaussian Error Linear Unit computation
+   */
+  public <T extends TNumber> Operand<T> gelu(Operand<T> input, boolean approximate) {
+    return GELU.gelu(scope, input, approximate);
   }
 }

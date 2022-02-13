@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -34,7 +39,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TInt32> instance = new Linear<>();
+        Linear instance = new Linear();
         Operand<TInt32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -48,7 +53,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat32> instance = new Linear<>();
+        Linear instance = new Linear();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -62,9 +67,23 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat64> instance = new Linear<>();
+        Linear instance = new Linear();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Linear.NAME);
+    assertTrue(instance instanceof Linear);
+    Linear linear = new Linear(Collections.emptyMap());
+    assertNotNull(linear);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Linear instance = new Linear();
+    assertEquals(Linear.NAME, instance.getConfig().get("name"));
   }
 }

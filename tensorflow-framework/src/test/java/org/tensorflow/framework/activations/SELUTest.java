@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -35,7 +38,7 @@ public class SELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        SELU<TFloat32> instance = new SELU<>();
+        SELU instance = new SELU();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -58,9 +61,21 @@ public class SELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        SELU<TFloat64> instance = new SELU<>();
+        SELU instance = new SELU();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(SELU.NAME);
+    assertTrue(instance instanceof SELU);
+  }
+
+  @Test
+  public void testGetConfig() {
+    SELU instance = new SELU();
+    assertEquals(SELU.NAME, instance.getConfig().get("name"));
   }
 }

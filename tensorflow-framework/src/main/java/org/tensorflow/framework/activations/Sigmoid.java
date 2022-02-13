@@ -14,9 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Sigmoid activation. <code>sigmoid(x) = 1 / (1 + exp(-x))</code>.
@@ -38,19 +39,60 @@ import org.tensorflow.types.family.TFloating;
  *     // result is [2.0611537e-09f, 2.6894143e-01f,
  *     //                 5.0000000e-01f,7.3105860e-01f, 1.f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Sigmoid<T extends TFloating> extends AbstractActivation<T> {
-
+public class Sigmoid extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "sigmoid";
   /** Creates a Sigmoid activation. */
   public Sigmoid() {
     super();
   }
 
+  /**
+   * Creates a new Exponential from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   */
+  @SuppressWarnings("unused")
+  public Sigmoid(Map<String, Object> config) {
+    this();
+  }
+
+  /**
+   * Applies the Sigmoid activation function, {@code sigmoid(x) = 1 / (1 + exp(-x))}.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = Sigmoid.sigmoid(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  public static <T extends TNumber> Operand<T> sigmoid(Ops tf, Operand<T> input) {
+    return tf.math.sigmoid(input);
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
-    return tf.math.sigmoid(input);
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return sigmoid(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    return getConfig(NAME);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

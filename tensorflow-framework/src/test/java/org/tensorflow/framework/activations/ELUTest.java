@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -33,7 +39,7 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat32> instance = new ELU<>();
+        ELU instance = new ELU();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -47,7 +53,7 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat64> instance = new ELU<>();
+        ELU instance = new ELU();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -61,9 +67,31 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat64> instance = new ELU<>(2.0f);
+        ELU instance = new ELU(2.0f);
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(ELU.NAME);
+    assertTrue(instance instanceof ELU);
+
+    Map<String, Object> config = new HashMap<>();
+    config.put("alpha", 2.0f);
+    config.put("name", ELU.NAME);
+
+    instance = Activation.create("elu");
+    assertNotNull(instance);
+    assertEquals(1.0f, ((ELU) instance).getAlpha());
+  }
+
+  @Test
+  public void testGetConfig() {
+    ELU instance = new ELU(2.0f);
+    Map<String, Object> config = instance.getConfig();
+    assertEquals(ELU.NAME, config.get("name"));
+    assertEquals(2.0f, ((Number) config.get("alpha")).floatValue());
   }
 }

@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -36,7 +39,7 @@ public class SoftplusTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softplus<TFloat32> instance = new Softplus<>();
+        Softplus instance = new Softplus();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -54,9 +57,21 @@ public class SoftplusTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softplus<TFloat64> instance = new Softplus<>();
+        Softplus instance = new Softplus();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Softplus.NAME);
+    assertTrue(instance instanceof Softplus);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Softplus instance = new Softplus();
+    assertEquals(Softplus.NAME, instance.getConfig().get("name"));
   }
 }

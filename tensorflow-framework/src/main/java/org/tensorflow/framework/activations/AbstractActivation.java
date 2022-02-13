@@ -14,17 +14,43 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Collections;
+import java.util.Map;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
 
 /** Abstract base class for Activations */
-public abstract class AbstractActivation<T extends TNumber> implements Activation<T> {
+public abstract class AbstractActivation implements Activation {
 
   /** The TensorFlow Ops */
   protected Ops tf;
 
   /** Creates the abstract class for an AbstractActivation */
   protected AbstractActivation() {}
+
+  /**
+   * Gets a configuration map, this default implementation returns a singleton Map, with {@code
+   * "name"} as the key, and the @code name} parameter as its value;
+   *
+   * @param name the name of the Activation as known by TensorFlow engine.
+   * @return the configuration map
+   */
+  protected Map<String, Object> getConfig(String name) {
+    return Collections.singletonMap("name", name);
+  }
+
+  /**
+   * Gets a configuration map
+   *
+   * @return the configuration map
+   */
+  public abstract Map<String, Object> getConfig();
+
+  /**
+   * Get the name of the activation as known by the TensorFlow Engine
+   *
+   * @return the name of the activation as known by the TensorFlow Engine
+   */
+  public abstract String getName();
 
   /**
    * Gets the TensorFlow Ops

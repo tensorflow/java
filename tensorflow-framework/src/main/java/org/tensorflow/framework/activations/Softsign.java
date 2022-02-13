@@ -14,9 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Softsign activation function, <code>softsign(x) = x / (abs(x) + 1)</code>.
@@ -30,19 +31,59 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = softsign.call(input);
  *     // result is [-0.5f, 0.f, 0.5f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Softsign<T extends TFloating> extends AbstractActivation<T> {
-
+public class Softsign extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "softsign";
   /** Creates a Softsign activation. */
   public Softsign() {
     super();
   }
 
+  /**
+   * Creates a new Softsign from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   */
+  public Softsign(Map<String, Object> config) {
+    this();
+  }
+
+  /**
+   * Applies the Softsign activation function, {@code softsign(x) = x / (abs(x) + 1)}.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = Softsign.softsign(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the Softsign activation, {@code softsign(x) = x / (abs(x) + 1)}.
+   */
+  public static <T extends TNumber> Operand<T> softsign(Ops tf, Operand<T> input) {
+    return tf.nn.softsign(input);
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
-    return tf.nn.softsign(input);
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return softsign(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    return getConfig(NAME);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

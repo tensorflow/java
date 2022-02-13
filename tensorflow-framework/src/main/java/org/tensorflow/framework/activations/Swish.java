@@ -14,9 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Swish activation function. <code>swish(x) = x * sigmoid(x)</code>.
@@ -37,10 +38,11 @@ import org.tensorflow.types.family.TFloating;
  *
  * </pre>
  *
- * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>
  */
-public class Swish<T extends TFloating> extends AbstractActivation<T> {
+public class Swish extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "swish";
 
   /**
    * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
@@ -53,10 +55,52 @@ public class Swish<T extends TFloating> extends AbstractActivation<T> {
     super();
   }
 
+  /**
+   * Creates a new Swish from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   */
+  @SuppressWarnings("unused")
+  public Swish(Map<String, Object> config) {
+    this();
+  }
+
+  /**
+   * Applies the Swish activation function, {@code swish(x) = x * sigmoid(x)}.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = Swish.swish(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the Swish activation , @code swish(x) = x * sigmoid(x)}.
+   */
+  public static <T extends TNumber> Operand<T> swish(Ops tf, Operand<T> input) {
+    return tf.math.mul(input, tf.math.sigmoid(input));
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
     // TODO Python Keras returns a "grad", which is an optimization not implemented in Java.
-    return tf.math.mul(input, tf.math.sigmoid(input));
+    return swish(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    return getConfig(NAME);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

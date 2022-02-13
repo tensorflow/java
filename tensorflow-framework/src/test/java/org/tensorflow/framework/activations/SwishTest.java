@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -42,7 +45,7 @@ public class SwishTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Swish<TFloat32> instance = new Swish<>();
+        Swish instance = new Swish();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -65,9 +68,21 @@ public class SwishTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Swish<TFloat64> instance = new Swish<>();
+        Swish instance = new Swish();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Swish.NAME);
+    assertTrue(instance instanceof Swish);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Swish instance = new Swish();
+    assertEquals(Swish.NAME, instance.getConfig().get("name"));
   }
 }

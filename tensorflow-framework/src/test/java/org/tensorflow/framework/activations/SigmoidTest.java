@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -42,7 +45,7 @@ public class SigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Sigmoid<TFloat32> instance = new Sigmoid<>();
+        Sigmoid instance = new Sigmoid();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -60,9 +63,21 @@ public class SigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Sigmoid<TFloat64> instance = new Sigmoid<>();
+        Sigmoid instance = new Sigmoid();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Sigmoid.NAME);
+    assertTrue(instance instanceof Sigmoid);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Sigmoid instance = new Sigmoid();
+    assertEquals(Sigmoid.NAME, instance.getConfig().get("name"));
   }
 }

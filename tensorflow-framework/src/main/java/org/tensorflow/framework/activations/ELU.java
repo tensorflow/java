@@ -16,10 +16,12 @@ package org.tensorflow.framework.activations;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Exponential linear unit.
@@ -42,19 +44,21 @@ import org.tensorflow.types.family.TFloating;
  *
  * <pre>
  *     Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
- *     ELU&lt;TFloat32&gt; elu = new ELU&lt;&gt;(tf, 2.0f);
+ *     ELU&lt;TFloat32&gt; elu = new ELU&lt;&gt;(tf, 2.0);
  *     Operand&lt;TFloat32&gt; result = elu.call(input);
  * </pre>
  *
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
-public class ELU<T extends TFloating> extends AbstractActivation<T> {
+public class ELU extends AbstractActivation {
+
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "elu";
 
   private static final double ALPHA_DEFAULT = 1.0;
 
-  /** A scalar, slope of negative section. */
-  private final double alpha;
+  private double alpha;
 
   /** Creates a new ELU with alpha={@link #ALPHA_DEFAULT}. */
   public ELU() {
@@ -72,16 +76,96 @@ public class ELU<T extends TFloating> extends AbstractActivation<T> {
     this.alpha = alpha;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
+  /**
+   * Creates a new ELU from a configuration Map
+   *
+   * @param config the configuration map, if the map contains an entry for {@code alpha} that value
+   *     is used, otherwise {@link #ALPHA_DEFAULT} is used.
+   */
+  public ELU(Map<String, Object> config) {
+    this((Double) config.getOrDefault("alpha", ALPHA_DEFAULT));
+  }
+
+  /**
+   * Computes the Exponential linear unit.
+   *
+   * <p>The exponential linear unit (ELU) with <code>alpha &gt; 0</code> is:
+   *
+   * <p><code>x</code> if <code>x &gt; 0</code> and <code>alpha * (exp(x) -
+   *  * 1)</code> if <code>x &lt; 0</code>.
+   *
+   * <p>The ELU hyperparameter <code>alpha</code> controls the value to which an ELU saturates for
+   * negative net inputs. ELUs diminish the vanishing gradient effect.
+   *
+   * <p>ELUs have negative values which pushes the mean of the activations closer to zero. Mean
+   * activations that are closer to zero enable faster learning as they bring the gradient closer to
+   * * the natural gradient. ELUs saturate to a negative value when the argument gets smaller.
+   * Saturation means a small derivative which decreases the variation and the information that is
+   * propagated to the next layer.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = ELU.elu(tf, input, 2.0);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param alpha scalar, slope of negative section. `alpha` controls the value to which an ELU
+   *     saturates for negative net inputs.
+   * @param <T> the data type for the input
+   * @return The exponential linear unit (ELU) activation function: `x` if `x > 0` and `alpha *
+   *     (exp(x) - 1)` if `x < 0`.
+   */
+  public static <T extends TNumber> Operand<T> elu(Ops tf, Operand<T> input, double alpha) {
     Operand<T> result = tf.nn.elu(input);
-    if (alpha == 1.0) return result;
-    else {
+    if (alpha == 1.0) {
+      return result;
+    } else {
       Class<T> inputType = input.type();
       Operand<T> y = tf.math.mul(result, cast(tf, tf.constant(alpha), inputType));
       Operand<TBool> cond = tf.math.greater(result, cast(tf, tf.constant(0), inputType));
       return tf.select(cond, result, y);
     }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    Map<String, Object> config = new HashMap<>();
+    config.put("name", ELU.NAME);
+    config.put("alpha", alpha);
+    return config;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return elu(tf, input, alpha);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
+  }
+
+  /**
+   * Gets the slope of negative section.
+   *
+   * @return the slope of negative section.
+   */
+  public double getAlpha() {
+    return alpha;
+  }
+
+  /**
+   * Sets the slope of negative section.
+   *
+   * @param alpha the slope of negative section.
+   */
+  public void setAlpha(double alpha) {
+    this.alpha = alpha;
   }
 }

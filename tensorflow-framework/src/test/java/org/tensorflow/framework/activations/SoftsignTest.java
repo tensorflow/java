@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -34,7 +37,7 @@ public class SoftsignTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softsign<TFloat32> instance = new Softsign<>();
+        Softsign instance = new Softsign();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -57,9 +60,21 @@ public class SoftsignTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softsign<TFloat64> instance = new Softsign<>();
+        Softsign instance = new Softsign();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Softsign.NAME);
+    assertTrue(instance instanceof Softsign);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Softsign instance = new Softsign();
+    assertEquals(Softsign.NAME, instance.getConfig().get("name"));
   }
 }

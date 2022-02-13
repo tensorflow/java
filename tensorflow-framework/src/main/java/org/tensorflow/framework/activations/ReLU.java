@@ -16,6 +16,8 @@ package org.tensorflow.framework.activations;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.math.Greater;
@@ -57,18 +59,18 @@ import org.tensorflow.types.family.TNumber;
  *     result = relu.call(input);
  *     // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
  * </pre>
- *
- * @param <T> the data type of the result
  */
-public class ReLU<T extends TNumber> extends AbstractActivation<T> {
+public class ReLU extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "relu";
 
   public static final float ALPHA_DEFAULT = 0.0f;
   public static final float MAX_VALUE_DEFAULT = Float.NaN;
   public static final float THRESHOLD_DEFAULT = 0.0f;
 
-  private final float alpha;
-  private final float maxValue;
-  private final float threshold;
+  private float alpha;
+  private float maxValue;
+  private float threshold;
 
   /**
    * Creates a new ReLU with alpha={@link #ALPHA_DEFAULT}, maxValue={@link #MAX_VALUE_DEFAULT},
@@ -93,9 +95,66 @@ public class ReLU<T extends TNumber> extends AbstractActivation<T> {
     this.threshold = threshold;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
+  /**
+   * Creates a ReLU activation from a config map.
+   *
+   * @param config the configuration map,
+   *     <ul>
+   *       <li>if the map contains an entry for {@code alpha} that value is used, otherwise {@link
+   *           #ALPHA_DEFAULT} is used.
+   *       <li>if the map contains an entry for {@code max_value} that value is used, otherwise
+   *           {@link #MAX_VALUE_DEFAULT} is used.
+   *       <li>if the map contains an entry for {@code threshold} that value is used, otherwise
+   *           {@link #THRESHOLD_DEFAULT} is used.
+   *     </ul>
+   */
+  public ReLU(Map<String, Object> config) {
+    this(
+        ((Number) config.getOrDefault("alpha", ALPHA_DEFAULT)).floatValue(),
+        ((Number) config.getOrDefault("max_value", MAX_VALUE_DEFAULT)).floatValue(),
+        ((Number) config.getOrDefault("threshold", THRESHOLD_DEFAULT)).floatValue());
+  }
+
+  /**
+   * Applies the rectified linear unit activation function with default values.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = ReLU.relu(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  public static <T extends TNumber> Operand<T> relu(Ops tf, Operand<T> input) {
+    return relu(tf, input, ALPHA_DEFAULT, MAX_VALUE_DEFAULT, THRESHOLD_DEFAULT);
+  }
+
+  /**
+   * Applies the rectified linear unit activation function.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>
+   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
+   *      Operand&lt;TFloat32&gt; result = ReLU.relu(tf, input);
+   * </pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param alpha governs the slope for values lower than the threshold.
+   * @param maxValue sets the saturation threshold (the largest value the function will return).
+   * @param threshold the threshold value of the activation function below which values will be
+   *     damped or set to zero.
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  public static <T extends TNumber> Operand<T> relu(
+      Ops tf, Operand<T> input, float alpha, float maxValue, float threshold) {
     Class<T> inputType = input.type();
 
     boolean clipMax = !Float.isNaN(maxValue);
@@ -136,5 +195,97 @@ public class ReLU<T extends TNumber> extends AbstractActivation<T> {
           tf.math.sub(lInput, tf.math.mul(cast(tf, tf.constant(alpha), inputType), negativePart));
     }
     return lInput;
+  }
+
+  /**
+   * Gets a configuration map with entries
+   *
+   * <ul>
+   *   <li>{@code alpha} and value set with {@link #alpha}.
+   *   <li>{@code max_value} and value set with {@link #maxValue}.
+   *   <li>{@code threshold} and value set with {@link #threshold}.
+   * </ul>
+   *
+   * @return config the configuration map
+   */
+  @Override
+  public Map<String, Object> getConfig() {
+    Map<String, Object> config = new HashMap<>();
+    config.put("name", NAME);
+    config.put("alpha", alpha);
+    config.put("max_value", maxValue);
+    config.put("threshold", threshold);
+    return config;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return relu(tf, input, alpha, maxValue, threshold);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
+  }
+
+  /**
+   * Gets the value that governs the slope for values lower than the threshold.
+   *
+   * @return the value that governs the slope for values lower than the threshold.
+   */
+  public float getAlpha() {
+    return alpha;
+  }
+
+  /**
+   * Sets the value that governs the slope for values lower than the threshold.
+   *
+   * @param alpha the value that governs the slope for values lower than the threshold.
+   */
+  public void setAlpha(float alpha) {
+    this.alpha = alpha;
+  }
+
+  /**
+   * Gets the saturation threshold (the largest value the function will return).
+   *
+   * @return the saturation threshold (the largest value the function will return). public float
+   *     getMaxValue() { return maxValue; }
+   *     <p>/** Gets the threshold value of the activation function below which values will be
+   *     damped or set to zero.
+   */
+  public float getThreshold() {
+    return threshold;
+  }
+
+  /**
+   * Sets the threshold value of the activation function below which values will be damped or set to
+   * zero.
+   *
+   * @param threshold the threshold value of the activation function below which values will be
+   *     damped or set to zero.
+   */
+  public void setThreshold(float threshold) {
+    this.threshold = threshold;
+  }
+
+  /**
+   * Gets the saturation threshold (the largest value the function will return).
+   *
+   * @return the saturation threshold (the largest value the function will return).
+   */
+  public float getMaxValue() {
+    return maxValue;
+  }
+
+  /**
+   * Sets the saturation threshold (the largest value the function will return).
+   *
+   * @param maxValue the saturation threshold (the largest value the function will return).
+   */
+  public void setMaxValue(float maxValue) {
+    this.maxValue = maxValue;
   }
 }
