@@ -80,14 +80,14 @@ public class Softmax extends AbstractActivation {
    *
    * <p>The elements of the output vector are in range (0, 1) and sum to 1.
    *
-   * <p>Each vector is handled independently. The {@code axis} argument sets which axis of the input the
-   * function is applied along.
+   * <p>Each vector is handled independently. The {@code axis} argument sets which axis of the input
+   * the function is applied along.
    *
    * <p>Softmax is often used as the activation for the last layer of a classification network
    * because the result could be interpreted as a probability distribution.
    *
-   * <p>The softmax of each vector x is computed as {@code exp(x) / tf.reduce_sum(exp(x))}. The input
-   * values in are the log-odds of the resulting probability.
+   * <p>The softmax of each vector x is computed as {@code exp(x) / tf.reduce_sum(exp(x))}. The
+   * input values in are the log-odds of the resulting probability.
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -103,14 +103,14 @@ public class Softmax extends AbstractActivation {
    *
    * <p>The elements of the output vector are in range (0, 1) and sum to 1.
    *
-   * <p>Each vector is handled independently. The {@code axis} argument sets which axis of the input the
-   * function is applied along.
+   * <p>Each vector is handled independently. The {@code axis} argument sets which axis of the input
+   * the function is applied along.
    *
    * <p>Softmax is often used as the activation for the last layer of a classification network
    * because the result could be interpreted as a probability distribution.
    *
-   * <p>The softmax of each vector x is computed as {@code exp(x) / tf.reduce_sum(exp(x))}. The input
-   * values in are the log-odds of the resulting probability.
+   * <p>The softmax of each vector x is computed as {@code exp(x) / tf.reduce_sum(exp(x))}. The
+   * input values in are the log-odds of the resulting probability.
    *
    * @param tf the TensorFlow Ops
    * @param input the input

@@ -112,11 +112,11 @@ public class ELU extends AbstractActivation {
    *
    * @param tf the TensorFlow Ops
    * @param input the input
-   * @param alpha scalar, slope of negative section. {@code alpha}  controls the value to which an ELU
-   *     saturates for negative net inputs.
+   * @param alpha scalar, slope of negative section. {@code alpha} controls the value to which an
+   *     ELU saturates for negative net inputs.
    * @param <T> the data type for the input
-   * @return The exponential linear unit (ELU) activation function: {@code x} if {@code x > 0} and {@code alpha *
-   *     (exp(x) - 1)}  if {@code x < 0} .
+   * @return The exponential linear unit (ELU) activation function: {@code x} if {@code x > 0} and
+   *     {@code alpha * (exp(x) - 1)} if {@code x < 0} .
    */
   public static <T extends TNumber> Operand<T> elu(Ops tf, Operand<T> input, double alpha) {
     Operand<T> result = tf.nn.elu(input);
