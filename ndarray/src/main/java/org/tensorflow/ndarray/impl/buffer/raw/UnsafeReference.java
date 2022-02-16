@@ -36,29 +36,39 @@ final class UnsafeReference {
       theUnsafe.setAccessible(true);
       Object instance = theUnsafe.get(null);
       if (instance.getClass() == clazz) {
-        // Validate that this Unsafe instance exposes all methods we need
-        clazz.getDeclaredMethod("getByte", Object.class, long.class);
-        clazz.getDeclaredMethod("putByte", Object.class, long.class, byte.class);
-        clazz.getDeclaredMethod("getShort", Object.class, long.class);
-        clazz.getDeclaredMethod("putShort", Object.class, long.class, short.class);
-        clazz.getDeclaredMethod("getInt", Object.class, long.class);
-        clazz.getDeclaredMethod("putInt", Object.class, long.class, int.class);
-        clazz.getDeclaredMethod("getLong", Object.class, long.class);
-        clazz.getDeclaredMethod("putLong", Object.class, long.class, long.class);
-        clazz.getDeclaredMethod("getFloat", Object.class, long.class);
-        clazz.getDeclaredMethod("putFloat", Object.class, long.class, float.class);
-        clazz.getDeclaredMethod("getDouble", Object.class, long.class);
-        clazz.getDeclaredMethod("putDouble", Object.class, long.class, double.class);
-        clazz.getDeclaredMethod("getBoolean", Object.class, long.class);
-        clazz.getDeclaredMethod("putBoolean", Object.class, long.class, boolean.class);
-        clazz.getDeclaredMethod("copyMemory", Object.class, long.class, Object.class, long.class, long.class);
-        clazz.getDeclaredMethod("arrayBaseOffset", Class.class);
-        clazz.getDeclaredMethod("arrayIndexScale", Class.class);
+        checkMethod(clazz, "getByte", Object.class, long.class);
+        checkMethod(clazz, "putByte", Object.class, long.class, byte.class);
+        checkMethod(clazz, "getShort", Object.class, long.class);
+        checkMethod(clazz, "putShort", Object.class, long.class, short.class);
+        checkMethod(clazz, "getInt", Object.class, long.class);
+        checkMethod(clazz, "putInt", Object.class, long.class, int.class);
+        checkMethod(clazz, "getLong", Object.class, long.class);
+        checkMethod(clazz, "putLong", Object.class, long.class, long.class);
+        checkMethod(clazz, "getFloat", Object.class, long.class);
+        checkMethod(clazz, "putFloat", Object.class, long.class, float.class);
+        checkMethod(clazz, "getDouble", Object.class, long.class);
+        checkMethod(clazz, "putDouble", Object.class, long.class, double.class);
+        checkMethod(clazz, "getBoolean", Object.class, long.class);
+        checkMethod(clazz, "putBoolean", Object.class, long.class, boolean.class);
+        checkMethod(clazz, "copyMemory", Object.class, long.class, Object.class, long.class, long.class);
+        checkMethod(clazz, "arrayBaseOffset", Class.class);
+        checkMethod(clazz, "arrayIndexScale", Class.class);
+
         unsafe = (Unsafe) instance;
       }
     } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | SecurityException | IllegalAccessException | ClassCastException ex) {
       // Do nothing, keep unsafe as null
     }
     UNSAFE = unsafe;
+  }
+
+  /**
+   * Validate that this Unsafe instance exposes this method
+   *
+   * ErrorProne does not like that we do nothing with the returned method... but there is nothing to do with it, so disable the check
+   */
+  @SuppressWarnings("ReturnValueIgnored")
+  private static void checkMethod(Class<?> unsafeClass, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
+    unsafeClass.getDeclaredMethod(methodName, parameterTypes);
   }
 }
