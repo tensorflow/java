@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "AnonymousIteratorV3"
+  endpoint {
+    name: "rawops.AnonymousIteratorV3"
+  }
+}

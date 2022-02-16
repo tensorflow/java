@@ -275,7 +275,7 @@ public final class ConfigProtos {
           org.tensorflow.proto.framework.GraphProtos.getDescriptor(),
           org.tensorflow.proto.framework.StepStatsProtos.getDescriptor(),
           org.tensorflow.proto.distruntime.ClusterProtos.getDescriptor(),
-          tensorflow.CoordinationConfig.getDescriptor(),
+          org.tensorflow.proto.distruntime.CoordinationConfig.getDescriptor(),
           org.tensorflow.proto.framework.DebugProtos.getDescriptor(),
           org.tensorflow.proto.framework.RewriterConfigProtos.getDescriptor(),
         });
@@ -403,7 +403,7 @@ public final class ConfigProtos {
     org.tensorflow.proto.framework.GraphProtos.getDescriptor();
     org.tensorflow.proto.framework.StepStatsProtos.getDescriptor();
     org.tensorflow.proto.distruntime.ClusterProtos.getDescriptor();
-    tensorflow.CoordinationConfig.getDescriptor();
+    org.tensorflow.proto.distruntime.CoordinationConfig.getDescriptor();
     org.tensorflow.proto.framework.DebugProtos.getDescriptor();
     org.tensorflow.proto.framework.RewriterConfigProtos.getDescriptor();
   }

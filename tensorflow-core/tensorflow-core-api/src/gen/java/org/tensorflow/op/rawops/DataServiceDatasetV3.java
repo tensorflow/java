@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.rawops;
 
 import java.util.Arrays;
 import java.util.List;
@@ -180,7 +180,7 @@ public final class DataServiceDatasetV3 extends RawOp implements Operand<TType> 
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.DataServiceDatasetV3}
+   * Optional attributes for {@link org.tensorflow.op.rawops.DataServiceDatasetV3}
    */
   public static class Options {
     private Long taskRefreshIntervalHintMs;

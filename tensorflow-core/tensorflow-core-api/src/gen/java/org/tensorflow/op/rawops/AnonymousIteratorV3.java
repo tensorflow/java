@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.rawops;
 
 import java.util.Arrays;
 import java.util.List;

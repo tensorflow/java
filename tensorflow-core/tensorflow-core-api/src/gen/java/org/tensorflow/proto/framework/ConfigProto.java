@@ -547,7 +547,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
      */
-    tensorflow.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig();
+    org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig();
     /**
      * <pre>
      * Distributed coordination service configurations.
@@ -555,7 +555,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
      */
-    tensorflow.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder();
+    org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder();
   }
   /**
    * <pre>
@@ -718,11 +718,11 @@ private static final long serialVersionUID = 0L;
               break;
             }
             case 186: {
-              tensorflow.CoordinationConfig.CoordinationServiceConfig.Builder subBuilder = null;
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder subBuilder = null;
               if (coordinationConfig_ != null) {
                 subBuilder = coordinationConfig_.toBuilder();
               }
-              coordinationConfig_ = input.readMessage(tensorflow.CoordinationConfig.CoordinationServiceConfig.parser(), extensionRegistry);
+              coordinationConfig_ = input.readMessage(org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(coordinationConfig_);
                 coordinationConfig_ = subBuilder.buildPartial();
@@ -1355,7 +1355,7 @@ private static final long serialVersionUID = 0L;
     }
 
     public static final int COORDINATION_CONFIG_FIELD_NUMBER = 23;
-    private tensorflow.CoordinationConfig.CoordinationServiceConfig coordinationConfig_;
+    private org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig coordinationConfig_;
     /**
      * <pre>
      * Distributed coordination service configurations.
@@ -1373,8 +1373,8 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
      */
-    public tensorflow.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig() {
-      return coordinationConfig_ == null ? tensorflow.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
+    public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig() {
+      return coordinationConfig_ == null ? org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
     }
     /**
      * <pre>
@@ -1383,7 +1383,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
      */
-    public tensorflow.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder() {
+    public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder() {
       return getCoordinationConfig();
     }
 
@@ -3224,9 +3224,9 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private tensorflow.CoordinationConfig.CoordinationServiceConfig coordinationConfig_;
+      private org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig coordinationConfig_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          tensorflow.CoordinationConfig.CoordinationServiceConfig, tensorflow.CoordinationConfig.CoordinationServiceConfig.Builder, tensorflow.CoordinationConfig.CoordinationServiceConfigOrBuilder> coordinationConfigBuilder_;
+          org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder> coordinationConfigBuilder_;
       /**
        * <pre>
        * Distributed coordination service configurations.
@@ -3244,9 +3244,9 @@ private static final long serialVersionUID = 0L;
        *
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
-      public tensorflow.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig() {
+      public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig() {
         if (coordinationConfigBuilder_ == null) {
-          return coordinationConfig_ == null ? tensorflow.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
+          return coordinationConfig_ == null ? org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
         } else {
           return coordinationConfigBuilder_.getMessage();
         }
@@ -3258,7 +3258,7 @@ private static final long serialVersionUID = 0L;
        *
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
-      public Builder setCoordinationConfig(tensorflow.CoordinationConfig.CoordinationServiceConfig value) {
+      public Builder setCoordinationConfig(org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig value) {
         if (coordinationConfigBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -3279,7 +3279,7 @@ private static final long serialVersionUID = 0L;
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
       public Builder setCoordinationConfig(
-          tensorflow.CoordinationConfig.CoordinationServiceConfig.Builder builderForValue) {
+          org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder builderForValue) {
         if (coordinationConfigBuilder_ == null) {
           coordinationConfig_ = builderForValue.build();
           onChanged();
@@ -3296,11 +3296,11 @@ private static final long serialVersionUID = 0L;
        *
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
-      public Builder mergeCoordinationConfig(tensorflow.CoordinationConfig.CoordinationServiceConfig value) {
+      public Builder mergeCoordinationConfig(org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig value) {
         if (coordinationConfigBuilder_ == null) {
           if (coordinationConfig_ != null) {
             coordinationConfig_ =
-              tensorflow.CoordinationConfig.CoordinationServiceConfig.newBuilder(coordinationConfig_).mergeFrom(value).buildPartial();
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.newBuilder(coordinationConfig_).mergeFrom(value).buildPartial();
           } else {
             coordinationConfig_ = value;
           }
@@ -3336,7 +3336,7 @@ private static final long serialVersionUID = 0L;
        *
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
-      public tensorflow.CoordinationConfig.CoordinationServiceConfig.Builder getCoordinationConfigBuilder() {
+      public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder getCoordinationConfigBuilder() {
         
         onChanged();
         return getCoordinationConfigFieldBuilder().getBuilder();
@@ -3348,12 +3348,12 @@ private static final long serialVersionUID = 0L;
        *
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
-      public tensorflow.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder() {
+      public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder() {
         if (coordinationConfigBuilder_ != null) {
           return coordinationConfigBuilder_.getMessageOrBuilder();
         } else {
           return coordinationConfig_ == null ?
-              tensorflow.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
         }
       }
       /**
@@ -3364,11 +3364,11 @@ private static final long serialVersionUID = 0L;
        * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          tensorflow.CoordinationConfig.CoordinationServiceConfig, tensorflow.CoordinationConfig.CoordinationServiceConfig.Builder, tensorflow.CoordinationConfig.CoordinationServiceConfigOrBuilder> 
+          org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder> 
           getCoordinationConfigFieldBuilder() {
         if (coordinationConfigBuilder_ == null) {
           coordinationConfigBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              tensorflow.CoordinationConfig.CoordinationServiceConfig, tensorflow.CoordinationConfig.CoordinationServiceConfig.Builder, tensorflow.CoordinationConfig.CoordinationServiceConfigOrBuilder>(
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder>(
                   getCoordinationConfig(),
                   getParentForChildren(),
                   isClean());

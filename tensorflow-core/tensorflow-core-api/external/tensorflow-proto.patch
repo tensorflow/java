@@ -461,3 +461,25 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/util/memmapped_file_system.proto tens
  
  // A message that describes one region of memmapped file.
  message MemmappedFileSystemDirectoryElement {
+diff -ruN tensorflow-2.8.0/tensorflow/core/protobuf/coordination_config.proto tensorflow-2.8.0-proto/tensorflow/core/protobuf/coordination_config.proto
+--- tensorflow-2.8.0/tensorflow/core/protobuf/coordination_config.proto	2022-02-01 04:17:33.000000000 +0900
++++ tensorflow-2.8.0-proto/tensorflow/core/protobuf/coordination_config.proto	2022-02-16 11:02:10.162709816 +0900
+@@ -3,6 +3,7 @@
+ package tensorflow;
+ 
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
++option java_package = "org.tensorflow.distruntime";
+ 
+ // Coordination service configuration parameters.
+ // The system picks appropriate values for fields that are not set.
+diff -ruN tensorflow-2.8.0/tensorflow/core/protobuf/distributed_runtime_payloads.proto tensorflow-2.8.0-proto/tensorflow/core/protobuf/distributed_runtime_payloads.proto
+--- tensorflow-2.8.0/tensorflow/core/protobuf/distributed_runtime_payloads.proto	2022-02-01 04:17:33.000000000 +0900
++++ tensorflow-2.8.0-proto/tensorflow/core/protobuf/distributed_runtime_payloads.proto	2022-02-16 11:00:03.739373379 +0900
+@@ -4,6 +4,7 @@
+ 
+ option cc_enable_arenas = true;
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
++option java_package = "org.tensorflow.distruntime";
+ 
+ // Used to serialize and transmit tensorflow::Status payloads through
+ // grpc::Status `error_details` since grpc::Status lacks payload API.

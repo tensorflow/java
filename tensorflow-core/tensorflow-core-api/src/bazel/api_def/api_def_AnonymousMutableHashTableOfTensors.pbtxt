@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "AnonymousMutableHashTableOfTensors"
+  endpoint {
+    name: "rawops.AnonymousMutableHashTableOfTensors"
+  }
+}

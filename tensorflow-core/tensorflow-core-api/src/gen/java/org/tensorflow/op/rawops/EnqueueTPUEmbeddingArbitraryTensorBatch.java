@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.rawops;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,6 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -45,21 +44,21 @@ import org.tensorflow.types.family.TNumber;
  * the corresponding feature.
  */
 @OpMetadata(
-    opType = DynamicEnqueueTPUEmbeddingArbitraryTensorBatch.OP_NAME,
-    inputsClass = DynamicEnqueueTPUEmbeddingArbitraryTensorBatch.Inputs.class
+    opType = EnqueueTPUEmbeddingArbitraryTensorBatch.OP_NAME,
+    inputsClass = EnqueueTPUEmbeddingArbitraryTensorBatch.Inputs.class
 )
-public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp {
+public final class EnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "DynamicEnqueueTPUEmbeddingArbitraryTensorBatch";
+  public static final String OP_NAME = "EnqueueTPUEmbeddingArbitraryTensorBatch";
 
-  public DynamicEnqueueTPUEmbeddingArbitraryTensorBatch(Operation operation) {
+  public EnqueueTPUEmbeddingArbitraryTensorBatch(Operation operation) {
     super(operation, OP_NAME);
   }
 
   /**
-   * Factory method to create a class wrapping a new DynamicEnqueueTPUEmbeddingArbitraryTensorBatch operation.
+   * Factory method to create a class wrapping a new EnqueueTPUEmbeddingArbitraryTensorBatch operation.
    *
    * @param scope current scope
    * @param sampleIndicesOrRowLengths A list of rank 2 Tensors specifying the training example to which the
@@ -84,27 +83,27 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
    * TPUEmbeddingConfiguration. Supported values are {'unspecified', 'inference',
    * 'training', 'backward_pass_only'}. When set to 'unspecified', the mode set
    * in TPUEmbeddingConfiguration is used, otherwise mode_override is used.
-   * @param deviceOrdinal The TPU device to use. Should be &gt;= 0 and less than the number
-   * of TPU cores in the task on which the node is placed.
    * @param options carries optional attribute values
-   * @return a new instance of DynamicEnqueueTPUEmbeddingArbitraryTensorBatch
+   * @return a new instance of EnqueueTPUEmbeddingArbitraryTensorBatch
    */
   @Endpoint(
       describeByClass = true
   )
-  public static DynamicEnqueueTPUEmbeddingArbitraryTensorBatch create(Scope scope,
+  public static EnqueueTPUEmbeddingArbitraryTensorBatch create(Scope scope,
       Iterable<Operand<? extends TNumber>> sampleIndicesOrRowLengths,
       Iterable<Operand<? extends TNumber>> embeddingIndices,
       Iterable<Operand<? extends TNumber>> aggregationWeights, Operand<TString> modeOverride,
-      Operand<TInt32> deviceOrdinal, Options... options) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DynamicEnqueueTPUEmbeddingArbitraryTensorBatch");
+      Options... options) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EnqueueTPUEmbeddingArbitraryTensorBatch");
     opBuilder.addInputList(Operands.asOutputs(sampleIndicesOrRowLengths));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
-    opBuilder.addInput(deviceOrdinal.asOutput());
     if (options != null) {
       for (Options opts : options) {
+        if (opts.deviceOrdinal != null) {
+          opBuilder.setAttr("device_ordinal", opts.deviceOrdinal);
+        }
         if (opts.combiners != null) {
           String[] combinersArray = new String[opts.combiners.size()];
           for (int i = 0 ; i < combinersArray.length ; i++) {
@@ -114,7 +113,18 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
         }
       }
     }
-    return new DynamicEnqueueTPUEmbeddingArbitraryTensorBatch(opBuilder.build());
+    return new EnqueueTPUEmbeddingArbitraryTensorBatch(opBuilder.build());
+  }
+
+  /**
+   * Sets the deviceOrdinal option.
+   *
+   * @param deviceOrdinal The TPU device to use. Should be &gt;= 0 and less than the number
+   * of TPU cores in the task on which the node is placed.
+   * @return this Options instance.
+   */
+  public static Options deviceOrdinal(Long deviceOrdinal) {
+    return new Options().deviceOrdinal(deviceOrdinal);
   }
 
   /**
@@ -148,12 +158,26 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.DynamicEnqueueTPUEmbeddingArbitraryTensorBatch}
+   * Optional attributes for {@link org.tensorflow.op.rawops.EnqueueTPUEmbeddingArbitraryTensorBatch}
    */
   public static class Options {
+    private Long deviceOrdinal;
+
     private List<String> combiners;
 
     private Options() {
+    }
+
+    /**
+     * Sets the deviceOrdinal option.
+     *
+     * @param deviceOrdinal The TPU device to use. Should be &gt;= 0 and less than the number
+     * of TPU cores in the task on which the node is placed.
+     * @return this Options instance.
+     */
+    public Options deviceOrdinal(Long deviceOrdinal) {
+      this.deviceOrdinal = deviceOrdinal;
+      return this;
     }
 
     /**
@@ -190,9 +214,9 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
   }
 
   @OpInputsMetadata(
-      outputsClass = DynamicEnqueueTPUEmbeddingArbitraryTensorBatch.class
+      outputsClass = EnqueueTPUEmbeddingArbitraryTensorBatch.class
   )
-  public static class Inputs extends RawOpInputs<DynamicEnqueueTPUEmbeddingArbitraryTensorBatch> {
+  public static class Inputs extends RawOpInputs<EnqueueTPUEmbeddingArbitraryTensorBatch> {
     /**
      * A list of rank 2 Tensors specifying the training example to which the
      * corresponding embedding_indices and aggregation_weights values belong.
@@ -232,12 +256,6 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
     public final Operand<TString> modeOverride;
 
     /**
-     * The TPU device to use. Should be &gt;= 0 and less than the number
-     * of TPU cores in the task on which the node is placed.
-     */
-    public final Operand<TInt32> deviceOrdinal;
-
-    /**
      * The T1 attribute
      */
     public final DataType T1;
@@ -253,6 +271,12 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
     public final DataType T3;
 
     /**
+     * The TPU device to use. Should be >= 0 and less than the number
+     * of TPU cores in the task on which the node is placed.
+     */
+    public final long deviceOrdinal;
+
+    /**
      * A list of string scalars, one for each embedding table that specify
      * how to normalize the embedding activations after weighted summation.
      * Supported combiners are 'mean', 'sum', or 'sqrtn'. It is invalid to have
@@ -263,7 +287,7 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
     public final String[] combiners;
 
     public Inputs(GraphOperation op) {
-      super(new DynamicEnqueueTPUEmbeddingArbitraryTensorBatch(op), op, Arrays.asList("T1", "T2", "T3", "combiners"));
+      super(new EnqueueTPUEmbeddingArbitraryTensorBatch(op), op, Arrays.asList("T1", "T2", "T3", "device_ordinal", "combiners"));
       int inputIndex = 0;
       int sampleIndicesOrRowLengthsLength = op.inputListLength("sample_indices_or_row_lengths");
       sampleIndicesOrRowLengths = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, sampleIndicesOrRowLengthsLength));
@@ -275,10 +299,10 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
       aggregationWeights = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, aggregationWeightsLength));
       inputIndex += aggregationWeightsLength;
       modeOverride = (Operand<TString>) op.input(inputIndex++);
-      deviceOrdinal = (Operand<TInt32>) op.input(inputIndex++);
       T1 = op.attributes().getAttrType("T1");
       T2 = op.attributes().getAttrType("T2");
       T3 = op.attributes().getAttrType("T3");
+      deviceOrdinal = op.attributes().getAttrInt("device_ordinal");
       combiners = op.attributes().getAttrStringList("combiners");
     }
   }
