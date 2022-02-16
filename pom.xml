@@ -37,8 +37,9 @@
 
   <properties>
     <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
     <junit.version>5.6.2</junit.version>
     <jmh.version>1.21</jmh.version>
     <versions-plugin.version>2.7</versions-plugin.version>
@@ -174,11 +175,11 @@
     </profile>
 
     <profile>
-      <id>jdk11</id>
+      <id>jdk17</id>
       <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
       </properties>
     </profile>
 
@@ -189,8 +190,6 @@
     <profile>
       <id>lint</id>
       <activation>
-        <!-- activate lint checks only on JDK1.9+ (required by Error Prone) -->
-        <jdk>(1.9,)</jdk>
         <!-- custom property to disable link checks on command line (enabled by default) -->
         <property>
           <name>!lint.skip</name>
@@ -366,15 +365,12 @@
         <artifactId>spotless-maven-plugin</artifactId>
         <version>${spotless.version}</version>
         <configuration>
-
           <ratchetFrom>origin/master</ratchetFrom>
-
           <lineEndings/>
           <java>
             <googleJavaFormat>
               <version>1.14.0</version>
             </googleJavaFormat>
-
             <removeUnusedImports/>
           </java>
         </configuration>
@@ -386,6 +382,17 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M5</version>
+          <configuration combine.children="append">
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+            <useModulePath>false</useModulePath>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -16,7 +16,7 @@ limitations under the License.
 */
 package org.tensorflow.op.generator;
 
-public enum AttributeType {
+enum AttributeType {
   STRING("String"),
   INT("Int"),
   FLOAT("Float"),
