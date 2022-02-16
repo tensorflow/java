@@ -15,6 +15,8 @@
  =======================================================================
  */
 module org.tensorflow.ndarray {
+  requires jdk.unsupported; // required by raw buffer implementations using Unsafe
+
   exports org.tensorflow.ndarray;
   exports org.tensorflow.ndarray.buffer;
   exports org.tensorflow.ndarray.buffer.layout;
@@ -22,6 +24,7 @@ module org.tensorflow.ndarray {
 
   // Expose all implementions of our interfaces, so consumers can write custom
   // implementations easily by extending from them
+  exports org.tensorflow.ndarray.impl.buffer;
   exports org.tensorflow.ndarray.impl.buffer.adapter;
   exports org.tensorflow.ndarray.impl.buffer.layout;
   exports org.tensorflow.ndarray.impl.buffer.misc;
@@ -32,6 +35,4 @@ module org.tensorflow.ndarray {
   exports org.tensorflow.ndarray.impl.sequence;
   exports org.tensorflow.ndarray.impl.sparse;
   exports org.tensorflow.ndarray.impl.sparse.slice;
-
-  requires jdk.unsupported; // required by raw buffer implementations using Unsafe
 }
