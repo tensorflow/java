@@ -15,10 +15,13 @@
  =======================================================================
  */
 module org.tensorflow.generator {
-  requires org.commonmark;
-  requires com.squareup.javapoet;
+  requires java.compiler;
+
+  requires com.github.javaparser.core;
   requires com.google.protobuf;
   requires com.google.common;
+  requires com.squareup.javapoet;
+  requires org.commonmark;
 
   exports org.tensorflow.processor.operator;
   exports org.tensorflow.op.generator;

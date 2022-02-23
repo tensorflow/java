@@ -18,6 +18,7 @@ module org.tensorflow {
   requires transitive org.tensorflow.ndarray;
   requires org.bytedeco.javacpp;
   requires com.google.protobuf;
+  requires java.logging;
 
   exports org.tensorflow;
   exports org.tensorflow.exceptions;
