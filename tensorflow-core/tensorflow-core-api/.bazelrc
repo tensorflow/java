@@ -1,2 +1,3 @@
 build --remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm
 build --remote_upload_local_results=false
+build --incompatible_restrict_string_escapes=false
