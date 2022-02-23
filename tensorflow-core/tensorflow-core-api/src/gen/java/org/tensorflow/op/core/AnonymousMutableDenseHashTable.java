@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.rawops;
+package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import org.tensorflow.GraphOperation;
@@ -154,7 +154,7 @@ public final class AnonymousMutableDenseHashTable extends RawOp implements Opera
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.rawops.AnonymousMutableDenseHashTable}
+   * Optional attributes for {@link org.tensorflow.op.core.AnonymousMutableDenseHashTable}
    */
   public static class Options {
     private Shape valueShape;

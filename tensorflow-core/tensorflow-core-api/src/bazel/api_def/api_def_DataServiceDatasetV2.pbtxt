@@ -1,7 +1,4 @@
 op {
   graph_op_name: "DataServiceDatasetV2"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.DataServiceDatasetV2"
-  }
+  visibility: SKIP
 }

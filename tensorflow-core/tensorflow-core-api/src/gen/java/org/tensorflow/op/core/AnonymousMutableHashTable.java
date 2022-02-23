@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.rawops;
+package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import org.tensorflow.GraphOperation;
@@ -23,7 +23,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
@@ -35,10 +34,10 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates an empty anonymous mutable hash table of vector values.
+ * Creates an empty anonymous mutable hash table.
  * This op creates a new anonymous mutable hash table (as a resource) everytime
  * it is executed, with the specified dtype of its keys and values,
- * returning the resource handle. Each value must be a vector.
+ * returning the resource handle. Each value must be a scalar.
  * Data can be inserted into the table using
  * the insert operations. It does not support the initialization operation.
  * The table is anonymous in the sense that it can only be
@@ -47,61 +46,43 @@ import org.tensorflow.types.family.TType;
  * deleted when all resource handles pointing to it are gone.
  */
 @OpMetadata(
-    opType = AnonymousMutableHashTableOfTensors.OP_NAME,
-    inputsClass = AnonymousMutableHashTableOfTensors.Inputs.class
+    opType = AnonymousMutableHashTable.OP_NAME,
+    inputsClass = AnonymousMutableHashTable.Inputs.class
 )
-public final class AnonymousMutableHashTableOfTensors extends RawOp implements Operand<TType> {
+public final class AnonymousMutableHashTable extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "AnonymousMutableHashTableOfTensors";
+  public static final String OP_NAME = "AnonymousMutableHashTable";
 
   private Output<? extends TType> tableHandle;
 
   @SuppressWarnings("unchecked")
-  public AnonymousMutableHashTableOfTensors(Operation operation) {
+  public AnonymousMutableHashTable(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     tableHandle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new AnonymousMutableHashTableOfTensors operation.
+   * Factory method to create a class wrapping a new AnonymousMutableHashTable operation.
    *
    * @param scope current scope
    * @param keyDtype Type of the table keys.
    * @param valueDtype Type of the table values.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code AnonymousMutableHashTableOfTensors} output and operands
-   * @param <U> data type for {@code AnonymousMutableHashTableOfTensors} output and operands
-   * @return a new instance of AnonymousMutableHashTableOfTensors
+   * @param <T> data type for {@code AnonymousMutableHashTable} output and operands
+   * @param <U> data type for {@code AnonymousMutableHashTable} output and operands
+   * @return a new instance of AnonymousMutableHashTable
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType, U extends TType> AnonymousMutableHashTableOfTensors create(
-      Scope scope, Class<T> keyDtype, Class<U> valueDtype, Options... options) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AnonymousMutableHashTableOfTensors");
+  public static <T extends TType, U extends TType> AnonymousMutableHashTable create(Scope scope,
+      Class<T> keyDtype, Class<U> valueDtype) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AnonymousMutableHashTable");
     opBuilder.setAttr("key_dtype", Operands.toDataType(keyDtype));
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));
-    if (options != null) {
-      for (Options opts : options) {
-        if (opts.valueShape != null) {
-          opBuilder.setAttr("value_shape", opts.valueShape);
-        }
-      }
-    }
-    return new AnonymousMutableHashTableOfTensors(opBuilder.build());
-  }
-
-  /**
-   * Sets the valueShape option.
-   *
-   * @param valueShape the valueShape option
-   * @return this Options instance.
-   */
-  public static Options valueShape(Shape valueShape) {
-    return new Options().valueShape(valueShape);
+    return new AnonymousMutableHashTable(opBuilder.build());
   }
 
   /**
@@ -119,31 +100,10 @@ public final class AnonymousMutableHashTableOfTensors extends RawOp implements O
     return (Output<TType>) tableHandle;
   }
 
-  /**
-   * Optional attributes for {@link org.tensorflow.op.rawops.AnonymousMutableHashTableOfTensors}
-   */
-  public static class Options {
-    private Shape valueShape;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the valueShape option.
-     *
-     * @param valueShape the valueShape option
-     * @return this Options instance.
-     */
-    public Options valueShape(Shape valueShape) {
-      this.valueShape = valueShape;
-      return this;
-    }
-  }
-
   @OpInputsMetadata(
-      outputsClass = AnonymousMutableHashTableOfTensors.class
+      outputsClass = AnonymousMutableHashTable.class
   )
-  public static class Inputs extends RawOpInputs<AnonymousMutableHashTableOfTensors> {
+  public static class Inputs extends RawOpInputs<AnonymousMutableHashTable> {
     /**
      * Type of the table keys.
      */
@@ -154,17 +114,11 @@ public final class AnonymousMutableHashTableOfTensors extends RawOp implements O
      */
     public final DataType valueDtype;
 
-    /**
-     * The valueShape attribute
-     */
-    public final Shape valueShape;
-
     public Inputs(GraphOperation op) {
-      super(new AnonymousMutableHashTableOfTensors(op), op, Arrays.asList("key_dtype", "value_dtype", "value_shape"));
+      super(new AnonymousMutableHashTable(op), op, Arrays.asList("key_dtype", "value_dtype"));
       int inputIndex = 0;
       keyDtype = op.attributes().getAttrType("key_dtype");
       valueDtype = op.attributes().getAttrType("value_dtype");
-      valueShape = op.attributes().getAttrShape("value_shape");
     }
   }
 }

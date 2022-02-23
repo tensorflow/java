@@ -20,6 +20,7 @@ package org.tensorflow.op.data;
 import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.GraphOperation;
+import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
@@ -45,26 +46,23 @@ import org.tensorflow.types.family.TType;
 @Operator(
     group = "data"
 )
-public final class AnonymousIterator extends RawOp {
+public final class AnonymousIterator extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "AnonymousIteratorV2";
+  public static final String OP_NAME = "AnonymousIteratorV3";
 
   private Output<? extends TType> handle;
-
-  private Output<? extends TType> deleter;
 
   @SuppressWarnings("unchecked")
   public AnonymousIterator(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
-    deleter = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new AnonymousIteratorV2 operation.
+   * Factory method to create a class wrapping a new AnonymousIteratorV3 operation.
    *
    * @param scope current scope
    * @param outputTypes The value of the outputTypes attribute
@@ -98,13 +96,10 @@ public final class AnonymousIterator extends RawOp {
     return handle;
   }
 
-  /**
-   * Gets deleter.
-   * A variant deleter that should be passed into the op that deletes the iterator.
-   * @return deleter.
-   */
-  public Output<? extends TType> deleter() {
-    return deleter;
+  @Override
+  @SuppressWarnings("unchecked")
+  public Output<TType> asOutput() {
+    return (Output<TType>) handle;
   }
 
   @OpInputsMetadata(

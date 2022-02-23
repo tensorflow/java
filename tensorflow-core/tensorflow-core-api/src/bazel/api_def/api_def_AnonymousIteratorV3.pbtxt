@@ -1,6 +1,7 @@
 op {
   graph_op_name: "AnonymousIteratorV3"
+  visibility: VISIBLE
   endpoint {
-    name: "rawops.AnonymousIteratorV3"
+    name: "data.AnonymousIterator"
   }
 }
