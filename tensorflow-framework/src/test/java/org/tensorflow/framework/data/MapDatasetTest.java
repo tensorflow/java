@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.exceptions.TFOutOfRangeException;
 import org.tensorflow.ndarray.IntNdArray;
@@ -76,17 +77,11 @@ public class MapDatasetTest extends DatasetTestBase {
 
         int batches = 0;
         while (true) {
-          try {
-            List<?> outputs = session.runner().fetch(X).fetch(y).run();
+          try (Result outputs = session.runner().fetch(X).fetch(y).run()) {
+            assertEquals(mapped1.get(batches), outputs.get(0));
+            assertEquals(mapped2.get(batches), outputs.get(1));
 
-            try (TInt32 XBatch = (TInt32) outputs.get(0);
-                TInt32 yBatch = (TInt32) outputs.get(1)) {
-
-              assertEquals(mapped1.get(batches), XBatch);
-              assertEquals(mapped2.get(batches), yBatch);
-
-              batches++;
-            }
+            batches++;
           } catch (TFOutOfRangeException e) {
             break;
           }

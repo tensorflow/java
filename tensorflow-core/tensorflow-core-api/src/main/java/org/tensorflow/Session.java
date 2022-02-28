@@ -1,4 +1,4 @@
-/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -306,7 +306,9 @@ public final class Session implements AutoCloseable {
      * @throws IllegalArgumentException if no output exists with the provided name
      */
     public Runner fetch(String operation) {
-      return fetch(graph.outputOrThrow(operation));
+      Runner r = fetch(graph.outputOrThrow(operation), false);
+      outputNames.add(operation);
+      return r;
     }
 
     /**
@@ -336,6 +338,20 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(Output<?> output) {
+      return fetch(output, true);
+    }
+
+    /**
+     * Makes {@link #run()} return the Tensor referred to by {@code output}.
+     *
+     * <p>If {@code output} is a resource variable, will fetch the value.
+     *
+     * @param output the node to fetch the tensor from
+     * @param recordName Records the output name. If false the output name must be recorded by the
+     *     calling method as otherwise the result object will throw on construction.
+     * @return this session runner
+     */
+    private Runner fetch(Output<?> output, boolean recordName) {
       if (output.env() != graph) {
         throw new IllegalStateException(
             "Can't fetch output "
@@ -377,6 +393,9 @@ public final class Session implements AutoCloseable {
         outputs.add(read.asOutput());
       } else {
         outputs.add(output);
+      }
+      if (recordName) {
+        outputNames.add(output.name());
       }
       return this;
     }
@@ -490,13 +509,13 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner
      */
-    public List<Tensor> run() {
+    public Result run() {
       doInit();
       return runNoInit();
     }
 
-    List<Tensor> runNoInit() {
-      return runHelper(false).outputs;
+    Result runNoInit() {
+      return runHelper(false);
     }
 
     /**
@@ -509,12 +528,12 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
-    public Run runAndFetchMetadata() {
+    public Result runAndFetchMetadata() {
       doInit();
       return runHelper(true);
     }
 
-    private Run runHelper(boolean wantMetadata) {
+    private Result runHelper(boolean wantMetadata) {
       TF_Tensor[] inputTensorHandles = new TF_Tensor[inputTensors.size()];
       TF_Operation[] inputOpHandles = new TF_Operation[inputs.size()];
       int[] inputOpIndices = new int[inputs.size()];
@@ -569,10 +588,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      Run ret = new Run();
-      ret.outputs = outputs;
-      ret.metadata = metadata;
-      return ret;
+      return new Result(outputNames, outputs, metadata);
     }
 
     private class Reference implements AutoCloseable {
@@ -602,6 +618,7 @@ public final class Session implements AutoCloseable {
     private final ArrayList<Output<?>> inputs = new ArrayList<>();
     private final ArrayList<Tensor> inputTensors = new ArrayList<>();
     private final ArrayList<Output<?>> outputs = new ArrayList<>();
+    private final ArrayList<String> outputNames = new ArrayList<>();
     private final ArrayList<GraphOperation> targets = new ArrayList<>();
     private RunOptions runOptions = null;
   }
@@ -648,8 +665,9 @@ public final class Session implements AutoCloseable {
    *
    * @param signature the signature of the function
    * @param arguments the arguments to call with.
+   * @return The results of the function call.
    */
-  public Map<String, Tensor> run(Signature signature, Map<String, Tensor> arguments) {
+  public Result run(Signature signature, Map<String, Tensor> arguments) {
     return function(signature).call(arguments);
   }
 
@@ -696,26 +714,6 @@ public final class Session implements AutoCloseable {
         .runNoInit();
     // TODO better way of doing this, only count as ran assignments to the restored variables.
     setInitialized();
-  }
-
-  /**
-   * Output tensors and metadata obtained when executing a session.
-   *
-   * <p>See {@link Runner#runAndFetchMetadata()}
-   */
-  public static final class Run {
-
-    /** Tensors from requested fetches. */
-    public List<Tensor> outputs;
-
-    /**
-     * Metadata about the run.
-     *
-     * <p>A <a
-     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
-     * protocol buffer</a>.
-     */
-    public RunMetadata metadata;
   }
 
   Graph graph() {
