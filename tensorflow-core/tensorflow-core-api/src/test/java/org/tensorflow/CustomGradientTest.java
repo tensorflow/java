@@ -66,8 +66,7 @@ public class CustomGradientTest {
       assertEquals(DataType.DT_FLOAT, grads0[0].dataType());
 
       try (TFloat32 c1 = TFloat32.vectorOf(3.0f, 2.0f, 1.0f, 0.0f);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed(x, c1).fetch(grads0[0]).run())) {
+          Result outputs = s.runner().feed(x, c1).fetch(grads0[0]).run()) {
 
         assertEquals(1, outputs.size());
         assertEquals(0.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);

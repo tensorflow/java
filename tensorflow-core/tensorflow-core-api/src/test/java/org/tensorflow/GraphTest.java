@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
@@ -84,15 +83,13 @@ public class GraphTest {
 
       Operand<TInt32> variable2 = init.withName("var2").variable(init.constant(4));
 
-      try (Session s = new Session(g, true)) {
-        List<Tensor> results = s.runner().fetch("result").fetch("var2").run();
+      try (Session s = new Session(g, true);
+          Result results = s.runner().fetch("result").fetch("var2").run()) {
         TInt32 result = (TInt32) results.get(0);
         assertEquals(6, result.getInt());
 
         TInt32 var2Result = (TInt32) results.get(1);
         assertEquals(4, var2Result.getInt());
-
-        results.forEach(Tensor::close);
       }
     }
   }
@@ -266,15 +263,14 @@ public class GraphTest {
 
       try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
           TFloat32 c2 = TFloat32.scalarOf(2.0f);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(
-                  s.runner()
-                      .feed(x1, c1)
-                      .feed(x2, c2)
-                      .fetch(grads0[0])
-                      .fetch(grads1[0])
-                      .fetch(grads1[1])
-                      .run())) {
+          Result outputs =
+              s.runner()
+                  .feed(x1, c1)
+                  .feed(x2, c2)
+                  .fetch(grads0[0])
+                  .fetch(grads1[0])
+                  .fetch(grads1[1])
+                  .run()) {
         assertEquals(3, outputs.size());
         assertEquals(108.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
         assertEquals(6.0f, ((TFloat32) outputs.get(1)).getFloat(), 0.0f);
@@ -418,14 +414,13 @@ public class GraphTest {
 
       try (TInt32 c1 = TInt32.scalarOf(2);
           TInt32 c2 = TInt32.scalarOf(5);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(
-                  s.runner()
-                      .feed(input1, c1)
-                      .feed(input2, c2)
-                      .fetch(loopOutputs[0])
-                      .fetch(loopOutputs[1])
-                      .run())) {
+          Result outputs =
+              s.runner()
+                  .feed(input1, c1)
+                  .feed(input2, c2)
+                  .fetch(loopOutputs[0])
+                  .fetch(loopOutputs[1])
+                  .run()) {
         assertEquals(2, outputs.size());
         assertEquals(16, ((TInt32) outputs.get(0)).getInt()); // ((2^2)^2)
         assertEquals(625, ((TInt32) outputs.get(1)).getInt()); // ((5^2)^2)

@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.Result;
 import org.tensorflow.Session;
 import org.tensorflow.op.OpScope;
 import org.tensorflow.op.Scope;
@@ -134,7 +134,7 @@ public class ZerosTest {
       long[] shape = {2, 2};
       Zeros<TFloat32> zeros =
           Zeros.create(scope.withSubScope("test"), Constant.vectorOf(scope, shape), TFloat32.class);
-      List<?> results =
+      Result results =
           sess.runner().addTarget("test/Zeros/Zero").addTarget("test/Zeros/Fill").run();
     }
   }
