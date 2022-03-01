@@ -14,8 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
@@ -43,9 +46,11 @@ public class Softmax extends AbstractActivation {
   /** The activation name as known by TensorFlow */
   public static final String NAME = "softmax";
 
+  private static final Set<String> allowedConfigKeys =
+      new HashSet<>(Arrays.asList(Softmax.NAME_KEY, "axis"));
   private static final int AXIS_DEFAULT = -1;
 
-  private int axis;
+  private final int axis;
 
   /**
    * Creates a softmax activation where the default axis is {@link #AXIS_DEFAULT} which indicates
@@ -70,9 +75,13 @@ public class Softmax extends AbstractActivation {
    *
    * @param config the configuration map, if the map contains an entry for {@code axis} that value
    *     is used, otherwise {@link #AXIS_DEFAULT} is used.
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
    */
   public Softmax(Map<String, Object> config) {
-    this((Integer) config.getOrDefault("axis", AXIS_DEFAULT));
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+    this.axis = (Integer) config.getOrDefault("axis", AXIS_DEFAULT);
   }
 
   /**
@@ -168,14 +177,5 @@ public class Softmax extends AbstractActivation {
    */
   public int getAxis() {
     return axis;
-  }
-
-  /**
-   * Sets the axis along which the softmax normalization is applied.
-   *
-   * @param axis the axis along which the softmax normalization is applied.
-   */
-  public void setAxis(int axis) {
-    this.axis = axis;
   }
 }

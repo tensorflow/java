@@ -14,8 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.op.Ops;
@@ -42,7 +45,9 @@ public class GELU extends AbstractActivation {
   /** The activation name as known by TensorFlow */
   public static final String NAME = "gelu";
 
-  private boolean approximate;
+  private static final Set<String> allowedConfigKeys =
+      new HashSet<>(Arrays.asList(GELU.NAME_KEY, "approximate"));
+  private final boolean approximate;
 
   /** Creates a Gaussian error linear unit (GELU) activation. */
   public GELU() {
@@ -64,9 +69,13 @@ public class GELU extends AbstractActivation {
    *
    * @param config the configuration map, if the map contains an entry for {@code approximate} that
    *     value is used, otherwise false is used.
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
    */
   public GELU(Map<String, Object> config) {
-    this((Boolean) config.getOrDefault("approximate", false));
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+    this.approximate = (Boolean) config.getOrDefault("approximate", false);
   }
 
   /**
@@ -144,14 +153,5 @@ public class GELU extends AbstractActivation {
    */
   public boolean isApproximate() {
     return approximate;
-  }
-
-  /**
-   * Sets the flag whether to enable approximation.
-   *
-   * @param approximate the flag whether to enable approximation.
-   */
-  public void setApproximate(boolean approximate) {
-    this.approximate = approximate;
   }
 }

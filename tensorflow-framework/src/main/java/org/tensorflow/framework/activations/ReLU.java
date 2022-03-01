@@ -16,8 +16,11 @@ package org.tensorflow.framework.activations;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.math.Greater;
@@ -67,10 +70,11 @@ public class ReLU extends AbstractActivation {
   public static final float ALPHA_DEFAULT = 0.0f;
   public static final float MAX_VALUE_DEFAULT = Float.NaN;
   public static final float THRESHOLD_DEFAULT = 0.0f;
-
-  private float alpha;
-  private float maxValue;
-  private float threshold;
+  private static final Set<String> allowedConfigKeys =
+      new HashSet<>(Arrays.asList(ReLU.NAME_KEY, "alpha", "max_value", "threshold"));
+  private final float alpha;
+  private final float maxValue;
+  private final float threshold;
 
   /**
    * Creates a new ReLU with alpha={@link #ALPHA_DEFAULT}, maxValue={@link #MAX_VALUE_DEFAULT},
@@ -107,12 +111,16 @@ public class ReLU extends AbstractActivation {
    *       <li>if the map contains an entry for {@code threshold} that value is used, otherwise
    *           {@link #THRESHOLD_DEFAULT} is used.
    *     </ul>
+   *
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
    */
   public ReLU(Map<String, Object> config) {
-    this(
-        ((Number) config.getOrDefault("alpha", ALPHA_DEFAULT)).floatValue(),
-        ((Number) config.getOrDefault("max_value", MAX_VALUE_DEFAULT)).floatValue(),
-        ((Number) config.getOrDefault("threshold", THRESHOLD_DEFAULT)).floatValue());
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+    this.alpha = ((Number) config.getOrDefault("alpha", ALPHA_DEFAULT)).floatValue();
+    this.maxValue = ((Number) config.getOrDefault("max_value", MAX_VALUE_DEFAULT)).floatValue();
+    this.threshold = ((Number) config.getOrDefault("threshold", THRESHOLD_DEFAULT)).floatValue();
   }
 
   /**
@@ -240,15 +248,6 @@ public class ReLU extends AbstractActivation {
   }
 
   /**
-   * Sets the value that governs the slope for values lower than the threshold.
-   *
-   * @param alpha the value that governs the slope for values lower than the threshold.
-   */
-  public void setAlpha(float alpha) {
-    this.alpha = alpha;
-  }
-
-  /**
    * Gets the saturation threshold (the largest value the function will return).
    *
    * @return the saturation threshold (the largest value the function will return). public float
@@ -261,31 +260,11 @@ public class ReLU extends AbstractActivation {
   }
 
   /**
-   * Sets the threshold value of the activation function below which values will be damped or set to
-   * zero.
-   *
-   * @param threshold the threshold value of the activation function below which values will be
-   *     damped or set to zero.
-   */
-  public void setThreshold(float threshold) {
-    this.threshold = threshold;
-  }
-
-  /**
    * Gets the saturation threshold (the largest value the function will return).
    *
    * @return the saturation threshold (the largest value the function will return).
    */
   public float getMaxValue() {
     return maxValue;
-  }
-
-  /**
-   * Sets the saturation threshold (the largest value the function will return).
-   *
-   * @param maxValue the saturation threshold (the largest value the function will return).
-   */
-  public void setMaxValue(float maxValue) {
-    this.maxValue = maxValue;
   }
 }

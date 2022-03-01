@@ -15,8 +15,11 @@ limitations under the License.
 package org.tensorflow.framework.activations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -78,5 +81,19 @@ public class SigmoidTest {
   public void testGetConfig() {
     Sigmoid instance = new Sigmoid();
     assertEquals(Sigmoid.NAME, instance.getConfig().get("name"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(Sigmoid.NAME_KEY, Sigmoid.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(Sigmoid.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> new Sigmoid(configBadClass));
   }
 }

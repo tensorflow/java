@@ -16,9 +16,12 @@ package org.tensorflow.framework.activations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -61,7 +64,8 @@ public class HardSigmoidTest {
   public void testConfig() {
     Activation instance = Activation.create(HardSigmoid.NAME);
     assertTrue(instance instanceof HardSigmoid);
-    HardSigmoid hardSigmoid = new HardSigmoid(Collections.emptyMap());
+    HardSigmoid hardSigmoid =
+        new HardSigmoid(Collections.singletonMap(HardSigmoid.NAME_KEY, HardSigmoid.NAME));
     assertNotNull(hardSigmoid);
   }
 
@@ -69,5 +73,19 @@ public class HardSigmoidTest {
   public void testGetConfig() {
     HardSigmoid instance = new HardSigmoid();
     assertEquals(HardSigmoid.NAME, instance.getConfig().get("name"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(HardSigmoid.NAME_KEY, HardSigmoid.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(HardSigmoid.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new HardSigmoid(configBadClass));
   }
 }

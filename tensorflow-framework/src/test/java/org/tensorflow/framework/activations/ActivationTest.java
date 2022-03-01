@@ -17,6 +17,7 @@ package org.tensorflow.framework.activations;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 public class ActivationTest {
@@ -37,6 +38,51 @@ public class ActivationTest {
     assertTrue(Activation.create("softsign") instanceof Softsign);
     assertTrue(Activation.create("swish") instanceof Swish);
     assertTrue(Activation.create("tanh") instanceof Tanh);
+  }
+
+  /** Test of Activation create method */
+  @Test
+  public void testCreateActivationConfig() {
+
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "elu"))
+            instanceof ELU);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "exponential"))
+            instanceof Exponential);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "gelu"))
+            instanceof GELU);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "hard_sigmoid"))
+            instanceof HardSigmoid);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "linear"))
+            instanceof Linear);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "relu"))
+            instanceof ReLU);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "selu"))
+            instanceof SELU);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "sigmoid"))
+            instanceof Sigmoid);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "softmax"))
+            instanceof Softmax);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "softplus"))
+            instanceof Softplus);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "softsign"))
+            instanceof Softsign);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "swish"))
+            instanceof Swish);
+    assertTrue(
+        Activation.create(Collections.singletonMap(AbstractActivation.NAME_KEY, "tanh"))
+            instanceof Tanh);
   }
 
   /** Test of Activation create method */

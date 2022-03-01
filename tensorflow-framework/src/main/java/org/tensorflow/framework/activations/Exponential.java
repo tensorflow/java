@@ -14,7 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -36,6 +38,8 @@ public class Exponential extends AbstractActivation {
   /** The activation name as known by TensorFlow */
   public static final String NAME = "exponential";
 
+  private static final Set<String> allowedConfigKeys = Collections.singleton(NAME_KEY);
+
   /** Creates an Exponential activation. */
   public Exponential() {
     super();
@@ -46,9 +50,12 @@ public class Exponential extends AbstractActivation {
    *
    * @param config the configuration map, this class does not use any of the entries in the
    *     configuration map
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
    */
   public Exponential(Map<String, Object> config) {
-    this();
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
   }
 
   /**

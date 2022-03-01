@@ -16,6 +16,7 @@ package org.tensorflow.framework.activations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
@@ -80,7 +81,11 @@ public class ELUTest {
 
     Map<String, Object> config = new HashMap<>();
     config.put("alpha", 2.0f);
-    config.put("name", ELU.NAME);
+    config.put(AbstractActivation.NAME_KEY, ELU.NAME);
+
+    instance = Activation.create(config);
+    assertTrue(instance instanceof ELU);
+    assertEquals(2.0, ((ELU) instance).getAlpha());
 
     instance = Activation.create("elu");
     assertNotNull(instance);
@@ -91,7 +96,21 @@ public class ELUTest {
   public void testGetConfig() {
     ELU instance = new ELU(2.0f);
     Map<String, Object> config = instance.getConfig();
-    assertEquals(ELU.NAME, config.get("name"));
+    assertEquals(ELU.NAME, config.get(AbstractActivation.NAME_KEY));
     assertEquals(2.0f, ((Number) config.get("alpha")).floatValue());
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(AbstractActivation.NAME_KEY, ELU.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put("alpha", 2.0f);
+    configBadClass.put(AbstractActivation.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new ELU(configBadClass));
   }
 }

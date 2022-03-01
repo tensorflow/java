@@ -16,8 +16,11 @@ package org.tensorflow.framework.activations;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
@@ -52,13 +55,14 @@ import org.tensorflow.types.family.TNumber;
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
 public class ELU extends AbstractActivation {
-
   /** The activation name as known by TensorFlow */
   public static final String NAME = "elu";
 
+  private static final Set<String> allowedConfigKeys =
+      new HashSet<>(Arrays.asList(NAME_KEY, "alpha"));
   private static final double ALPHA_DEFAULT = 1.0;
 
-  private double alpha;
+  private final double alpha;
 
   /** Creates a new ELU with alpha={@link #ALPHA_DEFAULT}. */
   public ELU() {
@@ -81,9 +85,13 @@ public class ELU extends AbstractActivation {
    *
    * @param config the configuration map, if the map contains an entry for {@code alpha} that value
    *     is used, otherwise {@link #ALPHA_DEFAULT} is used.
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
    */
   public ELU(Map<String, Object> config) {
-    this((Double) config.getOrDefault("alpha", ALPHA_DEFAULT));
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+    this.alpha = ((Number) config.getOrDefault("alpha", ALPHA_DEFAULT)).doubleValue();
   }
 
   /**
@@ -158,14 +166,5 @@ public class ELU extends AbstractActivation {
    */
   public double getAlpha() {
     return alpha;
-  }
-
-  /**
-   * Sets the slope of negative section.
-   *
-   * @param alpha the slope of negative section.
-   */
-  public void setAlpha(double alpha) {
-    this.alpha = alpha;
   }
 }

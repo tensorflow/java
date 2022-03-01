@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.activations;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
@@ -129,5 +130,19 @@ public class GELUTest {
     assertTrue(config.containsKey("approximate"));
     assertTrue(config.get("approximate") instanceof Boolean);
     assertTrue((Boolean) config.get("approximate"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(GELU.NAME_KEY, GELU.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(GELU.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new GELU(configBadClass));
   }
 }

@@ -16,9 +16,12 @@ package org.tensorflow.framework.activations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -76,13 +79,27 @@ public class LinearTest {
   public void testConfig() {
     Activation instance = Activation.create(Linear.NAME);
     assertTrue(instance instanceof Linear);
-    Linear linear = new Linear(Collections.emptyMap());
+    Linear linear = new Linear(Collections.singletonMap(Linear.NAME_KEY, Linear.NAME));
     assertNotNull(linear);
   }
 
   @Test
   public void testGetConfig() {
     Linear instance = new Linear();
-    assertEquals(Linear.NAME, instance.getConfig().get("name"));
+    assertEquals(Linear.NAME, instance.getConfig().get(Linear.NAME_KEY));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(Linear.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(Linear.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new Linear(configBadClass));
   }
 }
