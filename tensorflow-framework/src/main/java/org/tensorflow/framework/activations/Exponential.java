@@ -19,20 +19,22 @@ import java.util.Map;
 import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
+
 
 /**
  * Exponential activation function.
  *
  * <p>For example:
  *
- * <pre>
- *   Operand&lt;TFloat32&gt; input = tf.constant(
+ * <pre>{@code
+ *   Operand<TFloat32> input = tf.constant(
  *          new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
- *   Exponential&lt;TFloat32&gt; exp = new Exponential&lt;&gt;(tf);
- *   Operand&lt;TFloat32&gt; result = exp.call(input);
+ *   Exponential<TFloat32> exp = new Exponential<>(tf);
+ *   Operand<TFloat32> result = exp.call(input);
  *   // result is [0.04978707f,  0.36787945f,  1.f,  2.7182817f, 20.085537f]
- * </pre>
+ * }}</pre>
  */
 public class Exponential extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -63,30 +65,30 @@ public class Exponential extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Exponential.exponential(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Exponential.exponential(tf, input);
+   * }}</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
    * @param <T> the data type for the input
    * @return the exponential activation: {@code exp(x)}.
    */
-  public static <T extends TNumber> Operand<T> exponential(Ops tf, Operand<T> input) {
+  public static <T extends TFloating> Operand<T> exponential(Ops tf, Operand<T> input) {
     return tf.math.exp(input);
   }
 
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return super.getConfig(NAME);
+    return super.getDefaultConfig(NAME);
   }
 
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
-    return exponential(tf, input);
+    return  tf.math.exp(input);
   }
 
   /** {@inheritDoc} */

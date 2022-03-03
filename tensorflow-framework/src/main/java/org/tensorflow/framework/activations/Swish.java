@@ -22,23 +22,23 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Swish activation function. <code>swish(x) = x * sigmoid(x)</code>.
+ * Swish activation function. {@code swish(x) = x * sigmoid(x)}.
  *
- * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
- * non-monotonic function that consistently matches or outperforms <code>ReLU</code> on deep
+ * <p>Swish activation function which returns {@code x*sigmoid(x)}. It is a smooth,
+ * non-monotonic function that consistently matches or outperforms {@code ReLU} on deep
  * networks, it is unbounded above and bounded below.
  *
  * <p>Example Usage:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(new float[]
+ * <pre>{@code
+ *     Operand<TFloat32> input = tf.constant(new float[]
  *                                        {-20, -1.0, 0.0, 1.0, 20});
- *     Swish&lt;TFloat32&gt; swish = new Swish&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = swish.call(input);
+ *     Swish<TFloat32> swish = new Swish<>(tf);
+ *     Operand<TFloat32> result = swish.call(input);
  *     // result = [-4.1223075e-08f, -2.6894143e-01f,  0.0000000e+00f,
  *     //          7.3105860e-01f,  2.0000000e+01f ]
  *
- * </pre>
+ * }</pre>
  *
  * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>
  */
@@ -49,9 +49,9 @@ public class Swish extends AbstractActivation {
   private static final Set<String> allowedConfigKeys = Collections.singleton(NAME_KEY);
 
   /**
-   * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
+   * Creates a Swish activation, {@code swish(x) = x * sigmoid(x)}.
    *
-   * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
+   * <p>Swish activation function which returns {@code x*sigmoid(x)}. It is a smooth,
    * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is
    * unbounded above and bounded below.
    */
@@ -77,10 +77,10 @@ public class Swish extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Swish.swish(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Swish.swish(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -101,7 +101,7 @@ public class Swish extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

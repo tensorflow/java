@@ -28,13 +28,13 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>For example:
  *
- * <pre>
- *    Operand&lt;TFloat32&gt; input = tf.constant(
+ * <pre>{@code
+ *    Operand<TFloat32> input = tf.constant(
  *              new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
- *    Linear&lt;TFloat32&gt; linear = new Linear&lt;&gt;(tf);
- *    Operand&lt;TFloat32&gt; result = linear.call(input);
+ *    Linear<TFloat32> linear = new Linear<>(tf);
+ *    Operand<TFloat32> result = linear.call(input);
  *    // result is [-3.0f,-1.0f, 0.0f,1.0f,3.0f]
- * </pre>
+ * }</pre>
  */
 public class Linear extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -65,10 +65,10 @@ public class Linear extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Linear.linear(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Linear.linear(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -83,7 +83,7 @@ public class Linear extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

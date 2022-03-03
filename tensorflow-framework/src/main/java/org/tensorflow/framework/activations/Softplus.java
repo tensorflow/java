@@ -22,18 +22,18 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Softplus activation function, <code>softplus(x) = log(exp(x) + 1)</code>.
+ * Softplus activation function, {@code softplus(x) = log(exp(x) + 1)}.
  *
  * <p>Example Usage:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(
+ * <pre>{@code
+ *     Operand<TFloat32> input = tf.constant(
  *              new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
- *     Softplus&lt;TFloat32&gt; softplus = new Softplus&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = softplus.call(input);
+ *     Softplus<TFloat32> softplus = new Softplus<>(tf);
+ *     Operand<TFloat32> result = softplus.call(input);
  *     // result is [2.0611537e-09f, 3.1326166e-01f, 6.9314718e-01f,
  *     //                 1.3132616e+00f, 2.0000000e+01f]
- * </pre>
+ * }</pre>
  */
 public class Softplus extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -63,10 +63,10 @@ public class Softplus extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Softplus.softplus(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Softplus.softplus(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -86,7 +86,7 @@ public class Softplus extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

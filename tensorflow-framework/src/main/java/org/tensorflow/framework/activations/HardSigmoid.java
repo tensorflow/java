@@ -31,20 +31,20 @@ import org.tensorflow.types.family.TNumber;
  * <p>Defined as:
  *
  * <ul>
- *   <li><code>if x &lt; -2.5: return 0</code>
- *   <li><code>if x &gt; 2.5: return 1</code>
- *   <li><code>if -2.5 &lt;= x &lt;= 2.5: return 0.2 * x + 0.5</code>
+ *   <li>{@code if x < -2.5: return 0}
+ *   <li>{@code if x > 2.5: return 1}
+ *   <li>{@code if -2.5 <= x <= 2.5: return 0.2 * x + 0.5}
  * </ul>
  *
  * <p>For example:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(
+ * <pre>{@code
+ *     Operand<TFloat32> input = tf.constant(
  *              new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
- *     HardSigmoid&lt;TFloat32&gt; hardSigmoid = new HardSigmoid&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = hardSigmoid.call(input);
+ *     HardSigmoid<TFloat32> hardSigmoid = new HardSigmoid<>(tf);
+ *     Operand<TFloat32> result = hardSigmoid.call(input);
  *     // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
- * </pre>
+ * }</pre>
  */
 public class HardSigmoid extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -75,10 +75,10 @@ public class HardSigmoid extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = HardSigmoid.hardSigmoid(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = HardSigmoid.hardSigmoid(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -98,7 +98,7 @@ public class HardSigmoid extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

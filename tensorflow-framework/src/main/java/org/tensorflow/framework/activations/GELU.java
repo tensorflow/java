@@ -1,4 +1,4 @@
-/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TNumber;
  * y = gelu.call(tf, x);
  * // output [-0.00404951f, -0.15865529f, 0.f , 0.8413447f , 2.9959507f ]
  *
- * }</pre>
+ * }}</pre>
  */
 public class GELU extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -84,10 +84,10 @@ public class GELU extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Gelu.gelu(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Gelu.gelu(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -102,10 +102,10 @@ public class GELU extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Gelu.gelu(tf, input, true);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Gelu.gelu(tf, input, true);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input

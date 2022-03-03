@@ -27,17 +27,17 @@ import org.tensorflow.types.family.TNumber;
  * <p>The Scaled Exponential Linear Unit (SELU) activation function is defined as:
  *
  * <ul>
- *   <li><code>if x &gt; 0: return scale * x</code>
- *   <li><code>if x &lt; 0: return scale * alpha * (exp(x) - 1)</code>
+ *   <li>{@code if x > 0: return scale * x}
+ *   <li>{@code if x < 0: return scale * alpha * (exp(x) - 1)}
  * </ul>
  *
- * <p>where <code>alpha</code> and <code>scale</code> are pre-defined constants (<code>
- * alpha=1.67326324</code> and <code>scale=1.05070098</code>).
+ * <p>where {@code alpha} and {@code scale} are pre-defined constants ({@code 
+ * alpha=1.67326324} and {@code scale=1.05070098}).
  *
- * <p>Basically, the SELU activation function multiplies <code>scale</code> (&gt; 1) with the output
+ * <p>Basically, the SELU activation function multiplies {@code scale} (> 1) with the output
  * of the elu function to ensure a slope larger than one for positive inputs.
  *
- * <p>The values of <code>alpha</code> and <code>scale</code> are chosen so that the mean and
+ * <p>The values of {@code alpha} and {@code scale} are chosen so that the mean and
  * variance of the inputs are preserved between two consecutive layers as long as the weights are
  * initialized correctly (see {@link org.tensorflow.framework.initializers.LeCun} with Normal
  * Distribution) and the number of input units is "large enough"
@@ -76,10 +76,10 @@ public class SELU extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = SELU.selu(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = SELU.selu(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -98,7 +98,7 @@ public class SELU extends AbstractActivation {
 
   /** {@inheritDoc} */
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

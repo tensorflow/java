@@ -22,17 +22,17 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Softsign activation function, <code>softsign(x) = x / (abs(x) + 1)</code>.
+ * Softsign activation function, {@code softsign(x) = x / (abs(x) + 1)}.
  *
  * <p>Example Usage:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(
+ * <pre>{@code
+ *     Operand<TFloat32> input = tf.constant(
  *              new float[] {-1.0f, 0.0f, 1.0f});
- *     Softsign&lt;TFloat32&gt; softsign = new Softsign&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = softsign.call(input);
+ *     Softsign<TFloat32> softsign = new Softsign<>(tf);
+ *     Operand<TFloat32> result = softsign.call(input);
  *     // result is [-0.5f, 0.f, 0.5f]
- * </pre>
+ * }</pre>
  */
 public class Softsign extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -62,10 +62,10 @@ public class Softsign extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Softsign.softsign(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Softsign.softsign(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -85,7 +85,7 @@ public class Softsign extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

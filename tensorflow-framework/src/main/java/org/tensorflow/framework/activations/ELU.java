@@ -14,28 +14,28 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
+import org.tensorflow.Operand;
+import org.tensorflow.op.Ops;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TNumber;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Exponential linear unit.
  *
- * <p>The exponential linear unit (ELU) with <code>alpha &gt; 0</code> is:
+ * <p>The exponential linear unit (ELU) with {@code alpha > 0} is:
  *
- * <p><code>x</code> if <code>x &gt; 0</code> and <code>alpha * (exp(x) -
- * 1)</code> if <code>x &lt; 0</code>.
+ * <p>{@code x} if {@code x > 0} and {@code alpha * (exp(x) - 1)} if {@code x < 0}.
  *
- * <p>The ELU hyperparameter <code>alpha</code> controls the value to which an ELU saturates for
- * negative net inputs. ELUs diminish the vanishing gradient effect.
+ * <p>The ELU hyperparameter {@code alpha} controls the value to which an ELU saturates for negative
+ * net inputs. ELUs diminish the vanishing gradient effect.
  *
  * <p>ELUs have negative values which pushes the mean of the activations closer to zero. Mean
  * activations that are closer to zero enable faster learning as they bring the gradient closer to
@@ -45,11 +45,11 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>Example Usage:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
- *     ELU&lt;TFloat32&gt; elu = new ELU&lt;&gt;(tf, 2.0);
- *     Operand&lt;TFloat32&gt; result = elu.call(input);
- * </pre>
+ * <pre>{@code
+ * Operand<TFloat32> input = ...;
+ * ELU<TFloat32> elu = new ELU<>(tf, 2.0);
+ * Operand<TFloat32> result = elu.call(input);
+ * }}</pre>
  *
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
@@ -97,26 +97,25 @@ public class ELU extends AbstractActivation {
   /**
    * Computes the Exponential linear unit.
    *
-   * <p>The exponential linear unit (ELU) with <code>alpha &gt; 0</code> is:
+   * <p>The exponential linear unit (ELU) with {@code alpha > 0} is:
    *
-   * <p><code>x</code> if <code>x &gt; 0</code> and <code>alpha * (exp(x) -
-   *  * 1)</code> if <code>x &lt; 0</code>.
+   * <pre>{@code x} if {@code x > 0} and {@code alpha * (exp(x) - 1)} if {@code x < 0}.}</pre>
    *
-   * <p>The ELU hyperparameter <code>alpha</code> controls the value to which an ELU saturates for
+   * <p>The ELU hyperparameter {@code alpha} controls the value to which an ELU saturates for
    * negative net inputs. ELUs diminish the vanishing gradient effect.
    *
    * <p>ELUs have negative values which pushes the mean of the activations closer to zero. Mean
    * activations that are closer to zero enable faster learning as they bring the gradient closer to
-   * * the natural gradient. ELUs saturate to a negative value when the argument gets smaller.
+   * the natural gradient. ELUs saturate to a negative value when the argument gets smaller.
    * Saturation means a small derivative which decreases the variation and the information that is
    * propagated to the next layer.
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = ELU.elu(tf, input, 2.0);
-   * </pre>
+   * <pre>{@code
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = ELU.elu(tf, input, 2.0);
+   * }}</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input

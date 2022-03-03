@@ -26,13 +26,13 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>For example:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(new float[]
+ * <pre>{@code
+ *     Operand<TFloat32> input = tf.constant(new float[]
  *                                        {-3.0f,-1.0f, 0.0f, 1.0f, 3.0f});
- *     Tanh&lt;TFloat32&gt; tanh = new Tanh&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = tanh.call(input);
+ *     Tanh<TFloat32> tanh = new Tanh<>(tf);
+ *     Operand<TFloat32> result = tanh.call(input);
  *     // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
- * </pre>
+ * }</pre>
  */
 public class Tanh extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -64,10 +64,10 @@ public class Tanh extends AbstractActivation {
    *
    * <p>Example Usage:
    *
-   * <pre>
-   *      Operand&lt;TFloat32&gt; input = &#46;&#46;&#46;;
-   *      Operand&lt;TFloat32&gt; result = Tanh.tanh(tf, input);
-   * </pre>
+   * <pre>{@code
+   *      Operand<TFloat32> input = ...;
+   *      Operand<TFloat32> result = Tanh.tanh(tf, input);
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -88,7 +88,7 @@ public class Tanh extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public Map<String, Object> getConfig() {
-    return getConfig(NAME);
+    return getDefaultConfig(getName());
   }
 
   /** {@inheritDoc} */

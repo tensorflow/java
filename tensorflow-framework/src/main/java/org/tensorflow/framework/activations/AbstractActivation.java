@@ -38,7 +38,7 @@ public abstract class AbstractActivation implements Activation {
    * @param name the name of the Activation as known by TensorFlow engine.
    * @return the configuration map
    */
-  protected Map<String, Object> getConfig(String name) {
+  protected Map<String, Object> getDefaultConfig(String name) {
     return Collections.singletonMap(NAME_KEY, name);
   }
 
