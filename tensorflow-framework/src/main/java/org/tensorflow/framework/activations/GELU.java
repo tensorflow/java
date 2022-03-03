@@ -39,7 +39,8 @@ import org.tensorflow.types.family.TNumber;
  * y = gelu.call(tf, x);
  * // output [-0.00404951f, -0.15865529f, 0.f , 0.8413447f , 2.9959507f ]
  *
- * }}</pre>
+ * }
+ * }</pre>
  */
 public class GELU extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -85,8 +86,8 @@ public class GELU extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Gelu.gelu(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Gelu.gelu(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops
@@ -103,8 +104,8 @@ public class GELU extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Gelu.gelu(tf, input, true);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Gelu.gelu(tf, input, true);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

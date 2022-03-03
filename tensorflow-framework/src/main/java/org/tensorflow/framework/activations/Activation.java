@@ -45,7 +45,8 @@ public interface Activation {
    *     least a {@code name} key.
    *     <pre>{@code
    * "name" : String - this is the TensorFlow Engine's Activation name
-   * }}</pre>
+   * }
+   * }</pre>
    *
    * @return the Activation
    * @throws NullPointerException if config is null, or the activation name is missing from the Map.

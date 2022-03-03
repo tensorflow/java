@@ -24,9 +24,8 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Sigmoid activation. {@code sigmoid(x) = 1 / (1 + exp(-x))}.
  *
- * <p>Applies the sigmoid activation function. For small values (<-5), {@code sigmoid}
- * returns a value close to zero, and for large values (>5) the result of the function gets close
- * to 1.
+ * <p>Applies the sigmoid activation function. For small values (<-5), {@code sigmoid} returns a
+ * value close to zero, and for large values (>5) the result of the function gets close to 1.
  *
  * <p>Sigmoid is equivalent to a 2-element Softmax, where the second element is assumed to be zero.
  * The sigmoid function always returns a value between 0 and 1.
@@ -34,12 +33,12 @@ import org.tensorflow.types.family.TNumber;
  * <p>For example:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(
- *              new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
- *     Sigmoid<TFloat32> sigmoid = new Sigmoid<>(tf);
- *     Operand<TFloat32> result = sigmoid.call(input);
- *     // result is [2.0611537e-09f, 2.6894143e-01f,
- *     //                 5.0000000e-01f,7.3105860e-01f, 1.f]
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
+ * Sigmoid<TFloat32> sigmoid = new Sigmoid<>(tf);
+ * Operand<TFloat32> result = sigmoid.call(input);
+ * // result is [2.0611537e-09f, 2.6894143e-01f,
+ * //                 5.0000000e-01f,7.3105860e-01f, 1.f]
  * }</pre>
  */
 public class Sigmoid extends AbstractActivation {
@@ -71,8 +70,8 @@ public class Sigmoid extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Sigmoid.sigmoid(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Sigmoid.sigmoid(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

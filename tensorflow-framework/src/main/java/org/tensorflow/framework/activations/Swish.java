@@ -24,19 +24,19 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Swish activation function. {@code swish(x) = x * sigmoid(x)}.
  *
- * <p>Swish activation function which returns {@code x*sigmoid(x)}. It is a smooth,
- * non-monotonic function that consistently matches or outperforms {@code ReLU} on deep
- * networks, it is unbounded above and bounded below.
+ * <p>Swish activation function which returns {@code x*sigmoid(x)}. It is a smooth, non-monotonic
+ * function that consistently matches or outperforms {@code ReLU} on deep networks, it is unbounded
+ * above and bounded below.
  *
  * <p>Example Usage:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(new float[]
- *                                        {-20, -1.0, 0.0, 1.0, 20});
- *     Swish<TFloat32> swish = new Swish<>(tf);
- *     Operand<TFloat32> result = swish.call(input);
- *     // result = [-4.1223075e-08f, -2.6894143e-01f,  0.0000000e+00f,
- *     //          7.3105860e-01f,  2.0000000e+01f ]
+ * Operand<TFloat32> input = tf.constant(new float[]
+ *                                    {-20, -1.0, 0.0, 1.0, 20});
+ * Swish<TFloat32> swish = new Swish<>(tf);
+ * Operand<TFloat32> result = swish.call(input);
+ * // result = [-4.1223075e-08f, -2.6894143e-01f,  0.0000000e+00f,
+ * //          7.3105860e-01f,  2.0000000e+01f ]
  *
  * }</pre>
  *
@@ -51,9 +51,9 @@ public class Swish extends AbstractActivation {
   /**
    * Creates a Swish activation, {@code swish(x) = x * sigmoid(x)}.
    *
-   * <p>Swish activation function which returns {@code x*sigmoid(x)}. It is a smooth,
-   * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is
-   * unbounded above and bounded below.
+   * <p>Swish activation function which returns {@code x*sigmoid(x)}. It is a smooth, non-monotonic
+   * function that consistently matches or outperforms ReLU on deep networks, it is unbounded above
+   * and bounded below.
    */
   public Swish() {
     super();
@@ -78,8 +78,8 @@ public class Swish extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Swish.swish(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Swish.swish(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

@@ -39,11 +39,11 @@ import org.tensorflow.types.family.TNumber;
  * <p>For example:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(
- *              new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
- *     HardSigmoid<TFloat32> hardSigmoid = new HardSigmoid<>(tf);
- *     Operand<TFloat32> result = hardSigmoid.call(input);
- *     // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
+ * HardSigmoid<TFloat32> hardSigmoid = new HardSigmoid<>(tf);
+ * Operand<TFloat32> result = hardSigmoid.call(input);
+ * // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
  * }</pre>
  */
 public class HardSigmoid extends AbstractActivation {
@@ -76,8 +76,8 @@ public class HardSigmoid extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = HardSigmoid.hardSigmoid(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = HardSigmoid.hardSigmoid(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

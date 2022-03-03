@@ -32,8 +32,8 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>The elements of the output vector are in range (0, 1) and sum to 1.
  *
- * <p>Each vector is handled independently. The {@code axis} argument sets which axis of the
- * input the function is applied along.
+ * <p>Each vector is handled independently. The {@code axis} argument sets which axis of the input
+ * the function is applied along.
  *
  * <p>Softmax is often used as the activation for the last layer of a classification network because
  * the result could be interpreted as a probability distribution.

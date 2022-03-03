@@ -31,16 +31,16 @@ import org.tensorflow.types.family.TNumber;
  *   <li>{@code if x < 0: return scale * alpha * (exp(x) - 1)}
  * </ul>
  *
- * <p>where {@code alpha} and {@code scale} are pre-defined constants ({@code 
- * alpha=1.67326324} and {@code scale=1.05070098}).
+ * <p>where {@code alpha} and {@code scale} are pre-defined constants ({@code alpha=1.67326324} and
+ * {@code scale=1.05070098}).
  *
- * <p>Basically, the SELU activation function multiplies {@code scale} (> 1) with the output
- * of the elu function to ensure a slope larger than one for positive inputs.
+ * <p>Basically, the SELU activation function multiplies {@code scale} (> 1) with the output of the
+ * elu function to ensure a slope larger than one for positive inputs.
  *
- * <p>The values of {@code alpha} and {@code scale} are chosen so that the mean and
- * variance of the inputs are preserved between two consecutive layers as long as the weights are
- * initialized correctly (see {@link org.tensorflow.framework.initializers.LeCun} with Normal
- * Distribution) and the number of input units is "large enough"
+ * <p>The values of {@code alpha} and {@code scale} are chosen so that the mean and variance of the
+ * inputs are preserved between two consecutive layers as long as the weights are initialized
+ * correctly (see {@link org.tensorflow.framework.initializers.LeCun} with Normal Distribution) and
+ * the number of input units is "large enough"
  *
  * <p><b>Notes: </b> To be used together with the {@link
  * org.tensorflow.framework.initializers.LeCun} initializer with Normal Distribution.
@@ -77,8 +77,8 @@ public class SELU extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = SELU.selu(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = SELU.selu(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

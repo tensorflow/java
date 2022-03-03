@@ -22,7 +22,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 
-
 /**
  * Exponential activation function.
  *
@@ -34,7 +33,8 @@ import org.tensorflow.types.family.TNumber;
  *   Exponential<TFloat32> exp = new Exponential<>(tf);
  *   Operand<TFloat32> result = exp.call(input);
  *   // result is [0.04978707f,  0.36787945f,  1.f,  2.7182817f, 20.085537f]
- * }}</pre>
+ * }
+ * }</pre>
  */
 public class Exponential extends AbstractActivation {
   /** The activation name as known by TensorFlow */
@@ -68,7 +68,8 @@ public class Exponential extends AbstractActivation {
    * <pre>{@code
    *      Operand<TFloat32> input = ...;
    *      Operand<TFloat32> result = Exponential.exponential(tf, input);
-   * }}</pre>
+   * }
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input
@@ -88,7 +89,7 @@ public class Exponential extends AbstractActivation {
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
-    return  tf.math.exp(input);
+    return tf.math.exp(input);
   }
 
   /** {@inheritDoc} */

@@ -27,12 +27,12 @@ import org.tensorflow.types.family.TNumber;
  * <p>Example Usage:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(
- *              new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
- *     Softplus<TFloat32> softplus = new Softplus<>(tf);
- *     Operand<TFloat32> result = softplus.call(input);
- *     // result is [2.0611537e-09f, 3.1326166e-01f, 6.9314718e-01f,
- *     //                 1.3132616e+00f, 2.0000000e+01f]
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
+ * Softplus<TFloat32> softplus = new Softplus<>(tf);
+ * Operand<TFloat32> result = softplus.call(input);
+ * // result is [2.0611537e-09f, 3.1326166e-01f, 6.9314718e-01f,
+ * //                 1.3132616e+00f, 2.0000000e+01f]
  * }</pre>
  */
 public class Softplus extends AbstractActivation {
@@ -64,8 +64,8 @@ public class Softplus extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Softplus.softplus(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Softplus.softplus(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

@@ -27,11 +27,11 @@ import org.tensorflow.types.family.TNumber;
  * <p>For example:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(new float[]
- *                                        {-3.0f,-1.0f, 0.0f, 1.0f, 3.0f});
- *     Tanh<TFloat32> tanh = new Tanh<>(tf);
- *     Operand<TFloat32> result = tanh.call(input);
- *     // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
+ * Operand<TFloat32> input = tf.constant(new float[]
+ *                                    {-3.0f,-1.0f, 0.0f, 1.0f, 3.0f});
+ * Tanh<TFloat32> tanh = new Tanh<>(tf);
+ * Operand<TFloat32> result = tanh.call(input);
+ * // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
  * }</pre>
  */
 public class Tanh extends AbstractActivation {
@@ -65,8 +65,8 @@ public class Tanh extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Tanh.tanh(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Tanh.tanh(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

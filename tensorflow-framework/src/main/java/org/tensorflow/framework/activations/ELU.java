@@ -14,18 +14,17 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TNumber;
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
+import org.tensorflow.Operand;
+import org.tensorflow.op.Ops;
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Exponential linear unit.
@@ -49,7 +48,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * Operand<TFloat32> input = ...;
  * ELU<TFloat32> elu = new ELU<>(tf, 2.0);
  * Operand<TFloat32> result = elu.call(input);
- * }}</pre>
+ * }
+ * }</pre>
  *
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
@@ -115,7 +115,8 @@ public class ELU extends AbstractActivation {
    * <pre>{@code
    * Operand<TFloat32> input = ...;
    * Operand<TFloat32> result = ELU.elu(tf, input, 2.0);
-   * }}</pre>
+   * }
+   * }</pre>
    *
    * @param tf the TensorFlow Ops
    * @param input the input

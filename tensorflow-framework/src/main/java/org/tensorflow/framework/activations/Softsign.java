@@ -27,11 +27,11 @@ import org.tensorflow.types.family.TNumber;
  * <p>Example Usage:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(
- *              new float[] {-1.0f, 0.0f, 1.0f});
- *     Softsign<TFloat32> softsign = new Softsign<>(tf);
- *     Operand<TFloat32> result = softsign.call(input);
- *     // result is [-0.5f, 0.f, 0.5f]
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-1.0f, 0.0f, 1.0f});
+ * Softsign<TFloat32> softsign = new Softsign<>(tf);
+ * Operand<TFloat32> result = softsign.call(input);
+ * // result is [-0.5f, 0.f, 0.5f]
  * }</pre>
  */
 public class Softsign extends AbstractActivation {
@@ -63,8 +63,8 @@ public class Softsign extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Softsign.softsign(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Softsign.softsign(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

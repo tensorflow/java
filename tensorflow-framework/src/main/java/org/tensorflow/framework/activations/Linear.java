@@ -29,11 +29,11 @@ import org.tensorflow.types.family.TNumber;
  * <p>For example:
  *
  * <pre>{@code
- *    Operand<TFloat32> input = tf.constant(
- *              new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
- *    Linear<TFloat32> linear = new Linear<>(tf);
- *    Operand<TFloat32> result = linear.call(input);
- *    // result is [-3.0f,-1.0f, 0.0f,1.0f,3.0f]
+ * Operand<TFloat32> input = tf.constant(
+ *           new float[] {-3.0f,-1.0f, 0.0f,1.0f,3.0f});
+ * Linear<TFloat32> linear = new Linear<>(tf);
+ * Operand<TFloat32> result = linear.call(input);
+ * // result is [-3.0f,-1.0f, 0.0f,1.0f,3.0f]
  * }</pre>
  */
 public class Linear extends AbstractActivation {
@@ -66,8 +66,8 @@ public class Linear extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = Linear.linear(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Linear.linear(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops

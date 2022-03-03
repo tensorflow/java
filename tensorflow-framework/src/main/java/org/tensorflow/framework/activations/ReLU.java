@@ -39,28 +39,28 @@ import org.tensorflow.types.family.TNumber;
  * <p>For example:
  *
  * <pre>{@code
- *     Operand<TFloat32> input = tf.constant(
- *              new float[] {-10f, -5f, 0.0f, 5f, 10f});
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-10f, -5f, 0.0f, 5f, 10f});
  *
- *     // With default parameters
- *     ReLU<TFloat32> relu = new ReLU<>(tf);
- *     Operand<TFloat32> result = relu.call(input);
- *     // result is [0.f,  0.f,  0.f,  5.f, 10.f]
+ * // With default parameters
+ * ReLU<TFloat32> relu = new ReLU<>(tf);
+ * Operand<TFloat32> result = relu.call(input);
+ * // result is [0.f,  0.f,  0.f,  5.f, 10.f]
  *
- *     // With alpha = 0.5
- *     relu = new ReLU<>(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
- *     result = relu.call(input);
- *     // result is [-5.f , -2.5f,  0.f ,  5.f , 10.f]
+ * // With alpha = 0.5
+ * relu = new ReLU<>(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
+ * result = relu.call(input);
+ * // result is [-5.f , -2.5f,  0.f ,  5.f , 10.f]
  *
- *     // With maxValue = 5
- *     relu = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, 5f, ReLU.THRESHOLD_DEFAULT);
- *     result = relu.call(input);
- *     // result is [0.f, 0.f, 0.f, 5.f, 5.f]
+ * // With maxValue = 5
+ * relu = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, 5f, ReLU.THRESHOLD_DEFAULT);
+ * result = relu.call(input);
+ * // result is [0.f, 0.f, 0.f, 5.f, 5.f]
  *
- *     // With threshold = 5
- *     relu = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5f);
- *     result = relu.call(input);
- *     // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
+ * // With threshold = 5
+ * relu = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5f);
+ * result = relu.call(input);
+ * // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
  * }</pre>
  */
 public class ReLU extends AbstractActivation {
@@ -129,8 +129,8 @@ public class ReLU extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = ReLU.relu(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = ReLU.relu(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops
@@ -148,8 +148,8 @@ public class ReLU extends AbstractActivation {
    * <p>Example Usage:
    *
    * <pre>{@code
-   *      Operand<TFloat32> input = ...;
-   *      Operand<TFloat32> result = ReLU.relu(tf, input);
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = ReLU.relu(tf, input);
    * }</pre>
    *
    * @param tf the TensorFlow Ops
