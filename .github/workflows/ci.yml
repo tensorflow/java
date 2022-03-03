@@ -39,7 +39,6 @@ jobs:
       - name: Build project
         run: |
           source scl_source enable devtoolset-9 || true 
-          export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
           mvn clean install -Pdev,jdk17 -B -U -e -Dlint.skip=true
@@ -70,7 +69,6 @@ jobs:
       - name: Build project
         run: |
           source scl_source enable devtoolset-9 || true
-          export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
           mvn clean install -Pdev,jdk17 -B -U -e -Dlint.skip=true -Dmaven.test.skip=true
