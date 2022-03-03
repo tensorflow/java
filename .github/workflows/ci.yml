@@ -204,7 +204,7 @@ jobs:
           df -h
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: prepare
     strategy:
        matrix:
