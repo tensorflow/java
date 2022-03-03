@@ -192,7 +192,7 @@
       <activation>
         <!-- custom property to disable link checks on command line (enabled by default) -->
         <property>
-          <name>!lint.skip</name>
+          <name>lint.skip</name>
           <value>!true</value>
         </property>
       </activation>
@@ -204,13 +204,15 @@
             <version>3.8.0</version>
             <configuration>
               <showWarnings>true</showWarnings>
-              <fork>true</fork> <!-- Required for JDK16+ -->
               <compilerArgs combine.children="append">
                 <!--arg>-Werror</arg--> <!-- Disabled (temporarily?) -->
                 <arg>-Xlint:all</arg>
                 <arg>-XDcompilePolicy=simple</arg>
                 <arg>-Xplugin:ErrorProne</arg>
-                <!-- Following are required on JDK16+ -->
+                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+
+                <!-- We need to repeat all arguments found in jvm.config here or we'll lose them -->
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
@@ -219,8 +221,6 @@
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
               </compilerArgs>
               <annotationProcessorPaths combine.children="append">
                 <path>
@@ -302,6 +302,14 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <fork>true</fork> <!-- Required for JDK16+ -->
+        </configuration>
+      </plugin>
       <!-- GPG signed components: http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
