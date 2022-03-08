@@ -137,7 +137,7 @@ to add Sonatype OSS repository in your pom.xml, like the following
 </dependencies>
 ```
 
-## TensorFlow/JDK Version Support
+## TensorFlow/Java Version Support
 
 This table shows the mapping between TensorFlow, TensorFlow Java and minimum supported Java versions.
 
