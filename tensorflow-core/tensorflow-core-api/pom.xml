@@ -203,6 +203,9 @@
               <includes>
                 <include>org/tensorflow/internal/c_api/presets/*.java</include>
               </includes>
+              <!-- Build on Java8 to prevent the plugin to automatically include module-info.java (excluding it won't work) -->
+              <release>8</release>
+              <compilerArgs combine.self="override"></compilerArgs>
             </configuration>
           </execution>
         </executions>
@@ -433,7 +436,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
         <executions>
           <execution>
             <!--

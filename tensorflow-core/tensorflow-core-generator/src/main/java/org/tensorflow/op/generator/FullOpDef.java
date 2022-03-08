@@ -21,7 +21,7 @@ import org.tensorflow.proto.framework.ApiDef;
 import org.tensorflow.proto.framework.ApiDef.Endpoint;
 import org.tensorflow.proto.framework.OpDef;
 
-public final class FullOpDef {
+final class FullOpDef {
   public final OpDef opDef;
   public final ApiDef apiDef;
   public final String basePackage;

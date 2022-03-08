@@ -20,53 +20,61 @@ jobs:
     runs-on: ubuntu-latest
     container: centos:7
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
       - name: Install environment
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-11-openjdk-devel devtoolset-9
+          yum -y install devtoolset-9
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Checkout repository
+        uses: actions/checkout@v1
       - name: Build project
         run: |
           source scl_source enable devtoolset-9 || true 
-          export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
-          mvn clean install -Pdev,jdk11 -B -U -e -Dlint.skip=true
+          mvn clean install -Pdev,jdk17 -B -U -e -Dlint.skip=true
       - name: Run lint checks
         run: |
-          mvn compiler:compile -Pdev,jdk11 -B -U -e
+          mvn compiler:compile -Pdev,jdk17 -B -U -e
   check-format:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     container: centos:7
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
       - name: Install environment
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-11-openjdk-devel devtoolset-9
+          yum -y install devtoolset-9
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Checkout repository
+        uses: actions/checkout@v1
       - name: Build project
         run: |
           source scl_source enable devtoolset-9 || true
-          export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
-          mvn clean install -Pdev,jdk11 -B -U -e -Dlint.skip=true -Dmaven.test.skip=true
+          mvn clean install -Pdev,jdk17 -B -U -e -Dlint.skip=true -Dmaven.test.skip=true
       - name: Run format checks
         run: |
-          mvn spotless:check -Pdev,jdk11 -B -U -e
+          mvn spotless:check -Pdev,jdk17 -B -U -e
   prepare:
     runs-on: ubuntu-latest
     outputs:
@@ -99,7 +107,7 @@ jobs:
           yum --disablerepo updates -y install $GLIBC
           yum -x "$GLIBC" -y update
           yum -x "$GLIBC" -y install centos-release-scl-rh epel-release
-          yum -x "$GLIBC" -y install java-1.8.0-openjdk-devel devtoolset-9 rh-git218 patch perl-Data-Dumper python36-devel python36-numpy python36-pip python36-six
+          yum -x "$GLIBC" -y install devtoolset-9 rh-git218 patch perl-Data-Dumper python36-devel python36-numpy python36-pip python36-six
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
@@ -124,6 +132,11 @@ jobs:
           rm -f $(find /usr/local/cuda/ -name '*.a' -and -not -name libcudart_static.a -and -not -name libcudadevrt.a)
           rm -rf /usr/local/cuda/doc* /usr/local/cuda/libnvvp* /usr/local/cuda/nsight* /usr/local/cuda/samples*
           fi
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -163,6 +176,11 @@ jobs:
           curl -L https://github.com/bazelbuild/bazel/releases/download/3.7.2/bazel-3.7.2-installer-darwin-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
           brew install libomp perl
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -186,7 +204,7 @@ jobs:
           df -h
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: prepare
     strategy:
        matrix:
@@ -223,6 +241,11 @@ jobs:
             cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/"
           )
           echo %JAVA_HOME%
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
