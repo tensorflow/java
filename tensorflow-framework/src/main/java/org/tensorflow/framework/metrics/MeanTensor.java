@@ -163,12 +163,16 @@ public class MeanTensor<T extends TNumber> extends BaseMetric {
     }
   }
 
-  /** @return the total */
+  /**
+   * @return the total
+   */
   public Variable<T> getTotal() {
     return total;
   }
 
-  /** @return the count */
+  /**
+   * @return the count
+   */
   public Variable<T> getCount() {
     return count;
   }
