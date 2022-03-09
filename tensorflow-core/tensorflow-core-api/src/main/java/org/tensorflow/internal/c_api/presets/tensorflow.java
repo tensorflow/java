@@ -34,7 +34,9 @@ import org.bytedeco.javacpp.tools.Info;
 import org.bytedeco.javacpp.tools.InfoMap;
 import org.bytedeco.javacpp.tools.InfoMapper;
 
-/** @author Samuel Audet */
+/**
+ * @author Samuel Audet
+ */
 @Properties(
     value = {
       @Platform(
@@ -467,7 +469,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         .put(new Info("tensorflow::Operation").javaNames("NativeOperation"))
         .put(new Info("tensorflow::Status").javaNames("NativeStatus").purify())
         .put(
-            new Info("tensorflow::int32")
+            new Info("tensorflow::int32", "tensorflow::error::Code")
                 .cast()
                 .valueTypes("int")
                 .pointerTypes("IntPointer", "IntBuffer", "int[]"))

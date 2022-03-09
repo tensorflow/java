@@ -459,8 +459,10 @@ public final class Status {
   static {
     java.lang.String[] descriptorData = {
       "\n%tensorflow/core/protobuf/status.proto\022" +
-      "\ntensorflow\"\017\n\rDerivedStatusB \n\036org.tens" +
-      "orflow.proto.frameworkb\006proto3"
+      "\ntensorflow\"\017\n\rDerivedStatusBw\n\036org.tens" +
+      "orflow.proto.frameworkZUgithub.com/tenso" +
+      "rflow/tensorflow/tensorflow/go/core/prot" +
+      "obuf/for_core_protos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

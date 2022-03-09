@@ -35,7 +35,21 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * The TensorScatterMax operation
+ * Apply a sparse update to a tensor taking the element-wise maximum.
+ * Returns a new tensor copied from {@code tensor} whose values are element-wise maximum between
+ * tensor and updates according to the indices.
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tensor = [0, 0, 0, 0, 0, 0, 0, 0]
+ * indices = [[1], [4], [5]]
+ * updates = [1, -1, 1]
+ * tf.tensor_scatter_nd_max(tensor, indices, updates).numpy()
+ * array([0, 1, 0, 0, 0, 1, 0, 0], dtype=int32)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ * <p>Refer to {@code tf.tensor_scatter_nd_update} for more details.
  *
  * @param <T> data type for {@code output} output
  */

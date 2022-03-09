@@ -3901,7 +3901,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (algorithm_ != org.tensorflow.proto.data.model.AutotuneAlgorithm.HILL_CLIMB.getNumber()) {
+      if (algorithm_ != org.tensorflow.proto.data.model.AutotuneAlgorithm.DEFAULT.getNumber()) {
         output.writeEnum(1, algorithm_);
       }
       if (cpuBudget_ != 0L) {
@@ -3922,7 +3922,7 @@ private static final long serialVersionUID = 0L;
       if (size != -1) return size;
 
       size = 0;
-      if (algorithm_ != org.tensorflow.proto.data.model.AutotuneAlgorithm.HILL_CLIMB.getNumber()) {
+      if (algorithm_ != org.tensorflow.proto.data.model.AutotuneAlgorithm.DEFAULT.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, algorithm_);
       }

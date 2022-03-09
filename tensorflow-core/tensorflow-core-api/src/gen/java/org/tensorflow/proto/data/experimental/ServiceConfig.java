@@ -82,8 +82,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -96,8 +94,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -109,8 +105,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -122,14 +116,31 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
      */
     com.google.protobuf.ByteString
         getWorkerAddressesBytes(int index);
+
+    /**
+     * <pre>
+     * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+     * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+     * </pre>
+     *
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+     */
+    int getDeploymentModeValue();
+    /**
+     * <pre>
+     * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+     * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+     * </pre>
+     *
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+     */
+    org.tensorflow.proto.data.DataService.DeploymentMode getDeploymentMode();
 
     /**
      * <pre>
@@ -168,7 +179,7 @@ public final class ServiceConfig {
   /**
    * <pre>
    * Configuration for a tf.data service DispatchServer.
-   * Next id: 9
+   * Next id: 10
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.experimental.DispatcherConfig}
@@ -186,6 +197,7 @@ public final class ServiceConfig {
       protocol_ = "";
       workDir_ = "";
       workerAddresses_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      deploymentMode_ = 0;
     }
 
     @java.lang.Override
@@ -263,6 +275,12 @@ public final class ServiceConfig {
             case 64: {
 
               clientTimeoutMs_ = input.readInt64();
+              break;
+            }
+            case 72: {
+              int rawValue = input.readEnum();
+
+              deploymentMode_ = rawValue;
               break;
             }
             default: {
@@ -422,8 +440,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -438,8 +454,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -453,8 +467,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -468,8 +480,6 @@ public final class ServiceConfig {
      * of worker addresses that will register with the dispatcher. The worker
      * addresses should be in the format "host" or "host:port", where "port" is an
      * integer, named port, or %port% to match any port.
-     * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-     * allowed in the "COLOCATED" mode.
      * </pre>
      *
      * <code>repeated string worker_addresses = 7;</code>
@@ -477,6 +487,33 @@ public final class ServiceConfig {
     public com.google.protobuf.ByteString
         getWorkerAddressesBytes(int index) {
       return workerAddresses_.getByteString(index);
+    }
+
+    public static final int DEPLOYMENT_MODE_FIELD_NUMBER = 9;
+    private int deploymentMode_;
+    /**
+     * <pre>
+     * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+     * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+     * </pre>
+     *
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+     */
+    public int getDeploymentModeValue() {
+      return deploymentMode_;
+    }
+    /**
+     * <pre>
+     * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+     * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+     * </pre>
+     *
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+     */
+    public org.tensorflow.proto.data.DataService.DeploymentMode getDeploymentMode() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.data.DataService.DeploymentMode result = org.tensorflow.proto.data.DataService.DeploymentMode.valueOf(deploymentMode_);
+      return result == null ? org.tensorflow.proto.data.DataService.DeploymentMode.UNRECOGNIZED : result;
     }
 
     public static final int JOB_GC_CHECK_INTERVAL_MS_FIELD_NUMBER = 5;
@@ -563,6 +600,9 @@ public final class ServiceConfig {
       if (clientTimeoutMs_ != 0L) {
         output.writeInt64(8, clientTimeoutMs_);
       }
+      if (deploymentMode_ != org.tensorflow.proto.data.DataService.DeploymentMode.DEPLOYMENT_MODE_UNSPECIFIED.getNumber()) {
+        output.writeEnum(9, deploymentMode_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -606,6 +646,10 @@ public final class ServiceConfig {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(8, clientTimeoutMs_);
       }
+      if (deploymentMode_ != org.tensorflow.proto.data.DataService.DeploymentMode.DEPLOYMENT_MODE_UNSPECIFIED.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(9, deploymentMode_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -631,6 +675,7 @@ public final class ServiceConfig {
           != other.getFaultTolerantMode()) return false;
       if (!getWorkerAddressesList()
           .equals(other.getWorkerAddressesList())) return false;
+      if (deploymentMode_ != other.deploymentMode_) return false;
       if (getJobGcCheckIntervalMs()
           != other.getJobGcCheckIntervalMs()) return false;
       if (getJobGcTimeoutMs()
@@ -662,6 +707,8 @@ public final class ServiceConfig {
         hash = (37 * hash) + WORKER_ADDRESSES_FIELD_NUMBER;
         hash = (53 * hash) + getWorkerAddressesList().hashCode();
       }
+      hash = (37 * hash) + DEPLOYMENT_MODE_FIELD_NUMBER;
+      hash = (53 * hash) + deploymentMode_;
       hash = (37 * hash) + JOB_GC_CHECK_INTERVAL_MS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getJobGcCheckIntervalMs());
@@ -769,7 +816,7 @@ public final class ServiceConfig {
     /**
      * <pre>
      * Configuration for a tf.data service DispatchServer.
-     * Next id: 9
+     * Next id: 10
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.experimental.DispatcherConfig}
@@ -819,6 +866,8 @@ public final class ServiceConfig {
 
         workerAddresses_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
+        deploymentMode_ = 0;
+
         jobGcCheckIntervalMs_ = 0L;
 
         jobGcTimeoutMs_ = 0L;
@@ -861,6 +910,7 @@ public final class ServiceConfig {
           bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.workerAddresses_ = workerAddresses_;
+        result.deploymentMode_ = deploymentMode_;
         result.jobGcCheckIntervalMs_ = jobGcCheckIntervalMs_;
         result.jobGcTimeoutMs_ = jobGcTimeoutMs_;
         result.clientTimeoutMs_ = clientTimeoutMs_;
@@ -935,6 +985,9 @@ public final class ServiceConfig {
             workerAddresses_.addAll(other.workerAddresses_);
           }
           onChanged();
+        }
+        if (other.deploymentMode_ != 0) {
+          setDeploymentModeValue(other.getDeploymentModeValue());
         }
         if (other.getJobGcCheckIntervalMs() != 0L) {
           setJobGcCheckIntervalMs(other.getJobGcCheckIntervalMs());
@@ -1253,8 +1306,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1269,8 +1320,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1284,8 +1333,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1299,8 +1346,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1315,8 +1360,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1337,8 +1380,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1359,8 +1400,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1379,8 +1418,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1397,8 +1434,6 @@ public final class ServiceConfig {
        * of worker addresses that will register with the dispatcher. The worker
        * addresses should be in the format "host" or "host:port", where "port" is an
        * integer, named port, or %port% to match any port.
-       * TODO(yangchen): Also add a deployment mode flag. Auto-sharding will only be
-       * allowed in the "COLOCATED" mode.
        * </pre>
        *
        * <code>repeated string worker_addresses = 7;</code>
@@ -1411,6 +1446,76 @@ public final class ServiceConfig {
   checkByteStringIsUtf8(value);
         ensureWorkerAddressesIsMutable();
         workerAddresses_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private int deploymentMode_ = 0;
+      /**
+       * <pre>
+       * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+       * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+       * </pre>
+       *
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+       */
+      public int getDeploymentModeValue() {
+        return deploymentMode_;
+      }
+      /**
+       * <pre>
+       * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+       * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+       * </pre>
+       *
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+       */
+      public Builder setDeploymentModeValue(int value) {
+        deploymentMode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+       * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+       * </pre>
+       *
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+       */
+      public org.tensorflow.proto.data.DataService.DeploymentMode getDeploymentMode() {
+        @SuppressWarnings("deprecation")
+        org.tensorflow.proto.data.DataService.DeploymentMode result = org.tensorflow.proto.data.DataService.DeploymentMode.valueOf(deploymentMode_);
+        return result == null ? org.tensorflow.proto.data.DataService.DeploymentMode.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+       * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+       * </pre>
+       *
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+       */
+      public Builder setDeploymentMode(org.tensorflow.proto.data.DataService.DeploymentMode value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        deploymentMode_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * (Optional.) tf.data service deployment mode. Supported values are "REMOTE",
+       * "COLOCATED", and "HYBRID". If unspecified, it is assumed to be "REMOTE".
+       * </pre>
+       *
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 9;</code>
+       */
+      public Builder clearDeploymentMode() {
+        
+        deploymentMode_ = 0;
         onChanged();
         return this;
       }
@@ -3624,40 +3729,45 @@ public final class ServiceConfig {
   static {
     java.lang.String[] descriptorData = {
       "\n-tensorflow/core/protobuf/service_confi" +
-      "g.proto\022\034tensorflow.data.experimental\"\323\001" +
-      "\n\020DispatcherConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010prot" +
-      "ocol\030\002 \001(\t\022\020\n\010work_dir\030\003 \001(\t\022\033\n\023fault_to" +
-      "lerant_mode\030\004 \001(\010\022\030\n\020worker_addresses\030\007 " +
-      "\003(\t\022 \n\030job_gc_check_interval_ms\030\005 \001(\003\022\031\n" +
-      "\021job_gc_timeout_ms\030\006 \001(\003\022\031\n\021client_timeo" +
-      "ut_ms\030\010 \001(\003\"\226\002\n\014WorkerConfig\022\014\n\004port\030\001 \001" +
-      "(\003\022\020\n\010protocol\030\002 \001(\t\022\032\n\022dispatcher_addre" +
-      "ss\030\003 \001(\t\022\026\n\016worker_address\030\004 \001(\t\022\023\n\013work" +
-      "er_tags\030\n \003(\t\022\035\n\025heartbeat_interval_ms\030\005" +
-      " \001(\003\022\035\n\025dispatcher_timeout_ms\030\006 \001(\003\022\036\n\026d" +
-      "ata_transfer_protocol\030\007 \001(\t\022\035\n\025data_tran" +
-      "sfer_address\030\010 \001(\t\022 \n\030shutdown_quiet_per" +
-      "iod_ms\030\t \001(\003B\177\n&org.tensorflow.proto.dat" +
-      "a.experimentalZUgithub.com/tensorflow/te" +
-      "nsorflow/tensorflow/go/core/protobuf/for" +
-      "_core_protos_go_protob\006proto3"
+      "g.proto\022\034tensorflow.data.experimental\032+t" +
+      "ensorflow/core/protobuf/data_service.pro" +
+      "to\"\215\002\n\020DispatcherConfig\022\014\n\004port\030\001 \001(\003\022\020\n" +
+      "\010protocol\030\002 \001(\t\022\020\n\010work_dir\030\003 \001(\t\022\033\n\023fau" +
+      "lt_tolerant_mode\030\004 \001(\010\022\030\n\020worker_address" +
+      "es\030\007 \003(\t\0228\n\017deployment_mode\030\t \001(\0162\037.tens" +
+      "orflow.data.DeploymentMode\022 \n\030job_gc_che" +
+      "ck_interval_ms\030\005 \001(\003\022\031\n\021job_gc_timeout_m" +
+      "s\030\006 \001(\003\022\031\n\021client_timeout_ms\030\010 \001(\003\"\226\002\n\014W" +
+      "orkerConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010protocol\030\002 " +
+      "\001(\t\022\032\n\022dispatcher_address\030\003 \001(\t\022\026\n\016worke" +
+      "r_address\030\004 \001(\t\022\023\n\013worker_tags\030\n \003(\t\022\035\n\025" +
+      "heartbeat_interval_ms\030\005 \001(\003\022\035\n\025dispatche" +
+      "r_timeout_ms\030\006 \001(\003\022\036\n\026data_transfer_prot" +
+      "ocol\030\007 \001(\t\022\035\n\025data_transfer_address\030\010 \001(" +
+      "\t\022 \n\030shutdown_quiet_period_ms\030\t \001(\003B\177\n&o" +
+      "rg.tensorflow.proto.data.experimentalZUg" +
+      "ithub.com/tensorflow/tensorflow/tensorfl" +
+      "ow/go/core/protobuf/for_core_protos_go_p" +
+      "rotob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          org.tensorflow.proto.data.DataService.getDescriptor(),
         });
     internal_static_tensorflow_data_experimental_DispatcherConfig_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tensorflow_data_experimental_DispatcherConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_DispatcherConfig_descriptor,
-        new java.lang.String[] { "Port", "Protocol", "WorkDir", "FaultTolerantMode", "WorkerAddresses", "JobGcCheckIntervalMs", "JobGcTimeoutMs", "ClientTimeoutMs", });
+        new java.lang.String[] { "Port", "Protocol", "WorkDir", "FaultTolerantMode", "WorkerAddresses", "DeploymentMode", "JobGcCheckIntervalMs", "JobGcTimeoutMs", "ClientTimeoutMs", });
     internal_static_tensorflow_data_experimental_WorkerConfig_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_tensorflow_data_experimental_WorkerConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_WorkerConfig_descriptor,
         new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "WorkerTags", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "ShutdownQuietPeriodMs", });
+    org.tensorflow.proto.data.DataService.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

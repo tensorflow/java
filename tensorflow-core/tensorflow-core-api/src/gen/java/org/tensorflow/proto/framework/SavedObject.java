@@ -17,8 +17,10 @@ private static final long serialVersionUID = 0L;
   }
   private SavedObject() {
     children_ = java.util.Collections.emptyList();
+    dependencies_ = java.util.Collections.emptyList();
     slotVariables_ = java.util.Collections.emptyList();
     registeredName_ = "";
+    registeredSaver_ = "";
   }
 
   @java.lang.Override
@@ -62,9 +64,9 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
               slotVariables_ = new java.util.ArrayList<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference>();
-              mutable_bitField0_ |= 0x00000002;
+              mutable_bitField0_ |= 0x00000004;
             }
             slotVariables_.add(
                 input.readMessage(org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference.parser(), extensionRegistry));
@@ -169,10 +171,10 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 90: {
-            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+            if (!((mutable_bitField0_ & 0x00000008) != 0)) {
               saveableObjects_ = com.google.protobuf.MapField.newMapField(
                   SaveableObjectsDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000004;
+              mutable_bitField0_ |= 0x00000008;
             }
             com.google.protobuf.MapEntry<java.lang.String, org.tensorflow.proto.framework.SaveableObject>
             saveableObjects__ = input.readMessage(
@@ -214,6 +216,21 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 122: {
+            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+              dependencies_ = new java.util.ArrayList<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference>();
+              mutable_bitField0_ |= 0x00000002;
+            }
+            dependencies_.add(
+                input.readMessage(org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.parser(), extensionRegistry));
+            break;
+          }
+          case 130: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            registeredSaver_ = s;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -232,8 +249,11 @@ private static final long serialVersionUID = 0L;
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
         children_ = java.util.Collections.unmodifiableList(children_);
       }
-      if (((mutable_bitField0_ & 0x00000002) != 0)) {
+      if (((mutable_bitField0_ & 0x00000004) != 0)) {
         slotVariables_ = java.util.Collections.unmodifiableList(slotVariables_);
+      }
+      if (((mutable_bitField0_ & 0x00000002) != 0)) {
+        dependencies_ = java.util.Collections.unmodifiableList(dependencies_);
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -377,6 +397,71 @@ private static final long serialVersionUID = 0L;
   public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder getChildrenOrBuilder(
       int index) {
     return children_.get(index);
+  }
+
+  public static final int DEPENDENCIES_FIELD_NUMBER = 15;
+  private java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference> dependencies_;
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  public java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference> getDependenciesList() {
+    return dependencies_;
+  }
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  public java.util.List<? extends org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder> 
+      getDependenciesOrBuilderList() {
+    return dependencies_;
+  }
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  public int getDependenciesCount() {
+    return dependencies_.size();
+  }
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference getDependencies(int index) {
+    return dependencies_.get(index);
+  }
+  /**
+   * <pre>
+   * Ordered list of dependencies that must be loaded before this object.
+   * SavedModel loads with the bottom-up approach, by first creating all objects
+   * (in the order defined by the dependencies), then connecting the edges.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+   */
+  public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder getDependenciesOrBuilder(
+      int index) {
+    return dependencies_.get(index);
   }
 
   public static final int SLOT_VARIABLES_FIELD_NUMBER = 3;
@@ -684,6 +769,13 @@ private static final long serialVersionUID = 0L;
     return internalGetSaveableObjects().getMap().size();
   }
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
 
@@ -700,6 +792,13 @@ private static final long serialVersionUID = 0L;
     return getSaveableObjectsMap();
   }
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
 
@@ -707,6 +806,13 @@ private static final long serialVersionUID = 0L;
     return internalGetSaveableObjects().getMap();
   }
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
 
@@ -719,6 +825,13 @@ private static final long serialVersionUID = 0L;
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
+   * <pre>
+   * Stores the functions used to save and restore this object. At most one of
+   * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+   * See the comment below for the difference between SaveableObject and
+   * registered savers.
+   * </pre>
+   *
    * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
    */
 
@@ -737,9 +850,6 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object registeredName_;
   /**
    * <pre>
-   * The fields below are filled when the user serializes a registered Trackable
-   * class. Registered classes may save additional metadata and supersede the
-   * default loading process where nodes are recreated from the proto.
    * The name of the registered class of the form "{package}.{class_name}".
    * This field is used to search for the registered class at loading time.
    * </pre>
@@ -760,9 +870,6 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * The fields below are filled when the user serializes a registered Trackable
-   * class. Registered classes may save additional metadata and supersede the
-   * default loading process where nodes are recreated from the proto.
    * The name of the registered class of the form "{package}.{class_name}".
    * This field is used to search for the registered class at loading time.
    * </pre>
@@ -822,6 +929,50 @@ private static final long serialVersionUID = 0L;
     return getSerializedUserProto();
   }
 
+  public static final int REGISTERED_SAVER_FIELD_NUMBER = 16;
+  private volatile java.lang.Object registeredSaver_;
+  /**
+   * <pre>
+   * String name of the registered saver. At most one of `saveable_objects` or
+   * `registered_saver` is defined for each SavedObject.
+   * </pre>
+   *
+   * <code>string registered_saver = 16;</code>
+   */
+  public java.lang.String getRegisteredSaver() {
+    java.lang.Object ref = registeredSaver_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      registeredSaver_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * String name of the registered saver. At most one of `saveable_objects` or
+   * `registered_saver` is defined for each SavedObject.
+   * </pre>
+   *
+   * <code>string registered_saver = 16;</code>
+   */
+  public com.google.protobuf.ByteString
+      getRegisteredSaverBytes() {
+    java.lang.Object ref = registeredSaver_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      registeredSaver_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -877,6 +1028,12 @@ private static final long serialVersionUID = 0L;
     }
     if (serializedUserProto_ != null) {
       output.writeMessage(14, getSerializedUserProto());
+    }
+    for (int i = 0; i < dependencies_.size(); i++) {
+      output.writeMessage(15, dependencies_.get(i));
+    }
+    if (!getRegisteredSaverBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 16, registeredSaver_);
     }
     unknownFields.writeTo(output);
   }
@@ -944,6 +1101,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(14, getSerializedUserProto());
     }
+    for (int i = 0; i < dependencies_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(15, dependencies_.get(i));
+    }
+    if (!getRegisteredSaverBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, registeredSaver_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -961,6 +1125,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getChildrenList()
         .equals(other.getChildrenList())) return false;
+    if (!getDependenciesList()
+        .equals(other.getDependenciesList())) return false;
     if (!getSlotVariablesList()
         .equals(other.getSlotVariablesList())) return false;
     if (!internalGetSaveableObjects().equals(
@@ -972,6 +1138,8 @@ private static final long serialVersionUID = 0L;
       if (!getSerializedUserProto()
           .equals(other.getSerializedUserProto())) return false;
     }
+    if (!getRegisteredSaver()
+        .equals(other.getRegisteredSaver())) return false;
     if (!getKindCase().equals(other.getKindCase())) return false;
     switch (kindCase_) {
       case 4:
@@ -1024,6 +1192,10 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + CHILDREN_FIELD_NUMBER;
       hash = (53 * hash) + getChildrenList().hashCode();
     }
+    if (getDependenciesCount() > 0) {
+      hash = (37 * hash) + DEPENDENCIES_FIELD_NUMBER;
+      hash = (53 * hash) + getDependenciesList().hashCode();
+    }
     if (getSlotVariablesCount() > 0) {
       hash = (37 * hash) + SLOT_VARIABLES_FIELD_NUMBER;
       hash = (53 * hash) + getSlotVariablesList().hashCode();
@@ -1038,6 +1210,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + SERIALIZED_USER_PROTO_FIELD_NUMBER;
       hash = (53 * hash) + getSerializedUserProto().hashCode();
     }
+    hash = (37 * hash) + REGISTERED_SAVER_FIELD_NUMBER;
+    hash = (53 * hash) + getRegisteredSaver().hashCode();
     switch (kindCase_) {
       case 4:
         hash = (37 * hash) + USER_OBJECT_FIELD_NUMBER;
@@ -1225,6 +1399,7 @@ private static final long serialVersionUID = 0L;
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
         getChildrenFieldBuilder();
+        getDependenciesFieldBuilder();
         getSlotVariablesFieldBuilder();
       }
     }
@@ -1237,9 +1412,15 @@ private static final long serialVersionUID = 0L;
       } else {
         childrenBuilder_.clear();
       }
+      if (dependenciesBuilder_ == null) {
+        dependencies_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+      } else {
+        dependenciesBuilder_.clear();
+      }
       if (slotVariablesBuilder_ == null) {
         slotVariables_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
       } else {
         slotVariablesBuilder_.clear();
       }
@@ -1252,6 +1433,8 @@ private static final long serialVersionUID = 0L;
         serializedUserProto_ = null;
         serializedUserProtoBuilder_ = null;
       }
+      registeredSaver_ = "";
+
       kindCase_ = 0;
       kind_ = null;
       return this;
@@ -1290,10 +1473,19 @@ private static final long serialVersionUID = 0L;
       } else {
         result.children_ = childrenBuilder_.build();
       }
-      if (slotVariablesBuilder_ == null) {
+      if (dependenciesBuilder_ == null) {
         if (((bitField0_ & 0x00000002) != 0)) {
-          slotVariables_ = java.util.Collections.unmodifiableList(slotVariables_);
+          dependencies_ = java.util.Collections.unmodifiableList(dependencies_);
           bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.dependencies_ = dependencies_;
+      } else {
+        result.dependencies_ = dependenciesBuilder_.build();
+      }
+      if (slotVariablesBuilder_ == null) {
+        if (((bitField0_ & 0x00000004) != 0)) {
+          slotVariables_ = java.util.Collections.unmodifiableList(slotVariables_);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
         result.slotVariables_ = slotVariables_;
       } else {
@@ -1363,6 +1555,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.serializedUserProto_ = serializedUserProtoBuilder_.build();
       }
+      result.registeredSaver_ = registeredSaver_;
       result.kindCase_ = kindCase_;
       onBuilt();
       return result;
@@ -1438,11 +1631,37 @@ private static final long serialVersionUID = 0L;
           }
         }
       }
+      if (dependenciesBuilder_ == null) {
+        if (!other.dependencies_.isEmpty()) {
+          if (dependencies_.isEmpty()) {
+            dependencies_ = other.dependencies_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureDependenciesIsMutable();
+            dependencies_.addAll(other.dependencies_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.dependencies_.isEmpty()) {
+          if (dependenciesBuilder_.isEmpty()) {
+            dependenciesBuilder_.dispose();
+            dependenciesBuilder_ = null;
+            dependencies_ = other.dependencies_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+            dependenciesBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getDependenciesFieldBuilder() : null;
+          } else {
+            dependenciesBuilder_.addAllMessages(other.dependencies_);
+          }
+        }
+      }
       if (slotVariablesBuilder_ == null) {
         if (!other.slotVariables_.isEmpty()) {
           if (slotVariables_.isEmpty()) {
             slotVariables_ = other.slotVariables_;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           } else {
             ensureSlotVariablesIsMutable();
             slotVariables_.addAll(other.slotVariables_);
@@ -1455,7 +1674,7 @@ private static final long serialVersionUID = 0L;
             slotVariablesBuilder_.dispose();
             slotVariablesBuilder_ = null;
             slotVariables_ = other.slotVariables_;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
             slotVariablesBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getSlotVariablesFieldBuilder() : null;
@@ -1472,6 +1691,10 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasSerializedUserProto()) {
         mergeSerializedUserProto(other.getSerializedUserProto());
+      }
+      if (!other.getRegisteredSaver().isEmpty()) {
+        registeredSaver_ = other.registeredSaver_;
+        onChanged();
       }
       switch (other.getKindCase()) {
         case USER_OBJECT: {
@@ -1903,12 +2126,360 @@ private static final long serialVersionUID = 0L;
       return childrenBuilder_;
     }
 
+    private java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference> dependencies_ =
+      java.util.Collections.emptyList();
+    private void ensureDependenciesIsMutable() {
+      if (!((bitField0_ & 0x00000002) != 0)) {
+        dependencies_ = new java.util.ArrayList<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference>(dependencies_);
+        bitField0_ |= 0x00000002;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder> dependenciesBuilder_;
+
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference> getDependenciesList() {
+      if (dependenciesBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(dependencies_);
+      } else {
+        return dependenciesBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public int getDependenciesCount() {
+      if (dependenciesBuilder_ == null) {
+        return dependencies_.size();
+      } else {
+        return dependenciesBuilder_.getCount();
+      }
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference getDependencies(int index) {
+      if (dependenciesBuilder_ == null) {
+        return dependencies_.get(index);
+      } else {
+        return dependenciesBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder setDependencies(
+        int index, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference value) {
+      if (dependenciesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureDependenciesIsMutable();
+        dependencies_.set(index, value);
+        onChanged();
+      } else {
+        dependenciesBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder setDependencies(
+        int index, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder builderForValue) {
+      if (dependenciesBuilder_ == null) {
+        ensureDependenciesIsMutable();
+        dependencies_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        dependenciesBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder addDependencies(org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference value) {
+      if (dependenciesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureDependenciesIsMutable();
+        dependencies_.add(value);
+        onChanged();
+      } else {
+        dependenciesBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder addDependencies(
+        int index, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference value) {
+      if (dependenciesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureDependenciesIsMutable();
+        dependencies_.add(index, value);
+        onChanged();
+      } else {
+        dependenciesBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder addDependencies(
+        org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder builderForValue) {
+      if (dependenciesBuilder_ == null) {
+        ensureDependenciesIsMutable();
+        dependencies_.add(builderForValue.build());
+        onChanged();
+      } else {
+        dependenciesBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder addDependencies(
+        int index, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder builderForValue) {
+      if (dependenciesBuilder_ == null) {
+        ensureDependenciesIsMutable();
+        dependencies_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        dependenciesBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder addAllDependencies(
+        java.lang.Iterable<? extends org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference> values) {
+      if (dependenciesBuilder_ == null) {
+        ensureDependenciesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, dependencies_);
+        onChanged();
+      } else {
+        dependenciesBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder clearDependencies() {
+      if (dependenciesBuilder_ == null) {
+        dependencies_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+      } else {
+        dependenciesBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public Builder removeDependencies(int index) {
+      if (dependenciesBuilder_ == null) {
+        ensureDependenciesIsMutable();
+        dependencies_.remove(index);
+        onChanged();
+      } else {
+        dependenciesBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder getDependenciesBuilder(
+        int index) {
+      return getDependenciesFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder getDependenciesOrBuilder(
+        int index) {
+      if (dependenciesBuilder_ == null) {
+        return dependencies_.get(index);  } else {
+        return dependenciesBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public java.util.List<? extends org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder> 
+         getDependenciesOrBuilderList() {
+      if (dependenciesBuilder_ != null) {
+        return dependenciesBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(dependencies_);
+      }
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder addDependenciesBuilder() {
+      return getDependenciesFieldBuilder().addBuilder(
+          org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder addDependenciesBuilder(
+        int index) {
+      return getDependenciesFieldBuilder().addBuilder(
+          index, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * Ordered list of dependencies that must be loaded before this object.
+     * SavedModel loads with the bottom-up approach, by first creating all objects
+     * (in the order defined by the dependencies), then connecting the edges.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference dependencies = 15;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder> 
+         getDependenciesBuilderList() {
+      return getDependenciesFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder> 
+        getDependenciesFieldBuilder() {
+      if (dependenciesBuilder_ == null) {
+        dependenciesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReference.Builder, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.ObjectReferenceOrBuilder>(
+                dependencies_,
+                ((bitField0_ & 0x00000002) != 0),
+                getParentForChildren(),
+                isClean());
+        dependencies_ = null;
+      }
+      return dependenciesBuilder_;
+    }
+
     private java.util.List<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference> slotVariables_ =
       java.util.Collections.emptyList();
     private void ensureSlotVariablesIsMutable() {
-      if (!((bitField0_ & 0x00000002) != 0)) {
+      if (!((bitField0_ & 0x00000004) != 0)) {
         slotVariables_ = new java.util.ArrayList<org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference>(slotVariables_);
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
        }
     }
 
@@ -2135,7 +2706,7 @@ private static final long serialVersionUID = 0L;
     public Builder clearSlotVariables() {
       if (slotVariablesBuilder_ == null) {
         slotVariables_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
       } else {
         slotVariablesBuilder_.clear();
@@ -2261,7 +2832,7 @@ private static final long serialVersionUID = 0L;
         slotVariablesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReference.Builder, org.tensorflow.proto.framework.TrackableObjectGraph.TrackableObject.SlotVariableReferenceOrBuilder>(
                 slotVariables_,
-                ((bitField0_ & 0x00000002) != 0),
+                ((bitField0_ & 0x00000004) != 0),
                 getParentForChildren(),
                 isClean());
         slotVariables_ = null;
@@ -3384,6 +3955,13 @@ private static final long serialVersionUID = 0L;
       return internalGetSaveableObjects().getMap().size();
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
 
@@ -3400,6 +3978,13 @@ private static final long serialVersionUID = 0L;
       return getSaveableObjectsMap();
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
 
@@ -3407,6 +3992,13 @@ private static final long serialVersionUID = 0L;
       return internalGetSaveableObjects().getMap();
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
 
@@ -3419,6 +4011,13 @@ private static final long serialVersionUID = 0L;
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
 
@@ -3439,6 +4038,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
 
@@ -3458,6 +4064,13 @@ private static final long serialVersionUID = 0L;
       return internalGetMutableSaveableObjects().getMutableMap();
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
     public Builder putSaveableObjects(
@@ -3470,6 +4083,13 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * Stores the functions used to save and restore this object. At most one of
+     * `saveable_objects` or `registered_saver` is defined for each SavedObject.
+     * See the comment below for the difference between SaveableObject and
+     * registered savers.
+     * </pre>
+     *
      * <code>map&lt;string, .tensorflow.SaveableObject&gt; saveable_objects = 11;</code>
      */
 
@@ -3483,9 +4103,6 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object registeredName_ = "";
     /**
      * <pre>
-     * The fields below are filled when the user serializes a registered Trackable
-     * class. Registered classes may save additional metadata and supersede the
-     * default loading process where nodes are recreated from the proto.
      * The name of the registered class of the form "{package}.{class_name}".
      * This field is used to search for the registered class at loading time.
      * </pre>
@@ -3506,9 +4123,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The fields below are filled when the user serializes a registered Trackable
-     * class. Registered classes may save additional metadata and supersede the
-     * default loading process where nodes are recreated from the proto.
      * The name of the registered class of the form "{package}.{class_name}".
      * This field is used to search for the registered class at loading time.
      * </pre>
@@ -3530,9 +4144,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The fields below are filled when the user serializes a registered Trackable
-     * class. Registered classes may save additional metadata and supersede the
-     * default loading process where nodes are recreated from the proto.
      * The name of the registered class of the form "{package}.{class_name}".
      * This field is used to search for the registered class at loading time.
      * </pre>
@@ -3551,9 +4162,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The fields below are filled when the user serializes a registered Trackable
-     * class. Registered classes may save additional metadata and supersede the
-     * default loading process where nodes are recreated from the proto.
      * The name of the registered class of the form "{package}.{class_name}".
      * This field is used to search for the registered class at loading time.
      * </pre>
@@ -3568,9 +4176,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The fields below are filled when the user serializes a registered Trackable
-     * class. Registered classes may save additional metadata and supersede the
-     * default loading process where nodes are recreated from the proto.
      * The name of the registered class of the form "{package}.{class_name}".
      * This field is used to search for the registered class at loading time.
      * </pre>
@@ -3758,6 +4363,100 @@ private static final long serialVersionUID = 0L;
         serializedUserProto_ = null;
       }
       return serializedUserProtoBuilder_;
+    }
+
+    private java.lang.Object registeredSaver_ = "";
+    /**
+     * <pre>
+     * String name of the registered saver. At most one of `saveable_objects` or
+     * `registered_saver` is defined for each SavedObject.
+     * </pre>
+     *
+     * <code>string registered_saver = 16;</code>
+     */
+    public java.lang.String getRegisteredSaver() {
+      java.lang.Object ref = registeredSaver_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        registeredSaver_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * String name of the registered saver. At most one of `saveable_objects` or
+     * `registered_saver` is defined for each SavedObject.
+     * </pre>
+     *
+     * <code>string registered_saver = 16;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRegisteredSaverBytes() {
+      java.lang.Object ref = registeredSaver_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        registeredSaver_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * String name of the registered saver. At most one of `saveable_objects` or
+     * `registered_saver` is defined for each SavedObject.
+     * </pre>
+     *
+     * <code>string registered_saver = 16;</code>
+     */
+    public Builder setRegisteredSaver(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      registeredSaver_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * String name of the registered saver. At most one of `saveable_objects` or
+     * `registered_saver` is defined for each SavedObject.
+     * </pre>
+     *
+     * <code>string registered_saver = 16;</code>
+     */
+    public Builder clearRegisteredSaver() {
+      
+      registeredSaver_ = getDefaultInstance().getRegisteredSaver();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * String name of the registered saver. At most one of `saveable_objects` or
+     * `registered_saver` is defined for each SavedObject.
+     * </pre>
+     *
+     * <code>string registered_saver = 16;</code>
+     */
+    public Builder setRegisteredSaverBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      registeredSaver_ = value;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

@@ -367,19 +367,19 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final BitwiseOps bitwise;
-
   public final TpuOps tpu;
 
-  public final AudioOps audio;
+  public final BitwiseOps bitwise;
 
   public final MathOps math;
 
+  public final AudioOps audio;
+
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -398,13 +398,13 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    bitwise = new BitwiseOps(this);
     tpu = new TpuOps(this);
-    audio = new AudioOps(this);
+    bitwise = new BitwiseOps(this);
     math = new MathOps(this);
+    audio = new AudioOps(this);
     signal = new SignalOps(this);
-    train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    train = new TrainOps(this);
   }
 
   /**
@@ -637,11 +637,12 @@ public final class Ops {
    *
    * @param resource handle to the resource in which to store the variable.
    * @param value the value to set the new tensor to use.
+   * @param options carries optional attribute values
    * @return a new instance of AssignVariableOp
    */
   public AssignVariableOp assignVariableOp(Operand<? extends TType> resource,
-      Operand<? extends TType> value) {
-    return AssignVariableOp.create(scope, resource, value);
+      Operand<? extends TType> value, AssignVariableOp.Options... options) {
+    return AssignVariableOp.create(scope, resource, value, options);
   }
 
   /**
@@ -2066,7 +2067,10 @@ public final class Ops {
 
   /**
    * The op extracts fields from a serialized protocol buffers message into tensors.
-   *  The {@code decode_proto} op extracts fields from a serialized protocol buffers
+   *  Note: This API is designed for orthogonality rather than human-friendliness. It
+   *  can be used to parse input protos by hand, but it is intended for use in
+   *  generated code.
+   *  <p>The {@code decode_proto} op extracts fields from a serialized protocol buffers
    *  message into tensors.  The fields in {@code field_names} are decoded and converted
    *  to the corresponding {@code output_types} if possible.
    *  <p>A {@code message_type} name must be provided to give context for the field names.
@@ -2095,6 +2099,16 @@ public final class Ops {
    *  way). Unsigned int32 values can be represented exactly by specifying type
    *  {@code DT_INT64}, or using twos-complement if the caller specifies {@code DT_INT32} in
    *  the {@code output_types} attribute.
+   *  </li>
+   *  <li>
+   *  <p>{@code map} fields are not directly decoded. They are treated as {@code repeated} fields,
+   *  of the appropriate entry type. The proto-compiler defines entry types for each
+   *  map field. The type-name is the field name, converted to &quot;CamelCase&quot; with
+   *  &quot;Entry&quot; appended. The {@code tf.train.Features.FeatureEntry} message is an example of
+   *  one of these implicit {@code Entry} types.
+   *  </li>
+   *  <li>
+   *  <p>{@code enum} fields should be read as int32.
    *  </li>
    *  </ul>
    *  <p>Both binary and text proto serializations are supported, and can be
@@ -7238,7 +7252,21 @@ public final class Ops {
   }
 
   /**
-   * The TensorScatterMax operation
+   * Apply a sparse update to a tensor taking the element-wise maximum.
+   *  Returns a new tensor copied from {@code tensor} whose values are element-wise maximum between
+   *  tensor and updates according to the indices.
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>tensor = [0, 0, 0, 0, 0, 0, 0, 0]
+   *  indices = [[1], [4], [5]]
+   *  updates = [1, -1, 1]
+   *  tf.tensor_scatter_nd_max(tensor, indices, updates).numpy()
+   *  array([0, 1, 0, 0, 0, 1, 0, 0], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
+   *  <p>Refer to {@code tf.tensor_scatter_nd_update} for more details.
    *
    * @param <T> data type for {@code output} output
    * @param tensor Tensor to update.

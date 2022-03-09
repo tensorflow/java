@@ -32,7 +32,7 @@ import org.tensorflow.op.data.CacheDataset;
 import org.tensorflow.op.data.ChooseFastestBranchDataset;
 import org.tensorflow.op.data.ChooseFastestDataset;
 import org.tensorflow.op.data.ConcatenateDataset;
-import org.tensorflow.op.data.DataServiceDatasetV2;
+import org.tensorflow.op.data.DataServiceDataset;
 import org.tensorflow.op.data.DatasetCardinality;
 import org.tensorflow.op.data.DatasetFromGraph;
 import org.tensorflow.op.data.DatasetToGraph;
@@ -350,16 +350,17 @@ public final class DataOps {
    * @param iterationCounter The iterationCounter value
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param uncompressFn The value of the uncompressFn attribute
    * @param options carries optional attribute values
-   * @return a new instance of DataServiceDatasetV2
+   * @return a new instance of DataServiceDataset
    */
-  public DataServiceDatasetV2 dataServiceDatasetV2(Operand<TInt64> datasetId,
+  public DataServiceDataset dataServiceDataset(Operand<TInt64> datasetId,
       Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
       Operand<TString> jobName, Operand<TInt64> consumerIndex, Operand<TInt64> numConsumers,
       Operand<TInt64> maxOutstandingRequests, Operand<? extends TType> iterationCounter,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
-      DataServiceDatasetV2.Options... options) {
-    return DataServiceDatasetV2.create(scope, datasetId, processingMode, address, protocol, jobName, consumerIndex, numConsumers, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, options);
+      ConcreteFunction uncompressFn, DataServiceDataset.Options... options) {
+    return DataServiceDataset.create(scope, datasetId, processingMode, address, protocol, jobName, consumerIndex, numConsumers, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, uncompressFn, options);
   }
 
   /**
@@ -1594,12 +1595,14 @@ public final class DataOps {
    *  It must be positive.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
    * @return a new instance of SlidingWindowDataset
    */
   public SlidingWindowDataset slidingWindowDataset(Operand<? extends TType> inputDataset,
       Operand<TInt64> windowSize, Operand<TInt64> windowShift, Operand<TInt64> windowStride,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return SlidingWindowDataset.create(scope, inputDataset, windowSize, windowShift, windowStride, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      SlidingWindowDataset.Options... options) {
+    return SlidingWindowDataset.create(scope, inputDataset, windowSize, windowShift, windowStride, outputTypes, outputShapes, options);
   }
 
   /**

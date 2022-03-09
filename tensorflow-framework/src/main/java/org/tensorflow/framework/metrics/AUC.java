@@ -942,82 +942,114 @@ public class AUC<T extends TNumber> extends BaseMetric {
     return tf.withControlDependencies(controlList).noOp();
   }
 
-  /** @return the numThresholds */
+  /**
+   * @return the numThresholds
+   */
   public int getNumThresholds() {
     return numThresholds;
   }
 
-  /** @return the curve */
+  /**
+   * @return the curve
+   */
   public AUCCurve getCurve() {
     return curve;
   }
 
-  /** @return the summationMethod */
+  /**
+   * @return the summationMethod
+   */
   public AUCSummationMethod getSummationMethod() {
     return summationMethod;
   }
 
-  /** @return the thresholds */
+  /**
+   * @return the thresholds
+   */
   public float[] getThresholds() {
     return thresholds;
   }
 
-  /** @return the multiLabel */
+  /**
+   * @return the multiLabel
+   */
   public boolean isMultiLabel() {
     return multiLabel;
   }
 
-  /** @return the numLabels */
+  /**
+   * @return the numLabels
+   */
   public Integer getNumLabels() {
     return numLabels;
   }
 
-  /** @param numLabels the numLabels to set */
+  /**
+   * @param numLabels the numLabels to set
+   */
   public void setNumLabels(Integer numLabels) {
     this.numLabels = numLabels;
   }
 
-  /** @return the labelWeights */
+  /**
+   * @return the labelWeights
+   */
   public Operand<T> getLabelWeights() {
     return labelWeights;
   }
 
-  /** @return the truePositives */
+  /**
+   * @return the truePositives
+   */
   public Variable<T> getTruePositives() {
     return truePositives;
   }
 
-  /** @return the falsePositives */
+  /**
+   * @return the falsePositives
+   */
   public Variable<T> getFalsePositives() {
     return falsePositives;
   }
 
-  /** @return the trueNegatives */
+  /**
+   * @return the trueNegatives
+   */
   public Variable<T> getTrueNegatives() {
     return trueNegatives;
   }
 
-  /** @return the falseNegatives */
+  /**
+   * @return the falseNegatives
+   */
   public Variable<T> getFalseNegatives() {
     return falseNegatives;
   }
 
-  /** @return the truePositivesName */
+  /**
+   * @return the truePositivesName
+   */
   public String getTruePositivesName() {
     return truePositivesName;
   }
 
-  /** @return the falsePositivesName */
+  /**
+   * @return the falsePositivesName
+   */
   public String getFalsePositivesName() {
     return falsePositivesName;
   }
 
-  /** @return the trueNegativesName */
+  /**
+   * @return the trueNegativesName
+   */
   public String getTrueNegativesName() {
     return trueNegativesName;
   }
 
-  /** @return the falseNegativesName */
+  /**
+   * @return the falseNegativesName
+   */
   public String getFalseNegativesName() {
     return falseNegativesName;
   }

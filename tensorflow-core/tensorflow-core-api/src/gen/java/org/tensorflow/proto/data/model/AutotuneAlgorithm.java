@@ -13,24 +13,40 @@ package org.tensorflow.proto.data.model;
 public enum AutotuneAlgorithm
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
-   * <code>HILL_CLIMB = 0;</code>
+   * <code>DEFAULT = 0;</code>
    */
-  HILL_CLIMB(0),
+  DEFAULT(0),
   /**
-   * <code>GRADIENT_DESCENT = 1;</code>
+   * <code>HILL_CLIMB = 1;</code>
    */
-  GRADIENT_DESCENT(1),
+  HILL_CLIMB(1),
+  /**
+   * <code>GRADIENT_DESCENT = 2;</code>
+   */
+  GRADIENT_DESCENT(2),
+  /**
+   * <code>MAX_PARALLELISM = 3;</code>
+   */
+  MAX_PARALLELISM(3),
   UNRECOGNIZED(-1),
   ;
 
   /**
-   * <code>HILL_CLIMB = 0;</code>
+   * <code>DEFAULT = 0;</code>
    */
-  public static final int HILL_CLIMB_VALUE = 0;
+  public static final int DEFAULT_VALUE = 0;
   /**
-   * <code>GRADIENT_DESCENT = 1;</code>
+   * <code>HILL_CLIMB = 1;</code>
    */
-  public static final int GRADIENT_DESCENT_VALUE = 1;
+  public static final int HILL_CLIMB_VALUE = 1;
+  /**
+   * <code>GRADIENT_DESCENT = 2;</code>
+   */
+  public static final int GRADIENT_DESCENT_VALUE = 2;
+  /**
+   * <code>MAX_PARALLELISM = 3;</code>
+   */
+  public static final int MAX_PARALLELISM_VALUE = 3;
 
 
   public final int getNumber() {
@@ -51,8 +67,10 @@ public enum AutotuneAlgorithm
 
   public static AutotuneAlgorithm forNumber(int value) {
     switch (value) {
-      case 0: return HILL_CLIMB;
-      case 1: return GRADIENT_DESCENT;
+      case 0: return DEFAULT;
+      case 1: return HILL_CLIMB;
+      case 2: return GRADIENT_DESCENT;
+      case 3: return MAX_PARALLELISM;
       default: return null;
     }
   }

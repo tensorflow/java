@@ -467,7 +467,7 @@ private static final long serialVersionUID = 0L;
    *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
    *    the one registered under this name. For types registered outside
    *    core TensorFlow by an add-on library, that library must be loaded
-   *    before this value can be deserialized by StructureCoder.
+   *    before this value can be deserialized by nested_structure_coder.
    *  * If type_spec_class specifies a particular TypeSpec class, this field is
    *    redundant with the type_spec_class enum, and is only used for error
    *    reporting in older binaries that do not know the tupe_spec_class enum.
@@ -493,7 +493,7 @@ private static final long serialVersionUID = 0L;
    *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
    *    the one registered under this name. For types registered outside
    *    core TensorFlow by an add-on library, that library must be loaded
-   *    before this value can be deserialized by StructureCoder.
+   *    before this value can be deserialized by nested_structure_coder.
    *  * If type_spec_class specifies a particular TypeSpec class, this field is
    *    redundant with the type_spec_class enum, and is only used for error
    *    reporting in older binaries that do not know the tupe_spec_class enum.
@@ -1102,7 +1102,7 @@ private static final long serialVersionUID = 0L;
      *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
      *    the one registered under this name. For types registered outside
      *    core TensorFlow by an add-on library, that library must be loaded
-     *    before this value can be deserialized by StructureCoder.
+     *    before this value can be deserialized by nested_structure_coder.
      *  * If type_spec_class specifies a particular TypeSpec class, this field is
      *    redundant with the type_spec_class enum, and is only used for error
      *    reporting in older binaries that do not know the tupe_spec_class enum.
@@ -1128,7 +1128,7 @@ private static final long serialVersionUID = 0L;
      *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
      *    the one registered under this name. For types registered outside
      *    core TensorFlow by an add-on library, that library must be loaded
-     *    before this value can be deserialized by StructureCoder.
+     *    before this value can be deserialized by nested_structure_coder.
      *  * If type_spec_class specifies a particular TypeSpec class, this field is
      *    redundant with the type_spec_class enum, and is only used for error
      *    reporting in older binaries that do not know the tupe_spec_class enum.
@@ -1155,7 +1155,7 @@ private static final long serialVersionUID = 0L;
      *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
      *    the one registered under this name. For types registered outside
      *    core TensorFlow by an add-on library, that library must be loaded
-     *    before this value can be deserialized by StructureCoder.
+     *    before this value can be deserialized by nested_structure_coder.
      *  * If type_spec_class specifies a particular TypeSpec class, this field is
      *    redundant with the type_spec_class enum, and is only used for error
      *    reporting in older binaries that do not know the tupe_spec_class enum.
@@ -1179,7 +1179,7 @@ private static final long serialVersionUID = 0L;
      *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
      *    the one registered under this name. For types registered outside
      *    core TensorFlow by an add-on library, that library must be loaded
-     *    before this value can be deserialized by StructureCoder.
+     *    before this value can be deserialized by nested_structure_coder.
      *  * If type_spec_class specifies a particular TypeSpec class, this field is
      *    redundant with the type_spec_class enum, and is only used for error
      *    reporting in older binaries that do not know the tupe_spec_class enum.
@@ -1199,7 +1199,7 @@ private static final long serialVersionUID = 0L;
      *  * If type_spec_class == REGISTERED_TYPE_SPEC, the TypeSpec class is
      *    the one registered under this name. For types registered outside
      *    core TensorFlow by an add-on library, that library must be loaded
-     *    before this value can be deserialized by StructureCoder.
+     *    before this value can be deserialized by nested_structure_coder.
      *  * If type_spec_class specifies a particular TypeSpec class, this field is
      *    redundant with the type_spec_class enum, and is only used for error
      *    reporting in older binaries that do not know the tupe_spec_class enum.

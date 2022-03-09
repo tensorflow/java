@@ -513,26 +513,6 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * Distributed coordination service to be enabled if set.
-     * Currently only effective in multi-client setup.
-     * </pre>
-     *
-     * <code>string coordination_service = 19;</code>
-     */
-    java.lang.String getCoordinationService();
-    /**
-     * <pre>
-     * Distributed coordination service to be enabled if set.
-     * Currently only effective in multi-client setup.
-     * </pre>
-     *
-     * <code>string coordination_service = 19;</code>
-     */
-    com.google.protobuf.ByteString
-        getCoordinationServiceBytes();
-
-    /**
-     * <pre>
      * Whether functional control flow op lowering should be disabled. This is
      * useful when executing within a portable runtime where control flow op
      * kernels may not be loaded due to selective registration.
@@ -541,6 +521,41 @@ private static final long serialVersionUID = 0L;
      * <code>bool disable_functional_ops_lowering = 21;</code>
      */
     boolean getDisableFunctionalOpsLowering();
+
+    /**
+     * <pre>
+     * Provides a hint to XLA auto clustering to prefer forming a single large
+     * cluster that encompases most of the graph.
+     * </pre>
+     *
+     * <code>bool xla_prefer_single_graph_cluster = 22;</code>
+     */
+    boolean getXlaPreferSingleGraphCluster();
+
+    /**
+     * <pre>
+     * Distributed coordination service configurations.
+     * </pre>
+     *
+     * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+     */
+    boolean hasCoordinationConfig();
+    /**
+     * <pre>
+     * Distributed coordination service configurations.
+     * </pre>
+     *
+     * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+     */
+    org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig();
+    /**
+     * <pre>
+     * Distributed coordination service configurations.
+     * </pre>
+     *
+     * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+     */
+    org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder();
   }
   /**
    * <pre>
@@ -564,7 +579,6 @@ private static final long serialVersionUID = 0L;
       collectiveGroupLeader_ = "";
       executorType_ = "";
       mlirBridgeRollout_ = 0;
-      coordinationService_ = "";
     }
 
     @java.lang.Override
@@ -693,15 +707,27 @@ private static final long serialVersionUID = 0L;
               useTfrt_ = input.readBool();
               break;
             }
-            case 154: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              coordinationService_ = s;
-              break;
-            }
             case 168: {
 
               disableFunctionalOpsLowering_ = input.readBool();
+              break;
+            }
+            case 176: {
+
+              xlaPreferSingleGraphCluster_ = input.readBool();
+              break;
+            }
+            case 186: {
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder subBuilder = null;
+              if (coordinationConfig_ != null) {
+                subBuilder = coordinationConfig_.toBuilder();
+              }
+              coordinationConfig_ = input.readMessage(org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(coordinationConfig_);
+                coordinationConfig_ = subBuilder.buildPartial();
+              }
+
               break;
             }
             default: {
@@ -1299,50 +1325,6 @@ private static final long serialVersionUID = 0L;
       return useTfrt_;
     }
 
-    public static final int COORDINATION_SERVICE_FIELD_NUMBER = 19;
-    private volatile java.lang.Object coordinationService_;
-    /**
-     * <pre>
-     * Distributed coordination service to be enabled if set.
-     * Currently only effective in multi-client setup.
-     * </pre>
-     *
-     * <code>string coordination_service = 19;</code>
-     */
-    public java.lang.String getCoordinationService() {
-      java.lang.Object ref = coordinationService_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        coordinationService_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * Distributed coordination service to be enabled if set.
-     * Currently only effective in multi-client setup.
-     * </pre>
-     *
-     * <code>string coordination_service = 19;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCoordinationServiceBytes() {
-      java.lang.Object ref = coordinationService_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        coordinationService_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
     public static final int DISABLE_FUNCTIONAL_OPS_LOWERING_FIELD_NUMBER = 21;
     private boolean disableFunctionalOpsLowering_;
     /**
@@ -1356,6 +1338,53 @@ private static final long serialVersionUID = 0L;
      */
     public boolean getDisableFunctionalOpsLowering() {
       return disableFunctionalOpsLowering_;
+    }
+
+    public static final int XLA_PREFER_SINGLE_GRAPH_CLUSTER_FIELD_NUMBER = 22;
+    private boolean xlaPreferSingleGraphCluster_;
+    /**
+     * <pre>
+     * Provides a hint to XLA auto clustering to prefer forming a single large
+     * cluster that encompases most of the graph.
+     * </pre>
+     *
+     * <code>bool xla_prefer_single_graph_cluster = 22;</code>
+     */
+    public boolean getXlaPreferSingleGraphCluster() {
+      return xlaPreferSingleGraphCluster_;
+    }
+
+    public static final int COORDINATION_CONFIG_FIELD_NUMBER = 23;
+    private org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig coordinationConfig_;
+    /**
+     * <pre>
+     * Distributed coordination service configurations.
+     * </pre>
+     *
+     * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+     */
+    public boolean hasCoordinationConfig() {
+      return coordinationConfig_ != null;
+    }
+    /**
+     * <pre>
+     * Distributed coordination service configurations.
+     * </pre>
+     *
+     * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+     */
+    public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig() {
+      return coordinationConfig_ == null ? org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
+    }
+    /**
+     * <pre>
+     * Distributed coordination service configurations.
+     * </pre>
+     *
+     * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+     */
+    public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder() {
+      return getCoordinationConfig();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1423,11 +1452,14 @@ private static final long serialVersionUID = 0L;
       if (useTfrt_ != false) {
         output.writeBool(18, useTfrt_);
       }
-      if (!getCoordinationServiceBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 19, coordinationService_);
-      }
       if (disableFunctionalOpsLowering_ != false) {
         output.writeBool(21, disableFunctionalOpsLowering_);
+      }
+      if (xlaPreferSingleGraphCluster_ != false) {
+        output.writeBool(22, xlaPreferSingleGraphCluster_);
+      }
+      if (coordinationConfig_ != null) {
+        output.writeMessage(23, getCoordinationConfig());
       }
       unknownFields.writeTo(output);
     }
@@ -1504,12 +1536,17 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(18, useTfrt_);
       }
-      if (!getCoordinationServiceBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(19, coordinationService_);
-      }
       if (disableFunctionalOpsLowering_ != false) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(21, disableFunctionalOpsLowering_);
+      }
+      if (xlaPreferSingleGraphCluster_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(22, xlaPreferSingleGraphCluster_);
+      }
+      if (coordinationConfig_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(23, getCoordinationConfig());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1562,10 +1599,15 @@ private static final long serialVersionUID = 0L;
           != other.getXlaFusionAutotunerThresh()) return false;
       if (getUseTfrt()
           != other.getUseTfrt()) return false;
-      if (!getCoordinationService()
-          .equals(other.getCoordinationService())) return false;
       if (getDisableFunctionalOpsLowering()
           != other.getDisableFunctionalOpsLowering()) return false;
+      if (getXlaPreferSingleGraphCluster()
+          != other.getXlaPreferSingleGraphCluster()) return false;
+      if (hasCoordinationConfig() != other.hasCoordinationConfig()) return false;
+      if (hasCoordinationConfig()) {
+        if (!getCoordinationConfig()
+            .equals(other.getCoordinationConfig())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1625,11 +1667,16 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + USE_TFRT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getUseTfrt());
-      hash = (37 * hash) + COORDINATION_SERVICE_FIELD_NUMBER;
-      hash = (53 * hash) + getCoordinationService().hashCode();
       hash = (37 * hash) + DISABLE_FUNCTIONAL_OPS_LOWERING_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getDisableFunctionalOpsLowering());
+      hash = (37 * hash) + XLA_PREFER_SINGLE_GRAPH_CLUSTER_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getXlaPreferSingleGraphCluster());
+      if (hasCoordinationConfig()) {
+        hash = (37 * hash) + COORDINATION_CONFIG_FIELD_NUMBER;
+        hash = (53 * hash) + getCoordinationConfig().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1807,10 +1854,16 @@ private static final long serialVersionUID = 0L;
 
         useTfrt_ = false;
 
-        coordinationService_ = "";
-
         disableFunctionalOpsLowering_ = false;
 
+        xlaPreferSingleGraphCluster_ = false;
+
+        if (coordinationConfigBuilder_ == null) {
+          coordinationConfig_ = null;
+        } else {
+          coordinationConfig_ = null;
+          coordinationConfigBuilder_ = null;
+        }
         return this;
       }
 
@@ -1858,8 +1911,13 @@ private static final long serialVersionUID = 0L;
         result.disableOutputPartitionGraphs_ = disableOutputPartitionGraphs_;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
         result.useTfrt_ = useTfrt_;
-        result.coordinationService_ = coordinationService_;
         result.disableFunctionalOpsLowering_ = disableFunctionalOpsLowering_;
+        result.xlaPreferSingleGraphCluster_ = xlaPreferSingleGraphCluster_;
+        if (coordinationConfigBuilder_ == null) {
+          result.coordinationConfig_ = coordinationConfig_;
+        } else {
+          result.coordinationConfig_ = coordinationConfigBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -1961,12 +2019,14 @@ private static final long serialVersionUID = 0L;
         if (other.getUseTfrt() != false) {
           setUseTfrt(other.getUseTfrt());
         }
-        if (!other.getCoordinationService().isEmpty()) {
-          coordinationService_ = other.coordinationService_;
-          onChanged();
-        }
         if (other.getDisableFunctionalOpsLowering() != false) {
           setDisableFunctionalOpsLowering(other.getDisableFunctionalOpsLowering());
+        }
+        if (other.getXlaPreferSingleGraphCluster() != false) {
+          setXlaPreferSingleGraphCluster(other.getXlaPreferSingleGraphCluster());
+        }
+        if (other.hasCoordinationConfig()) {
+          mergeCoordinationConfig(other.getCoordinationConfig());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3079,100 +3139,6 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private java.lang.Object coordinationService_ = "";
-      /**
-       * <pre>
-       * Distributed coordination service to be enabled if set.
-       * Currently only effective in multi-client setup.
-       * </pre>
-       *
-       * <code>string coordination_service = 19;</code>
-       */
-      public java.lang.String getCoordinationService() {
-        java.lang.Object ref = coordinationService_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          coordinationService_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Distributed coordination service to be enabled if set.
-       * Currently only effective in multi-client setup.
-       * </pre>
-       *
-       * <code>string coordination_service = 19;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCoordinationServiceBytes() {
-        java.lang.Object ref = coordinationService_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          coordinationService_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       * Distributed coordination service to be enabled if set.
-       * Currently only effective in multi-client setup.
-       * </pre>
-       *
-       * <code>string coordination_service = 19;</code>
-       */
-      public Builder setCoordinationService(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        coordinationService_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Distributed coordination service to be enabled if set.
-       * Currently only effective in multi-client setup.
-       * </pre>
-       *
-       * <code>string coordination_service = 19;</code>
-       */
-      public Builder clearCoordinationService() {
-        
-        coordinationService_ = getDefaultInstance().getCoordinationService();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       * Distributed coordination service to be enabled if set.
-       * Currently only effective in multi-client setup.
-       * </pre>
-       *
-       * <code>string coordination_service = 19;</code>
-       */
-      public Builder setCoordinationServiceBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        coordinationService_ = value;
-        onChanged();
-        return this;
-      }
-
       private boolean disableFunctionalOpsLowering_ ;
       /**
        * <pre>
@@ -3215,6 +3181,200 @@ private static final long serialVersionUID = 0L;
         disableFunctionalOpsLowering_ = false;
         onChanged();
         return this;
+      }
+
+      private boolean xlaPreferSingleGraphCluster_ ;
+      /**
+       * <pre>
+       * Provides a hint to XLA auto clustering to prefer forming a single large
+       * cluster that encompases most of the graph.
+       * </pre>
+       *
+       * <code>bool xla_prefer_single_graph_cluster = 22;</code>
+       */
+      public boolean getXlaPreferSingleGraphCluster() {
+        return xlaPreferSingleGraphCluster_;
+      }
+      /**
+       * <pre>
+       * Provides a hint to XLA auto clustering to prefer forming a single large
+       * cluster that encompases most of the graph.
+       * </pre>
+       *
+       * <code>bool xla_prefer_single_graph_cluster = 22;</code>
+       */
+      public Builder setXlaPreferSingleGraphCluster(boolean value) {
+        
+        xlaPreferSingleGraphCluster_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Provides a hint to XLA auto clustering to prefer forming a single large
+       * cluster that encompases most of the graph.
+       * </pre>
+       *
+       * <code>bool xla_prefer_single_graph_cluster = 22;</code>
+       */
+      public Builder clearXlaPreferSingleGraphCluster() {
+        
+        xlaPreferSingleGraphCluster_ = false;
+        onChanged();
+        return this;
+      }
+
+      private org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig coordinationConfig_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder> coordinationConfigBuilder_;
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public boolean hasCoordinationConfig() {
+        return coordinationConfigBuilder_ != null || coordinationConfig_ != null;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig getCoordinationConfig() {
+        if (coordinationConfigBuilder_ == null) {
+          return coordinationConfig_ == null ? org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
+        } else {
+          return coordinationConfigBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public Builder setCoordinationConfig(org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig value) {
+        if (coordinationConfigBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          coordinationConfig_ = value;
+          onChanged();
+        } else {
+          coordinationConfigBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public Builder setCoordinationConfig(
+          org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder builderForValue) {
+        if (coordinationConfigBuilder_ == null) {
+          coordinationConfig_ = builderForValue.build();
+          onChanged();
+        } else {
+          coordinationConfigBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public Builder mergeCoordinationConfig(org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig value) {
+        if (coordinationConfigBuilder_ == null) {
+          if (coordinationConfig_ != null) {
+            coordinationConfig_ =
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.newBuilder(coordinationConfig_).mergeFrom(value).buildPartial();
+          } else {
+            coordinationConfig_ = value;
+          }
+          onChanged();
+        } else {
+          coordinationConfigBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public Builder clearCoordinationConfig() {
+        if (coordinationConfigBuilder_ == null) {
+          coordinationConfig_ = null;
+          onChanged();
+        } else {
+          coordinationConfig_ = null;
+          coordinationConfigBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder getCoordinationConfigBuilder() {
+        
+        onChanged();
+        return getCoordinationConfigFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      public org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder getCoordinationConfigOrBuilder() {
+        if (coordinationConfigBuilder_ != null) {
+          return coordinationConfigBuilder_.getMessageOrBuilder();
+        } else {
+          return coordinationConfig_ == null ?
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.getDefaultInstance() : coordinationConfig_;
+        }
+      }
+      /**
+       * <pre>
+       * Distributed coordination service configurations.
+       * </pre>
+       *
+       * <code>.tensorflow.CoordinationServiceConfig coordination_config = 23;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder> 
+          getCoordinationConfigFieldBuilder() {
+        if (coordinationConfigBuilder_ == null) {
+          coordinationConfigBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfig.Builder, org.tensorflow.proto.distruntime.CoordinationConfig.CoordinationServiceConfigOrBuilder>(
+                  getCoordinationConfig(),
+                  getParentForChildren(),
+                  isClean());
+          coordinationConfig_ = null;
+        }
+        return coordinationConfigBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(

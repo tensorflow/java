@@ -5,7 +5,7 @@ package org.tensorflow.proto.data;
 
 /**
  * <pre>
- * next: 4
+ * next: 5
  * </pre>
  *
  * Protobuf type {@code tensorflow.data.AutotuneOptions}
@@ -65,6 +65,12 @@ private static final long serialVersionUID = 0L;
           case 24: {
             optionalRamBudgetCase_ = 3;
             optionalRamBudget_ = input.readInt64();
+            break;
+          }
+          case 32: {
+            int rawValue = input.readEnum();
+            optionalAutotuneAlgorithmCase_ = 4;
+            optionalAutotuneAlgorithm_ = rawValue;
             break;
           }
           default: {
@@ -207,6 +213,42 @@ private static final long serialVersionUID = 0L;
         optionalRamBudgetCase_);
   }
 
+  private int optionalAutotuneAlgorithmCase_ = 0;
+  private java.lang.Object optionalAutotuneAlgorithm_;
+  public enum OptionalAutotuneAlgorithmCase
+      implements com.google.protobuf.Internal.EnumLite {
+    AUTOTUNE_ALGORITHM(4),
+    OPTIONALAUTOTUNEALGORITHM_NOT_SET(0);
+    private final int value;
+    private OptionalAutotuneAlgorithmCase(int value) {
+      this.value = value;
+    }
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static OptionalAutotuneAlgorithmCase valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static OptionalAutotuneAlgorithmCase forNumber(int value) {
+      switch (value) {
+        case 4: return AUTOTUNE_ALGORITHM;
+        case 0: return OPTIONALAUTOTUNEALGORITHM_NOT_SET;
+        default: return null;
+      }
+    }
+    public int getNumber() {
+      return this.value;
+    }
+  };
+
+  public OptionalAutotuneAlgorithmCase
+  getOptionalAutotuneAlgorithmCase() {
+    return OptionalAutotuneAlgorithmCase.forNumber(
+        optionalAutotuneAlgorithmCase_);
+  }
+
   public static final int ENABLED_FIELD_NUMBER = 1;
   /**
    * <code>bool enabled = 1;</code>
@@ -240,6 +282,29 @@ private static final long serialVersionUID = 0L;
     return 0L;
   }
 
+  public static final int AUTOTUNE_ALGORITHM_FIELD_NUMBER = 4;
+  /**
+   * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+   */
+  public int getAutotuneAlgorithmValue() {
+    if (optionalAutotuneAlgorithmCase_ == 4) {
+      return (java.lang.Integer) optionalAutotuneAlgorithm_;
+    }
+    return 0;
+  }
+  /**
+   * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+   */
+  public org.tensorflow.proto.data.model.AutotuneAlgorithm getAutotuneAlgorithm() {
+    if (optionalAutotuneAlgorithmCase_ == 4) {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.data.model.AutotuneAlgorithm result = org.tensorflow.proto.data.model.AutotuneAlgorithm.valueOf(
+          (java.lang.Integer) optionalAutotuneAlgorithm_);
+      return result == null ? org.tensorflow.proto.data.model.AutotuneAlgorithm.UNRECOGNIZED : result;
+    }
+    return org.tensorflow.proto.data.model.AutotuneAlgorithm.DEFAULT;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -266,6 +331,9 @@ private static final long serialVersionUID = 0L;
       output.writeInt64(
           3, (long)((java.lang.Long) optionalRamBudget_));
     }
+    if (optionalAutotuneAlgorithmCase_ == 4) {
+      output.writeEnum(4, ((java.lang.Integer) optionalAutotuneAlgorithm_));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -289,6 +357,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(
             3, (long)((java.lang.Long) optionalRamBudget_));
+    }
+    if (optionalAutotuneAlgorithmCase_ == 4) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(4, ((java.lang.Integer) optionalAutotuneAlgorithm_));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -332,6 +404,15 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
+    if (!getOptionalAutotuneAlgorithmCase().equals(other.getOptionalAutotuneAlgorithmCase())) return false;
+    switch (optionalAutotuneAlgorithmCase_) {
+      case 4:
+        if (getAutotuneAlgorithmValue()
+            != other.getAutotuneAlgorithmValue()) return false;
+        break;
+      case 0:
+      default:
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -365,6 +446,14 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + RAM_BUDGET_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
             getRamBudget());
+        break;
+      case 0:
+      default:
+    }
+    switch (optionalAutotuneAlgorithmCase_) {
+      case 4:
+        hash = (37 * hash) + AUTOTUNE_ALGORITHM_FIELD_NUMBER;
+        hash = (53 * hash) + getAutotuneAlgorithmValue();
         break;
       case 0:
       default:
@@ -466,7 +555,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * next: 4
+   * next: 5
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.AutotuneOptions}
@@ -512,6 +601,8 @@ private static final long serialVersionUID = 0L;
       optionalCpuBudget_ = null;
       optionalRamBudgetCase_ = 0;
       optionalRamBudget_ = null;
+      optionalAutotuneAlgorithmCase_ = 0;
+      optionalAutotuneAlgorithm_ = null;
       return this;
     }
 
@@ -547,9 +638,13 @@ private static final long serialVersionUID = 0L;
       if (optionalRamBudgetCase_ == 3) {
         result.optionalRamBudget_ = optionalRamBudget_;
       }
+      if (optionalAutotuneAlgorithmCase_ == 4) {
+        result.optionalAutotuneAlgorithm_ = optionalAutotuneAlgorithm_;
+      }
       result.optionalEnabledCase_ = optionalEnabledCase_;
       result.optionalCpuBudgetCase_ = optionalCpuBudgetCase_;
       result.optionalRamBudgetCase_ = optionalRamBudgetCase_;
+      result.optionalAutotuneAlgorithmCase_ = optionalAutotuneAlgorithmCase_;
       onBuilt();
       return result;
     }
@@ -625,6 +720,15 @@ private static final long serialVersionUID = 0L;
           break;
         }
       }
+      switch (other.getOptionalAutotuneAlgorithmCase()) {
+        case AUTOTUNE_ALGORITHM: {
+          setAutotuneAlgorithmValue(other.getAutotuneAlgorithmValue());
+          break;
+        }
+        case OPTIONALAUTOTUNEALGORITHM_NOT_SET: {
+          break;
+        }
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -694,6 +798,21 @@ private static final long serialVersionUID = 0L;
     public Builder clearOptionalRamBudget() {
       optionalRamBudgetCase_ = 0;
       optionalRamBudget_ = null;
+      onChanged();
+      return this;
+    }
+
+    private int optionalAutotuneAlgorithmCase_ = 0;
+    private java.lang.Object optionalAutotuneAlgorithm_;
+    public OptionalAutotuneAlgorithmCase
+        getOptionalAutotuneAlgorithmCase() {
+      return OptionalAutotuneAlgorithmCase.forNumber(
+          optionalAutotuneAlgorithmCase_);
+    }
+
+    public Builder clearOptionalAutotuneAlgorithm() {
+      optionalAutotuneAlgorithmCase_ = 0;
+      optionalAutotuneAlgorithm_ = null;
       onChanged();
       return this;
     }
@@ -784,6 +903,60 @@ private static final long serialVersionUID = 0L;
       if (optionalRamBudgetCase_ == 3) {
         optionalRamBudgetCase_ = 0;
         optionalRamBudget_ = null;
+        onChanged();
+      }
+      return this;
+    }
+
+    /**
+     * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+     */
+    public int getAutotuneAlgorithmValue() {
+      if (optionalAutotuneAlgorithmCase_ == 4) {
+        return ((java.lang.Integer) optionalAutotuneAlgorithm_).intValue();
+      }
+      return 0;
+    }
+    /**
+     * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+     */
+    public Builder setAutotuneAlgorithmValue(int value) {
+      optionalAutotuneAlgorithmCase_ = 4;
+      optionalAutotuneAlgorithm_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+     */
+    public org.tensorflow.proto.data.model.AutotuneAlgorithm getAutotuneAlgorithm() {
+      if (optionalAutotuneAlgorithmCase_ == 4) {
+        @SuppressWarnings("deprecation")
+        org.tensorflow.proto.data.model.AutotuneAlgorithm result = org.tensorflow.proto.data.model.AutotuneAlgorithm.valueOf(
+            (java.lang.Integer) optionalAutotuneAlgorithm_);
+        return result == null ? org.tensorflow.proto.data.model.AutotuneAlgorithm.UNRECOGNIZED : result;
+      }
+      return org.tensorflow.proto.data.model.AutotuneAlgorithm.DEFAULT;
+    }
+    /**
+     * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+     */
+    public Builder setAutotuneAlgorithm(org.tensorflow.proto.data.model.AutotuneAlgorithm value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      optionalAutotuneAlgorithmCase_ = 4;
+      optionalAutotuneAlgorithm_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+     */
+    public Builder clearAutotuneAlgorithm() {
+      if (optionalAutotuneAlgorithmCase_ == 4) {
+        optionalAutotuneAlgorithmCase_ = 0;
+        optionalAutotuneAlgorithm_ = null;
         onChanged();
       }
       return this;
