@@ -78,8 +78,8 @@
   <profiles>
     <!--
     Developing Profile
-      This profile skips the tedious native build for local development, fetching the artifacts as a
-      dependency from the Maven repositories instead. If no native artifact matching the current
+      This profile skips the tedious native build for local development, fetching and unpacking
+      the native artifact from the Maven repositories instead. If no artifact matching the current
       version have been deployed previously, building with this profile active will fail.
 
       Note that any changes to the code that may impact low-level bindings with the TensorFlow
@@ -87,17 +87,30 @@
     -->
     <profile>
       <id>dev</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-api</artifactId>
-          <version>${project.version}</version>
-          <classifier>${native.classifier}</classifier>
-        </dependency>
-      </dependencies>
       <properties>
         <native.build.skip>true</native.build.skip>
       </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>dev-unpack-native</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifact>${project.groupId}:${project.artifactId}:${project.version}:jar:${native.classifier}</artifact>
+                  <outputDirectory>${project.build.directory}/native</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <!--
     Deploying Profile
@@ -332,7 +345,7 @@
           <execution>
             <!--
             Compile JNI native code from this project
-              This code is used to called the TensorFlow C API right now but should be eventually
+              This code is used to call the TensorFlow C API right now but should be eventually
               replaced by the usage of JavaCPP generated bindings
             -->
             <id>javacpp-compiler</id>
