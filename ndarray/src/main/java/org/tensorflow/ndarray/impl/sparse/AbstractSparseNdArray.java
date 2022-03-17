@@ -403,6 +403,26 @@ public abstract class AbstractSparseNdArray<T, U extends NdArray<T>> extends Abs
   }
 
   /**
+   * A String showing the type, default value, number of elements and
+   * the dense shape of this sparse ndarray.
+   * @return A string containing the type, default value, number of elements and shape.
+   */
+  @Override
+  public String toString() {
+    long numElements = values == null ? 0 : values.size();
+    String strDefault;
+    if (defaultValue == null) {
+      strDefault = "<null>";
+    } else if (defaultValue instanceof Number) {
+      strDefault = defaultValue.toString();
+    } else {
+      strDefault = "'" + defaultValue + "'";
+    }
+    return this.getClass().getSimpleName() + "(defaultValue=" + strDefault
+            + ", numElements=" + numElements + ", shape=" + this.shape() + ")";
+  }
+
+  /**
    * Performs a binary search on the indices array to locate the index of the specified coordinates.
    * The indices array must be sorted by coordinates, row major.
    *

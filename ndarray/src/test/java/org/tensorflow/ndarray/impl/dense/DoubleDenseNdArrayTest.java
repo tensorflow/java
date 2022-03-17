@@ -16,6 +16,8 @@
  */
 package org.tensorflow.ndarray.impl.dense;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffers;
@@ -31,5 +33,15 @@ public class DoubleDenseNdArrayTest extends DoubleNdArrayTestBase {
 
   @Override protected DataBuffer<Double> allocateBuffer(long size) {
     return DataBuffers.ofDoubles(size);
+  }
+
+  @Test
+  public void testToString() {
+    DoubleNdArray matrix3d = allocate(Shape.of(5, 4, 5));
+    Assertions.assertEquals("DoubleDenseNdArray(shape=[5, 4, 5])",matrix3d.toString());
+    DoubleNdArray vector = allocate(Shape.of(5));
+    Assertions.assertEquals("DoubleDenseNdArray(shape=[5])",vector.toString());
+    DoubleNdArray scalar = allocate(Shape.of());
+    Assertions.assertEquals("DoubleDenseNdArray(shape=[])",scalar.toString());
   }
 }

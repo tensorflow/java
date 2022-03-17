@@ -16,6 +16,8 @@
  */
 package org.tensorflow.ndarray.impl.dense;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffers;
@@ -31,5 +33,13 @@ public class BooleanDenseNdArrayTest extends BooleanNdArrayTestBase {
 
   @Override protected DataBuffer<Boolean> allocateBuffer(long size) {
     return DataBuffers.ofBooleans(size);
+  }
+
+  @Test
+  public void testToString() {
+    BooleanNdArray matrix3d = allocate(Shape.of(5, 4, 5));
+    Assertions.assertEquals("BooleanDenseNdArray(shape=[5, 4, 5])",matrix3d.toString());
+    BooleanNdArray scalar = allocate(Shape.of());
+    Assertions.assertEquals("BooleanDenseNdArray(shape=[])",scalar.toString());
   }
 }

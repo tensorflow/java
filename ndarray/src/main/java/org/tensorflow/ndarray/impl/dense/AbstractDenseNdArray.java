@@ -132,6 +132,15 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
     return buffer().equals(other.buffer());
   }
 
+  /**
+   * A String showing the type and shape of this dense ndarray.
+   * @return A string containing the type and shape.
+   */
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName() + "(shape=" + this.shape() + ")";
+  }
+
   protected AbstractDenseNdArray(DimensionalSpace dimensions) {
     super(dimensions);
   }

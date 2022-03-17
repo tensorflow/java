@@ -1,5 +1,6 @@
 package org.tensorflow.ndarray.impl.sparse;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.LongNdArray;
@@ -301,5 +302,16 @@ class DoubleSparseNdArrayTest {
                 l.scalars()
                     .forEachIndexed(
                         (lidx, f) -> assertEquals(expected[i.getAndIncrement()], f.getDouble())));
+  }
+
+  @Test
+  public void testToString() {
+    DoubleNdArray ndArray = StdArrays.ndCopyOf(dense2DArray);
+    DoubleSparseNdArray instance =
+            DoubleSparseNdArray.create(DimensionalSpace.create(ndArray.shape()));
+    instance.fromDense(ndArray);
+    Assertions.assertEquals("DoubleSparseNdArray(defaultValue=0.0, numElements=2, shape=[3, 4])",instance.toString());
+    DoubleSparseNdArray empty = DoubleSparseNdArray.create(DimensionalSpace.create(Shape.of(5)));
+    Assertions.assertEquals("DoubleSparseNdArray(defaultValue=0.0, numElements=0, shape=[5])",empty.toString());
   }
 }

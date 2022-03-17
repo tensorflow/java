@@ -394,4 +394,25 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
   public Class<T> getType() {
     return type;
   }
+
+  /**
+   * A String showing the type, default value, number of elements and
+   * the dense shape of this sparse ndarray.
+   * @return A string containing the type, default value, number of elements and shape.
+   */
+  @Override
+  public String toString() {
+    long numElements = getValues() == null ? 0 : getValues().size();
+    String strDefault;
+    T defaultVal = getDefaultValue();
+    if (defaultVal == null) {
+      strDefault = "<null>";
+    } else if (defaultVal instanceof Number) {
+      strDefault = defaultVal.toString();
+    } else {
+      strDefault = "'" + defaultVal + "'";
+    }
+    return this.getClass().getSimpleName() + "(type="+type.getSimpleName()+", defaultValue=" + strDefault
+            + ", numElements=" + numElements + ", shape=" + this.shape() + ")";
+  }
 }

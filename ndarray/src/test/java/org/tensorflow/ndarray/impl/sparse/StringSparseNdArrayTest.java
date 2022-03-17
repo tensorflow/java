@@ -14,6 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -337,5 +338,15 @@ public class StringSparseNdArrayTest {
     assertEquals(1L, dArray.size());
     assertNotNull(dArray.getObject());
     assertEquals("a default", dArray.getObject());
+  }
+
+  @Test
+  public void testToString() {
+    SparseNdArray<String, NdArray<String>> instance =
+            new SparseNdArray<>(String.class, indices, values, DimensionalSpace.create(shape));
+    Assertions.assertEquals("SparseNdArray(type=String, defaultValue=<null>, numElements=2, shape=[3, 4])",instance.toString());
+    instance = new SparseNdArray<>(
+                    String.class, indices, values, "a default", DimensionalSpace.create(shape));
+    Assertions.assertEquals("SparseNdArray(type=String, defaultValue='a default', numElements=2, shape=[3, 4])",instance.toString());
   }
 }
