@@ -39,22 +39,31 @@ import org.tensorflow.types.family.TType;
  * Read
  *  <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
  * for an explanation of segments.
- * <p>This operator is similar to the unsorted segment sum operator found
- *  <a href="../../../api_docs/python/math_ops.md#UnsortedSegmentSum">(here)</a> .
+ * <p>This operator is similar to {@code tf.math.unsorted_segment_sum},
  * Instead of computing the sum over segments, it computes the product of all
  * entries belonging to a segment such that:
  * <p>\(output_i = \prod_{j...} data[j...]\) where the product is over tuples
  * {@code j...} such that {@code segment_ids[j...] == i}.
  * <p>For example:
- * <pre>
- * c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
- * tf.unsorted_segment_prod(c, tf.constant([0, 1, 0]), num_segments=2)
- * # ==&gt; [[ 4,  6, 6, 4],
- * #       [5,  6, 7, 8]]
- * </pre>
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
+ * tf.math.unsorted_segment_prod(c, tf.constant([0, 1, 0]), num_segments=2).numpy()
+ * array([[4, 6, 6, 4],
+ * [5, 6, 7, 8]], dtype=int32)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  * <p>If there is no entry for a given segment ID {@code i}, it outputs 1.
  * <p>If the given segment ID {@code i} is negative, then the corresponding value is
  * dropped, and will not be included in the result.
+ * Caution: On CPU, values in {@code segment_ids} are always validated to be less than
+ * {@code num_segments}, and an error is thrown for out-of-bound indices. On GPU, this
+ * does not throw an error for out-of-bound indices. On Gpu, out-of-bound indices
+ * result in safe but unspecified behavior, which may include ignoring
+ * out-of-bound indices or outputting a tensor with a 0 stored in the first
+ * dimension of its shape if {@code num_segments} is 0.
  *
  * @param <T> data type for {@code output} output
  */
@@ -85,6 +94,9 @@ public final class UnsortedSegmentProd<T extends TType> extends RawOp implements
    * @param scope current scope
    * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   * The values must be less than {@code num_segments}.
+   * <p>Caution: The values are always validated to be in range on CPU, never validated
+   * on GPU.
    * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentProd} output and operands
    * @return a new instance of UnsortedSegmentProd
@@ -128,6 +140,9 @@ public final class UnsortedSegmentProd<T extends TType> extends RawOp implements
 
     /**
      * A tensor whose shape is a prefix of {@code data.shape}.
+     * The values must be less than {@code num_segments}.
+     * <p>Caution: The values are always validated to be in range on CPU, never validated
+     * on GPU.
      */
     public final Operand<? extends TNumber> segmentIds;
 

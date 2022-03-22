@@ -90,8 +90,9 @@ public final class IoOps {
 
   /**
    * Decode web-safe base64-encoded strings.
-   *  Input may or may not have padding at the end. See EncodeBase64 for padding.
-   *  Web-safe means that input must use - and _ instead of + and /.
+   *  Input may or may not have padding at the end. See
+   *   <a href="https://www.tensorflow.org/api_docs/python/tf/io/encode_base64">EncodeBase64</a> 
+   *  for padding. Web-safe means that input must use - and _ instead of + and /.
    *
    * @param input Base64 strings to decode.
    * @return a new instance of DecodeBase64
@@ -242,8 +243,8 @@ public final class IoOps {
 
   /**
    * Encode strings into web-safe base64 format.
-   *  Refer to the following article for more information on base64 format:
-   *  en.wikipedia.org/wiki/Base64. Base64 strings may have padding with '=' at the
+   *  Refer to  <a href="https://en.wikipedia.org/wiki/Base64">this article</a>  for more information on
+   *  base64 format. Base64 strings may have padding with '=' at the
    *  end so that the encoded has length multiple of 4. See Padding section of the
    *  link above.
    *  <p>Web-safe means that the encoder uses - and _ instead of + and /.
@@ -992,8 +993,8 @@ public final class IoOps {
   }
 
   /**
-   * Writes contents to the file at input filename. Creates file and recursively
-   *  creates directory if not existing.
+   * Writes {@code contents} to the file at input {@code filename}.
+   *  Creates the file and recursively creates directory if it does not exist.
    *
    * @param filename scalar. The name of the file to which we write the contents.
    * @param contents scalar. The content to be written to the output file.

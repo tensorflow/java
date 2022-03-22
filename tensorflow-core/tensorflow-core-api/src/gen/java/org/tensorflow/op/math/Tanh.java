@@ -44,8 +44,8 @@ import org.tensorflow.types.family.TType;
  * <p>x = tf.constant([-float(&quot;inf&quot;), -5, -0.5, 1, 1.2, 2, 3, float(&quot;inf&quot;)])
  * tf.math.tanh(x)
  * &lt;tf.Tensor: shape=(8,), dtype=float32, numpy=
- * array([-1.        , -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
- * 0.9640276 ,  0.9950547 ,  1.        ], dtype=float32)&gt;
+ * array([-1.0, -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
+ * 0.9640276 ,  0.9950547 ,  1.0], dtype=float32)&gt;
  * </blockquote>
  * </blockquote>
  * </blockquote>

@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DataServiceDatasetV3"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.DataServiceDataset"
+  }
+}

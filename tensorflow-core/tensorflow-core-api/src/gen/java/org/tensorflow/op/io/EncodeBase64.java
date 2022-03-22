@@ -34,8 +34,8 @@ import org.tensorflow.types.TString;
 
 /**
  * Encode strings into web-safe base64 format.
- * Refer to the following article for more information on base64 format:
- * en.wikipedia.org/wiki/Base64. Base64 strings may have padding with '=' at the
+ * Refer to  <a href="https://en.wikipedia.org/wiki/Base64">this article</a>  for more information on
+ * base64 format. Base64 strings may have padding with '=' at the
  * end so that the encoded has length multiple of 4. See Padding section of the
  * link above.
  * <p>Web-safe means that the encoder uses - and _ instead of + and /.

@@ -10,6 +10,7 @@ public interface SaveableObjectOrBuilder extends
   /**
    * <pre>
    * Node ids of concrete functions for saving and loading from a checkpoint.
+   * These functions save and restore directly from tensors.
    * </pre>
    *
    * <code>int32 save_function = 2;</code>

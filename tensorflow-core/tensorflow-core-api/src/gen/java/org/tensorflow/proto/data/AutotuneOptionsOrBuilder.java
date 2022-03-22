@@ -22,9 +22,20 @@ public interface AutotuneOptionsOrBuilder extends
    */
   long getRamBudget();
 
+  /**
+   * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+   */
+  int getAutotuneAlgorithmValue();
+  /**
+   * <code>.tensorflow.data.model.AutotuneAlgorithm autotune_algorithm = 4;</code>
+   */
+  org.tensorflow.proto.data.model.AutotuneAlgorithm getAutotuneAlgorithm();
+
   public org.tensorflow.proto.data.AutotuneOptions.OptionalEnabledCase getOptionalEnabledCase();
 
   public org.tensorflow.proto.data.AutotuneOptions.OptionalCpuBudgetCase getOptionalCpuBudgetCase();
 
   public org.tensorflow.proto.data.AutotuneOptions.OptionalRamBudgetCase getOptionalRamBudgetCase();
+
+  public org.tensorflow.proto.data.AutotuneOptions.OptionalAutotuneAlgorithmCase getOptionalAutotuneAlgorithmCase();
 }

@@ -235,6 +235,8 @@ public interface TString extends NdArray<String>, TType {
    */
   TString using(Charset charset);
 
-  /** @return the tensor data as a n-dimensional array of raw byte sequences. */
+  /**
+   * @return the tensor data as a n-dimensional array of raw byte sequences.
+   */
   NdArray<byte[]> asBytes();
 }

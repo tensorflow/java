@@ -19,6 +19,7 @@ package org.tensorflow.op.data;
 
 import java.util.Arrays;
 import java.util.List;
+import org.tensorflow.ConcreteFunction;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -42,29 +43,29 @@ import org.tensorflow.types.family.TType;
  * Creates a dataset that reads data from the tf.data service.
  */
 @OpMetadata(
-    opType = DataServiceDatasetV2.OP_NAME,
-    inputsClass = DataServiceDatasetV2.Inputs.class
+    opType = DataServiceDataset.OP_NAME,
+    inputsClass = DataServiceDataset.Inputs.class
 )
 @Operator(
     group = "data"
 )
-public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> {
+public final class DataServiceDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "DataServiceDatasetV2";
+  public static final String OP_NAME = "DataServiceDatasetV3";
 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  public DataServiceDatasetV2(Operation operation) {
+  public DataServiceDataset(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new DataServiceDatasetV2 operation.
+   * Factory method to create a class wrapping a new DataServiceDatasetV3 operation.
    *
    * @param scope current scope
    * @param datasetId The datasetId value
@@ -78,18 +79,20 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
    * @param iterationCounter The iterationCounter value
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
+   * @param uncompressFn The value of the uncompressFn attribute
    * @param options carries optional attribute values
-   * @return a new instance of DataServiceDatasetV2
+   * @return a new instance of DataServiceDataset
    */
   @Endpoint(
       describeByClass = true
   )
-  public static DataServiceDatasetV2 create(Scope scope, Operand<TInt64> datasetId,
+  public static DataServiceDataset create(Scope scope, Operand<TInt64> datasetId,
       Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
       Operand<TString> jobName, Operand<TInt64> consumerIndex, Operand<TInt64> numConsumers,
       Operand<TInt64> maxOutstandingRequests, Operand<? extends TType> iterationCounter,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DataServiceDatasetV2");
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      ConcreteFunction uncompressFn, Options... options) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DataServiceDataset");
     opBuilder.addInput(datasetId.asOutput());
     opBuilder.addInput(processingMode.asOutput());
     opBuilder.addInput(address.asOutput());
@@ -105,6 +108,7 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    opBuilder.setAttr("uncompress_fn", uncompressFn);
     if (options != null) {
       for (Options opts : options) {
         if (opts.taskRefreshIntervalHintMs != null) {
@@ -116,9 +120,12 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
         if (opts.targetWorkers != null) {
           opBuilder.setAttr("target_workers", opts.targetWorkers);
         }
+        if (opts.uncompress != null) {
+          opBuilder.setAttr("uncompress", opts.uncompress);
+        }
       }
     }
-    return new DataServiceDatasetV2(opBuilder.build());
+    return new DataServiceDataset(opBuilder.build());
   }
 
   /**
@@ -152,6 +159,16 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
   }
 
   /**
+   * Sets the uncompress option.
+   *
+   * @param uncompress the uncompress option
+   * @return this Options instance.
+   */
+  public static Options uncompress(Boolean uncompress) {
+    return new Options().uncompress(uncompress);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -167,7 +184,7 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.DataServiceDatasetV2}
+   * Optional attributes for {@link org.tensorflow.op.data.DataServiceDataset}
    */
   public static class Options {
     private Long taskRefreshIntervalHintMs;
@@ -175,6 +192,8 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
     private String dataTransferProtocol;
 
     private String targetWorkers;
+
+    private Boolean uncompress;
 
     private Options() {
     }
@@ -211,12 +230,23 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
       this.targetWorkers = targetWorkers;
       return this;
     }
+
+    /**
+     * Sets the uncompress option.
+     *
+     * @param uncompress the uncompress option
+     * @return this Options instance.
+     */
+    public Options uncompress(Boolean uncompress) {
+      this.uncompress = uncompress;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
-      outputsClass = DataServiceDatasetV2.class
+      outputsClass = DataServiceDataset.class
   )
-  public static class Inputs extends RawOpInputs<DataServiceDatasetV2> {
+  public static class Inputs extends RawOpInputs<DataServiceDataset> {
     /**
      * The datasetId input
      */
@@ -287,8 +317,13 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
      */
     public final String targetWorkers;
 
+    /**
+     * The uncompress attribute
+     */
+    public final boolean uncompress;
+
     public Inputs(GraphOperation op) {
-      super(new DataServiceDatasetV2(op), op, Arrays.asList("task_refresh_interval_hint_ms", "output_types", "output_shapes", "data_transfer_protocol", "target_workers"));
+      super(new DataServiceDataset(op), op, Arrays.asList("task_refresh_interval_hint_ms", "output_types", "output_shapes", "data_transfer_protocol", "target_workers", "uncompress"));
       int inputIndex = 0;
       datasetId = (Operand<TInt64>) op.input(inputIndex++);
       processingMode = (Operand<TString>) op.input(inputIndex++);
@@ -304,6 +339,7 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       dataTransferProtocol = op.attributes().getAttrString("data_transfer_protocol");
       targetWorkers = op.attributes().getAttrString("target_workers");
+      uncompress = op.attributes().getAttrBool("uncompress");
     }
   }
 }

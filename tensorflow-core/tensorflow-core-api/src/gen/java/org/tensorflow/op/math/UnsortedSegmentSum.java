@@ -48,15 +48,25 @@ import org.tensorflow.types.family.TType;
  * If the given segment ID {@code i} is negative, the value is dropped and will not be
  * added to the sum of the segment.
  * <p>{@code num_segments} should equal the number of distinct segment IDs.
+ * <p>Caution: On CPU, values in {@code segment_ids} are always validated to be less than
+ * {@code num_segments}, and an error is thrown for out-of-bound indices. On GPU, this
+ * does not throw an error for out-of-bound indices. On Gpu, out-of-bound indices
+ * result in safe but unspecified behavior, which may include ignoring
+ * out-of-bound indices or outputting a tensor with a 0 stored in the first
+ * dimension of its shape if {@code num_segments} is 0.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/UnsortedSegmentSum.png" alt>
  * </div>
- * <pre>
- * c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
- * tf.math.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
- * # ==&gt; [[ 5, 5, 5, 5],
- * #       [5, 6, 7, 8]]
- * </pre>
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>c = [[1,2,3,4], [5,6,7,8], [4,3,2,1]]
+ * tf.math.unsorted_segment_sum(c, [0, 1, 0], num_segments=2).numpy()
+ * array([[5, 5, 5, 5],
+ * [5, 6, 7, 8]], dtype=int32)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  *
  * @param <T> data type for {@code output} output
  */
@@ -87,6 +97,9 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
    * @param scope current scope
    * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   * The values must be less than {@code num_segments}.
+   * <p>Caution: The values are always validated to be in range on CPU, never validated
+   * on GPU.
    * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentSum} output and operands
    * @return a new instance of UnsortedSegmentSum
@@ -130,6 +143,9 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
 
     /**
      * A tensor whose shape is a prefix of {@code data.shape}.
+     * The values must be less than {@code num_segments}.
+     * <p>Caution: The values are always validated to be in range on CPU, never validated
+     * on GPU.
      */
     public final Operand<? extends TNumber> segmentIds;
 

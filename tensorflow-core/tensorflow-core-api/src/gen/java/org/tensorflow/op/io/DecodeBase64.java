@@ -34,8 +34,9 @@ import org.tensorflow.types.TString;
 
 /**
  * Decode web-safe base64-encoded strings.
- * Input may or may not have padding at the end. See EncodeBase64 for padding.
- * Web-safe means that input must use - and _ instead of + and /.
+ * Input may or may not have padding at the end. See
+ *  <a href="https://www.tensorflow.org/api_docs/python/tf/io/encode_base64">EncodeBase64</a> 
+ * for padding. Web-safe means that input must use - and _ instead of + and /.
  */
 @OpMetadata(
     opType = DecodeBase64.OP_NAME,

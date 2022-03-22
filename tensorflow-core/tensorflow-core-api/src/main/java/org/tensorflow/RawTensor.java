@@ -188,7 +188,9 @@ public final class RawTensor implements Tensor {
     return typeInfo.mapper().mapDense(this);
   }
 
-  /** @return metadata about the type of this tensor. */
+  /**
+   * @return metadata about the type of this tensor.
+   */
   TensorTypeInfo<? extends TType> typeInfo() {
     return typeInfo;
   }

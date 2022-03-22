@@ -86,12 +86,17 @@ public final class XlaOps {
    * @param input Array or a non-empty tuple of arrays to reduce across replicas.
    * @param groupAssignment Groups between which the reductions are performed.
    * @param reduceOp Reduction computation.
+   * @param mode group mode.
+   *  CrossReplica: group_assignment contains replica_id. Each group contains the
+   *  replicas for the current partition.
+   *  CrossReplicaAndPartition: group_assignment contains replica_id. Each group
+   *  contains the replicas for all partitions.
    * @param <T> data type for {@code XlaAllReduce} output and operands
    * @return a new instance of AllReduce
    */
   public <T extends TNumber> AllReduce<T> allReduce(Operand<T> input,
-      Operand<TInt32> groupAssignment, String reduceOp) {
-    return AllReduce.create(scope, input, groupAssignment, reduceOp);
+      Operand<TInt32> groupAssignment, String reduceOp, String mode) {
+    return AllReduce.create(scope, input, groupAssignment, reduceOp, mode);
   }
 
   /**
@@ -130,16 +135,17 @@ public final class XlaOps {
    *  .
    *
    * @param <W> data type for {@code output} output
-   * @param lhs the input tensor
-   * @param rhs the kernel tensor
-   * @param windowStrides the inter-window strides
-   * @param padding the padding to apply at the start and end of each input dimensions
+   * @param lhs input tensor
+   * @param rhs kernel tensor
+   * @param windowStrides inter-window strides
+   * @param padding padding to apply at the start and end of each input dimensions
    * @param lhsDilation dilation to apply between input elements
    * @param rhsDilation dilation to apply between kernel elements
    * @param featureGroupCount number of feature groups for grouped convolution.
-   * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
-   * @param precisionConfig a serialized xla::PrecisionConfig proto.
-   * @param preferredElementType The type of the tensor.
+   * @param dimensionNumbers serialized xla::ConvolutionDimensionNumbers proto.
+   * @param precisionConfig serialized xla::PrecisionConfig proto.
+   * @param preferredElementType type of the tensor.
+   * @param options carries optional attribute values
    * @param <W> data type for {@code XlaConvV2} output and operands
    * @param <V> data type for {@code XlaConvV2} output and operands
    * @return a new instance of Conv
@@ -147,8 +153,9 @@ public final class XlaOps {
   public <W extends TType, V extends TNumber> Conv<W> conv(Operand<? extends TType> lhs,
       Operand<? extends TType> rhs, Operand<V> windowStrides, Operand<V> padding,
       Operand<V> lhsDilation, Operand<V> rhsDilation, Operand<V> featureGroupCount,
-      String dimensionNumbers, String precisionConfig, Class<W> preferredElementType) {
-    return Conv.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig, preferredElementType);
+      String dimensionNumbers, String precisionConfig, Class<W> preferredElementType,
+      Conv.Options... options) {
+    return Conv.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig, preferredElementType, options);
   }
 
   /**

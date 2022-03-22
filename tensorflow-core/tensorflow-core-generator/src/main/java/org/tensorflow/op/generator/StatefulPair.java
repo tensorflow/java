@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
-public final class StatefulPair {
+final class StatefulPair {
   public final FullOpDef statefulOp;
   public final FullOpDef statelessOp;
   public final String selectorClassName;

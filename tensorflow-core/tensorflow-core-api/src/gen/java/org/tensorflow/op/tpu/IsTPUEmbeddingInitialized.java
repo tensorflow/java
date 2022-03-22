@@ -56,14 +56,32 @@ public final class IsTPUEmbeddingInitialized extends RawOp implements Operand<TB
    * Factory method to create a class wrapping a new IsTPUEmbeddingInitialized operation.
    *
    * @param scope current scope
+   * @param options carries optional attribute values
    * @return a new instance of IsTPUEmbeddingInitialized
    */
   @Endpoint(
       describeByClass = true
   )
-  public static IsTPUEmbeddingInitialized create(Scope scope) {
+  public static IsTPUEmbeddingInitialized create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "IsTPUEmbeddingInitialized");
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.config != null) {
+          opBuilder.setAttr("config", opts.config);
+        }
+      }
+    }
     return new IsTPUEmbeddingInitialized(opBuilder.build());
+  }
+
+  /**
+   * Sets the config option.
+   *
+   * @param config the config option
+   * @return this Options instance.
+   */
+  public static Options config(String config) {
+    return new Options().config(config);
   }
 
   /**
@@ -80,13 +98,40 @@ public final class IsTPUEmbeddingInitialized extends RawOp implements Operand<TB
     return isTpuEmbeddingInitialized;
   }
 
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.IsTPUEmbeddingInitialized}
+   */
+  public static class Options {
+    private String config;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     */
+    public Options config(String config) {
+      this.config = config;
+      return this;
+    }
+  }
+
   @OpInputsMetadata(
       outputsClass = IsTPUEmbeddingInitialized.class
   )
   public static class Inputs extends RawOpInputs<IsTPUEmbeddingInitialized> {
+    /**
+     * The config attribute
+     */
+    public final String config;
+
     public Inputs(GraphOperation op) {
-      super(new IsTPUEmbeddingInitialized(op), op, Arrays.asList());
+      super(new IsTPUEmbeddingInitialized(op), op, Arrays.asList("config"));
       int inputIndex = 0;
+      config = op.attributes().getAttrString("config");
     }
   }
 }

@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TType;
  * <p>For example:
  * <pre>
  * c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
- * tf.segment_sum(c, tf.constant([0, 0, 1]))
+ * tf.math.segment_sum(c, tf.constant([0, 0, 1]))
  * # ==&gt; [[5, 5, 5, 5],
  * #      [5, 6, 7, 8]]
  * </pre>

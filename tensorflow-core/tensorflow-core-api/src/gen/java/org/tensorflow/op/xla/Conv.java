@@ -67,16 +67,17 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
    * Factory method to create a class wrapping a new XlaConvV2 operation.
    *
    * @param scope current scope
-   * @param lhs the input tensor
-   * @param rhs the kernel tensor
-   * @param windowStrides the inter-window strides
-   * @param padding the padding to apply at the start and end of each input dimensions
+   * @param lhs input tensor
+   * @param rhs kernel tensor
+   * @param windowStrides inter-window strides
+   * @param padding padding to apply at the start and end of each input dimensions
    * @param lhsDilation dilation to apply between input elements
    * @param rhsDilation dilation to apply between kernel elements
    * @param featureGroupCount number of feature groups for grouped convolution.
-   * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
-   * @param precisionConfig a serialized xla::PrecisionConfig proto.
-   * @param preferredElementType The type of the tensor.
+   * @param dimensionNumbers serialized xla::ConvolutionDimensionNumbers proto.
+   * @param precisionConfig serialized xla::PrecisionConfig proto.
+   * @param preferredElementType type of the tensor.
+   * @param options carries optional attribute values
    * @param <W> data type for {@code XlaConvV2} output and operands
    * @param <V> data type for {@code XlaConvV2} output and operands
    * @return a new instance of Conv
@@ -88,7 +89,7 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
       Operand<? extends TType> lhs, Operand<? extends TType> rhs, Operand<V> windowStrides,
       Operand<V> padding, Operand<V> lhsDilation, Operand<V> rhsDilation,
       Operand<V> featureGroupCount, String dimensionNumbers, String precisionConfig,
-      Class<W> preferredElementType) {
+      Class<W> preferredElementType, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv");
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
@@ -100,7 +101,24 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
     opBuilder.setAttr("preferred_element_type", Operands.toDataType(preferredElementType));
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.batchGroupCount != null) {
+          opBuilder.setAttr("batch_group_count", opts.batchGroupCount);
+        }
+      }
+    }
     return new Conv<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the batchGroupCount option.
+   *
+   * @param batchGroupCount number of batch groups or grouped filters.
+   * @return this Options instance.
+   */
+  public static Options batchGroupCount(Long batchGroupCount) {
+    return new Options().batchGroupCount(batchGroupCount);
   }
 
   /**
@@ -117,27 +135,48 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
     return output;
   }
 
+  /**
+   * Optional attributes for {@link org.tensorflow.op.xla.Conv}
+   */
+  public static class Options {
+    private Long batchGroupCount;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the batchGroupCount option.
+     *
+     * @param batchGroupCount number of batch groups or grouped filters.
+     * @return this Options instance.
+     */
+    public Options batchGroupCount(Long batchGroupCount) {
+      this.batchGroupCount = batchGroupCount;
+      return this;
+    }
+  }
+
   @OpInputsMetadata(
       outputsClass = Conv.class
   )
   public static class Inputs<V extends TNumber> extends RawOpInputs<Conv<?>> {
     /**
-     * the input tensor
+     * input tensor
      */
     public final Operand<? extends TType> lhs;
 
     /**
-     * the kernel tensor
+     * kernel tensor
      */
     public final Operand<? extends TType> rhs;
 
     /**
-     * the inter-window strides
+     * inter-window strides
      */
     public final Operand<V> windowStrides;
 
     /**
-     * the padding to apply at the start and end of each input dimensions
+     * padding to apply at the start and end of each input dimensions
      */
     public final Operand<V> padding;
 
@@ -172,22 +211,27 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
     public final DataType Tindices;
 
     /**
-     * a serialized xla::ConvolutionDimensionNumbers proto.
+     * serialized xla::ConvolutionDimensionNumbers proto.
      */
     public final String dimensionNumbers;
 
     /**
-     * a serialized xla::PrecisionConfig proto.
+     * serialized xla::PrecisionConfig proto.
      */
     public final String precisionConfig;
 
     /**
-     * The type of the tensor.
+     * type of the tensor.
      */
     public final DataType preferredElementType;
 
+    /**
+     * number of batch groups or grouped filters.
+     */
+    public final long batchGroupCount;
+
     public Inputs(GraphOperation op) {
-      super(new Conv<>(op), op, Arrays.asList("LhsT", "RhsT", "Tindices", "dimension_numbers", "precision_config", "preferred_element_type"));
+      super(new Conv<>(op), op, Arrays.asList("LhsT", "RhsT", "Tindices", "dimension_numbers", "precision_config", "preferred_element_type", "batch_group_count"));
       int inputIndex = 0;
       lhs = (Operand<? extends TType>) op.input(inputIndex++);
       rhs = (Operand<? extends TType>) op.input(inputIndex++);
@@ -202,6 +246,7 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
       dimensionNumbers = op.attributes().getAttrString("dimension_numbers");
       precisionConfig = op.attributes().getAttrString("precision_config");
       preferredElementType = op.attributes().getAttrType("preferred_element_type");
+      batchGroupCount = op.attributes().getAttrInt("batch_group_count");
     }
   }
 }

@@ -1866,7 +1866,7 @@ public final class MathOps {
    *  <p>For example:
    *  <pre>
    *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.segment_sum(c, tf.constant([0, 0, 1]))
+   *  tf.math.segment_sum(c, tf.constant([0, 0, 1]))
    *  # ==&gt; [[5, 5, 5, 5],
    *  #      [5, 6, 7, 8]]
    *  </pre>
@@ -2056,8 +2056,8 @@ public final class MathOps {
    *  <p>x = tf.constant([-float(&quot;inf&quot;), -5, -0.5, 1, 1.2, 2, 3, float(&quot;inf&quot;)])
    *  tf.math.tanh(x)
    *  &lt;tf.Tensor: shape=(8,), dtype=float32, numpy=
-   *  array([-1.        , -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
-   *  0.9640276 ,  0.9950547 ,  1.        ], dtype=float32)&gt;
+   *  array([-1.0, -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
+   *  0.9640276 ,  0.9950547 ,  1.0], dtype=float32)&gt;
    *  </blockquote>
    *  </blockquote>
    *  </blockquote>
@@ -2111,8 +2111,7 @@ public final class MathOps {
    *  Read
    *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
    *  for an explanation of segments.
-   *  <p>This operator is similar to the unsorted segment sum operator found
-   *   <a href="../../../api_docs/python/math_ops.md#UnsortedSegmentSum">(here)</a> .
+   *  <p>This operator is similar to {@code tf.math.unsorted_segment_sum},
    *  Instead of computing the sum over segments, it computes the maximum such that:
    *  <p>\(output_i = \max_{j...} data[j...]\) where max is over tuples {@code j...} such
    *  that {@code segment_ids[j...] == i}.
@@ -2121,20 +2120,33 @@ public final class MathOps {
    *  {@code output[i] = numeric_limits<T>::lowest()}.
    *  <p>If the given segment ID {@code i} is negative, then the corresponding value is
    *  dropped, and will not be included in the result.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be less than
+   *  {@code num_segments}, and an error is thrown for out-of-bound indices. On GPU, this
+   *  does not throw an error for out-of-bound indices. On Gpu, out-of-bound indices
+   *  result in safe but unspecified behavior, which may include ignoring
+   *  out-of-bound indices or outputting a tensor with a 0 stored in the first
+   *  dimension of its shape if {@code num_segments} is 0.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/UnsortedSegmentMax.png" alt>
    *  </div>
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
-   *  tf.unsorted_segment_max(c, tf.constant([0, 1, 0]), num_segments=2)
-   *  # ==&gt; [[ 4,  3, 3, 4],
-   *  #       [5,  6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
+   *  tf.math.unsorted_segment_max(c, tf.constant([0, 1, 0]), num_segments=2).numpy()
+   *  array([[4, 3, 3, 4],
+   *  [5,  6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   *  The values must be less than {@code num_segments}.
+   *  <p>Caution: The values are always validated to be in range on CPU, never validated
+   *  on GPU.
    * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentMax} output and operands
    * @return a new instance of UnsortedSegmentMax
@@ -2149,8 +2161,7 @@ public final class MathOps {
    *  Read
    *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
    *  for an explanation of segments.
-   *  <p>This operator is similar to the unsorted segment sum operator found
-   *   <a href="../../../api_docs/python/math_ops.md#UnsortedSegmentSum">(here)</a> .
+   *  <p>This operator is similar to {@code tf.math.unsorted_segment_sum},
    *  Instead of computing the sum over segments, it computes the minimum such that:
    *  <p>\(output_i = \min_{j...} data_[j...]\) where min is over tuples {@code j...} such
    *  that {@code segment_ids[j...] == i}.
@@ -2158,18 +2169,31 @@ public final class MathOps {
    *  possible value for the specific numeric type,
    *  {@code output[i] = numeric_limits<T>::max()}.
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
-   *  tf.unsorted_segment_min(c, tf.constant([0, 1, 0]), num_segments=2)
-   *  # ==&gt; [[ 1,  2, 2, 1],
-   *  #       [5,  6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
+   *  tf.math.unsorted_segment_min(c, tf.constant([0, 1, 0]), num_segments=2).numpy()
+   *  array([[1, 2, 2, 1],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *  <p>If the given segment ID {@code i} is negative, then the corresponding value is
    *  dropped, and will not be included in the result.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be less than
+   *  {@code num_segments}, and an error is thrown for out-of-bound indices. On GPU, this
+   *  does not throw an error for out-of-bound indices. On Gpu, out-of-bound indices
+   *  result in safe but unspecified behavior, which may include ignoring
+   *  out-of-bound indices or outputting a tensor with a 0 stored in the first
+   *  dimension of its shape if {@code num_segments} is 0.
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   *  The values must be less than {@code num_segments}.
+   *  <p>Caution: The values are always validated to be in range on CPU, never validated
+   *  on GPU.
    * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentMin} output and operands
    * @return a new instance of UnsortedSegmentMin
@@ -2184,26 +2208,38 @@ public final class MathOps {
    *  Read
    *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
    *  for an explanation of segments.
-   *  <p>This operator is similar to the unsorted segment sum operator found
-   *   <a href="../../../api_docs/python/math_ops.md#UnsortedSegmentSum">(here)</a> .
+   *  <p>This operator is similar to {@code tf.math.unsorted_segment_sum},
    *  Instead of computing the sum over segments, it computes the product of all
    *  entries belonging to a segment such that:
    *  <p>\(output_i = \prod_{j...} data[j...]\) where the product is over tuples
    *  {@code j...} such that {@code segment_ids[j...] == i}.
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
-   *  tf.unsorted_segment_prod(c, tf.constant([0, 1, 0]), num_segments=2)
-   *  # ==&gt; [[ 4,  6, 6, 4],
-   *  #       [5,  6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
+   *  tf.math.unsorted_segment_prod(c, tf.constant([0, 1, 0]), num_segments=2).numpy()
+   *  array([[4, 6, 6, 4],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *  <p>If there is no entry for a given segment ID {@code i}, it outputs 1.
    *  <p>If the given segment ID {@code i} is negative, then the corresponding value is
    *  dropped, and will not be included in the result.
+   *  Caution: On CPU, values in {@code segment_ids} are always validated to be less than
+   *  {@code num_segments}, and an error is thrown for out-of-bound indices. On GPU, this
+   *  does not throw an error for out-of-bound indices. On Gpu, out-of-bound indices
+   *  result in safe but unspecified behavior, which may include ignoring
+   *  out-of-bound indices or outputting a tensor with a 0 stored in the first
+   *  dimension of its shape if {@code num_segments} is 0.
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   *  The values must be less than {@code num_segments}.
+   *  <p>Caution: The values are always validated to be in range on CPU, never validated
+   *  on GPU.
    * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentProd} output and operands
    * @return a new instance of UnsortedSegmentProd
@@ -2227,19 +2263,32 @@ public final class MathOps {
    *  If the given segment ID {@code i} is negative, the value is dropped and will not be
    *  added to the sum of the segment.
    *  <p>{@code num_segments} should equal the number of distinct segment IDs.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be less than
+   *  {@code num_segments}, and an error is thrown for out-of-bound indices. On GPU, this
+   *  does not throw an error for out-of-bound indices. On Gpu, out-of-bound indices
+   *  result in safe but unspecified behavior, which may include ignoring
+   *  out-of-bound indices or outputting a tensor with a 0 stored in the first
+   *  dimension of its shape if {@code num_segments} is 0.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/UnsortedSegmentSum.png" alt>
    *  </div>
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
-   *  tf.math.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
-   *  # ==&gt; [[ 5, 5, 5, 5],
-   *  #       [5, 6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = [[1,2,3,4], [5,6,7,8], [4,3,2,1]]
+   *  tf.math.unsorted_segment_sum(c, [0, 1, 0], num_segments=2).numpy()
+   *  array([[5, 5, 5, 5],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   *  The values must be less than {@code num_segments}.
+   *  <p>Caution: The values are always validated to be in range on CPU, never validated
+   *  on GPU.
    * @param numSegments The numSegments value
    * @param <T> data type for {@code UnsortedSegmentSum} output and operands
    * @return a new instance of UnsortedSegmentSum

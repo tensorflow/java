@@ -7,9 +7,11 @@ export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 
 export BAZEL_VC="${VCINSTALLDIR:-}"
 if [[ -d $BAZEL_VC ]]; then
+    export BAZEL_BUILD="--output_user_root=$(cygpath -w $TMP) build"
     export BUILD_FLAGS="--copt=//arch:AVX `#--copt=//arch:AVX2` --define=override_eigen_strong_inline=true"
     export PYTHON_BIN_PATH=$(which python.exe)
 else
+    export BAZEL_BUILD="build"
     export BUILD_FLAGS="--copt=-msse4.1 --copt=-msse4.2 --copt=-mavx `#--copt=-mavx2 --copt=-mfma` --linkopt=-lstdc++ --host_linkopt=-lstdc++"
     export PYTHON_BIN_PATH=$(which python3)
 fi
@@ -33,7 +35,7 @@ BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON
 BUILD_FLAGS="$BUILD_FLAGS --distinct_host_configuration=true"
 
 # Build C/C++ API of TensorFlow itself including a target to generate ops for Java
-bazel --bazelrc=tensorflow.bazelrc build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
+bazel --bazelrc=tensorflow.bazelrc $BAZEL_BUILD $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
     @org_tensorflow//tensorflow:tensorflow_cc \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
