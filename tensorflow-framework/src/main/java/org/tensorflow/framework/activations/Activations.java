@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * The Enumerations for creating Activations based an activation name, with either an empty
  * constructor or a constructor that takes a Map object that contains the Activation's state.
  */
-public enum ActivationsType {
+public enum Activations {
   ELU(ELU::new, ELU::new),
   EXPONENTIAL(Exponential::new, Exponential::new),
   GELU(GELU::new, GELU::new),
@@ -49,7 +49,7 @@ public enum ActivationsType {
    * @param emptyCtor The constructor when no Config Map is available.
    * @param configCtor The constructor to use with a Map object containing the Activation's state
    */
-  ActivationsType(
+  Activations(
       Supplier<Activation> emptyCtor, Function<Map<String, Object>, Activation> configCtor) {
     this.emptyCtor = emptyCtor;
     this.configCtor = configCtor;
@@ -64,7 +64,7 @@ public enum ActivationsType {
    * @param name the TensorFlow name for the activation
    * @return the ActivationType
    */
-  public static ActivationsType of(final String name) {
+  public static Activations of(final String name) {
     return valueOf(name.toUpperCase());
   }
 

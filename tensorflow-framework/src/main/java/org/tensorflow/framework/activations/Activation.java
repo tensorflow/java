@@ -32,7 +32,7 @@ public interface Activation {
    * @throws IllegalArgumentException if the name is not a known ActivationType
    */
   static Activation create(String name) {
-    ActivationsType type = ActivationsType.of(name);
+    Activations type = Activations.of(name);
     return type.getInstance();
   }
 
@@ -53,7 +53,7 @@ public interface Activation {
    */
   static Activation create(Map<String, Object> config) {
     String activationName = (String) config.get("name");
-    ActivationsType type = ActivationsType.of(activationName);
+    Activations type = Activations.of(activationName);
     return type.getInstance(config);
   }
 
