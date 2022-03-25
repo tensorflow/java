@@ -24,7 +24,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Sigmoid activation. {@code sigmoid(x) = 1 / (1 + exp(-x))}.
  *
- * <p>Applies the sigmoid activation function. For small values (<-5), {@code sigmoid} returns a
+ * <p>Applies the sigmoid activation function. For small values {@code (<-5)}, {@code sigmoid} returns a
  * value close to zero, and for large values (>5) the result of the function gets close to 1.
  *
  * <p>Sigmoid is equivalent to a 2-element Softmax, where the second element is assumed to be zero.
