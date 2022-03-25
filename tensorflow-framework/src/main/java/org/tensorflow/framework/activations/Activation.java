@@ -15,8 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.activations;
 
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -34,7 +32,7 @@ public interface Activation {
    * @throws IllegalArgumentException if the name is not a known ActivationType
    */
   static Activation create(String name) {
-    ActivationType type = ActivationType.of(name);
+    ActivationsType type = ActivationsType.of(name);
     return type.getInstance();
   }
 
@@ -55,7 +53,7 @@ public interface Activation {
    */
   static Activation create(Map<String, Object> config) {
     String activationName = (String) config.get("name");
-    ActivationType type = ActivationType.of(activationName);
+    ActivationsType type = ActivationsType.of(activationName);
     return type.getInstance(config);
   }
 
@@ -68,83 +66,4 @@ public interface Activation {
    * @param <T> the data type of the input and the result
    */
   <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input);
-
-  /**
-   * The Enumerations for creating Activations based an activation name, with either an empty
-   * constructor or a constructor that takes a Map object that contains the Activation's state.
-   */
-  enum ActivationType {
-    ELU(ELU::new, ELU::new),
-    EXPONENTIAL(Exponential::new, Exponential::new),
-    GELU(GELU::new, GELU::new),
-    HARD_SIGMOID(HardSigmoid::new, HardSigmoid::new),
-    LINEAR(Linear::new, Linear::new),
-    RELU(ReLU::new, ReLU::new),
-    SELU(SELU::new, SELU::new),
-    SIGMOID(Sigmoid::new, Sigmoid::new),
-    SOFTMAX(Softmax::new, Softmax::new),
-    SOFTPLUS(Softplus::new, Softplus::new),
-    SOFTSIGN(Softsign::new, Softsign::new),
-    SWISH(Swish::new, Swish::new),
-    TANH(Tanh::new, Tanh::new);
-
-    /** The constructor when no Config Map is available. */
-    private final Supplier<Activation> emptyCtor;
-
-    /** The constructor to use with a Map object containing the Activation's state */
-    private final Function<Map<String, Object>, Activation> configCtor;
-
-    /**
-     * Creates an ActivationType
-     *
-     * @param emptyCtor The constructor when no Config Map is available.
-     * @param configCtor The constructor to use with a Map object containing the Activation's state
-     */
-    ActivationType(
-        Supplier<Activation> emptyCtor, Function<Map<String, Object>, Activation> configCtor) {
-      this.emptyCtor = emptyCtor;
-      this.configCtor = configCtor;
-    }
-
-    /**
-     * Gets the ActivationType based on the TensorFlow name for the activation
-     *
-     * <p>NOTE: this is similar to valueOf, but name can be either case, upper or lower. The
-     * TensorFlow engine produces names in lowwer case.
-     *
-     * @param name the TensorFlow name for the activation
-     * @return the ActivationType
-     */
-    public static ActivationType of(final String name) {
-      return valueOf(name.toUpperCase());
-    }
-
-    /**
-     * Gets the activation name as known to the TensorFlow engine.
-     *
-     * @return the activation name as known to the TensorFlow engine.
-     */
-    public String getTensorFlowName() {
-      return name().toLowerCase();
-    }
-
-    /**
-     * Gets an Activation Instance
-     *
-     * @return the new Activation Instance
-     */
-    public Activation getInstance() {
-      return emptyCtor.get();
-    }
-
-    /**
-     * Gets an Activation Instance
-     *
-     * @param config a Map object containing the Activation's state
-     * @return the new Activation Instance
-     */
-    public Activation getInstance(Map<String, Object> config) {
-      return configCtor.apply(config);
-    }
-  }
 }
