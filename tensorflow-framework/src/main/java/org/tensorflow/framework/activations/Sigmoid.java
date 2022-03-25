@@ -14,13 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import org.tensorflow.Operand;
+import org.tensorflow.op.Ops;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Sigmoid activation. {@code sigmoid(x) = 1 / (1 + exp(-x))}.
