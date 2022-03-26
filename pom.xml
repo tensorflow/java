@@ -7,7 +7,7 @@
 
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-java</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   <packaging>pom</packaging>
 
   <name>TensorFlow Java Parent</name>
@@ -42,11 +42,11 @@
     <junit.version>5.6.2</junit.version>
     <jmh.version>1.21</jmh.version>
     <versions-plugin.version>2.7</versions-plugin.version>
-    <errorprone.version>2.6.0</errorprone.version>
+    <errorprone.version>2.10.0</errorprone.version>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
-    <spotless.version>2.11.1</spotless.version>
+    <spotless.version>2.20.2</spotless.version>
   </properties>
 
   <repositories>
@@ -371,7 +371,9 @@
 
           <lineEndings/>
           <java>
-            <googleJavaFormat/>
+            <googleJavaFormat>
+              <version>1.14.0</version>
+            </googleJavaFormat>
 
             <removeUnusedImports/>
           </java>

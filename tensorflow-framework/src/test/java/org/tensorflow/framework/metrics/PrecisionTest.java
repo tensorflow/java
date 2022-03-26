@@ -22,7 +22,6 @@ import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.random.RandomUniform;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
@@ -39,11 +38,11 @@ public class PrecisionTest {
       Precision<TFloat64> instance =
           new Precision<>(new float[] {0.3f, 0.72f}, 1001L, TFloat64.class);
       Operand<TFloat32> predictions =
-          tf.random.randomUniform(
-              tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1001L));
+          tf.random.statelessRandomUniform(
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1001L, 0L}), TFloat32.class);
       Operand<TFloat32> labels =
-          tf.random.randomUniform(
-              tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1001L));
+          tf.random.statelessRandomUniform(
+              tf.constant(Shape.of(10, 3)), tf.constant(new long[] {1001L, 0L}), TFloat32.class);
 
       Op update = instance.updateState(tf, labels, predictions, null);
 
@@ -81,7 +80,11 @@ public class PrecisionTest {
       Precision<TFloat32> instance = new Precision<>(0.5f, 1001L, TFloat32.class);
 
       Operand<TInt32> predictions =
-          tf.random.randomUniformInt(tf.constant(Shape.of(100, 1)), tf.constant(0), tf.constant(2));
+          tf.random.statelessMultinomial(
+              tf.constant(new float[][] {{0.5f, 0.5f}}),
+              tf.constant(100),
+              tf.constant(new long[] {1001L, 0L}),
+              TInt32.class);
       Operand<TInt32> labels = tf.math.sub(tf.constant(1), predictions);
       Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);

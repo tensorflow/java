@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.tensorflow</groupId>
     <artifactId>tensorflow-java</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
   </parent>
   <artifactId>tensorflow-framework</artifactId>
   <packaging>jar</packaging>
@@ -93,7 +93,7 @@
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
-          <argLine>-Xmx2G -XX:MaxPermSize=256m</argLine>
+          <argLine>-Xmx2G</argLine>
           <includes>
             <include>**/*Test.java</include>
           </includes>
