@@ -14,6 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -22,7 +30,6 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
-/** @author Jim Clarke */
 public class LinearTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -34,7 +41,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TInt32> instance = new Linear<>();
+        Linear instance = new Linear();
         Operand<TInt32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -48,7 +55,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat32> instance = new Linear<>();
+        Linear instance = new Linear();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -62,9 +69,37 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat64> instance = new Linear<>();
+        Linear instance = new Linear();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Linear.NAME);
+    assertTrue(instance instanceof Linear);
+    Linear linear = new Linear(Collections.singletonMap(Linear.NAME_KEY, Linear.NAME));
+    assertNotNull(linear);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Linear instance = new Linear();
+    assertEquals(Linear.NAME, instance.getConfig().get(Linear.NAME_KEY));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(Linear.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(Linear.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new Linear(configBadClass));
   }
 }

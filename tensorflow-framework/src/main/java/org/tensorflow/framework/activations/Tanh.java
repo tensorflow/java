@@ -14,35 +14,86 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Hyperbolic tangent activation function.
  *
  * <p>For example:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(new float[]
- *                                        {-3.0f,-1.0f, 0.0f, 1.0f, 3.0f});
- *     Tanh&lt;TFloat32&gt; tanh = new Tanh&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = tanh.call(input);
- *     // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
- * </pre>
- *
- * @param <T> the data type of the activation
+ * <pre>{@code
+ * Operand<TFloat32> input = tf.constant(new float[]
+ *                                    {-3.0f,-1.0f, 0.0f, 1.0f, 3.0f});
+ * Tanh<TFloat32> tanh = new Tanh<>(tf);
+ * Operand<TFloat32> result = tanh.call(input);
+ * // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
+ * }</pre>
  */
-public class Tanh<T extends TFloating> extends AbstractActivation<T> {
+public class Tanh extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "tanh";
+
+  private static final Set<String> allowedConfigKeys = Collections.singleton(NAME_KEY);
 
   /** Creates a Hyperbolic tangent activation. */
   public Tanh() {
     super();
   }
 
+  /**
+   * Creates a new Tanh from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
+   */
+  public Tanh(Map<String, Object> config) {
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+  }
+
+  /**
+   * Applies the Hyperbolic tangent activation function, {@code tanh(x) = sinh(x)/cosh(x) = ((exp(x)
+   * - exp(-x))/(exp(x) + exp(-x)))}.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>{@code
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Tanh.tanh(tf, input);
+   * }</pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the Hyperbolic tangent activation, {@code tanh(x) = sinh(x)/cosh(x) = ((exp(x) -
+   *     exp(-x))/(exp(x) + exp(-x)))}.
+   */
+  public static <T extends TNumber> Operand<T> tanh(Ops tf, Operand<T> input) {
+    return tf.math.tanh(input);
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
-    return tf.math.tanh(input);
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return tanh(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    return getDefaultConfig(getName());
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

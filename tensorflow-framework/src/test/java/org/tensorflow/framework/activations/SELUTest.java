@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -21,7 +27,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-/** @author Jim Clarke */
 public class SELUTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -35,7 +40,7 @@ public class SELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        SELU<TFloat32> instance = new SELU<>();
+        SELU instance = new SELU();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -58,9 +63,35 @@ public class SELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        SELU<TFloat64> instance = new SELU<>();
+        SELU instance = new SELU();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(SELU.NAME);
+    assertTrue(instance instanceof SELU);
+  }
+
+  @Test
+  public void testGetConfig() {
+    SELU instance = new SELU();
+    assertEquals(SELU.NAME, instance.getConfig().get("name"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(SELU.NAME_KEY, SELU.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(SELU.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> new SELU(configBadClass));
   }
 }

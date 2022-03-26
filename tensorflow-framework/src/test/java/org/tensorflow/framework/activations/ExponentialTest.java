@@ -14,6 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -21,7 +29,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-/** @author Jim Clarke */
 public class ExponentialTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -42,7 +49,7 @@ public class ExponentialTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Exponential<TFloat32> instance = new Exponential<>();
+        Exponential instance = new Exponential();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -60,9 +67,38 @@ public class ExponentialTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Exponential<TFloat64> instance = new Exponential<>();
+        Exponential instance = new Exponential();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Exponential.NAME);
+    assertTrue(instance instanceof Exponential);
+    Exponential exponential =
+        new Exponential(Collections.singletonMap(Exponential.NAME_KEY, Exponential.NAME));
+    assertNotNull(exponential);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Exponential instance = new Exponential();
+    assertEquals(Exponential.NAME, instance.getConfig().get(Exponential.NAME_KEY));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(Exponential.NAME_KEY, Exponential.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(Exponential.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new Exponential(configBadClass));
   }
 }

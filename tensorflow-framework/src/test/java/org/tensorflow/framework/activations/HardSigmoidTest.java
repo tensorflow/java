@@ -14,6 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -21,7 +29,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-/** @author Jim Clarke */
 public class HardSigmoidTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -33,7 +40,7 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat32> instance = new HardSigmoid<>();
+        HardSigmoid instance = new HardSigmoid();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -47,9 +54,38 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat64> instance = new HardSigmoid<>();
+        HardSigmoid instance = new HardSigmoid();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(HardSigmoid.NAME);
+    assertTrue(instance instanceof HardSigmoid);
+    HardSigmoid hardSigmoid =
+        new HardSigmoid(Collections.singletonMap(HardSigmoid.NAME_KEY, HardSigmoid.NAME));
+    assertNotNull(hardSigmoid);
+  }
+
+  @Test
+  public void testGetConfig() {
+    HardSigmoid instance = new HardSigmoid();
+    assertEquals(HardSigmoid.NAME, instance.getConfig().get("name"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(HardSigmoid.NAME_KEY, HardSigmoid.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(HardSigmoid.NAME_KEY, "bogus");
+    assertThrows(IllegalArgumentException.class, () -> new HardSigmoid(configBadClass));
   }
 }

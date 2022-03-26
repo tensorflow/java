@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -21,7 +27,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-/** @author Jim Clarke */
 public class SoftmaxTest {
 
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -37,7 +42,7 @@ public class SoftmaxTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softmax<TFloat32> instance = new Softmax<>();
+        Softmax instance = new Softmax();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -54,7 +59,7 @@ public class SoftmaxTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softmax<TFloat64> instance = new Softmax<>();
+        Softmax instance = new Softmax();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -71,7 +76,7 @@ public class SoftmaxTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softmax<TFloat64> instance = new Softmax<>();
+        Softmax instance = new Softmax();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -88,7 +93,7 @@ public class SoftmaxTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softmax<TFloat64> instance = new Softmax<>();
+        Softmax instance = new Softmax();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -105,9 +110,35 @@ public class SoftmaxTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softmax<TFloat64> instance = new Softmax<>();
+        Softmax instance = new Softmax();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Softmax.NAME);
+    assertTrue(instance instanceof Softmax);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Softmax instance = new Softmax();
+    assertEquals(Softmax.NAME, instance.getConfig().get("name"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(Softmax.NAME_KEY, Softmax.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(Softmax.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> new Softmax(configBadClass));
   }
 }

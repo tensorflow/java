@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -21,7 +27,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-/** @author Jim Clarke */
 public class SigmoidTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -42,7 +47,7 @@ public class SigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Sigmoid<TFloat32> instance = new Sigmoid<>();
+        Sigmoid instance = new Sigmoid();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -60,9 +65,35 @@ public class SigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Sigmoid<TFloat64> instance = new Sigmoid<>();
+        Sigmoid instance = new Sigmoid();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(Sigmoid.NAME);
+    assertTrue(instance instanceof Sigmoid);
+  }
+
+  @Test
+  public void testGetConfig() {
+    Sigmoid instance = new Sigmoid();
+    assertEquals(Sigmoid.NAME, instance.getConfig().get("name"));
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(Sigmoid.NAME_KEY, Sigmoid.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(Sigmoid.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> new Sigmoid(configBadClass));
   }
 }

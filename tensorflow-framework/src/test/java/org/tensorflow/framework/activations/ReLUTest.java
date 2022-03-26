@@ -14,6 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -24,7 +31,6 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
-/** @author Jim Clarke */
 public class ReLUTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
@@ -36,7 +42,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat32> instance = new ReLU<>();
+        ReLU instance = new ReLU();
         Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -50,7 +56,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TInt32> instance = new ReLU<>();
+        ReLU instance = new ReLU();
         Operand<TInt32> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -64,7 +70,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TInt64> instance = new ReLU<>();
+        ReLU instance = new ReLU();
         Operand<TInt64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -78,7 +84,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat16> instance = new ReLU<>();
+        ReLU instance = new ReLU();
         Operand<TFloat16> result =
             instance.call(tf, tf.dtypes.cast(tf.constant(input), TFloat16.class));
         session.evaluate(tf.dtypes.cast(tf.constant(expected), TFloat16.class), result);
@@ -93,7 +99,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>();
+        ReLU instance = new ReLU();
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -106,7 +112,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
+        ReLU instance = new ReLU(0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -119,7 +125,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(ReLU.ALPHA_DEFAULT, 5, ReLU.THRESHOLD_DEFAULT);
+        ReLU instance = new ReLU(ReLU.ALPHA_DEFAULT, 5, ReLU.THRESHOLD_DEFAULT);
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -132,9 +138,52 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5.0f);
+        ReLU instance = new ReLU(ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5.0f);
         Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
+  }
+
+  @Test
+  public void testConfig() {
+    Activation instance = Activation.create(ReLU.NAME);
+    assertTrue(instance instanceof ReLU);
+    Map<String, Object> config = new HashMap<>();
+    config.put("name", ReLU.NAME);
+    config.put("alpha", 2.0);
+    config.put("max_value", 25);
+    config.put("threshold", .95);
+
+    instance = Activation.create(config);
+    assertNotNull(instance);
+    assertEquals(2.0f, ((ReLU) instance).getAlpha());
+    assertEquals(25.0f, ((ReLU) instance).getMaxValue());
+    assertEquals(.95f, ((ReLU) instance).getThreshold());
+  }
+
+  @Test
+  public void testGetConfig() {
+    ReLU instance = new ReLU();
+    Map<String, Object> config = instance.getConfig();
+    assertTrue(config.containsKey("alpha"));
+    assertEquals(instance.getAlpha(), ((Number) config.get("alpha")).floatValue());
+    assertTrue(config.containsKey("max_value"));
+    assertEquals(instance.getMaxValue(), ((Number) config.get("max_value")).floatValue());
+    assertTrue(config.containsKey("threshold"));
+    assertEquals(instance.getThreshold(), ((Number) config.get("threshold")).floatValue());
+  }
+
+  /** Test of Activation create method with bad data */
+  @Test
+  public void testBadConfig() {
+
+    final Map<String, Object> configBadKey = new HashMap<>();
+    configBadKey.put("beta", 2.0f);
+    configBadKey.put(ReLU.NAME_KEY, ReLU.NAME);
+    assertThrows(IllegalArgumentException.class, () -> Activation.create(configBadKey));
+
+    final Map<String, Object> configBadClass = new HashMap<>();
+    configBadClass.put(ReLU.NAME_KEY, Linear.NAME);
+    assertThrows(IllegalArgumentException.class, () -> new ReLU(configBadClass));
   }
 }

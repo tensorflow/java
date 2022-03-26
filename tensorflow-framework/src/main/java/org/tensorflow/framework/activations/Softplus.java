@@ -14,34 +14,84 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Softplus activation function, <code>softplus(x) = log(exp(x) + 1)</code>.
+ * Softplus activation function, {@code softplus(x) = log(exp(x) + 1)}.
  *
  * <p>Example Usage:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(
- *              new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
- *     Softplus&lt;TFloat32&gt; softplus = new Softplus&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = softplus.call(input);
- *     // result is [2.0611537e-09f, 3.1326166e-01f, 6.9314718e-01f,
- *     //                 1.3132616e+00f, 2.0000000e+01f]
- * </pre>
+ * <pre>{@code
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-20f, -1.0f, 0.0f, 1.0f, 20f});
+ * Softplus<TFloat32> softplus = new Softplus<>(tf);
+ * Operand<TFloat32> result = softplus.call(input);
+ * // result is [2.0611537e-09f, 3.1326166e-01f, 6.9314718e-01f,
+ * //                 1.3132616e+00f, 2.0000000e+01f]
+ * }</pre>
  */
-public class Softplus<T extends TFloating> extends AbstractActivation<T> {
+public class Softplus extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "softplus";
 
+  private static final Set<String> allowedConfigKeys = Collections.singleton(NAME_KEY);
   /** Creates a Softplus activation function. */
   public Softplus() {
     super();
   }
 
+  /**
+   * Creates a new Softplus from a configuration Map
+   *
+   * @param config the configuration map, this class does not use any of the entries in the
+   *     configuration map
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
+   */
+  public Softplus(Map<String, Object> config) {
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+  }
+
+  /**
+   * Applies the Softplus activation function, {@code softplus(x) = log(exp(x) + 1)}.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>{@code
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = Softplus.softplus(tf, input);
+   * }</pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the Softplus activation, {@code softplus(x) = log(exp(x) + 1)}.
+   */
+  public static <T extends TNumber> Operand<T> softplus(Ops tf, Operand<T> input) {
+    return tf.math.softplus(input);
+  }
+
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
-    return tf.math.softplus(input);
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return softplus(tf, input);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Map<String, Object> getConfig() {
+    return getDefaultConfig(getName());
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

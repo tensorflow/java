@@ -16,6 +16,11 @@ package org.tensorflow.framework.activations;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.math.Greater;
@@ -25,7 +30,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Rectified Linear Unit(ReLU) activation.
  *
- * <p>With default values, this returns the standard ReLU activation: <code>max(x, 0)</code>, the
+ * <p>With default values, this returns the standard ReLU activation: {@code max(x, 0)}, the
  * element-wise maximum of 0 and the input tensor.
  *
  * <p>Modifying default parameters allows you to use non-zero thresholds, change the max value of
@@ -33,39 +38,40 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>For example:
  *
- * <pre>
- *     Operand&lt;TFloat32&gt; input = tf.constant(
- *              new float[] {-10f, -5f, 0.0f, 5f, 10f});
+ * <pre>{@code
+ * Operand<TFloat32> input = tf.constant(
+ *          new float[] {-10f, -5f, 0.0f, 5f, 10f});
  *
- *     // With default parameters
- *     ReLU&lt;TFloat32&gt; relu = new ReLU&lt;&gt;(tf);
- *     Operand&lt;TFloat32&gt; result = relu.call(input);
- *     // result is [0.f,  0.f,  0.f,  5.f, 10.f]
+ * // With default parameters
+ * ReLU<TFloat32> relu = new ReLU<>(tf);
+ * Operand<TFloat32> result = relu.call(input);
+ * // result is [0.f,  0.f,  0.f,  5.f, 10.f]
  *
- *     // With alpha = 0.5
- *     relu = new ReLU&lt;&gt;(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
- *     result = relu.call(input);
- *     // result is [-5.f , -2.5f,  0.f ,  5.f , 10.f]
+ * // With alpha = 0.5
+ * relu = new ReLU<>(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
+ * result = relu.call(input);
+ * // result is [-5.f , -2.5f,  0.f ,  5.f , 10.f]
  *
- *     // With maxValue = 5
- *     relu = new ReLU&lt;&gt;(tf, ReLU.ALPHA_DEFAULT, 5f, ReLU.THRESHOLD_DEFAULT);
- *     result = relu.call(input);
- *     // result is [0.f, 0.f, 0.f, 5.f, 5.f]
+ * // With maxValue = 5
+ * relu = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, 5f, ReLU.THRESHOLD_DEFAULT);
+ * result = relu.call(input);
+ * // result is [0.f, 0.f, 0.f, 5.f, 5.f]
  *
- *     // With threshold = 5
- *     relu = new ReLU&lt;&gt;(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5f);
- *     result = relu.call(input);
- *     // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
- * </pre>
- *
- * @param <T> the data type of the result
+ * // With threshold = 5
+ * relu = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5f);
+ * result = relu.call(input);
+ * // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
+ * }</pre>
  */
-public class ReLU<T extends TNumber> extends AbstractActivation<T> {
+public class ReLU extends AbstractActivation {
+  /** The activation name as known by TensorFlow */
+  public static final String NAME = "relu";
 
   public static final float ALPHA_DEFAULT = 0.0f;
   public static final float MAX_VALUE_DEFAULT = Float.NaN;
   public static final float THRESHOLD_DEFAULT = 0.0f;
-
+  private static final Set<String> allowedConfigKeys =
+      new HashSet<>(Arrays.asList(ReLU.NAME_KEY, "alpha", "max_value", "threshold"));
   private final float alpha;
   private final float maxValue;
   private final float threshold;
@@ -93,9 +99,70 @@ public class ReLU<T extends TNumber> extends AbstractActivation<T> {
     this.threshold = threshold;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public Operand<T> call(Ops tf, Operand<T> input) {
+  /**
+   * Creates a ReLU activation from a config map.
+   *
+   * @param config the configuration map,
+   *     <ul>
+   *       <li>if the map contains an entry for {@code alpha} that value is used, otherwise {@link
+   *           #ALPHA_DEFAULT} is used.
+   *       <li>if the map contains an entry for {@code max_value} that value is used, otherwise
+   *           {@link #MAX_VALUE_DEFAULT} is used.
+   *       <li>if the map contains an entry for {@code threshold} that value is used, otherwise
+   *           {@link #THRESHOLD_DEFAULT} is used.
+   *     </ul>
+   *
+   * @throws IllegalArgumentException if the configuration contains unsupported keys for this class
+   *     or if the value for the name key does not match the name for the Activation
+   */
+  public ReLU(Map<String, Object> config) {
+    checkConfigKeys(config.keySet(), allowedConfigKeys);
+    checkClassName(config);
+    this.alpha = ((Number) config.getOrDefault("alpha", ALPHA_DEFAULT)).floatValue();
+    this.maxValue = ((Number) config.getOrDefault("max_value", MAX_VALUE_DEFAULT)).floatValue();
+    this.threshold = ((Number) config.getOrDefault("threshold", THRESHOLD_DEFAULT)).floatValue();
+  }
+
+  /**
+   * Applies the rectified linear unit activation function with default values.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>{@code
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = ReLU.relu(tf, input);
+   * }</pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  public static <T extends TNumber> Operand<T> relu(Ops tf, Operand<T> input) {
+    return relu(tf, input, ALPHA_DEFAULT, MAX_VALUE_DEFAULT, THRESHOLD_DEFAULT);
+  }
+
+  /**
+   * Applies the rectified linear unit activation function.
+   *
+   * <p>Example Usage:
+   *
+   * <pre>{@code
+   * Operand<TFloat32> input = ...;
+   * Operand<TFloat32> result = ReLU.relu(tf, input);
+   * }</pre>
+   *
+   * @param tf the TensorFlow Ops
+   * @param input the input
+   * @param alpha governs the slope for values lower than the threshold.
+   * @param maxValue sets the saturation threshold (the largest value the function will return).
+   * @param threshold the threshold value of the activation function below which values will be
+   *     damped or set to zero.
+   * @param <T> the data type for the input
+   * @return the input, unmodified.
+   */
+  public static <T extends TNumber> Operand<T> relu(
+      Ops tf, Operand<T> input, float alpha, float maxValue, float threshold) {
     Class<T> inputType = input.type();
 
     boolean clipMax = !Float.isNaN(maxValue);
@@ -136,5 +203,68 @@ public class ReLU<T extends TNumber> extends AbstractActivation<T> {
           tf.math.sub(lInput, tf.math.mul(cast(tf, tf.constant(alpha), inputType), negativePart));
     }
     return lInput;
+  }
+
+  /**
+   * Gets a configuration map with entries
+   *
+   * <ul>
+   *   <li>{@code alpha} and value set with {@link #alpha}.
+   *   <li>{@code max_value} and value set with {@link #maxValue}.
+   *   <li>{@code threshold} and value set with {@link #threshold}.
+   * </ul>
+   *
+   * @return config the configuration map
+   */
+  @Override
+  public Map<String, Object> getConfig() {
+    Map<String, Object> config = new HashMap<>();
+    config.put("name", NAME);
+    config.put("alpha", alpha);
+    config.put("max_value", maxValue);
+    config.put("threshold", threshold);
+    return config;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> input) {
+    return relu(tf, input, alpha, maxValue, threshold);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return NAME;
+  }
+
+  /**
+   * Gets the value that governs the slope for values lower than the threshold.
+   *
+   * @return the value that governs the slope for values lower than the threshold.
+   */
+  public float getAlpha() {
+    return alpha;
+  }
+
+  /**
+   * Gets the saturation threshold (the largest value the function will return).
+   *
+   * @return the saturation threshold (the largest value the function will return). public float
+   *     getMaxValue() { return maxValue; }
+   *     <p>/** Gets the threshold value of the activation function below which values will be
+   *     damped or set to zero.
+   */
+  public float getThreshold() {
+    return threshold;
+  }
+
+  /**
+   * Gets the saturation threshold (the largest value the function will return).
+   *
+   * @return the saturation threshold (the largest value the function will return).
+   */
+  public float getMaxValue() {
+    return maxValue;
   }
 }
