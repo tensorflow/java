@@ -17,7 +17,7 @@ env:
 jobs:
   quick-build:
     if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container: centos:7
     steps:
       - name: Checkout repository
@@ -43,7 +43,7 @@ jobs:
           mvn compiler:compile -Pdev,jdk11 -B -U -e
   check-format:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container: centos:7
     steps:
       - name: Checkout repository
@@ -68,7 +68,7 @@ jobs:
         run: |
           mvn spotless:check -Pdev,jdk11 -B -U -e
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     outputs:
       stagingRepositoryId: ${{ steps.staging.outputs.stagingRepositoryId }}
     steps:
@@ -85,7 +85,7 @@ jobs:
           echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
   linux-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     container: centos:7
     needs: prepare
     strategy:
@@ -150,7 +150,7 @@ jobs:
           df -h
   macosx-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: macos-latest
+    runs-on: macos-10.15
     needs: prepare
     strategy:
       matrix:
@@ -186,7 +186,7 @@ jobs:
           df -h
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: prepare
     strategy:
        matrix:
@@ -264,7 +264,7 @@ jobs:
   deploy:
     if: github.event_name == 'push' && contains(github.ref, 'master')
     needs: [linux-x86_64, macosx-x86_64, windows-x86_64]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
