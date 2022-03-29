@@ -58,7 +58,7 @@ For example,
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
 </dependency>
 ```
 
@@ -118,7 +118,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.4.0'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.4.1'
 }
 ```
 
@@ -164,7 +164,7 @@ add the TensorFlow dependency to the project's `pom.xml` file:
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow-core-platform</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.1</version>
         </dependency>
     </dependencies>
 </project>
@@ -189,8 +189,8 @@ public class HelloTensorFlow {
 
     try (ConcreteFunction dbl = ConcreteFunction.create(HelloTensorFlow::dbl);
         TInt32 x = TInt32.scalarOf(10);
-        Tensor dblX = dbl.call(x)) {
-      System.out.println(x.getInt() + " doubled is " + ((TInt32)dblX).getInt());
+        TInt32 dblX = (TInt32)dbl.call(x)) {
+      System.out.println(x.getInt() + " doubled is " + dblX.getInt());
     }
   }
 
