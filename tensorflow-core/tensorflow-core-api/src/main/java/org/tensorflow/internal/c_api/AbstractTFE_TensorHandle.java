@@ -17,6 +17,8 @@
 
 package org.tensorflow.internal.c_api;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleCopySharingTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleCopyToDevice;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteTensorHandle;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewTensorHandle;
 
@@ -43,6 +45,30 @@ public abstract class AbstractTFE_TensorHandle extends Pointer {
         TFE_TensorHandle th = TFE_NewTensorHandle(t, status);
         if (th != null) {
             th.tensor = t;
+            th.deallocator(new DeleteDeallocator(th));
+        }
+        return th;
+    }
+
+    /**
+     * Calls TFE_TensorHandleCopySharingTensor(this, ...), and registers a deallocator.
+     * @return TFE_TensorHandle created. Do not call TFE_DeleteTensorHandle() on it.
+     */
+    public TFE_TensorHandle copySharingTensor(TF_Status status) {
+        TFE_TensorHandle th = TFE_TensorHandleCopySharingTensor((TFE_TensorHandle)this, status);
+        if (th != null) {
+            th.deallocator(new DeleteDeallocator(th));
+        }
+        return th;
+    }
+
+    /**
+     * Calls TFE_TensorHandleCopyToDevice(this, ...), and registers a deallocator.
+     * @return TFE_TensorHandle created. Do not call TFE_DeleteTensorHandle() on it.
+     */
+    public TFE_TensorHandle copyToDevice(TFE_Context ctx, String device_name, TF_Status status) {
+        TFE_TensorHandle th = TFE_TensorHandleCopyToDevice((TFE_TensorHandle)this, ctx, device_name, status);
+        if (th != null) {
             th.deallocator(new DeleteDeallocator(th));
         }
         return th;
