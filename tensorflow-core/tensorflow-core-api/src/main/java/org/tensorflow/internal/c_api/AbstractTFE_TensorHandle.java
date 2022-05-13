@@ -17,10 +17,10 @@
 
 package org.tensorflow.internal.c_api;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleCopySharingTensor;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleCopyToDevice;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_DeleteTensorHandle;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewTensorHandle;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleCopySharingTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_TensorHandleCopyToDevice;
 
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
