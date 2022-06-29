@@ -21,7 +21,7 @@ The following describes the layout of the repository and its different artifacts
 * `tensorflow-core`
   * All artifacts that build up the core language bindings of TensorFlow for Java
   * Intended audience: projects that provide their own APIs or frameworks on top of 
-    TensorFlow and just want a thin layer to access the TensorFlow runtime from the JVM 
+    TensorFlow and just want a thin layer to access the TensorFlow native library from the JVM
     
 * `tensorflow-framework`
   * Primary API for building and training neural networks with TensorFlow
