@@ -1,6 +1,6 @@
-diff -ruN tensorflow-2.4.1/third_party/llvm_openmp/BUILD tensorflow-2.4.1-macosx/third_party/llvm_openmp/BUILD
---- tensorflow-2.4.1/third_party/llvm_openmp/BUILD	2021-01-21 09:25:54.000000000 +0900
-+++ tensorflow-2.4.1-macosx/third_party/llvm_openmp/BUILD	2021-02-07 21:13:40.971556568 +0900
+diff -ruN tensorflow/third_party/llvm_openmp/BUILD tensorflow-2.4.1-macosx/third_party/llvm_openmp/BUILD
+--- tensorflow/third_party/llvm_openmp/BUILD	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-macosx/third_party/llvm_openmp/BUILD	2021-02-07 21:13:40.971556568 +0900
 @@ -63,7 +63,7 @@
  
  # Linux Cmake vars to expand.

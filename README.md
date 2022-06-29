@@ -150,7 +150,7 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 | 0.3.3  | 2.4.1  | 8 |
 | 0.4.0  | 2.7.0  | 8 |
 | 0.4.1  | 2.7.1  | 8 |
-| 0.5.0-SNAPSHOT  | 2.8.0 | 11 |
+| 0.5.0-SNAPSHOT  | 2.9.1 | 11 |
 
 ## How to Contribute?
 
