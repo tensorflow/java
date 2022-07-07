@@ -562,25 +562,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .returns(Names.Ops)
             .addStatement("return new $T(scope.withInitScope())", Names.Ops)
             .addJavadoc(
-                "Returns an API that builds init operations.  {@link #liftToInitScope(Operand)} will be called for all created operations.\n"
-                    + initScopeComment
-                    + "\n@see #liftToInitScope(Operand)")
-            .build());
-
-    TypeVariableName T = TypeVariableName.get("T").withBounds(Names.Operand);
-    opsBuilder.addMethod(
-        MethodSpec.methodBuilder("liftToInitScope")
-            .addTypeVariable(T)
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(T, "op")
-            .returns(T)
-            .addStatement("scope.env().registerInitOp(op.op())")
-            .addStatement("return op")
-            .addJavadoc(
-                "Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).\n"
-                    + initScopeComment
-                    + "\n@see ExecutionEnvironment#registerInitOp(Operation)\n"
-                    + "\n@throws IllegalStateException if the op or one of its inputs can't be made an init op.")
+                "Returns an API that builds init operations.\n" + initScopeComment)
             .build());
 
     opsBuilder.addMethod(

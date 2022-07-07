@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.impl.BatchDataset;
 import org.tensorflow.framework.data.impl.MapDataset;
@@ -263,8 +264,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    */
   public DatasetIterator makeOneShotIterator() {
     DatasetIterator iterator = makeInitializeableIterator();
-    // TODO should pass the scope instead
-    tf.scope().env().registerInitOp(iterator.makeInitializer(this).op());
+    iterator.makeInitializer(this);
     return iterator;
   }
 

@@ -179,7 +179,7 @@ public class SavedModelBundleTest {
       assertEquals("save/control_dependency", saverDef.getSaveTensorName());
       assertEquals("save/restore_all", saverDef.getRestoreOpName());
 
-      assertEquals(2, savedModel.metaGraphDef().getSignatureDefCount());
+      assertEquals(1, savedModel.metaGraphDef().getSignatureDefCount());
       assertTrue(savedModel.metaGraphDef().getSignatureDefMap().containsKey(Signature.DEFAULT_KEY));
 
       TensorFunction function = savedModel.function(Signature.DEFAULT_KEY);

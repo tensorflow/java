@@ -70,7 +70,7 @@ public final class OpScope implements Scope {
 
   @Override
   public OpScope withInitScope() {
-    return new OpScope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
+    return new OpScope(env, nameScope, new ArrayList<>(), deviceSpec, true);
   }
 
   @Override
@@ -106,10 +106,10 @@ public final class OpScope implements Scope {
     ArrayList<Operation> toAdd = new ArrayList<>();
     for (Operation control : controls) {
       env.checkInput(control);
-      if (isInit && !env.isInitOp(control)) {
+      if (isInit && !env.isInitializer(control)) {
         throw new IllegalArgumentException("Init scope can not have non-init control dependency.");
       }
-      if (isInit || !env.isInitOp(control)) {
+      if (isInit || !env.isInitializer(control)) {
         toAdd.add(control);
       }
     }
@@ -121,18 +121,11 @@ public final class OpScope implements Scope {
   public OperationBuilder apply(OperationBuilder builder) {
     builder.setDevice(deviceSpec.toString());
     for (Operation control : controlDependencies) {
-      if (isInit || !env.isInitOp(control)) {
+      if (isInit || !env.isInitializer(control)) {
         builder.addControlInput(control);
       }
     }
     return builder;
-  }
-
-  @Override
-  public void onOpCreated(Operation op) {
-    if (isInit) {
-      env.registerInitOp(op);
-    }
   }
 
   @Override

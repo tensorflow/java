@@ -26,12 +26,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.proto.framework.NodeDef;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -73,6 +76,10 @@ public class GraphTest {
       Operand<TInt32> variable = init.variable(init.constant(4));
       Operand<TInt32> result = tf.withName("result").math.add(variable, tf.constant(2));
       graphDef = g.toGraphDef();
+
+      var initNode = graphDef.getNodeList().stream().filter(n -> n.getName().equals(Graph.INIT_OP_BASE_NAME)).collect(Collectors.toList());
+      assertEquals(1, initNode.size());
+      assertEquals(3, initNode.get(0).getInputCount());
     }
 
     try (Graph g = new Graph()) {
@@ -82,6 +89,11 @@ public class GraphTest {
       Ops init = tf.withInitScope();
 
       Operand<TInt32> variable2 = init.withName("var2").variable(init.constant(4));
+
+      graphDef = g.toGraphDef();
+      var initNode = graphDef.getNodeList().stream().filter(n -> n.getName().equals(Graph.INIT_OP_BASE_NAME)).collect(Collectors.toList());
+      assertEquals(1, initNode.size());
+      assertEquals(6, initNode.get(0).getInputCount());
 
       try (Session s = new Session(g, true);
           Result results = s.runner().fetch("result").fetch("var2").run()) {

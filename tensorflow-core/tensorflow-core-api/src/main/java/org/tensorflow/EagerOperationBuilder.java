@@ -75,9 +75,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   public EagerOperation build() {
     scope.apply(this);
     TFE_TensorHandle[] tensorHandles = execute(opHandle, session);
-    EagerOperation op = new EagerOperation(session, opHandle, tensorHandles, type, name);
-    scope.onOpCreated(op);
-    return op;
+    return new EagerOperation(session, opHandle, tensorHandles, type, name);
   }
 
   @Override

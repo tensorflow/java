@@ -221,7 +221,7 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
           "Dataset structure (types, " + "output shapes) must match this iterator.");
     }
 
-    this.initializer = tf.data.makeIterator(dataset.getVariant(), getIteratorResource());
+    this.initializer = tf.withInitScope().data.makeIterator(dataset.getVariant(), getIteratorResource());
     return this.initializer;
   }
 
