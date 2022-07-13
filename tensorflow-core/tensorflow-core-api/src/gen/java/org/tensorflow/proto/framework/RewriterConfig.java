@@ -373,6 +373,25 @@ private static final long serialVersionUID = 0L;
      * <code>AGGRESSIVE = 3;</code>
      */
     AGGRESSIVE(3),
+    /**
+     * <pre>
+     * Run MLIR pass if there's one implemented in TFG, do nothing otherwise.
+     * I.e., if there's no corresponding TFG pass, it's an OFF. This is supposed
+     * to be mapped with `ON` and there's no `AGGRESSIVE` in MLIR pass now.
+     * </pre>
+     *
+     * <code>EXPERIMENTAL_MLIR = 4;</code>
+     */
+    EXPERIMENTAL_MLIR(4),
+    /**
+     * <pre>
+     * Run both MLIR and Grappler passes consecutively and MLIR pass will come
+     * first.
+     * </pre>
+     *
+     * <code>EXPERIMENTAL_BOTH = 5;</code>
+     */
+    EXPERIMENTAL_BOTH(5),
     UNRECOGNIZED(-1),
     ;
 
@@ -398,6 +417,25 @@ private static final long serialVersionUID = 0L;
      * <code>AGGRESSIVE = 3;</code>
      */
     public static final int AGGRESSIVE_VALUE = 3;
+    /**
+     * <pre>
+     * Run MLIR pass if there's one implemented in TFG, do nothing otherwise.
+     * I.e., if there's no corresponding TFG pass, it's an OFF. This is supposed
+     * to be mapped with `ON` and there's no `AGGRESSIVE` in MLIR pass now.
+     * </pre>
+     *
+     * <code>EXPERIMENTAL_MLIR = 4;</code>
+     */
+    public static final int EXPERIMENTAL_MLIR_VALUE = 4;
+    /**
+     * <pre>
+     * Run both MLIR and Grappler passes consecutively and MLIR pass will come
+     * first.
+     * </pre>
+     *
+     * <code>EXPERIMENTAL_BOTH = 5;</code>
+     */
+    public static final int EXPERIMENTAL_BOTH_VALUE = 5;
 
 
     public final int getNumber() {
@@ -422,6 +460,8 @@ private static final long serialVersionUID = 0L;
         case 1: return ON;
         case 2: return OFF;
         case 3: return AGGRESSIVE;
+        case 4: return EXPERIMENTAL_MLIR;
+        case 5: return EXPERIMENTAL_BOTH;
         default: return null;
       }
     }

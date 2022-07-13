@@ -40,10 +40,10 @@ import org.tensorflow.types.family.TType;
  * This op returns an {@code output} tensor with the {@code shape} you specify. This op is the
  * inverse of the {@code tf.gather_nd} operator which extracts values or slices from a
  * given tensor.
- * <p>This operation is similar to {@code tf.tensor_scatter_add}, except that the tensor is
- * zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
+ * <p>This operation is similar to {@code tf.tensor_scatter_nd_add}, except that the tensor
+ * is zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
  * is identical to calling
- * {@code tf.tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)}.
+ * {@code tf.tensor_scatter_nd_add(tf.zeros(shape, values.dtype), indices, values)}
  * <p>If {@code indices} contains duplicates, the duplicate {@code values} are accumulated
  * (summed).
  * <p><strong>WARNING</strong>: The order in which updates are applied is nondeterministic, so the

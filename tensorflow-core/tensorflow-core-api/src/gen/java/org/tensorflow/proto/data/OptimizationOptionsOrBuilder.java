@@ -52,6 +52,11 @@ public interface OptimizationOptionsOrBuilder extends
    */
   boolean getShuffleAndRepeatFusion();
 
+  /**
+   * <code>bool filter_parallelization = 18;</code>
+   */
+  boolean getFilterParallelization();
+
   public org.tensorflow.proto.data.OptimizationOptions.OptionalApplyDefaultOptimizationsCase getOptionalApplyDefaultOptimizationsCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterFusionCase getOptionalFilterFusionCase();
@@ -69,4 +74,6 @@ public interface OptimizationOptionsOrBuilder extends
   public org.tensorflow.proto.data.OptimizationOptions.OptionalParallelBatchCase getOptionalParallelBatchCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalShuffleAndRepeatFusionCase getOptionalShuffleAndRepeatFusionCase();
+
+  public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterParallelizationCase getOptionalFilterParallelizationCase();
 }

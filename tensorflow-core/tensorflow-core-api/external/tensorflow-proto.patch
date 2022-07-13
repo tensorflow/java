@@ -1,6 +1,6 @@
-diff -ruN tensorflow-2.7.0/tensorflow/core/framework/dataset_metadata.proto tensorflow-2.7.0-proto/tensorflow/core/framework/dataset_metadata.proto
---- tensorflow-2.7.0/tensorflow/core/framework/dataset_metadata.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/framework/dataset_metadata.proto	2021-11-09 12:11:55.183453737 +0900
+diff -ruN tensorflow/tensorflow/core/framework/dataset_metadata.proto tensorflow-2.7.0-proto/tensorflow/core/framework/dataset_metadata.proto
+--- tensorflow/tensorflow/core/framework/dataset_metadata.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/framework/dataset_metadata.proto	2021-11-09 12:11:55.183453737 +0900
 @@ -2,6 +2,7 @@
  
  package tensorflow.data;
@@ -9,9 +9,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/framework/dataset_metadata.proto tens
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/framework/dataset_metadata_go_proto";
  
  // next: 2
-diff -ruN tensorflow-2.7.0/tensorflow/core/framework/dataset_options.proto tensorflow-2.7.0-proto/tensorflow/core/framework/dataset_options.proto
---- tensorflow-2.7.0/tensorflow/core/framework/dataset_options.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/framework/dataset_options.proto	2021-11-09 12:07:40.449571619 +0900
+diff -ruN tensorflow/tensorflow/core/framework/dataset_options.proto tensorflow-2.7.0-proto/tensorflow/core/framework/dataset_options.proto
+--- tensorflow/tensorflow/core/framework/dataset_options.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/framework/dataset_options.proto	2021-11-09 12:07:40.449571619 +0900
 @@ -4,6 +4,10 @@
  
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/framework/dataset_options_go_proto";
@@ -23,9 +23,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/framework/dataset_options.proto tenso
  // Represents the type of auto-sharding we enable.
  enum AutoShardPolicy {
    // AUTO: Attempts FILE-based sharding, falling back to DATA-based sharding.
-diff -ruN tensorflow-2.7.0/tensorflow/core/framework/model.proto tensorflow-2.7.0-proto/tensorflow/core/framework/model.proto
---- tensorflow-2.7.0/tensorflow/core/framework/model.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/framework/model.proto	2021-11-09 12:07:40.450571622 +0900
+diff -ruN tensorflow/tensorflow/core/framework/model.proto tensorflow-2.7.0-proto/tensorflow/core/framework/model.proto
+--- tensorflow/tensorflow/core/framework/model.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/framework/model.proto	2021-11-09 12:07:40.450571622 +0900
 @@ -3,6 +3,9 @@
  package tensorflow.data.model;
  
@@ -36,9 +36,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/framework/model.proto tensorflow-2.7.
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/framework/model_go_proto";
  
  // Class of a node in the performance model.
-diff -ruN tensorflow-2.7.0/tensorflow/core/grappler/costs/op_performance_data.proto tensorflow-2.7.0-proto/tensorflow/core/grappler/costs/op_performance_data.proto
---- tensorflow-2.7.0/tensorflow/core/grappler/costs/op_performance_data.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/grappler/costs/op_performance_data.proto	2021-11-09 12:07:40.450571622 +0900
+diff -ruN tensorflow/tensorflow/core/grappler/costs/op_performance_data.proto tensorflow-2.7.0-proto/tensorflow/core/grappler/costs/op_performance_data.proto
+--- tensorflow/tensorflow/core/grappler/costs/op_performance_data.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/grappler/costs/op_performance_data.proto	2021-11-09 12:07:40.450571622 +0900
 @@ -17,6 +17,9 @@
  
  package tensorflow;
@@ -49,18 +49,18 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/grappler/costs/op_performance_data.pr
  
  import "tensorflow/core/framework/tensor.proto";
  import "tensorflow/core/framework/tensor_shape.proto";
-diff -ruN tensorflow-2.7.0/tensorflow/core/lib/core/error_codes.proto tensorflow-2.7.0-proto/tensorflow/core/lib/core/error_codes.proto
---- tensorflow-2.7.0/tensorflow/core/lib/core/error_codes.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/lib/core/error_codes.proto	2021-11-09 12:07:40.447571613 +0900
+diff -ruN tensorflow/tensorflow/core/lib/core/error_codes.proto tensorflow-2.7.0-proto/tensorflow/core/lib/core/error_codes.proto
+--- tensorflow/tensorflow/core/lib/core/error_codes.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/lib/core/error_codes.proto	2021-11-09 12:07:40.447571613 +0900
 @@ -1,3 +1,5 @@
  syntax = "proto3";
  
 +option java_package = "org.tensorflow.framework";
 +
  import public "tensorflow/core/protobuf/error_codes.proto";
-diff -ruN tensorflow-2.7.0/tensorflow/core/profiler/profiler_options.proto tensorflow-2.7.0-proto/tensorflow/core/profiler/profiler_options.proto
---- tensorflow-2.7.0/tensorflow/core/profiler/profiler_options.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/profiler/profiler_options.proto	2021-11-09 12:07:40.448571616 +0900
+diff -ruN tensorflow/tensorflow/core/profiler/profiler_options.proto tensorflow-2.7.0-proto/tensorflow/core/profiler/profiler_options.proto
+--- tensorflow/tensorflow/core/profiler/profiler_options.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/profiler/profiler_options.proto	2021-11-09 12:07:40.448571616 +0900
 @@ -1,6 +1,9 @@
  syntax = "proto3";
  
@@ -71,9 +71,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/profiler/profiler_options.proto tenso
  
  // Next ID: 11
  message ProfileOptions {
-diff -ruN tensorflow-2.7.0/tensorflow/core/profiler/protobuf/xplane.proto tensorflow-2.7.0-proto/tensorflow/core/profiler/protobuf/xplane.proto
---- tensorflow-2.7.0/tensorflow/core/profiler/protobuf/xplane.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/profiler/protobuf/xplane.proto	2021-11-09 12:07:40.447571613 +0900
+diff -ruN tensorflow/tensorflow/core/profiler/protobuf/xplane.proto tensorflow-2.7.0-proto/tensorflow/core/profiler/protobuf/xplane.proto
+--- tensorflow/tensorflow/core/profiler/protobuf/xplane.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/profiler/protobuf/xplane.proto	2021-11-09 12:07:40.447571613 +0900
 @@ -3,6 +3,9 @@
  package tensorflow.profiler;
  
@@ -84,9 +84,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/profiler/protobuf/xplane.proto tensor
  
  // A container of parallel XPlanes, generated by one or more profiling sources.
  // Next ID: 5
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/bfc_memory_map.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/bfc_memory_map.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/bfc_memory_map.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/bfc_memory_map.proto	2021-11-09 12:07:40.443571601 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/bfc_memory_map.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/bfc_memory_map.proto
+--- tensorflow/tensorflow/core/protobuf/bfc_memory_map.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/bfc_memory_map.proto	2021-11-09 12:07:40.443571601 +0900
 @@ -3,6 +3,9 @@
  package tensorflow;
  
@@ -97,9 +97,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/bfc_memory_map.proto tensorf
  
  // Some of the data from AllocatorStats
  message MemAllocatorStats {
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/composite_tensor_variant.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/composite_tensor_variant.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/composite_tensor_variant.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/composite_tensor_variant.proto	2021-11-09 12:07:40.451571625 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/composite_tensor_variant.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/composite_tensor_variant.proto
+--- tensorflow/tensorflow/core/protobuf/composite_tensor_variant.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/composite_tensor_variant.proto	2021-11-09 12:07:40.451571625 +0900
 @@ -3,7 +3,7 @@
  package tensorflow;
  
@@ -109,9 +109,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/composite_tensor_variant.pro
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
  
  // Metadata for CompositeTensorVariant, used when serializing as Variant.
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/data_service.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/data_service.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/data_service.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/data_service.proto	2021-11-09 12:10:45.915184828 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/data_service.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/data_service.proto
+--- tensorflow/tensorflow/core/protobuf/data_service.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/data_service.proto	2021-11-09 12:10:45.915184828 +0900
 @@ -2,6 +2,7 @@
  
  package tensorflow.data;
@@ -120,9 +120,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/data_service.proto tensorflo
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
  
  message ProcessingModeDef {
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/device_properties.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/device_properties.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/device_properties.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/device_properties.proto	2021-11-09 12:07:40.444571604 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/device_properties.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/device_properties.proto
+--- tensorflow/tensorflow/core/protobuf/device_properties.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/device_properties.proto	2021-11-09 12:07:40.444571604 +0900
 @@ -19,6 +19,8 @@
  
  option cc_enable_arenas = true;
@@ -132,9 +132,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/device_properties.proto tens
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
  
  message DeviceProperties {
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/saved_object_graph.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/saved_object_graph.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/saved_object_graph.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/saved_object_graph.proto	2021-11-09 12:07:40.445571607 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/saved_object_graph.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/saved_object_graph.proto
+--- tensorflow/tensorflow/core/protobuf/saved_object_graph.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/saved_object_graph.proto	2021-11-09 12:07:40.445571607 +0900
 @@ -12,6 +12,9 @@
  
  option cc_enable_arenas = true;
@@ -145,9 +145,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/saved_object_graph.proto ten
  
  // A SavedObjectGraph is part of object-based SavedModels in TF 2.0. It
  // describes the directed graph of Python objects (or equivalent in other
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/saved_object_graph.proto.orig tensorflow-2.7.0-proto/tensorflow/core/protobuf/saved_object_graph.proto.orig
---- tensorflow-2.7.0/tensorflow/core/protobuf/saved_object_graph.proto.orig	1970-01-01 09:00:00.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/saved_object_graph.proto.orig	2021-11-01 10:31:04.000000000 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/saved_object_graph.proto.orig tensorflow-2.7.0-proto/tensorflow/core/protobuf/saved_object_graph.proto.orig
+--- tensorflow/tensorflow/core/protobuf/saved_object_graph.proto.orig	1970-01-01 09:00:00.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/saved_object_graph.proto.orig	2021-11-01 10:31:04.000000000 +0900
 @@ -0,0 +1,225 @@
 +syntax = "proto3";
 +
@@ -374,9 +374,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/saved_object_graph.proto.ori
 +  int32 save_function = 2;
 +  int32 restore_function = 3;
 +}
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/service_config.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/service_config.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/service_config.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/service_config.proto	2021-11-09 12:07:40.449571619 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/service_config.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/service_config.proto
+--- tensorflow/tensorflow/core/protobuf/service_config.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/service_config.proto	2021-11-09 12:07:40.449571619 +0900
 @@ -1,6 +1,7 @@
  syntax = "proto3";
  
@@ -385,9 +385,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/service_config.proto tensorf
  
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
  
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/snapshot.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/snapshot.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/snapshot.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/snapshot.proto	2021-11-09 12:07:40.444571604 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/snapshot.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/snapshot.proto
+--- tensorflow/tensorflow/core/protobuf/snapshot.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/snapshot.proto	2021-11-09 12:07:40.444571604 +0900
 @@ -8,6 +8,10 @@
  
  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
@@ -399,9 +399,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/snapshot.proto tensorflow-2.
  // Each SnapshotRecord represents one batch of pre-processed input data. A batch
  // consists of a list of tensors that we encode as TensorProtos. This message
  // doesn't store the structure of the batch.
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/status.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/status.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/status.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/status.proto	2021-11-09 12:09:16.716853813 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/status.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/status.proto
+--- tensorflow/tensorflow/core/protobuf/status.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/status.proto	2021-11-09 12:09:16.716853813 +0900
 @@ -2,6 +2,8 @@
  
  package tensorflow;
@@ -411,9 +411,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/status.proto tensorflow-2.7.
  // If included as a payload, this message flags the Status to be a "derived"
  // Status. Used by StatusGroup to ignore certain Statuses when reporting
  // errors to end users.
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/struct.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/struct.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/struct.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/struct.proto	2021-11-09 12:07:40.445571607 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/struct.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/struct.proto
+--- tensorflow/tensorflow/core/protobuf/struct.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/struct.proto	2021-11-09 12:07:40.445571607 +0900
 @@ -7,6 +7,9 @@
  import "tensorflow/core/framework/types.proto";
  
@@ -424,9 +424,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/struct.proto tensorflow-2.7.
  
  // `StructuredValue` represents a dynamically typed value representing various
  // data structures that are inspired by Python data structures typically used in
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/trackable_object_graph.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/trackable_object_graph.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/trackable_object_graph.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/trackable_object_graph.proto	2021-11-09 12:07:40.446571610 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/trackable_object_graph.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/trackable_object_graph.proto
+--- tensorflow/tensorflow/core/protobuf/trackable_object_graph.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/trackable_object_graph.proto	2021-11-09 12:07:40.446571610 +0900
 @@ -4,6 +4,9 @@
  
  option cc_enable_arenas = true;
@@ -437,9 +437,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/trackable_object_graph.proto
  
  // A TensorBundle addition which saves extra information about the objects which
  // own variables, allowing for more robust checkpoint loading into modified
-diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/transport_options.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/transport_options.proto
---- tensorflow-2.7.0/tensorflow/core/protobuf/transport_options.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/protobuf/transport_options.proto	2021-11-09 12:07:40.446571610 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/transport_options.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/transport_options.proto
+--- tensorflow/tensorflow/core/protobuf/transport_options.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/transport_options.proto	2021-11-09 12:07:40.446571610 +0900
 @@ -3,6 +3,7 @@
  package tensorflow;
  
@@ -448,9 +448,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/protobuf/transport_options.proto tens
  
  // Extra data needed on a non-RDMA RecvBufResponse.
  message RecvBufRespExtra {
-diff -ruN tensorflow-2.7.0/tensorflow/core/util/memmapped_file_system.proto tensorflow-2.7.0-proto/tensorflow/core/util/memmapped_file_system.proto
---- tensorflow-2.7.0/tensorflow/core/util/memmapped_file_system.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-2.7.0-proto/tensorflow/core/util/memmapped_file_system.proto	2021-11-09 12:07:40.448571616 +0900
+diff -ruN tensorflow/tensorflow/core/util/memmapped_file_system.proto tensorflow-2.7.0-proto/tensorflow/core/util/memmapped_file_system.proto
+--- tensorflow/tensorflow/core/util/memmapped_file_system.proto	2021-11-01 10:31:04.000000000 +0900
++++ tensorflow-proto/tensorflow/core/util/memmapped_file_system.proto	2021-11-09 12:07:40.448571616 +0900
 @@ -17,6 +17,9 @@
  package tensorflow;
  
@@ -461,9 +461,9 @@ diff -ruN tensorflow-2.7.0/tensorflow/core/util/memmapped_file_system.proto tens
  
  // A message that describes one region of memmapped file.
  message MemmappedFileSystemDirectoryElement {
-diff -ruN tensorflow-2.8.0/tensorflow/core/protobuf/coordination_config.proto tensorflow-2.8.0-proto/tensorflow/core/protobuf/coordination_config.proto
---- tensorflow-2.8.0/tensorflow/core/protobuf/coordination_config.proto	2022-02-01 04:17:33.000000000 +0900
-+++ tensorflow-2.8.0-proto/tensorflow/core/protobuf/coordination_config.proto	2022-02-16 11:02:10.162709816 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/coordination_config.proto tensorflow-2.8.0-proto/tensorflow/core/protobuf/coordination_config.proto
+--- tensorflow/tensorflow/core/protobuf/coordination_config.proto	2022-02-01 04:17:33.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/coordination_config.proto	2022-02-16 11:02:10.162709816 +0900
 @@ -3,6 +3,7 @@
  package tensorflow;
  
@@ -472,9 +472,9 @@ diff -ruN tensorflow-2.8.0/tensorflow/core/protobuf/coordination_config.proto te
  
  // Coordination service configuration parameters.
  // The system picks appropriate values for fields that are not set.
-diff -ruN tensorflow-2.8.0/tensorflow/core/protobuf/distributed_runtime_payloads.proto tensorflow-2.8.0-proto/tensorflow/core/protobuf/distributed_runtime_payloads.proto
---- tensorflow-2.8.0/tensorflow/core/protobuf/distributed_runtime_payloads.proto	2022-02-01 04:17:33.000000000 +0900
-+++ tensorflow-2.8.0-proto/tensorflow/core/protobuf/distributed_runtime_payloads.proto	2022-02-16 11:00:03.739373379 +0900
+diff -ruN tensorflow/tensorflow/core/protobuf/distributed_runtime_payloads.proto tensorflow-2.8.0-proto/tensorflow/core/protobuf/distributed_runtime_payloads.proto
+--- tensorflow/tensorflow/core/protobuf/distributed_runtime_payloads.proto	2022-02-01 04:17:33.000000000 +0900
++++ tensorflow-proto/tensorflow/core/protobuf/distributed_runtime_payloads.proto	2022-02-16 11:00:03.739373379 +0900
 @@ -4,6 +4,7 @@
  
  option cc_enable_arenas = true;

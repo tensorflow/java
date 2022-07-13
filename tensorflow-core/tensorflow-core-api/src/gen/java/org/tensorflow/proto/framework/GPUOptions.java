@@ -419,6 +419,17 @@ private static final long serialVersionUID = 0L;
      * <code>bool use_cuda_malloc_async = 11;</code>
      */
     boolean getUseCudaMallocAsync();
+
+    /**
+     * <pre>
+     * By default, BFCAllocator may sleep when it runs out of memory, in the
+     * hopes that another thread will free up memory in the meantime.  Setting
+     * this to true disables the sleep; instead we'll OOM immediately.
+     * </pre>
+     *
+     * <code>bool disallow_retry_on_allocation_failure = 12;</code>
+     */
+    boolean getDisallowRetryOnAllocationFailure();
   }
   /**
    * Protobuf type {@code tensorflow.GPUOptions.Experimental}
@@ -521,6 +532,11 @@ private static final long serialVersionUID = 0L;
             case 88: {
 
               useCudaMallocAsync_ = input.readBool();
+              break;
+            }
+            case 96: {
+
+              disallowRetryOnAllocationFailure_ = input.readBool();
               break;
             }
             default: {
@@ -1950,6 +1966,21 @@ private static final long serialVersionUID = 0L;
       return useCudaMallocAsync_;
     }
 
+    public static final int DISALLOW_RETRY_ON_ALLOCATION_FAILURE_FIELD_NUMBER = 12;
+    private boolean disallowRetryOnAllocationFailure_;
+    /**
+     * <pre>
+     * By default, BFCAllocator may sleep when it runs out of memory, in the
+     * hopes that another thread will free up memory in the meantime.  Setting
+     * this to true disables the sleep; instead we'll OOM immediately.
+     * </pre>
+     *
+     * <code>bool disallow_retry_on_allocation_failure = 12;</code>
+     */
+    public boolean getDisallowRetryOnAllocationFailure() {
+      return disallowRetryOnAllocationFailure_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1993,6 +2024,9 @@ private static final long serialVersionUID = 0L;
       }
       if (useCudaMallocAsync_ != false) {
         output.writeBool(11, useCudaMallocAsync_);
+      }
+      if (disallowRetryOnAllocationFailure_ != false) {
+        output.writeBool(12, disallowRetryOnAllocationFailure_);
       }
       unknownFields.writeTo(output);
     }
@@ -2042,6 +2076,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(11, useCudaMallocAsync_);
       }
+      if (disallowRetryOnAllocationFailure_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(12, disallowRetryOnAllocationFailure_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2078,6 +2116,8 @@ private static final long serialVersionUID = 0L;
               other.getInternalFragmentationFraction())) return false;
       if (getUseCudaMallocAsync()
           != other.getUseCudaMallocAsync()) return false;
+      if (getDisallowRetryOnAllocationFailure()
+          != other.getDisallowRetryOnAllocationFailure()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2115,6 +2155,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + USE_CUDA_MALLOC_ASYNC_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getUseCudaMallocAsync());
+      hash = (37 * hash) + DISALLOW_RETRY_ON_ALLOCATION_FAILURE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getDisallowRetryOnAllocationFailure());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2273,6 +2316,8 @@ private static final long serialVersionUID = 0L;
 
         useCudaMallocAsync_ = false;
 
+        disallowRetryOnAllocationFailure_ = false;
+
         return this;
       }
 
@@ -2318,6 +2363,7 @@ private static final long serialVersionUID = 0L;
         result.kernelTrackerMaxPending_ = kernelTrackerMaxPending_;
         result.internalFragmentationFraction_ = internalFragmentationFraction_;
         result.useCudaMallocAsync_ = useCudaMallocAsync_;
+        result.disallowRetryOnAllocationFailure_ = disallowRetryOnAllocationFailure_;
         onBuilt();
         return result;
       }
@@ -2419,6 +2465,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getUseCudaMallocAsync() != false) {
           setUseCudaMallocAsync(other.getUseCudaMallocAsync());
+        }
+        if (other.getDisallowRetryOnAllocationFailure() != false) {
+          setDisallowRetryOnAllocationFailure(other.getDisallowRetryOnAllocationFailure());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3644,6 +3693,50 @@ private static final long serialVersionUID = 0L;
       public Builder clearUseCudaMallocAsync() {
         
         useCudaMallocAsync_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean disallowRetryOnAllocationFailure_ ;
+      /**
+       * <pre>
+       * By default, BFCAllocator may sleep when it runs out of memory, in the
+       * hopes that another thread will free up memory in the meantime.  Setting
+       * this to true disables the sleep; instead we'll OOM immediately.
+       * </pre>
+       *
+       * <code>bool disallow_retry_on_allocation_failure = 12;</code>
+       */
+      public boolean getDisallowRetryOnAllocationFailure() {
+        return disallowRetryOnAllocationFailure_;
+      }
+      /**
+       * <pre>
+       * By default, BFCAllocator may sleep when it runs out of memory, in the
+       * hopes that another thread will free up memory in the meantime.  Setting
+       * this to true disables the sleep; instead we'll OOM immediately.
+       * </pre>
+       *
+       * <code>bool disallow_retry_on_allocation_failure = 12;</code>
+       */
+      public Builder setDisallowRetryOnAllocationFailure(boolean value) {
+        
+        disallowRetryOnAllocationFailure_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * By default, BFCAllocator may sleep when it runs out of memory, in the
+       * hopes that another thread will free up memory in the meantime.  Setting
+       * this to true disables the sleep; instead we'll OOM immediately.
+       * </pre>
+       *
+       * <code>bool disallow_retry_on_allocation_failure = 12;</code>
+       */
+      public Builder clearDisallowRetryOnAllocationFailure() {
+        
+        disallowRetryOnAllocationFailure_ = false;
         onChanged();
         return this;
       }

@@ -154,9 +154,9 @@ add the TensorFlow dependency to the project's `pom.xml` file:
 
     <properties>
         <exec.mainClass>HelloTensorFlow</exec.mainClass>
-        <!-- Minimal version for compiling TensorFlow Java is JDK 8 -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <!-- Minimal version for compiling with TensorFlow Java is JDK 11 -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>

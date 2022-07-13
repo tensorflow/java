@@ -43,16 +43,25 @@ import org.tensorflow.types.family.TType;
  * \(output_i = \sum_j data_j\) where sum is over {@code j} such
  * that {@code segment_ids[j] == i}.
  * <p>If the sum is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+ * <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+ * and an error is thrown for indices that are not increasing. On GPU, this
+ * does not throw an error for unsorted indices. On GPU, out-of-order indices
+ * result in safe but unspecified behavior, which may include treating
+ * out-of-order indices as the same as a smaller following index.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/SegmentSum.png" alt>
  * </div>
  * <p>For example:
- * <pre>
- * c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
- * tf.math.segment_sum(c, tf.constant([0, 0, 1]))
- * # ==&gt; [[5, 5, 5, 5],
- * #      [5, 6, 7, 8]]
- * </pre>
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+ * tf.math.segment_sum(c, tf.constant([0, 0, 1])).numpy()
+ * array([[5, 5, 5, 5],
+ * [5, 6, 7, 8]], dtype=int32)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  *
  * @param <T> data type for {@code output} output
  */
@@ -84,6 +93,8 @@ public final class SegmentSum<T extends TType> extends RawOp implements Operand<
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    * first dimension.  Values should be sorted and can be repeated.
+   * <p>Caution: The values are always validated to be sorted on CPU, never validated
+   * on GPU.
    * @param <T> data type for {@code SegmentSum} output and operands
    * @return a new instance of SegmentSum
    */
@@ -125,6 +136,8 @@ public final class SegmentSum<T extends TType> extends RawOp implements Operand<
     /**
      * A 1-D tensor whose size is equal to the size of {@code data}'s
      * first dimension.  Values should be sorted and can be repeated.
+     * <p>Caution: The values are always validated to be sorted on CPU, never validated
+     * on GPU.
      */
     public final Operand<? extends TNumber> segmentIds;
 

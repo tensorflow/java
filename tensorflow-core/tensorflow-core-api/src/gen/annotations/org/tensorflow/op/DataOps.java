@@ -22,6 +22,7 @@ import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.data.AnonymousIterator;
+import org.tensorflow.op.data.AnonymousMultiDeviceIterator;
 import org.tensorflow.op.data.AssertCardinalityDataset;
 import org.tensorflow.op.data.AssertNextDataset;
 import org.tensorflow.op.data.AutoShardDataset;
@@ -148,6 +149,19 @@ public final class DataOps {
   public AnonymousIterator anonymousIterator(List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     return AnonymousIterator.create(scope, outputTypes, outputShapes);
+  }
+
+  /**
+   * A container for a multi device iterator resource.
+   *
+   * @param devices The value of the devices attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of AnonymousMultiDeviceIterator
+   */
+  public AnonymousMultiDeviceIterator anonymousMultiDeviceIterator(List<String> devices,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return AnonymousMultiDeviceIterator.create(scope, devices, outputTypes, outputShapes);
   }
 
   /**

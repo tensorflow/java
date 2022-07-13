@@ -15,12 +15,11 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.xla;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import org.tensorflow.ConcreteFunction;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -35,32 +34,29 @@ import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Applies a for loop.
- * <pre>
- *  output = input;
- *  for i in range(start, limit, delta)
- *    output = body(i, output);
- * </pre>
+ * Wraps the XLA OptimizationBarrier operator.
+ * Documented at https://www.tensorflow.org/xla/operation_semantics#optimizationbarrier.
  */
 @OpMetadata(
-    opType = For.OP_NAME,
-    inputsClass = For.Inputs.class
+    opType = OptimizationBarrier.OP_NAME,
+    inputsClass = OptimizationBarrier.Inputs.class
 )
-@Operator
-public final class For extends RawOp implements Iterable<Operand<TType>> {
+@Operator(
+    group = "xla"
+)
+public final class OptimizationBarrier extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "For";
+  public static final String OP_NAME = "XlaOptimizationBarrier";
 
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  public For(Operation operation) {
+  public OptimizationBarrier(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
@@ -69,37 +65,24 @@ public final class For extends RawOp implements Iterable<Operand<TType>> {
   }
 
   /**
-   * Factory method to create a class wrapping a new For operation.
+   * Factory method to create a class wrapping a new XlaOptimizationBarrier operation.
    *
    * @param scope current scope
-   * @param start The lower bound. An int32
-   * @param limit The upper bound. An int32
-   * @param delta The increment. An int32
-   * @param input A list of input tensors whose types are T.
-   * @param body <pre>
-   * A function that takes a list of tensors (int32, T) and returns another
-   * list of tensors (T).
-   * </pre>
-   * @return a new instance of For
+   * @param input A Tuple of Arrays of any type.
+   * @return a new instance of OptimizationBarrier
    */
   @Endpoint(
-      describeByClass = true,
-      name = "forOp"
+      describeByClass = true
   )
-  public static For create(Scope scope, Operand<TInt32> start, Operand<TInt32> limit,
-      Operand<TInt32> delta, Iterable<Operand<?>> input, ConcreteFunction body) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "For");
-    opBuilder.addInput(start.asOutput());
-    opBuilder.addInput(limit.asOutput());
-    opBuilder.addInput(delta.asOutput());
+  public static OptimizationBarrier create(Scope scope, Iterable<Operand<?>> input) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OptimizationBarrier");
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder.setAttr("body", body);
-    return new For(opBuilder.build());
+    return new OptimizationBarrier(opBuilder.build());
   }
 
   /**
    * Gets output.
-   * A list of output tensors whose types are T.
+   *
    * @return output.
    */
   public List<Output<?>> output() {
@@ -113,40 +96,22 @@ public final class For extends RawOp implements Iterable<Operand<TType>> {
   }
 
   @OpInputsMetadata(
-      outputsClass = For.class
+      outputsClass = OptimizationBarrier.class
   )
-  public static class Inputs extends RawOpInputs<For> {
+  public static class Inputs extends RawOpInputs<OptimizationBarrier> {
     /**
-     * The lower bound. An int32
-     */
-    public final Operand<TInt32> start;
-
-    /**
-     * The upper bound. An int32
-     */
-    public final Operand<TInt32> limit;
-
-    /**
-     * The increment. An int32
-     */
-    public final Operand<TInt32> delta;
-
-    /**
-     * A list of input tensors whose types are T.
+     * A Tuple of Arrays of any type.
      */
     public final Iterable<Operand<?>> input;
 
     /**
-     * A list of dtypes.
+     * The T attribute
      */
     public final DataType[] T;
 
     public Inputs(GraphOperation op) {
-      super(new For(op), op, Arrays.asList("T"));
+      super(new OptimizationBarrier(op), op, Arrays.asList("T"));
       int inputIndex = 0;
-      start = (Operand<TInt32>) op.input(inputIndex++);
-      limit = (Operand<TInt32>) op.input(inputIndex++);
-      delta = (Operand<TInt32>) op.input(inputIndex++);
       int inputLength = op.inputListLength("input");
       input = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inputLength));
       inputIndex += inputLength;

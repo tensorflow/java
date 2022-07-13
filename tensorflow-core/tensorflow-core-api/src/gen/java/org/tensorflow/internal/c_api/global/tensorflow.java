@@ -948,7 +948,7 @@ limitations under the License.
 
 // --------------------------------------------------------------------------
 // TF_Version returns a string describing version information of the
-// TensorFlow library. TensorFlow using semantic versioning.
+// TensorFlow library. TensorFlow uses semantic versioning.
 public static native @Cast("const char*") BytePointer TF_Version();
 // Targeting ../TF_Buffer.java
 
@@ -1013,7 +1013,7 @@ public static native void TF_DeleteSessionOptions(TF_SessionOptions arg0);
 // Return a new graph object.
 public static native TF_Graph TF_NewGraph();
 
-// Destroy an options object.  Graph will be deleted once no more
+// Destroy an options object. Graph will be deleted once no more
 // TFSession's are referencing it.
 public static native void TF_DeleteGraph(TF_Graph arg0);
 
@@ -1917,7 +1917,7 @@ public static native void TF_OperationGetAttrShapeList(
     int num_shapes, @Cast("int64_t*") long[] storage, int storage_size, TF_Status status);
 
 // Sets `value` to the binary-serialized TensorShapeProto of the value of
-// `attr_name` attribute of `oper`'.
+// `attr_name` attribute of `oper`.
 public static native void TF_OperationGetAttrTensorShapeProto(
     TF_Operation oper, @Cast("const char*") BytePointer attr_name, TF_Buffer value,
     TF_Status status);
@@ -2391,7 +2391,7 @@ public static native void TF_AddGradientsWithPrefix(TF_Graph g, String prefix,
 //              the nodes in the graph (except for the automatic skipping, see
 //              below).
 //  opers - Array of operations to become the body of the function or null.
-//          - If no array is given (`num_opers`  = -1), all the
+//          - If no array is given (`num_opers` = -1), all the
 //          operations in `fn_body` will become part of the function
 //          except operations referenced in `inputs`. These operations
 //          must have a single output (these operations are typically
@@ -3741,17 +3741,17 @@ public static native TF_Tensor TF_AllocateOutput(TF_OpKernelContext context,
 // not nullptr). If no inputs are forwarded, forwarded_input will be assigned
 // -1.
 public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
-    TF_OpKernelContext context, IntPointer candidate_input_indices,
+    TF_OpKernelContext context, @Const IntPointer candidate_input_indices,
     int num_candidate_input_indices, int output_index,
     @Cast("const int64_t*") LongPointer output_dims, int output_num_dims, IntPointer forwarded_input,
     TF_Status status);
 public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
-    TF_OpKernelContext context, IntBuffer candidate_input_indices,
+    TF_OpKernelContext context, @Const IntBuffer candidate_input_indices,
     int num_candidate_input_indices, int output_index,
     @Cast("const int64_t*") LongBuffer output_dims, int output_num_dims, IntBuffer forwarded_input,
     TF_Status status);
 public static native TF_Tensor TF_ForwardInputOrAllocateOutput(
-    TF_OpKernelContext context, int[] candidate_input_indices,
+    TF_OpKernelContext context, @Const int[] candidate_input_indices,
     int num_candidate_input_indices, int output_index,
     @Cast("const int64_t*") long[] output_dims, int output_num_dims, int[] forwarded_input,
     TF_Status status);

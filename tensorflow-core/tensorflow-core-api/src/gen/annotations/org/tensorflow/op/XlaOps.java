@@ -25,6 +25,7 @@ import org.tensorflow.op.xla.AllReduce;
 import org.tensorflow.op.xla.BroadcastHelper;
 import org.tensorflow.op.xla.ClusterOutput;
 import org.tensorflow.op.xla.Conv;
+import org.tensorflow.op.xla.CustomCall;
 import org.tensorflow.op.xla.Dequantize;
 import org.tensorflow.op.xla.Dot;
 import org.tensorflow.op.xla.DynamicSlice;
@@ -33,6 +34,7 @@ import org.tensorflow.op.xla.Einsum;
 import org.tensorflow.op.xla.Gather;
 import org.tensorflow.op.xla.If;
 import org.tensorflow.op.xla.KeyValueSort;
+import org.tensorflow.op.xla.OptimizationBarrier;
 import org.tensorflow.op.xla.Pad;
 import org.tensorflow.op.xla.Recv;
 import org.tensorflow.op.xla.Reduce;
@@ -156,6 +158,25 @@ public final class XlaOps {
       String dimensionNumbers, String precisionConfig, Class<W> preferredElementType,
       Conv.Options... options) {
     return Conv.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig, preferredElementType, options);
+  }
+
+  /**
+   * Wraps the XLA CustomCall operator
+   *  documented at https://www.tensorflow.org/xla/operation_semantics#customcall.
+   *
+   * @param <T> data type for {@code output} output
+   * @param args A list of {@code Tensor} with possibly different types.
+   * @param targetName Name of the function. A call instruction will be emitted which
+   *  targets this symbol name.
+   * @param backendConfig String, used to encode serialized metadata to the backend.
+   * @param dtype Output tensor data type.
+   * @param shape Output tensor shape.
+   * @param <T> data type for {@code XlaCustomCall} output and operands
+   * @return a new instance of CustomCall
+   */
+  public <T extends TType> CustomCall<T> customCall(Iterable<Operand<?>> args, String targetName,
+      String backendConfig, Class<T> dtype, Shape shape) {
+    return CustomCall.create(scope, args, targetName, backendConfig, dtype, shape);
   }
 
   /**
@@ -313,6 +334,17 @@ public final class XlaOps {
   public <T extends TNumber, U extends TType> KeyValueSort<T, U> keyValueSort(Operand<T> keys,
       Operand<U> values) {
     return KeyValueSort.create(scope, keys, values);
+  }
+
+  /**
+   * Wraps the XLA OptimizationBarrier operator.
+   *  Documented at https://www.tensorflow.org/xla/operation_semantics#optimizationbarrier.
+   *
+   * @param input A Tuple of Arrays of any type.
+   * @return a new instance of OptimizationBarrier
+   */
+  public OptimizationBarrier optimizationBarrier(Iterable<Operand<?>> input) {
+    return OptimizationBarrier.create(scope, input);
   }
 
   /**

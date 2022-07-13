@@ -322,7 +322,7 @@ public final class MathOps {
    *
    * @param <V> data type for {@code output} output
    * @param input The input value
-   * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
+   * @param dimension int16, int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    *  Describes which dimension of the input Tensor to reduce across. For vectors,
    *  use dimension = 0.
    * @return a new instance of ArgMax, with default output types
@@ -347,7 +347,7 @@ public final class MathOps {
    *
    * @param <V> data type for {@code output} output
    * @param input The input value
-   * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
+   * @param dimension int16, int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    *  Describes which dimension of the input Tensor to reduce across. For vectors,
    *  use dimension = 0.
    * @param outputType The value of the outputType attribute
@@ -1731,21 +1731,32 @@ public final class MathOps {
    *  \(output_i = \max_j(data_j)\) where {@code max} is over {@code j} such
    *  that {@code segment_ids[j] == i}.
    *  <p>If the max is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as the same as a smaller following index.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentMax.png" alt>
    *  </div>
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.segment_max(c, tf.constant([0, 0, 1]))
-   *  # ==&gt; [[4, 3, 3, 4],
-   *  #      [5, 6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  tf.math.segment_max(c, tf.constant([0, 0, 1])).numpy()
+   *  array([[4, 3, 3, 4],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
    * @param <T> data type for {@code SegmentMax} output and operands
    * @return a new instance of SegmentMax
    */
@@ -1764,21 +1775,33 @@ public final class MathOps {
    *  over {@code j} such that {@code segment_ids[j] == i} and {@code N} is the total number of
    *  values summed.
    *  <p>If the mean is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as a smaller following index when computing the numerator
+   *  of the mean.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentMean.png" alt>
    *  </div>
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1.0,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.segment_mean(c, tf.constant([0, 0, 1]))
-   *  # ==&gt; [[2.5, 2.5, 2.5, 2.5],
-   *  #      [5, 6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1.0,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  tf.math.segment_mean(c, tf.constant([0, 0, 1])).numpy()
+   *  array([[2.5, 2.5, 2.5, 2.5],
+   *  [5., 6., 7., 8.]], dtype=float32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
    * @param <T> data type for {@code SegmentMean} output and operands
    * @return a new instance of SegmentMean
    */
@@ -1796,21 +1819,32 @@ public final class MathOps {
    *  \(output_i = \min_j(data_j)\) where {@code min} is over {@code j} such
    *  that {@code segment_ids[j] == i}.
    *  <p>If the min is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as the same as a smaller following index.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentMin.png" alt>
    *  </div>
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.segment_min(c, tf.constant([0, 0, 1]))
-   *  # ==&gt; [[1, 2, 2, 1],
-   *  #      [5, 6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  tf.math.segment_min(c, tf.constant([0, 0, 1])).numpy()
+   *  array([[1, 2, 2, 1],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
    * @param <T> data type for {@code SegmentMin} output and operands
    * @return a new instance of SegmentMin
    */
@@ -1828,21 +1862,32 @@ public final class MathOps {
    *  \(output_i = \prod_j data_j\) where the product is over {@code j} such
    *  that {@code segment_ids[j] == i}.
    *  <p>If the product is empty for a given segment ID {@code i}, {@code output[i] = 1}.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as the same as a smaller following index.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentProd.png" alt>
    *  </div>
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.segment_prod(c, tf.constant([0, 0, 1]))
-   *  # ==&gt; [[4, 6, 6, 4],
-   *  #      [5, 6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  tf.math.segment_prod(c, tf.constant([0, 0, 1])).numpy()
+   *  array([[4, 6, 6, 4],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
    * @param <T> data type for {@code SegmentProd} output and operands
    * @return a new instance of SegmentProd
    */
@@ -1860,21 +1905,32 @@ public final class MathOps {
    *  \(output_i = \sum_j data_j\) where sum is over {@code j} such
    *  that {@code segment_ids[j] == i}.
    *  <p>If the sum is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as the same as a smaller following index.
    *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
    *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentSum.png" alt>
    *  </div>
    *  <p>For example:
-   *  <pre>
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.math.segment_sum(c, tf.constant([0, 0, 1]))
-   *  # ==&gt; [[5, 5, 5, 5],
-   *  #      [5, 6, 7, 8]]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  tf.math.segment_sum(c, tf.constant([0, 0, 1])).numpy()
+   *  array([[5, 5, 5, 5],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
    * @param <T> data type for {@code SegmentSum} output and operands
    * @return a new instance of SegmentSum
    */

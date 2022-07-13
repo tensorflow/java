@@ -8,7 +8,7 @@ possible to build artifacts with support for MKL enabled with
 or both with `mvn install -Djavacpp.platform.extension=-mkl-gpu`.
 
 When building this project for the first time in a given workspace, the script will attempt to download
-the [TensorFlow runtime library sources](https://github.com/tensorflow/tensorflow) and build of all the native code for your platform. This requires a
+the [TensorFlow native library sources](https://github.com/tensorflow/tensorflow) and build of all the native code for your platform. This requires a
 valid environment for building TensorFlow, including the [bazel](https://bazel.build/)
 build tool and a few Python dependencies (please read [TensorFlow documentation](https://www.tensorflow.org/install/source)
 for more details).
@@ -102,11 +102,29 @@ to tell what caused the issue.
 
 To upgrade the version of TensorFlow that is embedded within TensorFlow Java, please follow carefully these steps.
 
-### Upgrading TensorFlow Runtime Library
+### Upgrading TensorFlow Native Library
 
-You can upgrade the version of the TensorFlow library by updating the archive downloadeded in the Bazel
-[workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/WORKSPACE#L19) at build time. Make sure to
-update the `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule to reflect the values for the new version.
+1. Download locally the archive of the tensorflow release at https://github.com/tensorflow/tensorflow/archive/refs/tags/vX.X.X.tar.gz
+2. Compute the SHA sum using the shell command `sha256sum <tensorflow-x.x.x.tar.gz>`
+3. Update `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule in Bazel [workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/WORKSPACE#L19)
+4. Extract the archive in a temporary folder
+5. Copy the content of `tensorflow-x.x.x/.bazelrc` file to `tensorflow-core/tensorflow-core-api/tensorflow.bazelrc` under TensorFlow Java source tree
+
+If the version of `tensorflow-x.x.x/.bazelversion` is different than the one found in `tensorflow-core/tensorflow-core-api/.bazelversion`
+
+1. Update the version of `tensorflow-core/tensorflow-core-api/.bazelversion` to match TensorFlow's one
+2. Update the CI build scripts at `.github/workflows/ci.yml` under TensorFlow Java source tree to reflect the version of Bazel to download and run for all platforms
+3. Validate that options in `tensorflow-core/tensorflow-core-api/.bazelrc` are still accurate or update them accordingly
+
+In order to build the TensorFlow native library to work with TensorFlow Java, we sometimes need to apply some patches to the TensorFlow sources. These
+patches are found in `tensorflow-core/tensorflow-core-api/external`.
+
+- If you have an error like "Error in fail: Error applying patch //external:xxx.patch:", verify why the patch is failing by looking at the TensorFlow source code.
+  Chances are that this code has changed and the patch needs to be updated.
+- To create a new patch or update one, you can make a copy of the TensorFlow source file to change, make your change and generate a patch using `git diff <file> <file-updated>`
+- If more than one file needs to be added to the patch, it's easier to clone the [TensorFlow repository](https://github.com/tensorflow/tensorflow), apply the changes and use `git diff` at the root of the tree
+
+Once these steps have been executed, you can run `mvn install` to build the new version but make sure to delete completely the `src/gen` directory of `tensorflow-core-api` first.
 
 ### Ops Classification
 
@@ -139,7 +157,7 @@ will automatically classify the op). It is also possible to enter manually the n
 application will then take care to write the `api_def` proto for each operation classified.
 
 Make sure to erase completely the generated source folder of the `tensorflow-core-api` module before rerunning the build so you can see
-if your ops have been classified properly.
+if your ops have been classified properly. Don't worry, that second run of the build will be fast ;)
 
 #### Ops Kernel Upgrade
 
@@ -149,7 +167,7 @@ previous versions of this operation are marked as `VISIBILITY: SKIP`.
 
 ### Java Protos Classification
 
-TensorFlow Java distributes a large number proto definitions found in the TensorFlow Runtime Library as Java classes. Again, new protos might not
+TensorFlow Java distributes a large number proto definitions found in the TensorFlow native library as Java classes. Again, new protos might not
 be classified properly since they may be lacking the `option java_*` statements at the beginning of their definition. If you notice in the
 [generated protos](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow/proto) of the `tensorflow-core-api`
 that some new proto classes seems to be in the wrong package, create a Bazel patch at this effect to add the missing options.

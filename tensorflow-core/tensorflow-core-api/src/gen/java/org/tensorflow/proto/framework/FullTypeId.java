@@ -5,6 +5,7 @@ package org.tensorflow.proto.framework;
 
 /**
  * <pre>
+ * LINT.IfChange
  * Experimental. Represents the complete type information of a TensorFlow value.
  * </pre>
  *

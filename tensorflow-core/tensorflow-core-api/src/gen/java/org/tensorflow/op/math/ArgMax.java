@@ -77,7 +77,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
    *
    * @param scope current scope
    * @param input The input value
-   * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
+   * @param dimension int16, int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    * Describes which dimension of the input Tensor to reduce across. For vectors,
    * use dimension = 0.
    * @param outputType The value of the outputType attribute
@@ -101,7 +101,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
    *
    * @param scope current scope
    * @param input The input value
-   * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
+   * @param dimension int16, int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    * Describes which dimension of the input Tensor to reduce across. For vectors,
    * use dimension = 0.
    * @return a new instance of ArgMax, with default output types
@@ -138,7 +138,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
     public final Operand<? extends TType> input;
 
     /**
-     * int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
+     * int16, int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
      * Describes which dimension of the input Tensor to reduce across. For vectors,
      * use dimension = 0.
      */

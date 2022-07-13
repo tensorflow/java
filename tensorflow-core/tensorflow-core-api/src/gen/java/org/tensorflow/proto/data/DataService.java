@@ -1048,17 +1048,17 @@ public final class DataService {
        * No compression.
        * </pre>
        *
-       * <code>OFF = 1;</code>
+       * <code>COMPRESSION_OFF = 1;</code>
        */
-      OFF(1),
+      COMPRESSION_OFF(1),
       /**
        * <pre>
        * Snappy compression as defined in tensorflow/core/platform/snappy.h.
        * </pre>
        *
-       * <code>SNAPPY = 2;</code>
+       * <code>COMPRESSION_SNAPPY = 2;</code>
        */
-      SNAPPY(2),
+      COMPRESSION_SNAPPY(2),
       UNRECOGNIZED(-1),
       ;
 
@@ -1071,17 +1071,17 @@ public final class DataService {
        * No compression.
        * </pre>
        *
-       * <code>OFF = 1;</code>
+       * <code>COMPRESSION_OFF = 1;</code>
        */
-      public static final int OFF_VALUE = 1;
+      public static final int COMPRESSION_OFF_VALUE = 1;
       /**
        * <pre>
        * Snappy compression as defined in tensorflow/core/platform/snappy.h.
        * </pre>
        *
-       * <code>SNAPPY = 2;</code>
+       * <code>COMPRESSION_SNAPPY = 2;</code>
        */
-      public static final int SNAPPY_VALUE = 2;
+      public static final int COMPRESSION_SNAPPY_VALUE = 2;
 
 
       public final int getNumber() {
@@ -1103,8 +1103,8 @@ public final class DataService {
       public static Compression forNumber(int value) {
         switch (value) {
           case 0: return COMPRESSION_UNSPECIFIED;
-          case 1: return OFF;
-          case 2: return SNAPPY;
+          case 1: return COMPRESSION_OFF;
+          case 2: return COMPRESSION_SNAPPY;
           default: return null;
         }
       }
@@ -1798,6 +1798,528 @@ public final class DataService {
 
   }
 
+  public interface DataServiceConfigOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tensorflow.data.DataServiceConfig)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+     */
+    int getDeploymentModeValue();
+    /**
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+     */
+    org.tensorflow.proto.data.DataService.DeploymentMode getDeploymentMode();
+  }
+  /**
+   * <pre>
+   * Data service config available to the client through GetDataServiceConfig RPC.
+   * Next tag: 2
+   * </pre>
+   *
+   * Protobuf type {@code tensorflow.data.DataServiceConfig}
+   */
+  public  static final class DataServiceConfig extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tensorflow.data.DataServiceConfig)
+      DataServiceConfigOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DataServiceConfig.newBuilder() to construct.
+    private DataServiceConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DataServiceConfig() {
+      deploymentMode_ = 0;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DataServiceConfig();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DataServiceConfig(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              int rawValue = input.readEnum();
+
+              deploymentMode_ = rawValue;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.tensorflow.proto.data.DataService.internal_static_tensorflow_data_DataServiceConfig_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.tensorflow.proto.data.DataService.internal_static_tensorflow_data_DataServiceConfig_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.tensorflow.proto.data.DataService.DataServiceConfig.class, org.tensorflow.proto.data.DataService.DataServiceConfig.Builder.class);
+    }
+
+    public static final int DEPLOYMENT_MODE_FIELD_NUMBER = 1;
+    private int deploymentMode_;
+    /**
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+     */
+    public int getDeploymentModeValue() {
+      return deploymentMode_;
+    }
+    /**
+     * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+     */
+    public org.tensorflow.proto.data.DataService.DeploymentMode getDeploymentMode() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.data.DataService.DeploymentMode result = org.tensorflow.proto.data.DataService.DeploymentMode.valueOf(deploymentMode_);
+      return result == null ? org.tensorflow.proto.data.DataService.DeploymentMode.UNRECOGNIZED : result;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (deploymentMode_ != org.tensorflow.proto.data.DataService.DeploymentMode.DEPLOYMENT_MODE_UNSPECIFIED.getNumber()) {
+        output.writeEnum(1, deploymentMode_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (deploymentMode_ != org.tensorflow.proto.data.DataService.DeploymentMode.DEPLOYMENT_MODE_UNSPECIFIED.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, deploymentMode_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.tensorflow.proto.data.DataService.DataServiceConfig)) {
+        return super.equals(obj);
+      }
+      org.tensorflow.proto.data.DataService.DataServiceConfig other = (org.tensorflow.proto.data.DataService.DataServiceConfig) obj;
+
+      if (deploymentMode_ != other.deploymentMode_) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + DEPLOYMENT_MODE_FIELD_NUMBER;
+      hash = (53 * hash) + deploymentMode_;
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.tensorflow.proto.data.DataService.DataServiceConfig prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * Data service config available to the client through GetDataServiceConfig RPC.
+     * Next tag: 2
+     * </pre>
+     *
+     * Protobuf type {@code tensorflow.data.DataServiceConfig}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tensorflow.data.DataServiceConfig)
+        org.tensorflow.proto.data.DataService.DataServiceConfigOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.tensorflow.proto.data.DataService.internal_static_tensorflow_data_DataServiceConfig_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.tensorflow.proto.data.DataService.internal_static_tensorflow_data_DataServiceConfig_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.tensorflow.proto.data.DataService.DataServiceConfig.class, org.tensorflow.proto.data.DataService.DataServiceConfig.Builder.class);
+      }
+
+      // Construct using org.tensorflow.proto.data.DataService.DataServiceConfig.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        deploymentMode_ = 0;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.tensorflow.proto.data.DataService.internal_static_tensorflow_data_DataServiceConfig_descriptor;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.data.DataService.DataServiceConfig getDefaultInstanceForType() {
+        return org.tensorflow.proto.data.DataService.DataServiceConfig.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.data.DataService.DataServiceConfig build() {
+        org.tensorflow.proto.data.DataService.DataServiceConfig result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.data.DataService.DataServiceConfig buildPartial() {
+        org.tensorflow.proto.data.DataService.DataServiceConfig result = new org.tensorflow.proto.data.DataService.DataServiceConfig(this);
+        result.deploymentMode_ = deploymentMode_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.tensorflow.proto.data.DataService.DataServiceConfig) {
+          return mergeFrom((org.tensorflow.proto.data.DataService.DataServiceConfig)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.tensorflow.proto.data.DataService.DataServiceConfig other) {
+        if (other == org.tensorflow.proto.data.DataService.DataServiceConfig.getDefaultInstance()) return this;
+        if (other.deploymentMode_ != 0) {
+          setDeploymentModeValue(other.getDeploymentModeValue());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.tensorflow.proto.data.DataService.DataServiceConfig parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.tensorflow.proto.data.DataService.DataServiceConfig) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int deploymentMode_ = 0;
+      /**
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+       */
+      public int getDeploymentModeValue() {
+        return deploymentMode_;
+      }
+      /**
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+       */
+      public Builder setDeploymentModeValue(int value) {
+        deploymentMode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+       */
+      public org.tensorflow.proto.data.DataService.DeploymentMode getDeploymentMode() {
+        @SuppressWarnings("deprecation")
+        org.tensorflow.proto.data.DataService.DeploymentMode result = org.tensorflow.proto.data.DataService.DeploymentMode.valueOf(deploymentMode_);
+        return result == null ? org.tensorflow.proto.data.DataService.DeploymentMode.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+       */
+      public Builder setDeploymentMode(org.tensorflow.proto.data.DataService.DeploymentMode value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        deploymentMode_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.tensorflow.data.DeploymentMode deployment_mode = 1;</code>
+       */
+      public Builder clearDeploymentMode() {
+        
+        deploymentMode_ = 0;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tensorflow.data.DataServiceConfig)
+    }
+
+    // @@protoc_insertion_point(class_scope:tensorflow.data.DataServiceConfig)
+    private static final org.tensorflow.proto.data.DataService.DataServiceConfig DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.tensorflow.proto.data.DataService.DataServiceConfig();
+    }
+
+    public static org.tensorflow.proto.data.DataService.DataServiceConfig getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<DataServiceConfig>
+        PARSER = new com.google.protobuf.AbstractParser<DataServiceConfig>() {
+      @java.lang.Override
+      public DataServiceConfig parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DataServiceConfig(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DataServiceConfig> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DataServiceConfig> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.tensorflow.proto.data.DataService.DataServiceConfig getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tensorflow_data_ProcessingModeDef_descriptor;
   private static final 
@@ -1808,6 +2330,11 @@ public final class DataService {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tensorflow_data_DataServiceMetadata_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tensorflow_data_DataServiceConfig_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tensorflow_data_DataServiceConfig_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1823,19 +2350,22 @@ public final class DataService {
       "ow.data.ProcessingModeDef.ShardingPolicy" +
       "\"V\n\016ShardingPolicy\022\007\n\003OFF\020\000\022\013\n\007DYNAMIC\020\001" +
       "\022\010\n\004FILE\020\002\022\010\n\004DATA\020\003\022\020\n\014FILE_OR_DATA\020\004\022\010" +
-      "\n\004HINT\020\005\"\343\001\n\023DataServiceMetadata\022\026\n\014elem" +
+      "\n\004HINT\020\005\"\373\001\n\023DataServiceMetadata\022\026\n\014elem" +
       "ent_spec\030\001 \001(\014H\000\022E\n\013compression\030\002 \001(\01620." +
       "tensorflow.data.DataServiceMetadata.Comp" +
-      "ression\022\023\n\013cardinality\030\003 \001(\003\"?\n\013Compress" +
-      "ion\022\033\n\027COMPRESSION_UNSPECIFIED\020\000\022\007\n\003OFF\020" +
-      "\001\022\n\n\006SNAPPY\020\002B\027\n\025optional_element_spec*\210" +
-      "\001\n\016DeploymentMode\022\037\n\033DEPLOYMENT_MODE_UNS" +
-      "PECIFIED\020\000\022\035\n\031DEPLOYMENT_MODE_COLOCATED\020" +
-      "\001\022\032\n\026DEPLOYMENT_MODE_REMOTE\020\002\022\032\n\026DEPLOYM" +
-      "ENT_MODE_HYBRID\020\003Br\n\031org.tensorflow.prot" +
-      "o.dataZUgithub.com/tensorflow/tensorflow" +
-      "/tensorflow/go/core/protobuf/for_core_pr" +
-      "otos_go_protob\006proto3"
+      "ression\022\023\n\013cardinality\030\003 \001(\003\"W\n\013Compress" +
+      "ion\022\033\n\027COMPRESSION_UNSPECIFIED\020\000\022\023\n\017COMP" +
+      "RESSION_OFF\020\001\022\026\n\022COMPRESSION_SNAPPY\020\002B\027\n" +
+      "\025optional_element_spec\"M\n\021DataServiceCon" +
+      "fig\0228\n\017deployment_mode\030\001 \001(\0162\037.tensorflo" +
+      "w.data.DeploymentMode*\210\001\n\016DeploymentMode" +
+      "\022\037\n\033DEPLOYMENT_MODE_UNSPECIFIED\020\000\022\035\n\031DEP" +
+      "LOYMENT_MODE_COLOCATED\020\001\022\032\n\026DEPLOYMENT_M" +
+      "ODE_REMOTE\020\002\022\032\n\026DEPLOYMENT_MODE_HYBRID\020\003" +
+      "Br\n\031org.tensorflow.proto.dataZUgithub.co" +
+      "m/tensorflow/tensorflow/tensorflow/go/co" +
+      "re/protobuf/for_core_protos_go_protob\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1853,6 +2383,12 @@ public final class DataService {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_DataServiceMetadata_descriptor,
         new java.lang.String[] { "ElementSpec", "Compression", "Cardinality", "OptionalElementSpec", });
+    internal_static_tensorflow_data_DataServiceConfig_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_tensorflow_data_DataServiceConfig_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tensorflow_data_DataServiceConfig_descriptor,
+        new java.lang.String[] { "DeploymentMode", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

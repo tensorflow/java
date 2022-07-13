@@ -1180,17 +1180,6 @@ private static final long serialVersionUID = 0L;
        */
       com.google.protobuf.ByteString
           getCheckpointKeyBytes();
-
-      /**
-       * <pre>
-       * Whether checkpoints should be considered as matching even without this
-       * value restored. Used for non-critical values which don't affect the
-       * TensorFlow graph, such as layer configurations.
-       * </pre>
-       *
-       * <code>bool optional_restore = 4;</code>
-       */
-      boolean getOptionalRestore();
     }
     /**
      * Protobuf type {@code tensorflow.TrackableObjectGraph.TrackableObject.SerializedTensor}
@@ -1256,11 +1245,6 @@ private static final long serialVersionUID = 0L;
                 java.lang.String s = input.readStringRequireUtf8();
 
                 checkpointKey_ = s;
-                break;
-              }
-              case 32: {
-
-                optionalRestore_ = input.readBool();
                 break;
               }
               default: {
@@ -1431,21 +1415,6 @@ private static final long serialVersionUID = 0L;
         }
       }
 
-      public static final int OPTIONAL_RESTORE_FIELD_NUMBER = 4;
-      private boolean optionalRestore_;
-      /**
-       * <pre>
-       * Whether checkpoints should be considered as matching even without this
-       * value restored. Used for non-critical values which don't affect the
-       * TensorFlow graph, such as layer configurations.
-       * </pre>
-       *
-       * <code>bool optional_restore = 4;</code>
-       */
-      public boolean getOptionalRestore() {
-        return optionalRestore_;
-      }
-
       private byte memoizedIsInitialized = -1;
       @java.lang.Override
       public final boolean isInitialized() {
@@ -1469,9 +1438,6 @@ private static final long serialVersionUID = 0L;
         if (!getCheckpointKeyBytes().isEmpty()) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 3, checkpointKey_);
         }
-        if (optionalRestore_ != false) {
-          output.writeBool(4, optionalRestore_);
-        }
         unknownFields.writeTo(output);
       }
 
@@ -1489,10 +1455,6 @@ private static final long serialVersionUID = 0L;
         }
         if (!getCheckpointKeyBytes().isEmpty()) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, checkpointKey_);
-        }
-        if (optionalRestore_ != false) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBoolSize(4, optionalRestore_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -1515,8 +1477,6 @@ private static final long serialVersionUID = 0L;
             .equals(other.getFullName())) return false;
         if (!getCheckpointKey()
             .equals(other.getCheckpointKey())) return false;
-        if (getOptionalRestore()
-            != other.getOptionalRestore()) return false;
         if (!unknownFields.equals(other.unknownFields)) return false;
         return true;
       }
@@ -1534,9 +1494,6 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getFullName().hashCode();
         hash = (37 * hash) + CHECKPOINT_KEY_FIELD_NUMBER;
         hash = (53 * hash) + getCheckpointKey().hashCode();
-        hash = (37 * hash) + OPTIONAL_RESTORE_FIELD_NUMBER;
-        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-            getOptionalRestore());
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -1676,8 +1633,6 @@ private static final long serialVersionUID = 0L;
 
           checkpointKey_ = "";
 
-          optionalRestore_ = false;
-
           return this;
         }
 
@@ -1707,7 +1662,6 @@ private static final long serialVersionUID = 0L;
           result.name_ = name_;
           result.fullName_ = fullName_;
           result.checkpointKey_ = checkpointKey_;
-          result.optionalRestore_ = optionalRestore_;
           onBuilt();
           return result;
         }
@@ -1767,9 +1721,6 @@ private static final long serialVersionUID = 0L;
           if (!other.getCheckpointKey().isEmpty()) {
             checkpointKey_ = other.checkpointKey_;
             onChanged();
-          }
-          if (other.getOptionalRestore() != false) {
-            setOptionalRestore(other.getOptionalRestore());
           }
           this.mergeUnknownFields(other.unknownFields);
           onChanged();
@@ -2088,50 +2039,6 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
           
           checkpointKey_ = value;
-          onChanged();
-          return this;
-        }
-
-        private boolean optionalRestore_ ;
-        /**
-         * <pre>
-         * Whether checkpoints should be considered as matching even without this
-         * value restored. Used for non-critical values which don't affect the
-         * TensorFlow graph, such as layer configurations.
-         * </pre>
-         *
-         * <code>bool optional_restore = 4;</code>
-         */
-        public boolean getOptionalRestore() {
-          return optionalRestore_;
-        }
-        /**
-         * <pre>
-         * Whether checkpoints should be considered as matching even without this
-         * value restored. Used for non-critical values which don't affect the
-         * TensorFlow graph, such as layer configurations.
-         * </pre>
-         *
-         * <code>bool optional_restore = 4;</code>
-         */
-        public Builder setOptionalRestore(boolean value) {
-          
-          optionalRestore_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <pre>
-         * Whether checkpoints should be considered as matching even without this
-         * value restored. Used for non-critical values which don't affect the
-         * TensorFlow graph, such as layer configurations.
-         * </pre>
-         *
-         * <code>bool optional_restore = 4;</code>
-         */
-        public Builder clearOptionalRestore() {
-          
-          optionalRestore_ = false;
           onChanged();
           return this;
         }

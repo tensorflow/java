@@ -16,12 +16,12 @@ http_archive(
     ],
     patch_tool = "patch",
     patch_args = ["-p1"],
-    patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\(.* java_package = \"org\.tensorflow\.\)\(.*\"\)/\\1proto.\\2'/"],
+    patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\\(.* java_package = \"org\\.tensorflow\\.\\)\\(.*\"\\)/\\1proto.\\2'/"],
     urls = [
-       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.8.0.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.9.1.tar.gz",
     ],
-    sha256 = "66b953ae7fba61fd78969a2e24e350b26ec116cf2e6a7eb93d02c63939c6f9f7",
-    strip_prefix = "tensorflow-2.8.0"
+    sha256 = "6eaf86ead73e23988fe192da1db68f4d3828bcdd0f3a9dc195935e339c95dbdc",
+    strip_prefix = "tensorflow-2.9.1"
 )
 
 # START: Upstream TensorFlow dependencies

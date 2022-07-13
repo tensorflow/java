@@ -36,6 +36,10 @@ public enum NodeClass
    * <code>UNKNOWN_RATIO = 5;</code>
    */
   UNKNOWN_RATIO(5),
+  /**
+   * <code>ASYNC_UNKNOWN_RATIO = 6;</code>
+   */
+  ASYNC_UNKNOWN_RATIO(6),
   UNRECOGNIZED(-1),
   ;
 
@@ -63,6 +67,10 @@ public enum NodeClass
    * <code>UNKNOWN_RATIO = 5;</code>
    */
   public static final int UNKNOWN_RATIO_VALUE = 5;
+  /**
+   * <code>ASYNC_UNKNOWN_RATIO = 6;</code>
+   */
+  public static final int ASYNC_UNKNOWN_RATIO_VALUE = 6;
 
 
   public final int getNumber() {
@@ -89,6 +97,7 @@ public enum NodeClass
       case 3: return KNOWN_RATIO;
       case 4: return ASYNC_KNOWN_RATIO;
       case 5: return UNKNOWN_RATIO;
+      case 6: return ASYNC_UNKNOWN_RATIO;
       default: return null;
     }
   }

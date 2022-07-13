@@ -55,9 +55,9 @@ public final class TrackableObjectGraphProtos {
     java.lang.String[] descriptorData = {
       "\n5tensorflow/core/protobuf/trackable_obj" +
       "ect_graph.proto\022\ntensorflow\032\036google/prot" +
-      "obuf/wrappers.proto\"\365\005\n\024TrackableObjectG" +
+      "obuf/wrappers.proto\"\363\005\n\024TrackableObjectG" +
       "raph\022?\n\005nodes\030\001 \003(\01320.tensorflow.Trackab" +
-      "leObjectGraph.TrackableObject\032\233\005\n\017Tracka" +
+      "leObjectGraph.TrackableObject\032\231\005\n\017Tracka" +
       "bleObject\022R\n\010children\030\001 \003(\0132@.tensorflow" +
       ".TrackableObjectGraph.TrackableObject.Ob" +
       "jectReference\022U\n\nattributes\030\002 \003(\0132A.tens" +
@@ -69,17 +69,17 @@ public final class TrackableObjectGraphProtos {
       "steredSaver\0229\n\025has_checkpoint_values\030\005 \001" +
       "(\0132\032.google.protobuf.BoolValue\0326\n\017Object" +
       "Reference\022\017\n\007node_id\030\001 \001(\005\022\022\n\nlocal_name" +
-      "\030\002 \001(\t\032e\n\020SerializedTensor\022\014\n\004name\030\001 \001(\t" +
+      "\030\002 \001(\t\032c\n\020SerializedTensor\022\014\n\004name\030\001 \001(\t" +
       "\022\021\n\tfull_name\030\002 \001(\t\022\026\n\016checkpoint_key\030\003 " +
-      "\001(\t\022\030\n\020optional_restore\030\004 \001(\010\032l\n\025SlotVar" +
-      "iableReference\022!\n\031original_variable_node" +
-      "_id\030\001 \001(\005\022\021\n\tslot_name\030\002 \001(\t\022\035\n\025slot_var" +
-      "iable_node_id\030\003 \001(\005\"4\n\017RegisteredSaver\022\014" +
-      "\n\004name\030\001 \001(\t\022\023\n\013object_name\030\002 \001(\tB\230\001\n\036or" +
-      "g.tensorflow.proto.frameworkB\032TrackableO" +
-      "bjectGraphProtosP\001ZUgithub.com/tensorflo" +
-      "w/tensorflow/tensorflow/go/core/protobuf" +
-      "/for_core_protos_go_proto\370\001\001b\006proto3"
+      "\001(\tJ\004\010\004\020\005R\020optional_restore\032l\n\025SlotVaria" +
+      "bleReference\022!\n\031original_variable_node_i" +
+      "d\030\001 \001(\005\022\021\n\tslot_name\030\002 \001(\t\022\035\n\025slot_varia" +
+      "ble_node_id\030\003 \001(\005\"4\n\017RegisteredSaver\022\014\n\004" +
+      "name\030\001 \001(\t\022\023\n\013object_name\030\002 \001(\tB\230\001\n\036org." +
+      "tensorflow.proto.frameworkB\032TrackableObj" +
+      "ectGraphProtosP\001ZUgithub.com/tensorflow/" +
+      "tensorflow/tensorflow/go/core/protobuf/f" +
+      "or_core_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -109,7 +109,7 @@ public final class TrackableObjectGraphProtos {
     internal_static_tensorflow_TrackableObjectGraph_TrackableObject_SerializedTensor_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_TrackableObjectGraph_TrackableObject_SerializedTensor_descriptor,
-        new java.lang.String[] { "Name", "FullName", "CheckpointKey", "OptionalRestore", });
+        new java.lang.String[] { "Name", "FullName", "CheckpointKey", });
     internal_static_tensorflow_TrackableObjectGraph_TrackableObject_SlotVariableReference_descriptor =
       internal_static_tensorflow_TrackableObjectGraph_TrackableObject_descriptor.getNestedTypes().get(2);
     internal_static_tensorflow_TrackableObjectGraph_TrackableObject_SlotVariableReference_fieldAccessorTable = new

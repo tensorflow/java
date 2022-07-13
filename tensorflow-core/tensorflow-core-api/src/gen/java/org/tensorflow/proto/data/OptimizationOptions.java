@@ -5,7 +5,7 @@ package org.tensorflow.proto.data;
 
 /**
  * <pre>
- * next: 18
+ * next: 19
  * </pre>
  *
  * Protobuf type {@code tensorflow.data.OptimizationOptions}
@@ -95,6 +95,11 @@ private static final long serialVersionUID = 0L;
           case 136: {
             optionalShuffleAndRepeatFusionCase_ = 17;
             optionalShuffleAndRepeatFusion_ = input.readBool();
+            break;
+          }
+          case 144: {
+            optionalFilterParallelizationCase_ = 18;
+            optionalFilterParallelization_ = input.readBool();
             break;
           }
           default: {
@@ -453,6 +458,42 @@ private static final long serialVersionUID = 0L;
         optionalShuffleAndRepeatFusionCase_);
   }
 
+  private int optionalFilterParallelizationCase_ = 0;
+  private java.lang.Object optionalFilterParallelization_;
+  public enum OptionalFilterParallelizationCase
+      implements com.google.protobuf.Internal.EnumLite {
+    FILTER_PARALLELIZATION(18),
+    OPTIONALFILTERPARALLELIZATION_NOT_SET(0);
+    private final int value;
+    private OptionalFilterParallelizationCase(int value) {
+      this.value = value;
+    }
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static OptionalFilterParallelizationCase valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static OptionalFilterParallelizationCase forNumber(int value) {
+      switch (value) {
+        case 18: return FILTER_PARALLELIZATION;
+        case 0: return OPTIONALFILTERPARALLELIZATION_NOT_SET;
+        default: return null;
+      }
+    }
+    public int getNumber() {
+      return this.value;
+    }
+  };
+
+  public OptionalFilterParallelizationCase
+  getOptionalFilterParallelizationCase() {
+    return OptionalFilterParallelizationCase.forNumber(
+        optionalFilterParallelizationCase_);
+  }
+
   public static final int APPLY_DEFAULT_OPTIMIZATIONS_FIELD_NUMBER = 1;
   /**
    * <code>bool apply_default_optimizations = 1;</code>
@@ -552,6 +593,17 @@ private static final long serialVersionUID = 0L;
     return false;
   }
 
+  public static final int FILTER_PARALLELIZATION_FIELD_NUMBER = 18;
+  /**
+   * <code>bool filter_parallelization = 18;</code>
+   */
+  public boolean getFilterParallelization() {
+    if (optionalFilterParallelizationCase_ == 18) {
+      return (java.lang.Boolean) optionalFilterParallelization_;
+    }
+    return false;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -601,6 +653,10 @@ private static final long serialVersionUID = 0L;
     if (optionalShuffleAndRepeatFusionCase_ == 17) {
       output.writeBool(
           17, (boolean)((java.lang.Boolean) optionalShuffleAndRepeatFusion_));
+    }
+    if (optionalFilterParallelizationCase_ == 18) {
+      output.writeBool(
+          18, (boolean)((java.lang.Boolean) optionalFilterParallelization_));
     }
     unknownFields.writeTo(output);
   }
@@ -655,6 +711,11 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(
             17, (boolean)((java.lang.Boolean) optionalShuffleAndRepeatFusion_));
+    }
+    if (optionalFilterParallelizationCase_ == 18) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(
+            18, (boolean)((java.lang.Boolean) optionalFilterParallelization_));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -752,6 +813,15 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
+    if (!getOptionalFilterParallelizationCase().equals(other.getOptionalFilterParallelizationCase())) return false;
+    switch (optionalFilterParallelizationCase_) {
+      case 18:
+        if (getFilterParallelization()
+            != other.getFilterParallelization()) return false;
+        break;
+      case 0:
+      default:
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -840,6 +910,15 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + SHUFFLE_AND_REPEAT_FUSION_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
             getShuffleAndRepeatFusion());
+        break;
+      case 0:
+      default:
+    }
+    switch (optionalFilterParallelizationCase_) {
+      case 18:
+        hash = (37 * hash) + FILTER_PARALLELIZATION_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getFilterParallelization());
         break;
       case 0:
       default:
@@ -941,7 +1020,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * next: 18
+   * next: 19
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.OptimizationOptions}
@@ -999,6 +1078,8 @@ private static final long serialVersionUID = 0L;
       optionalParallelBatch_ = null;
       optionalShuffleAndRepeatFusionCase_ = 0;
       optionalShuffleAndRepeatFusion_ = null;
+      optionalFilterParallelizationCase_ = 0;
+      optionalFilterParallelization_ = null;
       return this;
     }
 
@@ -1052,6 +1133,9 @@ private static final long serialVersionUID = 0L;
       if (optionalShuffleAndRepeatFusionCase_ == 17) {
         result.optionalShuffleAndRepeatFusion_ = optionalShuffleAndRepeatFusion_;
       }
+      if (optionalFilterParallelizationCase_ == 18) {
+        result.optionalFilterParallelization_ = optionalFilterParallelization_;
+      }
       result.optionalApplyDefaultOptimizationsCase_ = optionalApplyDefaultOptimizationsCase_;
       result.optionalFilterFusionCase_ = optionalFilterFusionCase_;
       result.optionalMapAndBatchFusionCase_ = optionalMapAndBatchFusionCase_;
@@ -1061,6 +1145,7 @@ private static final long serialVersionUID = 0L;
       result.optionalNoopEliminationCase_ = optionalNoopEliminationCase_;
       result.optionalParallelBatchCase_ = optionalParallelBatchCase_;
       result.optionalShuffleAndRepeatFusionCase_ = optionalShuffleAndRepeatFusionCase_;
+      result.optionalFilterParallelizationCase_ = optionalFilterParallelizationCase_;
       onBuilt();
       return result;
     }
@@ -1187,6 +1272,15 @@ private static final long serialVersionUID = 0L;
           break;
         }
         case OPTIONALSHUFFLEANDREPEATFUSION_NOT_SET: {
+          break;
+        }
+      }
+      switch (other.getOptionalFilterParallelizationCase()) {
+        case FILTER_PARALLELIZATION: {
+          setFilterParallelization(other.getFilterParallelization());
+          break;
+        }
+        case OPTIONALFILTERPARALLELIZATION_NOT_SET: {
           break;
         }
       }
@@ -1349,6 +1443,21 @@ private static final long serialVersionUID = 0L;
     public Builder clearOptionalShuffleAndRepeatFusion() {
       optionalShuffleAndRepeatFusionCase_ = 0;
       optionalShuffleAndRepeatFusion_ = null;
+      onChanged();
+      return this;
+    }
+
+    private int optionalFilterParallelizationCase_ = 0;
+    private java.lang.Object optionalFilterParallelization_;
+    public OptionalFilterParallelizationCase
+        getOptionalFilterParallelizationCase() {
+      return OptionalFilterParallelizationCase.forNumber(
+          optionalFilterParallelizationCase_);
+    }
+
+    public Builder clearOptionalFilterParallelization() {
+      optionalFilterParallelizationCase_ = 0;
+      optionalFilterParallelization_ = null;
       onChanged();
       return this;
     }
@@ -1619,6 +1728,36 @@ private static final long serialVersionUID = 0L;
       if (optionalShuffleAndRepeatFusionCase_ == 17) {
         optionalShuffleAndRepeatFusionCase_ = 0;
         optionalShuffleAndRepeatFusion_ = null;
+        onChanged();
+      }
+      return this;
+    }
+
+    /**
+     * <code>bool filter_parallelization = 18;</code>
+     */
+    public boolean getFilterParallelization() {
+      if (optionalFilterParallelizationCase_ == 18) {
+        return (java.lang.Boolean) optionalFilterParallelization_;
+      }
+      return false;
+    }
+    /**
+     * <code>bool filter_parallelization = 18;</code>
+     */
+    public Builder setFilterParallelization(boolean value) {
+      optionalFilterParallelizationCase_ = 18;
+      optionalFilterParallelization_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool filter_parallelization = 18;</code>
+     */
+    public Builder clearFilterParallelization() {
+      if (optionalFilterParallelizationCase_ == 18) {
+        optionalFilterParallelizationCase_ = 0;
+        optionalFilterParallelization_ = null;
         onChanged();
       }
       return this;

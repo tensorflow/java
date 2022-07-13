@@ -62,16 +62,16 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
    * Factory method to create a class wrapping a new DynamicEnqueueTPUEmbeddingArbitraryTensorBatch operation.
    *
    * @param scope current scope
-   * @param sampleIndicesOrRowLengths A list of rank 2 Tensors specifying the training example to which the
+   * @param sampleIndicesOrRowSplits A list of rank 2 Tensors specifying the training example to which the
    * corresponding embedding_indices and aggregation_weights values belong.
    * If the size of its first dimension is 0, we assume each embedding_indices
    * belongs to a different sample. Both int32 and int64 are allowed and will
    * be converted to int32 internally.
-   * <p>Or a list of rank 1 Tensors specifying the row lengths for splitting
+   * <p>Or a list of rank 1 Tensors specifying the row splits for splitting
    * embedding_indices and aggregation_weights into rows. It corresponds to
-   * ids.row_lengths in embedding_lookup(), when ids is a RaggedTensor. When
+   * ids.row_splits in embedding_lookup(), when ids is a RaggedTensor. When
    * enqueuing N-D ragged tensor, only the last dimension is allowed to be ragged.
-   * the row lengths is 1-D dense tensor. When empty, we assume a dense tensor is
+   * the row splits is 1-D dense tensor. When empty, we assume a dense tensor is
    * passed to the op Both int32 and int64 are allowed and will be converted to
    * int32 internally.
    * @param embeddingIndices A list of rank 1 Tensors, indices into the embedding
@@ -93,12 +93,12 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
       describeByClass = true
   )
   public static DynamicEnqueueTPUEmbeddingArbitraryTensorBatch create(Scope scope,
-      Iterable<Operand<? extends TNumber>> sampleIndicesOrRowLengths,
+      Iterable<Operand<? extends TNumber>> sampleIndicesOrRowSplits,
       Iterable<Operand<? extends TNumber>> embeddingIndices,
       Iterable<Operand<? extends TNumber>> aggregationWeights, Operand<TString> modeOverride,
       Operand<TInt32> deviceOrdinal, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DynamicEnqueueTPUEmbeddingArbitraryTensorBatch");
-    opBuilder.addInputList(Operands.asOutputs(sampleIndicesOrRowLengths));
+    opBuilder.addInputList(Operands.asOutputs(sampleIndicesOrRowSplits));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));
     opBuilder.addInput(modeOverride.asOutput());
@@ -199,15 +199,15 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
      * If the size of its first dimension is 0, we assume each embedding_indices
      * belongs to a different sample. Both int32 and int64 are allowed and will
      * be converted to int32 internally.
-     * <p>Or a list of rank 1 Tensors specifying the row lengths for splitting
+     * <p>Or a list of rank 1 Tensors specifying the row splits for splitting
      * embedding_indices and aggregation_weights into rows. It corresponds to
-     * ids.row_lengths in embedding_lookup(), when ids is a RaggedTensor. When
+     * ids.row_splits in embedding_lookup(), when ids is a RaggedTensor. When
      * enqueuing N-D ragged tensor, only the last dimension is allowed to be ragged.
-     * the row lengths is 1-D dense tensor. When empty, we assume a dense tensor is
+     * the row splits is 1-D dense tensor. When empty, we assume a dense tensor is
      * passed to the op Both int32 and int64 are allowed and will be converted to
      * int32 internally.
      */
-    public final Iterable<Operand<? extends TNumber>> sampleIndicesOrRowLengths;
+    public final Iterable<Operand<? extends TNumber>> sampleIndicesOrRowSplits;
 
     /**
      * A list of rank 1 Tensors, indices into the embedding
@@ -265,9 +265,9 @@ public final class DynamicEnqueueTPUEmbeddingArbitraryTensorBatch extends RawOp 
     public Inputs(GraphOperation op) {
       super(new DynamicEnqueueTPUEmbeddingArbitraryTensorBatch(op), op, Arrays.asList("T1", "T2", "T3", "combiners"));
       int inputIndex = 0;
-      int sampleIndicesOrRowLengthsLength = op.inputListLength("sample_indices_or_row_lengths");
-      sampleIndicesOrRowLengths = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, sampleIndicesOrRowLengthsLength));
-      inputIndex += sampleIndicesOrRowLengthsLength;
+      int sampleIndicesOrRowSplitsLength = op.inputListLength("sample_indices_or_row_splits");
+      sampleIndicesOrRowSplits = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, sampleIndicesOrRowSplitsLength));
+      inputIndex += sampleIndicesOrRowSplitsLength;
       int embeddingIndicesLength = op.inputListLength("embedding_indices");
       embeddingIndices = Arrays.asList((Operand<? extends TNumber>[]) op.inputList(inputIndex, embeddingIndicesLength));
       inputIndex += embeddingIndicesLength;

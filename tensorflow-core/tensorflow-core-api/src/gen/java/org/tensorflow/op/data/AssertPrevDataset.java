@@ -32,70 +32,72 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * A container for a multi device iterator resource.
+ * A transformation that asserts which transformations happened previously.
+ * This transformation checks the names and, optionally, the attribute name-value
+ * pairs in the {@code transformations} argument against those of the transformations
+ * that preceded this transformation.  If there is a mismatch, the transformation
+ * raises an exception.
+ * <p>The check occurs when iterating over the contents of the dataset, which
+ * means that the check happens <em>after</em> any static optimizations are applied
+ * to the dataset graph.
  */
 @OpMetadata(
-    opType = AnonymousMultiDeviceIterator.OP_NAME,
-    inputsClass = AnonymousMultiDeviceIterator.Inputs.class
+    opType = AssertPrevDataset.OP_NAME,
+    inputsClass = AssertPrevDataset.Inputs.class
 )
-@Operator(
-    group = "data"
-)
-public final class AnonymousMultiDeviceIterator extends RawOp implements Operand<TType> {
+public final class AssertPrevDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "AnonymousMultiDeviceIteratorV3";
+  public static final String OP_NAME = "AssertPrevDataset";
 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  public AnonymousMultiDeviceIterator(Operation operation) {
+  public AssertPrevDataset(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new AnonymousMultiDeviceIteratorV3 operation.
+   * Factory method to create a class wrapping a new AssertPrevDataset operation.
    *
    * @param scope current scope
-   * @param devices The value of the devices attribute
+   * @param inputDataset A variant tensor representing the input dataset.
+   * {@code data.AssertPrevDataset} passes through the outputs of its input dataset.
+   * @param transformations A {@code tf.string} vector {@code tf.Tensor} identifying the transformations, with optional
+   * attribute name-value pairs, that are expected to have happened previously.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
-   * @return a new instance of AnonymousMultiDeviceIterator
+   * @return a new instance of AssertPrevDataset
    */
   @Endpoint(
       describeByClass = true
   )
-  public static AnonymousMultiDeviceIterator create(Scope scope, List<String> devices,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AnonymousMultiDeviceIterator");
-    String[] devicesArray = new String[devices.size()];
-    for (int i = 0 ; i < devicesArray.length ; i++) {
-      devicesArray[i] = devices.get(i);
-    }
-    opBuilder.setAttr("devices", devicesArray);
+  public static AssertPrevDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TString> transformations, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssertPrevDataset");
+    opBuilder.addInput(inputDataset.asOutput());
+    opBuilder.addInput(transformations.asOutput());
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new AnonymousMultiDeviceIterator(opBuilder.build());
+    return new AssertPrevDataset(opBuilder.build());
   }
 
   /**
    * Gets handle.
-   * A handle to a multi device iterator that can be passed to a
-   * &quot;MultiDeviceIteratorGetNextFromShard&quot; op. In contrast to MultiDeviceIterator,
-   * AnonymousIterator prevents resource sharing by name, and does not keep a
-   * reference to the resource container.
+   *
    * @return handle.
    */
   public Output<? extends TType> handle() {
@@ -109,13 +111,20 @@ public final class AnonymousMultiDeviceIterator extends RawOp implements Operand
   }
 
   @OpInputsMetadata(
-      outputsClass = AnonymousMultiDeviceIterator.class
+      outputsClass = AssertPrevDataset.class
   )
-  public static class Inputs extends RawOpInputs<AnonymousMultiDeviceIterator> {
+  public static class Inputs extends RawOpInputs<AssertPrevDataset> {
     /**
-     * The devices attribute
+     * A variant tensor representing the input dataset.
+     * {@code data.AssertPrevDataset} passes through the outputs of its input dataset.
      */
-    public final String[] devices;
+    public final Operand<? extends TType> inputDataset;
+
+    /**
+     * A {@code tf.string} vector {@code tf.Tensor} identifying the transformations, with optional
+     * attribute name-value pairs, that are expected to have happened previously.
+     */
+    public final Operand<TString> transformations;
 
     /**
      * The outputTypes attribute
@@ -128,9 +137,10 @@ public final class AnonymousMultiDeviceIterator extends RawOp implements Operand
     public final Shape[] outputShapes;
 
     public Inputs(GraphOperation op) {
-      super(new AnonymousMultiDeviceIterator(op), op, Arrays.asList("devices", "output_types", "output_shapes"));
+      super(new AssertPrevDataset(op), op, Arrays.asList("output_types", "output_shapes"));
       int inputIndex = 0;
-      devices = op.attributes().getAttrStringList("devices");
+      inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      transformations = (Operand<TString>) op.input(inputIndex++);
       outputTypes = op.attributes().getAttrTypeList("output_types");
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
     }

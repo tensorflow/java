@@ -42,16 +42,25 @@ import org.tensorflow.types.family.TNumber;
  * \(output_i = \max_j(data_j)\) where {@code max} is over {@code j} such
  * that {@code segment_ids[j] == i}.
  * <p>If the max is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+ * <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+ * and an error is thrown for indices that are not increasing. On GPU, this
+ * does not throw an error for unsorted indices. On GPU, out-of-order indices
+ * result in safe but unspecified behavior, which may include treating
+ * out-of-order indices as the same as a smaller following index.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/SegmentMax.png" alt>
  * </div>
  * <p>For example:
- * <pre>
- * c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
- * tf.segment_max(c, tf.constant([0, 0, 1]))
- * # ==&gt; [[4, 3, 3, 4],
- * #      [5, 6, 7, 8]]
- * </pre>
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+ * tf.math.segment_max(c, tf.constant([0, 0, 1])).numpy()
+ * array([[4, 3, 3, 4],
+ * [5, 6, 7, 8]], dtype=int32)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  *
  * @param <T> data type for {@code output} output
  */
@@ -83,6 +92,8 @@ public final class SegmentMax<T extends TNumber> extends RawOp implements Operan
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    * first dimension.  Values should be sorted and can be repeated.
+   * <p>Caution: The values are always validated to be sorted on CPU, never validated
+   * on GPU.
    * @param <T> data type for {@code SegmentMax} output and operands
    * @return a new instance of SegmentMax
    */
@@ -124,6 +135,8 @@ public final class SegmentMax<T extends TNumber> extends RawOp implements Operan
     /**
      * A 1-D tensor whose size is equal to the size of {@code data}'s
      * first dimension.  Values should be sorted and can be repeated.
+     * <p>Caution: The values are always validated to be sorted on CPU, never validated
+     * on GPU.
      */
     public final Operand<? extends TNumber> segmentIds;
 

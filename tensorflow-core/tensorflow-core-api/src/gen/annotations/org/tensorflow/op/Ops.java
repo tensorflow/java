@@ -160,6 +160,7 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedReshape;
+import org.tensorflow.op.core.RandomIndexShuffle;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.ReadVariableOp;
@@ -2595,7 +2596,8 @@ public final class Ops {
   }
 
   /**
-   * <pre>
+   * Applies a for loop.
+   *  <pre>
    *   output = input;
    *   for i in range(start, limit, delta)
    *     output = body(i, output);
@@ -4060,6 +4062,25 @@ public final class Ops {
   }
 
   /**
+   * Outputs the position of {@code value} in a permutation of [0, ..., max_index].
+   *  Output values are a bijection of the {@code index} for any combination and {@code seed} and {@code max_index}.
+   *  <p>If multiple inputs are vectors (matrix in case of seed) then the size of the
+   *  first dimension must match.
+   *  <p>The outputs are deterministic.
+   *
+   * @param <T> data type for {@code output} output
+   * @param index A scalar tensor or a vector of dtype {@code dtype}. The index (or indices) to be shuffled. Must be within [0, max_index].
+   * @param seed A tensor of dtype {@code Tseed} and shape [3] or [n, 3]. The random seed.
+   * @param maxIndex A scalar tensor or vector of dtype {@code dtype}. The upper bound(s) of the interval (inclusive).
+   * @param <T> data type for {@code RandomIndexShuffle} output and operands
+   * @return a new instance of RandomIndexShuffle
+   */
+  public <T extends TNumber> RandomIndexShuffle<T> randomIndexShuffle(Operand<T> index,
+      Operand<? extends TNumber> seed, Operand<T> maxIndex) {
+    return RandomIndexShuffle.create(scope, index, seed, maxIndex);
+  }
+
+  /**
    * Creates a sequence of numbers.
    *  This operation creates a sequence of numbers that begins at {@code start} and
    *  extends by increments of {@code delta} up to but not including {@code limit}.
@@ -5143,10 +5164,10 @@ public final class Ops {
    *  This op returns an {@code output} tensor with the {@code shape} you specify. This op is the
    *  inverse of the {@code tf.gather_nd} operator which extracts values or slices from a
    *  given tensor.
-   *  <p>This operation is similar to {@code tf.tensor_scatter_add}, except that the tensor is
-   *  zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
+   *  <p>This operation is similar to {@code tf.tensor_scatter_nd_add}, except that the tensor
+   *  is zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
    *  is identical to calling
-   *  {@code tf.tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)}.
+   *  {@code tf.tensor_scatter_nd_add(tf.zeros(shape, values.dtype), indices, values)}
    *  <p>If {@code indices} contains duplicates, the duplicate {@code values} are accumulated
    *  (summed).
    *  <p><strong>WARNING</strong>: The order in which updates are applied is nondeterministic, so the
@@ -7184,9 +7205,9 @@ public final class Ops {
    * Adds sparse {@code updates} to an existing tensor according to {@code indices}.
    *  This operation creates a new tensor by adding sparse {@code updates} to the passed
    *  in {@code tensor}.
-   *  This operation is very similar to {@code tf.compat.v1.scatter_nd_add}, except that the updates
-   *  are added onto an existing tensor (as opposed to a variable). If the memory
-   *  for the existing tensor cannot be re-used, a copy is made and updated.
+   *  This operation is very similar to {@code tf.compat.v1.scatter_nd_add}, except that the
+   *  updates are added onto an existing tensor (as opposed to a variable). If the
+   *  memory for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>{@code indices} is an integer tensor containing indices into a new tensor of shape
    *  {@code tensor.shape}.  The last dimension of {@code indices} can be at most the rank of
    *  {@code tensor.shape}:
@@ -7200,43 +7221,47 @@ public final class Ops {
    *  <pre>
    *  indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
    *  </pre>
-   *  <p>The simplest form of tensor_scatter_add is to add individual elements to a
+   *  <p>The simplest form of {@code tensor_scatter_nd_add} is to add individual elements to a
    *  tensor by index. For example, say we want to add 4 elements in a rank-1
    *  tensor with 8 elements.
    *  <p>In Python, this scatter add operation would look like this:
-   *  <pre>
-   *      indices = tf.constant([[4], [3], [1], [7]])
-   *      updates = tf.constant([9, 10, 11, 12])
-   *      tensor = tf.ones([8], dtype=tf.int32)
-   *      updated = tf.tensor_scatter_nd_add(tensor, indices, updates)
-   *      print(updated)
-   *  </pre>
-   *  <p>The resulting tensor would look like this:
-   *  <pre>
-   *  [1, 12, 1, 11, 10, 1, 1, 13]
-   *  </pre>
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>indices = tf.constant([[4], [3], [1], [7]])
+   *  updates = tf.constant([9, 10, 11, 12])
+   *  tensor = tf.ones([8], dtype=tf.int32)
+   *  updated = tf.tensor_scatter_nd_add(tensor, indices, updates)
+   *  updated
+   *  &lt;tf.Tensor: shape=(8,), dtype=int32,
+   *  numpy=array([ 1, 12,  1, 11, 10,  1,  1, 13], dtype=int32)&gt;
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *  <p>We can also, insert entire slices of a higher rank tensor all at once. For
    *  example, if we wanted to insert two slices in the first dimension of a
    *  rank-3 tensor with two matrices of new values.
    *  <p>In Python, this scatter add operation would look like this:
-   *  <pre>
-   *      indices = tf.constant([[0], [2]])
-   *      updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
-   *                              [7, 7, 7, 7], [8, 8, 8, 8]],
-   *                             [[5, 5, 5, 5], [6, 6, 6, 6],
-   *                              [7, 7, 7, 7], [8, 8, 8, 8]]])
-   *      tensor = tf.ones([4, 4, 4],dtype=tf.int32)
-   *      updated = tf.tensor_scatter_nd_add(tensor, indices, updates)
-   *      print(updated)
-   *  </pre>
-   *  <p>The resulting tensor would look like this:
-   *  <pre>
-   *  [[[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8], [9, 9, 9, 9]],
-   *   [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
-   *   [[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8], [9, 9, 9, 9]],
-   *   [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]]
-   *  </pre>
-   *  <p>Note that on CPU, if an out of bound index is found, an error is returned.
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>indices = tf.constant([[0], [2]])
+   *  updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
+   *  ...                         [7, 7, 7, 7], [8, 8, 8, 8]],
+   *  ...                        [[5, 5, 5, 5], [6, 6, 6, 6],
+   *  ...                         [7, 7, 7, 7], [8, 8, 8, 8]]])
+   *  tensor = tf.ones([4, 4, 4],dtype=tf.int32)
+   *  updated = tf.tensor_scatter_nd_add(tensor, indices, updates)
+   *  updated
+   *  &lt;tf.Tensor: shape=(4, 4, 4), dtype=int32,
+   *  numpy=array([[[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8], [9, 9, 9, 9]],
+   *  [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
+   *  [[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8], [9, 9, 9, 9]],
+   *  [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]], dtype=int32)&gt;
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
+   *  <p>Note: on CPU, if an out of bound index is found, an error is returned.
    *  On GPU, if an out of bound index is found, the index is ignored.
    *
    * @param <T> data type for {@code output} output

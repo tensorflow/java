@@ -74,17 +74,17 @@ public final class ModelProtos {
       "\001\032\223\001\n\022OptimizationParams\022;\n\talgorithm\030\001 " +
       "\001(\0162(.tensorflow.data.model.AutotuneAlgo" +
       "rithm\022\022\n\ncpu_budget\030\002 \001(\003\022\022\n\nram_budget\030" +
-      "\003 \001(\003\022\030\n\020model_input_time\030\004 \001(\001J\004\010\004\020\005*\203\001" +
+      "\003 \001(\003\022\030\n\020model_input_time\030\004 \001(\001J\004\010\004\020\005*\234\001" +
       "\n\tNodeClass\022\013\n\007UNKNOWN\020\000\022\023\n\017INTERLEAVE_M" +
       "ANY\020\001\022\031\n\025ASYNC_INTERLEAVE_MANY\020\002\022\017\n\013KNOW" +
       "N_RATIO\020\003\022\025\n\021ASYNC_KNOWN_RATIO\020\004\022\021\n\rUNKN" +
-      "OWN_RATIO\020\005*[\n\021AutotuneAlgorithm\022\013\n\007DEFA" +
-      "ULT\020\000\022\016\n\nHILL_CLIMB\020\001\022\024\n\020GRADIENT_DESCEN" +
-      "T\020\002\022\023\n\017MAX_PARALLELISM\020\003B\201\001\n\037org.tensorf" +
-      "low.proto.data.modelB\013ModelProtosP\001ZLgit" +
-      "hub.com/tensorflow/tensorflow/tensorflow" +
-      "/go/core/framework/model_go_proto\370\001\001b\006pr" +
-      "oto3"
+      "OWN_RATIO\020\005\022\027\n\023ASYNC_UNKNOWN_RATIO\020\006*[\n\021" +
+      "AutotuneAlgorithm\022\013\n\007DEFAULT\020\000\022\016\n\nHILL_C" +
+      "LIMB\020\001\022\024\n\020GRADIENT_DESCENT\020\002\022\023\n\017MAX_PARA" +
+      "LLELISM\020\003B\201\001\n\037org.tensorflow.proto.data." +
+      "modelB\013ModelProtosP\001ZLgithub.com/tensorf" +
+      "low/tensorflow/tensorflow/go/core/framew" +
+      "ork/model_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -80,8 +80,11 @@ public final class CoordinationConfig {
 
     /**
      * <pre>
-     * Heartbeat timeout, if a worker does not record heartbeat in this time
+     * Heartbeat timeout, if a task does not record heartbeat in this time
      * window, it will be considered disconnected.
+     * Note: This is also used as a grace period to accept any heartbeats after
+     * the agent has disconnected, to account for the lag time between the service
+     * recording the state change and the agent stopping heartbeats.
      * </pre>
      *
      * <code>int64 heartbeat_timeout_in_ms = 5;</code>
@@ -126,6 +129,29 @@ public final class CoordinationConfig {
      */
     com.google.protobuf.ByteString
         getCoordinatedJobsBytes(int index);
+
+    /**
+     * <pre>
+     * Denotes how long to wait for all coordination agents to reach the barriers
+     * (after the first shutdown request) before disconnecting together. If
+     * set to 0, no barrier is imposed upon shutdown and each worker can
+     * disconnect individually.
+     * </pre>
+     *
+     * <code>int64 shutdown_barrier_timeout_in_ms = 7;</code>
+     */
+    long getShutdownBarrierTimeoutInMs();
+
+    /**
+     * <pre>
+     * If set, agents do not make an explicit Shutdown() call. Service will only
+     * find out about the disconnecte agent via stale heartbeats. Used for
+     * testing.
+     * </pre>
+     *
+     * <code>bool agent_destruction_without_shutdown = 8;</code>
+     */
+    boolean getAgentDestructionWithoutShutdown();
   }
   /**
    * <pre>
@@ -215,6 +241,16 @@ public final class CoordinationConfig {
                 mutable_bitField0_ |= 0x00000001;
               }
               coordinatedJobs_.add(s);
+              break;
+            }
+            case 56: {
+
+              shutdownBarrierTimeoutInMs_ = input.readInt64();
+              break;
+            }
+            case 64: {
+
+              agentDestructionWithoutShutdown_ = input.readBool();
               break;
             }
             default: {
@@ -372,8 +408,11 @@ public final class CoordinationConfig {
     private long heartbeatTimeoutInMs_;
     /**
      * <pre>
-     * Heartbeat timeout, if a worker does not record heartbeat in this time
+     * Heartbeat timeout, if a task does not record heartbeat in this time
      * window, it will be considered disconnected.
+     * Note: This is also used as a grace period to accept any heartbeats after
+     * the agent has disconnected, to account for the lag time between the service
+     * recording the state change and the agent stopping heartbeats.
      * </pre>
      *
      * <code>int64 heartbeat_timeout_in_ms = 5;</code>
@@ -431,6 +470,37 @@ public final class CoordinationConfig {
       return coordinatedJobs_.getByteString(index);
     }
 
+    public static final int SHUTDOWN_BARRIER_TIMEOUT_IN_MS_FIELD_NUMBER = 7;
+    private long shutdownBarrierTimeoutInMs_;
+    /**
+     * <pre>
+     * Denotes how long to wait for all coordination agents to reach the barriers
+     * (after the first shutdown request) before disconnecting together. If
+     * set to 0, no barrier is imposed upon shutdown and each worker can
+     * disconnect individually.
+     * </pre>
+     *
+     * <code>int64 shutdown_barrier_timeout_in_ms = 7;</code>
+     */
+    public long getShutdownBarrierTimeoutInMs() {
+      return shutdownBarrierTimeoutInMs_;
+    }
+
+    public static final int AGENT_DESTRUCTION_WITHOUT_SHUTDOWN_FIELD_NUMBER = 8;
+    private boolean agentDestructionWithoutShutdown_;
+    /**
+     * <pre>
+     * If set, agents do not make an explicit Shutdown() call. Service will only
+     * find out about the disconnecte agent via stale heartbeats. Used for
+     * testing.
+     * </pre>
+     *
+     * <code>bool agent_destruction_without_shutdown = 8;</code>
+     */
+    public boolean getAgentDestructionWithoutShutdown() {
+      return agentDestructionWithoutShutdown_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -462,6 +532,12 @@ public final class CoordinationConfig {
       }
       for (int i = 0; i < coordinatedJobs_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, coordinatedJobs_.getRaw(i));
+      }
+      if (shutdownBarrierTimeoutInMs_ != 0L) {
+        output.writeInt64(7, shutdownBarrierTimeoutInMs_);
+      }
+      if (agentDestructionWithoutShutdown_ != false) {
+        output.writeBool(8, agentDestructionWithoutShutdown_);
       }
       unknownFields.writeTo(output);
     }
@@ -498,6 +574,14 @@ public final class CoordinationConfig {
         size += dataSize;
         size += 1 * getCoordinatedJobsList().size();
       }
+      if (shutdownBarrierTimeoutInMs_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(7, shutdownBarrierTimeoutInMs_);
+      }
+      if (agentDestructionWithoutShutdown_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(8, agentDestructionWithoutShutdown_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -525,6 +609,10 @@ public final class CoordinationConfig {
           != other.getHeartbeatTimeoutInMs()) return false;
       if (!getCoordinatedJobsList()
           .equals(other.getCoordinatedJobsList())) return false;
+      if (getShutdownBarrierTimeoutInMs()
+          != other.getShutdownBarrierTimeoutInMs()) return false;
+      if (getAgentDestructionWithoutShutdown()
+          != other.getAgentDestructionWithoutShutdown()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -553,6 +641,12 @@ public final class CoordinationConfig {
         hash = (37 * hash) + COORDINATED_JOBS_FIELD_NUMBER;
         hash = (53 * hash) + getCoordinatedJobsList().hashCode();
       }
+      hash = (37 * hash) + SHUTDOWN_BARRIER_TIMEOUT_IN_MS_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getShutdownBarrierTimeoutInMs());
+      hash = (37 * hash) + AGENT_DESTRUCTION_WITHOUT_SHUTDOWN_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getAgentDestructionWithoutShutdown());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -703,6 +797,10 @@ public final class CoordinationConfig {
 
         coordinatedJobs_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
+        shutdownBarrierTimeoutInMs_ = 0L;
+
+        agentDestructionWithoutShutdown_ = false;
+
         return this;
       }
 
@@ -740,6 +838,8 @@ public final class CoordinationConfig {
           bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.coordinatedJobs_ = coordinatedJobs_;
+        result.shutdownBarrierTimeoutInMs_ = shutdownBarrierTimeoutInMs_;
+        result.agentDestructionWithoutShutdown_ = agentDestructionWithoutShutdown_;
         onBuilt();
         return result;
       }
@@ -814,6 +914,12 @@ public final class CoordinationConfig {
             coordinatedJobs_.addAll(other.coordinatedJobs_);
           }
           onChanged();
+        }
+        if (other.getShutdownBarrierTimeoutInMs() != 0L) {
+          setShutdownBarrierTimeoutInMs(other.getShutdownBarrierTimeoutInMs());
+        }
+        if (other.getAgentDestructionWithoutShutdown() != false) {
+          setAgentDestructionWithoutShutdown(other.getAgentDestructionWithoutShutdown());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1117,8 +1223,11 @@ public final class CoordinationConfig {
       private long heartbeatTimeoutInMs_ ;
       /**
        * <pre>
-       * Heartbeat timeout, if a worker does not record heartbeat in this time
+       * Heartbeat timeout, if a task does not record heartbeat in this time
        * window, it will be considered disconnected.
+       * Note: This is also used as a grace period to accept any heartbeats after
+       * the agent has disconnected, to account for the lag time between the service
+       * recording the state change and the agent stopping heartbeats.
        * </pre>
        *
        * <code>int64 heartbeat_timeout_in_ms = 5;</code>
@@ -1128,8 +1237,11 @@ public final class CoordinationConfig {
       }
       /**
        * <pre>
-       * Heartbeat timeout, if a worker does not record heartbeat in this time
+       * Heartbeat timeout, if a task does not record heartbeat in this time
        * window, it will be considered disconnected.
+       * Note: This is also used as a grace period to accept any heartbeats after
+       * the agent has disconnected, to account for the lag time between the service
+       * recording the state change and the agent stopping heartbeats.
        * </pre>
        *
        * <code>int64 heartbeat_timeout_in_ms = 5;</code>
@@ -1142,8 +1254,11 @@ public final class CoordinationConfig {
       }
       /**
        * <pre>
-       * Heartbeat timeout, if a worker does not record heartbeat in this time
+       * Heartbeat timeout, if a task does not record heartbeat in this time
        * window, it will be considered disconnected.
+       * Note: This is also used as a grace period to accept any heartbeats after
+       * the agent has disconnected, to account for the lag time between the service
+       * recording the state change and the agent stopping heartbeats.
        * </pre>
        *
        * <code>int64 heartbeat_timeout_in_ms = 5;</code>
@@ -1293,6 +1408,97 @@ public final class CoordinationConfig {
         onChanged();
         return this;
       }
+
+      private long shutdownBarrierTimeoutInMs_ ;
+      /**
+       * <pre>
+       * Denotes how long to wait for all coordination agents to reach the barriers
+       * (after the first shutdown request) before disconnecting together. If
+       * set to 0, no barrier is imposed upon shutdown and each worker can
+       * disconnect individually.
+       * </pre>
+       *
+       * <code>int64 shutdown_barrier_timeout_in_ms = 7;</code>
+       */
+      public long getShutdownBarrierTimeoutInMs() {
+        return shutdownBarrierTimeoutInMs_;
+      }
+      /**
+       * <pre>
+       * Denotes how long to wait for all coordination agents to reach the barriers
+       * (after the first shutdown request) before disconnecting together. If
+       * set to 0, no barrier is imposed upon shutdown and each worker can
+       * disconnect individually.
+       * </pre>
+       *
+       * <code>int64 shutdown_barrier_timeout_in_ms = 7;</code>
+       */
+      public Builder setShutdownBarrierTimeoutInMs(long value) {
+        
+        shutdownBarrierTimeoutInMs_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Denotes how long to wait for all coordination agents to reach the barriers
+       * (after the first shutdown request) before disconnecting together. If
+       * set to 0, no barrier is imposed upon shutdown and each worker can
+       * disconnect individually.
+       * </pre>
+       *
+       * <code>int64 shutdown_barrier_timeout_in_ms = 7;</code>
+       */
+      public Builder clearShutdownBarrierTimeoutInMs() {
+        
+        shutdownBarrierTimeoutInMs_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private boolean agentDestructionWithoutShutdown_ ;
+      /**
+       * <pre>
+       * If set, agents do not make an explicit Shutdown() call. Service will only
+       * find out about the disconnecte agent via stale heartbeats. Used for
+       * testing.
+       * </pre>
+       *
+       * <code>bool agent_destruction_without_shutdown = 8;</code>
+       */
+      public boolean getAgentDestructionWithoutShutdown() {
+        return agentDestructionWithoutShutdown_;
+      }
+      /**
+       * <pre>
+       * If set, agents do not make an explicit Shutdown() call. Service will only
+       * find out about the disconnecte agent via stale heartbeats. Used for
+       * testing.
+       * </pre>
+       *
+       * <code>bool agent_destruction_without_shutdown = 8;</code>
+       */
+      public Builder setAgentDestructionWithoutShutdown(boolean value) {
+        
+        agentDestructionWithoutShutdown_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If set, agents do not make an explicit Shutdown() call. Service will only
+       * find out about the disconnecte agent via stale heartbeats. Used for
+       * testing.
+       * </pre>
+       *
+       * <code>bool agent_destruction_without_shutdown = 8;</code>
+       */
+      public Builder clearAgentDestructionWithoutShutdown() {
+        
+        agentDestructionWithoutShutdown_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1361,15 +1567,18 @@ public final class CoordinationConfig {
   static {
     java.lang.String[] descriptorData = {
       "\n2tensorflow/core/protobuf/coordination_" +
-      "config.proto\022\ntensorflow\"\311\001\n\031Coordinatio" +
+      "config.proto\022\ntensorflow\"\235\002\n\031Coordinatio" +
       "nServiceConfig\022\024\n\014service_type\030\001 \001(\t\022\026\n\016" +
       "service_leader\030\002 \001(\t\022\033\n\023enable_health_ch" +
       "eck\030\003 \001(\010\022&\n\036cluster_register_timeout_in" +
       "_ms\030\004 \001(\003\022\037\n\027heartbeat_timeout_in_ms\030\005 \001" +
-      "(\003\022\030\n\020coordinated_jobs\030\006 \003(\tBy\n org.tens" +
-      "orflow.proto.distruntimeZUgithub.com/ten" +
-      "sorflow/tensorflow/tensorflow/go/core/pr" +
-      "otobuf/for_core_protos_go_protob\006proto3"
+      "(\003\022\030\n\020coordinated_jobs\030\006 \003(\t\022&\n\036shutdown" +
+      "_barrier_timeout_in_ms\030\007 \001(\003\022*\n\"agent_de" +
+      "struction_without_shutdown\030\010 \001(\010By\n org." +
+      "tensorflow.proto.distruntimeZUgithub.com" +
+      "/tensorflow/tensorflow/tensorflow/go/cor" +
+      "e/protobuf/for_core_protos_go_protob\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1380,7 +1589,7 @@ public final class CoordinationConfig {
     internal_static_tensorflow_CoordinationServiceConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_CoordinationServiceConfig_descriptor,
-        new java.lang.String[] { "ServiceType", "ServiceLeader", "EnableHealthCheck", "ClusterRegisterTimeoutInMs", "HeartbeatTimeoutInMs", "CoordinatedJobs", });
+        new java.lang.String[] { "ServiceType", "ServiceLeader", "EnableHealthCheck", "ClusterRegisterTimeoutInMs", "HeartbeatTimeoutInMs", "CoordinatedJobs", "ShutdownBarrierTimeoutInMs", "AgentDestructionWithoutShutdown", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

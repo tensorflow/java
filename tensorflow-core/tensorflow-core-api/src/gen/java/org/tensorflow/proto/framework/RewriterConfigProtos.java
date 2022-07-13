@@ -54,7 +54,7 @@ public final class RewriterConfigProtos {
       "e/protobuf/verifier_config.proto\";\n\023Auto" +
       "ParallelOptions\022\016\n\006enable\030\001 \001(\010\022\024\n\014num_r" +
       "eplicas\030\002 \001(\005\"+\n\026ScopedAllocatorOptions\022" +
-      "\021\n\tenable_op\030\001 \003(\t\"\246\024\n\016RewriterConfig\022C\n" +
+      "\021\n\tenable_op\030\001 \003(\t\"\324\024\n\016RewriterConfig\022C\n" +
       "\025cpu_layout_conversion\0302 \001(\0162$.tensorflo" +
       "w.RewriterConfig.CpuLayout\022;\n\020layout_opt" +
       "imizer\030\001 \001(\0162!.tensorflow.RewriterConfig" +
@@ -110,20 +110,21 @@ public final class RewriterConfigProtos {
       "\0132A.tensorflow.RewriterConfig.CustomGrap" +
       "hOptimizer.ParameterMapEntry\032J\n\021Paramete" +
       "rMapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025." +
-      "tensorflow.AttrValue:\0028\001\"6\n\006Toggle\022\013\n\007DE" +
+      "tensorflow.AttrValue:\0028\001\"d\n\006Toggle\022\013\n\007DE" +
       "FAULT\020\000\022\006\n\002ON\020\001\022\007\n\003OFF\020\002\022\016\n\nAGGRESSIVE\020\003" +
-      "\"I\n\tCpuLayout\022\030\n\024NO_CONVERSION_ON_CPU\020\000\022" +
-      "\020\n\014NCHW_TO_NHWC\020\001\022\020\n\014NHWC_TO_NCHW\020\002\"<\n\021N" +
-      "umIterationsType\022\025\n\021DEFAULT_NUM_ITERS\020\000\022" +
-      "\007\n\003ONE\020\001\022\007\n\003TWO\020\002\"\237\001\n\nMemOptType\022\023\n\017DEFA" +
-      "ULT_MEM_OPT\020\000\022\016\n\nNO_MEM_OPT\020\001\022\n\n\006MANUAL\020" +
-      "\002\022\027\n\023SWAPPING_HEURISTICS\020\004\022\034\n\030RECOMPUTAT" +
-      "ION_HEURISTICS\020\005\022\031\n\025SCHEDULING_HEURISTIC" +
-      "S\020\006\022\016\n\nHEURISTICS\020\003B\222\001\n\036org.tensorflow.p" +
-      "roto.frameworkB\024RewriterConfigProtosP\001ZU" +
-      "github.com/tensorflow/tensorflow/tensorf" +
-      "low/go/core/protobuf/for_core_protos_go_" +
-      "proto\370\001\001b\006proto3"
+      "\022\025\n\021EXPERIMENTAL_MLIR\020\004\022\025\n\021EXPERIMENTAL_" +
+      "BOTH\020\005\"I\n\tCpuLayout\022\030\n\024NO_CONVERSION_ON_" +
+      "CPU\020\000\022\020\n\014NCHW_TO_NHWC\020\001\022\020\n\014NHWC_TO_NCHW\020" +
+      "\002\"<\n\021NumIterationsType\022\025\n\021DEFAULT_NUM_IT" +
+      "ERS\020\000\022\007\n\003ONE\020\001\022\007\n\003TWO\020\002\"\237\001\n\nMemOptType\022\023" +
+      "\n\017DEFAULT_MEM_OPT\020\000\022\016\n\nNO_MEM_OPT\020\001\022\n\n\006M" +
+      "ANUAL\020\002\022\027\n\023SWAPPING_HEURISTICS\020\004\022\034\n\030RECO" +
+      "MPUTATION_HEURISTICS\020\005\022\031\n\025SCHEDULING_HEU" +
+      "RISTICS\020\006\022\016\n\nHEURISTICS\020\003B\222\001\n\036org.tensor" +
+      "flow.proto.frameworkB\024RewriterConfigProt" +
+      "osP\001ZUgithub.com/tensorflow/tensorflow/t" +
+      "ensorflow/go/core/protobuf/for_core_prot" +
+      "os_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
