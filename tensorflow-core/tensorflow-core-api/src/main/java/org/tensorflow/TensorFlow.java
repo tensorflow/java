@@ -1,4 +1,4 @@
-/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHa
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_RegisterFilesystemPlugin;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -105,6 +106,20 @@ public final class TensorFlow {
       return libraryOpList(h);
     } finally {
       libraryDelete(h);
+    }
+  }
+
+  /**
+   * Loads the filesystem plugin from fielname and registers all the filesystems it supports.
+   * <p>
+   * Throws a TF runtime exception if the plugin failed to load.
+   * @param filename Path of the dynamic library containing the filesystem support.
+   */
+  public static void registerFilesystemPlugin(String filename) {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_RegisterFilesystemPlugin(filename, status);
+      status.throwExceptionIfNotOK();
     }
   }
 
