@@ -111,8 +111,8 @@ public final class TensorFlow {
 
   /**
    * Loads the filesystem plugin from filename and registers all the filesystems it supports.
-   * <p>
-   * Throws a TF runtime exception if the plugin failed to load.
+   * <p>Throws a TF runtime exception if the plugin failed to load.
+   *
    * @param filename Path of the dynamic library containing the filesystem support.
    */
   public static void registerFilesystemPlugin(String filename) {
