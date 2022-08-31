@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2022 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 
-public class TUint16Test extends NumericTypesTestBase<TUint16, Byte> {
+public class TUint16Test extends NumericTypesTestBase<TUint16, Short> {
 
   @Override
   TUint16 allocateTensor(Shape shape) {
@@ -29,12 +29,12 @@ public class TUint16Test extends NumericTypesTestBase<TUint16, Byte> {
   }
 
   @Override
-  NdArray<Byte> allocateNdArray(Shape shape) {
-    return NdArrays.ofBytes(shape);
+  NdArray<Short> allocateNdArray(Shape shape) {
+    return NdArrays.ofShorts(shape);
   }
 
   @Override
-  Byte valueOf(Integer value) {
-    return value.byteValue();
+  Short valueOf(Integer value) {
+    return value.shortValue();
   }
 }

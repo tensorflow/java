@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2022 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,36 +22,36 @@ import org.tensorflow.SparseTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TUint16Mapper;
-import org.tensorflow.ndarray.ByteNdArray;
+import org.tensorflow.ndarray.ShortNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TIntegral;
 
 /** 16-bit unsigned integer tensor type. */
 @TensorType(dataType = DataType.DT_UINT16, byteSize = 2, mapperClass = TUint16Mapper.class)
-public interface TUint16 extends ByteNdArray, TIntegral {
+public interface TUint16 extends ShortNdArray, TIntegral {
 
   /**
-   * Allocates a new tensor for storing a single byte value.
+   * Allocates a new tensor for storing a single short value.
    *
-   * @param value byte to store in the new tensor
+   * @param value short to store in the new tensor
    * @return the new tensor
    */
-  static TUint16 scalarOf(byte value) {
-    return Tensor.of(TUint16.class, Shape.scalar(), data -> data.setByte(value));
+  static TUint16 scalarOf(short value) {
+    return Tensor.of(TUint16.class, Shape.scalar(), data -> data.setShort(value));
   }
 
   /**
-   * Allocates a new tensor for storing a vector of bytes.
+   * Allocates a new tensor for storing a vector of shorts.
    *
-   * @param values bytes to store in the new tensor
+   * @param values short to store in the new tensor
    * @return the new tensor
    */
-  static TUint16 vectorOf(byte... values) {
+  static TUint16 vectorOf(short... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
@@ -59,14 +59,14 @@ public interface TUint16 extends ByteNdArray, TIntegral {
   }
 
   /**
-   * Allocates a new tensor which is a copy of a given array of bytes.
+   * Allocates a new tensor which is a copy of a given array of shorts.
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
    *
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TUint16 tensorOf(NdArray<Byte> src) {
+  static TUint16 tensorOf(NdArray<Short> src) {
     return Tensor.of(TUint16.class, src.shape(), src::copyTo);
   }
 
@@ -84,10 +84,10 @@ public interface TUint16 extends ByteNdArray, TIntegral {
    * Allocates a new tensor of the given shape, initialized with the provided data.
    *
    * @param shape shape of the tensor to allocate
-   * @param data buffer of bytes to initialize the tensor with
+   * @param data buffer of shorts to initialize the tensor with
    * @return the new tensor
    */
-  static TUint16 tensorOf(Shape shape, ByteDataBuffer data) {
+  static TUint16 tensorOf(Shape shape, ShortDataBuffer data) {
     return Tensor.of(TUint16.class, shape, d -> d.write(data));
   }
 

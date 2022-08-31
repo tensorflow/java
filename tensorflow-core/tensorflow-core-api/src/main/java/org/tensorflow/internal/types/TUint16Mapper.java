@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2022 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ import org.tensorflow.RawTensor;
 import org.tensorflow.SparseTensor;
 import org.tensorflow.TensorMapper;
 import org.tensorflow.internal.buffer.TensorBuffers;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
-import org.tensorflow.ndarray.impl.sparse.ByteSparseNdArray;
+import org.tensorflow.ndarray.buffer.ShortDataBuffer;
+import org.tensorflow.ndarray.impl.dense.ShortDenseNdArray;
+import org.tensorflow.ndarray.impl.sparse.ShortSparseNdArray;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint16;
@@ -36,7 +36,7 @@ public final class TUint16Mapper extends TensorMapper<TUint16> {
 
   @Override
   protected TUint16 mapDense(RawTensor tensor) {
-    ByteDataBuffer buffer = TensorBuffers.toBytes(nativeHandle(tensor));
+    ShortDataBuffer buffer = TensorBuffers.toShorts(nativeHandle(tensor));
     return new DenseTUint16(tensor, buffer);
   }
 
@@ -46,7 +46,7 @@ public final class TUint16Mapper extends TensorMapper<TUint16> {
     return new TUint16Mapper.SparseTUint16(indices, values, denseShape, tensorScope);
   }
 
-  private static final class DenseTUint16 extends ByteDenseNdArray implements TUint16 {
+  private static final class DenseTUint16 extends ShortDenseNdArray implements TUint16 {
 
     @Override
     public Class<TUint16> type() {
@@ -75,13 +75,13 @@ public final class TUint16Mapper extends TensorMapper<TUint16> {
 
     final RawTensor rawTensor;
 
-    DenseTUint16(RawTensor rawTensor, ByteDataBuffer buffer) {
+    DenseTUint16(RawTensor rawTensor, ShortDataBuffer buffer) {
       super(buffer, rawTensor.shape());
       this.rawTensor = rawTensor;
     }
   }
 
-  private static final class SparseTUint16 extends ByteSparseNdArray
+  private static final class SparseTUint16 extends ShortSparseNdArray
       implements TUint16, SparseTensor<TUint16> {
 
     @Override
@@ -125,7 +125,7 @@ public final class TUint16Mapper extends TensorMapper<TUint16> {
     }
 
     SparseTUint16(TInt64 indices, TUint16 values, TInt64 denseShape, PointerScope tensorScope) {
-      super(indices, values, (byte) 0, SparseHelpers.toDimensionalSpace(denseShape));
+      super(indices, values, (short) 0, SparseHelpers.toDimensionalSpace(denseShape));
       this.denseShape = denseShape;
       this.tensorScope = tensorScope.extend();
     }
