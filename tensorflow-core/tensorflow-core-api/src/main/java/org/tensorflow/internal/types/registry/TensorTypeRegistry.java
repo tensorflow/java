@@ -29,6 +29,7 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
+import org.tensorflow.types.TUint16;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TType;
 
@@ -100,6 +101,7 @@ public final class TensorTypeRegistry {
     register(TInt64.class);
     register(TString.class);
     register(TUint8.class);
+    register(TUint16.class);
     register(TBfloat16.class);
   }
 }
