@@ -28,13 +28,12 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.TUint16;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TType;
 
-/**
- * Repository of all registered tensor types.
- */
+/** Repository of all registered tensor types. */
 public final class TensorTypeRegistry {
 
   /**
@@ -47,9 +46,10 @@ public final class TensorTypeRegistry {
   public static <T extends TType> TensorTypeInfo<T> find(DataType dataType) {
     TensorTypeInfo<?> typeInfo = TYPES_BY_CODE.get(dataType.getNumber());
     if (typeInfo == null) {
-      throw new IllegalArgumentException("No tensor type has been registered for data type " + dataType);
+      throw new IllegalArgumentException(
+          "No tensor type has been registered for data type " + dataType);
     }
-    return (TensorTypeInfo<T>)typeInfo;
+    return (TensorTypeInfo<T>) typeInfo;
   }
 
   /**
@@ -62,28 +62,37 @@ public final class TensorTypeRegistry {
   public static <T extends TType> TensorTypeInfo<T> find(Class<T> type) {
     TensorTypeInfo<?> typeInfo = TYPES_BY_CLASS.get(type);
     if (typeInfo == null) {
-      throw new IllegalArgumentException("Class \"" + type.getName() + "\" is not registered as a tensor type");
+      throw new IllegalArgumentException(
+          "Class \"" + type.getName() + "\" is not registered as a tensor type");
     }
-    return (TensorTypeInfo<T>)typeInfo;
+    return (TensorTypeInfo<T>) typeInfo;
   }
 
   private static final Map<Integer, TensorTypeInfo<?>> TYPES_BY_CODE = new HashMap<>();
-  private static final Map<Class<? extends TType>, TensorTypeInfo<?>> TYPES_BY_CLASS = new HashMap<>();
+  private static final Map<Class<? extends TType>, TensorTypeInfo<?>> TYPES_BY_CLASS =
+      new HashMap<>();
 
   private static <T extends TType> void register(Class<T> type) {
     TensorType typeAnnot = type.getDeclaredAnnotation(TensorType.class);
     if (typeAnnot == null) {
-      throw new IllegalArgumentException("Class \"" + type.getName() + "\" must be annotated "
-          + "with @TensorType to be registered as a tensor type");
+      throw new IllegalArgumentException(
+          "Class \""
+              + type.getName()
+              + "\" must be annotated "
+              + "with @TensorType to be registered as a tensor type");
     }
     TensorMapper<T> mapper;
     try {
-      mapper = (TensorMapper<T>)typeAnnot.mapperClass().newInstance();
+      mapper = (TensorMapper<T>) typeAnnot.mapperClass().newInstance();
     } catch (ReflectiveOperationException e) {
-      throw new IllegalArgumentException("Class \"" + type.getName() + "\" must have a public "
-          + "parameter-less constructor to be used as a tensor mapper");
+      throw new IllegalArgumentException(
+          "Class \""
+              + type.getName()
+              + "\" must have a public "
+              + "parameter-less constructor to be used as a tensor mapper");
     }
-    TensorTypeInfo<T> typeInfo = new TensorTypeInfo<>(type, typeAnnot.dataType(), typeAnnot.byteSize(), mapper);
+    TensorTypeInfo<T> typeInfo =
+        new TensorTypeInfo<>(type, typeAnnot.dataType(), typeAnnot.byteSize(), mapper);
     TYPES_BY_CLASS.put(type, typeInfo);
     TYPES_BY_CODE.put(typeInfo.dataType().getNumber(), typeInfo);
     TYPES_BY_CODE.put(typeInfo.dataType().getNumber() + 100, typeInfo);
@@ -100,6 +109,7 @@ public final class TensorTypeRegistry {
     register(TInt64.class);
     register(TString.class);
     register(TUint8.class);
+    register(TUint16.class);
     register(TBfloat16.class);
   }
 }
