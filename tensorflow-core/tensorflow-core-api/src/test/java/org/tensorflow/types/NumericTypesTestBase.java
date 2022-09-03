@@ -26,7 +26,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.op.math.Add;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.family.TNumber;
 
