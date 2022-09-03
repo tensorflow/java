@@ -22,9 +22,9 @@ import org.tensorflow.SparseTensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TUint16Mapper;
-import org.tensorflow.ndarray.ShortNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.ShortNdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.proto.framework.DataType;
@@ -55,7 +55,8 @@ public interface TUint16 extends ShortNdArray, TIntegral {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TUint16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(
+        TUint16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**

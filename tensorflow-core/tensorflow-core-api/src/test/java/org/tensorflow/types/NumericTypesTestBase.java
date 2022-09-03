@@ -39,38 +39,39 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
 
     assertEquals(3, tensor.rank());
     assertEquals(12, tensor.size());
-    NdArray<U> data = (NdArray<U>)tensor;
+    NdArray<U> data = (NdArray<U>) tensor;
 
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
 
       // Initialize tensor memory with zeros and take a snapshot
-      data.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(0)));
+      data.scalars().forEach(scalar -> ((NdArray<U>) scalar).setObject(valueOf(0)));
       Constant<T> x = tf.constantOf(tensor);
 
       // Initialize the same tensor memory with ones and take a snapshot
-      data.scalars().forEach(scalar -> ((NdArray<U>)scalar).setObject(valueOf(1)));
+      data.scalars().forEach(scalar -> ((NdArray<U>) scalar).setObject(valueOf(1)));
       Constant<T> y = tf.constantOf(tensor);
 
       // Subtract y from x and validate the result
       Sub<T> sub = tf.math.sub(x, y);
-      ((NdArray<U>)sub.asTensor()).scalars().forEach(scalar ->
-          assertEquals(valueOf(-1), scalar.getObject())
-      );
+      ((NdArray<U>) sub.asTensor())
+          .scalars()
+          .forEach(scalar -> assertEquals(valueOf(-1), scalar.getObject()));
     }
   }
 
   @Test
   public void setAndCompute() {
-    NdArray<U> heapData = allocateNdArray(Shape.of(4))
-        .setObject(valueOf(0), 0)
-        .setObject(valueOf(1), 1)
-        .setObject(valueOf(2), 2)
-        .setObject(valueOf(3), 3);
+    NdArray<U> heapData =
+        allocateNdArray(Shape.of(4))
+            .setObject(valueOf(0), 0)
+            .setObject(valueOf(1), 1)
+            .setObject(valueOf(2), 2)
+            .setObject(valueOf(3), 3);
 
     // Creates a 2x2 matrix
     try (T tensor = allocateTensor(Shape.of(2, 2))) {
-      NdArray<U> data = (NdArray<U>)tensor;
+      NdArray<U> data = (NdArray<U>) tensor;
 
       // Copy first 2 values of the vector to the first row of the matrix
       data.set(heapData.slice(Indices.range(0, 2)), 0);
@@ -94,13 +95,13 @@ abstract class NumericTypesTestBase<T extends TNumber, U> {
       try (EagerSession session = EagerSession.create()) {
         Ops tf = Ops.create(session);
 
-        Add<T> add = tf.math.add(tf.constantOf(tensor), tf.constantOf(tensor));
-        NdArray<U> result = (NdArray<U>)add.asTensor();
+        Sub<T> sub = tf.math.sub(tf.constantOf(tensor), tf.constantOf(tensor));
+        NdArray<U> result = (NdArray<U>) sub.asTensor();
 
         assertEquals(valueOf(0), result.getObject(0, 0));
-        assertEquals(valueOf(2), result.getObject(0, 1));
-        assertEquals(valueOf(2), result.getObject(1, 0));
-        assertEquals(valueOf(6), result.getObject(1, 1));
+        assertEquals(valueOf(0), result.getObject(0, 1));
+        assertEquals(valueOf(0), result.getObject(1, 0));
+        assertEquals(valueOf(0), result.getObject(1, 1));
       }
     }
   }
