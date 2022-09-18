@@ -105,7 +105,7 @@ jobs:
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
           echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/3.7.2/bazel-3.7.2-installer-linux-x86_64.sh -o bazel.sh --retry 10
+          curl -L https://github.com/bazelbuild/bazel/releases/download/4.2.1/bazel-4.2.1-installer-linux-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
           if [[ "${{ matrix.ext }}" == *-gpu ]]; then
           echo Installing CUDA
@@ -160,7 +160,7 @@ jobs:
         run: |
           python3 -m pip install numpy six
           echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/3.7.2/bazel-3.7.2-installer-darwin-x86_64.sh -o bazel.sh --retry 10
+          curl -L https://github.com/bazelbuild/bazel/releases/download/4.2.1/bazel-4.2.1-installer-darwin-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
           brew install libomp perl
       - name: Checkout repository
@@ -209,7 +209,7 @@ jobs:
           bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
           echo Downloading Bazel
           mkdir C:\bazel
-          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/3.7.2/bazel-3.7.2-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
+          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/4.2.1/bazel-4.2.1-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
           set "EXT=${{ matrix.ext }}"
           if "%EXT:~-4%" == "-gpu" (
             echo Removing some unused stuff to avoid running out of disk space
