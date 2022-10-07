@@ -516,7 +516,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     importGraphDef(graphDef, "");
   }
 
-  static final String INIT_OP_BASE_NAME = "Init";
+  static final String INIT_OP_NAME = "Init";
 
   /**
    * Import a representation of a TensorFlow graph.
@@ -539,12 +539,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     String initPrefix;
     if (!prefix.isEmpty()) {
       if (prefix.endsWith("/")) {
-        initPrefix = prefix + INIT_OP_BASE_NAME;
+        initPrefix = prefix + INIT_OP_NAME;
       } else {
-        initPrefix = prefix + "/" + INIT_OP_BASE_NAME;
+        initPrefix = prefix + "/" + INIT_OP_NAME;
       }
     } else {
-      initPrefix = INIT_OP_BASE_NAME;
+      initPrefix = INIT_OP_NAME;
     }
 
     operations()
@@ -1065,8 +1065,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       return graphDef;
     }
     var graphDefWithInitBuilder = graphDef.toBuilder();
-    var initNode = graphDefWithInitBuilder.getNodeBuilderList().stream().filter(n -> n.getName().startsWith(INIT_OP_BASE_NAME)).findFirst().orElseGet(() -> {
-      return graphDefWithInitBuilder.addNodeBuilder().setName(INIT_OP_BASE_NAME).setOp(NoOp.OP_NAME);
+    var initNode = graphDefWithInitBuilder.getNodeBuilderList().stream().filter(n -> n.getName().equals(INIT_OP_NAME)).findFirst().orElseGet(() -> {
+      return graphDefWithInitBuilder.addNodeBuilder().setName(INIT_OP_NAME).setOp(NoOp.OP_NAME);
     });
     initializers.stream().skip(newInitializersMarker).forEach(op -> initNode.addInput("^" + op.name()));
     return graphDefWithInitBuilder.build();
