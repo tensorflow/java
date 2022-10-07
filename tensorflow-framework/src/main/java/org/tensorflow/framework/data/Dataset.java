@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
-
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.impl.BatchDataset;
 import org.tensorflow.framework.data.impl.MapDataset;

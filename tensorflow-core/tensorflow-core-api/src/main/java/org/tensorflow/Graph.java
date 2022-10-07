@@ -30,7 +30,6 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -392,7 +391,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   @Override
   public void attachFunction(ConcreteFunction function) {
     try (Reference ref = ref();
-         PointerScope scope = new PointerScope()) {
+        PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), null, status);
       status.throwExceptionIfNotOK();
@@ -548,12 +547,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     operations()
-            .forEachRemaining(
-                    op -> {
-                      if (op.name().startsWith(initPrefix)) {
-                        registerInitializer(op, false);
-                      }
-                    });
+        .forEachRemaining(
+            op -> {
+              if (op.name().startsWith(initPrefix)) {
+                registerInitializer(op, false);
+              }
+            });
   }
 
   /**
@@ -1065,10 +1064,20 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       return graphDef;
     }
     var graphDefWithInitBuilder = graphDef.toBuilder();
-    var initNode = graphDefWithInitBuilder.getNodeBuilderList().stream().filter(n -> n.getName().equals(INIT_OP_NAME)).findFirst().orElseGet(() -> {
-      return graphDefWithInitBuilder.addNodeBuilder().setName(INIT_OP_NAME).setOp(NoOp.OP_NAME);
-    });
-    initializers.stream().skip(newInitializersMarker).forEach(op -> initNode.addInput("^" + op.name()));
+    var initNode =
+        graphDefWithInitBuilder.getNodeBuilderList().stream()
+            .filter(n -> n.getName().equals(INIT_OP_NAME))
+            .findFirst()
+            .orElseGet(
+                () -> {
+                  return graphDefWithInitBuilder
+                      .addNodeBuilder()
+                      .setName(INIT_OP_NAME)
+                      .setOp(NoOp.OP_NAME);
+                });
+    initializers.stream()
+        .skip(newInitializersMarker)
+        .forEach(op -> initNode.addInput("^" + op.name()));
     return graphDefWithInitBuilder.build();
   }
 

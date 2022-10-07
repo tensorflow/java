@@ -561,8 +561,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC)
             .returns(Names.Ops)
             .addStatement("return new $T(scope.withInitScope())", Names.Ops)
-            .addJavadoc(
-                "Returns an API that builds init operations.\n" + initScopeComment)
+            .addJavadoc("Returns an API that builds init operations.\n" + initScopeComment)
             .build());
 
     opsBuilder.addMethod(

@@ -388,7 +388,7 @@ public class SavedModelBundle implements AutoCloseable {
     // the init signatures aren't actual functions, just markers
     return functions.values().stream()
         .map(SessionFunction::signature)
-        .filter(s-> !s.key().equals(INIT_OP_SIGNATURE_KEY))
+        .filter(s -> !s.key().equals(INIT_OP_SIGNATURE_KEY))
         .collect(Collectors.toList());
   }
 
@@ -473,7 +473,10 @@ public class SavedModelBundle implements AutoCloseable {
   private final Map<String, SessionFunction> functions;
 
   private SavedModelBundle(
-      Graph graph, Session session, MetaGraphDef metaGraphDef, Map<String, SessionFunction> functions) {
+      Graph graph,
+      Session session,
+      MetaGraphDef metaGraphDef,
+      Map<String, SessionFunction> functions) {
     this.graph = graph;
     this.session = session;
     this.metaGraphDef = metaGraphDef;
@@ -554,9 +557,13 @@ public class SavedModelBundle implements AutoCloseable {
               });
     }
 
-    return new SavedModelBundle(graph, session, metaGraphDef, functions.entrySet().stream()
-            .collect(Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session)))
-    );
+    return new SavedModelBundle(
+        graph,
+        session,
+        metaGraphDef,
+        functions.entrySet().stream()
+            .collect(
+                Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session))));
   }
 
   private static SavedModelBundle load(

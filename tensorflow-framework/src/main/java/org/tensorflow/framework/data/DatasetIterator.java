@@ -15,15 +15,14 @@
  */
 package org.tensorflow.framework.data;
 
-import org.tensorflow.Graph;
-import org.tensorflow.Operand;
-import org.tensorflow.op.Op;
-import org.tensorflow.op.Ops;
-import org.tensorflow.ndarray.Shape;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.Graph;
+import org.tensorflow.Operand;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -115,8 +114,8 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * @param iteratorResource An Operand representing the iterator (e.g. constructed from
    *     `tf.data.iterator` or `tf.data.anonymousIterator`)
    * @param initializer An `Op` that should be run to initialize this iterator
-   * @param outputTypes A list of classes corresponding to the tensor type of each component of
-   *     a dataset element.
+   * @param outputTypes A list of classes corresponding to the tensor type of each component of a
+   *     dataset element.
    * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
    *     a dataset element.
    */
@@ -221,7 +220,8 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
           "Dataset structure (types, " + "output shapes) must match this iterator.");
     }
 
-    this.initializer = tf.withInitScope().data.makeIterator(dataset.getVariant(), getIteratorResource());
+    this.initializer =
+        tf.withInitScope().data.makeIterator(dataset.getVariant(), getIteratorResource());
     return this.initializer;
   }
 
@@ -229,8 +229,8 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
    * Creates a new iterator from a "structure" defined by `outputShapes` and `outputTypes`.
    *
    * @param tf Ops accessor
-   * @param outputTypes A list of classes repesenting the tensor type of each component of a
-   *     dataset element.
+   * @param outputTypes A list of classes repesenting the tensor type of each component of a dataset
+   *     element.
    * @param outputShapes A list of Shape objects representing the shape of each component of a
    *     dataset element.
    * @return A new DatasetIterator

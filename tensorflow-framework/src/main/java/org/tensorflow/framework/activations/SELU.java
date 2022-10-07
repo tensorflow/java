@@ -34,8 +34,8 @@ import org.tensorflow.types.family.TNumber;
  * <p>where {@code alpha} and {@code scale} are pre-defined constants ({@code alpha=1.67326324} and
  * {@code scale=1.05070098}).
  *
- * <p>Basically, the SELU activation function multiplies {@code scale} (&gt; 1) with the output of the
- * elu function to ensure a slope larger than one for positive inputs.
+ * <p>Basically, the SELU activation function multiplies {@code scale} (&gt; 1) with the output of
+ * the elu function to ensure a slope larger than one for positive inputs.
  *
  * <p>The values of {@code alpha} and {@code scale} are chosen so that the mean and variance of the
  * inputs are preserved between two consecutive layers as long as the weights are initialized

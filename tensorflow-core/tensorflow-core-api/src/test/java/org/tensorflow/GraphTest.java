@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
@@ -76,7 +75,10 @@ public class GraphTest {
       tf.withName("result").math.add(variable, tf.constant(2));
       graphDef = g.toGraphDef();
 
-      var initNode = graphDef.getNodeList().stream().filter(n -> n.getName().equals(Graph.INIT_OP_NAME)).collect(Collectors.toList());
+      var initNode =
+          graphDef.getNodeList().stream()
+              .filter(n -> n.getName().equals(Graph.INIT_OP_NAME))
+              .collect(Collectors.toList());
       assertEquals(1, initNode.size());
       assertEquals(3, initNode.get(0).getInputCount());
     }
@@ -90,7 +92,10 @@ public class GraphTest {
       init.withName("var2").variable(init.constant(4));
       graphDef = g.toGraphDef();
 
-      var initNode = graphDef.getNodeList().stream().filter(n -> n.getName().equals(Graph.INIT_OP_NAME)).collect(Collectors.toList());
+      var initNode =
+          graphDef.getNodeList().stream()
+              .filter(n -> n.getName().equals(Graph.INIT_OP_NAME))
+              .collect(Collectors.toList());
       assertEquals(1, initNode.size());
       assertEquals(6, initNode.get(0).getInputCount());
 

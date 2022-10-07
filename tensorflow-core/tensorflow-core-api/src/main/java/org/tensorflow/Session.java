@@ -24,7 +24,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -516,7 +515,7 @@ public final class Session implements AutoCloseable {
           initialize();
         } else {
           throw new IllegalStateException(
-                  "Graph has un-ran initializers, but the session's autoInit is false.  Run Session.initialize() before calling run().");
+              "Graph has un-ran initializers, but the session's autoInit is false.  Run Session.initialize() before calling run().");
         }
       }
     }
