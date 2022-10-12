@@ -1075,9 +1075,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
                       .setName(INIT_OP_NAME)
                       .setOp(NoOp.OP_NAME);
                 });
+
+    // Register each initializer as a control dependency of the Init op by adding their names
+    // prefixed with the '^' symbol to the list of inputs
     initializers.stream()
         .skip(newInitializersMarker)
         .forEach(op -> initNode.addInput("^" + op.name()));
+
     return graphDefWithInitBuilder.build();
   }
 
