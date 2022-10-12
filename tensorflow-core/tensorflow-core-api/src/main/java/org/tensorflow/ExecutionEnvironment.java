@@ -102,28 +102,9 @@ public interface ExecutionEnvironment {
   Scope baseScope();
 
   /**
-   * Get the execution environment to use for initialization. In most cases is {@code this}.
-   *
-   * <p><b>Should generally only be used internally.</b>
-   */
-  default ExecutionEnvironment initEnv() {
-    return this;
-  }
-
-  /**
-   * Register an op and all of its inputs (and control inputs) as an initialization op.
-   *
-   * <p><b>Should generally only be used internally, prefer {@link
-   * org.tensorflow.op.Ops#withInitScope()}.</b>
-   *
-   * @throws IllegalStateException if the op or one of its inputs can't be made an init op.
-   */
-  void registerInitOp(Operation op);
-
-  /**
    * Get whether an op is an initialization op.
    *
    * <p><b>Should generally only be used internally.</b>
    */
-  boolean isInitOp(Operation op);
+  boolean isInitializer(Operation op);
 }

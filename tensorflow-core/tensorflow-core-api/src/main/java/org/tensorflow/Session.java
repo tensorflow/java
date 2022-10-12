@@ -22,11 +22,8 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -183,22 +180,13 @@ public final class Session implements AutoCloseable {
    *
    * <p>This runs any ops that have been created with an init scope that have not already been ran.
    */
-  public void initialize() {
-    Runner runner = runner();
-    graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
-    setInitialized();
-    if (!runner.isEmpty()) {
+  public synchronized void initialize() {
+    if (hasUnranInitializers()) {
+      Runner runner = runner();
+      graph.initializers().stream().skip(ranInitializersMarker).forEach(runner::addTarget);
       runner.runNoInit();
+      markAllInitializersAsRan();
     }
-  }
-
-  /**
-   * Set the ran initializers to all initializers in the graph, as if they had been run. <b>Does not
-   * actually ensure they are ran.</b>
-   */
-  void setInitialized() {
-    ranInits.clear();
-    ranInits.addAll(graph.initializers());
   }
 
   /**
@@ -208,15 +196,13 @@ public final class Session implements AutoCloseable {
    *
    * @return this
    */
-  public Session forceInitialize() {
-    Set<Operation> initializers = graph.initializers();
-    if (!initializers.isEmpty()) {
-      Runner runner = runner();
-      initializers.forEach(runner::addTarget);
+  public synchronized Session forceInitialize() {
+    Runner runner = runner();
+    graph.initializers().stream().forEach(runner::addTarget);
+    if (!runner.isEmpty()) {
       runner.runNoInit();
     }
-    ranInits.clear();
-    ranInits.addAll(graph.initializers());
+    markAllInitializersAsRan();
     return this;
   }
 
@@ -477,21 +463,6 @@ public final class Session implements AutoCloseable {
       return targets.isEmpty() && outputs.isEmpty();
     }
 
-    private void doInit() {
-      if (autoInit) {
-        initialize();
-      } else {
-        graph
-            .initializers()
-            .forEach(
-                x -> {
-                  if (!ranInits.contains(x))
-                    throw new IllegalStateException(
-                        "Graph has un-ran initializers, but the session's autoInit is false.  Run Session.initialize() before calling run().");
-                });
-      }
-    }
-
     /**
      * Execute the graph fragments necessary to compute all requested fetches.
      *
@@ -510,11 +481,7 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner
      */
     public Result run() {
-      doInit();
-      return runNoInit();
-    }
-
-    Result runNoInit() {
+      verifyInit();
       return runHelper(false);
     }
 
@@ -529,8 +496,28 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
     public Result runAndFetchMetadata() {
-      doInit();
+      verifyInit();
       return runHelper(true);
+    }
+
+    /**
+     * Link {@link #run()} but without trying to initialize the session if it's not
+     *
+     * @return list of resulting tensors fetched by this session runner
+     */
+    Result runNoInit() {
+      return runHelper(false);
+    }
+
+    private void verifyInit() {
+      if (hasUnranInitializers()) {
+        if (autoInit) {
+          initialize();
+        } else {
+          throw new IllegalStateException(
+              "Graph has un-ran initializers, but the session's autoInit is false.  Run Session.initialize() before calling run().");
+        }
+      }
     }
 
     private Result runHelper(boolean wantMetadata) {
@@ -684,7 +671,7 @@ public final class Session implements AutoCloseable {
    *
    * @param prefix prefix to the variable files to save
    */
-  public void save(String prefix) {
+  public synchronized void save(String prefix) {
     SaverDef saverDef = graph.saverDef();
     runner()
         .addTarget(saverDef.getSaveTensorName())
@@ -706,14 +693,14 @@ public final class Session implements AutoCloseable {
    *
    * @param prefix prefix to restore from
    */
-  public void restore(String prefix) {
+  public synchronized void restore(String prefix) {
     SaverDef saverDef = graph.saverDef();
     runner()
         .addTarget(saverDef.getRestoreOpName())
         .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
         .runNoInit();
     // TODO better way of doing this, only count as ran assignments to the restored variables.
-    setInitialized();
+    markAllInitializersAsRan();
   }
 
   Graph graph() {
@@ -728,7 +715,7 @@ public final class Session implements AutoCloseable {
   private int numActiveRuns;
 
   private final boolean autoInit;
-  private final Set<Operation> ranInits = Collections.synchronizedSet(new LinkedHashSet<>());
+  private int ranInitializersMarker = 0;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
@@ -857,5 +844,13 @@ public final class Session implements AutoCloseable {
         throw new TensorFlowException("Cannot parse RunMetadata protocol buffer", e);
       }
     }
+  }
+
+  private boolean hasUnranInitializers() {
+    return ranInitializersMarker < graph.initializers().size();
+  }
+
+  void markAllInitializersAsRan() {
+    ranInitializersMarker = graph.initializers().size();
   }
 }

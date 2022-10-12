@@ -515,7 +515,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     importGraphDef(graphDef, "");
   }
 
-  private static final String INIT_OP_BASE_NAME = "Init";
+  static final String INIT_OP_NAME = "Init";
 
   /**
    * Import a representation of a TensorFlow graph.
@@ -538,42 +538,21 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     String initPrefix;
     if (!prefix.isEmpty()) {
       if (prefix.endsWith("/")) {
-        initPrefix = prefix + INIT_OP_BASE_NAME;
+        initPrefix = prefix + INIT_OP_NAME;
       } else {
-        initPrefix = prefix + "/" + INIT_OP_BASE_NAME;
+        initPrefix = prefix + "/" + INIT_OP_NAME;
       }
     } else {
-      initPrefix = INIT_OP_BASE_NAME;
+      initPrefix = INIT_OP_NAME;
     }
 
     operations()
         .forEachRemaining(
             op -> {
               if (op.name().startsWith(initPrefix)) {
-                registerInitOp(op);
+                registerInitializer(op, false);
               }
             });
-  }
-
-  /**
-   * Create and return a NoOp that will run all init ops. If {@code required} is false and there are
-   * no new init ops since the last call, will do nothing and return null.
-   */
-  synchronized GraphOperation addInitOp(boolean required) {
-    if (!newInitializers && !required) {
-      return null;
-    }
-    if (initializers.isEmpty() && !required) {
-      return null;
-    }
-
-    baseScope.refreshNames();
-    OperationBuilder builder =
-        baseScope().withInitScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
-    initializers.forEach(builder::addControlInput);
-    GraphOperation initOp = (GraphOperation) builder.build();
-    newInitializers = false;
-    return initOp;
   }
 
   /**
@@ -587,60 +566,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @see #importGraphDef(GraphDef, String)
    */
   public GraphDef toGraphDef() {
-    addInitOp(false);
+    GraphDef graphDef;
     synchronized (nativeHandleLock) {
-      return toGraphDef(nativeHandle);
+      graphDef = toGraphDef(nativeHandle);
     }
-  }
-
-  private boolean registerInitOpHelper(Operation op) {
-    if (isInitOp(op)) return false;
-    checkInput(op);
-
-    if (!(op instanceof GraphOperation)) {
-      throw new IllegalStateException("Can't use a non-graph op as a graph's init op.");
-    }
-    GraphOperation graphOp = (GraphOperation) op;
-
-    for (GraphOperation controlInput : graphOp.controlInputs()) {
-      registerInitOpHelper(controlInput);
-    }
-
-    for (Operand<?> input : graphOp.inputs()) {
-      registerInitOpHelper(input.op());
-    }
-    return initializers.add(op);
+    return addOrUpdateInit(graphDef);
   }
 
   @Override
-  public void registerInitOp(Operation op) {
-    if (registerInitOpHelper(op)) {
-      newInitializers = true;
-    }
-  }
-
-  @Override
-  public boolean isInitOp(Operation op) {
+  public boolean isInitializer(Operation op) {
     return initializers.contains(op);
-  }
-
-  /**
-   * Returns a set of ops that will run all initializers added to the graph via {@link
-   * #registerInitOp(Operation)}.
-   *
-   * <p>Note that NoOps aren't included in this list, since any inputs or control dependencies are
-   * guaranteed to also be in this list, and including the no-ops wouldn't change the initialization
-   * result.
-   */
-  public Set<Operation> initializers() {
-    return initializers.stream()
-        .filter(x -> !x.type().equals(NoOp.OP_NAME))
-        .collect(Collectors.toSet());
-  }
-
-  /** Get whether the graph has any initializers */
-  public boolean hasInitializers() {
-    return !initializers.isEmpty();
   }
 
   /**
@@ -893,6 +828,39 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return saverDef;
   }
 
+  /**
+   * Register an op as an initialization op.
+   *
+   * @throws IllegalArgumentException if the op or one of its inputs can't be made an init op.
+   */
+  synchronized void registerInitializer(GraphOperation op, boolean isNew) {
+    if (isInitializer(op)) {
+      return;
+    }
+    checkInput(op);
+    for (GraphOperation controlInput : op.controlInputs()) {
+      checkInput(controlInput);
+    }
+    for (Operand<?> input : op.inputs()) {
+      checkInput(input.op());
+    }
+    if (initializers.add(op) && isNew && newInitializersMarker < 0) {
+      newInitializersMarker = initializers.size() - 1;
+    }
+  }
+
+  /**
+   * Returns a set of ops that will run all initializers added to the graph via {@link
+   * #registerInitOp(Operation)}.
+   *
+   * <p>Note that NoOps aren't included in this list, since any inputs or control dependencies are
+   * guaranteed to also be in this list, and including the no-ops wouldn't change the initialization
+   * result.
+   */
+  Set<Operation> initializers() {
+    return initializers;
+  }
+
   private final Object nativeHandleLock = new Object();
   private TF_Graph nativeHandle;
   private int refcount = 0;
@@ -902,7 +870,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private boolean dangerousGradientBuilder;
 
   private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
-  private boolean newInitializers = false;
+  private int newInitializersMarker = -1;
 
   /**
    * Use builders without locking. This should only be used during custom gradient building.
@@ -1089,6 +1057,32 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         throw new TensorFlowException("Cannot parse GraphDef protocol buffer", e);
       }
     }
+  }
+
+  private GraphDef addOrUpdateInit(GraphDef graphDef) {
+    if (newInitializersMarker < 0) {
+      return graphDef;
+    }
+    var graphDefWithInitBuilder = graphDef.toBuilder();
+    var initNode =
+        graphDefWithInitBuilder.getNodeBuilderList().stream()
+            .filter(n -> n.getName().equals(INIT_OP_NAME))
+            .findFirst()
+            .orElseGet(
+                () -> {
+                  return graphDefWithInitBuilder
+                      .addNodeBuilder()
+                      .setName(INIT_OP_NAME)
+                      .setOp(NoOp.OP_NAME);
+                });
+
+    // Register each initializer as a control dependency of the Init op by adding their names
+    // prefixed with the '^' symbol to the list of inputs
+    initializers.stream()
+        .skip(newInitializersMarker)
+        .forEach(op -> initNode.addInput("^" + op.name()));
+
+    return graphDefWithInitBuilder.build();
   }
 
   static void resolveOutputs(
@@ -1316,7 +1310,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .build();
   }
 
-  private static Set<Graph> allGraphs =
+  private static final Set<Graph> allGraphs =
       Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
   /**

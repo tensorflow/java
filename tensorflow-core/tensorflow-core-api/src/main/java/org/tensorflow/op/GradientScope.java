@@ -124,9 +124,6 @@ public final class GradientScope implements Scope {
   }
 
   @Override
-  public void onOpCreated(Operation op) {}
-
-  @Override
   public String getDeviceString() {
     if (device == null) {
       throw new UnsupportedOperationException(

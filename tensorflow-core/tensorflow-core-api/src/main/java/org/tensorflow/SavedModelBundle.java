@@ -48,8 +48,6 @@ import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
-import org.tensorflow.proto.framework.SignatureDef;
-import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.util.SaverDef;
 
 /**
@@ -67,9 +65,6 @@ import org.tensorflow.proto.util.SaverDef;
 public class SavedModelBundle implements AutoCloseable {
 
   public static final String DEFAULT_TAG = "serve";
-
-  /** Signature used to track Java init ops, for our init scope. */
-  private static final String JAVA_INIT_OP_SIGNATURE_KEY = "__saved_model_java_init_op_tracker";
 
   /**
    * Tensorflow init op tracking signature. Init ops are executed before loading variables, so this
@@ -285,28 +280,12 @@ public class SavedModelBundle implements AutoCloseable {
       // new ops to the graph for saving and restoring the variables.
       SaverDef saverDef = graph.saverDef();
 
-      GraphOperation initOp = null;
-      if (!functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
-        initOp = graph.addInitOp(true);
-      }
-
       MetaGraphDef.Builder metaGraphDef =
           metaGraphDefBuilder
               .setSaverDef(saverDef)
               .setGraphDef(graph.toGraphDef())
               .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
-
-      if (!functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
-
-        metaGraphDef.putSignatureDef(
-            JAVA_INIT_OP_SIGNATURE_KEY,
-            SignatureDef.newBuilder()
-                .putOutputs(
-                    JAVA_INIT_OP_SIGNATURE_KEY,
-                    TensorInfo.newBuilder().setName(initOp.name() + ":0").build())
-                .build());
-      }
 
       // Make sure saved model directories exist
       Path variableDir = Paths.get(exportDir, "variables");
@@ -409,10 +388,7 @@ public class SavedModelBundle implements AutoCloseable {
     // the init signatures aren't actual functions, just markers
     return functions.values().stream()
         .map(SessionFunction::signature)
-        .filter(
-            signature ->
-                !signature.key().equals(INIT_OP_SIGNATURE_KEY)
-                    && !signature.key().equals(JAVA_INIT_OP_SIGNATURE_KEY))
+        .filter(s -> !s.key().equals(INIT_OP_SIGNATURE_KEY))
         .collect(Collectors.toList());
   }
 
@@ -497,14 +473,14 @@ public class SavedModelBundle implements AutoCloseable {
   private final Map<String, SessionFunction> functions;
 
   private SavedModelBundle(
-      Graph graph, Session session, MetaGraphDef metaGraphDef, Map<String, Signature> signatures) {
+      Graph graph,
+      Session session,
+      MetaGraphDef metaGraphDef,
+      Map<String, SessionFunction> functions) {
     this.graph = graph;
     this.session = session;
     this.metaGraphDef = metaGraphDef;
-    this.functions =
-        signatures.entrySet().stream()
-            .collect(
-                Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session)));
+    this.functions = functions;
   }
 
   private static GraphOperation findInitOp(
@@ -563,26 +539,12 @@ public class SavedModelBundle implements AutoCloseable {
 
     GraphOperation initOp = findInitOp(graph, functions, metaGraphDef.getCollectionDefMap());
     if (initOp != null) {
-      graph.registerInitOp(initOp);
+      graph.registerInitializer(initOp, false);
     }
 
-    // java init ops are marked as ran, since the variable restore will restore any state
-    // they mutated.
-    // Technically, init ops should be ran first, then variable restore, but that is not possible
-    // since TF_Session.loadSessionFromSavedModel does it in reverse order, so we just mark them as
-    // ran.
-    if (functions.containsKey(JAVA_INIT_OP_SIGNATURE_KEY)) {
-      String initOpName =
-          functions
-              .get(JAVA_INIT_OP_SIGNATURE_KEY)
-              .getOutputs()
-              .get(JAVA_INIT_OP_SIGNATURE_KEY)
-              .name;
-      graph.registerInitOp(graph.outputOrThrow(initOpName).op());
-    }
+    session.markAllInitializersAsRan();
 
-    session.setInitialized();
-
+    // FIXME: For Ryan, why marking all initializers as run before adding these ones?
     if (metaGraphDef.containsCollectionDef(TABLE_INITIALIZERS_COLLECTION_KEY)) {
       metaGraphDef
           .getCollectionDefMap()
@@ -591,11 +553,17 @@ public class SavedModelBundle implements AutoCloseable {
           .getValueList()
           .forEach(
               node -> {
-                graph.registerInitOp(graph.operationOrThrow(node));
+                graph.registerInitializer(graph.operationOrThrow(node), false);
               });
     }
 
-    return new SavedModelBundle(graph, session, metaGraphDef, functions);
+    return new SavedModelBundle(
+        graph,
+        session,
+        metaGraphDef,
+        functions.entrySet().stream()
+            .collect(
+                Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session))));
   }
 
   private static SavedModelBundle load(

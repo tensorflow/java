@@ -101,7 +101,9 @@ public final class GraphOperationBuilder implements OperationBuilder {
       }
       GraphOperation op = new GraphOperation(graph, built);
       unsafeNativeHandle = null;
-      scope.onOpCreated(op);
+      if (scope.isInit()) {
+        graph.registerInitializer(op, true);
+      }
       return op;
     }
   }

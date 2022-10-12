@@ -239,13 +239,6 @@ public interface Scope {
    */
   OperationBuilder apply(OperationBuilder builder);
 
-  /**
-   * Handle op creation, like registering it as an init op if the scope is init.
-   *
-   * <p><b>FOR INTERNAL USE ONLY</b>
-   */
-  void onOpCreated(Operation op);
-
   /** Returns device string from the scope. */
   String getDeviceString();
 

@@ -8131,34 +8131,16 @@ public final class Ops {
   }
 
   /**
-   * Returns an API that builds init operations.  {@link #liftToInitScope(Operand)} will be called for all created operations.
+   * Returns an API that builds init operations.
    * <p>
    * Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,
    * and are ignored when used as control dependencies.
    * Additionally, this scope ignores any control dependencies.
    * <p>
    * If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
-   * @see #liftToInitScope(Operand)
    */
   public Ops withInitScope() {
     return new Ops(scope.withInitScope());
-  }
-
-  /**
-   * Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).
-   * <p>
-   * Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,
-   * and are ignored when used as control dependencies.
-   * Additionally, this scope ignores any control dependencies.
-   * <p>
-   * If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
-   * @see ExecutionEnvironment#registerInitOp(Operation)
-   *
-   * @throws IllegalStateException if the op or one of its inputs can't be made an init op.
-   */
-  public <T extends Operand> T liftToInitScope(T op) {
-    scope.env().registerInitOp(op.op());
-    return op;
   }
 
   /**

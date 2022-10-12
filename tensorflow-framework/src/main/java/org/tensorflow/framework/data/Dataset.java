@@ -263,8 +263,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    */
   public DatasetIterator makeOneShotIterator() {
     DatasetIterator iterator = makeInitializeableIterator();
-    // TODO should pass the scope instead
-    tf.scope().env().registerInitOp(iterator.makeInitializer(this).op());
+    iterator.makeInitializer(this);
     return iterator;
   }
 
