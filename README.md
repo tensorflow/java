@@ -156,3 +156,7 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 ## How to Contribute?
 
 Contributions are welcome, guidelines are located in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Code and Usage Examples
+
+Please look at this repository: https://github.com/tensorflow/java-models
