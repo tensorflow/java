@@ -16,6 +16,7 @@
  */
 module org.tensorflow.ndarray {
   requires jdk.unsupported; // required by raw buffer implementations using Unsafe
+  requires java.desktop; // required for java.awt.*
 
   exports org.tensorflow.ndarray;
   exports org.tensorflow.ndarray.buffer;
