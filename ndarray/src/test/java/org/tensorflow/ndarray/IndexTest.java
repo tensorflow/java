@@ -143,13 +143,13 @@ public class IndexTest {
       {"(1, 3)", "(2, 3)"},
       {"(1, 4)", "(2, 4)"}
     };
-    //String[][] lArray = new String[5][2];
-    String[][] lArray = new String[5][];
-    lArray[0] = new String[2];
-    lArray[1] = new String[2];
-    lArray[2] = new String[2];
-    lArray[3] = new String[2];
-    lArray[4] = new String[2];
+    String[][] lArray = new String[5][2];
+    // String[][] lArray = new String[5][];
+    // lArray[0] = new String[2];
+    // lArray[1] = new String[2];
+    // lArray[2] = new String[2];
+    // lArray[3] = new String[2];
+    // lArray[4] = new String[2];
     StdArrays.copyFrom(same7, lArray);
     assertArrayEquals( expectedr7, lArray);
     String[][] same7j = StdArrays.array2dCopyOf(same7, String.class);
