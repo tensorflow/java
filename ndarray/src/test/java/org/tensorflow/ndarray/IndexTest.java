@@ -48,10 +48,13 @@ public class IndexTest {
   @Test
   public void testIndices(){
 
-    String[][] indexData = new String[5][4];
-    for (int i=0 ; i < 5; i++)
+    // String[][] indexData = new String[5][4];
+    String[][] indexData = new String[5][];
+    for (int i=0 ; i < 5; i++){
+      indexData[i] = new String[4];
       for (int j=0 ; j < 4; j++)
         indexData[i][j] = "("+j+", "+i+")";
+    }
 
     NdArray<String> matrix2d = StdArrays.ndCopyOf(indexData);
     assertEquals(2, matrix2d.rank());
@@ -63,6 +66,7 @@ public class IndexTest {
     |(0, 3), (1, 3), (2, 3), (3, 3)|
     |(0, 4), (1, 4), (2, 4), (3, 4)|  
     */
+    assertArrayEquals(new String[]{"(0, 0)", "(1, 0)", "(2, 0)", "(3, 0)"}, indexData[0]);
 
     NdArray<String> same1 = matrix2d.slice(Indices.all());
     String[][] same1j = StdArrays.array2dCopyOf(same1, String.class);
