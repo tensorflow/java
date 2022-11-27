@@ -206,6 +206,21 @@ public enum FullTypeId
   TFT_LITERAL(1003),
   /**
    * <pre>
+   * Encoding types describe a value of a certain type, encoded as a different
+   * type.
+   * Parametrization:
+   *   TFT_ENCODED[&lt;encoded type&gt;, &lt;encoding type&gt;]
+   *   * &lt;encoded type&gt; may be any type
+   *   * &lt;encoding type&gt; may be any type
+   * Examples:
+   *   TFT_ENCODING[TFT_INT32, TFT_STRING] is an integer encoded as string.
+   * </pre>
+   *
+   * <code>TFT_ENCODED = 1004;</code>
+   */
+  TFT_ENCODED(1004),
+  /**
+   * <pre>
    * The bool element type.
    * TODO(mdan): Quantized types, legacy representations (e.g. ref)
    * </pre>
@@ -299,7 +314,7 @@ public enum FullTypeId
    * mutation, and can potentially produce an infinite number of elements.
    * A datasets can produce logical structures (e.g. multiple elements). This
    * is expressed using TFT_PRODUCT.
-   * Parametrization: TFT_ARRAY[&lt;element type&gt;].
+   * Parametrization: TFT_DATASET[&lt;element type&gt;].
    *   * &lt;element type&gt; may be a concrete type or a type symbol. It represents
    *     the data type of the elements produced by the dataset.
    * Examples:
@@ -323,6 +338,18 @@ public enum FullTypeId
    * <code>TFT_RAGGED = 10103;</code>
    */
   TFT_RAGGED(10103),
+  /**
+   * <pre>
+   * Iterators created by tf.data ops and APIs. Very similar to Datasets, except
+   * they are mutable.
+   * Parametrization: TFT_ITERATOR[&lt;element type&gt;].
+   *   * &lt;element type&gt; may be a concrete type or a type symbol. It represents
+   *     the data type of the elements produced by the dataset.
+   * </pre>
+   *
+   * <code>TFT_ITERATOR = 10104;</code>
+   */
+  TFT_ITERATOR(10104),
   /**
    * <pre>
    * A mutex lock tensor, produced by tf.raw_ops.MutexLock.
@@ -545,6 +572,21 @@ public enum FullTypeId
   public static final int TFT_LITERAL_VALUE = 1003;
   /**
    * <pre>
+   * Encoding types describe a value of a certain type, encoded as a different
+   * type.
+   * Parametrization:
+   *   TFT_ENCODED[&lt;encoded type&gt;, &lt;encoding type&gt;]
+   *   * &lt;encoded type&gt; may be any type
+   *   * &lt;encoding type&gt; may be any type
+   * Examples:
+   *   TFT_ENCODING[TFT_INT32, TFT_STRING] is an integer encoded as string.
+   * </pre>
+   *
+   * <code>TFT_ENCODED = 1004;</code>
+   */
+  public static final int TFT_ENCODED_VALUE = 1004;
+  /**
+   * <pre>
    * The bool element type.
    * TODO(mdan): Quantized types, legacy representations (e.g. ref)
    * </pre>
@@ -638,7 +680,7 @@ public enum FullTypeId
    * mutation, and can potentially produce an infinite number of elements.
    * A datasets can produce logical structures (e.g. multiple elements). This
    * is expressed using TFT_PRODUCT.
-   * Parametrization: TFT_ARRAY[&lt;element type&gt;].
+   * Parametrization: TFT_DATASET[&lt;element type&gt;].
    *   * &lt;element type&gt; may be a concrete type or a type symbol. It represents
    *     the data type of the elements produced by the dataset.
    * Examples:
@@ -662,6 +704,18 @@ public enum FullTypeId
    * <code>TFT_RAGGED = 10103;</code>
    */
   public static final int TFT_RAGGED_VALUE = 10103;
+  /**
+   * <pre>
+   * Iterators created by tf.data ops and APIs. Very similar to Datasets, except
+   * they are mutable.
+   * Parametrization: TFT_ITERATOR[&lt;element type&gt;].
+   *   * &lt;element type&gt; may be a concrete type or a type symbol. It represents
+   *     the data type of the elements produced by the dataset.
+   * </pre>
+   *
+   * <code>TFT_ITERATOR = 10104;</code>
+   */
+  public static final int TFT_ITERATOR_VALUE = 10104;
   /**
    * <pre>
    * A mutex lock tensor, produced by tf.raw_ops.MutexLock.
@@ -719,6 +773,7 @@ public enum FullTypeId
       case 1001: return TFT_ARRAY;
       case 1002: return TFT_OPTIONAL;
       case 1003: return TFT_LITERAL;
+      case 1004: return TFT_ENCODED;
       case 200: return TFT_BOOL;
       case 201: return TFT_UINT8;
       case 202: return TFT_UINT16;
@@ -737,6 +792,7 @@ public enum FullTypeId
       case 214: return TFT_STRING;
       case 10102: return TFT_DATASET;
       case 10103: return TFT_RAGGED;
+      case 10104: return TFT_ITERATOR;
       case 10202: return TFT_MUTEX_LOCK;
       case 10203: return TFT_LEGACY_VARIANT;
       default: return null;

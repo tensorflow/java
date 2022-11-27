@@ -399,18 +399,6 @@ diff -ruN tensorflow/tensorflow/core/protobuf/snapshot.proto tensorflow-2.7.0-pr
  // Each SnapshotRecord represents one batch of pre-processed input data. A batch
  // consists of a list of tensors that we encode as TensorProtos. This message
  // doesn't store the structure of the batch.
-diff -ruN tensorflow/tensorflow/core/protobuf/status.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/status.proto
---- tensorflow/tensorflow/core/protobuf/status.proto	2021-11-01 10:31:04.000000000 +0900
-+++ tensorflow-proto/tensorflow/core/protobuf/status.proto	2021-11-09 12:09:16.716853813 +0900
-@@ -2,6 +2,8 @@
- 
- package tensorflow;
- 
-+option java_package = "org.tensorflow.framework";
-+
- // If included as a payload, this message flags the Status to be a "derived"
- // Status. Used by StatusGroup to ignore certain Statuses when reporting
- // errors to end users.
 diff -ruN tensorflow/tensorflow/core/protobuf/struct.proto tensorflow-2.7.0-proto/tensorflow/core/protobuf/struct.proto
 --- tensorflow/tensorflow/core/protobuf/struct.proto	2021-11-01 10:31:04.000000000 +0900
 +++ tensorflow-proto/tensorflow/core/protobuf/struct.proto	2021-11-09 12:07:40.445571607 +0900

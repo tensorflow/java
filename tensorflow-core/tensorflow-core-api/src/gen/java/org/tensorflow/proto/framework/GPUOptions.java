@@ -150,15 +150,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -180,15 +193,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -209,15 +235,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -238,15 +277,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -268,15 +320,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -666,6 +731,40 @@ private static final long serialVersionUID = 0L;
        * <code>repeated int32 priority = 2;</code>
        */
       int getPriority(int index);
+
+      /**
+       * <pre>
+       * Virtual Device ordinal number determines the device ID of the device.
+       * A Virtual device with a lower ordinal number always receives the a
+       * smaller device id. The phyiscal device id and location in the
+       * virtual device list is used to break ties.
+       * </pre>
+       *
+       * <code>repeated int32 device_ordinal = 3;</code>
+       */
+      java.util.List<java.lang.Integer> getDeviceOrdinalList();
+      /**
+       * <pre>
+       * Virtual Device ordinal number determines the device ID of the device.
+       * A Virtual device with a lower ordinal number always receives the a
+       * smaller device id. The phyiscal device id and location in the
+       * virtual device list is used to break ties.
+       * </pre>
+       *
+       * <code>repeated int32 device_ordinal = 3;</code>
+       */
+      int getDeviceOrdinalCount();
+      /**
+       * <pre>
+       * Virtual Device ordinal number determines the device ID of the device.
+       * A Virtual device with a lower ordinal number always receives the a
+       * smaller device id. The phyiscal device id and location in the
+       * virtual device list is used to break ties.
+       * </pre>
+       *
+       * <code>repeated int32 device_ordinal = 3;</code>
+       */
+      int getDeviceOrdinal(int index);
     }
     /**
      * <pre>
@@ -687,6 +786,7 @@ private static final long serialVersionUID = 0L;
       private VirtualDevices() {
         memoryLimitMb_ = emptyFloatList();
         priority_ = emptyIntList();
+        deviceOrdinal_ = emptyIntList();
       }
 
       @java.lang.Override
@@ -762,6 +862,27 @@ private static final long serialVersionUID = 0L;
                 input.popLimit(limit);
                 break;
               }
+              case 24: {
+                if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                  deviceOrdinal_ = newIntList();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                deviceOrdinal_.addInt(input.readInt32());
+                break;
+              }
+              case 26: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
+                  deviceOrdinal_ = newIntList();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  deviceOrdinal_.addInt(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
               default: {
                 if (!parseUnknownField(
                     input, unknownFields, extensionRegistry, tag)) {
@@ -782,6 +903,9 @@ private static final long serialVersionUID = 0L;
           }
           if (((mutable_bitField0_ & 0x00000002) != 0)) {
             priority_.makeImmutable(); // C
+          }
+          if (((mutable_bitField0_ & 0x00000004) != 0)) {
+            deviceOrdinal_.makeImmutable(); // C
           }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
@@ -909,6 +1033,50 @@ private static final long serialVersionUID = 0L;
       }
       private int priorityMemoizedSerializedSize = -1;
 
+      public static final int DEVICE_ORDINAL_FIELD_NUMBER = 3;
+      private com.google.protobuf.Internal.IntList deviceOrdinal_;
+      /**
+       * <pre>
+       * Virtual Device ordinal number determines the device ID of the device.
+       * A Virtual device with a lower ordinal number always receives the a
+       * smaller device id. The phyiscal device id and location in the
+       * virtual device list is used to break ties.
+       * </pre>
+       *
+       * <code>repeated int32 device_ordinal = 3;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getDeviceOrdinalList() {
+        return deviceOrdinal_;
+      }
+      /**
+       * <pre>
+       * Virtual Device ordinal number determines the device ID of the device.
+       * A Virtual device with a lower ordinal number always receives the a
+       * smaller device id. The phyiscal device id and location in the
+       * virtual device list is used to break ties.
+       * </pre>
+       *
+       * <code>repeated int32 device_ordinal = 3;</code>
+       */
+      public int getDeviceOrdinalCount() {
+        return deviceOrdinal_.size();
+      }
+      /**
+       * <pre>
+       * Virtual Device ordinal number determines the device ID of the device.
+       * A Virtual device with a lower ordinal number always receives the a
+       * smaller device id. The phyiscal device id and location in the
+       * virtual device list is used to break ties.
+       * </pre>
+       *
+       * <code>repeated int32 device_ordinal = 3;</code>
+       */
+      public int getDeviceOrdinal(int index) {
+        return deviceOrdinal_.getInt(index);
+      }
+      private int deviceOrdinalMemoizedSerializedSize = -1;
+
       private byte memoizedIsInitialized = -1;
       @java.lang.Override
       public final boolean isInitialized() {
@@ -937,6 +1105,13 @@ private static final long serialVersionUID = 0L;
         }
         for (int i = 0; i < priority_.size(); i++) {
           output.writeInt32NoTag(priority_.getInt(i));
+        }
+        if (getDeviceOrdinalList().size() > 0) {
+          output.writeUInt32NoTag(26);
+          output.writeUInt32NoTag(deviceOrdinalMemoizedSerializedSize);
+        }
+        for (int i = 0; i < deviceOrdinal_.size(); i++) {
+          output.writeInt32NoTag(deviceOrdinal_.getInt(i));
         }
         unknownFields.writeTo(output);
       }
@@ -972,6 +1147,20 @@ private static final long serialVersionUID = 0L;
           }
           priorityMemoizedSerializedSize = dataSize;
         }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < deviceOrdinal_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(deviceOrdinal_.getInt(i));
+          }
+          size += dataSize;
+          if (!getDeviceOrdinalList().isEmpty()) {
+            size += 1;
+            size += com.google.protobuf.CodedOutputStream
+                .computeInt32SizeNoTag(dataSize);
+          }
+          deviceOrdinalMemoizedSerializedSize = dataSize;
+        }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
         return size;
@@ -991,6 +1180,8 @@ private static final long serialVersionUID = 0L;
             .equals(other.getMemoryLimitMbList())) return false;
         if (!getPriorityList()
             .equals(other.getPriorityList())) return false;
+        if (!getDeviceOrdinalList()
+            .equals(other.getDeviceOrdinalList())) return false;
         if (!unknownFields.equals(other.unknownFields)) return false;
         return true;
       }
@@ -1009,6 +1200,10 @@ private static final long serialVersionUID = 0L;
         if (getPriorityCount() > 0) {
           hash = (37 * hash) + PRIORITY_FIELD_NUMBER;
           hash = (53 * hash) + getPriorityList().hashCode();
+        }
+        if (getDeviceOrdinalCount() > 0) {
+          hash = (37 * hash) + DEVICE_ORDINAL_FIELD_NUMBER;
+          hash = (53 * hash) + getDeviceOrdinalList().hashCode();
         }
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
@@ -1152,6 +1347,8 @@ private static final long serialVersionUID = 0L;
           bitField0_ = (bitField0_ & ~0x00000001);
           priority_ = emptyIntList();
           bitField0_ = (bitField0_ & ~0x00000002);
+          deviceOrdinal_ = emptyIntList();
+          bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
 
@@ -1189,6 +1386,11 @@ private static final long serialVersionUID = 0L;
             bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.priority_ = priority_;
+          if (((bitField0_ & 0x00000004) != 0)) {
+            deviceOrdinal_.makeImmutable();
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.deviceOrdinal_ = deviceOrdinal_;
           onBuilt();
           return result;
         }
@@ -1254,6 +1456,16 @@ private static final long serialVersionUID = 0L;
             } else {
               ensurePriorityIsMutable();
               priority_.addAll(other.priority_);
+            }
+            onChanged();
+          }
+          if (!other.deviceOrdinal_.isEmpty()) {
+            if (deviceOrdinal_.isEmpty()) {
+              deviceOrdinal_ = other.deviceOrdinal_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureDeviceOrdinalIsMutable();
+              deviceOrdinal_.addAll(other.deviceOrdinal_);
             }
             onChanged();
           }
@@ -1567,6 +1779,122 @@ private static final long serialVersionUID = 0L;
           onChanged();
           return this;
         }
+
+        private com.google.protobuf.Internal.IntList deviceOrdinal_ = emptyIntList();
+        private void ensureDeviceOrdinalIsMutable() {
+          if (!((bitField0_ & 0x00000004) != 0)) {
+            deviceOrdinal_ = mutableCopy(deviceOrdinal_);
+            bitField0_ |= 0x00000004;
+           }
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getDeviceOrdinalList() {
+          return ((bitField0_ & 0x00000004) != 0) ?
+                   java.util.Collections.unmodifiableList(deviceOrdinal_) : deviceOrdinal_;
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public int getDeviceOrdinalCount() {
+          return deviceOrdinal_.size();
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public int getDeviceOrdinal(int index) {
+          return deviceOrdinal_.getInt(index);
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public Builder setDeviceOrdinal(
+            int index, int value) {
+          ensureDeviceOrdinalIsMutable();
+          deviceOrdinal_.setInt(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public Builder addDeviceOrdinal(int value) {
+          ensureDeviceOrdinalIsMutable();
+          deviceOrdinal_.addInt(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public Builder addAllDeviceOrdinal(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureDeviceOrdinalIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, deviceOrdinal_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * Virtual Device ordinal number determines the device ID of the device.
+         * A Virtual device with a lower ordinal number always receives the a
+         * smaller device id. The phyiscal device id and location in the
+         * virtual device list is used to break ties.
+         * </pre>
+         *
+         * <code>repeated int32 device_ordinal = 3;</code>
+         */
+        public Builder clearDeviceOrdinal() {
+          deviceOrdinal_ = emptyIntList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+          return this;
+        }
         @java.lang.Override
         public final Builder setUnknownFields(
             final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1631,15 +1959,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -1662,15 +2003,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -1694,15 +2048,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -1725,15 +2092,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -1756,15 +2136,28 @@ private static final long serialVersionUID = 0L;
      * "visible_device_list" filtering if it is set), and the string represented
      * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
      * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-     * according to the order they appear in this list and the "memory_limit"
-     * list inside each element. For example,
+     * according to the order of the virtual devices determined by
+     * device_ordinal and the location in the virtual device list.
+     * For example,
      *   visible_device_list = "1,0"
      *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-     *   virtual_devices {}
-     * will create three virtual devices as:
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+     * will create 4 virtual devices as:
      *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
      *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-     *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+     *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+     * but
+     *   visible_device_list = "1,0"
+     *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+     *                     device_ordinal: 10 device_ordinal: 20}
+     * will create 4 virtual devices as:
+     *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+     *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+     *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+     *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
      * NOTE:
      * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
      *    at the same time.
@@ -2520,15 +2913,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2555,15 +2961,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2590,15 +3009,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2625,15 +3057,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2667,15 +3112,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2706,15 +3164,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2747,15 +3218,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2789,15 +3273,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2828,15 +3325,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2867,15 +3377,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2907,15 +3430,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2945,15 +3481,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -2983,15 +3532,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -3015,15 +3577,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -3050,15 +3625,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -3086,15 +3674,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -3118,15 +3719,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.
@@ -3151,15 +3765,28 @@ private static final long serialVersionUID = 0L;
        * "visible_device_list" filtering if it is set), and the string represented
        * device names (e.g. /device:GPU:&lt;id&gt;) will refer to the virtual
        * devices and have the &lt;id&gt; field assigned sequentially starting from 0,
-       * according to the order they appear in this list and the "memory_limit"
-       * list inside each element. For example,
+       * according to the order of the virtual devices determined by
+       * device_ordinal and the location in the virtual device list.
+       * For example,
        *   visible_device_list = "1,0"
        *   virtual_devices { memory_limit: 1GB memory_limit: 2GB }
-       *   virtual_devices {}
-       * will create three virtual devices as:
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB }
+       * will create 4 virtual devices as:
        *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory
        *   /device:GPU:1 -&gt; visible GPU 1 with 2GB memory
-       *   /device:GPU:2 -&gt; visible GPU 0 with all available memory
+       *   /device:GPU:2 -&gt; visible GPU 0 with 3GB memory
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory
+       * but
+       *   visible_device_list = "1,0"
+       *   virtual_devices { memory_limit: 1GB memory_limit: 2GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       *   virtual_devices { memory_limit: 3GB memory_limit: 4GB
+       *                     device_ordinal: 10 device_ordinal: 20}
+       * will create 4 virtual devices as:
+       *   /device:GPU:0 -&gt; visible GPU 1 with 1GB memory  (ordinal 10)
+       *   /device:GPU:1 -&gt; visible GPU 0 with 3GB memory  (ordinal 10)
+       *   /device:GPU:2 -&gt; visible GPU 1 with 2GB memory  (ordinal 20)
+       *   /device:GPU:3 -&gt; visible GPU 0 with 4GB memory  (ordinal 20)
        * NOTE:
        * 1. It's invalid to set both this and "per_process_gpu_memory_fraction"
        *    at the same time.

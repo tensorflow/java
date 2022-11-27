@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ShutdownTPUSystem"
+  endpoint {
+    name: "tpu.ShutdownTPUSystem"
+  }
+}

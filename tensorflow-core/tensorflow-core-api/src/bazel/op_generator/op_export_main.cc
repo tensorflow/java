@@ -93,32 +93,30 @@ int main(int argc, char* argv[]) {
   tensorflow::port::InitMain(tensorflow::java::kUsageHeader, &argc, &argv);
   std::vector<tensorflow::string> api_dirs;
 
-  if(argc < 4) {
-      std::cerr << "Must specify <library_path> <binary_output> <text_output>" << "\n";
+  if(argc < 3) {
+      std::cerr << "Must specify <binary_output> <text_output>" << "\n";
       std::cerr << tensorflow::java::kUsageHeader;
       return 1;
   }
   
-  for(int i = 4 ; i < argc ; i++){
+  for(int i = 3 ; i < argc ; i++){
     api_dirs.push_back(argv[i]);
   }
 
-  std::ofstream binary_output (argv[2], std::ios::out | std::ios::trunc | std::ios::binary);
-  std::ofstream text_output  (argv[3], std::ios::out | std::ios::trunc);
+  std::ofstream binary_output (argv[1], std::ios::out | std::ios::trunc | std::ios::binary);
+  std::ofstream text_output  (argv[2], std::ios::out | std::ios::trunc);
 
   if(!binary_output.is_open()){
-    std::cerr << "Error opening file " << argv[2] << "\n";
+    std::cerr << "Error opening file " << argv[1] << "\n";
     return 1;
   }
 
   if(!text_output.is_open()){
-    std::cerr << "Error opening file " << argv[3] << "\n";
+    std::cerr << "Error opening file " << argv[2] << "\n";
     return 1;
   }
 
   tensorflow::Env* env = tensorflow::Env::Default();
-  void* ops_libs_handles[1];
-  TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[0]));
   tensorflow::OpList ops;
   tensorflow::OpRegistry::Global()->Export(false, &ops);
 

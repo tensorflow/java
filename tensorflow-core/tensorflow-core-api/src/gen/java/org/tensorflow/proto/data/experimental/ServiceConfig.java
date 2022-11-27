@@ -1889,6 +1889,16 @@ public final class ServiceConfig {
 
     /**
      * <pre>
+     * Maximum size of the cross-trainer cache in bytes. If enabled, make sure
+     * your training job provides sufficient memory resources.
+     * </pre>
+     *
+     * <code>int64 cross_trainer_cache_size_bytes = 11;</code>
+     */
+    long getCrossTrainerCacheSizeBytes();
+
+    /**
+     * <pre>
      * When shutting down a worker, how long to wait for the gRPC server to
      * process the final requests. This is used to achieve clean shutdown in unit
      * tests.
@@ -1901,7 +1911,7 @@ public final class ServiceConfig {
   /**
    * <pre>
    * Configuration for a tf.data service WorkerServer.
-   * Next id: 11
+   * Next id: 12
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.experimental.WorkerConfig}
@@ -2012,6 +2022,11 @@ public final class ServiceConfig {
                 mutable_bitField0_ |= 0x00000001;
               }
               workerTags_.add(s);
+              break;
+            }
+            case 88: {
+
+              crossTrainerCacheSizeBytes_ = input.readInt64();
               break;
             }
             default: {
@@ -2367,6 +2382,20 @@ public final class ServiceConfig {
       }
     }
 
+    public static final int CROSS_TRAINER_CACHE_SIZE_BYTES_FIELD_NUMBER = 11;
+    private long crossTrainerCacheSizeBytes_;
+    /**
+     * <pre>
+     * Maximum size of the cross-trainer cache in bytes. If enabled, make sure
+     * your training job provides sufficient memory resources.
+     * </pre>
+     *
+     * <code>int64 cross_trainer_cache_size_bytes = 11;</code>
+     */
+    public long getCrossTrainerCacheSizeBytes() {
+      return crossTrainerCacheSizeBytes_;
+    }
+
     public static final int SHUTDOWN_QUIET_PERIOD_MS_FIELD_NUMBER = 9;
     private long shutdownQuietPeriodMs_;
     /**
@@ -2426,6 +2455,9 @@ public final class ServiceConfig {
       for (int i = 0; i < workerTags_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 10, workerTags_.getRaw(i));
       }
+      if (crossTrainerCacheSizeBytes_ != 0L) {
+        output.writeInt64(11, crossTrainerCacheSizeBytes_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -2474,6 +2506,10 @@ public final class ServiceConfig {
         size += dataSize;
         size += 1 * getWorkerTagsList().size();
       }
+      if (crossTrainerCacheSizeBytes_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(11, crossTrainerCacheSizeBytes_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2507,6 +2543,8 @@ public final class ServiceConfig {
           .equals(other.getDataTransferProtocol())) return false;
       if (!getDataTransferAddress()
           .equals(other.getDataTransferAddress())) return false;
+      if (getCrossTrainerCacheSizeBytes()
+          != other.getCrossTrainerCacheSizeBytes()) return false;
       if (getShutdownQuietPeriodMs()
           != other.getShutdownQuietPeriodMs()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -2543,6 +2581,9 @@ public final class ServiceConfig {
       hash = (53 * hash) + getDataTransferProtocol().hashCode();
       hash = (37 * hash) + DATA_TRANSFER_ADDRESS_FIELD_NUMBER;
       hash = (53 * hash) + getDataTransferAddress().hashCode();
+      hash = (37 * hash) + CROSS_TRAINER_CACHE_SIZE_BYTES_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCrossTrainerCacheSizeBytes());
       hash = (37 * hash) + SHUTDOWN_QUIET_PERIOD_MS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getShutdownQuietPeriodMs());
@@ -2644,7 +2685,7 @@ public final class ServiceConfig {
     /**
      * <pre>
      * Configuration for a tf.data service WorkerServer.
-     * Next id: 11
+     * Next id: 12
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.experimental.WorkerConfig}
@@ -2702,6 +2743,8 @@ public final class ServiceConfig {
 
         dataTransferAddress_ = "";
 
+        crossTrainerCacheSizeBytes_ = 0L;
+
         shutdownQuietPeriodMs_ = 0L;
 
         return this;
@@ -2744,6 +2787,7 @@ public final class ServiceConfig {
         result.dispatcherTimeoutMs_ = dispatcherTimeoutMs_;
         result.dataTransferProtocol_ = dataTransferProtocol_;
         result.dataTransferAddress_ = dataTransferAddress_;
+        result.crossTrainerCacheSizeBytes_ = crossTrainerCacheSizeBytes_;
         result.shutdownQuietPeriodMs_ = shutdownQuietPeriodMs_;
         onBuilt();
         return result;
@@ -2831,6 +2875,9 @@ public final class ServiceConfig {
         if (!other.getDataTransferAddress().isEmpty()) {
           dataTransferAddress_ = other.dataTransferAddress_;
           onChanged();
+        }
+        if (other.getCrossTrainerCacheSizeBytes() != 0L) {
+          setCrossTrainerCacheSizeBytes(other.getCrossTrainerCacheSizeBytes());
         }
         if (other.getShutdownQuietPeriodMs() != 0L) {
           setShutdownQuietPeriodMs(other.getShutdownQuietPeriodMs());
@@ -3613,6 +3660,47 @@ public final class ServiceConfig {
         return this;
       }
 
+      private long crossTrainerCacheSizeBytes_ ;
+      /**
+       * <pre>
+       * Maximum size of the cross-trainer cache in bytes. If enabled, make sure
+       * your training job provides sufficient memory resources.
+       * </pre>
+       *
+       * <code>int64 cross_trainer_cache_size_bytes = 11;</code>
+       */
+      public long getCrossTrainerCacheSizeBytes() {
+        return crossTrainerCacheSizeBytes_;
+      }
+      /**
+       * <pre>
+       * Maximum size of the cross-trainer cache in bytes. If enabled, make sure
+       * your training job provides sufficient memory resources.
+       * </pre>
+       *
+       * <code>int64 cross_trainer_cache_size_bytes = 11;</code>
+       */
+      public Builder setCrossTrainerCacheSizeBytes(long value) {
+        
+        crossTrainerCacheSizeBytes_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Maximum size of the cross-trainer cache in bytes. If enabled, make sure
+       * your training job provides sufficient memory resources.
+       * </pre>
+       *
+       * <code>int64 cross_trainer_cache_size_bytes = 11;</code>
+       */
+      public Builder clearCrossTrainerCacheSizeBytes() {
+        
+        crossTrainerCacheSizeBytes_ = 0L;
+        onChanged();
+        return this;
+      }
+
       private long shutdownQuietPeriodMs_ ;
       /**
        * <pre>
@@ -3737,14 +3825,15 @@ public final class ServiceConfig {
       "es\030\007 \003(\t\0228\n\017deployment_mode\030\t \001(\0162\037.tens" +
       "orflow.data.DeploymentMode\022 \n\030job_gc_che" +
       "ck_interval_ms\030\005 \001(\003\022\031\n\021job_gc_timeout_m" +
-      "s\030\006 \001(\003\022\031\n\021client_timeout_ms\030\010 \001(\003\"\226\002\n\014W" +
+      "s\030\006 \001(\003\022\031\n\021client_timeout_ms\030\010 \001(\003\"\276\002\n\014W" +
       "orkerConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010protocol\030\002 " +
       "\001(\t\022\032\n\022dispatcher_address\030\003 \001(\t\022\026\n\016worke" +
       "r_address\030\004 \001(\t\022\023\n\013worker_tags\030\n \003(\t\022\035\n\025" +
       "heartbeat_interval_ms\030\005 \001(\003\022\035\n\025dispatche" +
       "r_timeout_ms\030\006 \001(\003\022\036\n\026data_transfer_prot" +
       "ocol\030\007 \001(\t\022\035\n\025data_transfer_address\030\010 \001(" +
-      "\t\022 \n\030shutdown_quiet_period_ms\030\t \001(\003B\177\n&o" +
+      "\t\022&\n\036cross_trainer_cache_size_bytes\030\013 \001(" +
+      "\003\022 \n\030shutdown_quiet_period_ms\030\t \001(\003B\177\n&o" +
       "rg.tensorflow.proto.data.experimentalZUg" +
       "ithub.com/tensorflow/tensorflow/tensorfl" +
       "ow/go/core/protobuf/for_core_protos_go_p" +
@@ -3766,7 +3855,7 @@ public final class ServiceConfig {
     internal_static_tensorflow_data_experimental_WorkerConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_WorkerConfig_descriptor,
-        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "WorkerTags", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "ShutdownQuietPeriodMs", });
+        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "WorkerTags", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "CrossTrainerCacheSizeBytes", "ShutdownQuietPeriodMs", });
     org.tensorflow.proto.data.DataService.getDescriptor();
   }
 

@@ -591,6 +591,9 @@ public final class TrainOps {
    *  <p>If delete_old_dirs is true, attempts to delete recursively the dirname of each
    *  path in the input checkpoint_prefixes.  This is useful when those paths are non
    *  user-facing temporary locations.
+   *  <p>If allow_missing_files is true, merges the checkpoint prefixes as long as
+   *  at least one file exists. Otherwise, if no files exist, an error will be thrown.
+   *  The default value for allow_missing_files is false.
    *
    * @param checkpointPrefixes prefixes of V2 checkpoints to merge.
    * @param destinationPrefix scalar.  The desired final prefix.  Allowed to be the same

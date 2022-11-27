@@ -53,7 +53,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "DataServiceDatasetV3";
+  public static final String OP_NAME = "DataServiceDatasetV4";
 
   private Output<? extends TType> handle;
 
@@ -65,7 +65,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Factory method to create a class wrapping a new DataServiceDatasetV3 operation.
+   * Factory method to create a class wrapping a new DataServiceDatasetV4 operation.
    *
    * @param scope current scope
    * @param datasetId The datasetId value
@@ -86,7 +86,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   @Endpoint(
       describeByClass = true
   )
-  public static DataServiceDataset create(Scope scope, Operand<TInt64> datasetId,
+  public static DataServiceDataset create(Scope scope, Operand<TString> datasetId,
       Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
       Operand<TString> jobName, Operand<TInt64> consumerIndex, Operand<TInt64> numConsumers,
       Operand<TInt64> maxOutstandingRequests, Operand<? extends TType> iterationCounter,
@@ -122,6 +122,9 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
         }
         if (opts.uncompress != null) {
           opBuilder.setAttr("uncompress", opts.uncompress);
+        }
+        if (opts.crossTrainerCacheOptions != null) {
+          opBuilder.setAttr("cross_trainer_cache_options", opts.crossTrainerCacheOptions);
         }
       }
     }
@@ -169,6 +172,16 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the crossTrainerCacheOptions option.
+   *
+   * @param crossTrainerCacheOptions the crossTrainerCacheOptions option
+   * @return this Options instance.
+   */
+  public static Options crossTrainerCacheOptions(String crossTrainerCacheOptions) {
+    return new Options().crossTrainerCacheOptions(crossTrainerCacheOptions);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -194,6 +207,8 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
     private String targetWorkers;
 
     private Boolean uncompress;
+
+    private String crossTrainerCacheOptions;
 
     private Options() {
     }
@@ -241,6 +256,17 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
       this.uncompress = uncompress;
       return this;
     }
+
+    /**
+     * Sets the crossTrainerCacheOptions option.
+     *
+     * @param crossTrainerCacheOptions the crossTrainerCacheOptions option
+     * @return this Options instance.
+     */
+    public Options crossTrainerCacheOptions(String crossTrainerCacheOptions) {
+      this.crossTrainerCacheOptions = crossTrainerCacheOptions;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -250,7 +276,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
     /**
      * The datasetId input
      */
-    public final Operand<TInt64> datasetId;
+    public final Operand<TString> datasetId;
 
     /**
      * The processingMode input
@@ -322,10 +348,15 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
      */
     public final boolean uncompress;
 
+    /**
+     * The crossTrainerCacheOptions attribute
+     */
+    public final String crossTrainerCacheOptions;
+
     public Inputs(GraphOperation op) {
-      super(new DataServiceDataset(op), op, Arrays.asList("task_refresh_interval_hint_ms", "output_types", "output_shapes", "data_transfer_protocol", "target_workers", "uncompress"));
+      super(new DataServiceDataset(op), op, Arrays.asList("task_refresh_interval_hint_ms", "output_types", "output_shapes", "data_transfer_protocol", "target_workers", "uncompress", "cross_trainer_cache_options"));
       int inputIndex = 0;
-      datasetId = (Operand<TInt64>) op.input(inputIndex++);
+      datasetId = (Operand<TString>) op.input(inputIndex++);
       processingMode = (Operand<TString>) op.input(inputIndex++);
       address = (Operand<TString>) op.input(inputIndex++);
       protocol = (Operand<TString>) op.input(inputIndex++);
@@ -340,6 +371,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
       dataTransferProtocol = op.attributes().getAttrString("data_transfer_protocol");
       targetWorkers = op.attributes().getAttrString("target_workers");
       uncompress = op.attributes().getAttrBool("uncompress");
+      crossTrainerCacheOptions = op.attributes().getAttrString("cross_trainer_cache_options");
     }
   }
 }

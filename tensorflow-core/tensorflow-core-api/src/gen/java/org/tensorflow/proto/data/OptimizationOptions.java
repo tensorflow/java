@@ -5,7 +5,7 @@ package org.tensorflow.proto.data;
 
 /**
  * <pre>
- * next: 19
+ * next: 20
  * </pre>
  *
  * Protobuf type {@code tensorflow.data.OptimizationOptions}
@@ -100,6 +100,11 @@ private static final long serialVersionUID = 0L;
           case 144: {
             optionalFilterParallelizationCase_ = 18;
             optionalFilterParallelization_ = input.readBool();
+            break;
+          }
+          case 152: {
+            optionalInjectPrefetchCase_ = 19;
+            optionalInjectPrefetch_ = input.readBool();
             break;
           }
           default: {
@@ -494,6 +499,42 @@ private static final long serialVersionUID = 0L;
         optionalFilterParallelizationCase_);
   }
 
+  private int optionalInjectPrefetchCase_ = 0;
+  private java.lang.Object optionalInjectPrefetch_;
+  public enum OptionalInjectPrefetchCase
+      implements com.google.protobuf.Internal.EnumLite {
+    INJECT_PREFETCH(19),
+    OPTIONALINJECTPREFETCH_NOT_SET(0);
+    private final int value;
+    private OptionalInjectPrefetchCase(int value) {
+      this.value = value;
+    }
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static OptionalInjectPrefetchCase valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static OptionalInjectPrefetchCase forNumber(int value) {
+      switch (value) {
+        case 19: return INJECT_PREFETCH;
+        case 0: return OPTIONALINJECTPREFETCH_NOT_SET;
+        default: return null;
+      }
+    }
+    public int getNumber() {
+      return this.value;
+    }
+  };
+
+  public OptionalInjectPrefetchCase
+  getOptionalInjectPrefetchCase() {
+    return OptionalInjectPrefetchCase.forNumber(
+        optionalInjectPrefetchCase_);
+  }
+
   public static final int APPLY_DEFAULT_OPTIMIZATIONS_FIELD_NUMBER = 1;
   /**
    * <code>bool apply_default_optimizations = 1;</code>
@@ -604,6 +645,17 @@ private static final long serialVersionUID = 0L;
     return false;
   }
 
+  public static final int INJECT_PREFETCH_FIELD_NUMBER = 19;
+  /**
+   * <code>bool inject_prefetch = 19;</code>
+   */
+  public boolean getInjectPrefetch() {
+    if (optionalInjectPrefetchCase_ == 19) {
+      return (java.lang.Boolean) optionalInjectPrefetch_;
+    }
+    return false;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -657,6 +709,10 @@ private static final long serialVersionUID = 0L;
     if (optionalFilterParallelizationCase_ == 18) {
       output.writeBool(
           18, (boolean)((java.lang.Boolean) optionalFilterParallelization_));
+    }
+    if (optionalInjectPrefetchCase_ == 19) {
+      output.writeBool(
+          19, (boolean)((java.lang.Boolean) optionalInjectPrefetch_));
     }
     unknownFields.writeTo(output);
   }
@@ -716,6 +772,11 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(
             18, (boolean)((java.lang.Boolean) optionalFilterParallelization_));
+    }
+    if (optionalInjectPrefetchCase_ == 19) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(
+            19, (boolean)((java.lang.Boolean) optionalInjectPrefetch_));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -822,6 +883,15 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
+    if (!getOptionalInjectPrefetchCase().equals(other.getOptionalInjectPrefetchCase())) return false;
+    switch (optionalInjectPrefetchCase_) {
+      case 19:
+        if (getInjectPrefetch()
+            != other.getInjectPrefetch()) return false;
+        break;
+      case 0:
+      default:
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -923,6 +993,15 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
+    switch (optionalInjectPrefetchCase_) {
+      case 19:
+        hash = (37 * hash) + INJECT_PREFETCH_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getInjectPrefetch());
+        break;
+      case 0:
+      default:
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -1020,7 +1099,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * next: 19
+   * next: 20
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.OptimizationOptions}
@@ -1080,6 +1159,8 @@ private static final long serialVersionUID = 0L;
       optionalShuffleAndRepeatFusion_ = null;
       optionalFilterParallelizationCase_ = 0;
       optionalFilterParallelization_ = null;
+      optionalInjectPrefetchCase_ = 0;
+      optionalInjectPrefetch_ = null;
       return this;
     }
 
@@ -1136,6 +1217,9 @@ private static final long serialVersionUID = 0L;
       if (optionalFilterParallelizationCase_ == 18) {
         result.optionalFilterParallelization_ = optionalFilterParallelization_;
       }
+      if (optionalInjectPrefetchCase_ == 19) {
+        result.optionalInjectPrefetch_ = optionalInjectPrefetch_;
+      }
       result.optionalApplyDefaultOptimizationsCase_ = optionalApplyDefaultOptimizationsCase_;
       result.optionalFilterFusionCase_ = optionalFilterFusionCase_;
       result.optionalMapAndBatchFusionCase_ = optionalMapAndBatchFusionCase_;
@@ -1146,6 +1230,7 @@ private static final long serialVersionUID = 0L;
       result.optionalParallelBatchCase_ = optionalParallelBatchCase_;
       result.optionalShuffleAndRepeatFusionCase_ = optionalShuffleAndRepeatFusionCase_;
       result.optionalFilterParallelizationCase_ = optionalFilterParallelizationCase_;
+      result.optionalInjectPrefetchCase_ = optionalInjectPrefetchCase_;
       onBuilt();
       return result;
     }
@@ -1281,6 +1366,15 @@ private static final long serialVersionUID = 0L;
           break;
         }
         case OPTIONALFILTERPARALLELIZATION_NOT_SET: {
+          break;
+        }
+      }
+      switch (other.getOptionalInjectPrefetchCase()) {
+        case INJECT_PREFETCH: {
+          setInjectPrefetch(other.getInjectPrefetch());
+          break;
+        }
+        case OPTIONALINJECTPREFETCH_NOT_SET: {
           break;
         }
       }
@@ -1458,6 +1552,21 @@ private static final long serialVersionUID = 0L;
     public Builder clearOptionalFilterParallelization() {
       optionalFilterParallelizationCase_ = 0;
       optionalFilterParallelization_ = null;
+      onChanged();
+      return this;
+    }
+
+    private int optionalInjectPrefetchCase_ = 0;
+    private java.lang.Object optionalInjectPrefetch_;
+    public OptionalInjectPrefetchCase
+        getOptionalInjectPrefetchCase() {
+      return OptionalInjectPrefetchCase.forNumber(
+          optionalInjectPrefetchCase_);
+    }
+
+    public Builder clearOptionalInjectPrefetch() {
+      optionalInjectPrefetchCase_ = 0;
+      optionalInjectPrefetch_ = null;
       onChanged();
       return this;
     }
@@ -1758,6 +1867,36 @@ private static final long serialVersionUID = 0L;
       if (optionalFilterParallelizationCase_ == 18) {
         optionalFilterParallelizationCase_ = 0;
         optionalFilterParallelization_ = null;
+        onChanged();
+      }
+      return this;
+    }
+
+    /**
+     * <code>bool inject_prefetch = 19;</code>
+     */
+    public boolean getInjectPrefetch() {
+      if (optionalInjectPrefetchCase_ == 19) {
+        return (java.lang.Boolean) optionalInjectPrefetch_;
+      }
+      return false;
+    }
+    /**
+     * <code>bool inject_prefetch = 19;</code>
+     */
+    public Builder setInjectPrefetch(boolean value) {
+      optionalInjectPrefetchCase_ = 19;
+      optionalInjectPrefetch_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool inject_prefetch = 19;</code>
+     */
+    public Builder clearInjectPrefetch() {
+      if (optionalInjectPrefetchCase_ == 19) {
+        optionalInjectPrefetchCase_ = 0;
+        optionalInjectPrefetch_ = null;
         onChanged();
       }
       return this;

@@ -135,27 +135,20 @@ using namespace tensorflow;
 int main(int argc, char* argv[]) {
   string java_api_dir = "";
   string tf_src_dir = "";
-  string tf_lib_path = "";
   std::vector<Flag> flag_list = {
       Flag(
           "java_api_dir", &java_api_dir,
           "Root directory where generated Java API definitions are exported"),
       Flag(
           "tf_src_dir", &tf_src_dir,
-          "Root directory of TensorFlow sources"),
-      Flag(
-          "tf_lib_path", &tf_lib_path,
-          "Path to TensorFlow shared library")};
+          "Root directory of TensorFlow sources")};
   string usage = java::kUsageHeader;
   usage += Flags::Usage(argv[0], flag_list);
   bool parsed_flags_ok = Flags::Parse(&argc, argv, flag_list);
   port::InitMain(usage.c_str(), &argc, &argv);
-  QCHECK(parsed_flags_ok && !java_api_dir.empty()
-		  && !tf_src_dir.empty() && !tf_lib_path.empty()) << usage;
+  QCHECK(parsed_flags_ok && !java_api_dir.empty() && !tf_src_dir.empty()) << usage;
 
   Env* env = Env::Default();
-  void* tf_lib_handle;
-  TF_CHECK_OK(env->LoadDynamicLibrary(tf_lib_path.c_str(), &tf_lib_handle));  // This registers all TF ops
   OpList op_defs;
   OpRegistry::Global()->Export(false, &op_defs);
   ApiDefMap python_api_map(op_defs);

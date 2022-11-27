@@ -46,6 +46,7 @@ import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.op.core.Abort;
 import org.tensorflow.op.core.All;
 import org.tensorflow.op.core.Any;
+import org.tensorflow.op.core.ApproxTopK;
 import org.tensorflow.op.core.AssertThat;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.AssignAdd;
@@ -75,6 +76,7 @@ import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
+import org.tensorflow.op.core.CopyToMesh;
 import org.tensorflow.op.core.CountUpTo;
 import org.tensorflow.op.core.DecodeProto;
 import org.tensorflow.op.core.DeepCopy;
@@ -173,6 +175,7 @@ import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.RefNextIteration;
 import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
+import org.tensorflow.op.core.Relayout;
 import org.tensorflow.op.core.RemoteCall;
 import org.tensorflow.op.core.Reshape;
 import org.tensorflow.op.core.ResourceCountUpTo;
@@ -297,6 +300,7 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
+import org.tensorflow.op.core.XlaCallModule;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -453,6 +457,23 @@ public final class Ops {
    */
   public Any any(Operand<TBool> input, Operand<? extends TNumber> axis, Any.Options... options) {
     return Any.create(scope, input, axis, options);
+  }
+
+  /**
+   * Returns min/max k values and their indices of the input operand in an approximate manner.
+   *  See https://arxiv.org/abs/2206.14286 for the algorithm details.
+   *  This op is only optimized on TPU currently.
+   *
+   * @param <T> data type for {@code values} output
+   * @param input Array to search. Must be at least 1-D of the floating type
+   * @param k Specifies the number of min/max-k.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApproxTopK} output and operands
+   * @return a new instance of ApproxTopK
+   */
+  public <T extends TNumber> ApproxTopK<T> approxTopK(Operand<T> input, Long k,
+      ApproxTopK.Options... options) {
+    return ApproxTopK.create(scope, input, k, options);
   }
 
   /**
@@ -1128,25 +1149,33 @@ public final class Ops {
    * Broadcast an array for a compatible shape.
    *  Broadcasting is the process of making arrays to have compatible shapes
    *  for arithmetic operations. Two shapes are compatible if for each
-   *  dimension pair they are either equal or one of them is one. When trying
-   *  to broadcast a Tensor to a shape, it starts with the trailing dimensions,
-   *  and works its way forward.
-   *  <p>For example,
+   *  dimension pair they are either equal or one of them is one.
+   *  <p>For example:
    *  <blockquote>
    *  <blockquote>
    *  <blockquote>
-   *  <p>x = tf.constant([1, 2, 3])
-   *  y = tf.broadcast_to(x, [3, 3])
+   *  <p>x = tf.constant([[1, 2, 3]])   # Shape (1, 3,)
+   *  y = tf.broadcast_to(x, [2, 3])
    *  print(y)
    *  tf.Tensor(
    *  [[1 2 3]
-   *  [1 2 3]
-   *  [1 2 3]], shape=(3, 3), dtype=int32)
+   *  [1 2 3]], shape=(2, 3), dtype=int32)
    *  </blockquote>
    *  </blockquote>
    *  </blockquote>
    *  <p>In the above example, the input Tensor with the shape of {@code [1, 3]}
-   *  is broadcasted to output Tensor with shape of {@code [3, 3]}.
+   *  is broadcasted to output Tensor with shape of {@code [2, 3]}.
+   *  <p>When broadcasting, if a tensor has fewer axes than necessary its shape is
+   *  padded on the left with ones. So this gives the same result as the previous
+   *  example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>x = tf.constant([1, 2, 3])   # Shape (3,)
+   *  y = tf.broadcast_to(x, [2, 3])
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *  <p>When doing broadcasted operations such as multiplying a tensor
    *  by a scalar, broadcasting (usually) confers some time or space
    *  benefit, as the broadcasted tensor is never materialized.
@@ -2050,6 +2079,21 @@ public final class Ops {
    */
   public ControlTrigger controlTrigger() {
     return ControlTrigger.create(scope);
+  }
+
+  /**
+   * The CopyToMesh operation
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input value
+   * @param layout The value of the layout attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CopyToMesh} output and operands
+   * @return a new instance of CopyToMesh
+   */
+  public <T extends TType> CopyToMesh<T> copyToMesh(Operand<T> input, String layout,
+      CopyToMesh.Options... options) {
+    return CopyToMesh.create(scope, input, layout, options);
   }
 
   /**
@@ -4301,6 +4345,19 @@ public final class Ops {
   }
 
   /**
+   * The Relayout operation
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input value
+   * @param layout The value of the layout attribute
+   * @param <T> data type for {@code Relayout} output and operands
+   * @return a new instance of Relayout
+   */
+  public <T extends TType> Relayout<T> relayout(Operand<T> input, String layout) {
+    return Relayout.create(scope, input, layout);
+  }
+
+  /**
    * Runs function {@code f} on a remote device indicated by {@code target}.
    *
    * @param target A fully specified device name where we want to run the function.
@@ -5160,22 +5217,24 @@ public final class Ops {
 
   /**
    * Scatters {@code updates} into a tensor of shape {@code shape} according to {@code indices}.
-   *  Update the input tensor by scattering sparse {@code updates} according to individual values at the specified {@code indices}.
-   *  This op returns an {@code output} tensor with the {@code shape} you specify. This op is the
-   *  inverse of the {@code tf.gather_nd} operator which extracts values or slices from a
-   *  given tensor.
+   *  Scatter sparse {@code updates} according to individual values at the specified
+   *  {@code indices}. This op returns an output tensor with the {@code shape} you specify. This
+   *  op is the inverse of the {@code tf.gather_nd} operator which extracts values or slices
+   *  from a given tensor.
    *  <p>This operation is similar to {@code tf.tensor_scatter_nd_add}, except that the tensor
-   *  is zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
+   *  is zero-initialized. Calling {@code tf.scatter_nd(indices, updates, shape)}
    *  is identical to calling
-   *  {@code tf.tensor_scatter_nd_add(tf.zeros(shape, values.dtype), indices, values)}
-   *  <p>If {@code indices} contains duplicates, the duplicate {@code values} are accumulated
-   *  (summed).
-   *  <p><strong>WARNING</strong>: The order in which updates are applied is nondeterministic, so the
-   *  output will be nondeterministic if {@code indices} contains duplicates;
-   *  numbers summed in different order may yield different results because of some
-   *  numerical approximation issues.
-   *  <p>{@code indices} is an integer tensor of shape {@code shape}. The last dimension
-   *  of {@code indices} can be at most the rank of {@code shape}:
+   *  {@code tf.tensor_scatter_nd_add(tf.zeros(shape, updates.dtype), indices, updates)}
+   *  <p>If {@code indices} contains duplicates, the associated {@code updates} are accumulated
+   *  (summed) into the output tensor.
+   *  <p><strong>WARNING</strong>: For floating-point data types, the output may be nondeterministic.
+   *  This is because the order in which the updates are applied is nondeterministic
+   *  and when floating-point numbers are added in different orders the resulting
+   *  numerical approximation error can be slightly different. However, the output
+   *  will be deterministic if op determinism is enabled via
+   *  {@code tf.config.experimental.enable_op_determinism}.
+   *  <p>{@code indices} is an integer tensor containing indices into the output tensor. The
+   *  last dimension of {@code indices} can be at most the rank of {@code shape}:
    *  <pre>
    *  indices.shape[-1] &lt;= shape.rank
    *  </pre>
@@ -8095,6 +8154,45 @@ public final class Ops {
   public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
       While.Options... options) {
     return While.create(scope, input, cond, body, options);
+  }
+
+  /**
+   * Temporary op for experimenting with jax2tf.
+   *  DO NOT USE THIS OP. It has no backwards compatibility guarantees. It is also
+   *  very likely to change. This op will be used only in jax2tf under an
+   *  experimental flag.
+   *  <p>This is an experimental op to allow a smooth evolution of jax2tf towards
+   *  emitting and serializing MHLO directly from JAX. At the moment this op
+   *  carries a serialized MHLO module, therefore there are no backward-compatibility
+   *  guarantees, and should not be used for serialization.
+   *  Eventually, the op will carry a MHLO object, which will have
+   *  backwards-compatibility guarantees.
+   *  <p>The serialized module must return a tuple if and only if the Sout is an empty
+   *  list or a list with more than 1 elements. The length of Tout and Sout must
+   *  match. This op always returns a tuple of results, even if the module returns
+   *  a single result.
+   *  <p>The handling of dynamic shapes is work-in-progress. At the moment, the
+   *  JAX lowering for dynamic shapes will prepend one dimension parameter to the
+   *  serialized module for each dimension whose value must be passed in.
+   *  The &quot;args&quot; correspond to the non-dimension arguments. During compilation
+   *  we compute the values of the dimension arguments based on the static shapes of
+   *  the &quot;args&quot;. In order to do this, we encode for each dimension argument a
+   *  specification of how to compute its value, as a string, in the form
+   *  &quot;&lt;arg_idx&gt;.&lt;axis_idx&gt;&quot;.
+   *  E.g., the specification &quot;2.1&quot; denotes the value args[2].shape[1].
+   *
+   * @param args A list of {@code Tensor} with possibly different types to be passed as arguments
+   *  to the HLO module.
+   * @param module A serialized computation, a text representation of mlir.Module.
+   * @param Sout List of output tensor shapes.
+   * @param Tout List of output tensor data types.
+   * @param dimArgsSpec the specification for the dimension arguments, one for each
+   *  dimension argument. In absence of dynamic shapes this list is empty.
+   * @return a new instance of XlaCallModule
+   */
+  public XlaCallModule xlaCallModule(Iterable<Operand<?>> args, String module, List<Shape> Sout,
+      List<Class<? extends TType>> Tout, List<String> dimArgsSpec) {
+    return XlaCallModule.create(scope, args, module, Sout, Tout, dimArgsSpec);
   }
 
   /**

@@ -221,7 +221,7 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * The aggregate processing time spent in this node.
+     * The aggregate processing time spent in this node in nanoseconds.
      * </pre>
      *
      * <code>int64 processing_time = 9;</code>
@@ -1717,7 +1717,7 @@ private static final long serialVersionUID = 0L;
     private long processingTime_;
     /**
      * <pre>
-     * The aggregate processing time spent in this node.
+     * The aggregate processing time spent in this node in nanoseconds.
      * </pre>
      *
      * <code>int64 processing_time = 9;</code>
@@ -2924,7 +2924,7 @@ private static final long serialVersionUID = 0L;
       private long processingTime_ ;
       /**
        * <pre>
-       * The aggregate processing time spent in this node.
+       * The aggregate processing time spent in this node in nanoseconds.
        * </pre>
        *
        * <code>int64 processing_time = 9;</code>
@@ -2934,7 +2934,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * The aggregate processing time spent in this node.
+       * The aggregate processing time spent in this node in nanoseconds.
        * </pre>
        *
        * <code>int64 processing_time = 9;</code>
@@ -2947,7 +2947,7 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
-       * The aggregate processing time spent in this node.
+       * The aggregate processing time spent in this node in nanoseconds.
        * </pre>
        *
        * <code>int64 processing_time = 9;</code>

@@ -57,6 +57,11 @@ public interface OptimizationOptionsOrBuilder extends
    */
   boolean getFilterParallelization();
 
+  /**
+   * <code>bool inject_prefetch = 19;</code>
+   */
+  boolean getInjectPrefetch();
+
   public org.tensorflow.proto.data.OptimizationOptions.OptionalApplyDefaultOptimizationsCase getOptionalApplyDefaultOptimizationsCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterFusionCase getOptionalFilterFusionCase();
@@ -76,4 +81,6 @@ public interface OptimizationOptionsOrBuilder extends
   public org.tensorflow.proto.data.OptimizationOptions.OptionalShuffleAndRepeatFusionCase getOptionalShuffleAndRepeatFusionCase();
 
   public org.tensorflow.proto.data.OptimizationOptions.OptionalFilterParallelizationCase getOptionalFilterParallelizationCase();
+
+  public org.tensorflow.proto.data.OptimizationOptions.OptionalInjectPrefetchCase getOptionalInjectPrefetchCase();
 }

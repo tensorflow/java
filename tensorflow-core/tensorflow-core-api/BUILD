@@ -1,4 +1,4 @@
-load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_copts", "tf_cc_binary")
+load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_copts", "tf_cc_binary", "VERSION")
 load("@rules_java//java:defs.bzl", "java_proto_library")
 
 tf_cc_binary(
@@ -7,8 +7,12 @@ tf_cc_binary(
         "@org_tensorflow//tensorflow:windows": [],
         "//conditions:default": ["-lm"],
     }),
+    dynamic_deps = select({
+        "@org_tensorflow//tensorflow:macos": ["@org_tensorflow//tensorflow:libtensorflow_cc.%s.dylib" % VERSION],
+        "//conditions:default": ["@org_tensorflow//tensorflow:libtensorflow_cc.so.%s" % VERSION],
+    }),
     deps = [
-        ":java_op_export_lib",
+        ":java_op_export_lib"
     ],
 )
 
@@ -16,8 +20,6 @@ cc_library(
     name = "java_op_export_lib",
     srcs = [
         "src/bazel/op_generator/op_export_main.cc",
-    ],
-    hdrs = [
     ],
     copts = tf_copts(),
     deps = [
@@ -41,6 +43,10 @@ tf_cc_binary(
     linkopts = select({
         "@org_tensorflow//tensorflow:windows": [],
         "//conditions:default": ["-lm"],
+    }),
+    dynamic_deps = select({
+        "@org_tensorflow//tensorflow:macos": ["@org_tensorflow//tensorflow:libtensorflow_cc.%s.dylib" % VERSION],
+        "//conditions:default": ["@org_tensorflow//tensorflow:libtensorflow_cc.so.%s" % VERSION],
     }),
     deps = [
         "@org_tensorflow//tensorflow/core:op_gen_lib",
