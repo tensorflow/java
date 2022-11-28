@@ -25,9 +25,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/tensorflow/tensorflow.git</url>
-    <connection>git@github.com:tensorflow/tensorflow.git</connection>
-    <developerConnection>scm:git:https://github.com/tensorflow/tensorflow.git</developerConnection>
+    <url>https://github.com/tensorflow/java.git</url>
+    <connection>git@github.com:tensorflow/java.git</connection>
+    <developerConnection>scm:git:https://github.com/tensorflow/java.git</developerConnection>
   </scm>
 
   <modules>
