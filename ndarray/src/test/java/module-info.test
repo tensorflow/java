@@ -14,6 +14,9 @@
  limitations under the License.
  =======================================================================
  */
-module org.tensorflow.ndarray.test {
+module org.tensorflow.ndarray {
   requires java.desktop; // required for java.awt.*
+  
+  requires transitive org.junit.jupiter.engine;
+  requires transitive org.junit.jupiter.api;
 }
