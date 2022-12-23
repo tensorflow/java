@@ -63,12 +63,12 @@ precedence if present.
 ### Apple Silicon
 
 The TensorFlow Java project relies on [GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)
-to build and distribute the native binaries for TensorFlow. Unfortunately until this day, GitHub Actions still does not support runners with a
+to build and distribute the native binaries for TensorFlow. Unfortunately at the moment, GitHub Actions still does not support runners with a
 Apple Silicon chip (such as M1). Therefore, we cannot distribute the binaries for this platform, so they must be compiled and installed locally on such systems.
 
 Please follow the present [procedure](CONTRIBUTING.md#building) for building TensorFlow Java from sources.
 
-:warning: Until this day (12-16-2022), TensorFlow fails to build on XCode command line tools version 14+. If you have such version installed, it might 
+:warning: As of 12-16-2022, TensorFlow fails to build on XCode command line tools version 14+. If you have such version installed, it might 
 be necessary to downgrade it to a [previous version](https://developer.apple.com/download/all/?q=Xcode), like 13.4.1.
 
 ## Running Tests

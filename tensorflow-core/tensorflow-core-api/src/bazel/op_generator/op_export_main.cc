@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
   std::vector<tensorflow::string> api_dirs;
 
   if(argc < 3) {
-      std::cerr << "Must specify <binary_output> <text_output>" << "\n";
+      std::cerr << "Must specify <binary_output> <text_output> <api_dirs...>\n";
       std::cerr << tensorflow::java::kUsageHeader;
       return 1;
   }

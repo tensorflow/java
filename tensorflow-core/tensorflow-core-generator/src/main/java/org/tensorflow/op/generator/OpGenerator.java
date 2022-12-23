@@ -41,7 +41,7 @@ import org.tensorflow.proto.framework.OpList;
 public final class OpGenerator {
 
   private static final String LICENSE =
-      "/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.\n"
+      "/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.\n"
           + "\n"
           + "Licensed under the Apache License, Version 2.0 (the \"License\");\n"
           + "you may not use this file except in compliance with the License.\n"

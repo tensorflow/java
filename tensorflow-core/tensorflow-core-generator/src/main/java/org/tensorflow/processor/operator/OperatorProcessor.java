@@ -199,7 +199,7 @@ public final class OperatorProcessor extends AbstractProcessor {
       Pattern.compile("@(?:param|return|throws|exception|see|deprecated)\\s+.*");
 
   private static final String LICENSE =
-      "Copyright 2020 The TensorFlow Authors. All Rights Reserved.\n"
+      "Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.\n"
           + "\n"
           + "Licensed under the Apache License, Version 2.0 (the \"License\");\n"
           + "you may not use this file except in compliance with the License.\n"
