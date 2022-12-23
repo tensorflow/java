@@ -291,8 +291,7 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
 
   @Override
   public void visit(IndentedCodeBlock indentedCodeBlock) {
-    renderCodeBlock(
-        indentedCodeBlock.getLiteral(), indentedCodeBlock, Collections.emptyMap());
+    renderCodeBlock(indentedCodeBlock.getLiteral(), indentedCodeBlock, Collections.emptyMap());
   }
 
   @Override

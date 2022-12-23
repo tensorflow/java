@@ -18,8 +18,8 @@ package org.tensorflow.internal.types;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
 import org.tensorflow.internal.buffer.ByteSequenceProvider;
+import org.tensorflow.internal.buffer.ByteSequenceTensorBuffer;
 import org.tensorflow.internal.types.TStringMapper.TStringInternal;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.types.TString;
@@ -47,7 +47,7 @@ public final class TStringInitializer<T> implements Consumer<TString> {
 
   @Override
   public void accept(TString tensor) {
-    ((TStringInternal)tensor).init(byteSequenceProvider);
+    ((TStringInternal) tensor).init(byteSequenceProvider);
   }
 
   private final ByteSequenceProvider<T> byteSequenceProvider;

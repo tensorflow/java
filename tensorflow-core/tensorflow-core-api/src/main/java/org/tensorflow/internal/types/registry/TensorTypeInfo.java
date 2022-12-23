@@ -27,36 +27,35 @@ import org.tensorflow.types.family.TType;
  */
 public final class TensorTypeInfo<T extends TType> {
 
-  /**
-   * Returns the class of this tensor type
-   */
+  /** Returns the class of this tensor type */
   public Class<T> type() {
     return type;
   }
 
-  /**
-   * Returns the corresponding data type for this tensor type
-   */
+  /** Returns the corresponding data type for this tensor type */
   public DataType dataType() {
     return dataType;
   }
 
   /**
-   * Returns the number of bytes required to store one element of the corresponding data type, -1 if variable.
+   * Returns the number of bytes required to store one element of the corresponding data type, -1 if
+   * variable.
    */
   public int byteSize() {
     return byteSize;
   }
 
   /**
-   * Returns true if elements of the corresponding data type are of variable length (undefined number of bytes)
+   * Returns true if elements of the corresponding data type are of variable length (undefined
+   * number of bytes)
    */
   public boolean isVariableLength() {
     return byteSize < 0;
   }
 
   /**
-   * Returns an object used to map {@link org.tensorflow.RawTensor raw tensors} to a tensor of this type
+   * Returns an object used to map {@link org.tensorflow.RawTensor raw tensors} to a tensor of this
+   * type
    */
   public TensorMapper<T> mapper() {
     return mapper;

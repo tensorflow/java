@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.PrintWriter;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 import org.tensorflow.*;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.IntNdArray;
@@ -22,13 +28,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.*;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
-
-import java.io.PrintWriter;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Predicate;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /** Eager Mode Test Session */
 public class EagerTestSession extends TestSession {
@@ -296,7 +295,8 @@ public class EagerTestSession extends TestSession {
     if (debug) {
       if (isScalar) {
         System.out.printf(
-            "0). %b <==> %s\n", predicate.test(input.asTensor().getObject()), input.asTensor().getObject());
+            "0). %b <==> %s\n",
+            predicate.test(input.asTensor().getObject()), input.asTensor().getObject());
       } else {
         input
             .asTensor()
@@ -312,7 +312,10 @@ public class EagerTestSession extends TestSession {
     if (isScalar) {
       assertTrue(predicate.test(input.asTensor().getObject()));
     } else {
-      input.asTensor().scalars().forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
+      input
+          .asTensor()
+          .scalars()
+          .forEachIndexed((idx, s) -> assertTrue(predicate.test(s.getObject())));
     }
   }
 
@@ -351,7 +354,8 @@ public class EagerTestSession extends TestSession {
       if (debug) {
         if (isScalar) {
           System.out.printf(
-              "0). %b <==> %f\n", predicate.test(o.asTensor().getDouble()), o.asTensor().getDouble());
+              "0). %b <==> %f\n",
+              predicate.test(o.asTensor().getDouble()), o.asTensor().getDouble());
         } else {
           o.asTensor()
               .scalars()
@@ -657,7 +661,8 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %s  <==> %s\n", x.asTensor().getObject(), o.asTensor().getObject());
+          System.out.printf(
+              "0). %s  <==> %s\n", x.asTensor().getObject(), o.asTensor().getObject());
         } else {
           o.asTensor()
               .scalars()
@@ -682,7 +687,8 @@ public class EagerTestSession extends TestSession {
       AtomicInteger index = new AtomicInteger();
       if (debug) {
         if (isScalar) {
-          System.out.printf("0). %b  <==> %b\n", x.asTensor().getBoolean(), o.asTensor().getBoolean());
+          System.out.printf(
+              "0). %b  <==> %b\n", x.asTensor().getBoolean(), o.asTensor().getBoolean());
         } else {
           o.asTensor()
               .scalars()

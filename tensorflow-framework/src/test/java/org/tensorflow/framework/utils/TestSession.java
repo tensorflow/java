@@ -14,6 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.function.Predicate;
 import org.tensorflow.*;
 import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -23,14 +30,6 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
-
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.function.Predicate;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Base class for Test Session */
 public abstract class TestSession implements AutoCloseable {
@@ -654,7 +653,9 @@ public abstract class TestSession implements AutoCloseable {
   @Override
   public abstract void close();
 
-  /** @return the debug setting */
+  /**
+   * @return the debug setting
+   */
   public boolean isDebug() {
     return debug;
   }

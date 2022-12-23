@@ -102,17 +102,13 @@ public class JavaDocRenderer implements Renderer {
     return sb.toString();
   }
 
-  /**
-   * Extension for {@link JavaDocRenderer}.
-   */
+  /** Extension for {@link JavaDocRenderer}. */
   public interface JavaDocRendererExtension extends Extension {
 
     void extend(Builder rendererBuilder);
   }
 
-  /**
-   * Builder for configuring an {@link JavaDocRenderer}. See methods for default configuration.
-   */
+  /** Builder for configuring an {@link JavaDocRenderer}. See methods for default configuration. */
   public static class Builder {
 
     private final List<AttributeProviderFactory> attributeProviderFactories = new ArrayList<>();
@@ -131,8 +127,8 @@ public class JavaDocRenderer implements Renderer {
     }
 
     /**
-     * The HTML to use for rendering a softbreak, defaults to {@code "\n"} (meaning the rendered result doesn't have a
-     * line break).
+     * The HTML to use for rendering a softbreak, defaults to {@code "\n"} (meaning the rendered
+     * result doesn't have a line break).
      *
      * <p>Set it to {@code "<br>"} (or {@code "<br />"} to make them hard breaks.
      *
@@ -147,10 +143,12 @@ public class JavaDocRenderer implements Renderer {
     }
 
     /**
-     * Whether {@link HtmlInline} and {@link HtmlBlock} should be escaped, defaults to {@code false}.
+     * Whether {@link HtmlInline} and {@link HtmlBlock} should be escaped, defaults to {@code
+     * false}.
      *
      * <p>Note that {@link HtmlInline} is only a tag itself, not the text between an opening tag and
-     * a closing tag. So markup in the text will be parsed as normal and is not affected by this option.
+     * a closing tag. So markup in the text will be parsed as normal and is not affected by this
+     * option.
      *
      * @param escapeJavaDoc true for escaping, false for preserving raw HTML
      * @return {@code this}
@@ -161,7 +159,8 @@ public class JavaDocRenderer implements Renderer {
     }
 
     /**
-     * Whether {@link Image} src and {@link Link} href should be sanitized, defaults to {@code false}.
+     * Whether {@link Image} src and {@link Link} href should be sanitized, defaults to {@code
+     * false}.
      *
      * @param sanitizeUrls true for sanitization, false for preserving raw attribute
      * @return {@code this}
@@ -206,7 +205,8 @@ public class JavaDocRenderer implements Renderer {
     }
 
     /**
-     * Add a factory for an attribute provider for adding/changing HTML attributes to the rendered tags.
+     * Add a factory for an attribute provider for adding/changing HTML attributes to the rendered
+     * tags.
      *
      * @param attributeProviderFactory the attribute provider factory to add
      * @return {@code this}
@@ -220,12 +220,12 @@ public class JavaDocRenderer implements Renderer {
     }
 
     /**
-     * Add a factory for instantiating a node renderer (done when rendering). This allows to override the rendering of
-     * node types or define rendering for custom node types.
+     * Add a factory for instantiating a node renderer (done when rendering). This allows to
+     * override the rendering of node types or define rendering for custom node types.
      *
      * <p>If multiple node renderers for the same node type are created, the one from the factory
-     * that was added first "wins". (This is how the rendering for core node types can be overridden; the default
-     * rendering comes last.)
+     * that was added first "wins". (This is how the rendering for core node types can be
+     * overridden; the default rendering comes last.)
      *
      * @param nodeRendererFactory the factory for creating a node renderer
      * @return {@code this}

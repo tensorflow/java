@@ -1,8 +1,7 @@
 package org.tensorflow.framework.optimizers;
 
-import org.tensorflow.Graph;
-
 import java.util.function.Function;
+import org.tensorflow.Graph;
 
 /** Enumerator used to create a new Optimizer with default parameters. */
 public enum Optimizers {

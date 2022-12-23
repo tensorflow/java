@@ -15,12 +15,11 @@
  */
 package org.tensorflow.framework.data.impl;
 
+import java.util.List;
+import java.util.function.Function;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
 import org.tensorflow.framework.data.DatasetIterator;
-
-import java.util.List;
-import java.util.function.Function;
 
 public class MapDataset extends Dataset {
   private final Function<List<Operand<?>>, List<Operand<?>>> mapper;

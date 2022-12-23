@@ -18,9 +18,9 @@
 /**
  * Interfaces used to group tensor types in families that define a particular domain of data.
  *
- * <p>Some operations enforces that only operands of a type from a given family can be passed
- * in argument. For example, if an operation only allows numeric operands, such operands must be
- * bound to the {@link org.tensorflow.types.family.TNumber TNumber} interface.
+ * <p>Some operations enforces that only operands of a type from a given family can be passed in
+ * argument. For example, if an operation only allows numeric operands, such operands must be bound
+ * to the {@link org.tensorflow.types.family.TNumber TNumber} interface.
  *
  * <p>All tensor types is bound to {@link org.tensorflow.types.family.TType TType}, which lays at
  * the root of the family hierarchy.

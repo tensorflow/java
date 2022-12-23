@@ -31,10 +31,10 @@ public class RawTensorTest {
   @Test
   public void rawToTypedTensor() {
     RawTensor rawTensor = RawTensor.allocate(TFloat32.class, Shape.of(2, 2), -1);
-    TFloat32 floatTensor = (TFloat32)rawTensor.asTypedTensor();
+    TFloat32 floatTensor = (TFloat32) rawTensor.asTypedTensor();
     assertSame(floatTensor.asRawTensor(), rawTensor);
     try {
-      TInt32 intTensor = (TInt32)rawTensor.asTypedTensor();
+      TInt32 intTensor = (TInt32) rawTensor.asTypedTensor();
       fail();
     } catch (ClassCastException e) {
       // ok

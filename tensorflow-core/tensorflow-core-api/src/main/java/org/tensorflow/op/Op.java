@@ -21,17 +21,17 @@ import org.tensorflow.Operation;
 /**
  * A logical unit of computation.
  *
- * <p>{@code Op} implementations provide a strongly typed API for building and executing
- * operations without the use of literals and indexes, as required in internal classes like
- * {@link Operation}.
+ * <p>{@code Op} implementations provide a strongly typed API for building and executing operations
+ * without the use of literals and indexes, as required in internal classes like {@link Operation}.
  *
  * <p>Ops can be classified under two categories:
+ *
  * <ul>
- * <li><i>{@link RawOp Raw} ops</i> target a single TensorFlow operation and are, in most cases,
- * generated automatically from the {@code OpDef} proto definitions exposed by TensorFlow runtime
- * library.</li>
- * <li><i>Composite ops</i> execute a series of other ops to accomplish a task logically presented
- * as a single unit of computation.
+ *   <li><i>{@link RawOp Raw} ops</i> target a single TensorFlow operation and are, in most cases,
+ *       generated automatically from the {@code OpDef} proto definitions exposed by TensorFlow
+ *       runtime library.
+ *   <li><i>Composite ops</i> execute a series of other ops to accomplish a task logically presented
+ *       as a single unit of computation.
  * </ul>
  */
 public interface Op {
@@ -50,9 +50,7 @@ public interface Op {
    */
   Operation op();
 
-  /**
-   * Return the execution environment this op was created in.
-   */
+  /** Return the execution environment this op was created in. */
   default ExecutionEnvironment env() {
     return op().env();
   }

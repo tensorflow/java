@@ -15,11 +15,10 @@
  */
 package org.tensorflow.framework.data.impl;
 
-import org.tensorflow.Operand;
-import org.tensorflow.framework.data.DatasetOptional;
-
 import java.util.List;
 import java.util.function.Function;
+import org.tensorflow.Operand;
+import org.tensorflow.framework.data.DatasetOptional;
 
 public class MapOptional extends DatasetOptional {
   private final Function<List<Operand<?>>, List<Operand<?>>> mapper;

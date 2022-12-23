@@ -15,14 +15,13 @@
  */
 package org.tensorflow.framework.data.impl;
 
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TInt64;
-
-import java.util.List;
 import org.tensorflow.types.family.TType;
 
 public class SkipDataset extends Dataset {

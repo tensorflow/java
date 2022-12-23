@@ -10,10 +10,10 @@ import org.bytedeco.javacpp.Pointer;
  *
  * <p>As opposed to {@link org.bytedeco.javacpp.PointerScope}, instances of this class will not
  * prevent the garbage collector to free the memory of a pointer that is no longer reachable, even
- * if it has been attached to the scope.</p>
+ * if it has been attached to the scope.
  *
  * <p>When the scope is closed, all pointers that are still valid will be automatically deallocated
- * while those already garbage-collected will be ignored.</p>
+ * while those already garbage-collected will be ignored.
  */
 public class WeakPointerScope implements AutoCloseable {
 
@@ -21,9 +21,9 @@ public class WeakPointerScope implements AutoCloseable {
    * Attach a pointer to this scope.
    *
    * <p>Pointers attached to the scope will be automatically freed once the scope is closed, unless
-   * they have been already released by the garbage collector</p>
+   * they have been already released by the garbage collector
    *
-   * <p>It this {@code pointer} was already attached to this scope, this method has no effect.</p>
+   * <p>It this {@code pointer} was already attached to this scope, this method has no effect.
    *
    * @param pointer pointer to attach
    * @throws IllegalStateException if that scope has already been closed
@@ -39,9 +39,9 @@ public class WeakPointerScope implements AutoCloseable {
    * Detach a pointer from this scope.
    *
    * <p>Detaching a pointer from the scope will prevent its memory to be freed when closing the
-   * scope.</p>
+   * scope.
    *
-   * <p>If this {@code pointer} is not attached to this scope, this method has no effect.</p>
+   * <p>If this {@code pointer} is not attached to this scope, this method has no effect.
    *
    * @param pointer pointer to detach
    * @throws IllegalStateException if that scope has already been closed

@@ -15,9 +15,7 @@ limitations under the License.
 
 package org.tensorflow.exceptions;
 
-/**
- * Unchecked exception thrown by TensorFlow core classes
- */
+/** Unchecked exception thrown by TensorFlow core classes */
 public class TensorFlowException extends RuntimeException {
   public TensorFlowException(String message) {
     super(message);

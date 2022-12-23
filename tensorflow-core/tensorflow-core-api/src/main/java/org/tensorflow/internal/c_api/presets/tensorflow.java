@@ -465,9 +465,10 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .pointerTypes("BytePointer"))
         .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
         .put(
-             new Info("absl::Span<const tensorflow::SourceLocation>").annotations("@Span")
-                 .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
-                 .pointerTypes("SourceLocation"))
+            new Info("absl::Span<const tensorflow::SourceLocation>")
+                .annotations("@Span")
+                .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
+                .pointerTypes("SourceLocation"))
         .put(
             new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
         .put(new Info("tensorflow::Output").javaNames("NativeOutput"))

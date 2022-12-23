@@ -43,7 +43,11 @@ abstract class AbstractOperation implements Operation {
       int numOutputs = this.numOutputs();
       if (idx >= numOutputs) {
         throw new IndexOutOfBoundsException(
-            "Can't get output with index " + idx + ", this op only has " + numOutputs + " outputs.");
+            "Can't get output with index "
+                + idx
+                + ", this op only has "
+                + numOutputs
+                + " outputs.");
       }
 
       if (idx < 0) {

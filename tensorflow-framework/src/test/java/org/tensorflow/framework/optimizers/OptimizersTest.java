@@ -1,10 +1,10 @@
 package org.tensorflow.framework.optimizers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.*;
 import org.tensorflow.Graph;
 import org.tensorflow.framework.utils.TestSession;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OptimizersTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;

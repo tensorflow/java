@@ -50,17 +50,23 @@ public class LossTuple<T extends TNumber> {
     this.sampleWeights = sampleWeights;
   }
 
-  /** @return the labels */
+  /**
+   * @return the labels
+   */
   public Operand<T> getLabels() {
     return labels;
   }
 
-  /** @return the target */
+  /**
+   * @return the target
+   */
   public Operand<T> getTarget() {
     return target;
   }
 
-  /** @return the sampleWeights */
+  /**
+   * @return the sampleWeights
+   */
   public Operand<T> getSampleWeights() {
     return sampleWeights;
   }
