@@ -3,12 +3,7 @@ load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_cc_binary", "clean_dep", 
 def tfjava_cc_binary(name, srcs, deps = [], **kwargs):
     tf_cc_binary(
         name = name,
-        srcs = srcs + select({
-            clean_dep("//tensorflow:windows"): [
-                clean_dep("//tensorflow:tensorflow_cc_dll_import_lib"),
-            ],
-            "//conditions:default": [],
-        }),
+        srcs = srcs,
         linkopts = select({
             clean_dep("//tensorflow:macos"): [
                 "-Wl,-rpath,@loaderpath/external/org_tensorflow/tensorflow"
@@ -27,6 +22,10 @@ def tfjava_cc_binary(name, srcs, deps = [], **kwargs):
                 clean_dep("//tensorflow:libtensorflow_cc.so.%s" % VERSION),
             ],
         }),
-        deps = deps,
-        **kwargs
+        deps = deps + select({
+            clean_dep("//tensorflow:windows"): [
+                clean_dep("//tensorflow:tensorflow.dll"),
+            ],
+            "//conditions:default": [],
+        }),
     )
