@@ -55,16 +55,22 @@ export TENSORFLOW_BIN=$BAZEL_BIN/external/org_tensorflow/tensorflow
 
 # Normalize some paths with symbolic links
 TENSORFLOW_SO=($TENSORFLOW_BIN/libtensorflow_cc.so.?.??.?)
+TENSORFLOW_FRMK_SO=($TENSORFLOW_BIN/libtensorflow_framework.so.?.??.?)
 if [[ -f $TENSORFLOW_SO ]]; then
     export TENSORFLOW_LIB=$TENSORFLOW_SO
     ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow_cc.so
     ln -sf $(basename $TENSORFLOW_SO) $TENSORFLOW_BIN/libtensorflow_cc.so.2
+    ln -sf $(basename $TENSORFLOW_FRMK_SO) $TENSORFLOW_BIN/libtensorflow_framework.so
+    ln -sf $(basename $TENSORFLOW_FRMK_SO) $TENSORFLOW_BIN/libtensorflow_framework.so.2
 fi
 TENSORFLOW_DYLIB=($TENSORFLOW_BIN/libtensorflow_cc.?.??.?.dylib)
+TENSORFLOW_FRMK_DYLIB=($TENSORFLOW_BIN/libtensorflow_framework.?.??.?.dylib)
 if [[ -f $TENSORFLOW_DYLIB ]]; then
     export TENSORFLOW_LIB=$TENSORFLOW_DYLIB
     ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow_cc.dylib
     ln -sf $(basename $TENSORFLOW_DYLIB) $TENSORFLOW_BIN/libtensorflow_cc.2.dylib
+    ln -sf $(basename $TENSORFLOW_FRMK_DYLIB) $TENSORFLOW_BIN/libtensorflow_framework.dylib
+    ln -sf $(basename $TENSORFLOW_FRMK_DYLIB) $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
 fi
 TENSORFLOW_DLLS=($TENSORFLOW_BIN/tensorflow_cc.dll.if.lib $TENSORFLOW_BIN/libtensorflow_cc.dll.ifso)
 for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
@@ -75,18 +81,14 @@ for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
 done
 echo "Listing $TENSORFLOW_BIN:" && ls -l $TENSORFLOW_BIN
 
-if [[ -x /usr/bin/install_name_tool ]]; then
-    if [[ -e $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib ]]; then
-        # Fix library with correct rpath on Mac
-        chmod +w $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_cc.2.dylib $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
-        UGLYPATH=$(otool -L $TENSORFLOW_BIN/libtensorflow_cc.2.dylib | grep @loader_path | cut -f1 -d ' ')
-        echo $UGLYPATH
-        install_name_tool -add_rpath @loader_path/. -id @rpath/libiomp5.dylib $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib
-        install_name_tool -change $UGLYPATH @rpath/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_cc.2.dylib
-        install_name_tool -change $UGLYPATH @rpath/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
-    fi
-    install_name_tool -add_rpath $TENSORFLOW_BIN $BAZEL_BIN/java_op_exporter
-    install_name_tool -add_rpath $TENSORFLOW_BIN $BAZEL_BIN/java_api_import
+if [[ -x /usr/bin/install_name_tool ]] && [[ -e $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib ]]; then
+   # Fix library with correct rpath on Mac
+   chmod +w $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_cc.2.dylib $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
+   UGLYPATH=$(otool -L $TENSORFLOW_BIN/libtensorflow_cc.2.dylib | grep @loader_path | cut -f1 -d ' ')
+   echo $UGLYPATH
+   install_name_tool -add_rpath @loader_path/. -id @rpath/libiomp5.dylib $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib
+   install_name_tool -change $UGLYPATH @rpath/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_cc.2.dylib
+   install_name_tool -change $UGLYPATH @rpath/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
 fi
 
 GEN_SRCS_DIR=src/gen/java
