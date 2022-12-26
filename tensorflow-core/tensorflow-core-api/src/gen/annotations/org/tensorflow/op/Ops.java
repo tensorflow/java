@@ -1,4 +1,4 @@
-// Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+// Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -300,7 +300,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
-import org.tensorflow.op.core.XlaCallModule;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -1076,18 +1075,19 @@ public final class Ops {
   }
 
   /**
-   * Apply boolean mask to tensor.  Returns the flat array of each element corresponding to a {@code true} in the mask.
-   *  <p>
-   *  Numpy equivalent is {@code tensor[mask]}.
-   *  <p>
-   *  In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
-   *  the first K dimensions of {@code tensor}'s shape.  We then have:
-   *    {@code booleanMask(tensor, mask)[i, j1,...,jd] = tensor[i1,...,iK,j1,...,jd]}
-   *  where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major order).
-   *  <p>
-   *  The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default).
-   *  In that case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
-   *  the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
+   * Apply boolean mask to tensor. Returns the flat array of each element corresponding to a {@code
+   *  true} in the mask.
+   *
+   *  <p>Numpy equivalent is {@code tensor[mask]}.
+   *
+   *  <p>In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
+   *  the first K dimensions of {@code tensor}'s shape. We then have: {@code booleanMask(tensor,
+   *  mask)[i, j1,...,jd] = tensor[i1,...,iK,j1,...,jd]} where {@code (i1,...,iK)} is the ith {@code
+   *  true} entry of {@code mask} (row-major order).
+   *
+   *  <p>The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0
+   *  by default). In that case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape
+   *  must match the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
    *
    * @param tensor The tensor to mask.
    * @param mask The mask to apply.
@@ -1100,23 +1100,24 @@ public final class Ops {
   }
 
   /**
-   * Updates a tensor at the masked values, and returns the updated tensor.  Does not mutate the input tensors.  {@code
-   *  updates} will be broadcasted by default
-   *  <p>
-   *  Numpy equivalent is `tensor[mask] = updates`.
-   *  <p>
-   *  In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match the first K dimensions of
-   *  {@code tensor}'s shape.  We then have: {@code booleanMask(tensor, mask)[i, j1,...,jd] =
-   *  tensor[i1,...,iK,j1,...,jd]} where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major
-   *  order).
-   *  <p>
-   *  The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default). In that
-   *  case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match the first {@code axis +
-   *  dim(mask)} dimensions of {@code tensor}'s shape.
-   *  <p>
-   *  The shape of {@code updates} should be {@code [n, t_1, t_2, ...]} where {@code n} is the number of true values in
-   *  {@code mask} and {@code t_i} is the {@code i}th dimension of {@code tensor} after {@code axis} and {@code mask}.
-   *  {@code updates} will be broadcasted to this shape by default, which can be disabled using {@code options}.
+   * Updates a tensor at the masked values, and returns the updated tensor. Does not mutate the
+   *  input tensors. {@code updates} will be broadcasted by default
+   *
+   *  <p>Numpy equivalent is `tensor[mask] = updates`.
+   *
+   *  <p>In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
+   *  the first K dimensions of {@code tensor}'s shape. We then have: {@code booleanMask(tensor,
+   *  mask)[i, j1,...,jd] = tensor[i1,...,iK,j1,...,jd]} where {@code (i1,...,iK)} is the ith {@code
+   *  true} entry of {@code mask} (row-major order).
+   *
+   *  <p>The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0
+   *  by default). In that case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape
+   *  must match the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
+   *
+   *  <p>The shape of {@code updates} should be {@code [n, t_1, t_2, ...]} where {@code n} is the
+   *  number of true values in {@code mask} and {@code t_i} is the {@code i}th dimension of {@code
+   *  tensor} after {@code axis} and {@code mask}. {@code updates} will be broadcasted to this shape
+   *  by default, which can be disabled using {@code options}.
    *
    * @param tensor The tensor to mask.
    * @param mask The mask to apply.
@@ -2830,32 +2831,20 @@ public final class Ops {
   }
 
   /**
-   * Adds gradients computation ops to the graph according to scope.
+   * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s, i.e.,
+   *  {@code d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
    *
-   * @param y outputs of the function to derive
-   * @param x inputs of the function for which partial derivatives are computed
-   * @param options carries optional attributes values
-   * @return a new instance of {@code Gradients}
-   * @throws IllegalArgumentException if execution environment is not a graph
-   */
-  public Gradients gradients(Iterable<? extends Operand<?>> y, Iterable<? extends Operand<?>> x,
-      Gradients.Options... options) {
-    return Gradients.create(scope, y, x, options);
-  }
-
-  /**
-   * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s,
-   *  i.e., {@code d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
-   *  <p> 
-   *  If {@code Options.dx()} values are set, they are as the initial symbolic partial derivatives of some loss 
-   *  function {@code L} w.r.t. {@code y}. {@code Options.dx()} must have the size of {@code y}.
-   *  <p>
-   *  If {@code Options.dx()} is not set, the implementation will use dx of {@code OnesLike} for all
+   *  <p>If {@code Options.dx()} values are set, they are as the initial symbolic partial derivatives
+   *  of some loss function {@code L} w.r.t. {@code y}. {@code Options.dx()} must have the size of
+   *  {@code y}.
+   *
+   *  <p>If {@code Options.dx()} is not set, the implementation will use dx of {@code OnesLike} for all
    *  shapes in {@code y}.
-   *  <p>
-   *  The partial derivatives are returned in output {@code dy}, with the size of {@code x}.
-   *  <p>
-   *  Example of usage:
+   *
+   *  <p>The partial derivatives are returned in output {@code dy}, with the size of {@code x}.
+   *
+   *  <p>Example of usage:
+   *
    *  <pre>{@code
    *  Gradients gradients = tf.gradients(loss, Arrays.asList(w, b));
    *  Constant<TFloat32> alpha = tf.constant(1.0f);
@@ -2870,6 +2859,20 @@ public final class Ops {
    * @throws IllegalArgumentException if execution environment is not a graph
    */
   public Gradients gradients(Operand<?> y, Iterable<? extends Operand<?>> x,
+      Gradients.Options... options) {
+    return Gradients.create(scope, y, x, options);
+  }
+
+  /**
+   * Adds gradients computation ops to the graph according to scope.
+   *
+   * @param y outputs of the function to derive
+   * @param x inputs of the function for which partial derivatives are computed
+   * @param options carries optional attributes values
+   * @return a new instance of {@code Gradients}
+   * @throws IllegalArgumentException if execution environment is not a graph
+   */
+  public Gradients gradients(Iterable<? extends Operand<?>> y, Iterable<? extends Operand<?>> x,
       Gradients.Options... options) {
     return Gradients.create(scope, y, x, options);
   }
@@ -6316,46 +6319,51 @@ public final class Ops {
 
   /**
    * Return a strided slice from `input`.
-   *  <p>
-   *  The goal of this op is to produce a new tensor with a subset of the elements from the `n` dimensional `input`
-   *  tensor. The subset is chosen using a sequence of `m` sparse range specifications encoded into the arguments of this
-   *  function. Note, in some cases `m` could be equal to `n`, but this need not be the case. Each range specification
-   *  entry can be one of the following:
-   *  <p>
-   *  - An ellipsis (...) using {@link Indices#ellipsis()}. Ellipses are used to imply zero or more dimensions of
-   *  full-dimension selection. For example, {@code stridedSlice(foo, Indices.ellipsis()} is the identity slice.
-   *  <p>
-   *  - A new axis using {@link Indices#newAxis()}. This is used to insert a new shape=1 dimension.
-   *  For example, `{@code stridedSlice(foo, Indices.newAxis())} where {@code foo} is shape {@code (3, 4)} 
-   *  produces a {@code (1, 3, 4)} tensor.
-   *  <p>
-   *  - A range {@code begin:end:stride} using {@link Indices#slice(Long, Long, long)}  Index.slice()} or {@link Indices#all()}. This is used to specify
-   *  how much to choose from a given dimension. {@code stride} can be any integer but 0.  {@code begin} is an integer which
-   *  represents the index of the first value to select while {@code end} represents the index of the last value to select 
-   *  (exclusive). Begin and end can be null, in which case the index begins or ends at the beginning or end of the dimension,
-   *  respectively (reversed if stride is negative).  When both are null, {@code slice()} is the same as {@code all()}.
-   *  The number of values selected in each dimension is {@code end - begin} if {@code stride > 0} and {@code begin - end}
-   *  if {@code stride < 0}. {@code begin} and {@code end} can be negative where {@code -1} is the last element, {@code -2}
-   *  is the second to last. For example, given a shape {@code (3,)} tensor {@code stridedSlice(foo, Indices.all())}, the
-   *  effective {@code begin} and {@code end} are {@code 0} and {@code 3}. Do not assume this is equivalent to
-   *  {@code stridedSlice(foo, Indices.slice(0, -1))} which has an effective {@code begin} and {@code end} of {@code 0} and
-   *  {@code 2}. Another example is {@code stridedSlice(foo, Indices.slice(-2, null, -1))} which reverses the first dimension
-   *  of a tensor while dropping the last two (in the original order elements). For example {@code foo = [1,2,3,4];
-   *  stridedSlice(foo, Indices.slice(-2, null, -1)} is {@code [4,3]}.
-   *  <p>
-   *  - A single index using {@link Indices#at(long)}. This is used to keep only elements that have a given index. For
-   *  example ({@code stridedSlice(foo, Indices.at(2))} on a shape {@code (5,6)} tensor produces a shape {@code (6,)} tensor.
-   *  The dimension can be kept with size one using {@link Indices#at(long, boolean)}.
-   *  <p>
-   *  These semantics generally follow NumPy's indexing semantics, which can be found here:
-   *  <a href="https://numpy.org/doc/stable/reference/arrays.indexing.html">https://numpy.org/doc/stable/reference/arrays.indexing.html</a>
-   *  <p>
    *
-   *  <i>Requirements</i>:
-   *  `0 != strides[i] for i in [0, m)` Only one ellipsis.
+   *  <p>The goal of this op is to produce a new tensor with a subset of the elements from the `n`
+   *  dimensional `input` tensor. The subset is chosen using a sequence of `m` sparse range
+   *  specifications encoded into the arguments of this function. Note, in some cases `m` could be
+   *  equal to `n`, but this need not be the case. Each range specification entry can be one of the
+   *  following:
+   *
+   *  <p>- An ellipsis (...) using {@link Indices#ellipsis()}. Ellipses are used to imply zero or
+   *  more dimensions of full-dimension selection. For example, {@code stridedSlice(foo,
+   *  Indices.ellipsis()} is the identity slice.
+   *
+   *  <p>- A new axis using {@link Indices#newAxis()}. This is used to insert a new shape=1
+   *  dimension. For example, `{@code stridedSlice(foo, Indices.newAxis())} where {@code foo} is
+   *  shape {@code (3, 4)} produces a {@code (1, 3, 4)} tensor.
+   *
+   *  <p>- A range {@code begin:end:stride} using {@link Indices#slice(Long, Long, long)}
+   *  Index.slice()} or {@link Indices#all()}. This is used to specify how much to choose from a
+   *  given dimension. {@code stride} can be any integer but 0. {@code begin} is an integer which
+   *  represents the index of the first value to select while {@code end} represents the index of the
+   *  last value to select (exclusive). Begin and end can be null, in which case the index begins or
+   *  ends at the beginning or end of the dimension, respectively (reversed if stride is negative).
+   *  When both are null, {@code slice()} is the same as {@code all()}. The number of values selected
+   *  in each dimension is {@code end - begin} if {@code stride > 0} and {@code begin - end} if
+   *  {@code stride < 0}. {@code begin} and {@code end} can be negative where {@code -1} is the last
+   *  element, {@code -2} is the second to last. For example, given a shape {@code (3,)} tensor
+   *  {@code stridedSlice(foo, Indices.all())}, the effective {@code begin} and {@code end} are
+   *  {@code 0} and {@code 3}. Do not assume this is equivalent to {@code stridedSlice(foo,
+   *  Indices.slice(0, -1))} which has an effective {@code begin} and {@code end} of {@code 0} and
+   *  {@code 2}. Another example is {@code stridedSlice(foo, Indices.slice(-2, null, -1))} which
+   *  reverses the first dimension of a tensor while dropping the last two (in the original order
+   *  elements). For example {@code foo = [1,2,3,4]; stridedSlice(foo, Indices.slice(-2, null, -1)}
+   *  is {@code [4,3]}.
+   *
+   *  <p>- A single index using {@link Indices#at(long)}. This is used to keep only elements that
+   *  have a given index. For example ({@code stridedSlice(foo, Indices.at(2))} on a shape {@code
+   *  (5,6)} tensor produces a shape {@code (6,)} tensor. The dimension can be kept with size one
+   *  using {@link Indices#at(long, boolean)}.
+   *
+   *  <p>These semantics generally follow NumPy's indexing semantics, which can be found here: <a
+   *  href="https://numpy.org/doc/stable/reference/arrays.indexing.html">https://numpy.org/doc/stable/reference/arrays.indexing.html</a>
+   *
+   *  <p><i>Requirements</i>: `0 != strides[i] for i in [0, m)` Only one ellipsis.
    *
    * @param <T> data type for {@code output()} output
-   * @param indices The indices to slice.  See {@link Indices}.
+   * @param indices The indices to slice. See {@link Indices}.
    * @return a new instance of StridedSlice
    * @see Indices
    */
@@ -6489,17 +6497,18 @@ public final class Ops {
 
   /**
    * Assign `value` to the sliced l-value reference of `ref`.
-   *  <p>
-   *  The values of `value` are assigned to the positions in the variable `ref` that are selected by the slice
-   *  parameters. The slice parameters `begin`, `end`, `strides`, etc. work exactly as in `StridedSlice`.
-   *  <p>
-   *  NOTE this op currently does not support broadcasting and so `value`'s shape must be exactly the shape produced by
-   *  the slice of `ref`.
+   *
+   *  <p>The values of `value` are assigned to the positions in the variable `ref` that are selected
+   *  by the slice parameters. The slice parameters `begin`, `end`, `strides`, etc. work exactly as
+   *  in `StridedSlice`.
+   *
+   *  <p>NOTE this op currently does not support broadcasting and so `value`'s shape must be exactly
+   *  the shape produced by the slice of `ref`.
    *
    * @param <T> data type for {@code outputRef()} output
    * @param ref the tensor to assign to.
    * @param value the value to assign.
-   * @param indices The indices to slice.  See {@link Indices}.
+   * @param indices The indices to slice. See {@link Indices}.
    * @return a new instance of StridedSliceAssign
    * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
    */
@@ -8154,45 +8163,6 @@ public final class Ops {
   public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
       While.Options... options) {
     return While.create(scope, input, cond, body, options);
-  }
-
-  /**
-   * Temporary op for experimenting with jax2tf.
-   *  DO NOT USE THIS OP. It has no backwards compatibility guarantees. It is also
-   *  very likely to change. This op will be used only in jax2tf under an
-   *  experimental flag.
-   *  <p>This is an experimental op to allow a smooth evolution of jax2tf towards
-   *  emitting and serializing MHLO directly from JAX. At the moment this op
-   *  carries a serialized MHLO module, therefore there are no backward-compatibility
-   *  guarantees, and should not be used for serialization.
-   *  Eventually, the op will carry a MHLO object, which will have
-   *  backwards-compatibility guarantees.
-   *  <p>The serialized module must return a tuple if and only if the Sout is an empty
-   *  list or a list with more than 1 elements. The length of Tout and Sout must
-   *  match. This op always returns a tuple of results, even if the module returns
-   *  a single result.
-   *  <p>The handling of dynamic shapes is work-in-progress. At the moment, the
-   *  JAX lowering for dynamic shapes will prepend one dimension parameter to the
-   *  serialized module for each dimension whose value must be passed in.
-   *  The &quot;args&quot; correspond to the non-dimension arguments. During compilation
-   *  we compute the values of the dimension arguments based on the static shapes of
-   *  the &quot;args&quot;. In order to do this, we encode for each dimension argument a
-   *  specification of how to compute its value, as a string, in the form
-   *  &quot;&lt;arg_idx&gt;.&lt;axis_idx&gt;&quot;.
-   *  E.g., the specification &quot;2.1&quot; denotes the value args[2].shape[1].
-   *
-   * @param args A list of {@code Tensor} with possibly different types to be passed as arguments
-   *  to the HLO module.
-   * @param module A serialized computation, a text representation of mlir.Module.
-   * @param Sout List of output tensor shapes.
-   * @param Tout List of output tensor data types.
-   * @param dimArgsSpec the specification for the dimension arguments, one for each
-   *  dimension argument. In absence of dynamic shapes this list is empty.
-   * @return a new instance of XlaCallModule
-   */
-  public XlaCallModule xlaCallModule(Iterable<Operand<?>> args, String module, List<Shape> Sout,
-      List<Class<? extends TType>> Tout, List<String> dimArgsSpec) {
-    return XlaCallModule.create(scope, args, module, Sout, Tout, dimArgsSpec);
   }
 
   /**
