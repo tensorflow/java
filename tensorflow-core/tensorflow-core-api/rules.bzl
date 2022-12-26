@@ -24,7 +24,7 @@ def tfjava_cc_binary(name, srcs, deps = [], **kwargs):
         }),
         deps = deps + select({
             clean_dep("//tensorflow:windows"): [
-                clean_dep("//tensorflow:tensorflow.dll"),
+                clean_dep("//tensorflow:tensorflow_cc.dll"),
             ],
             "//conditions:default": [],
         }),
