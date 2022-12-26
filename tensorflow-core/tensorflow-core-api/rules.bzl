@@ -10,19 +10,22 @@ def tfjava_cc_binary(name, srcs, deps):
             ],
             clean_dep("//tensorflow:windows"): [],
             "//conditions:default": [
-                "-Wl,-rpath,$$ORIGIN/external/org_tensorflow/tensorflow"
+                "-lm,-Wl,-rpath,$$ORIGIN/external/org_tensorflow/tensorflow"
             ],
         }),
         dynamic_deps = select({
             clean_dep("//tensorflow:macos"): [
                 clean_dep("//tensorflow:libtensorflow_cc.%s.dylib" % VERSION),
             ],
-            clean_dep("//tensorflow:windows"): [
-                clean_dep("//tensorflow:tensorflow_cc_dll_import_lib"),
-            ],
+            clean_dep("//tensorflow:windows"): [],
             "//conditions:default": [
                 clean_dep("//tensorflow:libtensorflow_cc.so.%s" % VERSION),
             ],
         }),
-        deps = deps
+        deps = deps + select({
+            clean_dep("//tensorflow:windows"): [
+                clean_dep("//tensorflow:tensorflow_cc_dll_import_lib"),
+            ],
+            "//conditions:default": [],
+        })
     )
