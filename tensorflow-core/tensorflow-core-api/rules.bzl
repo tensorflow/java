@@ -18,7 +18,7 @@ def tfjava_cc_binary(name, srcs, deps):
                 clean_dep("//tensorflow:libtensorflow_cc.%s.dylib" % VERSION),
             ],
             clean_dep("//tensorflow:windows"): [
-                clean_dep("//tensorflow:tensorflow.dll"),
+                clean_dep("//tensorflow:tensorflow_cc_dll_import_lib"),
             ],
             "//conditions:default": [
                 clean_dep("//tensorflow:libtensorflow_cc.so.%s" % VERSION),
