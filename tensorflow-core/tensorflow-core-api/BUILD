@@ -1,6 +1,14 @@
-load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_cc_binary", "clean_dep")
+load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_cc_binary", "clean_dep", "VERSION_MAJOR")
 load("@rules_java//java:defs.bzl", "java_proto_library")
 load("rules.bzl", "tfjava_cc_binary")
+
+cc_import(
+    name = "libtensorflow_cc_import_lib",
+    shared_library = select({
+        clean_dep("//tensorflow:macos"): "@org_tensorflow//tensorflow:libtensorflow_cc.dylib",
+        "//conditions:default": "@org_tensorflow//tensorflow:libtensorflow_cc.so.%s" % VERSION_MAJOR,
+    }),
+)
 
 tfjava_cc_binary(
     name = "java_op_exporter",
