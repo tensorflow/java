@@ -28,26 +28,23 @@ import org.tensorflow.proto.framework.DataType;
  * Annotation for all tensor types.
  *
  * <p>Any interface extending {@link org.tensorflow.types.family.TType TType} to be registered as a
- * tensor type must be annotated with {@code @TensorType} to provide metadata required for allocating
- * and mapping tensors of this type.</p>
+ * tensor type must be annotated with {@code @TensorType} to provide metadata required for
+ * allocating and mapping tensors of this type.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface TensorType {
 
-  /**
-   * The data type of each elements in a tensor of this type
-   */
+  /** The data type of each elements in a tensor of this type */
   DataType dataType();
 
   /**
-   * The number of bytes required one element of a tensor of type, -1 for variable-length element tensors
+   * The number of bytes required one element of a tensor of type, -1 for variable-length element
+   * tensors
    */
   int byteSize();
 
-  /**
-   * The class of the {@link TensorMapper} to allocate and use for mapping tensors of this type
-   */
+  /** The class of the {@link TensorMapper} to allocate and use for mapping tensors of this type */
   Class<? extends TensorMapper<?>> mapperClass();
 }

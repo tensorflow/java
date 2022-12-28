@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,25 +38,33 @@ import org.tensorflow.types.family.TType;
  * Broadcast an array for a compatible shape.
  * Broadcasting is the process of making arrays to have compatible shapes
  * for arithmetic operations. Two shapes are compatible if for each
- * dimension pair they are either equal or one of them is one. When trying
- * to broadcast a Tensor to a shape, it starts with the trailing dimensions,
- * and works its way forward.
- * <p>For example,
+ * dimension pair they are either equal or one of them is one.
+ * <p>For example:
  * <blockquote>
  * <blockquote>
  * <blockquote>
- * <p>x = tf.constant([1, 2, 3])
- * y = tf.broadcast_to(x, [3, 3])
+ * <p>x = tf.constant([[1, 2, 3]])   # Shape (1, 3,)
+ * y = tf.broadcast_to(x, [2, 3])
  * print(y)
  * tf.Tensor(
  * [[1 2 3]
- * [1 2 3]
- * [1 2 3]], shape=(3, 3), dtype=int32)
+ * [1 2 3]], shape=(2, 3), dtype=int32)
  * </blockquote>
  * </blockquote>
  * </blockquote>
  * <p>In the above example, the input Tensor with the shape of {@code [1, 3]}
- * is broadcasted to output Tensor with shape of {@code [3, 3]}.
+ * is broadcasted to output Tensor with shape of {@code [2, 3]}.
+ * <p>When broadcasting, if a tensor has fewer axes than necessary its shape is
+ * padded on the left with ones. So this gives the same result as the previous
+ * example:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>x = tf.constant([1, 2, 3])   # Shape (3,)
+ * y = tf.broadcast_to(x, [2, 3])
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  * <p>When doing broadcasted operations such as multiplying a tensor
  * by a scalar, broadcasting (usually) confers some time or space
  * benefit, as the broadcasted tensor is never materialized.

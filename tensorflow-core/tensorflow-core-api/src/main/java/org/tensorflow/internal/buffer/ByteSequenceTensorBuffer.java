@@ -28,22 +28,22 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.TensorFlow;
-import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.internal.c_api.TF_TString;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
 import org.tensorflow.ndarray.impl.buffer.Validator;
-import org.tensorflow.ndarray.NdArray;
 
 /**
  * Buffer for storing string tensor data.
  *
- * <p>The values are stored as an array of {@link TF_TString}, internally wrapped with
- * {@code tensorflow::tstring}, which is essentially a portable version of {@code std::string}.
+ * <p>The values are stored as an array of {@link TF_TString}, internally wrapped with {@code
+ * tensorflow::tstring}, which is essentially a portable version of {@code std::string}.
  *
- * <p>The data of the buffer must be initialized only once, by calling {@link #init(NdArray, Function)},
- * and the buffer must have been allocated with enough space (use {@link #computeSize(NdArray, Function)}
- * priory to know exactly how many bytes are required to store the data).
+ * <p>The data of the buffer must be initialized only once, by calling {@link #init(NdArray,
+ * Function)}, and the buffer must have been allocated with enough space (use {@link
+ * #computeSize(NdArray, Function)} priory to know exactly how many bytes are required to store the
+ * data).
  *
  * <p>After its data has been initialized, the buffer is read-only as it is not possible to change
  * safely a value without reinitializing the whole data.

@@ -19,8 +19,8 @@ package org.tensorflow.types.family;
 /**
  * Common interface for all floating point tensors.
  *
- * <p>Operations that only accepts floating point values as some of their operands enforce that the tensor
- * types for these operands to be bound to this interface. For example:
+ * <p>Operations that only accepts floating point values as some of their operands enforce that the
+ * tensor types for these operands to be bound to this interface. For example:
  *
  * <pre>{@code
  * Ops tf = Ops.create();

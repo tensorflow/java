@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
 
-    @Test
-    public void getVersion() {
-        assertTrue(TF_Version().getString().length() > 0);
-    }
+  @Test
+  public void getVersion() {
+    assertTrue(TF_Version().getString().length() > 0);
+  }
 }

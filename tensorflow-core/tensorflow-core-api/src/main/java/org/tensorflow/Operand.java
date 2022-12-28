@@ -56,7 +56,7 @@ public interface Operand<T extends TType> extends Op, Shaped {
   /**
    * Returns the tensor at this operand.
    *
-   * <i>Only works when running in an eager execution</i>
+   * <p><i>Only works when running in an eager execution</i>
    *
    * @return the tensor
    * @throws IllegalStateException if this is an operand of a graph
@@ -65,15 +65,14 @@ public interface Operand<T extends TType> extends Op, Shaped {
     return asOutput().asTensor();
   }
 
-  /**
-   * Returns the tensor type of this operand
-   */
+  /** Returns the tensor type of this operand */
   default Class<T> type() {
     return asOutput().type();
   }
 
   /**
-   * Returns the (possibly partially known) shape of the tensor referred to by the {@link Output} of this operand.
+   * Returns the (possibly partially known) shape of the tensor referred to by the {@link Output} of
+   * this operand.
    */
   @Override
   default Shape shape() {

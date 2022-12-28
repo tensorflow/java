@@ -1,30 +1,25 @@
-load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_copts", "tf_cc_binary")
+load("@org_tensorflow//tensorflow:tensorflow.bzl", "tf_cc_binary", "clean_dep", "VERSION_MAJOR")
 load("@rules_java//java:defs.bzl", "java_proto_library")
+load("rules.bzl", "tfjava_cc_binary")
 
-tf_cc_binary(
-    name = "java_op_exporter",
-    linkopts = select({
-        "@org_tensorflow//tensorflow:windows": [],
-        "//conditions:default": ["-lm"],
+cc_import(
+    name = "libtensorflow_cc_import_lib",
+    shared_library = select({
+        clean_dep("//tensorflow:macos"): "@org_tensorflow//tensorflow:libtensorflow_cc.dylib",
+        "//conditions:default": "@org_tensorflow//tensorflow:libtensorflow_cc.so.%s" % VERSION_MAJOR,
     }),
-    deps = [
-        ":java_op_export_lib",
-    ],
 )
 
-cc_library(
-    name = "java_op_export_lib",
+tfjava_cc_binary(
+    name = "java_op_exporter",
     srcs = [
         "src/bazel/op_generator/op_export_main.cc",
     ],
-    hdrs = [
-    ],
-    copts = tf_copts(),
     deps = [
-        "@org_tensorflow//tensorflow/core:framework",
-        "@org_tensorflow//tensorflow/core:lib",
-        "@org_tensorflow//tensorflow/core:op_gen_lib",
-        "@org_tensorflow//tensorflow/core:protos_all_cc",
+        clean_dep("//tensorflow/core:framework"),
+        clean_dep("//tensorflow/core:lib"),
+        clean_dep("//tensorflow/core:op_gen_lib"),
+        clean_dep("//tensorflow/core:protos_all_cc"),
     ],
 )
 
@@ -33,31 +28,29 @@ filegroup(
     srcs = glob(["src/bazel/api_def/*"])
 )
 
-tf_cc_binary(
+tfjava_cc_binary(
     name = "java_api_import",
     srcs = [
         "src/bazel/api_def/import/api_import.cc",
     ],
-    linkopts = select({
-        "@org_tensorflow//tensorflow:windows": [],
-        "//conditions:default": ["-lm"],
-    }),
     deps = [
-        "@org_tensorflow//tensorflow/core:op_gen_lib",
-        "@org_tensorflow//tensorflow/tools/api/lib:api_objects_proto_cc",
+        clean_dep("//tensorflow/core:op_gen_lib"),
+        clean_dep("//tensorflow/tools/api/lib:api_objects_proto_cc"),
     ],
 )
 
 java_proto_library(
     name = "java_proto_gen_sources",
-    deps = ["@org_tensorflow//tensorflow/core:protos_all"]
+    deps = [
+        clean_dep("//tensorflow/core:protos_all")
+    ]
 )
 
 filegroup(
     name = "custom_ops_test",
     srcs = select({
         # FIXME(karllessard) Disable custom ops test on Windows since TF is still monolithic on this platform
-        "@org_tensorflow//tensorflow:windows": [],
+        clean_dep("//tensorflow:windows"): [],
         "//conditions:default": [":libcustom_ops_test.so"],
     })
 )
@@ -68,6 +61,6 @@ tf_cc_binary(
 	linkshared = 1,
 	linkopts = ["-lm"],
 	deps = [
-		"@org_tensorflow//tensorflow/core:framework",
+		clean_dep("//tensorflow/core:framework"),
 	]
 )

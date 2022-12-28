@@ -106,8 +106,7 @@ public abstract class Shapes {
    * @return the flattened shape
    */
   @Endpoint(name = "flatten")
-  public static <U extends TNumber> Operand<U> flatten(
-      Scope scope, Shape<U> shape, Class<U> type) {
+  public static <U extends TNumber> Operand<U> flatten(Scope scope, Shape<U> shape, Class<U> type) {
     return ExpandDims.create(
         scope,
         size(scope, shape, type),
@@ -136,8 +135,7 @@ public abstract class Shapes {
    * @return the size
    */
   @Endpoint(name = "size")
-  public static <U extends TNumber> Operand<U> size(
-      Scope scope, Shape<U> shape, Class<U> type) {
+  public static <U extends TNumber> Operand<U> size(Scope scope, Shape<U> shape, Class<U> type) {
     Slice<U> dims =
         Slice.create(
             scope,
@@ -352,8 +350,7 @@ public abstract class Shapes {
    * @return the squeezed shape
    */
   @Endpoint(name = "squeeze")
-  public static <U extends TNumber> Operand<U> squeeze(
-      Scope scope, Shape<U> shape, Class<U> type) {
+  public static <U extends TNumber> Operand<U> squeeze(Scope scope, Shape<U> shape, Class<U> type) {
     Operand<TBool> mask =
         NotEqual.create(scope, shape, Cast.create(scope, OnesLike.create(scope, shape), type));
 
@@ -382,8 +379,7 @@ public abstract class Shapes {
    * @return a 1-dimensional Operand containing the Shape's first dimension
    */
   @Endpoint(name = "head")
-  public static <U extends TNumber> Operand<U> head(
-      Scope scope, Shape<U> shape, Class<U> type) {
+  public static <U extends TNumber> Operand<U> head(Scope scope, Shape<U> shape, Class<U> type) {
     return take(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), type), type);
   }
 
@@ -450,8 +446,7 @@ public abstract class Shapes {
    *     Shape
    */
   @Endpoint(name = "tail")
-  public static <U extends TNumber> Operand<U> tail(
-      Scope scope, Shape<U> shape, Class<U> type) {
+  public static <U extends TNumber> Operand<U> tail(Scope scope, Shape<U> shape, Class<U> type) {
     return takeLast(scope, shape, Cast.create(scope, Constant.scalarOf(scope, 1), type), type);
   }
 

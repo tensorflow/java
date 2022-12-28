@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
-
 import org.bytedeco.javacpp.Pointer;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -43,10 +42,14 @@ public class TStringTest {
 
   @Test
   public void createrScalarLongerThan127() {
-    TString tensor = TString.scalarOf("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
+    TString tensor =
+        TString.scalarOf(
+            "Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
     assertNotNull(tensor);
     assertEquals(Shape.scalar(), tensor.shape());
-    assertEquals("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !", tensor.getObject());
+    assertEquals(
+        "Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !",
+        tensor.getObject());
   }
 
   @Test
@@ -60,38 +63,40 @@ public class TStringTest {
 
   @Test
   public void createCopy() {
-    NdArray<String> strings = NdArrays.ofObjects(String.class, Shape.of(2, 2))
-        .setObject("Pretty", 0, 0)
-        .setObject("vacant", 0, 1)
-        .setObject("New", 1, 0)
-        .setObject("York", 1, 1);
+    NdArray<String> strings =
+        NdArrays.ofObjects(String.class, Shape.of(2, 2))
+            .setObject("Pretty", 0, 0)
+            .setObject("vacant", 0, 1)
+            .setObject("New", 1, 0)
+            .setObject("York", 1, 1);
 
     TString tensor = TString.tensorOf(strings);
     assertNotNull(tensor);
-    strings.scalars().forEachIndexed((idx, s) ->
-        assertEquals(s.getObject(), tensor.getObject(idx))
-    );
+    strings
+        .scalars()
+        .forEachIndexed((idx, s) -> assertEquals(s.getObject(), tensor.getObject(idx)));
   }
 
   @Test
   public void defaultCharsetIsUtf8() {
     TString tensor = TString.tensorOf(NdArrays.scalarOfObject(BABY_CHICK));
     byte[] bytes = tensor.asBytes().getObject();
-    assertArrayEquals(new byte[] { (byte)0xF0, (byte)0x9F, (byte)0x90, (byte)0xA5 }, bytes);
+    assertArrayEquals(new byte[] {(byte) 0xF0, (byte) 0x9F, (byte) 0x90, (byte) 0xA5}, bytes);
     assertEquals(BABY_CHICK, tensor.getObject());
   }
 
   @Test
   public void usingDifferentCharset() {
-    TString tensor = TString.tensorOf(StandardCharsets.UTF_16LE, NdArrays.scalarOfObject(BABY_CHICK));
+    TString tensor =
+        TString.tensorOf(StandardCharsets.UTF_16LE, NdArrays.scalarOfObject(BABY_CHICK));
     byte[] bytes = tensor.asBytes().getObject();
-    assertArrayEquals(new byte[] { (byte)0x3D, (byte)0xD8, (byte)0x25, (byte)0xDC }, bytes);
+    assertArrayEquals(new byte[] {(byte) 0x3D, (byte) 0xD8, (byte) 0x25, (byte) 0xDC}, bytes);
     assertEquals(BABY_CHICK, tensor.using(StandardCharsets.UTF_16LE).getObject());
   }
 
   @Test
   public void initializingTensorWithRawBytes() {
-    String[] strings = new String[] { "TensorFlow", "For", "Java", "Rocks", "!" };
+    String[] strings = new String[] {"TensorFlow", "For", "Java", "Rocks", "!"};
     NdArray<byte[]> bytes = NdArrays.ofObjects(byte[].class, Shape.of(strings.length));
     for (int i = 0; i < strings.length; ++i) {
       bytes.setObject(strings[i].getBytes(), i);
@@ -124,10 +129,11 @@ public class TStringTest {
 
     long bytesAfter = Pointer.physicalBytes();
 
-    // the difference should ideally be 0, but the JVM and TF Core may be holding onto some unrelated stuff...
+    // the difference should ideally be 0, but the JVM and TF Core may be holding onto some
+    // unrelated stuff...
     assertTrue(Math.abs(bytesAfter - bytesBefore) < 10_000_000);
   }
 
   private static final String A_LARGE_STRING = new String(new byte[1_000_000]);
-  private static final String BABY_CHICK = "\uD83D\uDC25";	  
+  private static final String BABY_CHICK = "\uD83D\uDC25";
 }

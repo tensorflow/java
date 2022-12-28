@@ -14,12 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
-import org.tensorflow.ndarray.*;
-
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import org.tensorflow.ndarray.*;
 
 // TODO used in the Callbacks, this should be a part of NDArray?
 

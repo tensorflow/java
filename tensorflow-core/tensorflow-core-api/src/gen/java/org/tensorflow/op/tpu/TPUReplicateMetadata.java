@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -111,6 +111,9 @@ public final class TPUReplicateMetadata extends RawOp {
         }
         if (opts.useSpmdForXlaPartitioning != null) {
           opBuilder.setAttr("use_spmd_for_xla_partitioning", opts.useSpmdForXlaPartitioning);
+        }
+        if (opts.tpuCompileOptionsProto != null) {
+          opBuilder.setAttr("tpu_compile_options_proto", opts.tpuCompileOptionsProto);
         }
       }
     }
@@ -258,6 +261,16 @@ public final class TPUReplicateMetadata extends RawOp {
   }
 
   /**
+   * Sets the tpuCompileOptionsProto option.
+   *
+   * @param tpuCompileOptionsProto the tpuCompileOptionsProto option
+   * @return this Options instance.
+   */
+  public static Options tpuCompileOptionsProto(String tpuCompileOptionsProto) {
+    return new Options().tpuCompileOptionsProto(tpuCompileOptionsProto);
+  }
+
+  /**
    * Optional attributes for {@link org.tensorflow.op.tpu.TPUReplicateMetadata}
    */
   public static class Options {
@@ -280,6 +293,8 @@ public final class TPUReplicateMetadata extends RawOp {
     private Boolean allowSoftPlacement;
 
     private Boolean useSpmdForXlaPartitioning;
+
+    private String tpuCompileOptionsProto;
 
     private Options() {
     }
@@ -437,6 +452,17 @@ public final class TPUReplicateMetadata extends RawOp {
       this.useSpmdForXlaPartitioning = useSpmdForXlaPartitioning;
       return this;
     }
+
+    /**
+     * Sets the tpuCompileOptionsProto option.
+     *
+     * @param tpuCompileOptionsProto the tpuCompileOptionsProto option
+     * @return this Options instance.
+     */
+    public Options tpuCompileOptionsProto(String tpuCompileOptionsProto) {
+      this.tpuCompileOptionsProto = tpuCompileOptionsProto;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -498,8 +524,13 @@ public final class TPUReplicateMetadata extends RawOp {
      */
     public final boolean useSpmdForXlaPartitioning;
 
+    /**
+     * The tpuCompileOptionsProto attribute
+     */
+    public final String tpuCompileOptionsProto;
+
     public Inputs(GraphOperation op) {
-      super(new TPUReplicateMetadata(op), op, Arrays.asList("num_replicas", "num_cores_per_replica", "topology", "use_tpu", "device_assignment", "computation_shape", "host_compute_core", "padding_map", "step_marker_location", "allow_soft_placement", "use_spmd_for_xla_partitioning"));
+      super(new TPUReplicateMetadata(op), op, Arrays.asList("num_replicas", "num_cores_per_replica", "topology", "use_tpu", "device_assignment", "computation_shape", "host_compute_core", "padding_map", "step_marker_location", "allow_soft_placement", "use_spmd_for_xla_partitioning", "tpu_compile_options_proto"));
       int inputIndex = 0;
       numReplicas = op.attributes().getAttrInt("num_replicas");
       numCoresPerReplica = op.attributes().getAttrInt("num_cores_per_replica");
@@ -512,6 +543,7 @@ public final class TPUReplicateMetadata extends RawOp {
       stepMarkerLocation = op.attributes().getAttrString("step_marker_location");
       allowSoftPlacement = op.attributes().getAttrBool("allow_soft_placement");
       useSpmdForXlaPartitioning = op.attributes().getAttrBool("use_spmd_for_xla_partitioning");
+      tpuCompileOptionsProto = op.attributes().getAttrString("tpu_compile_options_proto");
     }
   }
 }

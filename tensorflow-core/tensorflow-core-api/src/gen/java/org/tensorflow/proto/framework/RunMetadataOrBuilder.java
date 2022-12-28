@@ -195,4 +195,29 @@ public interface RunMetadataOrBuilder extends
    */
   org.tensorflow.proto.framework.RunMetadata.FunctionGraphsOrBuilder getFunctionGraphsOrBuilder(
       int index);
+
+  /**
+   * <pre>
+   * Metadata about the session.
+   * </pre>
+   *
+   * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+   */
+  boolean hasSessionMetadata();
+  /**
+   * <pre>
+   * Metadata about the session.
+   * </pre>
+   *
+   * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+   */
+  org.tensorflow.proto.framework.SessionMetadata getSessionMetadata();
+  /**
+   * <pre>
+   * Metadata about the session.
+   * </pre>
+   *
+   * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+   */
+  org.tensorflow.proto.framework.SessionMetadataOrBuilder getSessionMetadataOrBuilder();
 }

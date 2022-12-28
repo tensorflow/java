@@ -67,8 +67,8 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/cc/framework/ops.h",
             "tensorflow/c/c_api_internal.h",
           },
-          link = "tensorflow_cc@.2",
-          preload = {"iomp5", "mklml", "mklml_intel", "tensorflow_framework@.2"},
+          link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
+          preload = {"iomp5", "mklml", "mklml_intel"},
           preloadresource = "/org/bytedeco/mkldnn/",
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
       @Platform(
@@ -323,7 +323,8 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tensorflow::Node::set_original_node_names",
                     "tensorflow::Node::AddAttr",
                     "tensorflow::Node::ClearAttr",
-                    "tensorflow::Node::input_node")
+                    "tensorflow::Node::input_node",
+                    "tensorflow::Node::RunForwardTypeInference")
                 .skip())
         .put(
             new Info("c_api.cc")
@@ -463,6 +464,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .valueTypes("BytePointer", "String")
                 .pointerTypes("BytePointer"))
         .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
+        .put(
+            new Info("absl::Span<const tensorflow::SourceLocation>")
+                .annotations("@Span")
+                .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
+                .pointerTypes("SourceLocation"))
         .put(
             new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
         .put(new Info("tensorflow::Output").javaNames("NativeOutput"))

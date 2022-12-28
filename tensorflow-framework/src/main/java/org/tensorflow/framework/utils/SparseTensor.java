@@ -24,57 +24,58 @@ import org.tensorflow.types.family.TType;
  * This is a helper class that represents a sparse tensor who's attributes may be passed to {@link
  * SparseOps} methods.
  *
- * <p>This class does <em>not inherit from {@link Tensor}</em>, but is merely a place to accumulate the
- * properties that are needed for the {@link SparseOps} methods.
+ * <p>This class does <em>not inherit from {@link Tensor}</em>, but is merely a place to accumulate
+ * the properties that are needed for the {@link SparseOps} methods.
  *
  * @param <T> the type of the SparseTensor's values.
  */
 public class SparseTensor<T extends TType> {
-    private final Operand<TInt64> indices;
-    private final Operand<T> values;
-    private final Operand<TInt64> denseShape;
+  private final Operand<TInt64> indices;
+  private final Operand<T> values;
+  private final Operand<TInt64> denseShape;
 
-    /**
-     * Creates a SparseTensor
-     *
-     * @param indices A 2-D int64 tensor of shape `[N, ndims]`, which specifies the
-     * indices of the elements in the sparse tensor that contain nonzero values
-     * @param values A 1-D tensor of any type and shape `[N]`, which supplies the
-     * values for each element in `indices`.
-     * @param denseShape A 1-D int64 tensor of shape `[ndims]`, which specifies the
-     * dense_shape of the sparse tensor
-     * @throws IllegalArgumentException When building an eager SparseTensor if `dense_shape` is
-     *   unknown or contains unknown elements (None or -1).
-     */
-    public SparseTensor (Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
-        this.indices = indices;
-        this.values = values;
-        this.denseShape = denseShape;
-    }
+  /**
+   * Creates a SparseTensor
+   *
+   * @param indices A 2-D int64 tensor of shape `[N, ndims]`, which specifies the indices of the
+   *     elements in the sparse tensor that contain nonzero values
+   * @param values A 1-D tensor of any type and shape `[N]`, which supplies the values for each
+   *     element in `indices`.
+   * @param denseShape A 1-D int64 tensor of shape `[ndims]`, which specifies the dense_shape of the
+   *     sparse tensor
+   * @throws IllegalArgumentException When building an eager SparseTensor if `dense_shape` is
+   *     unknown or contains unknown elements (None or -1).
+   */
+  public SparseTensor(Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
+    this.indices = indices;
+    this.values = values;
+    this.denseShape = denseShape;
+  }
 
-    /**
-     * Gets the indices for the Sparse Tensor
-     * @return the indices
-     */
-    public Operand<TInt64> getIndices() {
-        return indices;
-    }
+  /**
+   * Gets the indices for the Sparse Tensor
+   *
+   * @return the indices
+   */
+  public Operand<TInt64> getIndices() {
+    return indices;
+  }
 
-    /**
-     * Get the values for the Sparse Tensor
-     * @return the values
-     */
-    public Operand<T> getValues() {
-        return values;
-    }
+  /**
+   * Get the values for the Sparse Tensor
+   *
+   * @return the values
+   */
+  public Operand<T> getValues() {
+    return values;
+  }
 
-    /**
-     * Gets the dense shape for the Sparse Tensor
-     *
-     * @return the denseShape
-     */
-    public Operand<TInt64> getDenseShape() {
-        return denseShape;
-    }
-
+  /**
+   * Gets the dense shape for the Sparse Tensor
+   *
+   * @return the denseShape
+   */
+  public Operand<TInt64> getDenseShape() {
+    return denseShape;
+  }
 }

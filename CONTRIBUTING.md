@@ -48,7 +48,6 @@ The `tensorflow-core/tensorflow-core-api/.bazelversion` file must be kept in syn
 This allows using [Bazelisk](https://github.com/bazelbuild/bazelisk) which runs the bazel version given in .bazelversion instead of having to 
 physically reinstall a specific `bazel` version each time the TensorFlow version changes.
 
-
 ### GPU Support
 
 Currently, due to build time constraints, the GPU binaries only support compute capacities 3.5 and 7.0.  
@@ -60,6 +59,17 @@ now this is the best option.
 To build for GPU, pass `-Djavacpp.platform.extension=-gpu` to maven. By default, the CI options are used for the bazel build, see the above section
 for more info. If you add `bazelrc` files, make sure the `TF_CUDA_COMPUTE_CAPABILITIES` value in them matches the value set elsewhere, as it will take
 precedence if present.
+
+### Apple Silicon
+
+The TensorFlow Java project relies on [GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)
+to build and distribute the native binaries for TensorFlow. Unfortunately at the moment, GitHub Actions still does not support runners with a
+Apple Silicon chip (such as M1). Therefore, we cannot distribute the binaries for this platform, so they must be compiled and installed locally on such systems.
+
+Please follow the present [procedure](CONTRIBUTING.md#building) for building TensorFlow Java from sources.
+
+:warning: As of 12-16-2022, TensorFlow fails to build on XCode command line tools version 14+. If you have such version installed, it might 
+be necessary to downgrade it to a [previous version](https://developer.apple.com/download/all/?q=Xcode), like 13.4.1.
 
 ## Running Tests
 
@@ -136,8 +146,8 @@ The actual classification process is a bit arbitrary and based on the good jugem
 are being wrapped by a higher-level API and therefore are left unclassified, while in Java they are exposed and can be used directly by
 the users.
 
-For classifying an op, a `api_def` proto must be added to the `tensorflow-core-api` [folder](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/bazel/api_def)
-for this purpose, redefining optionally its endpoints or its visibility.
+For classifying an op, an `api_def` proto must be added to the [`tensorflow-core-api/src/bazel/api_def`](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/bazel/api_def)
+folder for this purpose, redefining optionally its endpoints or its visibility.
 
 Writing these protos and trying the guess the right location for each new operation can become a tedious job so an utility program called `java_api_import`
 has been created to help you with this task. This utility is available under the `bazel-bin` folder of `tensorflow-core-api` after the
@@ -147,8 +157,7 @@ initial build. Here is how to invoke it:
 cd tensorflow-core/tensorflow-core-api
 ./bazel-bin/java_api_import \
   --java_api_dir=src/bazel/api_def \
-  --tf_src_dir=bazel-tensorflow-core-api/external/org_tensorflow \
-  --tf_lib_path=bazel-bin/external/org_tensorflow/tensorflow/libtensorflow_cc.<version>.<ext>
+  --tf_src_dir=bazel-tensorflow-core-api/external/org_tensorflow
 ```
 
 For each new operation detected (i.e. any operation that does not have a valid `api_def` proto yet), the utility will suggest you some possible
@@ -157,7 +166,9 @@ will automatically classify the op). It is also possible to enter manually the n
 application will then take care to write the `api_def` proto for each operation classified.
 
 Make sure to erase completely the generated source folder of the `tensorflow-core-api` module before rerunning the build so you can see
-if your ops have been classified properly. Don't worry, that second run of the build will be fast ;)
+if your ops have been classified properly. Don't worry, that second run of the build will be faster! Please review the location of the new generated ops 
+after rebuilding and make necessary adjustments to the `api_def`protos manually if some of them seems to be in the "wrong" place, making sure to repeat this process
+until satisfaction.
 
 #### Ops Kernel Upgrade
 

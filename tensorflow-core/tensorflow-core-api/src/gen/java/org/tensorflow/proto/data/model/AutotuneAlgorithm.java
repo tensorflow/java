@@ -28,6 +28,10 @@ public enum AutotuneAlgorithm
    * <code>MAX_PARALLELISM = 3;</code>
    */
   MAX_PARALLELISM(3),
+  /**
+   * <code>STAGE_BASED = 4;</code>
+   */
+  STAGE_BASED(4),
   UNRECOGNIZED(-1),
   ;
 
@@ -47,6 +51,10 @@ public enum AutotuneAlgorithm
    * <code>MAX_PARALLELISM = 3;</code>
    */
   public static final int MAX_PARALLELISM_VALUE = 3;
+  /**
+   * <code>STAGE_BASED = 4;</code>
+   */
+  public static final int STAGE_BASED_VALUE = 4;
 
 
   public final int getNumber() {
@@ -71,6 +79,7 @@ public enum AutotuneAlgorithm
       case 1: return HILL_CLIMB;
       case 2: return GRADIENT_DESCENT;
       case 3: return MAX_PARALLELISM;
+      case 4: return STAGE_BASED;
       default: return null;
     }
   }

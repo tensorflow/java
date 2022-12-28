@@ -15,15 +15,14 @@
  */
 package org.tensorflow.framework.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TakeDatasetTest extends DatasetTestBase {
 
@@ -40,8 +39,8 @@ public class TakeDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
-      try (TInt32 batch1 = (TInt32)components.get(0).asTensor();
-          TInt32 batch2 = (TInt32)components.get(1).asTensor()) {
+      try (TInt32 batch1 = (TInt32) components.get(0).asTensor();
+          TInt32 batch2 = (TInt32) components.get(1).asTensor()) {
         assertEquals(testMatrix1.get(count), batch1);
         assertEquals(testMatrix2.get(count), batch2);
         count++;

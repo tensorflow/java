@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -90,6 +90,9 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
         if (opts.metadata != null) {
           opBuilder.setAttr("metadata", opts.metadata);
         }
+        if (opts.replicateOnSplit != null) {
+          opBuilder.setAttr("replicate_on_split", opts.replicateOnSplit);
+        }
       }
     }
     return new TensorSliceDataset(opBuilder.build());
@@ -116,6 +119,16 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the replicateOnSplit option.
+   *
+   * @param replicateOnSplit the replicateOnSplit option
+   * @return this Options instance.
+   */
+  public static Options replicateOnSplit(Boolean replicateOnSplit) {
+    return new Options().replicateOnSplit(replicateOnSplit);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -137,6 +150,8 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
     private Boolean isFiles;
 
     private String metadata;
+
+    private Boolean replicateOnSplit;
 
     private Options() {
     }
@@ -160,6 +175,17 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
      */
     public Options metadata(String metadata) {
       this.metadata = metadata;
+      return this;
+    }
+
+    /**
+     * Sets the replicateOnSplit option.
+     *
+     * @param replicateOnSplit the replicateOnSplit option
+     * @return this Options instance.
+     */
+    public Options replicateOnSplit(Boolean replicateOnSplit) {
+      this.replicateOnSplit = replicateOnSplit;
       return this;
     }
   }
@@ -193,8 +219,13 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
      */
     public final String metadata;
 
+    /**
+     * The replicateOnSplit attribute
+     */
+    public final boolean replicateOnSplit;
+
     public Inputs(GraphOperation op) {
-      super(new TensorSliceDataset(op), op, Arrays.asList("Toutput_types", "output_shapes", "is_files", "metadata"));
+      super(new TensorSliceDataset(op), op, Arrays.asList("Toutput_types", "output_shapes", "is_files", "metadata", "replicate_on_split"));
       int inputIndex = 0;
       int componentsLength = op.inputListLength("components");
       components = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, componentsLength));
@@ -203,6 +234,7 @@ public final class TensorSliceDataset extends RawOp implements Operand<TType> {
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       isFiles = op.attributes().getAttrBool("is_files");
       metadata = op.attributes().getAttrString("metadata");
+      replicateOnSplit = op.attributes().getAttrBool("replicate_on_split");
     }
   }
 }

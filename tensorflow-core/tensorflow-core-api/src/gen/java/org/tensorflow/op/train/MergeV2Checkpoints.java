@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ import org.tensorflow.types.TString;
  * <p>If delete_old_dirs is true, attempts to delete recursively the dirname of each
  * path in the input checkpoint_prefixes.  This is useful when those paths are non
  * user-facing temporary locations.
+ * <p>If allow_missing_files is true, merges the checkpoint prefixes as long as
+ * at least one file exists. Otherwise, if no files exist, an error will be thrown.
+ * The default value for allow_missing_files is false.
  */
 @OpMetadata(
     opType = MergeV2Checkpoints.OP_NAME,
@@ -80,6 +83,9 @@ public final class MergeV2Checkpoints extends RawOp {
         if (opts.deleteOldDirs != null) {
           opBuilder.setAttr("delete_old_dirs", opts.deleteOldDirs);
         }
+        if (opts.allowMissingFiles != null) {
+          opBuilder.setAttr("allow_missing_files", opts.allowMissingFiles);
+        }
       }
     }
     return new MergeV2Checkpoints(opBuilder.build());
@@ -96,10 +102,22 @@ public final class MergeV2Checkpoints extends RawOp {
   }
 
   /**
+   * Sets the allowMissingFiles option.
+   *
+   * @param allowMissingFiles see above.
+   * @return this Options instance.
+   */
+  public static Options allowMissingFiles(Boolean allowMissingFiles) {
+    return new Options().allowMissingFiles(allowMissingFiles);
+  }
+
+  /**
    * Optional attributes for {@link org.tensorflow.op.train.MergeV2Checkpoints}
    */
   public static class Options {
     private Boolean deleteOldDirs;
+
+    private Boolean allowMissingFiles;
 
     private Options() {
     }
@@ -112,6 +130,17 @@ public final class MergeV2Checkpoints extends RawOp {
      */
     public Options deleteOldDirs(Boolean deleteOldDirs) {
       this.deleteOldDirs = deleteOldDirs;
+      return this;
+    }
+
+    /**
+     * Sets the allowMissingFiles option.
+     *
+     * @param allowMissingFiles see above.
+     * @return this Options instance.
+     */
+    public Options allowMissingFiles(Boolean allowMissingFiles) {
+      this.allowMissingFiles = allowMissingFiles;
       return this;
     }
   }
@@ -136,12 +165,18 @@ public final class MergeV2Checkpoints extends RawOp {
      */
     public final boolean deleteOldDirs;
 
+    /**
+     * see above.
+     */
+    public final boolean allowMissingFiles;
+
     public Inputs(GraphOperation op) {
-      super(new MergeV2Checkpoints(op), op, Arrays.asList("delete_old_dirs"));
+      super(new MergeV2Checkpoints(op), op, Arrays.asList("delete_old_dirs", "allow_missing_files"));
       int inputIndex = 0;
       checkpointPrefixes = (Operand<TString>) op.input(inputIndex++);
       destinationPrefix = (Operand<TString>) op.input(inputIndex++);
       deleteOldDirs = op.attributes().getAttrBool("delete_old_dirs");
+      allowMissingFiles = op.attributes().getAttrBool("allow_missing_files");
     }
   }
 }

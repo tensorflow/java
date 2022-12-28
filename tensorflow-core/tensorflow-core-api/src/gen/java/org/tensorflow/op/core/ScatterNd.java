@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,22 +36,24 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Scatters {@code updates} into a tensor of shape {@code shape} according to {@code indices}.
- * Update the input tensor by scattering sparse {@code updates} according to individual values at the specified {@code indices}.
- * This op returns an {@code output} tensor with the {@code shape} you specify. This op is the
- * inverse of the {@code tf.gather_nd} operator which extracts values or slices from a
- * given tensor.
+ * Scatter sparse {@code updates} according to individual values at the specified
+ * {@code indices}. This op returns an output tensor with the {@code shape} you specify. This
+ * op is the inverse of the {@code tf.gather_nd} operator which extracts values or slices
+ * from a given tensor.
  * <p>This operation is similar to {@code tf.tensor_scatter_nd_add}, except that the tensor
- * is zero-initialized. Calling {@code tf.scatter_nd(indices, values, shape)}
+ * is zero-initialized. Calling {@code tf.scatter_nd(indices, updates, shape)}
  * is identical to calling
- * {@code tf.tensor_scatter_nd_add(tf.zeros(shape, values.dtype), indices, values)}
- * <p>If {@code indices} contains duplicates, the duplicate {@code values} are accumulated
- * (summed).
- * <p><strong>WARNING</strong>: The order in which updates are applied is nondeterministic, so the
- * output will be nondeterministic if {@code indices} contains duplicates;
- * numbers summed in different order may yield different results because of some
- * numerical approximation issues.
- * <p>{@code indices} is an integer tensor of shape {@code shape}. The last dimension
- * of {@code indices} can be at most the rank of {@code shape}:
+ * {@code tf.tensor_scatter_nd_add(tf.zeros(shape, updates.dtype), indices, updates)}
+ * <p>If {@code indices} contains duplicates, the associated {@code updates} are accumulated
+ * (summed) into the output tensor.
+ * <p><strong>WARNING</strong>: For floating-point data types, the output may be nondeterministic.
+ * This is because the order in which the updates are applied is nondeterministic
+ * and when floating-point numbers are added in different orders the resulting
+ * numerical approximation error can be slightly different. However, the output
+ * will be deterministic if op determinism is enabled via
+ * {@code tf.config.experimental.enable_op_determinism}.
+ * <p>{@code indices} is an integer tensor containing indices into the output tensor. The
+ * last dimension of {@code indices} can be at most the rank of {@code shape}:
  * <pre>
  * indices.shape[-1] &lt;= shape.rank
  * </pre>

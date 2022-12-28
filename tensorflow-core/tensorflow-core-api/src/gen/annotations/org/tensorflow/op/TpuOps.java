@@ -1,4 +1,4 @@
-// Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+// Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,12 +20,25 @@ package org.tensorflow.op;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.tpu.CollateTPUEmbeddingMemory;
 import org.tensorflow.op.tpu.Compile;
 import org.tensorflow.op.tpu.CompileSucceededAssert;
+import org.tensorflow.op.tpu.ConfigureAndInitializeGlobalTPU;
+import org.tensorflow.op.tpu.ConfigureTPUEmbeddingHost;
+import org.tensorflow.op.tpu.ConfigureTPUEmbeddingMemory;
+import org.tensorflow.op.tpu.ConnectTPUEmbeddingHosts;
+import org.tensorflow.op.tpu.DTensorRestore;
+import org.tensorflow.op.tpu.DTensorShardedPrefix;
 import org.tensorflow.op.tpu.Execute;
 import org.tensorflow.op.tpu.ExecuteAndUpdateVariables;
+import org.tensorflow.op.tpu.ExecuteTPUEmbeddingPartitioner;
+import org.tensorflow.op.tpu.FinalizeTPUEmbedding;
 import org.tensorflow.op.tpu.PartitionedInput;
 import org.tensorflow.op.tpu.PartitionedOutput;
+import org.tensorflow.op.tpu.ShutdownTPUSystem;
+import org.tensorflow.op.tpu.TPURoundRobin;
+import org.tensorflow.op.tpu.TpuHandleToProtoKey;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -43,6 +56,18 @@ public final class TpuOps {
   TpuOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+  }
+
+  /**
+   * An op that merges the string-encoded memory config protos from all hosts.
+   *
+   * @param memoryConfigs String-encoded memory config protos containing metadata about
+   *  the memory allocations reserved for TPUEmbedding across all hosts.
+   * @return a new instance of CollateTPUEmbeddingMemory
+   */
+  public CollateTPUEmbeddingMemory collateTPUEmbeddingMemory(
+      Iterable<Operand<TString>> memoryConfigs) {
+    return CollateTPUEmbeddingMemory.create(scope, memoryConfigs);
   }
 
   /**
@@ -89,6 +114,90 @@ public final class TpuOps {
   }
 
   /**
+   * An op that sets up the centralized structures for a distributed TPU system.
+   *
+   * @return a new instance of ConfigureAndInitializeGlobalTPU
+   */
+  public ConfigureAndInitializeGlobalTPU configureAndInitializeGlobalTPU() {
+    return ConfigureAndInitializeGlobalTPU.create(scope);
+  }
+
+  /**
+   * An op that configures the TPUEmbedding software on a host.
+   *
+   * @param commonConfig A string-encoded common configuration proto containing metadata
+   *  about the TPUEmbedding partitioner output.
+   * @param memoryConfig A string-encoded memory config proto containing metadata about
+   *  the memory allocations reserved for TPUEmbedding.
+   * @param config An TPUEmbeddingConfiguration proto serialized to a string,
+   *  describing the desired TPUEmbedding configuration.
+   * @return a new instance of ConfigureTPUEmbeddingHost
+   */
+  public ConfigureTPUEmbeddingHost configureTPUEmbeddingHost(Operand<TString> commonConfig,
+      Operand<TString> memoryConfig, String config) {
+    return ConfigureTPUEmbeddingHost.create(scope, commonConfig, memoryConfig, config);
+  }
+
+  /**
+   * An op that configures the TPUEmbedding software on a host.
+   *
+   * @param commonConfig A string-encoded CommonConfiguration proto containing metadata
+   *  about the TPUEmbedding partitioner output and the HBM size (in bytes) required
+   *  for operation.
+   * @return a new instance of ConfigureTPUEmbeddingMemory
+   */
+  public ConfigureTPUEmbeddingMemory configureTPUEmbeddingMemory(Operand<TString> commonConfig) {
+    return ConfigureTPUEmbeddingMemory.create(scope, commonConfig);
+  }
+
+  /**
+   * An op that sets up communication between TPUEmbedding host software instances
+   *  after ConfigureTPUEmbeddingHost has been called on each host.
+   *
+   * @param networkConfigs Strings containing metadata about the hostname and RPC port
+   *  used for communication with all hosts.
+   * @return a new instance of ConnectTPUEmbeddingHosts
+   */
+  public ConnectTPUEmbeddingHosts connectTPUEmbeddingHosts(
+      Iterable<Operand<TString>> networkConfigs) {
+    return ConnectTPUEmbeddingHosts.create(scope, networkConfigs);
+  }
+
+  /**
+   * The DTensorRestoreV2 operation
+   *
+   * @param prefix The prefix value
+   * @param tensorNames The tensorNames value
+   * @param shapeAndSlices The shapeAndSlices value
+   * @param inputShapes The value of the inputShapes attribute
+   * @param inputLayouts The value of the inputLayouts attribute
+   * @param dtypes The value of the dtypes attribute
+   * @return a new instance of DTensorRestore
+   */
+  public DTensorRestore dTensorRestore(Operand<TString> prefix, Operand<TString> tensorNames,
+      Operand<TString> shapeAndSlices, List<Shape> inputShapes, List<String> inputLayouts,
+      List<Class<? extends TType>> dtypes) {
+    return DTensorRestore.create(scope, prefix, tensorNames, shapeAndSlices, inputShapes, inputLayouts, dtypes);
+  }
+
+  /**
+   * The DTensorShardedPrefix operation
+   *
+   * @param prefix The prefix value
+   * @param tensorNames The tensorNames value
+   * @param shapeAndSlices The shapeAndSlices value
+   * @param mesh The mesh value
+   * @param layouts The layouts value
+   * @param tensors The tensors value
+   * @return a new instance of DTensorShardedPrefix
+   */
+  public DTensorShardedPrefix dTensorShardedPrefix(Operand<TString> prefix,
+      Operand<TString> tensorNames, Operand<TString> shapeAndSlices, Operand<TString> mesh,
+      Operand<TString> layouts, Iterable<Operand<?>> tensors) {
+    return DTensorShardedPrefix.create(scope, prefix, tensorNames, shapeAndSlices, mesh, layouts, tensors);
+  }
+
+  /**
    * Op that loads and executes a TPU program on a TPU device.
    *  For the internal use of the distributed TPU compiler.
    *
@@ -126,6 +235,33 @@ public final class TpuOps {
   }
 
   /**
+   * An op that executes the TPUEmbedding partitioner on the central configuration
+   *  device and computes the HBM size (in bytes) required for TPUEmbedding operation.
+   *
+   * @param config An TPUEmbeddingConfiguration proto serialized to a string,
+   *  describing the desired TPUEmbedding configuration.
+   * @return a new instance of ExecuteTPUEmbeddingPartitioner
+   */
+  public ExecuteTPUEmbeddingPartitioner executeTPUEmbeddingPartitioner(String config) {
+    return ExecuteTPUEmbeddingPartitioner.create(scope, config);
+  }
+
+  /**
+   * An op that finalizes the TPUEmbedding configuration.
+   *
+   * @param commonConfig A string-encoded common configuration proto containing metadata
+   *  about the TPUEmbedding partitioner output and the HBM size (in bytes) required
+   *  for operation.
+   * @param memoryConfig A string-encoded memory config proto containing metadata about
+   *  the memory allocations reserved for TPUEmbedding.
+   * @return a new instance of FinalizeTPUEmbedding
+   */
+  public FinalizeTPUEmbedding finalizeTPUEmbedding(Operand<TString> commonConfig,
+      Operand<TString> memoryConfig) {
+    return FinalizeTPUEmbedding.create(scope, commonConfig, memoryConfig);
+  }
+
+  /**
    * An op that groups a list of partitioned inputs together. This op
    *
    * @param <T> data type for {@code output} output
@@ -153,6 +289,45 @@ public final class TpuOps {
   public <T extends TType> PartitionedOutput<T> partitionedOutput(Operand<T> inputs, Long numSplits,
       PartitionedOutput.Options... options) {
     return PartitionedOutput.create(scope, inputs, numSplits, options);
+  }
+
+  /**
+   * An op that shuts down the TPU system.
+   *
+   * @return a new instance of ShutdownTPUSystem
+   */
+  public ShutdownTPUSystem shutdownTPUSystem() {
+    return ShutdownTPUSystem.create(scope);
+  }
+
+  /**
+   * Round-robin load balancing on TPU cores.
+   *  A load balancing op that round-robins among TPU cores.
+   *  <p>This op round-robins between the integers in [0, NumTPUCoresVisiblePerHost]. It
+   *  is useful for interfacing with TensorFlow ops that take as input a TPU core on
+   *  which to execute computations, such as {@code TPUPartitionedCall}.
+   *  <p>device_ordinal: An integer in [0, NumTPUCoresVisiblePerHost].
+   *
+   * @return a new instance of TPURoundRobin
+   */
+  public TPURoundRobin tPURoundRobin() {
+    return TPURoundRobin.create(scope);
+  }
+
+  /**
+   * Converts XRT's uid handles to TensorFlow-friendly input format.
+   *  Converts a uid handle for a compiled program into a vector of proto keys.
+   *  <p>XRT compile ops return uids, and the TensorFlow execute op takes a proto
+   *  key. This op enables a client to compile on TPU using XRT and execute using the
+   *  standard TensorFlow execute op.
+   *  <p>'uid' is the input handle.
+   *  'proto_keys' is a vector of proto keys, one for each core program.
+   *
+   * @param uid The uid value
+   * @return a new instance of TpuHandleToProtoKey
+   */
+  public TpuHandleToProtoKey tpuHandleToProtoKey(Operand<TInt64> uid) {
+    return TpuHandleToProtoKey.create(scope, uid);
   }
 
   /**

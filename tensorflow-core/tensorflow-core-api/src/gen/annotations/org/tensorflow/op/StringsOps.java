@@ -1,4 +1,4 @@
-// Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+// Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import org.tensorflow.op.strings.ToHashBucketStrong;
 import org.tensorflow.op.strings.ToNumber;
 import org.tensorflow.op.strings.UnicodeScript;
 import org.tensorflow.op.strings.UnicodeTranscode;
-import org.tensorflow.op.strings.UnsortedSegmentJoin;
 import org.tensorflow.op.strings.Upper;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -584,46 +583,6 @@ public final class StringsOps {
   public UnicodeTranscode unicodeTranscode(Operand<TString> input, String inputEncoding,
       String outputEncoding, UnicodeTranscode.Options... options) {
     return UnicodeTranscode.create(scope, input, inputEncoding, outputEncoding, options);
-  }
-
-  /**
-   * Joins the elements of {@code inputs} based on {@code segment_ids}.
-   *  Computes the string join along segments of a tensor.
-   *  Given {@code segment_ids} with rank {@code N} and {@code data} with rank {@code N+M}:
-   *  <pre>
-   *  `output[i, k1...kM] = strings.join([data[j1...jN, k1...kM])`
-   *  </pre>
-   *  <p>where the join is over all [j1...jN] such that segment_ids[j1...jN] = i.
-   *  Strings are joined in row-major order.
-   *  <p>For example:
-   *  <pre>
-   *  inputs = [['Y', 'q', 'c'], ['Y', '6', '6'], ['p', 'G', 'a']]
-   *  output_array = string_ops.unsorted_segment_join(inputs=inputs,
-   *                                                  segment_ids=[1, 0, 1],
-   *                                                  num_segments=2,
-   *                                                  separator=':'))
-   *  # output_array ==&gt; [['Y', '6', '6'], ['Y:p', 'q:G', 'c:a']]
-   *
-   *
-   *  inputs = ['this', 'is', 'a', 'test']
-   *  output_array = string_ops.unsorted_segment_join(inputs=inputs,
-   *                                                  segment_ids=[0, 0, 0, 0],
-   *                                                  num_segments=1,
-   *                                                  separator=':'))
-   *  # output_array ==&gt; ['this:is:a:test']
-   *  </pre>
-   *
-   * @param inputs The input to be joined.
-   * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
-   *  supported.
-   * @param numSegments A scalar.
-   * @param options carries optional attribute values
-   * @return a new instance of UnsortedSegmentJoin
-   */
-  public UnsortedSegmentJoin unsortedSegmentJoin(Operand<TString> inputs,
-      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments,
-      UnsortedSegmentJoin.Options... options) {
-    return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
   }
 
   /**

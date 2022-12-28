@@ -70,8 +70,8 @@ public @interface Endpoint {
    * Indicates that the class description should be copied in the documentation of this endpoint,
    * instead of the description of the annotated method.
    *
-   * <p>Tags of the annotated method, like {@code @param} and {@code @return}, are copied to
-   * the endpoint documentation independently from this value.
+   * <p>Tags of the annotated method, like {@code @param} and {@code @return}, are copied to the
+   * endpoint documentation independently from this value.
    */
   boolean describeByClass() default false;
 }

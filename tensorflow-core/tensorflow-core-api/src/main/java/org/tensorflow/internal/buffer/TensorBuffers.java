@@ -20,8 +20,6 @@ package org.tensorflow.internal.buffer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorByteSize;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorData;
 
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
@@ -34,9 +32,7 @@ import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 
-/**
- * Maps native tensor memory into {@link DataBuffers}, allowing I/O operations from the JVM.
- */
+/** Maps native tensor memory into {@link DataBuffers}, allowing I/O operations from the JVM. */
 public final class TensorBuffers {
 
   /**
@@ -162,7 +158,8 @@ public final class TensorBuffers {
       return TensorRawDataBufferFactory.mapTensorToStrings(tensorMemory, numElements);
     }
     if (numElements > Integer.MAX_VALUE) {
-      throw new IllegalArgumentException("Cannot map string tensor of " + numElements + " elements");
+      throw new IllegalArgumentException(
+          "Cannot map string tensor of " + numElements + " elements");
     }
     return new ByteSequenceTensorBuffer(tensorMemory, numElements);
   }

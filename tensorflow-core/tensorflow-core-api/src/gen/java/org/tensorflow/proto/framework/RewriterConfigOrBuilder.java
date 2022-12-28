@@ -299,9 +299,11 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
-   * Optimize data types for MKL (default is OFF).
+   * Optimize data types for oneDNN (default is OFF).
    * This will try to use bfloat16 on CPUs, which is faster.
    * Note that this can change the numerical stability of the graph.
+   * Note: this is deprecated.
+   * It is replaced by auto_mixed_precision_onednn_bfloat16
    * </pre>
    *
    * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -309,14 +311,39 @@ public interface RewriterConfigOrBuilder extends
   int getAutoMixedPrecisionMklValue();
   /**
    * <pre>
-   * Optimize data types for MKL (default is OFF).
+   * Optimize data types for oneDNN (default is OFF).
    * This will try to use bfloat16 on CPUs, which is faster.
    * Note that this can change the numerical stability of the graph.
+   * Note: this is deprecated.
+   * It is replaced by auto_mixed_precision_onednn_bfloat16
    * </pre>
    *
    * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
    */
   org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionMkl();
+
+  /**
+   * <pre>
+   * Optimize data types for oneDNN (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+   */
+  int getAutoMixedPrecisionOnednnBfloat16Value();
+  /**
+   * <pre>
+   * Optimize data types for oneDNN (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionOnednnBfloat16();
 
   /**
    * <pre>
@@ -368,6 +395,23 @@ public interface RewriterConfigOrBuilder extends
    * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
    */
   org.tensorflow.proto.framework.RewriterConfig.Toggle getUsePluginOptimizers();
+
+  /**
+   * <pre>
+   * Conditional code motion (default is ON).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+   */
+  int getExperimentalConditionalCodeMotionValue();
+  /**
+   * <pre>
+   * Conditional code motion (default is ON).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.Toggle getExperimentalConditionalCodeMotion();
 
   /**
    * <pre>

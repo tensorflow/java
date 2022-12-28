@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,24 +35,34 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Permute input tensor from {@code src_format} to {@code dst_format}.
- * Input tensor must be a vector of size 4, or a 4x2 tensor.
- * <p>For example, with {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and inputs:
+ * Given source and destination format strings of length n=4 or 5, the input
+ * tensor must be a vector of size n or n-2, or a 2D tensor of shape
+ * (n, 2) or (n-2, 2).
+ * <p>If the first dimension of the input tensor is n-2, it is assumed that
+ * non-spatial dimensions are omitted (i.e {@code N}, {@code C}).
+ * <p>For example, with {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and input:
  * <pre>
  * [1, 2, 3, 4]
  * </pre>
- * <p>and
- * <pre>
- * [[1, 2, 3, 4],
- *  [5, 6, 7, 8]]
- * </pre>
- * <p>, the outputs will be (respectively):
+ * <p>, the output will be:
  * <pre>
  * [1, 4, 2, 3]
  * </pre>
- * <p>and
+ * <p>With {@code src_format} of {@code NDHWC}, {@code dst_format} of {@code NCDHW}, and input:
  * <pre>
- * [[1, 4, 2, 3],
- *  [5, 8, 6, 7]]
+ * [[1, 6], [2, 7], [3, 8], [4, 9], [5, 10]]
+ * </pre>
+ * <p>, the output will be:
+ * <pre>
+ * [[1, 6], [5, 10], [2, 7], [3, 8], [4, 9]]
+ * </pre>
+ * <p>With {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and input:
+ * <pre>
+ * [1, 2]
+ * </pre>
+ * <p>, the output will be:
+ * <pre>
+ * [1, 2]
  * </pre>
  *
  * @param <T> data type for {@code y} output
@@ -82,7 +92,7 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
    * Factory method to create a class wrapping a new DataFormatVecPermute operation.
    *
    * @param scope current scope
-   * @param x Vector of size 4 or Tensor of shape (4, 2) in source data format.
+   * @param x Tensor of rank 1 or 2 in source data format.
    * @param options carries optional attribute values
    * @param <T> data type for {@code DataFormatVecPermute} output and operands
    * @return a new instance of DataFormatVecPermute
@@ -129,7 +139,7 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
 
   /**
    * Gets y.
-   * Vector of size 4 or Tensor of shape (4, 2) in destination data format.
+   * Tensor of rank 1 or 2 in destination data format.
    * @return y.
    */
   public Output<T> y() {
@@ -180,7 +190,7 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
   )
   public static class Inputs<T extends TNumber> extends RawOpInputs<DataFormatVecPermute<T>> {
     /**
-     * Vector of size 4 or Tensor of shape (4, 2) in source data format.
+     * Tensor of rank 1 or 2 in source data format.
      */
     public final Operand<T> x;
 

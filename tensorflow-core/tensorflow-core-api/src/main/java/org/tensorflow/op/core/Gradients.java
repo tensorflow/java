@@ -29,18 +29,20 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s,
- * i.e., {@code d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
- * <p> 
- * If {@code Options.dx()} values are set, they are as the initial symbolic partial derivatives of some loss 
- * function {@code L} w.r.t. {@code y}. {@code Options.dx()} must have the size of {@code y}.
- * <p>
- * If {@code Options.dx()} is not set, the implementation will use dx of {@code OnesLike} for all
+ * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s, i.e.,
+ * {@code d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
+ *
+ * <p>If {@code Options.dx()} values are set, they are as the initial symbolic partial derivatives
+ * of some loss function {@code L} w.r.t. {@code y}. {@code Options.dx()} must have the size of
+ * {@code y}.
+ *
+ * <p>If {@code Options.dx()} is not set, the implementation will use dx of {@code OnesLike} for all
  * shapes in {@code y}.
- * <p>
- * The partial derivatives are returned in output {@code dy}, with the size of {@code x}.
- * <p>
- * Example of usage:
+ *
+ * <p>The partial derivatives are returned in output {@code dy}, with the size of {@code x}.
+ *
+ * <p>Example of usage:
+ *
  * <pre>{@code
  * Gradients gradients = tf.gradients(loss, Arrays.asList(w, b));
  * Constant<TFloat32> alpha = tf.constant(1.0f);
@@ -51,9 +53,7 @@ import org.tensorflow.types.family.TType;
 @Operator
 public final class Gradients implements Iterable<Operand<?>> {
 
-  /**
-   * Optional attributes for {@link Gradients}
-   */
+  /** Optional attributes for {@link Gradients} */
   public static class Options {
 
     /**
@@ -67,8 +67,7 @@ public final class Gradients implements Iterable<Operand<?>> {
 
     private Iterable<? extends Operand<?>> dx;
 
-    private Options() {
-    }
+    private Options() {}
   }
 
   /**
@@ -138,10 +137,8 @@ public final class Gradients implements Iterable<Operand<?>> {
   public Iterator<Operand<?>> iterator() {
     return (Iterator) dy.iterator();
   }
-  
-  /**
-   * Partial derivatives of {@code y}s w.r.t. {@code x}s, with the size of {@code x}
-   */
+
+  /** Partial derivatives of {@code y}s w.r.t. {@code x}s, with the size of {@code x} */
   public List<Output<?>> dy() {
     return dy;
   }
@@ -162,7 +159,7 @@ public final class Gradients implements Iterable<Operand<?>> {
   }
 
   private List<Output<?>> dy;
-  
+
   private Gradients(List<Output<?>> dy) {
     this.dy = dy;
   }

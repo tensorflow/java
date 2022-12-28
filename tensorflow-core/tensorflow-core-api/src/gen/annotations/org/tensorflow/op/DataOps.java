@@ -1,4 +1,4 @@
-// Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+// Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -368,7 +368,7 @@ public final class DataOps {
    * @param options carries optional attribute values
    * @return a new instance of DataServiceDataset
    */
-  public DataServiceDataset dataServiceDataset(Operand<TInt64> datasetId,
+  public DataServiceDataset dataServiceDataset(Operand<TString> datasetId,
       Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
       Operand<TString> jobName, Operand<TInt64> consumerIndex, Operand<TInt64> numConsumers,
       Operand<TInt64> maxOutstandingRequests, Operand<? extends TType> iterationCounter,

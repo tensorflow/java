@@ -70,7 +70,7 @@ public final class DatasetOptionsProtos {
       "ODERATE\020\002\"\177\n\021DistributeOptions\022;\n\021auto_s" +
       "hard_policy\030\001 \001(\0162 .tensorflow.data.Auto" +
       "ShardPolicy\022\025\n\013num_devices\030\002 \001(\005H\000B\026\n\024op" +
-      "tional_num_devices\"\265\005\n\023OptimizationOptio" +
+      "tional_num_devices\"\354\005\n\023OptimizationOptio" +
       "ns\022%\n\033apply_default_optimizations\030\001 \001(\010H" +
       "\000\022\027\n\rfilter_fusion\030\006 \001(\010H\001\022\036\n\024map_and_ba" +
       "tch_fusion\030\t \001(\010H\002\022\037\n\025map_and_filter_fus" +
@@ -78,39 +78,41 @@ public final class DatasetOptionsProtos {
       "_parallelization\030\014 \001(\010H\005\022\032\n\020noop_elimina" +
       "tion\030\016 \001(\010H\006\022\030\n\016parallel_batch\030\017 \001(\010H\007\022#" +
       "\n\031shuffle_and_repeat_fusion\030\021 \001(\010H\010\022 \n\026f" +
-      "ilter_parallelization\030\022 \001(\010H\tB&\n$optiona" +
-      "l_apply_default_optimizationsB\030\n\026optiona" +
-      "l_filter_fusionB\037\n\035optional_map_and_batc" +
-      "h_fusionB \n\036optional_map_and_filter_fusi" +
-      "onB\025\n\023optional_map_fusionB\036\n\034optional_ma" +
-      "p_parallelizationB\033\n\031optional_noop_elimi" +
-      "nationB\031\n\027optional_parallel_batchB$\n\"opt" +
-      "ional_shuffle_and_repeat_fusionB!\n\037optio" +
-      "nal_filter_parallelizationJ\004\010\002\020\003J\004\010\003\020\004J\004" +
-      "\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010\020\tJ\004\010\r\020\016J\004\010\020\020\021\"\242\001\n\020T" +
-      "hreadingOptions\022\"\n\030max_intra_op_parallel" +
-      "ism\030\001 \001(\005H\000\022!\n\027private_threadpool_size\030\002" +
-      " \001(\005H\001B#\n!optional_max_intra_op_parallel" +
-      "ismB\"\n optional_private_threadpool_size\"" +
-      "\306\003\n\007Options\022\027\n\rdeterministic\030\001 \001(\010H\000\022:\n\020" +
-      "autotune_options\030\007 \001(\0132 .tensorflow.data" +
-      ".AutotuneOptions\022>\n\022distribute_options\030\002" +
-      " \001(\0132\".tensorflow.data.DistributeOptions" +
-      "\022B\n\024optimization_options\030\003 \001(\0132$.tensorf" +
-      "low.data.OptimizationOptions\022\017\n\005slack\030\004 " +
-      "\001(\010H\001\022<\n\021threading_options\030\005 \001(\0132!.tenso" +
-      "rflow.data.ThreadingOptions\022E\n\025external_" +
-      "state_policy\030\006 \001(\0162$.tensorflow.data.Ext" +
-      "ernalStatePolicyH\002B\030\n\026optional_determini" +
-      "sticB\020\n\016optional_slackB \n\036optional_exter" +
-      "nal_state_policy*K\n\017AutoShardPolicy\022\010\n\004A" +
-      "UTO\020\000\022\010\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HINT\020\003\022\020\n\003O" +
-      "FF\020\377\377\377\377\377\377\377\377\377\001*J\n\023ExternalStatePolicy\022\017\n\013" +
-      "POLICY_WARN\020\000\022\021\n\rPOLICY_IGNORE\020\001\022\017\n\013POLI" +
-      "CY_FAIL\020\002B\213\001\n\031org.tensorflow.proto.dataB" +
-      "\024DatasetOptionsProtosP\001ZVgithub.com/tens" +
-      "orflow/tensorflow/tensorflow/go/core/fra" +
-      "mework/dataset_options_go_protob\006proto3"
+      "ilter_parallelization\030\022 \001(\010H\t\022\031\n\017inject_" +
+      "prefetch\030\023 \001(\010H\nB&\n$optional_apply_defau" +
+      "lt_optimizationsB\030\n\026optional_filter_fusi" +
+      "onB\037\n\035optional_map_and_batch_fusionB \n\036o" +
+      "ptional_map_and_filter_fusionB\025\n\023optiona" +
+      "l_map_fusionB\036\n\034optional_map_paralleliza" +
+      "tionB\033\n\031optional_noop_eliminationB\031\n\027opt" +
+      "ional_parallel_batchB$\n\"optional_shuffle" +
+      "_and_repeat_fusionB!\n\037optional_filter_pa" +
+      "rallelizationB\032\n\030optional_inject_prefetc" +
+      "hJ\004\010\002\020\003J\004\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010\020\tJ\004\010" +
+      "\r\020\016J\004\010\020\020\021\"\242\001\n\020ThreadingOptions\022\"\n\030max_in" +
+      "tra_op_parallelism\030\001 \001(\005H\000\022!\n\027private_th" +
+      "readpool_size\030\002 \001(\005H\001B#\n!optional_max_in" +
+      "tra_op_parallelismB\"\n optional_private_t" +
+      "hreadpool_size\"\306\003\n\007Options\022\027\n\rdeterminis" +
+      "tic\030\001 \001(\010H\000\022:\n\020autotune_options\030\007 \001(\0132 ." +
+      "tensorflow.data.AutotuneOptions\022>\n\022distr" +
+      "ibute_options\030\002 \001(\0132\".tensorflow.data.Di" +
+      "stributeOptions\022B\n\024optimization_options\030" +
+      "\003 \001(\0132$.tensorflow.data.OptimizationOpti" +
+      "ons\022\017\n\005slack\030\004 \001(\010H\001\022<\n\021threading_option" +
+      "s\030\005 \001(\0132!.tensorflow.data.ThreadingOptio" +
+      "ns\022E\n\025external_state_policy\030\006 \001(\0162$.tens" +
+      "orflow.data.ExternalStatePolicyH\002B\030\n\026opt" +
+      "ional_deterministicB\020\n\016optional_slackB \n" +
+      "\036optional_external_state_policy*K\n\017AutoS" +
+      "hardPolicy\022\010\n\004AUTO\020\000\022\010\n\004FILE\020\001\022\010\n\004DATA\020\002" +
+      "\022\010\n\004HINT\020\003\022\020\n\003OFF\020\377\377\377\377\377\377\377\377\377\001*J\n\023External" +
+      "StatePolicy\022\017\n\013POLICY_WARN\020\000\022\021\n\rPOLICY_I" +
+      "GNORE\020\001\022\017\n\013POLICY_FAIL\020\002B\213\001\n\031org.tensorf" +
+      "low.proto.dataB\024DatasetOptionsProtosP\001ZV" +
+      "github.com/tensorflow/tensorflow/tensorf" +
+      "low/go/core/framework/dataset_options_go" +
+      "_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -140,7 +142,7 @@ public final class DatasetOptionsProtos {
     internal_static_tensorflow_data_OptimizationOptions_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_OptimizationOptions_descriptor,
-        new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", });
+        new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "InjectPrefetch", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", "OptionalInjectPrefetch", });
     internal_static_tensorflow_data_ThreadingOptions_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_tensorflow_data_ThreadingOptions_fieldAccessorTable = new

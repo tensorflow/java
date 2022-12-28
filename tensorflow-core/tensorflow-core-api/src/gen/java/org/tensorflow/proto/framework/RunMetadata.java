@@ -99,6 +99,19 @@ private static final long serialVersionUID = 0L;
                 input.readMessage(org.tensorflow.proto.framework.RunMetadata.FunctionGraphs.parser(), extensionRegistry));
             break;
           }
+          case 42: {
+            org.tensorflow.proto.framework.SessionMetadata.Builder subBuilder = null;
+            if (sessionMetadata_ != null) {
+              subBuilder = sessionMetadata_.toBuilder();
+            }
+            sessionMetadata_ = input.readMessage(org.tensorflow.proto.framework.SessionMetadata.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(sessionMetadata_);
+              sessionMetadata_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -1652,6 +1665,39 @@ private static final long serialVersionUID = 0L;
     return functionGraphs_.get(index);
   }
 
+  public static final int SESSION_METADATA_FIELD_NUMBER = 5;
+  private org.tensorflow.proto.framework.SessionMetadata sessionMetadata_;
+  /**
+   * <pre>
+   * Metadata about the session.
+   * </pre>
+   *
+   * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+   */
+  public boolean hasSessionMetadata() {
+    return sessionMetadata_ != null;
+  }
+  /**
+   * <pre>
+   * Metadata about the session.
+   * </pre>
+   *
+   * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+   */
+  public org.tensorflow.proto.framework.SessionMetadata getSessionMetadata() {
+    return sessionMetadata_ == null ? org.tensorflow.proto.framework.SessionMetadata.getDefaultInstance() : sessionMetadata_;
+  }
+  /**
+   * <pre>
+   * Metadata about the session.
+   * </pre>
+   *
+   * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+   */
+  public org.tensorflow.proto.framework.SessionMetadataOrBuilder getSessionMetadataOrBuilder() {
+    return getSessionMetadata();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -1678,6 +1724,9 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < functionGraphs_.size(); i++) {
       output.writeMessage(4, functionGraphs_.get(i));
     }
+    if (sessionMetadata_ != null) {
+      output.writeMessage(5, getSessionMetadata());
+    }
     unknownFields.writeTo(output);
   }
 
@@ -1702,6 +1751,10 @@ private static final long serialVersionUID = 0L;
     for (int i = 0; i < functionGraphs_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, functionGraphs_.get(i));
+    }
+    if (sessionMetadata_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, getSessionMetadata());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -1732,6 +1785,11 @@ private static final long serialVersionUID = 0L;
         .equals(other.getPartitionGraphsList())) return false;
     if (!getFunctionGraphsList()
         .equals(other.getFunctionGraphsList())) return false;
+    if (hasSessionMetadata() != other.hasSessionMetadata()) return false;
+    if (hasSessionMetadata()) {
+      if (!getSessionMetadata()
+          .equals(other.getSessionMetadata())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -1758,6 +1816,10 @@ private static final long serialVersionUID = 0L;
     if (getFunctionGraphsCount() > 0) {
       hash = (37 * hash) + FUNCTION_GRAPHS_FIELD_NUMBER;
       hash = (53 * hash) + getFunctionGraphsList().hashCode();
+    }
+    if (hasSessionMetadata()) {
+      hash = (37 * hash) + SESSION_METADATA_FIELD_NUMBER;
+      hash = (53 * hash) + getSessionMetadata().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1922,6 +1984,12 @@ private static final long serialVersionUID = 0L;
       } else {
         functionGraphsBuilder_.clear();
       }
+      if (sessionMetadataBuilder_ == null) {
+        sessionMetadata_ = null;
+      } else {
+        sessionMetadata_ = null;
+        sessionMetadataBuilder_ = null;
+      }
       return this;
     }
 
@@ -1976,6 +2044,11 @@ private static final long serialVersionUID = 0L;
         result.functionGraphs_ = functionGraphs_;
       } else {
         result.functionGraphs_ = functionGraphsBuilder_.build();
+      }
+      if (sessionMetadataBuilder_ == null) {
+        result.sessionMetadata_ = sessionMetadata_;
+      } else {
+        result.sessionMetadata_ = sessionMetadataBuilder_.build();
       }
       onBuilt();
       return result;
@@ -2082,6 +2155,9 @@ private static final long serialVersionUID = 0L;
             functionGraphsBuilder_.addAllMessages(other.functionGraphs_);
           }
         }
+      }
+      if (other.hasSessionMetadata()) {
+        mergeSessionMetadata(other.getSessionMetadata());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -3221,6 +3297,159 @@ private static final long serialVersionUID = 0L;
         functionGraphs_ = null;
       }
       return functionGraphsBuilder_;
+    }
+
+    private org.tensorflow.proto.framework.SessionMetadata sessionMetadata_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.SessionMetadata, org.tensorflow.proto.framework.SessionMetadata.Builder, org.tensorflow.proto.framework.SessionMetadataOrBuilder> sessionMetadataBuilder_;
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public boolean hasSessionMetadata() {
+      return sessionMetadataBuilder_ != null || sessionMetadata_ != null;
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public org.tensorflow.proto.framework.SessionMetadata getSessionMetadata() {
+      if (sessionMetadataBuilder_ == null) {
+        return sessionMetadata_ == null ? org.tensorflow.proto.framework.SessionMetadata.getDefaultInstance() : sessionMetadata_;
+      } else {
+        return sessionMetadataBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public Builder setSessionMetadata(org.tensorflow.proto.framework.SessionMetadata value) {
+      if (sessionMetadataBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        sessionMetadata_ = value;
+        onChanged();
+      } else {
+        sessionMetadataBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public Builder setSessionMetadata(
+        org.tensorflow.proto.framework.SessionMetadata.Builder builderForValue) {
+      if (sessionMetadataBuilder_ == null) {
+        sessionMetadata_ = builderForValue.build();
+        onChanged();
+      } else {
+        sessionMetadataBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public Builder mergeSessionMetadata(org.tensorflow.proto.framework.SessionMetadata value) {
+      if (sessionMetadataBuilder_ == null) {
+        if (sessionMetadata_ != null) {
+          sessionMetadata_ =
+            org.tensorflow.proto.framework.SessionMetadata.newBuilder(sessionMetadata_).mergeFrom(value).buildPartial();
+        } else {
+          sessionMetadata_ = value;
+        }
+        onChanged();
+      } else {
+        sessionMetadataBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public Builder clearSessionMetadata() {
+      if (sessionMetadataBuilder_ == null) {
+        sessionMetadata_ = null;
+        onChanged();
+      } else {
+        sessionMetadata_ = null;
+        sessionMetadataBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public org.tensorflow.proto.framework.SessionMetadata.Builder getSessionMetadataBuilder() {
+      
+      onChanged();
+      return getSessionMetadataFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    public org.tensorflow.proto.framework.SessionMetadataOrBuilder getSessionMetadataOrBuilder() {
+      if (sessionMetadataBuilder_ != null) {
+        return sessionMetadataBuilder_.getMessageOrBuilder();
+      } else {
+        return sessionMetadata_ == null ?
+            org.tensorflow.proto.framework.SessionMetadata.getDefaultInstance() : sessionMetadata_;
+      }
+    }
+    /**
+     * <pre>
+     * Metadata about the session.
+     * </pre>
+     *
+     * <code>.tensorflow.SessionMetadata session_metadata = 5;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.SessionMetadata, org.tensorflow.proto.framework.SessionMetadata.Builder, org.tensorflow.proto.framework.SessionMetadataOrBuilder> 
+        getSessionMetadataFieldBuilder() {
+      if (sessionMetadataBuilder_ == null) {
+        sessionMetadataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.framework.SessionMetadata, org.tensorflow.proto.framework.SessionMetadata.Builder, org.tensorflow.proto.framework.SessionMetadataOrBuilder>(
+                getSessionMetadata(),
+                getParentForChildren(),
+                isClean());
+        sessionMetadata_ = null;
+      }
+      return sessionMetadataBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

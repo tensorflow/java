@@ -15,21 +15,16 @@
  */
 package org.tensorflow.framework.data.impl;
 
+import java.util.List;
+import java.util.function.Function;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.DatasetIterator;
 import org.tensorflow.framework.data.DatasetOptional;
-import org.tensorflow.op.Ops;
-
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class MapIterator extends DatasetIterator {
   private final Function<List<Operand<?>>, List<Operand<?>>> mapper;
 
-  public MapIterator(
-      DatasetIterator source,
-      Function<List<Operand<?>>, List<Operand<?>>> mapper) {
+  public MapIterator(DatasetIterator source, Function<List<Operand<?>>, List<Operand<?>>> mapper) {
     super(source);
     this.mapper = mapper;
   }

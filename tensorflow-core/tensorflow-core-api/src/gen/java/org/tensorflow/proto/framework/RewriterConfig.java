@@ -37,8 +37,10 @@ private static final long serialVersionUID = 0L;
     implementationSelector_ = 0;
     autoMixedPrecision_ = 0;
     autoMixedPrecisionMkl_ = 0;
+    autoMixedPrecisionOnednnBfloat16_ = 0;
     autoMixedPrecisionCpu_ = 0;
     usePluginOptimizers_ = 0;
+    experimentalConditionalCodeMotion_ = 0;
     metaOptimizerIterations_ = 0;
     memoryOptimization_ = 0;
     memoryOptimizerTargetNodeNameScope_ = "";
@@ -256,6 +258,18 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
 
             autoMixedPrecisionCpu_ = rawValue;
+            break;
+          }
+          case 240: {
+            int rawValue = input.readEnum();
+
+            experimentalConditionalCodeMotion_ = rawValue;
+            break;
+          }
+          case 248: {
+            int rawValue = input.readEnum();
+
+            autoMixedPrecisionOnednnBfloat16_ = rawValue;
             break;
           }
           case 400: {
@@ -2233,9 +2247,11 @@ private static final long serialVersionUID = 0L;
   private int autoMixedPrecisionMkl_;
   /**
    * <pre>
-   * Optimize data types for MKL (default is OFF).
+   * Optimize data types for oneDNN (default is OFF).
    * This will try to use bfloat16 on CPUs, which is faster.
    * Note that this can change the numerical stability of the graph.
+   * Note: this is deprecated.
+   * It is replaced by auto_mixed_precision_onednn_bfloat16
    * </pre>
    *
    * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -2245,9 +2261,11 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Optimize data types for MKL (default is OFF).
+   * Optimize data types for oneDNN (default is OFF).
    * This will try to use bfloat16 on CPUs, which is faster.
    * Note that this can change the numerical stability of the graph.
+   * Note: this is deprecated.
+   * It is replaced by auto_mixed_precision_onednn_bfloat16
    * </pre>
    *
    * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -2255,6 +2273,37 @@ private static final long serialVersionUID = 0L;
   public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionMkl() {
     @SuppressWarnings("deprecation")
     org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionMkl_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+  }
+
+  public static final int AUTO_MIXED_PRECISION_ONEDNN_BFLOAT16_FIELD_NUMBER = 31;
+  private int autoMixedPrecisionOnednnBfloat16_;
+  /**
+   * <pre>
+   * Optimize data types for oneDNN (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+   */
+  public int getAutoMixedPrecisionOnednnBfloat16Value() {
+    return autoMixedPrecisionOnednnBfloat16_;
+  }
+  /**
+   * <pre>
+   * Optimize data types for oneDNN (default is OFF).
+   * This will try to use bfloat16 on CPUs, which is faster.
+   * Note that this can change the numerical stability of the graph.
+   * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionOnednnBfloat16() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionOnednnBfloat16_);
     return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
   }
 
@@ -2326,6 +2375,31 @@ private static final long serialVersionUID = 0L;
   public org.tensorflow.proto.framework.RewriterConfig.Toggle getUsePluginOptimizers() {
     @SuppressWarnings("deprecation")
     org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(usePluginOptimizers_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+  }
+
+  public static final int EXPERIMENTAL_CONDITIONAL_CODE_MOTION_FIELD_NUMBER = 30;
+  private int experimentalConditionalCodeMotion_;
+  /**
+   * <pre>
+   * Conditional code motion (default is ON).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+   */
+  public int getExperimentalConditionalCodeMotionValue() {
+    return experimentalConditionalCodeMotion_;
+  }
+  /**
+   * <pre>
+   * Conditional code motion (default is ON).
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.Toggle getExperimentalConditionalCodeMotion() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(experimentalConditionalCodeMotion_);
     return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
   }
 
@@ -2882,6 +2956,12 @@ private static final long serialVersionUID = 0L;
     if (autoMixedPrecisionCpu_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
       output.writeEnum(29, autoMixedPrecisionCpu_);
     }
+    if (experimentalConditionalCodeMotion_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      output.writeEnum(30, experimentalConditionalCodeMotion_);
+    }
+    if (autoMixedPrecisionOnednnBfloat16_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      output.writeEnum(31, autoMixedPrecisionOnednnBfloat16_);
+    }
     if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
       output.writeEnum(50, cpuLayoutConversion_);
     }
@@ -3021,6 +3101,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(29, autoMixedPrecisionCpu_);
     }
+    if (experimentalConditionalCodeMotion_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(30, experimentalConditionalCodeMotion_);
+    }
+    if (autoMixedPrecisionOnednnBfloat16_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(31, autoMixedPrecisionOnednnBfloat16_);
+    }
     if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(50, cpuLayoutConversion_);
@@ -3078,10 +3166,12 @@ private static final long serialVersionUID = 0L;
     if (implementationSelector_ != other.implementationSelector_) return false;
     if (autoMixedPrecision_ != other.autoMixedPrecision_) return false;
     if (autoMixedPrecisionMkl_ != other.autoMixedPrecisionMkl_) return false;
+    if (autoMixedPrecisionOnednnBfloat16_ != other.autoMixedPrecisionOnednnBfloat16_) return false;
     if (autoMixedPrecisionCpu_ != other.autoMixedPrecisionCpu_) return false;
     if (getDisableMetaOptimizer()
         != other.getDisableMetaOptimizer()) return false;
     if (usePluginOptimizers_ != other.usePluginOptimizers_) return false;
+    if (experimentalConditionalCodeMotion_ != other.experimentalConditionalCodeMotion_) return false;
     if (metaOptimizerIterations_ != other.metaOptimizerIterations_) return false;
     if (getMinGraphNodes()
         != other.getMinGraphNodes()) return false;
@@ -3166,6 +3256,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + autoMixedPrecision_;
     hash = (37 * hash) + AUTO_MIXED_PRECISION_MKL_FIELD_NUMBER;
     hash = (53 * hash) + autoMixedPrecisionMkl_;
+    hash = (37 * hash) + AUTO_MIXED_PRECISION_ONEDNN_BFLOAT16_FIELD_NUMBER;
+    hash = (53 * hash) + autoMixedPrecisionOnednnBfloat16_;
     hash = (37 * hash) + AUTO_MIXED_PRECISION_CPU_FIELD_NUMBER;
     hash = (53 * hash) + autoMixedPrecisionCpu_;
     hash = (37 * hash) + DISABLE_META_OPTIMIZER_FIELD_NUMBER;
@@ -3173,6 +3265,8 @@ private static final long serialVersionUID = 0L;
         getDisableMetaOptimizer());
     hash = (37 * hash) + USE_PLUGIN_OPTIMIZERS_FIELD_NUMBER;
     hash = (53 * hash) + usePluginOptimizers_;
+    hash = (37 * hash) + EXPERIMENTAL_CONDITIONAL_CODE_MOTION_FIELD_NUMBER;
+    hash = (53 * hash) + experimentalConditionalCodeMotion_;
     hash = (37 * hash) + META_OPTIMIZER_ITERATIONS_FIELD_NUMBER;
     hash = (53 * hash) + metaOptimizerIterations_;
     hash = (37 * hash) + MIN_GRAPH_NODES_FIELD_NUMBER;
@@ -3390,11 +3484,15 @@ private static final long serialVersionUID = 0L;
 
       autoMixedPrecisionMkl_ = 0;
 
+      autoMixedPrecisionOnednnBfloat16_ = 0;
+
       autoMixedPrecisionCpu_ = 0;
 
       disableMetaOptimizer_ = false;
 
       usePluginOptimizers_ = 0;
+
+      experimentalConditionalCodeMotion_ = 0;
 
       metaOptimizerIterations_ = 0;
 
@@ -3488,9 +3586,11 @@ private static final long serialVersionUID = 0L;
       result.implementationSelector_ = implementationSelector_;
       result.autoMixedPrecision_ = autoMixedPrecision_;
       result.autoMixedPrecisionMkl_ = autoMixedPrecisionMkl_;
+      result.autoMixedPrecisionOnednnBfloat16_ = autoMixedPrecisionOnednnBfloat16_;
       result.autoMixedPrecisionCpu_ = autoMixedPrecisionCpu_;
       result.disableMetaOptimizer_ = disableMetaOptimizer_;
       result.usePluginOptimizers_ = usePluginOptimizers_;
+      result.experimentalConditionalCodeMotion_ = experimentalConditionalCodeMotion_;
       result.metaOptimizerIterations_ = metaOptimizerIterations_;
       result.minGraphNodes_ = minGraphNodes_;
       result.experimentalDisableCompressedTensorOptimization_ = experimentalDisableCompressedTensorOptimization_;
@@ -3632,6 +3732,9 @@ private static final long serialVersionUID = 0L;
       if (other.autoMixedPrecisionMkl_ != 0) {
         setAutoMixedPrecisionMklValue(other.getAutoMixedPrecisionMklValue());
       }
+      if (other.autoMixedPrecisionOnednnBfloat16_ != 0) {
+        setAutoMixedPrecisionOnednnBfloat16Value(other.getAutoMixedPrecisionOnednnBfloat16Value());
+      }
       if (other.autoMixedPrecisionCpu_ != 0) {
         setAutoMixedPrecisionCpuValue(other.getAutoMixedPrecisionCpuValue());
       }
@@ -3640,6 +3743,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.usePluginOptimizers_ != 0) {
         setUsePluginOptimizersValue(other.getUsePluginOptimizersValue());
+      }
+      if (other.experimentalConditionalCodeMotion_ != 0) {
+        setExperimentalConditionalCodeMotionValue(other.getExperimentalConditionalCodeMotionValue());
       }
       if (other.metaOptimizerIterations_ != 0) {
         setMetaOptimizerIterationsValue(other.getMetaOptimizerIterationsValue());
@@ -4825,9 +4931,11 @@ private static final long serialVersionUID = 0L;
     private int autoMixedPrecisionMkl_ = 0;
     /**
      * <pre>
-     * Optimize data types for MKL (default is OFF).
+     * Optimize data types for oneDNN (default is OFF).
      * This will try to use bfloat16 on CPUs, which is faster.
      * Note that this can change the numerical stability of the graph.
+     * Note: this is deprecated.
+     * It is replaced by auto_mixed_precision_onednn_bfloat16
      * </pre>
      *
      * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -4837,9 +4945,11 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types for MKL (default is OFF).
+     * Optimize data types for oneDNN (default is OFF).
      * This will try to use bfloat16 on CPUs, which is faster.
      * Note that this can change the numerical stability of the graph.
+     * Note: this is deprecated.
+     * It is replaced by auto_mixed_precision_onednn_bfloat16
      * </pre>
      *
      * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -4851,9 +4961,11 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types for MKL (default is OFF).
+     * Optimize data types for oneDNN (default is OFF).
      * This will try to use bfloat16 on CPUs, which is faster.
      * Note that this can change the numerical stability of the graph.
+     * Note: this is deprecated.
+     * It is replaced by auto_mixed_precision_onednn_bfloat16
      * </pre>
      *
      * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -4865,9 +4977,11 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types for MKL (default is OFF).
+     * Optimize data types for oneDNN (default is OFF).
      * This will try to use bfloat16 on CPUs, which is faster.
      * Note that this can change the numerical stability of the graph.
+     * Note: this is deprecated.
+     * It is replaced by auto_mixed_precision_onednn_bfloat16
      * </pre>
      *
      * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -4883,9 +4997,11 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Optimize data types for MKL (default is OFF).
+     * Optimize data types for oneDNN (default is OFF).
      * This will try to use bfloat16 on CPUs, which is faster.
      * Note that this can change the numerical stability of the graph.
+     * Note: this is deprecated.
+     * It is replaced by auto_mixed_precision_onednn_bfloat16
      * </pre>
      *
      * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_mkl = 25;</code>
@@ -4893,6 +5009,86 @@ private static final long serialVersionUID = 0L;
     public Builder clearAutoMixedPrecisionMkl() {
       
       autoMixedPrecisionMkl_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int autoMixedPrecisionOnednnBfloat16_ = 0;
+    /**
+     * <pre>
+     * Optimize data types for oneDNN (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+     */
+    public int getAutoMixedPrecisionOnednnBfloat16Value() {
+      return autoMixedPrecisionOnednnBfloat16_;
+    }
+    /**
+     * <pre>
+     * Optimize data types for oneDNN (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+     */
+    public Builder setAutoMixedPrecisionOnednnBfloat16Value(int value) {
+      autoMixedPrecisionOnednnBfloat16_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Optimize data types for oneDNN (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.Toggle getAutoMixedPrecisionOnednnBfloat16() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(autoMixedPrecisionOnednnBfloat16_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Optimize data types for oneDNN (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+     */
+    public Builder setAutoMixedPrecisionOnednnBfloat16(org.tensorflow.proto.framework.RewriterConfig.Toggle value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      autoMixedPrecisionOnednnBfloat16_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Optimize data types for oneDNN (default is OFF).
+     * This will try to use bfloat16 on CPUs, which is faster.
+     * Note that this can change the numerical stability of the graph.
+     * Note: this is equivalent to the deprecated option auto_mixed_precision_mkl
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle auto_mixed_precision_onednn_bfloat16 = 31;</code>
+     */
+    public Builder clearAutoMixedPrecisionOnednnBfloat16() {
+      
+      autoMixedPrecisionOnednnBfloat16_ = 0;
       onChanged();
       return this;
     }
@@ -5081,6 +5277,71 @@ private static final long serialVersionUID = 0L;
     public Builder clearUsePluginOptimizers() {
       
       usePluginOptimizers_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int experimentalConditionalCodeMotion_ = 0;
+    /**
+     * <pre>
+     * Conditional code motion (default is ON).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+     */
+    public int getExperimentalConditionalCodeMotionValue() {
+      return experimentalConditionalCodeMotion_;
+    }
+    /**
+     * <pre>
+     * Conditional code motion (default is ON).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+     */
+    public Builder setExperimentalConditionalCodeMotionValue(int value) {
+      experimentalConditionalCodeMotion_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Conditional code motion (default is ON).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.Toggle getExperimentalConditionalCodeMotion() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(experimentalConditionalCodeMotion_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Conditional code motion (default is ON).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+     */
+    public Builder setExperimentalConditionalCodeMotion(org.tensorflow.proto.framework.RewriterConfig.Toggle value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      experimentalConditionalCodeMotion_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Conditional code motion (default is ON).
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle experimental_conditional_code_motion = 30;</code>
+     */
+    public Builder clearExperimentalConditionalCodeMotion() {
+      
+      experimentalConditionalCodeMotion_ = 0;
       onChanged();
       return this;
     }

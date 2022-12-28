@@ -35,7 +35,7 @@ public final class GeneratedOperationsTest {
         Session sess = new Session(g)) {
       Ops ops = Ops.create(g);
       Operand<TInt32> x = ops.math.add(ops.constant(1), ops.constant(2));
-      try (TInt32 result = (TInt32)sess.runner().fetch(x).run().get(0)) {
+      try (TInt32 result = (TInt32) sess.runner().fetch(x).run().get(0)) {
         assertEquals(3, result.getInt());
       }
     }
@@ -51,7 +51,7 @@ public final class GeneratedOperationsTest {
       inputs.add(ops.constant(2));
       inputs.add(ops.constant(3));
       Operand<TInt32> x = ops.math.addN(inputs);
-      try (TInt32 result = (TInt32)sess.runner().fetch(x).run().get(0)) {
+      try (TInt32 result = (TInt32) sess.runner().fetch(x).run().get(0)) {
         assertEquals(6, result.getInt());
       }
     }
@@ -73,10 +73,9 @@ public final class GeneratedOperationsTest {
       Operand<?> initVariable = ops.assign(variable, ops.constant(0));
       ArrayList<Op> controls = new ArrayList<>();
       controls.add(ops.assign(variable, ops.constant(3)));
-      Operand<TInt32> x =
-          ops.withControlDependencies(controls).math.add(variable, ops.constant(0));
+      Operand<TInt32> x = ops.withControlDependencies(controls).math.add(variable, ops.constant(0));
       sess.runner().addTarget(initVariable).run();
-      try (TInt32 result = (TInt32)sess.runner().fetch(x).run().get(0)) {
+      try (TInt32 result = (TInt32) sess.runner().fetch(x).run().get(0)) {
         assertEquals(3, result.getInt());
       }
     }

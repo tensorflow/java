@@ -1,4 +1,4 @@
-// Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+// Copyright 2020-2022 The TensorFlow Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -660,28 +660,38 @@ public final class NnOps {
 
   /**
    * Permute input tensor from {@code src_format} to {@code dst_format}.
-   *  Input tensor must be a vector of size 4, or a 4x2 tensor.
-   *  <p>For example, with {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and inputs:
+   *  Given source and destination format strings of length n=4 or 5, the input
+   *  tensor must be a vector of size n or n-2, or a 2D tensor of shape
+   *  (n, 2) or (n-2, 2).
+   *  <p>If the first dimension of the input tensor is n-2, it is assumed that
+   *  non-spatial dimensions are omitted (i.e {@code N}, {@code C}).
+   *  <p>For example, with {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and input:
    *  <pre>
    *  [1, 2, 3, 4]
    *  </pre>
-   *  <p>and
-   *  <pre>
-   *  [[1, 2, 3, 4],
-   *   [5, 6, 7, 8]]
-   *  </pre>
-   *  <p>, the outputs will be (respectively):
+   *  <p>, the output will be:
    *  <pre>
    *  [1, 4, 2, 3]
    *  </pre>
-   *  <p>and
+   *  <p>With {@code src_format} of {@code NDHWC}, {@code dst_format} of {@code NCDHW}, and input:
    *  <pre>
-   *  [[1, 4, 2, 3],
-   *   [5, 8, 6, 7]]
+   *  [[1, 6], [2, 7], [3, 8], [4, 9], [5, 10]]
+   *  </pre>
+   *  <p>, the output will be:
+   *  <pre>
+   *  [[1, 6], [5, 10], [2, 7], [3, 8], [4, 9]]
+   *  </pre>
+   *  <p>With {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and input:
+   *  <pre>
+   *  [1, 2]
+   *  </pre>
+   *  <p>, the output will be:
+   *  <pre>
+   *  [1, 2]
    *  </pre>
    *
    * @param <T> data type for {@code y} output
-   * @param x Vector of size 4 or Tensor of shape (4, 2) in source data format.
+   * @param x Tensor of rank 1 or 2 in source data format.
    * @param options carries optional attribute values
    * @param <T> data type for {@code DataFormatVecPermute} output and operands
    * @return a new instance of DataFormatVecPermute
@@ -701,7 +711,7 @@ public final class NnOps {
    *  <ul>
    *  <li>Chunks of data of size {@code block_size * block_size} from depth are rearranged
    *  into non-overlapping blocks of size {@code block_size x block_size}</li>
-   *  <li>The width the output tensor is {@code input_depth * block_size}, whereas the
+   *  <li>The width of the output tensor is {@code input_depth * block_size}, whereas the
    *  height is {@code input_height * block_size}.</li>
    *  <li>The Y, X coordinates within each block of the output image are determined
    *  by the high order component of the input channel index.</li>

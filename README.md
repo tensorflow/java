@@ -43,15 +43,30 @@ See [CONTRIBUTING.md](CONTRIBUTING.md#building).
 
 ## Using Maven Artifacts
 
-To include TensorFlow in your Maven application, you first need to add a dependency on either the
-`tensorflow-core` or `tensorflow-core-platform` artifacts. The former could be included multiple times
-for different targeted systems by their classifiers, while the later includes them as dependencies for
-`linux-x86_64`, `macosx-x86_64`, and `windows-x86_64`, with more to come in the future. There are also
-`tensorflow-core-platform-mkl`, `tensorflow-core-platform-gpu`, and `tensorflow-core-platform-mkl-gpu`
-artifacts that depend on artifacts with MKL and/or CUDA support enabled.
+There are two options for adding TensorFlow Java as a dependency to your Maven project: with individual dependencies 
+for each targeted platforms or with a single dependency that target them all.
+
+### Individual dependencies
+
+With this option, you must first add an unclassified dependency to `tensorflow-core-api` and then add one or multiple
+native dependencies to this same artifact with a classifier targeting a specific platform. This option is preferred as 
+it minimize the size of your application by only including the TensorFlow builds you need, at the cost of being more 
+restrictive. 
+
+While TensorFlow Java can be compiled for [multiple platforms](https://github.com/tensorflow/java/blob/dc64755ee948c71f1321be27478828a51f1f3cf7/tensorflow-core/pom.xml#L54),
+only binaries for the followings are being **supported and distributed** by this project:
+
+- `linux-x86_64`: Linux platforms on Intel chips
+- `linux-x86_64-gpu`: Linux platforms on Intel chips with Cuda GPU support
+- `macosx-x86_64`: MacOS X platforms on Intel chips
+- `windows-x86_64`: Windows platforms on Intel chips
+- `windows-x86_64-gpu`: Windows platforms on Intel chips with Cuda GPU support
+
+*Note: No binaries are distributed to run TensorFlow Java on machines with Apple Silicon chips (`macosx-arm64`), these 
+should be build from sources. See [here](CONTRIBUTING.md#apple-silicon) for more details.*
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
-systems, you should add the following dependencies:
+systems with no GPU support, you should add the following dependencies:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
@@ -62,7 +77,7 @@ systems, you should add the following dependencies:
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.4.2</version>
-  <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
+  <classifier>linux-x86_64</classifier>
 </dependency>
 ```
 
@@ -78,37 +93,54 @@ native dependencies as follows:
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.4.2</version>
-  <classifier>linux-x86_64${javacpp.platform.extension}</classifier>
+  <classifier>linux-x86_64-gpu</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.4.2</version>
-  <classifier>macosx-x86_64${javacpp.platform.extension}</classifier>
+  <classifier>macosx-x86_64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
   <version>0.4.2</version>
-  <classifier>windows-x86_64${javacpp.platform.extension}</classifier>
+  <classifier>windows-x86_64-gpu</classifier>
 </dependency>
 ```
 
-In some cases, pre-configured starter artifacts can help to automatically include all versions of
-the native library for a given configuration. For example, the `tensorflow-core-platform`,
-`tensorflow-core-platform-mkl`, `tensorflow-core-platform-gpu`, or `tensorflow-core-platform-mkl-gpu`
-artifact includes transitively all the artifacts above as a single dependency:
+Only one dependency can be added per platform, meaning that you cannot add native dependencies to both `linux-x86_64` and 
+`linux-x86_64-gpu` within the same project.
+
+### Single dependency
+
+In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
+required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
+
+- `tensorflow-core-platform`: Includes TenSupports for `linux-x86_64`, `macosx-x86_64` and `windows-x86_64`
+- `tensorflow-core-platform-gpu`: Supports `linux-x86_64-gpu` and `windows-x86_64-gpu`
+
+For example, to run TensorFlow Java on any platform for which a binary is being distributed by this project, you can 
+simply add this dependency to your application:
 ```xml
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
+  <artifactId>tensorflow-core-platform</artifactId>
+  <version>0.4.2</version>
+</dependency>
+```
+or this dependency if you want to run it only on platforms with GPU support:
+```xml
+<dependency>
+  <groupId>org.tensorflow</groupId>
+  <artifactId>tensorflow-core-platform-gpu</artifactId>
   <version>0.4.2</version>
 </dependency>
 ```
 
-Be aware though that the native library is quite large and including too many versions of it may
-significantly increase  the size of your JAR. So it is good practice to limit your dependencies to
-the platforms you are targeting. For this purpose the `-platform` artifacts include profiles that follow
+Be aware though that the builds of TensorFlow are quite voluminous and including too many native dependencies may
+significantly increase the size of your application. So it is good practice to limit your dependencies to
+the platforms you are targeting. For this purpose these artifacts include profiles that follow
 the conventions established on this page:
 * [Reducing the Number of Dependencies](https://github.com/bytedeco/javacpp-presets/wiki/Reducing-the-Number-of-Dependencies)
 

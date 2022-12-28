@@ -1,7 +1,4 @@
 op {
   graph_op_name: "RegisterDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.RegisterDataset"
-  }
+  visibility: SKIP
 }

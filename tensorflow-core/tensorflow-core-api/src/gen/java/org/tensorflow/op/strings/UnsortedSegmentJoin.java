@@ -1,4 +1,4 @@
-/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,44 +29,16 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Joins the elements of {@code inputs} based on {@code segment_ids}.
- * Computes the string join along segments of a tensor.
- * Given {@code segment_ids} with rank {@code N} and {@code data} with rank {@code N+M}:
- * <pre>
- * `output[i, k1...kM] = strings.join([data[j1...jN, k1...kM])`
- * </pre>
- * <p>where the join is over all [j1...jN] such that segment_ids[j1...jN] = i.
- * Strings are joined in row-major order.
- * <p>For example:
- * <pre>
- * inputs = [['Y', 'q', 'c'], ['Y', '6', '6'], ['p', 'G', 'a']]
- * output_array = string_ops.unsorted_segment_join(inputs=inputs,
- *                                                 segment_ids=[1, 0, 1],
- *                                                 num_segments=2,
- *                                                 separator=':'))
- * # output_array ==&gt; [['Y', '6', '6'], ['Y:p', 'q:G', 'c:a']]
- *
- *
- * inputs = ['this', 'is', 'a', 'test']
- * output_array = string_ops.unsorted_segment_join(inputs=inputs,
- *                                                 segment_ids=[0, 0, 0, 0],
- *                                                 num_segments=1,
- *                                                 separator=':'))
- * # output_array ==&gt; ['this:is:a:test']
- * </pre>
+ * The UnsortedSegmentJoin operation
  */
 @OpMetadata(
     opType = UnsortedSegmentJoin.OP_NAME,
     inputsClass = UnsortedSegmentJoin.Inputs.class
-)
-@Operator(
-    group = "strings"
 )
 public final class UnsortedSegmentJoin extends RawOp implements Operand<TString> {
   /**
@@ -86,10 +58,9 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
    * Factory method to create a class wrapping a new UnsortedSegmentJoin operation.
    *
    * @param scope current scope
-   * @param inputs The input to be joined.
-   * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
-   * supported.
-   * @param numSegments A scalar.
+   * @param inputs The inputs value
+   * @param segmentIds The segmentIds value
+   * @param numSegments The numSegments value
    * @param options carries optional attribute values
    * @return a new instance of UnsortedSegmentJoin
    */
@@ -116,7 +87,7 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
   /**
    * Sets the separator option.
    *
-   * @param separator The separator to use when joining.
+   * @param separator the separator option
    * @return this Options instance.
    */
   public static Options separator(String separator) {
@@ -149,7 +120,7 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
     /**
      * Sets the separator option.
      *
-     * @param separator The separator to use when joining.
+     * @param separator the separator option
      * @return this Options instance.
      */
     public Options separator(String separator) {
@@ -163,23 +134,22 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
   )
   public static class Inputs extends RawOpInputs<UnsortedSegmentJoin> {
     /**
-     * The input to be joined.
+     * The inputs input
      */
     public final Operand<TString> inputs;
 
     /**
-     * A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
-     * supported.
+     * The segmentIds input
      */
     public final Operand<? extends TNumber> segmentIds;
 
     /**
-     * A scalar.
+     * The numSegments input
      */
     public final Operand<? extends TNumber> numSegments;
 
     /**
-     * The separator to use when joining.
+     * The separator attribute
      */
     public final String separator;
 

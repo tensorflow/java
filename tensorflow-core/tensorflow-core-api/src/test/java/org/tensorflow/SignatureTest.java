@@ -14,14 +14,13 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Signature.TensorDescription;
 import org.tensorflow.op.Ops;
 import org.tensorflow.proto.framework.DataType;
-
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SignatureTest {
 
@@ -37,10 +36,11 @@ public class SignatureTest {
   public void cannotDuplicateInputOutputNames() {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Signature.Builder builder = Signature.builder()
-          .input("x", tf.constant(10.0f))
-          .output("x", tf.constant(10.0f))  // can add an output with the same name as an input
-          .output("y", tf.constant(20.0f));
+      Signature.Builder builder =
+          Signature.builder()
+              .input("x", tf.constant(10.0f))
+              .output("x", tf.constant(10.0f)) // can add an output with the same name as an input
+              .output("y", tf.constant(20.0f));
       assertThrows(IllegalArgumentException.class, () -> builder.input("x", tf.constant(10)));
       assertThrows(IllegalArgumentException.class, () -> builder.output("y", tf.constant(20.0f)));
     }
@@ -49,10 +49,12 @@ public class SignatureTest {
   @Test
   public void getInputsAndOutputs() {
     Ops tf = Ops.create();
-    Signature builder = Signature.builder()
-          .input("x",  tf.constant(10.0f))
-          .output("y", tf.constant(new float[][] {{10.0f, 30.0f}}))
-          .output("z", tf.constant(20.0f)).build();
+    Signature builder =
+        Signature.builder()
+            .input("x", tf.constant(10.0f))
+            .output("y", tf.constant(new float[][] {{10.0f, 30.0f}}))
+            .output("z", tf.constant(20.0f))
+            .build();
 
     Map<String, TensorDescription> inputs = builder.getInputs();
     assertEquals(inputs.size(), 1);
@@ -62,8 +64,8 @@ public class SignatureTest {
 
     assertEquals(outputs.get("y").dataType, DataType.DT_FLOAT);
     assertEquals(outputs.get("z").dataType, DataType.DT_FLOAT);
-    assertArrayEquals(outputs.get("y").shape.asArray(), new long [] {1,2});
-    assertArrayEquals(outputs.get("z").shape.asArray(), new long [] {});
+    assertArrayEquals(outputs.get("y").shape.asArray(), new long[] {1, 2});
+    assertArrayEquals(outputs.get("z").shape.asArray(), new long[] {});
 
     Signature emptySignature = Signature.builder().build();
     assertEquals(emptySignature.getInputs().size(), 0);

@@ -7,7 +7,8 @@ import java.util.Objects;
  *
  * <p>This is a Java port from python device_spec.py.
  *
- * @see <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/framework/device_spec.py">device_spec.py</a>.
+ * @see <a
+ *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/framework/device_spec.py">device_spec.py</a>.
  */
 public final class DeviceSpec {
   private static final String JOB_PREFIX = "/job:";

@@ -25,11 +25,11 @@ import java.lang.annotation.Target;
  * Annotation used by classes to make TensorFlow operations conveniently accessible via {@code
  * org.tensorflow.op.Ops} or one of its groups.
  *
- * <p>An annotation processor ({@code org.tensorflow.processor.OperatorProcessor}) builds the
- * {@code Ops} class by aggregating all classes annotated as {@code @Operator}s. Each annotated
- * class <b>must</b> have at least one public static factory method named {@code create} that
- * accepts a {@link org.tensorflow.op.Scope} as its first argument. The processor then adds a
- * convenience method in the {@code Ops} class. For example:
+ * <p>An annotation processor ({@code org.tensorflow.processor.OperatorProcessor}) builds the {@code
+ * Ops} class by aggregating all classes annotated as {@code @Operator}s. Each annotated class
+ * <b>must</b> have at least one public static factory method named {@code create} that accepts a
+ * {@link org.tensorflow.op.Scope} as its first argument. The processor then adds a convenience
+ * method in the {@code Ops} class. For example:
  *
  * <pre>{@code
  * @Operator
@@ -96,8 +96,8 @@ public @interface Operator {
    * }</pre>
    *
    * <p>The group name must be a <a
-   * href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">valid Java
-   * package name</a>.
+   * href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">valid Java package
+   * name</a>.
    */
   String group() default "";
 

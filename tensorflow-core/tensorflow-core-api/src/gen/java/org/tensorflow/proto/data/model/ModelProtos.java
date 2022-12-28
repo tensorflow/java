@@ -78,13 +78,14 @@ public final class ModelProtos {
       "\n\tNodeClass\022\013\n\007UNKNOWN\020\000\022\023\n\017INTERLEAVE_M" +
       "ANY\020\001\022\031\n\025ASYNC_INTERLEAVE_MANY\020\002\022\017\n\013KNOW" +
       "N_RATIO\020\003\022\025\n\021ASYNC_KNOWN_RATIO\020\004\022\021\n\rUNKN" +
-      "OWN_RATIO\020\005\022\027\n\023ASYNC_UNKNOWN_RATIO\020\006*[\n\021" +
+      "OWN_RATIO\020\005\022\027\n\023ASYNC_UNKNOWN_RATIO\020\006*l\n\021" +
       "AutotuneAlgorithm\022\013\n\007DEFAULT\020\000\022\016\n\nHILL_C" +
       "LIMB\020\001\022\024\n\020GRADIENT_DESCENT\020\002\022\023\n\017MAX_PARA" +
-      "LLELISM\020\003B\201\001\n\037org.tensorflow.proto.data." +
-      "modelB\013ModelProtosP\001ZLgithub.com/tensorf" +
-      "low/tensorflow/tensorflow/go/core/framew" +
-      "ork/model_go_proto\370\001\001b\006proto3"
+      "LLELISM\020\003\022\017\n\013STAGE_BASED\020\004B\201\001\n\037org.tenso" +
+      "rflow.proto.data.modelB\013ModelProtosP\001ZLg" +
+      "ithub.com/tensorflow/tensorflow/tensorfl" +
+      "ow/go/core/framework/model_go_proto\370\001\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
