@@ -174,7 +174,9 @@ public abstract class Optimizer {
     List<Op> updateOps = new ArrayList<>();
     prepOp.ifPresent(updateOps::add);
     for (GradAndVar<? extends TType> pair : gradsAndVars) {
-      updateOps.add(applyDense(pair));
+      if (!pair.gradient.isClosed()) {
+        updateOps.add(applyDense(pair));
+      }
     }
 
     return finish(updateOps, name);
