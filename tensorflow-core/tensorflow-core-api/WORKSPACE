@@ -12,7 +12,7 @@ http_archive(
 #        ":tensorflow-macosx.patch",
 #        ":tensorflow-windows.patch", # https://github.com/tensorflow/tensorflow/issues/25213
         ":tensorflow-proto.patch",
-        ":custom-grad-symbols.patch",
+#        ":custom-grad-symbols.patch",
 	":tensorflow-nccl.patch"
     ],
     patch_tool = "patch",
