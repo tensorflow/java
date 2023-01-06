@@ -149,7 +149,7 @@ public final class Output<T extends TType> implements Operand<T> {
 
   public boolean isClosed() {
     Pointer handle = operation.getUnsafeNativeHandle(index);
-    return handle== null || handle.isNull() ;
+    return handle == null || handle.isNull();
   }
 
   private final AbstractOperation operation;
