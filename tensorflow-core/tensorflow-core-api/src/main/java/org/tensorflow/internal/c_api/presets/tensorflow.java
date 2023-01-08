@@ -121,7 +121,8 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "libiomp5md",
             "mklml",
             "tensorflow_framework"
-          }),
+          },
+          link = {"tensorflow_cc@.2"}),
       @Platform(
           value = "windows-x86",
           preloadpath = {
