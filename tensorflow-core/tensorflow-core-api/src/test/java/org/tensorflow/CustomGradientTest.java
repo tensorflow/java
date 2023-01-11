@@ -16,6 +16,9 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -25,10 +28,6 @@ import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.nn.NthElement;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
-
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomGradientTest {
 
@@ -45,8 +44,8 @@ public class CustomGradientTest {
             }));
   }
 
-  // FIXME: Since TF 2.10.1, this test is failing on Windows, because the whole JVM crashes when calling the JavaCPP
-  //        generated binding `NameMap.erase`. Disable it until we find a fix.
+  // FIXME: Since TF 2.10.1, this test is failing on Windows, because the whole JVM crashes when
+  // calling the JavaCPP generated binding `NameMap.erase`. Disable it until we find a fix.
   @DisabledOnOs(OS.WINDOWS)
   @Test
   public void testCustomGradient() {
