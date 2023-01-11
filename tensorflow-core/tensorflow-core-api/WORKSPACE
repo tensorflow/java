@@ -10,10 +10,10 @@ http_archive(
     patches = [
         ":tensorflow-visibility.patch",
 #        ":tensorflow-macosx.patch",
-#        ":tensorflow-windows.patch", # https://github.com/tensorflow/tensorflow/issues/25213
+        ":tensorflow-windows.patch",
         ":tensorflow-proto.patch",
         ":custom-grad-symbols.patch",
-	":tensorflow-nccl.patch"
+	    ":tensorflow-nccl.patch"
     ],
     patch_tool = "patch",
     patch_args = ["-p1"],

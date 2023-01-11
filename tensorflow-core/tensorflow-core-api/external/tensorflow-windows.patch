@@ -1,44 +1,12 @@
-diff --git a/third_party/mkl/BUILD b/third_party/mkl/BUILD
-index aa65b585b85..4e6546eac34 100644
---- a/third_party/mkl/BUILD
-+++ b/third_party/mkl/BUILD
-@@ -91,10 +91,23 @@ cc_library(
-     visibility = ["//visibility:public"],
- )
- 
-+cc_import(
-+    name = "iomp5",
-+    interface_library = "lib/libiomp5md.lib",
-+    system_provided = 1,
-+)
-+
-+cc_import(
-+    name = "mklml",
-+    interface_library = "lib/mklml.lib",
-+    system_provided = 1,
-+)
-+
- cc_library(
-     name = "mkl_libs_windows",
--    srcs = [
--        "@llvm_openmp//:libiomp5md.dll",
-+    deps = [
-+        "iomp5",
-+        "mklml"
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+index 19ee8000206..655c30af1e9 100644
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -1162,6 +1162,7 @@ tf_cc_shared_library(
      ],
-     visibility = ["//visibility:public"],
- )
-diff --git a/third_party/llvm_openmp/BUILD b/third_party/llvm_openmp/BUILD
-index 099a84dcbaa..f7f9d44118f 100644
---- a/third_party/llvm_openmp/BUILD
-+++ b/third_party/llvm_openmp/BUILD
-@@ -71,7 +71,7 @@ omp_vars_linux = {
-
- # Windows Cmake vars to expand.
- omp_vars_win = {
--    "MSVC": 1,
-+    "MSVC": 0,
- }
-
- omp_all_cmake_vars = select({
- 
+     dynamic_deps = select({
+         "//tensorflow:macos": ["//tensorflow:libtensorflow_framework.%s.dylib" % VERSION],
++        "//tensorflow:windows": [],
+         "//conditions:default": ["//tensorflow:libtensorflow_framework.so.%s" % VERSION],
+     }),
+     framework_so = [],

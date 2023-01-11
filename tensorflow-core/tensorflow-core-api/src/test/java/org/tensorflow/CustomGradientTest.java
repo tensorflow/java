@@ -16,13 +16,12 @@ limitations under the License.
 */
 package org.tensorflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.dtypes.Cast;
@@ -45,6 +44,9 @@ public class CustomGradientTest {
             }));
   }
 
+  // FIXME: Since TF 2.10.1, this test is failing on Windows, because the whole JVM crashes when
+  // calling the JavaCPP generated binding `NameMap.erase`. Disable it until we find a fix.
+  @DisabledOnOs(OS.WINDOWS)
   @Test
   public void testCustomGradient() {
     try (Graph g = new Graph();
