@@ -1,5 +1,5 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package org.tensorflow.ndarray;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.index.Index;
+
+import java.util.stream.DoubleStream;
+import java.util.stream.StreamSupport;
 
 /**
  * An {@link NdArray} of doubles.
@@ -67,6 +70,18 @@ public interface DoubleNdArray extends NdArray<Double> {
    * @throws IllegalRankException if number of coordinates is not sufficient to access a scalar element
    */
   DoubleNdArray setDouble(double value, long... coordinates);
+
+  /**
+   * Retrieve all scalar values of this array as a stream of doubles.
+   *
+   * <p>For {@code rank() > 1} arrays, all vectors of the last dimension are collated so that the scalar values are
+   * returned in sequential order.</p>
+   *
+   * @return scalar values as a stream
+   */
+  default DoubleStream streamOfDoubles() {
+    return StreamSupport.stream(scalars().spliterator(), false).mapToDouble(DoubleNdArray::getDouble);
+  }
 
   @Override
   DoubleNdArray slice(Index... indices);

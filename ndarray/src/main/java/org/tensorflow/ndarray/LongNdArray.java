@@ -1,5 +1,5 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package org.tensorflow.ndarray;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.index.Index;
+
+import java.util.stream.LongStream;
+import java.util.stream.StreamSupport;
 
 /**
  * An {@link NdArray} of longs.
@@ -67,6 +70,18 @@ public interface LongNdArray extends NdArray<Long> {
    * @throws IllegalRankException if number of coordinates is not sufficient to access a scalar element
    */
   LongNdArray setLong(long value, long... coordinates);
+
+  /**
+   * Retrieve all scalar values of this array as a stream of longs.
+   *
+   * <p>For {@code rank() > 1} arrays, all vectors of the last dimension are collated so that the scalar values are
+   * returned in sequential order.</p>
+   *
+   * @return scalar values as a stream
+   */
+  default LongStream streamOfLongs() {
+    return StreamSupport.stream(scalars().spliterator(), false).mapToLong(LongNdArray::getLong);
+  }
 
   @Override
   LongNdArray slice(Index... indices);

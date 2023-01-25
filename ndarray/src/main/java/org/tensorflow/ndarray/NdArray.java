@@ -1,5 +1,5 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.tensorflow.ndarray;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.index.Index;
 
@@ -228,6 +231,18 @@ public interface NdArray<T> extends Shaped {
    * element
    */
   NdArray<T> setObject(T value, long... coordinates);
+
+  /**
+   * Retrieve all scalar values of this array as a stream of objects.
+   *
+   * <p>For {@code rank() > 1} arrays, all vectors of the last dimension are collated so that the scalar values are
+   * returned in sequential order.</p>
+   *
+   * @return scalar values as a stream
+   */
+  default Stream<T> streamOfObjects() {
+    return StreamSupport.stream(scalars().spliterator(), false).map(NdArray::getObject);
+  }
 
   /**
    * Copy the content of this array to the destination array.

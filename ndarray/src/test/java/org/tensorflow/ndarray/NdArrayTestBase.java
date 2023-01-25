@@ -1,5 +1,5 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
  */
 package org.tensorflow.ndarray;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.tensorflow.ndarray.NdArrays.vectorOfObjects;
 import static org.tensorflow.ndarray.index.Indices.all;
 import static org.tensorflow.ndarray.index.Indices.at;
@@ -32,6 +30,9 @@ import static org.tensorflow.ndarray.index.Indices.sliceTo;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.index.Indices;
@@ -357,5 +358,30 @@ public abstract class NdArrayTestBase<T> {
         assertEquals(valueOf((eCoord[0] * originalTensor.shape().get(1)) + sCoord[0] + 1), s.getObject());
       });
     });
+  }
+
+  @Test
+  public void streamingObjects() {
+    NdArray<T> scalar = allocate(Shape.scalar());
+    scalar.setObject(valueOf(1L));
+    var values = scalar.streamOfObjects().collect(Collectors.toList());
+    assertIterableEquals(List.of(valueOf(1L)), values);
+
+    NdArray<T> vector = allocate(Shape.of(5));
+    vector.setObject(valueOf(1L), 0);
+    vector.setObject(valueOf(2L), 1);
+    vector.setObject(valueOf(3L), 2);
+    vector.setObject(valueOf(4L), 3);
+    vector.setObject(valueOf(5L), 4);
+    values = vector.streamOfObjects().collect(Collectors.toList());
+    assertIterableEquals(List.of(valueOf(1L), valueOf(2L), valueOf(3L), valueOf(4L), valueOf(5L)), values);
+
+    NdArray<T> matrix = allocate(Shape.of(2, 2));
+    matrix.setObject(valueOf(1L), 0, 0);
+    matrix.setObject(valueOf(2L), 0, 1);
+    matrix.setObject(valueOf(3L), 1, 0);
+    matrix.setObject(valueOf(4L), 1, 1);
+    values = matrix.streamOfObjects().collect(Collectors.toList());
+    assertIterableEquals(List.of(valueOf(1L), valueOf(2L), valueOf(3L), valueOf(4L)), values);
   }
 }

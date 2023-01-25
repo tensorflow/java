@@ -1,5 +1,5 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 package org.tensorflow.ndarray;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -51,5 +52,30 @@ public abstract class LongNdArrayTestBase extends NdArrayTestBase<Long> {
         assertEquals(6, matrix3d.getLong(0, 0, 1));
         assertEquals(9, matrix3d.getLong(0, 0, 4));
         assertEquals(7, matrix3d.getLong(0, 1, 2));
+    }
+
+    @Test
+    public void streamingLongs() {
+        LongNdArray scalar = allocate(Shape.scalar());
+        scalar.setLong(1L);
+        var values = scalar.streamOfLongs().toArray();
+        assertArrayEquals(new long[]{1L}, values);
+
+        LongNdArray vector = allocate(Shape.of(5));
+        vector.setLong(1L, 0);
+        vector.setLong(2L, 1);
+        vector.setLong(3L, 2);
+        vector.setLong(4L, 3);
+        vector.setLong(5L, 4);
+        values = vector.streamOfLongs().toArray();
+        assertArrayEquals(new long[]{1L, 2L, 3L, 4L, 5L}, values);
+
+        LongNdArray matrix = allocate(Shape.of(2, 2));
+        matrix.setLong(1L, 0, 0);
+        matrix.setLong(2L, 0, 1);
+        matrix.setLong(3L, 1, 0);
+        matrix.setLong(4L, 1, 1);
+        values = matrix.streamOfLongs().toArray();
+        assertArrayEquals(new long[]{1L, 2L, 3L, 4L}, values);
     }
 }

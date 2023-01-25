@@ -1,5 +1,5 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,9 +16,10 @@
  */
 package org.tensorflow.ndarray;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class IntNdArrayTestBase extends NdArrayTestBase<Integer> {
 
@@ -51,5 +52,30 @@ public abstract class IntNdArrayTestBase extends NdArrayTestBase<Integer> {
         assertEquals(6, matrix3d.getInt(0, 0, 1));
         assertEquals(9, matrix3d.getInt(0, 0, 4));
         assertEquals(7, matrix3d.getInt(0, 1, 2));
+    }
+
+    @Test
+    public void streamingInts() {
+        IntNdArray scalar = allocate(Shape.scalar());
+        scalar.setInt(1);
+        var values = scalar.streamOfInts().toArray();
+        assertArrayEquals(new int[]{1}, values);
+
+        IntNdArray vector = allocate(Shape.of(5));
+        vector.setInt(1, 0);
+        vector.setInt(2, 1);
+        vector.setInt(3, 2);
+        vector.setInt(4, 3);
+        vector.setInt(5, 4);
+        values = vector.streamOfInts().toArray();
+        assertArrayEquals(new int[]{1, 2, 3, 4, 5}, values);
+
+        IntNdArray matrix = allocate(Shape.of(2, 2));
+        matrix.setInt(1, 0, 0);
+        matrix.setInt(2, 0, 1);
+        matrix.setInt(3, 1, 0);
+        matrix.setInt(4, 1, 1);
+        values = matrix.streamOfInts().toArray();
+        assertArrayEquals(new int[]{1, 2, 3, 4}, values);
     }
 }
