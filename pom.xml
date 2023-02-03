@@ -19,7 +19,7 @@
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -296,7 +296,7 @@
     <developer>
       <name>SIG JVM</name>
       <organization>TensorFlow</organization>
-      <organizationUrl>http://www.tensorflow.org</organizationUrl>
+      <organizationUrl>https://www.tensorflow.org</organizationUrl>
     </developer>
   </developers>
 
@@ -309,6 +309,27 @@
         <configuration>
           <fork>true</fork> <!-- Required for JDK16+ -->
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.2.1</version>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <configuration>
+              <rules>
+                <dependencyConvergence/>
+                <requireMavenVersion>
+                  <version>3.6</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <!-- GPG signed components: http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components -->
       <plugin>
