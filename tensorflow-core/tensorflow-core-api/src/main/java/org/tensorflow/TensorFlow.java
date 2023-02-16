@@ -193,6 +193,10 @@ public final class TensorFlow {
    * <p>Note that this only works with graph gradients, and will eventually be deprecated in favor
    * of unified gradient support once it is fully supported by tensorflow core.
    *
+   * <p><i>Warning: Custom gradient registration is currently not supported on Windows and may crash
+   * the JVM if trying to do so. See <a href=https://github.com/tensorflow/java/issues/486>GitHub
+   * issue</a> related to this.</i>
+   *
    * @param opType the type of op to register the gradient for. Should usually be an {@code OP_NAME}
    *     field, i.e. {@link Add#OP_NAME}.
    * @param gradient the gradient function to use
@@ -215,6 +219,10 @@ public final class TensorFlow {
    * is detected from the class's {@link OpInputsMetadata} annotation. As such, it only works on
    * generated op classes or custom op classes with the correct annotations. To operate on the
    * {@link org.tensorflow.GraphOperation} directly use {@link RawCustomGradient}.
+   *
+   * <p><i>Warning: Custom gradient registration is currently not supported on Windows and may crash
+   * the JVM if trying to do so. See <a href=https://github.com/tensorflow/java/issues/486>GitHub
+   * issue</a> related to this.</i>
    *
    * @param inputClass the inputs class of op to register the gradient for.
    * @param gradient the gradient function to use
