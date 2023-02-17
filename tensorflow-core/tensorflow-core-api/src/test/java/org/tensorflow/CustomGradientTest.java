@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
@@ -44,8 +45,8 @@ public class CustomGradientTest {
             }));
   }
 
-  // FIXME: Since TF 2.10.1, this test is failing on Windows, because the whole JVM crashes when
-  // calling the JavaCPP generated binding `NameMap.erase`. Disable it until we find a fix.
+  // FIXME: Since TF 2.10.1, custom gradient registration is failing on Windows, see
+  //        https://github.com/tensorflow/java/issues/486
   @DisabledOnOs(OS.WINDOWS)
   @Test
   public void testCustomGradient() {
@@ -74,6 +75,26 @@ public class CustomGradientTest {
         assertEquals(0.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
       }
     }
+  }
+
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  public void testCustomGradientThrowsOnWindows() {
+    assertThrows(
+        UnsupportedOperationException.class,
+        () ->
+            TensorFlow.registerCustomGradient(
+                NthElement.OP_NAME,
+                (tf, op, gradInputs) ->
+                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
+
+    assertThrows(
+        UnsupportedOperationException.class,
+        () ->
+            TensorFlow.registerCustomGradient(
+                NthElement.Inputs.class,
+                (tf, op, gradInputs) ->
+                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
   }
 
   private static Output<?>[] toArray(Output<?>... outputs) {

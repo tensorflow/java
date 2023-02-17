@@ -26,6 +26,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.PointerPointer;
@@ -193,9 +194,8 @@ public final class TensorFlow {
    * <p>Note that this only works with graph gradients, and will eventually be deprecated in favor
    * of unified gradient support once it is fully supported by tensorflow core.
    *
-   * <p><i>Warning: Custom gradient registration is currently not supported on Windows and may crash
-   * the JVM if trying to do so. See <a href=https://github.com/tensorflow/java/issues/486>GitHub
-   * issue</a> related to this.</i>
+   * <p><i>Warning: Custom gradient registration is currently not supported on Windows, see <a
+   * href=https://github.com/tensorflow/java/issues/486>GitHub issue</a> for more info.</i>
    *
    * @param opType the type of op to register the gradient for. Should usually be an {@code OP_NAME}
    *     field, i.e. {@link Add#OP_NAME}.
@@ -205,6 +205,10 @@ public final class TensorFlow {
    */
   public static synchronized boolean registerCustomGradient(
       String opType, RawCustomGradient gradient) {
+    if (isWindowsOs()) {
+      throw new UnsupportedOperationException(
+          "Custom gradient registration is not supported on Windows systems.");
+    }
     if (hasGradient(opType)) {
       return false;
     }
@@ -220,9 +224,8 @@ public final class TensorFlow {
    * generated op classes or custom op classes with the correct annotations. To operate on the
    * {@link org.tensorflow.GraphOperation} directly use {@link RawCustomGradient}.
    *
-   * <p><i>Warning: Custom gradient registration is currently not supported on Windows and may crash
-   * the JVM if trying to do so. See <a href=https://github.com/tensorflow/java/issues/486>GitHub
-   * issue</a> related to this.</i>
+   * <p><i>Warning: Custom gradient registration is currently not supported on Windows, see <a
+   * href=https://github.com/tensorflow/java/issues/486>GitHub issue</a> for more info.</i>
    *
    * @param inputClass the inputs class of op to register the gradient for.
    * @param gradient the gradient function to use
@@ -233,8 +236,11 @@ public final class TensorFlow {
    */
   public static synchronized <T extends RawOpInputs<?>> boolean registerCustomGradient(
       Class<T> inputClass, CustomGradient<T> gradient) {
+    if (isWindowsOs()) {
+      throw new UnsupportedOperationException(
+          "Custom gradient registration is not supported on Windows systems.");
+    }
     OpInputsMetadata metadata = inputClass.getAnnotation(OpInputsMetadata.class);
-
     if (metadata == null) {
       throw new IllegalArgumentException(
           "Inputs Class "
@@ -260,5 +266,9 @@ public final class TensorFlow {
     GradOpRegistry.Global().Register(opType, g);
     gradientFuncs.add(g);
     return true;
+  }
+
+  private static boolean isWindowsOs() {
+    return System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("win");
   }
 }
