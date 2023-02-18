@@ -30,8 +30,31 @@ import org.tensorflow.op.nn.NthElement;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 
+// FIXME: Since TF 2.10.1, custom gradient registration is failing on Windows, see
+//        https://github.com/tensorflow/java/issues/486
 public class CustomGradientTest {
 
+  @EnabledOnOs(OS.WINDOWS)
+  @Test
+  public void customGradientRegistrationUnsupportedOnWindows() {
+    assertThrows(
+        UnsupportedOperationException.class,
+        () ->
+            TensorFlow.registerCustomGradient(
+                NthElement.OP_NAME,
+                (tf, op, gradInputs) ->
+                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
+
+    assertThrows(
+        UnsupportedOperationException.class,
+        () ->
+            TensorFlow.registerCustomGradient(
+                NthElement.Inputs.class,
+                (tf, op, gradInputs) ->
+                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
+  }
+
+  @DisabledOnOs(OS.WINDOWS)
   @Test
   public void testAlreadyExisting() {
     assertFalse(
@@ -45,8 +68,6 @@ public class CustomGradientTest {
             }));
   }
 
-  // FIXME: Since TF 2.10.1, custom gradient registration is failing on Windows, see
-  //        https://github.com/tensorflow/java/issues/486
   @DisabledOnOs(OS.WINDOWS)
   @Test
   public void testCustomGradient() {
@@ -75,26 +96,6 @@ public class CustomGradientTest {
         assertEquals(0.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
       }
     }
-  }
-
-  @EnabledOnOs(OS.WINDOWS)
-  @Test
-  public void testCustomGradientThrowsOnWindows() {
-    assertThrows(
-        UnsupportedOperationException.class,
-        () ->
-            TensorFlow.registerCustomGradient(
-                NthElement.OP_NAME,
-                (tf, op, gradInputs) ->
-                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
-
-    assertThrows(
-        UnsupportedOperationException.class,
-        () ->
-            TensorFlow.registerCustomGradient(
-                NthElement.Inputs.class,
-                (tf, op, gradInputs) ->
-                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
   }
 
   private static Output<?>[] toArray(Output<?>... outputs) {
