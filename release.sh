@@ -48,5 +48,5 @@ docker run \
   -v ${HOME}/.gnupg:/root/.gnupg \
   -w /tensorflow-java \
   -it \
-  maven:3.6.3-jdk-8  \
+  maven:3.8.6-jdk-11  \
   ${CMD}
