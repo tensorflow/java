@@ -9,7 +9,7 @@ which makes TensorFlow Java a strategic choice for adopting machine learning at
 a large scale.
 
 Caution: The TensorFlow Java API is *not* covered by the TensorFlow
-[API stability guarantees](../guide/versions.md).
+[API stability guarantees](https://www.tensorflow.org/guide/versions).
 
 ## Requirements
 
