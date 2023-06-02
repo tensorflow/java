@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.tensorflow</groupId>
     <artifactId>tensorflow-java</artifactId>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
   </parent>
   <artifactId>tensorflow-framework</artifactId>
   <packaging>jar</packaging>
