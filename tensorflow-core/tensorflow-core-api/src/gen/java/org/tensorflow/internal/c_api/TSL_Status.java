@@ -8,10 +8,12 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
+// #endif
+
 @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
-public class TF_OpKernelContext extends Pointer {
+public class TSL_Status extends Pointer {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
-    public TF_OpKernelContext() { super((Pointer)null); }
+    public TSL_Status() { super((Pointer)null); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
-    public TF_OpKernelContext(Pointer p) { super(p); }
+    public TSL_Status(Pointer p) { super(p); }
 }

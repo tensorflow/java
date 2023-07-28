@@ -16,6 +16,7 @@
 
   <properties>
     <native.build.skip>false</native.build.skip>
+    <native.build.folder>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</native.build.folder>
     <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
     <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
@@ -173,6 +174,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
@@ -246,16 +248,16 @@
           <classPath>${project.build.outputDirectory}</classPath>
           <includePaths>
             <includePath>${project.basedir}/</includePath>
-            <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
-            <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>
-            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>
-            <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>
-            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>
+<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>-->
+<!--            <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>-->
+<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>-->
+<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>-->
+<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>-->
+            <includePath>${project.basedir}/downloads/tensorflow/include/</includePath>
             <includePath>${project.basedir}/target/classes/org/tensorflow/internal/c_api/include/</includePath>
           </includePaths>
           <linkPaths>
-            <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
-            <linkPath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/</linkPath>
+            <linkPath>${native.build.folder}</linkPath>
           </linkPaths>
           <resourcePaths>
             <resourcePath>${project.basedir}/../../</resourcePath>
@@ -296,7 +298,10 @@
               <skip>${javacpp.build.skip}</skip>
               <buildCommand>
                 <program>bash</program>
-                <argument>${project.basedir}/build.sh</argument>
+                <argument>prepare_build.sh</argument>
+                <!--argument>${project.basedir}/build.sh</argument-->
+                <argument>${native.wheel.url}</argument>
+                <argument>${native.build.folder}</argument>
               </buildCommand>
               <environmentVariables>
                 <PLATFORM>${javacpp.platform}</PLATFORM>
@@ -355,7 +360,7 @@
               <goal>build</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</outputDirectory>
+              <outputDirectory>${native.build.folder}/</outputDirectory>
               <skip>${javacpp.compiler.skip}</skip>
               <classOrPackageName>org.tensorflow.internal.c_api.**</classOrPackageName>
               <copyLibs>true</copyLibs>

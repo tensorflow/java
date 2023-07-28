@@ -38,12 +38,10 @@
   <properties>
     <!--
     Match version used by TensorFlow, in
-    https://github.com/tensorflow/tensorflow/blob/master/tensorflow/workspace2.bzl#L567
+    https://github.com/tensorflow/tensorflow/blob/master/tensorflow/workspace2.bzl
     (but for the currently used release, not master)
-    
-    Bumped to newer version to patch a CVE only present in protobuf-java
     -->
-    <protobuf.version>3.19.4</protobuf.version>
+    <protobuf.version>3.21.9</protobuf.version>
 
     <native.classifier>${javacpp.platform}${javacpp.platform.extension}</native.classifier>
     <javacpp.build.skip>false</javacpp.build.skip>       <!-- To skip execution of build.sh: -Djavacpp.build.skip=true -->
@@ -69,7 +67,10 @@
     <javacpp.platform.macosx-x86_64.extension>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
     <javacpp.platform.windows-x86.extension>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
     <javacpp.platform.windows-x86_64.extension>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
-    <javacpp.version>1.5.8</javacpp.version>
+    <javacpp.version>1.5.9</javacpp.version>
+
+    <native.wheel.url/>
+    <native.wheel.url.macosx-arm64>https://files.pythonhosted.org/packages/d2/e6/94748fedae940a7095ac3acb821e613f72513cf9fa8ea0cf6fe734ef8c8f/tensorflow_macos-2.12.0-cp311-cp311-macosx_12_0_arm64.whl</native.wheel.url.macosx-arm64>
   </properties>
 
   <profiles>
@@ -880,6 +881,18 @@
       <properties>
         <os.kernel>darwin</os.kernel>
         <os.name>macosx</os.name>
+      </properties>
+    </profile>
+    <profile>
+      <id>macosx-arm64</id>
+      <activation>
+        <os>
+          <name>mac os x</name>
+          <arch>aarch64</arch>
+        </os>
+      </activation>
+      <properties>
+        <native.wheel.url>${native.wheel.url.macosx-arm64}</native.wheel.url>
       </properties>
     </profile>
     <profile>

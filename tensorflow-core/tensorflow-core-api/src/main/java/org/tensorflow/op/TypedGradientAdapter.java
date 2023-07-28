@@ -27,7 +27,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.NativeOutputVector;
-import org.tensorflow.internal.c_api.NativeStatus;
+import org.tensorflow.internal.c_api.Status;
 import org.tensorflow.internal.c_api.TF_Scope;
 
 /** A native adapter for {@link CustomGradient}. */
@@ -46,7 +46,7 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientA
   }
 
   @Override
-  public NativeStatus call(
+  public Status call(
       TF_Scope scope,
       NativeOperation op,
       NativeOutputVector grad_inputs,
@@ -77,6 +77,6 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends BaseGradientA
     } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
       throw new RuntimeException("Could not instantiate Op class " + opInputClass, e);
     }
-    return NativeStatus.OK();
+    return org.tensorflow.internal.c_api.global.tensorflow.OkStatus();
   }
 }

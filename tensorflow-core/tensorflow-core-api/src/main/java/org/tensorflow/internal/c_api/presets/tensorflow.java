@@ -22,14 +22,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+
+import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.ClassProperties;
 import org.bytedeco.javacpp.LoadEnabled;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.annotation.Adapter;
+import org.bytedeco.javacpp.annotation.ByRef;
+import org.bytedeco.javacpp.annotation.ByVal;
 import org.bytedeco.javacpp.annotation.Cast;
+import org.bytedeco.javacpp.annotation.Const;
+import org.bytedeco.javacpp.annotation.Namespace;
 import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
+import org.bytedeco.javacpp.annotation.StdString;
 import org.bytedeco.javacpp.tools.Info;
 import org.bytedeco.javacpp.tools.InfoMap;
 import org.bytedeco.javacpp.tools.InfoMapper;
@@ -41,10 +48,17 @@ import org.bytedeco.javacpp.tools.InfoMapper;
     value = {
       @Platform(
           value = {"linux", "macosx", "windows"},
-          compiler = "cpp14",
+          compiler = "cpp17",
           include = {
-            "tensorflow/core/platform/ctstring_internal.h",
-            "tensorflow/core/platform/ctstring.h",
+            "tensorflow/tsl/platform/ctstring_internal.h",
+            "tensorflow/tsl/platform/ctstring.h",
+//            "tensorflow/tsl/platform/tstring.h",
+//            "tensorflow/tsl/platform/stringpiece.h",
+//            "tensorflow/tsl/platform/cord.h",
+            //"tensorflow/core/platform/status.h",
+            "tensorflow/tsl/platform/status.h",
+            "tensorflow/tsl/platform/default/status.h",
+            "tensorflow/tsl/c/tsl_status.h",
             "tensorflow/core/util/port.h",
             "tensorflow/c/tf_attrtype.h",
             "tensorflow/c/c_api_macros.h",
@@ -53,6 +67,8 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_tensor.h",
             "tensorflow/c/tf_tstring.h",
             "tensorflow/c/c_api.h",
+            "tensorflow/c/tf_buffer.h",
+            "tensorflow/c/tf_status.h",
             //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
@@ -61,11 +77,11 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/eager/c_api_experimental.h",
             "tensorflow/cc/framework/scope.h",
             "tensorflow/cc/framework/grad_op_registry.h",
-            "tensorflow/core/platform/status.h",
             "tensorflow/core/graph/graph.h",
             "tensorflow/c/tf_status_helper.h",
             "tensorflow/cc/framework/ops.h",
-            "tensorflow/c/c_api_internal.h",
+            "tensorflow/c/c_api_internal.h"
+//            "absl/strings/string_view.h"
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           preload = {"iomp5", "mklml", "mklml_intel"},
@@ -465,16 +481,16 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .valueTypes("BytePointer", "String")
                 .pointerTypes("BytePointer"))
         .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
-        .put(
-            new Info("absl::Span<const tensorflow::SourceLocation>")
-                .annotations("@Span")
-                .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
-                .pointerTypes("SourceLocation"))
+//        .put(
+//            new Info("absl::Span<const tensorflow::SourceLocation>")
+//                .annotations("@Span")
+//                .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
+//                .pointerTypes("SourceLocation"))
         .put(
             new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
         .put(new Info("tensorflow::Output").javaNames("NativeOutput"))
         .put(new Info("tensorflow::Operation").javaNames("NativeOperation"))
-        .put(new Info("tensorflow::Status").javaNames("NativeStatus").purify())
+//        .put(new Info("tensorflow::Status").javaNames("NativeStatus").purify())
         .put(
             new Info("tensorflow::int32", "tensorflow::error::Code")
                 .cast()
@@ -488,6 +504,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tensorflow::OutputHash",
                     "tensorflow::StackFrame",
                     "tensorflow::StatusGroup",
+                    "tsl::StatusGroup",
                     "tensorflow::internal::TF_StatusDeleter",
                     "tensorflow::GraphDef",
                     "tensorflow::Scope::graph_as_shared_ptr",
@@ -522,8 +539,47 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tensorflow::Status::SetPayload",
                     "tensorflow::Status::GetPayload",
                     "tensorflow::Status::ForEachPayload",
+                    "tensorflow::Status::GetSourceLocations",
+                    "tsl::GetSourceLocations",
+                    "tsl::SourceLocationImpl",
+                    "tsl::SourceLocation",
+                    "tensorflow::SourceLocationImpl",
+                    "tensorflow::SourceLocation",
+                    "tsl::Status::SourceLocationImpl",
+                    "tsl::Status::SourceLocation",
+                    "tensorflow::Status::SourceLocationImpl",
+                    "tensorflow::Status::SourceLocation",
+                    "tsl::Status::GetAllPayloads",
+                    "tsl::Status::ReplaceAllPayloads",
+                    "tsl::Status::ErasePayload",
+                    "tsl::Status::SetPayload",
+                    "tsl::Status::GetPayload",
+                    "tsl::Status::ForEachPayload",
                     "tensorflow::Node::SetStackTrace",
-                    "tensorflow::Node::GetStackTrace")
+                    "tensorflow::Node::GetStackTrace",
+                    "tsl::Status::SetStackTrace",
+                    "tsl::Status::GetStackTrace",
+                    "tsl::errors::SetStackTrace",
+                    "tsl::errors::GetStackTrace",
+                    "tsl::TfCheckOpHelperOutOfLine",
+                    "tsl::TfCheckOpHelper",
+                    "tsl::ToAbslStatus",
+                    "tsl::FromAbslStatus"
+                    )
+                .skip())
+            .put(new Info(
+                    "auto",
+                    "ska::flat_hash_map",
+                    "std::atomic",
+                    "std::bitset",
+                    "std::conditional",
+                    "std::iterator_traits",
+                    "std::initializer_list",
+                    "std::integral_constant",
+                    "std::mutex",
+                    "std::reverse_iterator",
+                    "std::weak_ptr",
+                    "absl::string_view")
                 .skip());
   }
 
