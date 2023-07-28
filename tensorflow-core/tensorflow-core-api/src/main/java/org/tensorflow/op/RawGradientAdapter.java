@@ -26,7 +26,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.NativeOutputVector;
-import org.tensorflow.internal.c_api.NativeStatus;
+import org.tensorflow.internal.c_api.Status;
 import org.tensorflow.internal.c_api.TF_Scope;
 
 /** A native adapter for {@link RawCustomGradient}. */
@@ -40,7 +40,7 @@ final class RawGradientAdapter extends BaseGradientAdapter {
   }
 
   @Override
-  public NativeStatus call(
+  public Status call(
       TF_Scope scope,
       NativeOperation op,
       NativeOutputVector grad_inputs,
@@ -66,6 +66,6 @@ final class RawGradientAdapter extends BaseGradientAdapter {
 
       BaseGradientAdapter.putToNativeOutputs(gradOutputs, grad_outputs);
     }
-    return NativeStatus.OK();
+    return org.tensorflow.internal.c_api.global.tensorflow.OkStatus();
   }
 }

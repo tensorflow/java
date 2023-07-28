@@ -34,7 +34,7 @@ import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.GradFunc;
 import org.tensorflow.internal.c_api.GradOpRegistry;
-import org.tensorflow.internal.c_api.NativeStatus;
+import org.tensorflow.internal.c_api.Status;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -179,7 +179,7 @@ public final class TensorFlow {
 
   private static synchronized boolean hasGradient(String opType) {
     try (PointerScope scope = new PointerScope()) {
-      NativeStatus status =
+      Status status =
           GradOpRegistry.Global().Lookup(opType, new GradFunc(new PointerPointer<>(1)));
       return status.ok();
     }
