@@ -159,7 +159,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.3.1</version>
         <executions>
           <!--
             Important: Use a phase before "generate-sources" like "initialize" or Maven may move
@@ -177,7 +177,7 @@
 
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.11.0</version>
         <executions>
           <!--
           Generate Ops classes
@@ -248,11 +248,6 @@
           <classPath>${project.build.outputDirectory}</classPath>
           <includePaths>
             <includePath>${project.basedir}/</includePath>
-<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>-->
-<!--            <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>-->
-<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>-->
-<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>-->
-<!--            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>-->
             <includePath>${project.basedir}/downloads/tensorflow/include/</includePath>
             <includePath>${project.basedir}/target/classes/org/tensorflow/internal/c_api/include/</includePath>
           </includePaths>
@@ -261,13 +256,7 @@
           </linkPaths>
           <resourcePaths>
             <resourcePath>${project.basedir}/../../</resourcePath>
-            <resourcePath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/tools/lib_package/</resourcePath>
           </resourcePaths>
-          <preloadPaths>
-            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_linux/lib/</preloadPath>
-            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_darwin/lib/</preloadPath>
-            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_windows/lib/</preloadPath>
-          </preloadPaths>
         </configuration>
         <executions>
           <execution>
@@ -299,9 +288,9 @@
               <buildCommand>
                 <program>bash</program>
                 <argument>prepare_build.sh</argument>
-                <!--argument>${project.basedir}/build.sh</argument-->
                 <argument>${native.wheel.url}</argument>
                 <argument>${native.build.folder}</argument>
+                <argument>${os.name}</argument>
               </buildCommand>
               <environmentVariables>
                 <PLATFORM>${javacpp.platform}</PLATFORM>
@@ -311,12 +300,11 @@
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>
-          <execution>
-            <!--
+          <!-- Commented out while we remove bazel
+        <execution>
             Clean TensorFlow native libraries
-              When this gets executed, all libraries build and cached by Bazel will be deleted and
-              will be rebuild on the next execution.
-            -->
+            When this gets executed, all libraries build and cached by Bazel will be deleted and
+            will be rebuild on the next execution.
             <id>javacpp-clean</id>
             <phase>clean</phase>
             <goals>
@@ -331,6 +319,7 @@
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>
+          -->
           <execution>
             <!--
             Generate TensorFlow C API binding sources
@@ -384,7 +373,7 @@
         -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <id>generate-ops</id>
@@ -413,11 +402,11 @@
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.3.0</version>
         <configuration>
           <archive>
             <manifestEntries>
-              <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
+              <Automatic-Module-Name>org.tensorflow.core</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>
@@ -484,7 +473,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -500,7 +489,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
