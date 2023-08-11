@@ -113,6 +113,75 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>tf-upgrade</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <execution>
+                <id>generate-protos</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>initialize</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <executable>/bin/bash</executable>
+              <arguments>
+                <argument>scripts/bazel_gen.sh</argument>
+                <argument>${project.basedir}/src/gen/java</argument>
+                <argument>${project.basedir}/src/gen/resources/ops.pb</argument>
+              </arguments>
+              <environmentVariables>
+                <PLATFORM>${javacpp.platform}</PLATFORM>
+                <EXTENSION>${javacpp.platform.extension}</EXTENSION>
+                <BUILD_USER_FLAGS>${native.build.flags}</BUILD_USER_FLAGS>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+          <plugin>
+            <!--
+            An execution to execute the op class generator (which lives in tensorflow-core-generator).
+            Must be ran after build.sh, which generates the ops.pb file it reads.
+            Will be ran during the generate-sources phase.
+            -->
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <execution>
+                <id>generate-ops</id>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <phase>generate-sources</phase>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.tensorflow</groupId>
+                <artifactId>tensorflow-core-generator</artifactId>
+                <version>${project.version}</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <includeProjectDependencies>false</includeProjectDependencies>
+              <includePluginDependencies>true</includePluginDependencies>
+              <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
+              <arguments>
+                <argument>${project.basedir}/src/gen/java</argument>
+                <argument>${project.basedir}/src/gen/resources/ops.pb</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!--
     Deploying Profile
       When deploying, native libraries are not rebuilt but fetched from the Maven repository
@@ -287,16 +356,11 @@
               <skip>${javacpp.build.skip}</skip>
               <buildCommand>
                 <program>bash</program>
-                <argument>prepare_build.sh</argument>
+                <argument>scripts/download_wheel.sh</argument>
                 <argument>${native.wheel.url}</argument>
                 <argument>${native.build.folder}</argument>
                 <argument>${os.name}</argument>
               </buildCommand>
-              <environmentVariables>
-                <PLATFORM>${javacpp.platform}</PLATFORM>
-                <EXTENSION>${javacpp.platform.extension}</EXTENSION>
-                <BUILD_USER_FLAGS>${native.build.flags}</BUILD_USER_FLAGS>
-              </environmentVariables>
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>
