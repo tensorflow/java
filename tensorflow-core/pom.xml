@@ -51,26 +51,21 @@
     <javacpp.platform.properties>${javacpp.platform}</javacpp.platform.properties>
     <javacpp.platform.linux-armhf>linux-armhf</javacpp.platform.linux-armhf>
     <javacpp.platform.linux-arm64>linux-arm64</javacpp.platform.linux-arm64>
-    <javacpp.platform.linux-ppc64le>linux-ppc64le</javacpp.platform.linux-ppc64le>
-    <javacpp.platform.linux-x86>linux-x86</javacpp.platform.linux-x86>
     <javacpp.platform.linux-x86_64>linux-x86_64</javacpp.platform.linux-x86_64>
     <javacpp.platform.macosx-arm64>macosx-arm64</javacpp.platform.macosx-arm64>
     <javacpp.platform.macosx-x86_64>macosx-x86_64</javacpp.platform.macosx-x86_64>
-    <javacpp.platform.windows-x86>windows-x86</javacpp.platform.windows-x86>
     <javacpp.platform.windows-x86_64>windows-x86_64</javacpp.platform.windows-x86_64>
     <javacpp.platform.linux-armhf.extension>linux-armhf${javacpp.platform.extension}</javacpp.platform.linux-armhf.extension>
     <javacpp.platform.linux-arm64.extension>linux-arm64${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
-    <javacpp.platform.linux-ppc64le.extension>linux-ppc64le${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
-    <javacpp.platform.linux-x86.extension>linux-x86${javacpp.platform.extension}</javacpp.platform.linux-x86.extension>
     <javacpp.platform.linux-x86_64.extension>linux-x86_64${javacpp.platform.extension}</javacpp.platform.linux-x86_64.extension>
     <javacpp.platform.macosx-arm64.extension>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64.extension>
     <javacpp.platform.macosx-x86_64.extension>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
-    <javacpp.platform.windows-x86.extension>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
     <javacpp.platform.windows-x86_64.extension>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
     <javacpp.version>1.5.9</javacpp.version>
 
     <native.wheel.url/>
-    <native.wheel.url.linux-x86_64>https://files.pythonhosted.org/packages/6b/6d/00ef55900312ba8c8aa9d64b13c74fb8cba0afa24cc4a2ce74796f530244/tensorflow-2.12.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl</native.wheel.url.linux-x86_64>
+    <native.wheel.url.linux-x86_64.gpu>https://files.pythonhosted.org/packages/6b/6d/00ef55900312ba8c8aa9d64b13c74fb8cba0afa24cc4a2ce74796f530244/tensorflow-2.12.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl</native.wheel.url.linux-x86_64.gpu>
+    <native.wheel.url.linux-x86_64>https://files.pythonhosted.org/packages/e3/c9/c349a0844aa0dffd63f5dfcf1895f8daa966df727f00d0c109f2e2ecc737/tensorflow_cpu-2.12.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl</native.wheel.url.linux-x86_64>
     <native.wheel.url.macosx-x86_64>https://files.pythonhosted.org/packages/67/4a/a39d10a1f2f3b13bc845a13d7f7f771fa93ee67fc36c697ade5c203727b3/tensorflow_macos-2.12.0-cp311-cp311-macosx_12_0_x86_64.whl</native.wheel.url.macosx-x86_64>
     <native.wheel.url.macosx-arm64>https://files.pythonhosted.org/packages/d2/e6/94748fedae940a7095ac3acb821e613f72513cf9fa8ea0cf6fe734ef8c8f/tensorflow_macos-2.12.0-cp311-cp311-macosx_12_0_arm64.whl</native.wheel.url.macosx-arm64>
     <native.wheel.url.windows-x86_64>https://files.pythonhosted.org/packages/2c/14/5ae30837269512867efbfa7144b45e816db43b98e3f663f5a51a8148d5c3/tensorflow_intel-2.12.0-cp311-cp311-win_amd64.whl</native.wheel.url.windows-x86_64>
@@ -115,9 +110,6 @@
       <modules>
         <module>tensorflow-core-platform</module>
         <module>tensorflow-core-platform-gpu</module>
-        <!-- Disabling MKL builds until they are more stable and performant -->
-        <!--module>tensorflow-core-platform-mkl</module-->
-        <!--module>tensorflow-core-platform-mkl-gpu</module-->
       </modules>
     </profile>
 
@@ -173,21 +165,15 @@
         <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
         <javacpp.platform.linux-armhf>${os.name}-${os.arch}</javacpp.platform.linux-armhf>
         <javacpp.platform.linux-arm64>${os.name}-${os.arch}</javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-ppc64le>${os.name}-${os.arch}</javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-x86>${os.name}-${os.arch}</javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64>${os.name}-${os.arch}</javacpp.platform.linux-x86_64>
         <javacpp.platform.macosx-arm64>${os.name}-${os.arch}</javacpp.platform.macosx-arm64>
         <javacpp.platform.macosx-x86_64>${os.name}-${os.arch}</javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86>${os.name}-${os.arch}</javacpp.platform.windows-x86>
         <javacpp.platform.windows-x86_64>${os.name}-${os.arch}</javacpp.platform.windows-x86_64>
         <javacpp.platform.linux-armhf.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-armhf.extension>
         <javacpp.platform.linux-arm64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-ppc64le.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
-        <javacpp.platform.linux-x86.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86.extension>
         <javacpp.platform.linux-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86_64.extension>
         <javacpp.platform.macosx-arm64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64.extension>
         <javacpp.platform.macosx-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
         <javacpp.platform.windows-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
       </properties>
     </profile>
@@ -313,66 +299,6 @@
     </profile>
 
     <profile>
-      <id>javacpp-platform-linux-ppc64le</id>
-      <activation>
-        <property>
-          <name>javacpp.platform</name>
-          <value>linux-ppc64le</value>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
-        <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-ppc64le>${javacpp.platform}</javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
-        <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
-        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
-        <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
-        <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
-        <javacpp.platform.linux-armhf.extension></javacpp.platform.linux-armhf.extension>
-        <javacpp.platform.linux-arm64.extension></javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-ppc64le.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
-        <javacpp.platform.linux-x86.extension></javacpp.platform.linux-x86.extension>
-        <javacpp.platform.linux-x86_64.extension></javacpp.platform.linux-x86_64.extension>
-        <javacpp.platform.macosx-arm64.extension></javacpp.platform.macosx-arm64.extension>
-        <javacpp.platform.macosx-x86_64.extension></javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86.extension></javacpp.platform.windows-x86.extension>
-        <javacpp.platform.windows-x86_64.extension></javacpp.platform.windows-x86_64.extension>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>javacpp-platform-linux-x86</id>
-      <activation>
-        <property>
-          <name>javacpp.platform</name>
-          <value>linux-x86</value>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
-        <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-x86>${javacpp.platform}</javacpp.platform.linux-x86>
-        <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
-        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
-        <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86></javacpp.platform.windows-x86>
-        <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
-        <javacpp.platform.linux-armhf.extension></javacpp.platform.linux-armhf.extension>
-        <javacpp.platform.linux-arm64.extension></javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-ppc64le.extension></javacpp.platform.linux-ppc64le.extension>
-        <javacpp.platform.linux-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86.extension>
-        <javacpp.platform.linux-x86_64.extension></javacpp.platform.linux-x86_64.extension>
-        <javacpp.platform.macosx-arm64.extension></javacpp.platform.macosx-arm64.extension>
-        <javacpp.platform.macosx-x86_64.extension></javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86.extension></javacpp.platform.windows-x86.extension>
-        <javacpp.platform.windows-x86_64.extension></javacpp.platform.windows-x86_64.extension>
-      </properties>
-    </profile>
-
-    <profile>
       <id>javacpp-platform-linux-x86_64</id>
       <activation>
         <property>
@@ -463,36 +389,6 @@
     </profile>
 
     <profile>
-      <id>javacpp-platform-windows-x86</id>
-      <activation>
-        <property>
-          <name>javacpp.platform</name>
-          <value>windows-x86</value>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
-        <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
-        <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
-        <javacpp.platform.macosx-arm64></javacpp.platform.macosx-arm64>
-        <javacpp.platform.macosx-x86_64></javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86>${javacpp.platform}</javacpp.platform.windows-x86>
-        <javacpp.platform.windows-x86_64></javacpp.platform.windows-x86_64>
-        <javacpp.platform.linux-armhf.extension></javacpp.platform.linux-armhf.extension>
-        <javacpp.platform.linux-arm64.extension></javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-ppc64le.extension></javacpp.platform.linux-ppc64le.extension>
-        <javacpp.platform.linux-x86.extension></javacpp.platform.linux-x86.extension>
-        <javacpp.platform.linux-x86_64.extension></javacpp.platform.linux-x86_64.extension>
-        <javacpp.platform.macosx-arm64.extension></javacpp.platform.macosx-arm64.extension>
-        <javacpp.platform.macosx-x86_64.extension></javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
-        <javacpp.platform.windows-x86_64.extension></javacpp.platform.windows-x86_64.extension>
-      </properties>
-    </profile>
-
-    <profile>
       <id>javacpp-platform-windows-x86_64</id>
       <activation>
         <property>
@@ -551,32 +447,6 @@
     </profile>
 
     <profile>
-      <id>javacpp.platform.linux-ppc64le-true</id>
-      <activation>
-        <property>
-          <name>javacpp.platform.linux-ppc64le</name>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-ppc64le>linux-ppc64le</javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-ppc64le.extension>linux-ppc64le${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>javacpp.platform.linux-x86-true</id>
-      <activation>
-        <property>
-          <name>javacpp.platform.linux-x86</name>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-x86>linux-x86</javacpp.platform.linux-x86>
-        <javacpp.platform.linux-x86.extension>linux-x86${javacpp.platform.extension}</javacpp.platform.linux-x86.extension>
-      </properties>
-    </profile>
-
-    <profile>
       <id>javacpp.platform.linux-x86_64-true</id>
       <activation>
         <property>
@@ -612,19 +482,6 @@
       <properties>
         <javacpp.platform.macosx-x86_64>macosx-x86_64</javacpp.platform.macosx-x86_64>
         <javacpp.platform.macosx-x86_64.extension>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>javacpp.platform.windows-x86-true</id>
-      <activation>
-        <property>
-          <name>javacpp.platform.windows-x86</name>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform.windows-x86>windows-x86</javacpp.platform.windows-x86>
-        <javacpp.platform.windows-x86.extension>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
       </properties>
     </profile>
 
@@ -708,20 +565,6 @@
       <properties>
         <javacpp.platform.linux-arm64>linux-arm64</javacpp.platform.linux-arm64>
         <javacpp.platform.linux-arm64.extension>linux-arm64${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>javacpp.platform.custom-linux-ppc64le</id>
-      <activation>
-        <property>
-          <name>javacpp.platform.host</name>
-        </property>
-        <os><name>linux</name><arch>ppc64le</arch></os>
-      </activation>
-      <properties>
-        <javacpp.platform.linux-ppc64le>linux-ppc64le</javacpp.platform.linux-ppc64le>
-        <javacpp.platform.linux-ppc64le.extension>linux-ppc64le${javacpp.platform.extension}</javacpp.platform.linux-ppc64le.extension>
       </properties>
     </profile>
 
@@ -969,42 +812,6 @@
       </activation>
       <properties>
         <os.arch>arm64</os.arch>
-      </properties>
-    </profile>
-    <profile>
-      <id>i386</id>
-      <activation>
-        <os><arch>i386</arch></os>
-      </activation>
-      <properties>
-        <os.arch>x86</os.arch>
-      </properties>
-    </profile>
-    <profile>
-      <id>i486</id>
-      <activation>
-        <os><arch>i486</arch></os>
-      </activation>
-      <properties>
-        <os.arch>x86</os.arch>
-      </properties>
-    </profile>
-    <profile>
-      <id>i586</id>
-      <activation>
-        <os><arch>i586</arch></os>
-      </activation>
-      <properties>
-        <os.arch>x86</os.arch>
-      </properties>
-    </profile>
-    <profile>
-      <id>i686</id>
-      <activation>
-        <os><arch>i686</arch></os>
-      </activation>
-      <properties>
-        <os.arch>x86</os.arch>
       </properties>
     </profile>
     <profile>
