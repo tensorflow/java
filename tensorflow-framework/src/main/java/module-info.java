@@ -15,7 +15,8 @@ limitations under the License.
 =======================================================================
 */
 module org.tensorflow.framework {
-  requires org.tensorflow;
+  requires org.tensorflow.core;
+  requires org.tensorflow.ndarray;
 
   exports org.tensorflow.framework.activations;
   exports org.tensorflow.framework.constraints;
