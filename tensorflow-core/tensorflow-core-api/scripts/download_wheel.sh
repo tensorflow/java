@@ -4,7 +4,7 @@ set -eu
 PYTHON_WHEEL_URL="$1"
 TARGET_FOLDER="$2"
 OS_NAME="$3"
-DOWNLOAD_FOLDER="downloads"
+DOWNLOAD_FOLDER="target/wheels"
 DOWNLOADED_FILE="tensorflow.zip" # TODO extract name from wheel url, change .whl to .zip
 
 mkdir -p $TARGET_FOLDER
@@ -23,8 +23,8 @@ if [ "$OS_NAME" = "linux" ]; then
   ln -fs $TARGET_FOLDER/libtensorflow_framework.so.2 $TARGET_FOLDER/libtensorflow_framework.so
 elif [ "$OS_NAME" = "mac os x" ]; then
   mv -f $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.2.dylib $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.2.dylib $TARGET_FOLDER
-  ln -s $TARGET_FOLDER/libtensorflow_cc.2.dylib $TARGET_FOLDER/libtensorflow_cc.dylib
-  ln -s $TARGET_FOLDER/libtensorflow_framework.2.dylib $TARGET_FOLDER/libtensorflow_framework.dylib
+  ln -fs $TARGET_FOLDER/libtensorflow_cc.2.dylib $TARGET_FOLDER/libtensorflow_cc.dylib
+  ln -fs $TARGET_FOLDER/libtensorflow_framework.2.dylib $TARGET_FOLDER/libtensorflow_framework.dylib
 elif [ "$OS_NAME" = "windows" ]; then
   cat "Windows unsupported";
   return 1;
