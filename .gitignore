@@ -36,6 +36,10 @@ xcuserdata/**
 /api_init_files_list.txt
 /estimator_api_init_files_list.txt
 *.whl
+tensorflow-core/tensorflow-core-api/downloads/
+
+# Vim backups
+*~
 
 # Patch files
 *.orig
