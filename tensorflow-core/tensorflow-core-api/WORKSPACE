@@ -9,7 +9,6 @@ http_archive(
     name = "org_tensorflow",
     patches = [
         ":tensorflow-visibility.patch",
-#        ":tensorflow-macosx.patch",
         ":tensorflow-windows.patch",
         ":tensorflow-proto.patch",
         ":custom-grad-symbols.patch",
@@ -19,10 +18,10 @@ http_archive(
     patch_args = ["-p1"],
     patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\\(.* java_package = \"org\\.tensorflow\\.\\)\\(.*\"\\)/\\1proto.\\2'/"],
     urls = [
-       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.10.1.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.12.0.tar.gz",
     ],
-    sha256 = "622a92e22e6f3f4300ea43b3025a0b6122f1cc0e2d9233235e4c628c331a94a3",
-    strip_prefix = "tensorflow-2.10.1"
+    sha256 = "c030cb1905bff1d2446615992aad8d8d85cbe90c4fb625cee458c63bf466bc8e",
+    strip_prefix = "tensorflow-2.12.0"
 )
 
 # START: Upstream TensorFlow dependencies

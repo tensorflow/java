@@ -2,9 +2,6 @@
 # Script to build native TensorFlow libraries
 set -eu
 
-
-
-
 # Allows us to use ccache with Bazel on Mac
 export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 
