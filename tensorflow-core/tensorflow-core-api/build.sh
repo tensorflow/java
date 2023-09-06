@@ -22,6 +22,11 @@ if [[ "${PLATFORM:-}" == macosx-arm64 ]]; then
   BUILD_FLAGS="$BUILD_FLAGS --config=macos_arm64"
 fi
 
+# Add platform specific flags
+if [[ "${PLATFORM:-}" == linux-arm64 ]]; then
+  BUILD_FLAGS="--config=mkl_aarch64"
+fi
+
 if [[ "${EXTENSION:-}" == *mkl* ]]; then
     BUILD_FLAGS="$BUILD_FLAGS --config=mkl"
 fi
