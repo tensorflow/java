@@ -23,6 +23,18 @@ tfjava_cc_binary(
     ],
 )
 
+# cc_binary(
+#    name = "java_op_exporter",
+#    srcs = [
+#        "src/bazel/op_generator/op_export_main.cc",
+#    ],
+#    includes = ["target/wheels/tensorflow/include"],
+#    linkopts = [
+#        "-L./target/wheels/tensorflow",
+#        "-ltensorflow_cc"
+#    ]
+# )
+
 filegroup(
     name = "java_api_def",
     srcs = glob(["src/bazel/api_def/*"])
@@ -42,7 +54,9 @@ tfjava_cc_binary(
 java_proto_library(
     name = "java_proto_gen_sources",
     deps = [
-        clean_dep("//tensorflow/core:protos_all")
+        clean_dep("//tensorflow/core:protos_all"),
+        clean_dep("//tensorflow/tsl/protobuf:protos_all"),
+        clean_dep("//tensorflow/tsl/profiler/protobuf:protos_all")
     ]
 )
 

@@ -81,7 +81,7 @@ Status UpdateOpDefs(OpList* op_list, const std::vector<tensorflow::string>& api_
     const ApiDef* api_def = api_map.GetApiDef(op_def->name());
   	Write(op_def, *api_def);
   }
-  return Status::OK();
+  return OkStatus();
 }
 
 }
