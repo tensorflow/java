@@ -726,9 +726,28 @@
           <name>linux</name>
           <arch>amd64</arch>
         </os>
+        <property>
+          <name>!javacpp.platform.extension</name>
+        </property>
       </activation>
       <properties>
         <native.wheel.url>${native.wheel.url.linux-x86_64}</native.wheel.url>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux-x86_64-gpu</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>amd64</arch>
+        </os>
+        <property>
+          <name>javacpp.platform.extension</name>
+          <value>-gpu</value>
+        </property>
+      </activation>
+      <properties>
+        <native.wheel.url>${native.wheel.url.linux-x86_64.gpu}</native.wheel.url>
       </properties>
     </profile>
     <profile>
