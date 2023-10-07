@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
   // are missing
   int unresolved_count = 0;
   for (const auto& op_def : op_defs.op()) {
-    if (env->FileExists(java_api_dir + "/api_def_" + op_def.name() + ".pbtxt") == Status::OK()) {
+    if (env->FileExists(java_api_dir + "/api_def_" + op_def.name() + ".pbtxt") == tsl::OkStatus()) {
       // LOG(INFO) << "Java API for " << op_def.name() << " already defined, skipping";
       continue;
     }
