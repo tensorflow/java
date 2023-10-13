@@ -178,6 +178,35 @@
               </dependency>
             </dependencies>
           </plugin>
+
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <executions>
+              <execution>
+                <!--
+                  Generate Ops classes
+                    All classes found in the source path that are annotated with `@Operator` are processed
+                    to be added as an endpoint to one of the generated Ops class
+                -->
+                <id>default-compile</id>
+                <configuration>
+                  <annotationProcessors>
+                    <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor</annotationProcessor>
+                  </annotationProcessors>
+                  <annotationProcessorPaths>
+                    <annotationProcessorPath>
+                      <groupId>org.tensorflow</groupId>
+                      <artifactId>tensorflow-core-generator</artifactId>
+                      <version>${project.version}</version>
+                    </annotationProcessorPath>
+                  </annotationProcessorPaths>
+                  <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
+                  <generatedSourcesDirectory>${project.basedir}/src/gen/annotations</generatedSourcesDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
     </profile>
@@ -245,28 +274,6 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <executions>
-          <execution>
-            <!--
-              Generate Ops classes
-                All classes found in the source path that are annotated with `@Operator` are processed
-                to be added as an endpoint to one of the generated Ops class
-            -->
-            <id>default-compile</id>
-            <configuration>
-              <annotationProcessors>
-                <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor</annotationProcessor>
-              </annotationProcessors>
-              <annotationProcessorPaths>
-                <annotationProcessorPath>
-                  <groupId>org.tensorflow</groupId>
-                  <artifactId>tensorflow-core-generator</artifactId>
-                  <version>${project.version}</version>
-                </annotationProcessorPath>
-              </annotationProcessorPaths>
-              <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
-              <generatedSourcesDirectory>${project.basedir}/src/gen/annotations</generatedSourcesDirectory>
-            </configuration>
-          </execution>
           <execution>
             <!--
               Compile JavaCPP presets
