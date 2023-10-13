@@ -25,7 +25,7 @@
     <javacpp.compiler.skip>false</javacpp.compiler.skip>
     <java.module.name>org.tensorflow.core.api</java.module.name>
     <ndarray.version>0.4.0</ndarray.version>
-    <truth.version>1.0.1</truth.version>
+    <truth.version>1.1.5</truth.version>
   </properties>
 
   <dependencies>
@@ -101,7 +101,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>3.0.0</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <!--
@@ -229,7 +229,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.4.0</version>
         <executions>
           <execution>
             <!--
@@ -302,7 +302,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <!--
@@ -514,7 +514,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -534,7 +534,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.6.0</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>

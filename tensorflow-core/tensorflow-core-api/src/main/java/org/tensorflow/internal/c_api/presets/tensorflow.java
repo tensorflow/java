@@ -84,8 +84,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
 //            "absl/strings/string_view.h"
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
-          preload = {"iomp5", "mklml", "mklml_intel"},
-          preloadresource = "/org/bytedeco/mkldnn/",
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
       @Platform(
           value = "windows",
@@ -155,7 +153,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
           }),
       @Platform(
           value = {"linux", "macosx", "windows"},
-          extension = {"-mkl", "-gpu", "-mkl-gpu"})
+          extension = {"-gpu"})
     },
     target = "org.tensorflow.internal.c_api",
     global = "org.tensorflow.internal.c_api.global.tensorflow")
@@ -579,7 +577,9 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "std::mutex",
                     "std::reverse_iterator",
                     "std::weak_ptr",
-                    "absl::string_view")
+                    "absl::string_view",
+                    "absl::flat_hash_map"
+                    )
                 .skip());
   }
 
