@@ -40,14 +40,14 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
-    <junit.version>5.6.2</junit.version>
-    <jmh.version>1.21</jmh.version>
+    <junit.version>5.10.0</junit.version>
+    <jmh.version>1.37</jmh.version>
     <versions-plugin.version>2.7</versions-plugin.version>
     <errorprone.version>2.10.0</errorprone.version>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
-    <spotless.version>2.20.2</spotless.version>
+    <spotless.version>2.38.0</spotless.version>
   </properties>
 
   <repositories>
@@ -201,7 +201,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.0</version>
+            <version>3.11.0</version>
             <configuration>
               <showWarnings>true</showWarnings>
               <compilerArgs combine.children="append">
@@ -305,7 +305,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.11.0</version>
         <configuration>
           <fork>true</fork> <!-- Required for JDK16+ -->
         </configuration>
@@ -313,7 +313,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <id>enforce</id>
@@ -335,7 +335,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -354,7 +354,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -366,7 +366,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -398,7 +398,7 @@
           <lineEndings/>
           <java>
             <googleJavaFormat>
-              <version>1.14.0</version>
+              <version>1.17.0</version>
             </googleJavaFormat>
             <removeUnusedImports/>
           </java>
@@ -410,12 +410,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M5</version>
+          <version>3.1.2</version>
           <configuration combine.children="append">
             <includes>
               <include>**/*Test.java</include>
