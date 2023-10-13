@@ -12,7 +12,7 @@ if [ ! -f $DOWNLOAD_FOLDER/$DOWNLOADED_FILE ]; then
   curl -L $PYTHON_WHEEL_URL --output-dir $DOWNLOAD_FOLDER --output $DOWNLOADED_FILE
 fi
 
-unzip -u -d $DOWNLOAD_FOLDER $DOWNLOAD_FOLDER/$DOWNLOADED_FILE
+unzip -q -u -d $DOWNLOAD_FOLDER $DOWNLOAD_FOLDER/$DOWNLOADED_FILE
 
 # TODO Per OS logic
 if [ "$OS_NAME" = "linux" ]; then
