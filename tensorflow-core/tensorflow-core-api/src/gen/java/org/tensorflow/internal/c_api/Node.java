@@ -35,8 +35,6 @@ public class Node extends Pointer {
   // * def().attr() is authoritative.
   // TODO(irving): Replace with NodeInfo.
 
-  // TODO(mdan): This is only used by control_flow_deps_o_chains. Remove?
-
   // input and output types
   public native @Cast("tensorflow::int32") int num_inputs();
 
@@ -156,6 +154,13 @@ public class Node extends Pointer {
 
   // Erases type information from the node.
   public native void ClearTypeInfo();
+
+  // Update type information for a node with a list of inputs and/or outputs
+  // described by its TYPE_ATTR_NAME attr when removing some of these. The keys
+  // of INDEX_MAPPING are the indexes of the inputs/outputs that are not
+  // removed. dtype information in the TYPE_ATTR_NAME attr is always updated.
+  // Use UPDATE_FULL_TYPE=true when this changes the node's outputs to also
+  // update the node's full type information (if present).
 
   // Called after an incident non-control edge has changed. Does nothing if not
   // all input edges are defined.

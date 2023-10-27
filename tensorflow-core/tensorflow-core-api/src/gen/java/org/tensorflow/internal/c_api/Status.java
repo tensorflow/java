@@ -45,8 +45,6 @@ public class Status extends Pointer {
 
   public native @Cast("tsl::error::Code") int code();
 
-  public native @StdString BytePointer error_message();
-
   public native @Cast("bool") @Name("operator ==") boolean equals(@Const @ByRef Status x);
   
   ///
