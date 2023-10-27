@@ -23,20 +23,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 
-import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.ClassProperties;
 import org.bytedeco.javacpp.LoadEnabled;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.annotation.Adapter;
-import org.bytedeco.javacpp.annotation.ByRef;
-import org.bytedeco.javacpp.annotation.ByVal;
 import org.bytedeco.javacpp.annotation.Cast;
-import org.bytedeco.javacpp.annotation.Const;
-import org.bytedeco.javacpp.annotation.Namespace;
 import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
-import org.bytedeco.javacpp.annotation.StdString;
 import org.bytedeco.javacpp.tools.Info;
 import org.bytedeco.javacpp.tools.InfoMap;
 import org.bytedeco.javacpp.tools.InfoMapper;
@@ -52,10 +46,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
           include = {
             "tensorflow/tsl/platform/ctstring_internal.h",
             "tensorflow/tsl/platform/ctstring.h",
-//            "tensorflow/tsl/platform/tstring.h",
-//            "tensorflow/tsl/platform/stringpiece.h",
-//            "tensorflow/tsl/platform/cord.h",
-            //"tensorflow/core/platform/status.h",
             "tensorflow/tsl/platform/status.h",
             "tensorflow/tsl/platform/default/status.h",
             "tensorflow/tsl/c/tsl_status.h",
@@ -68,8 +58,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_tstring.h",
             "tensorflow/c/c_api.h",
             "tensorflow/c/tf_buffer.h",
-            "tensorflow/c/tf_status.h",
-            //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
             "tensorflow_adapters.h",
@@ -81,7 +69,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_status_helper.h",
             "tensorflow/cc/framework/ops.h",
             "tensorflow/c/c_api_internal.h"
-//            "absl/strings/string_view.h"
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
@@ -169,7 +156,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
     List<String> preloadpaths = properties.get("platform.preloadpath");
 
     String vcredistdir = System.getenv("VCToolsRedistDir");
-    if (vcredistdir != null && vcredistdir.length() > 0) {
+    if (vcredistdir != null && !vcredistdir.isEmpty()) {
       switch (platform) {
         case "windows-x86":
           preloadpaths.add(0, vcredistdir + "\\x86\\Microsoft.VC142.CRT");
@@ -224,7 +211,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
       resources.add("/org/bytedeco/mkl/");
     }
 
-    if (load.length() > 0) {
+    if (!load.isEmpty()) {
       if (platform.startsWith("linux")) {
         preloads.add(i, load + "#mklml_intel");
       } else if (platform.startsWith("macosx")) {
@@ -479,16 +466,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .valueTypes("BytePointer", "String")
                 .pointerTypes("BytePointer"))
         .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
-//        .put(
-//            new Info("absl::Span<const tensorflow::SourceLocation>")
-//                .annotations("@Span")
-//                .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
-//                .pointerTypes("SourceLocation"))
         .put(
             new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
         .put(new Info("tensorflow::Output").javaNames("NativeOutput"))
         .put(new Info("tensorflow::Operation").javaNames("NativeOperation"))
-//        .put(new Info("tensorflow::Status").javaNames("NativeStatus").purify())
+//        .put(new Info("tensorflow::Status").javaNames("TF_Status").purify())
         .put(
             new Info("tensorflow::int32", "tensorflow::error::Code")
                 .cast()
@@ -562,7 +544,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tsl::TfCheckOpHelperOutOfLine",
                     "tsl::TfCheckOpHelper",
                     "tsl::ToAbslStatus",
-                    "tsl::FromAbslStatus"
+                    "tsl::FromAbslStatus",
+                    "tsl::errors::Code",
+                    "absl::StatusCode",
+                    "TF_PayloadVisitor",
+                    "TSL_PayloadVisitor"
                     )
                 .skip())
             .put(new Info(

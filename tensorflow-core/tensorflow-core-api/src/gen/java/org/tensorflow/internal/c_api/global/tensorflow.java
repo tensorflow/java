@@ -307,8 +307,10 @@ limitations under the License.
 // #include <string>
 // #include <unordered_map>
 // #include <utility>
+// #include <vector>
 
 // #include "absl/base/attributes.h"
+// #include "absl/functional/function_ref.h"
 // #include "absl/status/status.h"
 // #include "absl/strings/cord.h"
 // #include "absl/strings/string_view.h"
@@ -327,13 +329,24 @@ limitations under the License.
 // #include "tensorflow/tsl/platform/default/status.h"  // IWYU pragma: export
 // #endif
 
-// #if TF_HAS_CPP_ATTRIBUTE(nodiscard)
-// #endif
+// Since April 2023, tensorflow::Status is an alias to absl::Status. The first
+// TF release including this change will be TF 2.14 (the latest release in
+// April 2023 is 2.13).
+// At the same time `tsl::errors::Code` aliases `absl::StatusCode`.
+//
+// Here is a set of correspondences:
+// - Use `absl::OkStatus()` instead of `tsl::OkStatus()`.
   // namespace errors
+  // namespace error
+  // namespace tsl
 
-// Targeting ../Status.java
-
-
+// Transparent comparison between tensorflow::error::Code protobuf enum and
+// absl::Status.
+//
+// The longer term objective is to delete these when we have done the transition
+// to absl::Status.
+  // namespace tensorflow::error
+  // namespace absl
 
 // OkStatus()
 //
@@ -343,6 +356,13 @@ limitations under the License.
 
 
 
+
+// Given `Status.message()` does not guarantee to be always backed by a
+// null-terminated string, we have this utility function when it's needed for
+// the Tensorflow C-API.
+// A more robust API would be to get both a `char*` of the beginning of the
+// string, plus the size (see e.g. `XlaCustomCallStatusSetFailure`).
+@Namespace("tsl") public static native @Cast("const char*") BytePointer NullTerminatedMessage(@Const @ByRef Status status);
 
 // TODO(b/197552541) Move this namespace to errors.h.
 
@@ -354,25 +374,6 @@ limitations under the License.
 // Helper class to manage multiple child status values.
 
 
-
-
-
-// #ifndef SWIG
-
-
-
-// #endif  // SWIG
-
-
-
-
-
-/** \ingroup core */
-@Namespace("tsl") public static native @Cast("std::ostream*") @ByRef @Name("operator <<") Pointer shiftLeft(@Cast("std::ostream*") @ByRef Pointer os, @Const @ByRef Status x);
-
-
-
-@Namespace("tsl") public static native @StdString BytePointer error_name(@Cast("tsl::error::Code") int code);
 
 
 
@@ -416,20 +417,10 @@ limitations under the License.
 // #ifndef TENSORFLOW_TSL_PLATFORM_DEFAULT_STATUS_H_
 // #define TENSORFLOW_TSL_PLATFORM_DEFAULT_STATUS_H_
 
-// #include "absl/status/status.h"
-// #include "absl/strings/string_view.h"
-// #include "absl/types/span.h"
-// #include "tensorflow/tsl/platform/types.h"
-// #include "tensorflow/tsl/protobuf/error_codes.pb.h"
-// #if ABSL_HAVE_BUILTIN(__builtin_LINE) && ABSL_HAVE_BUILTIN(__builtin_FILE)
-public static final int TF_INTERNAL_HAVE_BUILTIN_LINE_FILE = 1;
-// #endif
+// #define MAYBE_ADD_SOURCE_LOCATION(status)
+//   {}
 
-
-
-  // namespace internal
-
-  // namespace tsl
+// #define ADD_SOURCE_LOCATION(status) status
 
 // #endif  // TENSORFLOW_TSL_PLATFORM_DEFAULT_STATUS_H_
 
@@ -500,6 +491,10 @@ public static native void TSL_SetStatus(TSL_Status s, @Cast("TSL_Code") int code
 // is OK.
 public static native void TSL_SetPayload(TSL_Status s, @Cast("const char*") BytePointer key, @Cast("const char*") BytePointer value);
 public static native void TSL_SetPayload(TSL_Status s, String key, String value);
+
+// Iterates over the stored payloads and calls the `visitor(key, value)`
+// callable for each one. `key` and `value` is only usable during the callback.
+// `capture` will be passed to the callback without modification.
 
 // Convert from an I/O error code (e.g., errno) to a TSL_Status value.
 // Any previous information is lost. Prefer to use this instead of TSL_SetStatus
@@ -649,7 +644,12 @@ limitations under the License.
 // #define TF_CAPI_EXPORT __declspec(dllimport)
 // #endif  // TF_COMPILE_LIBRARY
 // #else
+// #ifdef TF_CAPI_WEAK
+// #define TF_CAPI_EXPORT
+//   __attribute__((visibility("default"))) __attribute((weak))
+// #else
 // #define TF_CAPI_EXPORT __attribute__((visibility("default")))
+// #endif  // TF_CAPI_WEAK
 // #endif  // _WIN32
 // #endif  // SWIG
 
@@ -691,24 +691,7 @@ limitations under the License.
 
 // #include <stddef.h>
 
-// Macro to control visibility of exported symbols in the shared library (.so,
-// .dylib, .dll).
-// This duplicates the TF_EXPORT macro definition in
-// tensorflow/core/platform/macros.h in order to keep this .h file independent
-// of any other includes.
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
+// #include "tensorflow/c/c_api_macros.h"
 
 // #ifdef __cplusplus
 // #endif
@@ -777,21 +760,8 @@ limitations under the License.
 // #ifndef TENSORFLOW_C_TF_STATUS_H_
 // #define TENSORFLOW_C_TF_STATUS_H_
 
+// #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/tsl/c/tsl_status.h"
-
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
 
 // #ifdef __cplusplus
 // Targeting ../TF_Status.java
@@ -842,6 +812,11 @@ public static native void TF_SetPayload(TF_Status s, @Cast("const char*") BytePo
 public static native void TF_SetPayload(TF_Status s, String key,
                                   String value);
 
+// Iterates over the stored payloads and calls the `visitor(key, value)`
+// callable for each one. `key` and `value` is only usable during the callback.
+// `capture` will be passed to the callback without modification.
+// #define TF_PayloadVisitor TSL_PayloadVisitor
+
 // Convert from an I/O error code (e.g., errno) to a TF_Status value.
 // Any previous information is lost. Prefer to use this instead of TF_SetStatus
 // when the error comes from I/O operations.
@@ -891,25 +866,6 @@ limitations under the License.
 // #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/c/tf_datatype.h"
 // #include "tensorflow/c/tf_status.h"
-
-// Macro to control visibility of exported symbols in the shared library (.so,
-// .dylib, .dll).
-// This duplicates the TF_EXPORT macro definition in
-// tensorflow/core/platform/macros.h in order to keep this .h file independent
-// of any other includes.
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
 
 // #ifdef __cplusplus
 // Targeting ../TF_AllocatorAttributes.java
@@ -1058,22 +1014,9 @@ limitations under the License.
 // #ifndef TENSORFLOW_C_TF_TSTRING_H_
 // #define TENSORFLOW_C_TF_TSTRING_H_
 
+// #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/c/tf_tensor.h"
 // #include "tensorflow/core/platform/ctstring.h"
-
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
 
 // #ifdef __cplusplus
 // #endif
@@ -1130,6 +1073,7 @@ limitations under the License.
 // #include <stddef.h>
 // #include <stdint.h>
 
+// #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/c/tf_attrtype.h"
 // #include "tensorflow/c/tf_buffer.h"
 // #include "tensorflow/c/tf_datatype.h"
@@ -1182,25 +1126,6 @@ limitations under the License.
 // * Devices are not in this API.  Instead, they are created/used internally
 //   and the API just provides high level controls over the number of
 //   devices of each type.
-
-// Macro to control visibility of exported symbols in the shared library (.so,
-// .dylib, .dll).
-// This duplicates the TF_EXPORT macro definition in
-// tensorflow/core/platform/macros.h in order to keep this .h file independent
-// of any other includes.
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
 
 // #ifdef __cplusplus
 // #endif
@@ -3395,6 +3320,91 @@ public static native void TF_RegisterFilesystemPlugin(
 public static native void TF_RegisterFilesystemPlugin(
     String plugin_filename, TF_Status status);
 
+// Apis that are corresponding to python c api. --------------------
+
+// Add control input to `op`.
+public static native void TF_AddOperationControlInput(TF_Graph graph,
+                                                       TF_Operation op,
+                                                       TF_Operation input);
+
+// Changes an attr value in the node_def Protocol Buffer and sets a status upon
+// completion.
+public static native void TF_SetAttr(TF_Graph graph, TF_Operation op,
+                                      @Cast("const char*") BytePointer attr_name,
+                                      TF_Buffer attr_value_proto,
+                                      TF_Status status);
+public static native void TF_SetAttr(TF_Graph graph, TF_Operation op,
+                                      String attr_name,
+                                      TF_Buffer attr_value_proto,
+                                      TF_Status status);
+
+// Clears the attr in the node_def Protocol Buffer and sets a status upon
+// completion.
+public static native void TF_ClearAttr(TF_Graph graph, TF_Operation op,
+                                        @Cast("const char*") BytePointer attr_name,
+                                        TF_Status status);
+public static native void TF_ClearAttr(TF_Graph graph, TF_Operation op,
+                                        String attr_name,
+                                        TF_Status status);
+
+// Sets the experimental_type` field in the node_def Protocol Buffer.
+public static native void TF_SetFullType(TF_Graph graph, TF_Operation op,
+                                          @Const TF_Buffer full_type_proto);
+
+// Set the requested device for `graph`.
+public static native void TF_SetRequestedDevice(TF_Graph graph,
+                                                 TF_Operation op,
+                                                 @Cast("const char*") BytePointer device);
+public static native void TF_SetRequestedDevice(TF_Graph graph,
+                                                 TF_Operation op,
+                                                 String device);
+
+// Remove all the control inputs from `op` in `graph`.
+public static native void TF_RemoveAllControlInputs(TF_Graph graph,
+                                                     TF_Operation op);
+
+// Set if `graph` requires shape inference functions.
+public static native void TF_SetRequireShapeInferenceFns(TF_Graph graph,
+                                                          @Cast("bool") boolean require);
+
+// Extends `session` with any new operations added to its associated graph.
+// Usually this happens automatically in TF_SessionRun. After this is called,
+// TF_SessionRun will no longer extend the session on every call.
+//
+// We expose this here to allow fine-grained synchronization in multi-threaded
+// workloads, which is required since the Python implementation depends on the
+// above mutation methods. This allows us to prevent modifications to nodes in
+// the graph after the session has been made aware of them.
+public static native void TF_ExtendSession(TF_Session session,
+                                            TF_Status status);
+
+// Returns the serialized CppShapeInferenceResult::HandleData proto for
+// `output` if its a resource or variant tensor, or otherwise returns the empty
+// string.
+public static native TF_Buffer TF_GetHandleShapeAndType(TF_Graph graph,
+                                                          @ByVal TF_Output output);
+
+// Sets `output` based on `proto`, which should be a serialized
+// CppShapeInferenceResult::HandleData proto. `output` should be a resource
+// or variant tensor.
+// NOTE(skyewm): `proto` is passed a void*/size_t pair instead of a std::string
+// because I couldn't get SWIG to work otherwise.
+public static native void TF_SetHandleShapeAndType(TF_Graph graph,
+                                                    @ByVal TF_Output output,
+                                                    @Const Pointer proto,
+                                                    @Cast("size_t") long proto_len,
+                                                    TF_Status status);
+
+// This method is used to add a new input edge to 'dst', which must be a While
+// op. The While op's "T" attribute must have already been updated to include
+// the new edge. This is used to construct tf.while_loop gradients.
+public static native void TF_AddWhileInputHack(TF_Graph graph,
+                                                @ByVal TF_Output new_src,
+                                                TF_Operation dst,
+                                                TF_Status status);
+
+// ----------------------------------------------------------------
+
 // #ifdef __cplusplus /* end extern "C" */
 // #endif
 
@@ -3423,24 +3433,7 @@ limitations under the License.
 
 // #include <stddef.h>
 
-// Macro to control visibility of exported symbols in the shared library (.so,
-// .dylib, .dll).
-// This duplicates the TF_EXPORT macro definition in
-// tensorflow/core/platform/macros.h in order to keep this .h file independent
-// of any other includes.
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
+// #include "tensorflow/c/c_api_macros.h"
 
 // #ifdef __cplusplus
 // Targeting ../TF_Buffer.java
@@ -3488,29 +3481,11 @@ limitations under the License.
 // #include <stdint.h>
 
 // #include "tensorflow/c/c_api.h"
+// #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/c/experimental/stream_executor/stream_executor.h"
 // #include "tensorflow/c/tf_datatype.h"
 // #include "tensorflow/c/tf_status.h"
 // #include "tensorflow/c/tf_tensor.h"
-
-// Macro to control visibility of exported symbols in the shared library (.so,
-// .dylib, .dll).
-// This duplicates the TF_EXPORT macro definition in
-// tensorflow/core/platform/macros.h in order to keep this .h file independent
-// of any other includes.
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
 
 // #ifdef __cplusplus
 // #endif
@@ -3523,6 +3498,13 @@ limitations under the License.
 // Targeting ../TF_OpKernelContext.java
 
 
+// Targeting ../TF_AsyncOpKernelDoneCallback.java
+
+
+
+// Run callback function for async kernel.
+public static native void TF_RunAsyncOpKernelDoneCallback(
+    TF_AsyncOpKernelDoneCallback arg0);
 
 // TF_InitKernel to do op/kernel registration.
 // Plugin should implement TF_InitKernel to register kernels. This function
@@ -3546,6 +3528,19 @@ public static native TF_KernelBuilder TF_NewKernelBuilder(
     String op_name, String device_name,
     Create_func_TF_OpKernelConstruction create_func,
     Compute_func_Pointer_TF_OpKernelContext compute_func,
+    Delete_func_Pointer delete_func);
+// Targeting ../Compute_async_func_Pointer_TF_OpKernelContext_TF_AsyncOpKernelDoneCallback.java
+
+
+public static native TF_KernelBuilder TF_NewAsyncKernelBuilder(
+    @Cast("const char*") BytePointer op_name, @Cast("const char*") BytePointer device_name,
+    Create_func_TF_OpKernelConstruction create_func,
+    Compute_async_func_Pointer_TF_OpKernelContext_TF_AsyncOpKernelDoneCallback compute_async_func,
+    Delete_func_Pointer delete_func);
+public static native TF_KernelBuilder TF_NewAsyncKernelBuilder(
+    String op_name, String device_name,
+    Create_func_TF_OpKernelConstruction create_func,
+    Compute_async_func_Pointer_TF_OpKernelContext_TF_AsyncOpKernelDoneCallback compute_async_func,
     Delete_func_Pointer delete_func);
 
 // Specifies that this kernel's attribute only supports the given type.
@@ -3721,7 +3716,11 @@ public static native @Cast("int64_t") long TF_GetIterId(TF_OpKernelContext ctx);
 // Returns the Step ID of the given context.
 public static native @Cast("int64_t") long TF_GetStepId(TF_OpKernelContext ctx);
 
-// Returns the Device ID of the device that the context possesses.
+// Returns the Device ID of the device that the context possesses. Returns the
+// PlatformDeviceId if a mapping between between TfDeviceId and PlatformDeviceId
+// is set; otherwise returns the id in the device name. Please refer to
+// tensorflow/tsl/framework/device_id.h for more details.
+// For mobile or slim build, returns the id in the device name.
 public static native int TF_GetDeviceId(TF_OpKernelContext ctx);
 
 // Returns the graph def version of the given context.
@@ -4281,22 +4280,9 @@ limitations under the License.
 // #include <stdint.h>
 // #include <stdlib.h>
 
+// #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/c/tf_datatype.h"
 // #include "tensorflow/c/tf_status.h"
-
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
 
 // #ifdef __cplusplus
 // Targeting ../TF_DimensionHandle.java
@@ -4658,25 +4644,7 @@ limitations under the License.
 // stable and can change without notice.
 
 // #include "tensorflow/c/c_api.h"
-
-// Macro to control visibility of exported symbols in the shared library (.so,
-// .dylib, .dll).
-// This duplicates the TF_EXPORT macro definition in
-// tensorflow/core/platform/macros.h in order to keep this .h file independent
-// of any other includes.$a
-// #ifdef SWIG
-// #define TF_CAPI_EXPORT
-// #else
-// #if defined(_WIN32)
-// #ifdef TF_COMPILE_LIBRARY
-// #define TF_CAPI_EXPORT __declspec(dllexport)
-// #else
-// #define TF_CAPI_EXPORT __declspec(dllimport)
-// #endif  // TF_COMPILE_LIBRARY
-// #else
-// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
-// #endif  // _WIN32
-// #endif  // SWIG
+// #include "tensorflow/c/c_api_macros.h"
 
 // #ifdef __cplusplus
 // Targeting ../TFE_ContextOptions.java
@@ -5468,8 +5436,10 @@ limitations under the License.
 // #ifndef TENSORFLOW_C_TF_STATUS_HELPER_H_
 // #define TENSORFLOW_C_TF_STATUS_HELPER_H_
 
+// #include <utility>
+
 // #include "tensorflow/c/tf_status.h"
-// #include "tensorflow/core/platform/status.h"
+// #include "tensorflow/tsl/platform/status.h"
 // Set the attribute of "tf_status" from the attributes of "status".
 @Namespace("tsl") public static native void Set_TF_Status_from_Status(TF_Status tf_status, @Const @ByRef Status status);
 
@@ -5479,6 +5449,32 @@ limitations under the License.
   // namespace internal
 
   // namespace tensorflow
+
+// #define TF_STATUS_ASSIGN_OR_RETURN(lhs, rexpr, c_status)
+//   _TF_STATUS_ASSIGN_OR_RETURN_IMPL(
+//       _TF_STATUS_CONCAT(_status_or_value, __COUNTER__), lhs, rexpr, c_status);
+
+// #define _TF_STATUS_ASSIGN_OR_RETURN_IMPL(statusor, lhs, rexpr, c_status)
+//   auto statusor = (rexpr);
+//   if (!statusor.ok()) {
+//     tensorflow::Set_TF_Status_from_Status(c_status, statusor.status());
+//     return;
+//   }
+//   lhs = std::move(*statusor)
+
+// #define TF_STATUS_RETURN_IF_ERROR(rexpr, c_status)
+//   _TF_STATUS_RETURN_IF_ERROR_IMPL(_TF_STATUS_CONCAT(_status, __COUNTER__),
+//                                   rexpr, c_status);
+
+// #define _TF_STATUS_RETURN_IF_ERROR_IMPL(status, rexpr, c_status)
+//   auto status = (rexpr);
+//   if (!status.ok()) {
+//     tensorflow::Set_TF_Status_from_Status(c_status, status);
+//     return;
+//   }
+
+// #define _TF_STATUS_CONCAT(x, y) _TF_STATUS_CONCAT_IMPL(x, y)
+// #define _TF_STATUS_CONCAT_IMPL(x, y) x##y
 
 // #endif  // TENSORFLOW_C_TF_STATUS_HELPER_H_
 
@@ -5508,6 +5504,8 @@ limitations under the License.
 // #include <utility>
 // #include <vector>
 
+// #include "absl/status/status.h"
+// #include "absl/strings/str_cat.h"
 // #include "tensorflow/core/framework/tensor.h"
 // #include "tensorflow/core/framework/tensor.pb.h"
 // #include "tensorflow/core/graph/graph.h"

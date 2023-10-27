@@ -100,8 +100,7 @@ public class TF_Scope extends Pointer {
   /** Return a new scope. All ops created within the returned scope will have as
    *  control dependencies the union of operations in the control_deps vector
    *  and the control dependencies of the current scope. */
-  public native @ByVal TF_Scope WithControlDependencies(
-        @Span NativeOperation control_deps);
+  public native @ByVal TF_Scope WithControlDependencies(@Span NativeOperation control_deps);
   /** Same as above, but convenient to add control dependency on the operation
    *  producing the control_dep output. */
   public native @ByVal TF_Scope WithControlDependencies(@Const @ByRef NativeOutput control_dep);
@@ -176,7 +175,9 @@ public class TF_Scope extends Pointer {
 
   /** If status() is ok, convert the Graph object stored in this scope
    *  to a GraphDef proto and return an ok Status. Otherwise, return the error
-   *  status as is without performing GraphDef conversion. */
+   *  status as is without performing GraphDef conversion. If
+   *  {@code include_debug_info} is true, populate the {@code debug_info} field of the
+   *  GraphDef from stack traces in this Graph. */
   
 
   // START_SKIP_DOXYGEN
