@@ -23,20 +23,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 
-import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.ClassProperties;
 import org.bytedeco.javacpp.LoadEnabled;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.annotation.Adapter;
-import org.bytedeco.javacpp.annotation.ByRef;
-import org.bytedeco.javacpp.annotation.ByVal;
 import org.bytedeco.javacpp.annotation.Cast;
-import org.bytedeco.javacpp.annotation.Const;
-import org.bytedeco.javacpp.annotation.Namespace;
 import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
-import org.bytedeco.javacpp.annotation.StdString;
 import org.bytedeco.javacpp.tools.Info;
 import org.bytedeco.javacpp.tools.InfoMap;
 import org.bytedeco.javacpp.tools.InfoMapper;
@@ -169,7 +163,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
     List<String> preloadpaths = properties.get("platform.preloadpath");
 
     String vcredistdir = System.getenv("VCToolsRedistDir");
-    if (vcredistdir != null && vcredistdir.length() > 0) {
+    if (vcredistdir != null && !vcredistdir.isEmpty()) {
       switch (platform) {
         case "windows-x86":
           preloadpaths.add(0, vcredistdir + "\\x86\\Microsoft.VC142.CRT");
@@ -224,7 +218,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
       resources.add("/org/bytedeco/mkl/");
     }
 
-    if (load.length() > 0) {
+    if (!load.isEmpty()) {
       if (platform.startsWith("linux")) {
         preloads.add(i, load + "#mklml_intel");
       } else if (platform.startsWith("macosx")) {
@@ -479,11 +473,6 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .valueTypes("BytePointer", "String")
                 .pointerTypes("BytePointer"))
         .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
-//        .put(
-//            new Info("absl::Span<const tensorflow::SourceLocation>")
-//                .annotations("@Span")
-//                .valueTypes("@Cast(\"const tensorflow::SourceLocation*\") SourceLocation")
-//                .pointerTypes("SourceLocation"))
         .put(
             new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
         .put(new Info("tensorflow::Output").javaNames("NativeOutput"))
@@ -562,7 +551,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "tsl::TfCheckOpHelperOutOfLine",
                     "tsl::TfCheckOpHelper",
                     "tsl::ToAbslStatus",
-                    "tsl::FromAbslStatus"
+                    "tsl::FromAbslStatus",
+                    "tsl::errors::Code",
+                    "absl::StatusCode",
+                    "TF_PayloadVisitor",
+                    "TSL_PayloadVisitor"
                     )
                 .skip())
             .put(new Info(
