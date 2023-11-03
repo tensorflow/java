@@ -16,11 +16,11 @@ unzip -u -d $DOWNLOAD_FOLDER $DOWNLOAD_FOLDER/$DOWNLOADED_FILE
 
 # TODO Per OS logic
 if [ "$OS_NAME" = "linux" ]; then
-  ln -fs $DOWNLOAD_FOLDER/libtensorflow_cc.so.2 $DOWNLOAD_FOLDER/libtensorflow_cc.so
-  ln -fs $DOWNLOAD_FOLDER/libtensorflow_framework.so.2 $DOWNLOAD_FOLDER/libtensorflow_framework.so
+  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.so.2 $DOWNLOAD_FOLDER/libtensorflow_cc.so
+  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.so.2 $DOWNLOAD_FOLDER/libtensorflow_framework.so
 elif [ "$OS_NAME" = "macosx" ]; then
-  ln -fs $DOWNLOAD_FOLDER/libtensorflow_cc.2.dylib $DOWNLOAD_FOLDER/libtensorflow_cc.dylib
-  ln -fs $DOWNLOAD_FOLDER/libtensorflow_framework.2.dylib $DOWNLOAD_FOLDER/libtensorflow_framework.dylib
+  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.2.dylib $DOWNLOAD_FOLDER/libtensorflow_cc.dylib
+  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.2.dylib $DOWNLOAD_FOLDER/libtensorflow_framework.dylib
 elif [ "$OS_NAME" = "windows" ]; then
   cat "Windows unsupported";
   return 1;
