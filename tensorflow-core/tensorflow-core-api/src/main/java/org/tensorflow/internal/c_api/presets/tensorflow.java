@@ -46,10 +46,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
           include = {
             "tensorflow/tsl/platform/ctstring_internal.h",
             "tensorflow/tsl/platform/ctstring.h",
-//            "tensorflow/tsl/platform/tstring.h",
-//            "tensorflow/tsl/platform/stringpiece.h",
-//            "tensorflow/tsl/platform/cord.h",
-            //"tensorflow/core/platform/status.h",
             "tensorflow/tsl/platform/status.h",
             "tensorflow/tsl/platform/default/status.h",
             "tensorflow/tsl/c/tsl_status.h",
@@ -62,8 +58,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_tstring.h",
             "tensorflow/c/c_api.h",
             "tensorflow/c/tf_buffer.h",
-            "tensorflow/c/tf_status.h",
-            //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
             "tensorflow_adapters.h",
@@ -75,7 +69,6 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_status_helper.h",
             "tensorflow/cc/framework/ops.h",
             "tensorflow/c/c_api_internal.h"
-//            "absl/strings/string_view.h"
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
@@ -477,7 +470,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
         .put(new Info("tensorflow::Output").javaNames("NativeOutput"))
         .put(new Info("tensorflow::Operation").javaNames("NativeOperation"))
-//        .put(new Info("tensorflow::Status").javaNames("NativeStatus").purify())
+//        .put(new Info("tensorflow::Status").javaNames("TF_Status").purify())
         .put(
             new Info("tensorflow::int32", "tensorflow::error::Code")
                 .cast()
