@@ -16,7 +16,11 @@ http_archive(
     ],
     patch_tool = "patch",
     patch_args = ["-p1"],
-    patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\\(.* java_package = \"org\\.tensorflow\\.\\)\\(.*\"\\)/\\1proto.\\2'/"],
+    patch_cmds = [
+        # "grep -rl 'syntax = "proto3";' tensorflow | xargs sed -i.bak 's/^\\(.* java_package = \"org\\.tensorflow\\.\\)\\(.*\"\\)/\\1proto.\\2'/",
+        "find tensorflow -name \\*.proto | xargs sed -i.bak 's/^\\(.* java_package = \"org\\.tensorflow\\.\\)\\(.*\"\\)/\\1proto.\\2/'",
+        "find tensorflow -name \\*.proto | xargs grep -L 'option java_package' | xargs sed -i.bak 's/^\\(syntax = \"proto3\";\\)/\\1\\roption java_package = \"org.tensorflow.proto\";/'",
+    ],
     urls = [
        "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.14.0.tar.gz",
     ],

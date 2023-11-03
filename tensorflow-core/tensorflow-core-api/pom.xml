@@ -292,9 +292,7 @@
               <includes>
                 <include>org/tensorflow/internal/c_api/presets/*.java</include>
               </includes>
-              <!-- Build on Java8 to prevent the plugin to automatically include module-info.java (excluding it won't work) -->
-              <release>8</release>
-              <compilerArgs combine.self="override"></compilerArgs>
+              <compilerArgs combine.self="override"/>
             </configuration>
           </execution>
         </executions>

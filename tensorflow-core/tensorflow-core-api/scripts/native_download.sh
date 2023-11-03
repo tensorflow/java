@@ -14,7 +14,6 @@ fi
 
 unzip -q -u -d $DOWNLOAD_FOLDER $DOWNLOAD_FOLDER/$DOWNLOADED_FILE
 
-# TODO Per OS logic
 if [ "$OS_NAME" = "linux" ]; then
   ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.so.2 $DOWNLOAD_FOLDER/libtensorflow_cc.so
   ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.so.2 $DOWNLOAD_FOLDER/libtensorflow_framework.so
