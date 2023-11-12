@@ -119,6 +119,7 @@ To upgrade the version of TensorFlow that is embedded within TensorFlow Java, pl
 3. Update `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule in Bazel [workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/WORKSPACE#L19)
 4. Extract the archive in a temporary folder
 5. Copy the content of `tensorflow-x.x.x/.bazelrc` file to `tensorflow-core/tensorflow-core-api/tensorflow.bazelrc` under TensorFlow Java source tree
+6. Copy the content of `tensorflow-x.x.x/WORKSPACE` after the "###### Copy content of..." notice if `tensorflow-core/tensorflow-core-api/WORKSPACE`, read notice for more details
 
 If the version of `tensorflow-x.x.x/.bazelversion` is different than the one found in `tensorflow-core/tensorflow-core-api/.bazelversion`
 
