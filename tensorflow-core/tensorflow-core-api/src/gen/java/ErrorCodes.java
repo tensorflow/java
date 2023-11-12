@@ -28,9 +28,9 @@ public final class ErrorCodes {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          org.tensorflow.framework.ErrorCodesProtos.getDescriptor(),
+          org.tensorflow.proto.error.ErrorCodesProtos.getDescriptor(),
         });
-    org.tensorflow.framework.ErrorCodesProtos.getDescriptor();
+    org.tensorflow.proto.error.ErrorCodesProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

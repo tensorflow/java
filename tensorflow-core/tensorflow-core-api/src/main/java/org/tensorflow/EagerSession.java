@@ -34,7 +34,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
-import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.ConfigProto;
 
 /**
  * An environment for executing TensorFlow operations eagerly.

@@ -90,16 +90,16 @@ GEN_RESOURCE_DIR=src/gen/resources
 rm -rf $GEN_RESOURCE_DIR
 mkdir -p $GEN_RESOURCE_DIR
 
-# Export op defs
-echo "Exporting Ops..."
-$BAZEL_BIN/java_op_exporter \
-    $GEN_RESOURCE_DIR/ops.pb \
-    $GEN_RESOURCE_DIR/ops.pbtxt \
-    $BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api \
-    src/bazel/api_def
-
 # Copy generated Java protos from source jars
 echo "Copying generated protos"
 cd $GEN_SRCS_DIR
 find $TENSORFLOW_BIN -name \*-speed-src.jar -exec jar xf {} \;
 rm -rf META-INF
+
+# Export op defs
+echo "Exporting Ops"
+$BAZEL_BIN/java_op_exporter \
+    $GEN_RESOURCE_DIR/ops.pb \
+    $GEN_RESOURCE_DIR/ops.pbtxt \
+    $BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api \
+    src/bazel/api_def
