@@ -28,8 +28,8 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Add;
 import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.nn.Relu;
-import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.proto.ConfigProto;
+import org.tensorflow.proto.GraphDef;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 

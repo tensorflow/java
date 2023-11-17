@@ -41,6 +41,7 @@ import org.tensorflow.op.core.Stack;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.nn.TopK;
+import org.tensorflow.op.nn.TopK.Options;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -660,7 +661,7 @@ public class MetricsHelper {
     Class<T> type = x.type();
     Shape xShape = x.shape();
     // top has the same rank as x; the last dimension becomes indices of the topK features.
-    TopK<T> top = tf.nn.topK(x, tf.constant(topK), TopK.sorted(false));
+    TopK<T, TInt32> top = tf.nn.topK(x, tf.constant(topK), new Options[]{TopK.sorted(false)});
     // oneHot has an additional dimension: the one-hot representation of each topK index.
     OneHot<TInt32> oneHot =
         tf.oneHot(
