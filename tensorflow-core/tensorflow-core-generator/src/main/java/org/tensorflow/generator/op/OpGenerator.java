@@ -33,6 +33,8 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 
 import org.bytedeco.javacpp.BytePointer;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.SystemPropertyUtils;
 import org.tensorflow.internal.c_api.TF_ApiDefMap;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -67,7 +70,7 @@ public final class OpGenerator {
           + "=======================================================================*/"
           + "\n";
 
-  private static final String HELP_TEXT = "Args should be: [-p <base_package>] <outputDir> [<opDefFile>]";
+  private static final String HELP_TEXT = "Args should be: [--help] [-p <basePackage>] [-a <apiDefsPaths>] [-o <outputPath>] [<opDefPath>]";
 
   private static final String DEFAULT_OP_DEF_FILE = "org/tensorflow/ops.pbtxt";
 
@@ -79,27 +82,48 @@ public final class OpGenerator {
    * <p><b>Will delete everything in {@code outputDir}.</b>
    */
   public static void main(String[] args) throws IOException, URISyntaxException {
-    //TF_RuntimeLibrary.load();
+    String packageName = "org.tensorflow.op";
+    String[] apiDefsPaths = new String[0];
+    String outputPath = ".";
+    String opDefsPath = null;
 
     int argIdx = 0;
-
-    if (arg(args, argIdx).equals("--help")) {
-      System.out.println(HELP_TEXT);
-      return;
+    for (; argIdx < args.length - 1; ++argIdx) {
+      var arg = arg(args, argIdx);
+      switch (arg) {
+        case "--help":
+        case "-h":
+          System.out.println(HELP_TEXT);
+          return;
+        case "-p":
+          packageName = arg(args, ++argIdx);
+          break;
+        case "-a":
+          apiDefsPaths = arg(args, ++argIdx).split(",");
+          break;
+        case "-o":
+          outputPath = arg(args, ++argIdx);
+          break;
+        default:
+          System.err.println("Unknown argument \"" + arg + "\"");
+          System.out.println(HELP_TEXT);
+          System.exit(1);
+      }
     }
-
-    String packageName = "org.tensorflow.op";
-
-    if (arg(args, argIdx).equals("-p")) {
-      packageName = arg(args, ++argIdx);
-      ++argIdx;
+    if (argIdx < args.length) {
+      opDefsPath = arg(args, argIdx);
     }
+    System.out.println("Generating ops files:");
+    System.out.println("    op definitions: " + (opDefsPath != null ? opDefsPath : "<default>"));
+    System.out.println("    additional api definitions: " + Arrays.toString(apiDefsPaths));
+    System.out.println("    package name: " + packageName);
+    System.out.println("    output directory: " + outputPath);
 
-    File outputDir = new File(arg(args, argIdx++));
+    File outputDir = new File(outputPath);
     OpList opList = null;
 
-    if (argIdx < args.length - 1) {
-      var opDefsFile = new File(arg(args, argIdx++));
+    if (opDefsPath != null) {
+      var opDefsFile = new File(opDefsPath);
 
       if (!opDefsFile.exists()) {
         System.err.println("Op def file " + opDefsFile + " does not exist.");
@@ -151,7 +175,7 @@ public final class OpGenerator {
       } catch (IOException ignored) {
       }
     }
-    generate(outputDir, packageName, opList);
+    generate(outputDir, packageName, opList, apiDefsPaths);
   }
 
   private static String arg(String[] args, int idx) {
@@ -174,15 +198,17 @@ public final class OpGenerator {
     }
   }
 
-  private static Map<OpDef, ApiDef> buildDefMap(OpList opList) {
+  private static Map<OpDef, ApiDef> buildDefMap(OpList opList, String[] additionalApiDefs) {
     try (TF_Status status = TF_Status.newStatus();
          TF_ApiDefMap apiDefMap = tensorflow.TF_NewApiDefMap(TF_Buffer.newBufferFromString(opList), status)){
       status.throwExceptionIfNotOK();
 
       // We must build the ApiDefMap before any attempt to retrieve a value from it, or it will fail
-      mergeApiDefs(apiDefMap, "org/tensorflow/base_api", status);
-      mergeApiDefs(apiDefMap, "org/tensorflow/java_api", status);
-
+      // Load first the base APIs coming from the native artifact, then any other additional paths
+      mergeApiDefsResources(apiDefMap, "org/tensorflow/base_api", status);
+      for (var apiDefsPath : additionalApiDefs) {
+        mergeApiDefsFiles(apiDefMap, apiDefsPath, status);
+      }
       Map<OpDef, ApiDef> defs = new LinkedHashMap<>();
       for (OpDef opDef : opList.getOpList()) {
         var apiDef = tensorflow.TF_ApiDefMapGet(apiDefMap, opDef.getName(), opDef.getName().length(), status);
@@ -195,10 +221,10 @@ public final class OpGenerator {
     }
   }
 
-  private static void mergeApiDefs(TF_ApiDefMap apiDefMap, String apiDefsResourceFolder, TF_Status status) {
+  private static void mergeApiDefsResources(TF_ApiDefMap apiDefMap, String apiDefsPath, TF_Status status) {
     try {
       var resourceResolver = new PathMatchingResourcePatternResolver(OpGenerator.class.getClassLoader());
-      var apiDefs = resourceResolver.getResources(apiDefsResourceFolder + "/api_def_*.pbtxt");
+      var apiDefs = resourceResolver.getResources(apiDefsPath + "/api_def_*.pbtxt");
       for (var apiDef : apiDefs) {
         try (var apiDefInput = apiDef.getInputStream()) {
           tensorflow.TF_ApiDefMapPut(apiDefMap, new BytePointer(apiDefInput.readAllBytes()), apiDef.contentLength(), status);
@@ -208,7 +234,23 @@ public final class OpGenerator {
         }
       }
     } catch (IOException e) {
-      throw new RuntimeException("Failed to browse API definitions in resource folder \"" + apiDefsResourceFolder + "\"", e);
+      throw new RuntimeException("Failed to browse API definitions in resource folder \"" + apiDefsPath + "\"", e);
+    }
+  }
+
+  private static void mergeApiDefsFiles(TF_ApiDefMap apiDefMap, String apiDefsPath, TF_Status status) {
+    try {
+      Files.walk(Path.of(apiDefsPath)).filter(p -> p.toString().endsWith(".pbtxt")).forEach(p -> {
+        try {
+          byte[] content = Files.readAllBytes(p);
+          tensorflow.TF_ApiDefMapPut(apiDefMap, new BytePointer(content), content.length, status);
+          status.throwExceptionIfNotOK();
+        } catch (IOException e) {
+          throw new RuntimeException("Failed to parse API definition in resource file \"" + p.toString() + "\"", e);
+        }
+      });
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to browse API definitions in resource folder \"" + apiDefsPath + "\"", e);
     }
   }
 
@@ -237,8 +279,8 @@ public final class OpGenerator {
   }
 
   /** Generate all the ops that pass {@link ClassGenerator#canGenerateOp(OpDef, ApiDef)}. */
-  private static void generate(File outputDir, String basePackage, OpList opList) {
-    Map<OpDef, ApiDef> ops = buildDefMap(opList);
+  private static void generate(File outputDir, String basePackage, OpList opList, String[] additionalApiDefs) {
+    Map<OpDef, ApiDef> ops = buildDefMap(opList, additionalApiDefs);
 
     List<FullOpDef> fullOps =
         ops.entrySet().stream()

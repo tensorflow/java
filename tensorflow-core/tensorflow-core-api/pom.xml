@@ -103,6 +103,9 @@
                   <includePluginDependencies>true</includePluginDependencies>
                   <mainClass>org.tensorflow.generator.op.OpGenerator</mainClass>
                   <arguments>
+                    <argument>-a</argument>
+                    <argument>${project.basedir}/src/api</argument>
+                    <argument>-o</argument>
                     <argument>${project.basedir}/src/gen/java</argument>
                   </arguments>
                 </configuration>
