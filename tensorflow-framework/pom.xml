@@ -67,8 +67,9 @@
     <!-- Include native binaries dependencies only for testing -->
     <dependency>
       <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
+      <classifier>${os.name}-${os.arch}</classifier>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -97,5 +98,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
