@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ZipDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ZipDataset"
+  }
+}

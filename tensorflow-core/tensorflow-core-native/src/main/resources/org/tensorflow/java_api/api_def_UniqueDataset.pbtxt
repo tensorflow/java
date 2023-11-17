@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "UniqueDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.UniqueDataset"
+  }
+}

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "MulNoNan"
+  endpoint {
+    name: "math.MulNoNan"
+  }
+}

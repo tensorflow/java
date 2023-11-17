@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "LeakyRelu"
+  visibility: VISIBLE
+  endpoint {
+    name: "nn.LeakyRelu"
+  }
+}

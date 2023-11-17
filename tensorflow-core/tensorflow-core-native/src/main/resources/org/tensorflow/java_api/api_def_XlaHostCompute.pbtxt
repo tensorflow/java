@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaHostCompute"
+   endpoint: {
+     name: "xla.XlaHostCompute"
+   }
+}

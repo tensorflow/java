@@ -48,7 +48,7 @@ import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 
 /**
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.

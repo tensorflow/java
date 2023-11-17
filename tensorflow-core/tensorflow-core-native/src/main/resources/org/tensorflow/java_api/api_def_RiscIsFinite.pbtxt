@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RiscIsFinite"
+  endpoint {
+    name: "risc.RiscIsFinite"
+  }
+}

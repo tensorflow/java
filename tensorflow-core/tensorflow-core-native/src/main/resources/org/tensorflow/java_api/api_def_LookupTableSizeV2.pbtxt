@@ -1,0 +1,10 @@
+op {
+  graph_op_name: "LookupTableSizeV2"
+  endpoint {
+    name: "LookupTableSize"
+  }
+  out_arg {
+    name: "size"
+    rename_to: "output"
+  }
+}

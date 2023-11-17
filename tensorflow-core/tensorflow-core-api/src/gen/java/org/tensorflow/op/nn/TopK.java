@@ -23,6 +23,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
@@ -30,7 +31,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
@@ -47,6 +48,8 @@ import org.tensorflow.types.family.TNumber;
  * <p>If two elements are equal, the lower-index element appears first.
  *
  * @param <T> data type for {@code values} output
+ *
+ * @param <V> data type for {@code indices} output
  */
 @OpMetadata(
     opType = TopK.OP_NAME,
@@ -55,7 +58,7 @@ import org.tensorflow.types.family.TNumber;
 @Operator(
     group = "nn"
 )
-public final class TopK<T extends TNumber> extends RawOp {
+public final class TopK<T extends TNumber, V extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -63,7 +66,7 @@ public final class TopK<T extends TNumber> extends RawOp {
 
   private Output<T> values;
 
-  private Output<TInt32> indices;
+  private Output<V> indices;
 
   public TopK(Operation operation) {
     super(operation, OP_NAME);
@@ -79,18 +82,21 @@ public final class TopK<T extends TNumber> extends RawOp {
    * @param input 1-D or higher with last dimension at least {@code k}.
    * @param k 0-D.  Number of top elements to look for along the last dimension (along each
    * row for matrices).
+   * @param indexType The value of the indexType attribute
    * @param options carries optional attribute values
    * @param <T> data type for {@code TopKV2} output and operands
+   * @param <V> data type for {@code TopKV2} output and operands
    * @return a new instance of TopK
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TNumber> TopK<T> create(Scope scope, Operand<T> input, Operand<TInt32> k,
-      Options... options) {
+  public static <T extends TNumber, V extends TNumber> TopK<T, V> create(Scope scope,
+      Operand<T> input, Operand<? extends TNumber> k, Class<V> indexType, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TopK");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
+    opBuilder.setAttr("index_type", Operands.toDataType(indexType));
     if (options != null) {
       for (Options opts : options) {
         if (opts.sorted != null) {
@@ -99,6 +105,25 @@ public final class TopK<T extends TNumber> extends RawOp {
       }
     }
     return new TopK<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TopKV2 operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param input 1-D or higher with last dimension at least {@code k}.
+   * @param k 0-D.  Number of top elements to look for along the last dimension (along each
+   * row for matrices).
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TopKV2} output and operands
+   * @return a new instance of TopK, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> TopK<T, TInt32> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> k, Options[] options) {
+    return create(scope, input, k, TInt32.class, options);
   }
 
   /**
@@ -126,7 +151,7 @@ public final class TopK<T extends TNumber> extends RawOp {
    * The indices of {@code values} within the last dimension of {@code input}.
    * @return indices.
    */
-  public Output<TInt32> indices() {
+  public Output<V> indices() {
     return indices;
   }
 
@@ -155,7 +180,7 @@ public final class TopK<T extends TNumber> extends RawOp {
   @OpInputsMetadata(
       outputsClass = TopK.class
   )
-  public static class Inputs<T extends TNumber> extends RawOpInputs<TopK<T>> {
+  public static class Inputs<T extends TNumber> extends RawOpInputs<TopK<T, ?>> {
     /**
      * 1-D or higher with last dimension at least {@code k}.
      */
@@ -165,7 +190,7 @@ public final class TopK<T extends TNumber> extends RawOp {
      * 0-D.  Number of top elements to look for along the last dimension (along each
      * row for matrices).
      */
-    public final Operand<TInt32> k;
+    public final Operand<? extends TNumber> k;
 
     /**
      * If true the resulting `k` elements will be sorted by the values in
@@ -178,13 +203,25 @@ public final class TopK<T extends TNumber> extends RawOp {
      */
     public final DataType T;
 
+    /**
+     * The Tk attribute
+     */
+    public final DataType Tk;
+
+    /**
+     * The indexType attribute
+     */
+    public final DataType indexType;
+
     public Inputs(GraphOperation op) {
-      super(new TopK<>(op), op, Arrays.asList("sorted", "T"));
+      super(new TopK<>(op), op, Arrays.asList("sorted", "T", "Tk", "index_type"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
-      k = (Operand<TInt32>) op.input(inputIndex++);
+      k = (Operand<? extends TNumber>) op.input(inputIndex++);
       sorted = op.attributes().getAttrBool("sorted");
       T = op.attributes().getAttrType("T");
+      Tk = op.attributes().getAttrType("Tk");
+      indexType = op.attributes().getAttrType("index_type");
     }
   }
 }

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ResourceAccumulatorApplyGradient"
+  endpoint {
+    name: "train.ResourceAccumulatorApplyGradient"
+  }
+}

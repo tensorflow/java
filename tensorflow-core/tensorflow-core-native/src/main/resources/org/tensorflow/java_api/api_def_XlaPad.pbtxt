@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaPad"
+  endpoint {
+    name: "xla.Pad"
+  }
+}

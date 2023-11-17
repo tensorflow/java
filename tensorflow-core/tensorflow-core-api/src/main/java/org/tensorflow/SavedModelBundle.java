@@ -41,14 +41,14 @@ import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.proto.framework.CollectionDef;
-import org.tensorflow.proto.framework.CollectionDef.NodeList;
-import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.proto.framework.MetaGraphDef;
-import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
-import org.tensorflow.proto.framework.RunOptions;
-import org.tensorflow.proto.framework.SavedModel;
-import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.proto.CollectionDef;
+import org.tensorflow.proto.CollectionDef.NodeList;
+import org.tensorflow.proto.ConfigProto;
+import org.tensorflow.proto.MetaGraphDef;
+import org.tensorflow.proto.MetaGraphDef.MetaInfoDef;
+import org.tensorflow.proto.RunOptions;
+import org.tensorflow.proto.SavedModel;
+import org.tensorflow.proto.SaverDef;
 
 /**
  * SavedModelBundle represents a model loaded from storage.

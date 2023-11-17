@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "LoadTPUEmbeddingRMSPropParametersGradAccumDebug"
+  endpoint {
+    name: "tpu.LoadTPUEmbeddingRMSPropParametersGradAccumDebug"
+  }
+}

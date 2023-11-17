@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SnapshotDatasetReader"
+  endpoint {
+    name: "data.SnapshotDatasetReader"
+  }
+}

@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "FinalizeDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.FinalizeDataset"
+  }
+}

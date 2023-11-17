@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DatasetToGraphV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.DatasetToGraph"
+  }
+}

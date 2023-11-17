@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "QuantizeAndDequantizeV4Grad"
+  endpoint {
+    name: "quantization.QuantizeAndDequantizeV4Grad"
+  }
+}

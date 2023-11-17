@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "MakeIterator"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.MakeIterator"
+  }
+}

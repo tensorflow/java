@@ -17,7 +17,7 @@
 package org.tensorflow.internal.types.registry;
 
 import org.tensorflow.TensorMapper;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**

@@ -1,0 +1,10 @@
+op {
+  graph_op_name: "NcclReduce"
+  endpoint: {
+    name: "distribute.NcclReduce"
+  }
+  endpoint: {
+    name: "NcclReduce"
+    deprecated: true
+  }
+}

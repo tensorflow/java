@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ReduceDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ReduceDataset"
+  }
+}

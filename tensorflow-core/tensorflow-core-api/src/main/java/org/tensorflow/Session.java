@@ -41,11 +41,11 @@ import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReadVariableOp;
-import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.proto.framework.RunMetadata;
-import org.tensorflow.proto.framework.RunOptions;
-import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.proto.ConfigProto;
+import org.tensorflow.proto.DataType;
+import org.tensorflow.proto.RunMetadata;
+import org.tensorflow.proto.RunOptions;
+import org.tensorflow.proto.SaverDef;
 import org.tensorflow.types.TString;
 
 /**

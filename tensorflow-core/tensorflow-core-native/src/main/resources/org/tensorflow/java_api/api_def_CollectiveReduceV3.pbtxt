@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CollectiveReduceV3"
+  endpoint {
+    name: "collective.CollectiveReduce"
+  }
+}

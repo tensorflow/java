@@ -24,12 +24,12 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.impl.dense.DoubleDenseNdArray;
 import org.tensorflow.ndarray.impl.sparse.DoubleSparseNdArray;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_DOUBLE} tensors to a
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_DOUBLE} tensors to a
  * n-dimensional data space.
  */
 public final class TFloat64Mapper extends TensorMapper<TFloat64> {

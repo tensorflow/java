@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ChooseFastestBranchDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ChooseFastestBranchDataset"
+  }
+}

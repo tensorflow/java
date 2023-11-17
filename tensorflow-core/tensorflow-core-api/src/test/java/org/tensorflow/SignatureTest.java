@@ -20,7 +20,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Signature.TensorDescription;
 import org.tensorflow.op.Ops;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 
 public class SignatureTest {
 

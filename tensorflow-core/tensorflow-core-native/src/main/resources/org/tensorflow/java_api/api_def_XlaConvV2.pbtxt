@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaConvV2"
+  endpoint {
+    name: "xla.Conv"
+  }
+}

@@ -14,14 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
-module org.tensorflow.generator {
+module tensorflow.generator {
+  requires tensorflow.tf_native;
   requires java.compiler;
   requires com.github.javaparser.core;
   requires com.google.protobuf;
   requires com.google.common;
   requires com.squareup.javapoet;
   requires org.commonmark;
+  requires spring.core;
 
-  exports org.tensorflow.processor.operator;
-  exports org.tensorflow.op.generator;
+  exports org.tensorflow.generator.op;
+  exports org.tensorflow.generator.op.processor;
 }

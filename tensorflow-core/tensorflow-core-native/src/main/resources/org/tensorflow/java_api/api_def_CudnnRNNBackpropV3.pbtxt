@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CudnnRNNBackpropV3"
+  endpoint {
+    name: "nn.CudnnRNNBackprop"
+  }
+}

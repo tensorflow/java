@@ -20,11 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.proto.framework.SignatureDef;
-import org.tensorflow.proto.framework.TensorInfo;
-import org.tensorflow.proto.framework.TensorShapeProto;
-import org.tensorflow.proto.framework.TensorShapeProto.Dim;
+import org.tensorflow.proto.DataType;
+import org.tensorflow.proto.SignatureDef;
+import org.tensorflow.proto.TensorInfo;
+import org.tensorflow.proto.TensorShapeProto;
+import org.tensorflow.proto.TensorShapeProto.Dim;
 
 /**
  * Describe the inputs and outputs of an executable entity, such as a {@link ConcreteFunction},

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "StatsAggregatorHandleV2"
+  endpoint {
+    name: "data.StatsAggregatorHandle"
+  }
+}

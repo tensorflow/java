@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ShuffleAndRepeatDatasetV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ShuffleAndRepeatDataset"
+  }
+}

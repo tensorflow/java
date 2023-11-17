@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DebugNanCount"
+  endpoint {
+    name: "debugging.DebugNanCount"
+  }
+  visibility: HIDDEN
+}

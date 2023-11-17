@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "StatelessRandomUniformFullIntV2"
+  endpoint {
+    name: "random.StatelessRandomUniformFullIntV2"
+  }
+}

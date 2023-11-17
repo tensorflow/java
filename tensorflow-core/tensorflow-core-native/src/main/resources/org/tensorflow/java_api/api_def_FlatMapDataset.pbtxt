@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "FlatMapDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.FlatMapDataset"
+  }
+}

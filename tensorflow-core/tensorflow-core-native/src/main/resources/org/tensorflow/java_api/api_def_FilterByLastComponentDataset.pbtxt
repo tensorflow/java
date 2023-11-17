@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "FilterByLastComponentDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.FilterByLastComponentDataset"
+  }
+}

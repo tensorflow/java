@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DebugGradientRefIdentity"
+  endpoint {
+    name: "debugging.DebugGradientRefIdentity"
+  }
+  visibility: HIDDEN
+}

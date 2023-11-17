@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "LoadTPUEmbeddingAdagradMomentumParameters"
+  endpoint {
+    name: "tpu.LoadTPUEmbeddingAdagradMomentumParameters"
+  }
+}

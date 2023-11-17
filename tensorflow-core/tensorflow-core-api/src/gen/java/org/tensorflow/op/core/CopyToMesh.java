@@ -30,7 +30,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -62,18 +62,17 @@ public final class CopyToMesh<T extends TType> extends RawOp implements Operand<
    *
    * @param scope current scope
    * @param input The input value
-   * @param layout The value of the layout attribute
+   * @param mesh The value of the mesh attribute
    * @param <T> data type for {@code CopyToMesh} output and operands
    * @return a new instance of CopyToMesh
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> CopyToMesh<T> create(Scope scope, Operand<T> input,
-      String layout) {
+  public static <T extends TType> CopyToMesh<T> create(Scope scope, Operand<T> input, String mesh) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CopyToMesh");
     opBuilder.addInput(input.asOutput());
-    opBuilder.setAttr("layout", layout);
+    opBuilder.setAttr("mesh", mesh);
     return new CopyToMesh<>(opBuilder.build());
   }
 
@@ -101,9 +100,9 @@ public final class CopyToMesh<T extends TType> extends RawOp implements Operand<
     public final Operand<T> input;
 
     /**
-     * The layout attribute
+     * The mesh attribute
      */
-    public final String layout;
+    public final String mesh;
 
     /**
      * The T attribute
@@ -111,10 +110,10 @@ public final class CopyToMesh<T extends TType> extends RawOp implements Operand<
     public final DataType T;
 
     public Inputs(GraphOperation op) {
-      super(new CopyToMesh<>(op), op, Arrays.asList("layout", "T"));
+      super(new CopyToMesh<>(op), op, Arrays.asList("mesh", "T"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
-      layout = op.attributes().getAttrString("layout");
+      mesh = op.attributes().getAttrString("mesh");
       T = op.attributes().getAttrType("T");
     }
   }

@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DatasetToSingleElement"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.DatasetToSingleElement"
+  }
+}

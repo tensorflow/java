@@ -27,7 +27,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.ShortNdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TIntegral;
 

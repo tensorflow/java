@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.proto.framework.RunMetadata;
+import org.tensorflow.proto.RunMetadata;
 
 /**
  * An {@link AutoCloseable} wrapper around a {@link Map} containing {@link Tensor}s.

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "KMC2ChainInitialization"
+  endpoint {
+    name: "cluster.KMC2ChainInitialization"
+  }
+}

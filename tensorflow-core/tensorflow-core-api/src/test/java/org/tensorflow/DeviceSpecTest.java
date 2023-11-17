@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.ConfigProto;
 import org.tensorflow.types.TInt32;
 
 /** Tests for {@link DeviceSpec}. */

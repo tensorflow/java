@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ParallelBatchDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ParallelBatchDataset"
+  }
+}

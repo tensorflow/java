@@ -22,7 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.internal.types.registry.TensorTypeRegistry;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /** Utilities for manipulating operand related types and lists. */

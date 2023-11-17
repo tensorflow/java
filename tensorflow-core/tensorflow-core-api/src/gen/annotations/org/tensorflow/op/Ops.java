@@ -76,19 +76,14 @@ import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
+import org.tensorflow.op.core.Conv;
 import org.tensorflow.op.core.Conv2DBackpropFilterV2;
 import org.tensorflow.op.core.Conv2DBackpropInputV2;
 import org.tensorflow.op.core.CopyToMesh;
 import org.tensorflow.op.core.CopyToMeshGrad;
 import org.tensorflow.op.core.CountUpTo;
-import org.tensorflow.op.core.CustomAggregator;
-import org.tensorflow.op.core.DTensorAllGather;
-import org.tensorflow.op.core.DTensorAllReduce;
-import org.tensorflow.op.core.DTensorAllScatter;
-import org.tensorflow.op.core.DTensorReduceScatter;
 import org.tensorflow.op.core.DecodeProto;
 import org.tensorflow.op.core.DeepCopy;
-import org.tensorflow.op.core.DeleteRpcFutureResource;
 import org.tensorflow.op.core.DeleteSessionTensor;
 import org.tensorflow.op.core.DestroyResourceOp;
 import org.tensorflow.op.core.DestroyTemporaryVariable;
@@ -171,6 +166,8 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedReshape;
+import org.tensorflow.op.core.RaggedFillEmptyRows;
+import org.tensorflow.op.core.RaggedFillEmptyRowsGrad;
 import org.tensorflow.op.core.RandomIndexShuffle;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
@@ -185,6 +182,7 @@ import org.tensorflow.op.core.RefNextIteration;
 import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
 import org.tensorflow.op.core.Relayout;
+import org.tensorflow.op.core.RelayoutLike;
 import org.tensorflow.op.core.RemoteCall;
 import org.tensorflow.op.core.Reshape;
 import org.tensorflow.op.core.ResourceCountUpTo;
@@ -206,13 +204,6 @@ import org.tensorflow.op.core.ResourceStridedSliceAssign;
 import org.tensorflow.op.core.Reverse;
 import org.tensorflow.op.core.ReverseSequence;
 import org.tensorflow.op.core.Roll;
-import org.tensorflow.op.core.RpcCall;
-import org.tensorflow.op.core.RpcCheckStatus;
-import org.tensorflow.op.core.RpcClient;
-import org.tensorflow.op.core.RpcGetValue;
-import org.tensorflow.op.core.RpcServer;
-import org.tensorflow.op.core.RpcServerRegister;
-import org.tensorflow.op.core.RpcServerStart;
 import org.tensorflow.op.core.ScatterAdd;
 import org.tensorflow.op.core.ScatterDiv;
 import org.tensorflow.op.core.ScatterMax;
@@ -225,6 +216,8 @@ import org.tensorflow.op.core.ScatterNdSub;
 import org.tensorflow.op.core.ScatterNdUpdate;
 import org.tensorflow.op.core.ScatterSub;
 import org.tensorflow.op.core.ScatterUpdate;
+import org.tensorflow.op.core.SegmentMaxV2;
+import org.tensorflow.op.core.SegmentMinV2;
 import org.tensorflow.op.core.SegmentProdV2;
 import org.tensorflow.op.core.SegmentSumV2;
 import org.tensorflow.op.core.Select;
@@ -236,6 +229,9 @@ import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.core.Snapshot;
 import org.tensorflow.op.core.SpaceToBatchNd;
+import org.tensorflow.op.core.SparseSegmentMeanGradV2;
+import org.tensorflow.op.core.SparseSegmentSqrtNGradV2;
+import org.tensorflow.op.core.SparseSegmentSumGradV2;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
@@ -249,7 +245,6 @@ import org.tensorflow.op.core.StatefulIf;
 import org.tensorflow.op.core.StatefulPartitionedCall;
 import org.tensorflow.op.core.StatefulWhile;
 import org.tensorflow.op.core.StatelessIf;
-import org.tensorflow.op.core.StatelessPartitionedCall;
 import org.tensorflow.op.core.StatelessWhile;
 import org.tensorflow.op.core.StopGradient;
 import org.tensorflow.op.core.StridedSlice;
@@ -302,7 +297,6 @@ import org.tensorflow.op.core.TensorScatterNdMin;
 import org.tensorflow.op.core.TensorScatterNdSub;
 import org.tensorflow.op.core.TensorScatterNdUpdate;
 import org.tensorflow.op.core.TensorStridedSliceUpdate;
-import org.tensorflow.op.core.TfLiteSubgraphExecute;
 import org.tensorflow.op.core.Tile;
 import org.tensorflow.op.core.Timestamp;
 import org.tensorflow.op.core.TopKUnique;
@@ -320,8 +314,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
-import org.tensorflow.op.core.XlaCustomCallV2;
-import org.tensorflow.op.core.XlaReducePrecision;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -403,9 +395,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -429,8 +421,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -2107,6 +2099,33 @@ public final class Ops {
   }
 
   /**
+   * Computes a N-D convolution given (N+1+batch_dims)-D {@code input} and (N+2)-D {@code filter} tensors.
+   *  General function for computing a N-D convolution. It is required that
+   *  {@code 1 <= N <= 3}.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input Tensor of type T and shape {@code batch_shape + spatial_shape + [in_channels]} in the
+   *  case that {@code channels_last_format = true} or shape
+   *  {@code batch_shape + [in_channels] + spatial_shape} if {@code channels_last_format = false}.
+   *  spatial_shape is N-dimensional with {@code N=2} or {@code N=3}.
+   *  Also note that {@code batch_shape} is dictated by the parameter {@code batch_dims}
+   *  and defaults to 1.
+   * @param filter An {@code (N+2)-D} Tensor with the same type as {@code input} and shape
+   *  {@code spatial_filter_shape + [in_channels, out_channels]}, where spatial_filter_shape
+   *  is N-dimensional with {@code N=2} or {@code N=3}.
+   * @param strides 1-D tensor of length {@code N+2}. The stride of the sliding window for each
+   *  dimension of {@code input}. Must have {@code strides[0] = strides[N+1] = 1}.
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Conv} output and operands
+   * @return a new instance of Conv
+   */
+  public <T extends TNumber> Conv<T> conv(Operand<T> input, Operand<T> filter, List<Long> strides,
+      String padding, Conv.Options... options) {
+    return Conv.create(scope, input, filter, strides, padding, options);
+  }
+
+  /**
    * Computes the gradients of convolution with respect to the filter.
    *
    * @param <T> data type for {@code output} output
@@ -2158,12 +2177,12 @@ public final class Ops {
    *
    * @param <T> data type for {@code output} output
    * @param input The input value
-   * @param layout The value of the layout attribute
+   * @param mesh The value of the mesh attribute
    * @param <T> data type for {@code CopyToMesh} output and operands
    * @return a new instance of CopyToMesh
    */
-  public <T extends TType> CopyToMesh<T> copyToMesh(Operand<T> input, String layout) {
-    return CopyToMesh.create(scope, input, layout);
+  public <T extends TType> CopyToMesh<T> copyToMesh(Operand<T> input, String mesh) {
+    return CopyToMesh.create(scope, input, mesh);
   }
 
   /**
@@ -2172,13 +2191,12 @@ public final class Ops {
    * @param <T> data type for {@code output} output
    * @param input The input value
    * @param forwardInput The forwardInput value
-   * @param options carries optional attribute values
    * @param <T> data type for {@code CopyToMeshGrad} output and operands
    * @return a new instance of CopyToMeshGrad
    */
   public <T extends TType> CopyToMeshGrad<T> copyToMeshGrad(Operand<T> input,
-      Operand<T> forwardInput, CopyToMeshGrad.Options... options) {
-    return CopyToMeshGrad.create(scope, input, forwardInput, options);
+      Operand<T> forwardInput) {
+    return CopyToMeshGrad.create(scope, input, forwardInput);
   }
 
   /**
@@ -2193,81 +2211,6 @@ public final class Ops {
    */
   public <T extends TNumber> CountUpTo<T> countUpTo(Operand<T> ref, Long limit) {
     return CountUpTo.create(scope, ref, limit);
-  }
-
-  /**
-   * The CustomAggregator operation
-   *
-   * @param input The input value
-   * @param id The value of the id attribute
-   * @return a new instance of CustomAggregator
-   */
-  public CustomAggregator customAggregator(Operand<TFloat32> input, String id) {
-    return CustomAggregator.create(scope, input, id);
-  }
-
-  /**
-   * The DTensorAllGather operation
-   *
-   * @param <T> data type for {@code output} output
-   * @param input The input value
-   * @param inputLayout The value of the inputLayout attribute
-   * @param outputLayout The value of the outputLayout attribute
-   * @param <T> data type for {@code DTensorAllGather} output and operands
-   * @return a new instance of DTensorAllGather
-   */
-  public <T extends TType> DTensorAllGather<T> dTensorAllGather(Operand<T> input,
-      String inputLayout, String outputLayout) {
-    return DTensorAllGather.create(scope, input, inputLayout, outputLayout);
-  }
-
-  /**
-   * The DTensorAllReduce operation
-   *
-   * @param <T> data type for {@code output} output
-   * @param input The input value
-   * @param groupAssignment The groupAssignment value
-   * @param reduceOp The value of the reduceOp attribute
-   * @param deviceType The value of the deviceType attribute
-   * @param <T> data type for {@code DTensorAllReduce} output and operands
-   * @return a new instance of DTensorAllReduce
-   */
-  public <T extends TType> DTensorAllReduce<T> dTensorAllReduce(Operand<T> input,
-      Operand<TInt32> groupAssignment, String reduceOp, String deviceType) {
-    return DTensorAllReduce.create(scope, input, groupAssignment, reduceOp, deviceType);
-  }
-
-  /**
-   * The DTensorAllScatter operation
-   *
-   * @param <T> data type for {@code output} output
-   * @param input The input value
-   * @param inputLayout The value of the inputLayout attribute
-   * @param outputLayout The value of the outputLayout attribute
-   * @param <T> data type for {@code DTensorAllScatter} output and operands
-   * @return a new instance of DTensorAllScatter
-   */
-  public <T extends TType> DTensorAllScatter<T> dTensorAllScatter(Operand<T> input,
-      String inputLayout, String outputLayout) {
-    return DTensorAllScatter.create(scope, input, inputLayout, outputLayout);
-  }
-
-  /**
-   * The DTensorReduceScatter operation
-   *
-   * @param <T> data type for {@code output} output
-   * @param input The input value
-   * @param groupAssignment The groupAssignment value
-   * @param scatterDimension The scatterDimension value
-   * @param reduceOp The value of the reduceOp attribute
-   * @param deviceType The value of the deviceType attribute
-   * @param <T> data type for {@code DTensorReduceScatter} output and operands
-   * @return a new instance of DTensorReduceScatter
-   */
-  public <T extends TType> DTensorReduceScatter<T> dTensorReduceScatter(Operand<T> input,
-      Operand<TInt32> groupAssignment, Operand<TInt32> scatterDimension, String reduceOp,
-      String deviceType) {
-    return DTensorReduceScatter.create(scope, input, groupAssignment, scatterDimension, reduceOp, deviceType);
   }
 
   /**
@@ -2361,18 +2304,6 @@ public final class Ops {
    */
   public <T extends TType> DeepCopy<T> deepCopy(Operand<T> x) {
     return DeepCopy.create(scope, x);
-  }
-
-  /**
-   * The DeleteRpcFutureResource operation
-   *
-   * @param handle The handle value
-   * @param deleter The deleter value
-   * @return a new instance of DeleteRpcFutureResource
-   */
-  public DeleteRpcFutureResource deleteRpcFutureResource(Operand<? extends TType> handle,
-      Operand<? extends TType> deleter) {
-    return DeleteRpcFutureResource.create(scope, handle, deleter);
   }
 
   /**
@@ -4189,8 +4120,9 @@ public final class Ops {
 
   /**
    * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
-   *
-   *  <p>Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
+   *  Asynchronously executes a function, potentially across multiple devices but
+   *  within a single process. The kernel places and partitions a given function's
+   *  underlying graph, and executes each of the partitioned subgraphs as a function.
    *
    * @param args A list of input tensors.
    * @param Tout A list of output types.
@@ -4198,8 +4130,7 @@ public final class Ops {
    *    A function that takes 'args', a list of tensors, and returns 'output',
    *    another list of tensors. Input and output types are specified by 'Tin'
    *    and 'Tout'. The function body of f will be placed and partitioned across
-   *    devices, setting this op apart from the regular Call op. This op is
-   *    stateful.
+   *    devices, setting this op apart from the regular Call op.
    *  </pre>
    * @param options carries optional attribute values
    * @return a new instance of PartitionedCall
@@ -4286,6 +4217,36 @@ public final class Ops {
   public <T extends TType> QuantizedReshape<T> quantizedReshape(Operand<T> tensor,
       Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
+  }
+
+  /**
+   * The RaggedFillEmptyRows operation
+   *
+   * @param <T> data type for {@code output_values} output
+   * @param valueRowids The valueRowids value
+   * @param values The values value
+   * @param nrows The nrows value
+   * @param defaultValue The defaultValue value
+   * @param <T> data type for {@code RaggedFillEmptyRows} output and operands
+   * @return a new instance of RaggedFillEmptyRows
+   */
+  public <T extends TType> RaggedFillEmptyRows<T> raggedFillEmptyRows(Operand<TInt64> valueRowids,
+      Operand<T> values, Operand<TInt64> nrows, Operand<T> defaultValue) {
+    return RaggedFillEmptyRows.create(scope, valueRowids, values, nrows, defaultValue);
+  }
+
+  /**
+   * The RaggedFillEmptyRowsGrad operation
+   *
+   * @param <T> data type for {@code d_values} output
+   * @param reverseIndexMap The reverseIndexMap value
+   * @param gradValues The gradValues value
+   * @param <T> data type for {@code RaggedFillEmptyRowsGrad} output and operands
+   * @return a new instance of RaggedFillEmptyRowsGrad
+   */
+  public <T extends TType> RaggedFillEmptyRowsGrad<T> raggedFillEmptyRowsGrad(
+      Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
+    return RaggedFillEmptyRowsGrad.create(scope, reverseIndexMap, gradValues);
   }
 
   /**
@@ -4539,6 +4500,20 @@ public final class Ops {
    */
   public <T extends TType> Relayout<T> relayout(Operand<T> input, String layout) {
     return Relayout.create(scope, input, layout);
+  }
+
+  /**
+   * The RelayoutLike operation
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input value
+   * @param layoutInput The layoutInput value
+   * @param <T> data type for {@code RelayoutLike} output and operands
+   * @return a new instance of RelayoutLike
+   */
+  public <T extends TType> RelayoutLike<T> relayoutLike(Operand<T> input,
+      Operand<? extends TType> layoutInput) {
+    return RelayoutLike.create(scope, input, layoutInput);
   }
 
   /**
@@ -5231,92 +5206,6 @@ public final class Ops {
   }
 
   /**
-   * The RpcCall operation
-   *
-   * @param client The client value
-   * @param methodName The methodName value
-   * @param args The args value
-   * @param timeoutInMs The timeoutInMs value
-   * @return a new instance of RpcCall
-   */
-  public RpcCall rpcCall(Operand<? extends TType> client, Operand<TString> methodName,
-      Iterable<Operand<?>> args, Operand<TInt64> timeoutInMs) {
-    return RpcCall.create(scope, client, methodName, args, timeoutInMs);
-  }
-
-  /**
-   * The RpcCheckStatus operation
-   *
-   * @param statusOr The statusOr value
-   * @return a new instance of RpcCheckStatus
-   */
-  public RpcCheckStatus rpcCheckStatus(Operand<? extends TType> statusOr) {
-    return RpcCheckStatus.create(scope, statusOr);
-  }
-
-  /**
-   * The RpcClient operation
-   *
-   * @param serverAddress The serverAddress value
-   * @param timeoutInMs The timeoutInMs value
-   * @param options carries optional attribute values
-   * @return a new instance of RpcClient
-   */
-  public RpcClient rpcClient(Operand<TString> serverAddress, Operand<TInt64> timeoutInMs,
-      RpcClient.Options... options) {
-    return RpcClient.create(scope, serverAddress, timeoutInMs, options);
-  }
-
-  /**
-   * The RpcGetValue operation
-   *
-   * @param statusOr The statusOr value
-   * @param Tout The value of the Tout attribute
-   * @return a new instance of RpcGetValue
-   */
-  public RpcGetValue rpcGetValue(Operand<? extends TType> statusOr,
-      List<Class<? extends TType>> Tout) {
-    return RpcGetValue.create(scope, statusOr, Tout);
-  }
-
-  /**
-   * The RpcServer operation
-   *
-   * @param serverAddress The serverAddress value
-   * @return a new instance of RpcServer
-   */
-  public RpcServer rpcServer(Operand<TString> serverAddress) {
-    return RpcServer.create(scope, serverAddress);
-  }
-
-  /**
-   * The RpcServerRegister operation
-   *
-   * @param server The server value
-   * @param methodName The methodName value
-   * @param capturedInputs The capturedInputs value
-   * @param f The value of the f attribute
-   * @param outputSpecs The value of the outputSpecs attribute
-   * @param options carries optional attribute values
-   * @return a new instance of RpcServerRegister
-   */
-  public RpcServerRegister rpcServerRegister(Operand<? extends TType> server,
-      Operand<TString> methodName, Iterable<Operand<?>> capturedInputs, ConcreteFunction f,
-      String outputSpecs, RpcServerRegister.Options... options) {
-    return RpcServerRegister.create(scope, server, methodName, capturedInputs, f, outputSpecs, options);
-  }
-
-  /**
-   * The RpcServerStart operation
-   *
-   * @param server The server value
-   * @return a new instance of RpcServerStart
-   */
-  public RpcServerStart rpcServerStart(Operand<? extends TType> server) {
-    return RpcServerStart.create(scope, server);
-  }
-
-  /**
    * Adds sparse updates to a variable reference.
    *  This operation computes
    *  <pre>
@@ -5823,6 +5712,120 @@ public final class Ops {
   }
 
   /**
+   * Computes the maximum along segments of a tensor.
+   *  Read
+   *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
+   *  for an explanation of segments.
+   *  <p>Computes a tensor such that
+   *  \(output_i = \max_j(data_j)\) where {@code max} is over {@code j} such
+   *  that {@code segment_ids[j] == i}.
+   *  <p>If the maximum is empty for a given segment ID {@code i}, it outputs the smallest
+   *  possible value for the specific numeric type,
+   *  {@code output[i] = numeric_limits<T>::lowest()}.
+   *  <p>Note: That this op is currently only supported with jit_compile=True.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as the same as a smaller following index.
+   *  <p>The only difference with SegmentMax is the additional input  {@code num_segments}.
+   *  This helps in evaluating the output shape in compile time.
+   *  {@code num_segments} should be consistent with segment_ids.
+   *  e.g. Max(segment_ids) should be equal to {@code num_segments} - 1 for a 1-d segment_ids
+   *  With inconsistent num_segments, the op still runs. only difference is,
+   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
+   *  for num_segments less than expected output size, the last elements are ignored
+   *  for num_segments more than the expected output size, last elements are assigned
+   *  smallest possible value for the specific numeric type.
+   *  <p>For example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>{@literal @}tf.function(jit_compile=True)
+   *  ... def test(c):
+   *  ...   return tf.raw_ops.SegmentMaxV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
+   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  test(c).numpy()
+   *  array([[4, 3, 3, 4],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
+   *
+   * @param <T> data type for {@code output} output
+   * @param data The data value
+   * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
+   *  first dimension.  Values should be sorted and can be repeated.
+   *  The values must be less than {@code num_segments}.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
+   * @param numSegments The numSegments value
+   * @param <T> data type for {@code SegmentMaxV2} output and operands
+   * @return a new instance of SegmentMaxV2
+   */
+  public <T extends TNumber> SegmentMaxV2<T> segmentMaxV2(Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+    return SegmentMaxV2.create(scope, data, segmentIds, numSegments);
+  }
+
+  /**
+   * Computes the minimum along segments of a tensor.
+   *  Read
+   *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
+   *  for an explanation of segments.
+   *  <p>Computes a tensor such that
+   *  \(output_i = \min_j(data_j)\) where {@code min} is over {@code j} such
+   *  that {@code segment_ids[j] == i}.
+   *  <p>If the minimum is empty for a given segment ID {@code i}, it outputs the largest
+   *  possible value for the specific numeric type,
+   *  {@code output[i] = numeric_limits<T>::max()}.
+   *  <p>Note: That this op is currently only supported with jit_compile=True.
+   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
+   *  and an error is thrown for indices that are not increasing. On GPU, this
+   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
+   *  result in safe but unspecified behavior, which may include treating
+   *  out-of-order indices as the same as a smaller following index.
+   *  <p>The only difference with SegmentMin is the additional input  {@code num_segments}.
+   *  This helps in evaluating the output shape in compile time.
+   *  {@code num_segments} should be consistent with segment_ids.
+   *  e.g. Max(segment_ids) should be equal to {@code num_segments} - 1 for a 1-d segment_ids
+   *  With inconsistent num_segments, the op still runs. only difference is,
+   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
+   *  for num_segments less than expected output size, the last elements are ignored
+   *  for num_segments more than the expected output size, last elements are assigned
+   *  the largest possible value for the specific numeric type.
+   *  <p>For example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>{@literal @}tf.function(jit_compile=True)
+   *  ... def test(c):
+   *  ...   return tf.raw_ops.SegmentMinV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
+   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  test(c).numpy()
+   *  array([[1, 2, 2, 1],
+   *  [5, 6, 7, 8]], dtype=int32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
+   *
+   * @param <T> data type for {@code output} output
+   * @param data The data value
+   * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
+   *  first dimension.  Values should be sorted and can be repeated.
+   *  The values must be less than {@code num_segments}.
+   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
+   *  on GPU.
+   * @param numSegments The numSegments value
+   * @param <T> data type for {@code SegmentMinV2} output and operands
+   * @return a new instance of SegmentMinV2
+   */
+  public <T extends TNumber> SegmentMinV2<T> segmentMinV2(Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+    return SegmentMinV2.create(scope, data, segmentIds, numSegments);
+  }
+
+  /**
    * Computes the product along segments of a tensor.
    *  Read
    *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
@@ -5982,7 +5985,8 @@ public final class Ops {
    *  and {@code set_shape}. The last dimension contains values in a set, duplicates are
    *  allowed but ignored.
    *  <p>If {@code validate_indices} is {@code True}, this op validates the order and range of {@code set}
-   *  indices.
+   *  indices. Setting is to {@code False} while passing invalid arguments results in
+   *  undefined behavior.
    *
    * @param setIndices 2D {@code Tensor}, indices of a {@code SparseTensor}.
    * @param setValues 1D {@code Tensor}, values of a {@code SparseTensor}.
@@ -6262,6 +6266,72 @@ public final class Ops {
   }
 
   /**
+   * Computes gradients for SparseSegmentMean.
+   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
+   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
+   *
+   * @param <T> data type for {@code output} output
+   * @param <U> data type for {@code sorted_unique_indices} output
+   * @param grad gradient propagated to the SparseSegmentMean op.
+   * @param indices indices passed to the corresponding SparseSegmentMean op.
+   * @param segmentIds segment_ids passed to the corresponding SparseSegmentMean op.
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
+   * @param <T> data type for {@code SparseSegmentMeanGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentMeanGradV2} output and operands
+   * @return a new instance of SparseSegmentMeanGradV2
+   */
+  public <T extends TNumber, U extends TNumber> SparseSegmentMeanGradV2<T, U> sparseSegmentMeanGradV2(
+      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
+    return SparseSegmentMeanGradV2.create(scope, grad, indices, segmentIds, denseOutputDim0);
+  }
+
+  /**
+   * Computes gradients for SparseSegmentSqrtN.
+   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
+   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
+   *
+   * @param <T> data type for {@code output} output
+   * @param <U> data type for {@code sorted_unique_indices} output
+   * @param grad gradient propagated to the SparseSegmentSqrtN op.
+   * @param indices indices passed to the corresponding SparseSegmentSqrtN op.
+   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSqrtN op.
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSqrtN op.
+   * @param <T> data type for {@code SparseSegmentSqrtNGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentSqrtNGradV2} output and operands
+   * @return a new instance of SparseSegmentSqrtNGradV2
+   */
+  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGradV2<T, U> sparseSegmentSqrtNGradV2(
+      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
+    return SparseSegmentSqrtNGradV2.create(scope, grad, indices, segmentIds, denseOutputDim0);
+  }
+
+  /**
+   * Computes gradients for SparseSegmentSum.
+   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
+   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
+   *
+   * @param <T> data type for {@code output} output
+   * @param <U> data type for {@code sorted_unique_indices} output
+   * @param grad gradient propagated to the SparseSegmentSum op.
+   * @param indices indices passed to the corresponding SparseSegmentSum op.
+   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
+   * @param <T> data type for {@code SparseSegmentSumGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentSumGradV2} output and operands
+   * @return a new instance of SparseSegmentSumGradV2
+   */
+  public <T extends TNumber, U extends TNumber> SparseSegmentSumGradV2<T, U> sparseSegmentSumGradV2(
+      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
+    return SparseSegmentSumGradV2.create(scope, grad, indices, segmentIds, denseOutputDim0);
+  }
+
+  /**
    * Splits a tensor into {@code num_split} tensors along one dimension.
    *
    * @param <T> data type for {@code output} output
@@ -6485,7 +6555,8 @@ public final class Ops {
    * @return a new instance of StatefulPartitionedCall
    */
   public StatefulPartitionedCall statefulPartitionedCall(Iterable<Operand<?>> args,
-      List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
+      List<Class<? extends TType>> Tout, ConcreteFunction f,
+      StatefulPartitionedCall.Options... options) {
     return StatefulPartitionedCall.create(scope, args, Tout, f, options);
   }
 
@@ -6546,28 +6617,6 @@ public final class Ops {
       List<Class<? extends TType>> Tout, ConcreteFunction thenBranch, ConcreteFunction elseBranch,
       If.Options... options) {
     return StatelessIf.create(scope, cond, input, Tout, thenBranch, elseBranch, options);
-  }
-
-  /**
-   * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
-   *  Asynchronously executes a function, potentially across multiple devices but
-   *  within a single process. The kernel places and partitions a given function's
-   *  underlying graph, and executes each of the partitioned subgraphs as a function.
-   *
-   * @param args A list of input tensors.
-   * @param Tout A list of output types.
-   * @param f <pre>
-   *    A function that takes 'args', a list of tensors, and returns 'output',
-   *    another list of tensors. Input and output types are specified by 'Tin'
-   *    and 'Tout'. The function body of f will be placed and partitioned across
-   *    devices, setting this op apart from the regular Call op.
-   *  </pre>
-   * @param options carries optional attribute values
-   * @return a new instance of StatelessPartitionedCall
-   */
-  public StatelessPartitionedCall statelessPartitionedCall(Iterable<Operand<?>> args,
-      List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
-    return StatelessPartitionedCall.create(scope, args, Tout, f, options);
   }
 
   /**
@@ -7339,7 +7388,10 @@ public final class Ops {
   }
 
   /**
-   * The TensorListGetItem operation
+   * Returns the item in the list with the given index.
+   *  input_handle: the list
+   *  index: the position in the list from which an element will be retrieved
+   *  item: the element at that position
    *
    * @param <T> data type for {@code item} output
    * @param inputHandle The inputHandle value
@@ -7494,16 +7546,21 @@ public final class Ops {
   }
 
   /**
-   * The TensorListSetItem operation
+   * Sets the index-th position of the list to contain the given tensor.
+   *  input_handle: the list
+   *  index: the position in the list to which the tensor will be assigned
+   *  item: the element to be assigned to that position
+   *  output_handle: the new list, with the element in the proper position
    *
    * @param inputHandle The inputHandle value
    * @param index The index value
    * @param item The item value
+   * @param options carries optional attribute values
    * @return a new instance of TensorListSetItem
    */
   public TensorListSetItem tensorListSetItem(Operand<? extends TType> inputHandle,
-      Operand<TInt32> index, Operand<? extends TType> item) {
-    return TensorListSetItem.create(scope, inputHandle, index, item);
+      Operand<TInt32> index, Operand<? extends TType> item, TensorListSetItem.Options... options) {
+    return TensorListSetItem.create(scope, inputHandle, index, item, options);
   }
 
   /**
@@ -7896,19 +7953,6 @@ public final class Ops {
       Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value,
       TensorStridedSliceUpdate.Options... options) {
     return TensorStridedSliceUpdate.create(scope, input, begin, end, strides, value, options);
-  }
-
-  /**
-   * The TfLiteSubgraphExecute operation
-   *
-   * @param subgraphKey The subgraphKey value
-   * @param args The args value
-   * @param Tout The value of the Tout attribute
-   * @return a new instance of TfLiteSubgraphExecute
-   */
-  public TfLiteSubgraphExecute tfLiteSubgraphExecute(Operand<TString> subgraphKey,
-      Iterable<Operand<?>> args, List<Class<? extends TType>> Tout) {
-    return TfLiteSubgraphExecute.create(scope, subgraphKey, args, Tout);
   }
 
   /**
@@ -8555,46 +8599,6 @@ public final class Ops {
   public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
       While.Options... options) {
     return While.create(scope, input, cond, body, options);
-  }
-
-  /**
-   * Emits an HLO {@code CustomCall} operation with multiple outputs.
-   *  As opposed to {@code XlaCustomCall}, this operation supports multiple outputs.
-   *  <p>See {@code CustomCall} specification at
-   *  https://tensorflow.org/xla/operation_semantics#customcall,
-   *  and {@code mhlo.custom_call} specification at
-   *  https://tensorflow.org/mlir/hlo_ops#mhlocustom_call_mlirmhlocustomcallop.
-   *
-   * @param operands A sequence of tensors with possibly different types.
-   * @param callTargetName Name of the user function. The function signature must conform
-   *  to version 3 of the API, see {@code API_VERSION_STATUS_RETURNING_UNIFIED}. All
-   *  operands and results assumed to be in the default layout.
-   * @param backendConfig A string that encodes a metadata for the backend.
-   * @param hasSideEffect Indicates whether the custom call has side effects.
-   * @param resultDtypes Types of all results.
-   * @param resultShapes Shapes of all results.
-   * @return a new instance of XlaCustomCallV2
-   */
-  public XlaCustomCallV2 xlaCustomCallV2(Iterable<Operand<?>> operands, String callTargetName,
-      String backendConfig, Boolean hasSideEffect, List<Class<? extends TType>> resultDtypes,
-      List<Shape> resultShapes) {
-    return XlaCustomCallV2.create(scope, operands, callTargetName, backendConfig, hasSideEffect, resultDtypes, resultShapes);
-  }
-
-  /**
-   * Wraps the XLA ReducePrecision operator
-   *  documented at https://www.tensorflow.org/xla/operation_semantics#reduceprecision.
-   *
-   * @param <T> data type for {@code output} output
-   * @param operand array of floating-point type.
-   * @param exponentBits number of exponent bits in lower-precision format
-   * @param mantissaBits number of mantissa bits in lower-precision format
-   * @param <T> data type for {@code XlaReducePrecision} output and operands
-   * @return a new instance of XlaReducePrecision
-   */
-  public <T extends TNumber> XlaReducePrecision<T> xlaReducePrecision(Operand<T> operand,
-      Long exponentBits, Long mantissaBits) {
-    return XlaReducePrecision.create(scope, operand, exponentBits, mantissaBits);
   }
 
   /**

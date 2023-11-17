@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "StatefulStandardNormalV2"
+  endpoint {
+    name: "random.StatefulStandardNormal"
+  }
+}

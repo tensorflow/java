@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "EuclideanNorm"
+  endpoint {
+    name: "linalg.EuclideanNorm"
+  }
+}

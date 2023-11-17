@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalGroupByReducerDataset"
+  endpoint {
+    name: "data.experimental.GroupByReducerDataset"
+  }
+}

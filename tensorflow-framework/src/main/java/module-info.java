@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
-module org.tensorflow.framework {
-  requires org.tensorflow.core;
+module tensorflow.framework {
+  requires tensorflow;
   requires org.tensorflow.ndarray;
 
   exports org.tensorflow.framework.activations;

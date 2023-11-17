@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "SlideDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.SlideDataset"
+  }
+}

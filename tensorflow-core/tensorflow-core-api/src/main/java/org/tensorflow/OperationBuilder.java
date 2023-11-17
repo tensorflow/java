@@ -16,8 +16,8 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.AttrValue;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.AttrValue;
+import org.tensorflow.proto.DataType;
 
 /**
  * A builder for {@link Operation}s.

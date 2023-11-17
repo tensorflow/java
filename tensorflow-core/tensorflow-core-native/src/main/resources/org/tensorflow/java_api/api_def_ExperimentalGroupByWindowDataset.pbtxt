@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalGroupByWindowDataset"
+  endpoint {
+    name: "data.experimental.GroupByWindowDataset"
+  }
+}

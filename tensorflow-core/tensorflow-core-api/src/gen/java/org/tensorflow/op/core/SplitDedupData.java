@@ -30,7 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -77,6 +77,7 @@ public final class SplitDedupData<T extends TNumber, U extends TNumber> extends 
    * with first column as tuple element type, and second column as span of this type.
    * For example, an output tuple of (1, 2, 0.1, 3), its mask is [[0, 2], [1, 1], [0,
    * 1]]. We expect only two types of elements: integer(0) and float(1).
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SplitDedupData} output and operands
    * @param <U> data type for {@code SplitDedupData} output and operands
    * @return a new instance of SplitDedupData
@@ -85,13 +86,31 @@ public final class SplitDedupData<T extends TNumber, U extends TNumber> extends 
       describeByClass = true
   )
   public static <T extends TNumber, U extends TNumber> SplitDedupData<T, U> create(Scope scope,
-      Operand<? extends TType> input, Class<T> integerType, Class<U> floatType, String tupleMask) {
+      Operand<? extends TType> input, Class<T> integerType, Class<U> floatType, String tupleMask,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SplitDedupData");
     opBuilder.addInput(input.asOutput());
     opBuilder.setAttr("integer_type", Operands.toDataType(integerType));
     opBuilder.setAttr("float_type", Operands.toDataType(floatType));
     opBuilder.setAttr("tuple_mask", tupleMask);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.config != null) {
+          opBuilder.setAttr("config", opts.config);
+        }
+      }
+    }
     return new SplitDedupData<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the config option.
+   *
+   * @param config the config option
+   * @return this Options instance.
+   */
+  public static Options config(String config) {
+    return new Options().config(config);
   }
 
   /**
@@ -110,6 +129,27 @@ public final class SplitDedupData<T extends TNumber, U extends TNumber> extends 
    */
   public Output<U> floatTensor() {
     return floatTensor;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.SplitDedupData}
+   */
+  public static class Options {
+    private String config;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     */
+    public Options config(String config) {
+      this.config = config;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -139,13 +179,19 @@ public final class SplitDedupData<T extends TNumber, U extends TNumber> extends 
      */
     public final String tupleMask;
 
+    /**
+     * The config attribute
+     */
+    public final String config;
+
     public Inputs(GraphOperation op) {
-      super(new SplitDedupData<>(op), op, Arrays.asList("integer_type", "float_type", "tuple_mask"));
+      super(new SplitDedupData<>(op), op, Arrays.asList("integer_type", "float_type", "tuple_mask", "config"));
       int inputIndex = 0;
       input = (Operand<? extends TType>) op.input(inputIndex++);
       integerType = op.attributes().getAttrType("integer_type");
       floatType = op.attributes().getAttrType("float_type");
       tupleMask = op.attributes().getAttrString("tuple_mask");
+      config = op.attributes().getAttrString("config");
     }
   }
 }

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.OperationAttributeInspector;
-import org.tensorflow.proto.framework.AttrValue;
+import org.tensorflow.proto.AttrValue;
 
 /** A base class for operation input accessors. */
 public abstract class RawOpInputs<T extends RawOp> {

@@ -22,7 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.tensorflow.TensorMapper;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 
 /**
  * Annotation for all tensor types.
