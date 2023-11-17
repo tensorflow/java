@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaReduce"
+  endpoint {
+    name: "xla.Reduce"
+  }
+}

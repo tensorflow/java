@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "QuantizedConv2DPerChannel"
+  endpoint {
+    name: "nn.QuantizedConv2DPerChannel"
+  }
+}

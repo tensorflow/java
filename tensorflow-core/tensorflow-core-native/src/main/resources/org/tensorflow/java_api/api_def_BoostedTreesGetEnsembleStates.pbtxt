@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BoostedTreesGetEnsembleStates"
+  endpoint {
+    name: "estimator.BoostedTreesGetEnsembleStates"
+  }
+}

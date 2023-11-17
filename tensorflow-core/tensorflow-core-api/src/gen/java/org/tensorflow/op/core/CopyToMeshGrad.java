@@ -30,7 +30,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -63,7 +63,6 @@ public final class CopyToMeshGrad<T extends TType> extends RawOp implements Oper
    * @param scope current scope
    * @param input The input value
    * @param forwardInput The forwardInput value
-   * @param options carries optional attribute values
    * @param <T> data type for {@code CopyToMeshGrad} output and operands
    * @return a new instance of CopyToMeshGrad
    */
@@ -71,28 +70,11 @@ public final class CopyToMeshGrad<T extends TType> extends RawOp implements Oper
       describeByClass = true
   )
   public static <T extends TType> CopyToMeshGrad<T> create(Scope scope, Operand<T> input,
-      Operand<T> forwardInput, Options... options) {
+      Operand<T> forwardInput) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CopyToMeshGrad");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(forwardInput.asOutput());
-    if (options != null) {
-      for (Options opts : options) {
-        if (opts.referenceLayout != null) {
-          opBuilder.setAttr("reference_layout", opts.referenceLayout);
-        }
-      }
-    }
     return new CopyToMeshGrad<>(opBuilder.build());
-  }
-
-  /**
-   * Sets the referenceLayout option.
-   *
-   * @param referenceLayout the referenceLayout option
-   * @return this Options instance.
-   */
-  public static Options referenceLayout(String referenceLayout) {
-    return new Options().referenceLayout(referenceLayout);
   }
 
   /**
@@ -107,27 +89,6 @@ public final class CopyToMeshGrad<T extends TType> extends RawOp implements Oper
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.core.CopyToMeshGrad}
-   */
-  public static class Options {
-    private String referenceLayout;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the referenceLayout option.
-     *
-     * @param referenceLayout the referenceLayout option
-     * @return this Options instance.
-     */
-    public Options referenceLayout(String referenceLayout) {
-      this.referenceLayout = referenceLayout;
-      return this;
-    }
   }
 
   @OpInputsMetadata(
@@ -145,21 +106,15 @@ public final class CopyToMeshGrad<T extends TType> extends RawOp implements Oper
     public final Operand<T> forwardInput;
 
     /**
-     * The referenceLayout attribute
-     */
-    public final String referenceLayout;
-
-    /**
      * The T attribute
      */
     public final DataType T;
 
     public Inputs(GraphOperation op) {
-      super(new CopyToMeshGrad<>(op), op, Arrays.asList("reference_layout", "T"));
+      super(new CopyToMeshGrad<>(op), op, Arrays.asList("T"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       forwardInput = (Operand<T>) op.input(inputIndex++);
-      referenceLayout = op.attributes().getAttrString("reference_layout");
       T = op.attributes().getAttrType("T");
     }
   }

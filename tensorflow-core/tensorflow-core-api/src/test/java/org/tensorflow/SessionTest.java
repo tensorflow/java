@@ -36,10 +36,10 @@ import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.op.math.Add;
-import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.proto.framework.GraphDef;
-import org.tensorflow.proto.framework.RunMetadata;
-import org.tensorflow.proto.framework.RunOptions;
+import org.tensorflow.proto.ConfigProto;
+import org.tensorflow.proto.GraphDef;
+import org.tensorflow.proto.RunMetadata;
+import org.tensorflow.proto.RunOptions;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 

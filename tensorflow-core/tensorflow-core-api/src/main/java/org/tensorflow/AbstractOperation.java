@@ -17,7 +17,7 @@ package org.tensorflow;
 
 import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**

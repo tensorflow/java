@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CSRSparseMatrixToSparseTensor"
+  endpoint {
+    name: "linalg.sparse.CSRSparseMatrixToSparseTensor"
+  }
+}

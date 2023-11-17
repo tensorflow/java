@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "NearestNeighbors"
+  endpoint {
+    name: "image.NearestNeighbors"
+  }
+}

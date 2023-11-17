@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "KmeansPlusPlusInitialization"
+  endpoint {
+    name: "cluster.KmeansPlusPlusInitialization"
+  }
+}

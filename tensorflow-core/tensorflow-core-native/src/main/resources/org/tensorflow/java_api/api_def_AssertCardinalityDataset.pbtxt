@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "AssertCardinalityDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.AssertCardinalityDataset"
+  }
+}

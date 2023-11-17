@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "LegacyParallelInterleaveDatasetV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.LegacyParallelInterleaveDataset"
+  }
+}

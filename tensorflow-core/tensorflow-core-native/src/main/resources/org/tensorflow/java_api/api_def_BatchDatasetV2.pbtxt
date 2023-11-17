@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "BatchDatasetV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.BatchDataset"
+  }
+}

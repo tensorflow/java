@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "LMDBDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.LMDBDataset"
+  }
+}

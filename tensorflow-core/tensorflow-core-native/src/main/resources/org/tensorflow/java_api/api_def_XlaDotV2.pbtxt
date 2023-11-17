@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaDotV2"
+  endpoint {
+    name: "xla.Dot"
+  }
+}

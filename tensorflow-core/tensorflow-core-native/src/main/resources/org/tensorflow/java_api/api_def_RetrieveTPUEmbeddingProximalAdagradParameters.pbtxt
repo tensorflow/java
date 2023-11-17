@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RetrieveTPUEmbeddingProximalAdagradParameters"
+  endpoint {
+    name: "tpu.RetrieveTPUEmbeddingProximalAdagradParameters"
+  }
+}

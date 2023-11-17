@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.MatMul;
-import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.proto.framework.GraphDef;
+import org.tensorflow.proto.DataType;
+import org.tensorflow.proto.GraphDef;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 

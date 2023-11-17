@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "SqlDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.SqlDataset"
+  }
+}

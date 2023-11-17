@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BatchMatMulV3"
+  endpoint {
+    name: "train.BatchMatMul"
+  }
+}

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RiscBinaryArithmetic"
+  endpoint {
+    name: "risc.RiscBinaryArithmetic"
+  }
+}

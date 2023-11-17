@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DebugIdentityV2"
+  endpoint {
+    name: "debugging.DebugIdentity"
+  }
+  visibility: HIDDEN
+}

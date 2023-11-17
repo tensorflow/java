@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TFRecordReaderV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "io.TfRecordReader"
+  }
+}

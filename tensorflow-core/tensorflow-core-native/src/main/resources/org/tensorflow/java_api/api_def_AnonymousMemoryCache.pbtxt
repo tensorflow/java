@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "AnonymousMemoryCache"
+  endpoint {
+    name: "data.AnonymousMemoryCache"
+  }
+}

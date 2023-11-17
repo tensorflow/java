@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "RandomDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.RandomDataset"
+  }
+}

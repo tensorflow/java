@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalMapAndBatchDataset"
+  endpoint {
+    name: "data.experimental.MapAndBatchDataset"
+  }
+}

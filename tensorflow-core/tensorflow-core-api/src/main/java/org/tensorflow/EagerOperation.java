@@ -29,7 +29,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.

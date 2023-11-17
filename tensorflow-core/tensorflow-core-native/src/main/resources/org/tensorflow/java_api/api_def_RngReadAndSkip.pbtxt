@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RngReadAndSkip"
+  endpoint {
+    name: "random.RngReadAndSkip"
+  }
+}

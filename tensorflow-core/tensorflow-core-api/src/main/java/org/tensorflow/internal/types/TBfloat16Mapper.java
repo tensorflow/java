@@ -25,12 +25,12 @@ import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.impl.dense.FloatDenseNdArray;
 import org.tensorflow.ndarray.impl.sparse.FloatSparseNdArray;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_BFLOAT16} tensors to a
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_BFLOAT16} tensors to a
  * n-dimensional data space.
  */
 public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {

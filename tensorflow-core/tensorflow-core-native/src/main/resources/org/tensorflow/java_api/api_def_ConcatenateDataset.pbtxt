@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ConcatenateDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ConcatenateDataset"
+  }
+}

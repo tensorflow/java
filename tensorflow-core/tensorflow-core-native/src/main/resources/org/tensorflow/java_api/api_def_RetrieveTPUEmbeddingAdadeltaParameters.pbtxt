@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RetrieveTPUEmbeddingAdadeltaParameters"
+  endpoint {
+    name: "tpu.RetrieveTPUEmbeddingAdadeltaParameters"
+  }
+}

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaReduceWindow"
+  endpoint {
+    name: "xla.ReduceWindow"
+  }
+}

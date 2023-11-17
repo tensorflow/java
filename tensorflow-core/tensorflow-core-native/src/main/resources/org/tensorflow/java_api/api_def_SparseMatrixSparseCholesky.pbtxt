@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseMatrixSparseCholesky"
+  endpoint {
+    name: "linalg.sparse.SparseMatrixSparseCholesky"
+  }
+}

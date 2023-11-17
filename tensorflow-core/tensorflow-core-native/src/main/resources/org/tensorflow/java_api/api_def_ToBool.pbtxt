@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ToBool"
+  endpoint {
+    name: "dtypes.ToBool"
+  }
+}

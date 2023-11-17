@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RaggedGather"
+  endpoint {
+    name: "ragged.RaggedGather"
+  }
+}

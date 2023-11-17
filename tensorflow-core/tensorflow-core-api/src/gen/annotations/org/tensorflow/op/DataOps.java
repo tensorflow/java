@@ -382,10 +382,12 @@ public final class DataOps {
    *  Returns the cardinality of {@code input_dataset}.
    *
    * @param inputDataset A variant tensor representing the dataset to return cardinality for.
+   * @param options carries optional attribute values
    * @return a new instance of DatasetCardinality
    */
-  public DatasetCardinality datasetCardinality(Operand<? extends TType> inputDataset) {
-    return DatasetCardinality.create(scope, inputDataset);
+  public DatasetCardinality datasetCardinality(Operand<? extends TType> inputDataset,
+      DatasetCardinality.Options... options) {
+    return DatasetCardinality.create(scope, inputDataset, options);
   }
 
   /**

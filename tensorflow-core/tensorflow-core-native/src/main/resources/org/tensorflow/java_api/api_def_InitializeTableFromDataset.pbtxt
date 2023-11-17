@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "InitializeTableFromDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.InitializeTableFromDataset"
+  }
+}

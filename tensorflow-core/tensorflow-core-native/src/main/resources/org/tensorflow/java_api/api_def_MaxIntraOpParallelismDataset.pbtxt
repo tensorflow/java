@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "MaxIntraOpParallelismDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.MaxIntraOpParallelismDataset"
+  }
+}

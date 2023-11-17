@@ -24,12 +24,12 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.ndarray.impl.dense.ShortDenseNdArray;
 import org.tensorflow.ndarray.impl.sparse.ShortSparseNdArray;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint16;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_Uint16} tensors to a
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_Uint16} tensors to a
  * n-dimensional data space.
  */
 public final class TUint16Mapper extends TensorMapper<TUint16> {

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ResourceApplyKerasMomentum"
+  endpoint {
+    name: "train.ResourceApplyKerasMomentum"
+  }
+}

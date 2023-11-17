@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "GroupByWindowDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.GroupByWindowDataset"
+  }
+}

@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TensorDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.TensorDataset"
+  }
+}

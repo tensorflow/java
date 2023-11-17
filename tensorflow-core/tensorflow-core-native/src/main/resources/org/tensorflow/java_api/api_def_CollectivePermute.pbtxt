@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CollectivePermute"
+  endpoint {
+    name: "collective.CollectivePermute"
+  }
+}

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "OutfeedEnqueueTuple"
+  endpoint {
+    name: "tpu.OutfeedEnqueueTuple"
+  }
+}

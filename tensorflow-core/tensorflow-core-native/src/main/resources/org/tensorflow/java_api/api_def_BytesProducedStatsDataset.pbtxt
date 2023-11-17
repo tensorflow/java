@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "BytesProducedStatsDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.BytesProducedStatsDataset"
+  }
+}

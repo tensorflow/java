@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TakeWhileDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.TakeWhileDataset"
+  }
+}

@@ -25,7 +25,7 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_Server;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.proto.distruntime.ServerDef;
+import org.tensorflow.proto.ServerDef;
 
 /**
  * An in-process TensorFlow server, for use in distributed training.

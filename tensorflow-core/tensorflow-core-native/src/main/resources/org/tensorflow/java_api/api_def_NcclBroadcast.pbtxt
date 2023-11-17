@@ -1,0 +1,10 @@
+op {
+  graph_op_name: "NcclBroadcast"
+  endpoint: {
+    name: "distribute.NcclBroadcast"
+  }
+  endpoint: {
+    name: "NcclBroadcast"
+    deprecated: true
+  }
+}

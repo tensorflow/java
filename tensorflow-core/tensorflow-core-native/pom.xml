@@ -1,0 +1,513 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.tensorflow</groupId>
+    <artifactId>tensorflow-core</artifactId>
+    <version>0.6.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>tensorflow-core-native</artifactId>
+  <packaging>jar</packaging>
+
+  <name>TensorFlow Native Library</name>
+  <description>Platform-dependent native code and pure-Java code for the TensorFlow machine intelligence library.</description>
+
+  <properties>
+    <bazel.build.skip>true</bazel.build.skip>
+    <bazel.generate.skip>true</bazel.generate.skip>
+    <bazel.clean.skip>true</bazel.clean.skip>
+    <javacpp.build.skip>false</javacpp.build.skip>
+    <javacpp.generate.skip>true</javacpp.generate.skip>
+    <javacpp.clean.skip>true</javacpp.clean.skip>
+    <wheel.download.skip>false</wheel.download.skip>
+    <wheel.download.folder>${project.build.directory}/wheel/</wheel.download.folder>
+    <target.folder>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</target.folder>
+    <java.module.name>org.tensorflow.core.native</java.module.name>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>${javacpp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>${javacpp.version}</version>
+      <classifier>${javacpp.platform}</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>${protobuf.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>native-build</id>
+      <activation>
+        <property>
+          <name>native.build</name>
+        </property>
+      </activation>
+      <properties>
+        <bazel.build.skip>false</bazel.build.skip>
+        <bazel.clean.skip>false</bazel.clean.skip>
+        <javacpp.clean.skip>false</javacpp.clean.skip>
+        <wheel.download.skip>true</wheel.download.skip>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>generating</id>
+      <activation>
+        <property>
+          <name>native.generate</name>
+        </property>
+      </activation>
+      <properties>
+        <bazel.generate.skip>false</bazel.generate.skip>
+        <bazel.clean.skip>false</bazel.clean.skip>
+        <javacpp.generate.skip>false</javacpp.generate.skip>
+        <javacpp.clean.skip>false</javacpp.clean.skip>
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <!--
+              Run the full native build with Bazel
+                This will compile TensorFlow from sources to generate the runtime libraries, instead of using those
+                retrieved from the official Python wheels. It can be useful when someone wants to build a version
+                of TensorFlow Java for an architecture not officially supported.
+            -->
+            <id>bazel-build</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <skip>${bazel.build.skip}</skip>
+              <executable>/bin/bash</executable>
+              <arguments>
+                <argument>scripts/bazel_build.sh</argument>
+              </arguments>
+              <environmentVariables>
+                <PLATFORM>${javacpp.platform}</PLATFORM>
+                <BUILD_USER_FLAGS>${bazel.build.flags}</BUILD_USER_FLAGS>
+              </environmentVariables>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Run a partial native build with Bazel
+                This is build a few artifacts from which Java sources are generated, including the Java protos and
+                the list of operators available for parsing.
+            -->
+            <id>bazel-generate</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <skip>${bazel.generate.skip}</skip>
+              <executable>/bin/bash</executable>
+              <arguments>
+                <argument>scripts/bazel_generate.sh</argument>
+              </arguments>
+              <environmentVariables>
+                <PLATFORM>${javacpp.platform}</PLATFORM>
+                <BUILD_USER_FLAGS>${bazel.build.flags}</BUILD_USER_FLAGS>
+              </environmentVariables>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Clean resources allocated by the Bazel build
+                Be careful when using this flag since this might delete all resources that result from a build that took many
+                hours to complete. For these reason, the flag is not set by default even when bazel.build.skip is false
+            -->
+            <id>bazel-clean</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>clean</phase>
+            <configuration>
+              <skip>${bazel.clean.skip}</skip>
+              <executable>/bin/bash</executable>
+              <arguments>
+                <argument>scripts/bazel_clean.sh</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Download TensorFlow native libraries
+                This will download the official Python wheel distribution for the active platform, and extract the `tensorflow_cc` library
+                from it so that we can generate the JavaCPP API bindings and distribute it as a JAR. This will be executed only
+                when not building a full native build.
+            -->
+            <id>wheel-download</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${wheel.download.skip}</skip> <!-- skipped when full native build is enabled -->
+              <executable>/bin/bash</executable>
+              <arguments>
+                <argument>scripts/wheel_download.sh</argument>
+                <argument>${wheel.download.url}</argument>
+                <argument>${wheel.download.folder}</argument>
+                <argument>${os.name}</argument>
+              </arguments>
+              <workingDirectory>${project.basedir}</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.bytedeco</groupId>
+        <artifactId>javacpp</artifactId>
+        <version>${javacpp.version}</version>
+        <configuration>
+          <properties>${javacpp.platform.properties}</properties>
+          <propertyKeysAndValues>
+            <property>
+              <name>platform.root</name>
+              <value>${javacpp.platform.root}</value>
+            </property>
+            <property>
+              <name>platform.compiler</name>
+              <value>${javacpp.platform.compiler}</value>
+            </property>
+            <property>
+              <name>platform.extension</name>
+              <value>${javacpp.platform.extension}</value>
+            </property>
+          </propertyKeysAndValues>
+          <classPath>${project.build.outputDirectory}</classPath>
+          <includePaths>
+            <includePath>${project.basedir}/</includePath>
+            <includePath>${wheel.download.folder}/tensorflow/include/</includePath>
+            <includePath>${project.basedir}/target/classes/org/tensorflow/internal/c_api/include/</includePath>
+            <!-- additional include paths in case of a full native build -->
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>
+          </includePaths>
+          <linkPaths>
+            <linkPath>${wheel.download.folder}/tensorflow</linkPath>
+            <!-- additional link paths in case of a full native build -->
+            <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
+            <linkPath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/</linkPath>
+          </linkPaths>
+          <resourcePaths>
+            <resourcePath>${project.basedir}/../../</resourcePath>
+            <resourcePath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/tools/lib_package/</resourcePath>
+          </resourcePaths>
+        </configuration>
+        <executions>
+          <!--
+            Validates the configuration of the JavaCPP plugin
+          -->
+          <execution>
+            <id>javacpp-validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+          <execution>
+            <!--
+              Generate TensorFlow C API binding sources
+                The plugin will parse the pre-compiled TensorFlow C API presets and generate
+                source classes for calling this API directly in Java.
+            -->
+            <id>javacpp-parser</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>parse</goal>
+            </goals>
+            <configuration>
+              <skip>${javacpp.generate.skip}</skip>
+              <outputDirectory>${project.basedir}/src/gen/java</outputDirectory>
+              <classOrPackageName>org.tensorflow.internal.c_api.presets.*</classOrPackageName>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+            Compile JNI native code from this project
+              This code is used to call the TensorFlow C API right now but should be eventually
+              replaced by the usage of JavaCPP generated bindings
+            -->
+            <id>javacpp-compiler</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <skip>${javacpp.build.skip}</skip>
+              <outputDirectory>${target.folder}/</outputDirectory>
+              <classOrPackageName>org.tensorflow.internal.c_api.**</classOrPackageName>
+              <copyLibs>true</copyLibs>
+              <copyResources>true</copyResources>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
+          <execution>
+            <!--
+              Add generated classes to the source path
+                These are classes generated by the javacpp-plugin and the native build. They include TensorFlow operations
+                wrappers, C API Java bindings and TensorFlow protos.
+            -->
+            <id>add-gen-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.basedir}/src/gen/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Clean generated source files and resources
+            -->
+            <id>generated-sources-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <skip>${javacpp.clean.skip}</skip> <!-- FIXME bazel + javacpp? -->
+              <filesets>
+                <fileset>
+                  <directory>src/gen</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <!--
+              Copies main resources straight to the main outputs
+                Important: Use a phase before "generate-sources" like "initialize" or Maven may move
+                its execution after JavaCPP when profiles override its configuration
+            -->
+            <id>copy-resources</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+          <execution>
+            <!--
+              Copies generated resources straight to the main outputs
+            -->
+            <id>generated-resources-copy</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/gen/resources</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <executions>
+          <execution>
+            <!--
+              Compile JavaCPP presets
+                This must be done prematurely, before the generate-sources phase, since the javacpp-plugin
+                will parse the compiled presets for generating Java bindings to the native APIs
+                Important: Use a phase before "generate-sources" like "initialize" or Maven may move
+                its execution after JavaCPP when profiles override its configuration
+            -->
+            <id>javacpp-compiler</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>org/tensorflow/internal/c_api/presets/*.java</include>
+              </includes>
+              <!-- Build on Java8 to prevent the plugin to automatically include module-info.java (excluding it won't work) -->
+              <release>8</release>
+              <compilerArgs combine.self="override"/>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>org.tensorflow.core</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <!--
+              Create the native artifact
+                This artifact will contain only native libraries compiled by the javacpp-plugin,
+                and will be classified under the active platform (OS, arch, extension...)
+            -->
+            <id>native-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>${native.classifier}</classifier>
+              <skipIfEmpty>true</skipIfEmpty>
+              <includes>
+                <!-- In case of successive builds for multiple platforms without cleaning, ensures
+                     we only include files for this platform. -->
+                <include>org/tensorflow/internal/c_api/${native.classifier}/</include>
+              </includes>
+              <classesDirectory>${project.build.directory}/native</classesDirectory>
+              <excludes>
+                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.exp</exclude>
+                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.lib</exclude>
+                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.obj</exclude>
+                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*mklml*</exclude>
+                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*msvcr120*</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Run the tests after packaging the artifacts
+                This is required as most of our unit tests are in fact integration tests that should
+                be executed in a TensorFlow runtime environment.
+            -->
+            <id>default-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <additionalClasspathElements>
+                <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
+                <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
+              </additionalClasspathElements>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>leave-disabled-to-not-generate-sources-twice-on-release</phase>
+          </execution>
+          <execution>
+            <id>attach-source</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <failOnError>false</failOnError>
+              <minmemory>256m</minmemory>
+              <maxmemory>2048m</maxmemory>
+              <links>
+                <link>http://bytedeco.org/javacpp/apidocs</link>
+              </links>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -24,12 +24,12 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.impl.dense.IntDenseNdArray;
 import org.tensorflow.ndarray.impl.sparse.IntSparseNdArray;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_INT32} tensors to a
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_INT32} tensors to a
  * n-dimensional data space.
  */
 public final class TInt32Mapper extends TensorMapper<TInt32> {

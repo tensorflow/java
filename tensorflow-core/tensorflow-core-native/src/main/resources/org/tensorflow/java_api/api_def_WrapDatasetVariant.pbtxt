@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "WrapDatasetVariant"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.WrapDatasetVariant"
+  }
+}

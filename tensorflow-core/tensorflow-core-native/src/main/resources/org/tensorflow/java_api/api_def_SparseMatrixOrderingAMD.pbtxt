@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseMatrixOrderingAMD"
+  endpoint {
+    name: "linalg.sparse.SparseMatrixOrderingAMD"
+  }
+}

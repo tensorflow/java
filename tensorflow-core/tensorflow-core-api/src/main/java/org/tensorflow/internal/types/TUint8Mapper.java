@@ -24,12 +24,12 @@ import org.tensorflow.internal.buffer.TensorBuffers;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.impl.dense.ByteDenseNdArray;
 import org.tensorflow.ndarray.impl.sparse.ByteSparseNdArray;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_UINT8} tensors to a
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_UINT8} tensors to a
  * n-dimensional data space.
  */
 public final class TUint8Mapper extends TensorMapper<TUint8> {

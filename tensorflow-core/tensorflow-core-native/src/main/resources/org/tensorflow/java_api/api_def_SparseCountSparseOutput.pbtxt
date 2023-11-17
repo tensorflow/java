@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseCountSparseOutput"
+  endpoint {
+    name: "sparse.SparseCountSparseOutput"
+  }
+}

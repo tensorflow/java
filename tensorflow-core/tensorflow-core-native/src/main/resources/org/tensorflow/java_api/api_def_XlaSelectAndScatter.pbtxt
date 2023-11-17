@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaSelectAndScatter"
+  endpoint {
+    name: "xla.SelectAndScatter"
+  }
+}

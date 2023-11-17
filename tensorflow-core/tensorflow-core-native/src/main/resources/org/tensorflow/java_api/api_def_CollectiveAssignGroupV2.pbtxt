@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CollectiveAssignGroupV2"
+  endpoint {
+    name: "collective.CollectiveAssignGroup"
+  }
+}

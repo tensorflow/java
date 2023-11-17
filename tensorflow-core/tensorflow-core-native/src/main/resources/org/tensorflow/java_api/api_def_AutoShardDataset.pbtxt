@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "AutoShardDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.AutoShardDataset"
+  }
+}

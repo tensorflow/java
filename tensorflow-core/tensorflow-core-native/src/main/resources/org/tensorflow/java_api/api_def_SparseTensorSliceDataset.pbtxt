@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "SparseTensorSliceDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.SparseTensorSliceDataset"
+  }
+}

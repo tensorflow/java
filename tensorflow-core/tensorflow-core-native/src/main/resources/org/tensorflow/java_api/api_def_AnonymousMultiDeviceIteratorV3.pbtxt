@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "AnonymousMultiDeviceIteratorV3"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.AnonymousMultiDeviceIterator"
+  }
+}

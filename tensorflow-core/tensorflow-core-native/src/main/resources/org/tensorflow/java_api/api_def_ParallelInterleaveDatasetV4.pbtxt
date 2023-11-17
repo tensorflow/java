@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ParallelInterleaveDatasetV4"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ParallelInterleaveDataset"
+  }
+}
