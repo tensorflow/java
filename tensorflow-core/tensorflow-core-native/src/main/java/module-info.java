@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
-module tensorflow.tf_native {
+module tensorflow.runtime {
   requires transitive org.bytedeco.javacpp;
   requires transitive com.google.protobuf;
   requires java.logging;
