@@ -41,7 +41,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Ops;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;

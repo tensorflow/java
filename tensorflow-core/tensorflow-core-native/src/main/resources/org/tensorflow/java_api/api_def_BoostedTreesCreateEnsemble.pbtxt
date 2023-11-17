@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BoostedTreesCreateEnsemble"
+  endpoint {
+    name: "estimator.BoostedTreesCreateEnsemble"
+  }
+}

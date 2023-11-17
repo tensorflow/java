@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "IsBoostedTreesQuantileStreamResourceInitialized"
+  endpoint {
+    name: "estimator.IsBoostedTreesQuantileStreamResourceInitialized"
+  }
+}

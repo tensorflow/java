@@ -1,0 +1,10 @@
+op {
+  graph_op_name: "TPUReplicateMetadata"
+  endpoint {
+    name: "tpu.ReplicateMetadata"
+  }
+  endpoint {
+    name: "tpu.TPUReplicateMetadata"
+    deprecated: true
+  }
+}

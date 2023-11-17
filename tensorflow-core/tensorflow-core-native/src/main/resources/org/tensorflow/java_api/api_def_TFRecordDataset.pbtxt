@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TFRecordDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.TfRecordDataset"
+  }
+}

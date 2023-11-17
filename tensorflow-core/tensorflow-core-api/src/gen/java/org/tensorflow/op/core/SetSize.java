@@ -30,7 +30,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -41,7 +41,8 @@ import org.tensorflow.types.family.TType;
  * and {@code set_shape}. The last dimension contains values in a set, duplicates are
  * allowed but ignored.
  * <p>If {@code validate_indices} is {@code True}, this op validates the order and range of {@code set}
- * indices.
+ * indices. Setting is to {@code False} while passing invalid arguments results in
+ * undefined behavior.
  */
 @OpMetadata(
     opType = SetSize.OP_NAME,

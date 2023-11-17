@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BoostedTreesMakeStatsSummary"
+  endpoint {
+    name: "estimator.BoostedTreesMakeStatsSummary"
+  }
+}

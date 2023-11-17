@@ -27,7 +27,7 @@ import org.tensorflow.internal.types.registry.TensorTypeInfo;
 import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**

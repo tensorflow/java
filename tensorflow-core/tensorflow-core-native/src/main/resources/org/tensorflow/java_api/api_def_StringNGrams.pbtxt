@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "StringNGrams"
+  endpoint {
+    name: "strings.StringNGrams"
+  }
+}

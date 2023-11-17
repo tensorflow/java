@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "CollectiveBcastRecvV2"
+  endpoint {
+    name: "collective.CollectiveBcastRecv"
+  }
+}

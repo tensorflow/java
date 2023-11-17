@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "QuantizedDepthwiseConv2D"
+  endpoint {
+    name: "nn.QuantizedDepthwiseConv2D"
+  }
+}

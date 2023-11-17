@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "RangeDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.RangeDataset"
+  }
+}

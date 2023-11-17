@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "CacheDatasetV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.CacheDataset"
+  }
+}

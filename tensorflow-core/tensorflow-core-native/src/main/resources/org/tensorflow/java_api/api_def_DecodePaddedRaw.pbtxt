@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "DecodePaddedRaw"
+  endpoint {
+    name: "io.DecodePaddedRaw"
+  }
+}

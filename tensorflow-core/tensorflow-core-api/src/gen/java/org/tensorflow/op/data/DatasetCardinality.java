@@ -63,15 +63,34 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
    *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the dataset to return cardinality for.
+   * @param options carries optional attribute values
    * @return a new instance of DatasetCardinality
    */
   @Endpoint(
       describeByClass = true
   )
-  public static DatasetCardinality create(Scope scope, Operand<? extends TType> inputDataset) {
+  public static DatasetCardinality create(Scope scope, Operand<? extends TType> inputDataset,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetCardinality");
     opBuilder.addInput(inputDataset.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.cardinalityOptions != null) {
+          opBuilder.setAttr("cardinality_options", opts.cardinalityOptions);
+        }
+      }
+    }
     return new DatasetCardinality(opBuilder.build());
+  }
+
+  /**
+   * Sets the cardinalityOptions option.
+   *
+   * @param cardinalityOptions the cardinalityOptions option
+   * @return this Options instance.
+   */
+  public static Options cardinalityOptions(String cardinalityOptions) {
+    return new Options().cardinalityOptions(cardinalityOptions);
   }
 
   /**
@@ -89,6 +108,27 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
     return cardinality;
   }
 
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.DatasetCardinality}
+   */
+  public static class Options {
+    private String cardinalityOptions;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the cardinalityOptions option.
+     *
+     * @param cardinalityOptions the cardinalityOptions option
+     * @return this Options instance.
+     */
+    public Options cardinalityOptions(String cardinalityOptions) {
+      this.cardinalityOptions = cardinalityOptions;
+      return this;
+    }
+  }
+
   @OpInputsMetadata(
       outputsClass = DatasetCardinality.class
   )
@@ -98,10 +138,16 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
      */
     public final Operand<? extends TType> inputDataset;
 
+    /**
+     * The cardinalityOptions attribute
+     */
+    public final String cardinalityOptions;
+
     public Inputs(GraphOperation op) {
-      super(new DatasetCardinality(op), op, Arrays.asList());
+      super(new DatasetCardinality(op), op, Arrays.asList("cardinality_options"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
+      cardinalityOptions = op.attributes().getAttrString("cardinality_options");
     }
   }
 }

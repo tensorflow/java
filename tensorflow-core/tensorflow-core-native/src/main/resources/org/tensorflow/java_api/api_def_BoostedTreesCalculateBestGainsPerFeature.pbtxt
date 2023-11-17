@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BoostedTreesCalculateBestGainsPerFeature"
+  endpoint {
+    name: "estimator.BoostedTreesCalculateBestGainsPerFeature"
+  }
+}

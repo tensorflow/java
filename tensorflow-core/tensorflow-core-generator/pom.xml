@@ -10,7 +10,7 @@
   <artifactId>tensorflow-core-generator</artifactId>
   <packaging>jar</packaging>
 
-  <name>TensorFlow Core Generators</name>
+  <name>TensorFlow Generators</name>
   <description>Code generators for TensorFlow Java client</description>
 
   <properties>
@@ -19,9 +19,25 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>0.6.0-SNAPSHOT</version>
+      <classifier>${native.classifier}</classifier>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>32.1.3-jre</version>
+    </dependency>
+    <dependency> <!-- for path matching resource listing -->
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>5.3.30</version>
     </dependency>
     <dependency>
       <groupId>com.squareup</groupId>

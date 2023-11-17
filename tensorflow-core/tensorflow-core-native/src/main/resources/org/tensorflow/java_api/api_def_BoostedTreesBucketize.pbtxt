@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BoostedTreesBucketize"
+  endpoint {
+    name: "estimator.BoostedTreesBucketize"
+  }
+}

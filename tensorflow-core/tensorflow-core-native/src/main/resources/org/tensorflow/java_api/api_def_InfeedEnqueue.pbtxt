@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "InfeedEnqueue"
+  endpoint {
+    name: "tpu.InfeedEnqueue"
+  }
+}

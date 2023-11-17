@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "Einsum"
+  endpoint {
+    name: "linalg.Einsum"
+  }
+}

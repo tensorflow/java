@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "UniformQuantizedDotHybrid"
+  endpoint {
+    name: "quantization.UniformQuantizedDotHybrid"
+  }
+}

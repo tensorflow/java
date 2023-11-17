@@ -1,0 +1,10 @@
+op {
+  graph_op_name: "TPUReplicatedOutput"
+  endpoint {
+    name: "tpu.ReplicatedOutput"
+  }
+  endpoint {
+    name: "tpu.TPUReplicatedOutput"
+    deprecated: true
+  }
+}

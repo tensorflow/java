@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RiscLogicalAnd"
+  endpoint {
+    name: "risc.RiscLogicalAnd"
+  }
+}

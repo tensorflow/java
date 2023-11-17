@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ExperimentalScanDataset"
+  endpoint {
+    name: "data.experimental.ScanDataset"
+  }
+}

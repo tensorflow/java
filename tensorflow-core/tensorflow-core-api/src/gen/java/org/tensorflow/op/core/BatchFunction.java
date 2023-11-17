@@ -34,7 +34,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -147,6 +147,22 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
         if (opts.batchingQueue != null) {
           opBuilder.setAttr("batching_queue", opts.batchingQueue);
         }
+        if (opts.lowPriorityMaxBatchSize != null) {
+          opBuilder.setAttr("low_priority_max_batch_size", opts.lowPriorityMaxBatchSize);
+        }
+        if (opts.lowPriorityBatchTimeoutMicros != null) {
+          opBuilder.setAttr("low_priority_batch_timeout_micros", opts.lowPriorityBatchTimeoutMicros);
+        }
+        if (opts.lowPriorityAllowedBatchSizes != null) {
+          long[] lowPriorityAllowedBatchSizesArray = new long[opts.lowPriorityAllowedBatchSizes.size()];
+          for (int i = 0 ; i < lowPriorityAllowedBatchSizesArray.length ; i++) {
+            lowPriorityAllowedBatchSizesArray[i] = opts.lowPriorityAllowedBatchSizes.get(i);
+          }
+          opBuilder.setAttr("low_priority_allowed_batch_sizes", lowPriorityAllowedBatchSizesArray);
+        }
+        if (opts.lowPriorityMaxEnqueuedBatches != null) {
+          opBuilder.setAttr("low_priority_max_enqueued_batches", opts.lowPriorityMaxEnqueuedBatches);
+        }
         if (opts.enableLargeBatchSplitting != null) {
           opBuilder.setAttr("enable_large_batch_splitting", opts.enableLargeBatchSplitting);
         }
@@ -226,6 +242,56 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
   }
 
   /**
+   * Sets the lowPriorityMaxBatchSize option.
+   *
+   * @param lowPriorityMaxBatchSize the lowPriorityMaxBatchSize option
+   * @return this Options instance.
+   */
+  public static Options lowPriorityMaxBatchSize(Long lowPriorityMaxBatchSize) {
+    return new Options().lowPriorityMaxBatchSize(lowPriorityMaxBatchSize);
+  }
+
+  /**
+   * Sets the lowPriorityBatchTimeoutMicros option.
+   *
+   * @param lowPriorityBatchTimeoutMicros the lowPriorityBatchTimeoutMicros option
+   * @return this Options instance.
+   */
+  public static Options lowPriorityBatchTimeoutMicros(Long lowPriorityBatchTimeoutMicros) {
+    return new Options().lowPriorityBatchTimeoutMicros(lowPriorityBatchTimeoutMicros);
+  }
+
+  /**
+   * Sets the lowPriorityAllowedBatchSizes option.
+   *
+   * @param lowPriorityAllowedBatchSizes the lowPriorityAllowedBatchSizes option
+   * @return this Options instance.
+   */
+  public static Options lowPriorityAllowedBatchSizes(List<Long> lowPriorityAllowedBatchSizes) {
+    return new Options().lowPriorityAllowedBatchSizes(lowPriorityAllowedBatchSizes);
+  }
+
+  /**
+   * Sets the lowPriorityAllowedBatchSizes option.
+   *
+   * @param lowPriorityAllowedBatchSizes the lowPriorityAllowedBatchSizes option
+   * @return this Options instance.
+   */
+  public static Options lowPriorityAllowedBatchSizes(Long... lowPriorityAllowedBatchSizes) {
+    return new Options().lowPriorityAllowedBatchSizes(lowPriorityAllowedBatchSizes);
+  }
+
+  /**
+   * Sets the lowPriorityMaxEnqueuedBatches option.
+   *
+   * @param lowPriorityMaxEnqueuedBatches the lowPriorityMaxEnqueuedBatches option
+   * @return this Options instance.
+   */
+  public static Options lowPriorityMaxEnqueuedBatches(Long lowPriorityMaxEnqueuedBatches) {
+    return new Options().lowPriorityMaxEnqueuedBatches(lowPriorityMaxEnqueuedBatches);
+  }
+
+  /**
    * Sets the enableLargeBatchSplitting option.
    *
    * @param enableLargeBatchSplitting input with a large size (i.e., larger than the largest value of
@@ -264,6 +330,14 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     private String sharedName;
 
     private String batchingQueue;
+
+    private Long lowPriorityMaxBatchSize;
+
+    private Long lowPriorityBatchTimeoutMicros;
+
+    private List<Long> lowPriorityAllowedBatchSizes;
+
+    private Long lowPriorityMaxEnqueuedBatches;
 
     private Boolean enableLargeBatchSplitting;
 
@@ -347,6 +421,61 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     }
 
     /**
+     * Sets the lowPriorityMaxBatchSize option.
+     *
+     * @param lowPriorityMaxBatchSize the lowPriorityMaxBatchSize option
+     * @return this Options instance.
+     */
+    public Options lowPriorityMaxBatchSize(Long lowPriorityMaxBatchSize) {
+      this.lowPriorityMaxBatchSize = lowPriorityMaxBatchSize;
+      return this;
+    }
+
+    /**
+     * Sets the lowPriorityBatchTimeoutMicros option.
+     *
+     * @param lowPriorityBatchTimeoutMicros the lowPriorityBatchTimeoutMicros option
+     * @return this Options instance.
+     */
+    public Options lowPriorityBatchTimeoutMicros(Long lowPriorityBatchTimeoutMicros) {
+      this.lowPriorityBatchTimeoutMicros = lowPriorityBatchTimeoutMicros;
+      return this;
+    }
+
+    /**
+     * Sets the lowPriorityAllowedBatchSizes option.
+     *
+     * @param lowPriorityAllowedBatchSizes the lowPriorityAllowedBatchSizes option
+     * @return this Options instance.
+     */
+    public Options lowPriorityAllowedBatchSizes(List<Long> lowPriorityAllowedBatchSizes) {
+      this.lowPriorityAllowedBatchSizes = lowPriorityAllowedBatchSizes;
+      return this;
+    }
+
+    /**
+     * Sets the lowPriorityAllowedBatchSizes option.
+     *
+     * @param lowPriorityAllowedBatchSizes the lowPriorityAllowedBatchSizes option
+     * @return this Options instance.
+     */
+    public Options lowPriorityAllowedBatchSizes(Long... lowPriorityAllowedBatchSizes) {
+      this.lowPriorityAllowedBatchSizes = Arrays.asList(lowPriorityAllowedBatchSizes);
+      return this;
+    }
+
+    /**
+     * Sets the lowPriorityMaxEnqueuedBatches option.
+     *
+     * @param lowPriorityMaxEnqueuedBatches the lowPriorityMaxEnqueuedBatches option
+     * @return this Options instance.
+     */
+    public Options lowPriorityMaxEnqueuedBatches(Long lowPriorityMaxEnqueuedBatches) {
+      this.lowPriorityMaxEnqueuedBatches = lowPriorityMaxEnqueuedBatches;
+      return this;
+    }
+
+    /**
      * Sets the enableLargeBatchSplitting option.
      *
      * @param enableLargeBatchSplitting input with a large size (i.e., larger than the largest value of
@@ -423,6 +552,26 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     public final String batchingQueue;
 
     /**
+     * The lowPriorityMaxBatchSize attribute
+     */
+    public final long lowPriorityMaxBatchSize;
+
+    /**
+     * The lowPriorityBatchTimeoutMicros attribute
+     */
+    public final long lowPriorityBatchTimeoutMicros;
+
+    /**
+     * The lowPriorityAllowedBatchSizes attribute
+     */
+    public final long[] lowPriorityAllowedBatchSizes;
+
+    /**
+     * The lowPriorityMaxEnqueuedBatches attribute
+     */
+    public final long lowPriorityMaxEnqueuedBatches;
+
+    /**
      * the types of tensors to be batched.
      */
     public final DataType[] Tin;
@@ -444,7 +593,7 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     public final boolean enableLargeBatchSplitting;
 
     public Inputs(GraphOperation op) {
-      super(new BatchFunction(op), op, Arrays.asList("num_batch_threads", "max_batch_size", "batch_timeout_micros", "max_enqueued_batches", "allowed_batch_sizes", "container", "shared_name", "batching_queue", "Tin", "Tcaptured", "Tout", "enable_large_batch_splitting"));
+      super(new BatchFunction(op), op, Arrays.asList("num_batch_threads", "max_batch_size", "batch_timeout_micros", "max_enqueued_batches", "allowed_batch_sizes", "container", "shared_name", "batching_queue", "low_priority_max_batch_size", "low_priority_batch_timeout_micros", "low_priority_allowed_batch_sizes", "low_priority_max_enqueued_batches", "Tin", "Tcaptured", "Tout", "enable_large_batch_splitting"));
       int inputIndex = 0;
       int inTensorsLength = op.inputListLength("in_tensors");
       inTensors = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inTensorsLength));
@@ -460,6 +609,10 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
       container = op.attributes().getAttrString("container");
       sharedName = op.attributes().getAttrString("shared_name");
       batchingQueue = op.attributes().getAttrString("batching_queue");
+      lowPriorityMaxBatchSize = op.attributes().getAttrInt("low_priority_max_batch_size");
+      lowPriorityBatchTimeoutMicros = op.attributes().getAttrInt("low_priority_batch_timeout_micros");
+      lowPriorityAllowedBatchSizes = op.attributes().getAttrIntList("low_priority_allowed_batch_sizes");
+      lowPriorityMaxEnqueuedBatches = op.attributes().getAttrInt("low_priority_max_enqueued_batches");
       Tin = op.attributes().getAttrTypeList("Tin");
       Tcaptured = op.attributes().getAttrTypeList("Tcaptured");
       Tout = op.attributes().getAttrTypeList("Tout");

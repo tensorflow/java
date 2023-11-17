@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "BoostedTreesSerializeEnsemble"
+  endpoint {
+    name: "estimator.BoostedTreesSerializeEnsemble"
+  }
+}

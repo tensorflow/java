@@ -19,7 +19,7 @@ package org.tensorflow.internal.types.registry;
 import java.util.HashMap;
 import java.util.Map;
 import org.tensorflow.TensorMapper;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat16;

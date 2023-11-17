@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "OrderedMapSize"
+  out_arg {
+    name: "size"
+    rename_to: "output"
+  }
+}

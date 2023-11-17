@@ -2070,16 +2070,45 @@ public final class NnOps {
    *  <p>If two elements are equal, the lower-index element appears first.
    *
    * @param <T> data type for {@code values} output
+   * @param <V> data type for {@code indices} output
    * @param input 1-D or higher with last dimension at least {@code k}.
    * @param k 0-D.  Number of top elements to look for along the last dimension (along each
    *  row for matrices).
    * @param options carries optional attribute values
    * @param <T> data type for {@code TopKV2} output and operands
+   * @return a new instance of TopK, with default output types
+   */
+  public <T extends TNumber> TopK<T, TInt32> topK(Operand<T> input, Operand<? extends TNumber> k,
+      TopK.Options[] options) {
+    return TopK.create(scope, input, k, options);
+  }
+
+  /**
+   * Finds values and indices of the {@code k} largest elements for the last dimension.
+   *  If the input is a vector (rank-1), finds the {@code k} largest entries in the vector
+   *  and outputs their values and indices as vectors.  Thus {@code values[j]} is the
+   *  {@code j}-th largest entry in {@code input}, and its index is {@code indices[j]}.
+   *  <p>For matrices (resp. higher rank input), computes the top {@code k} entries in each
+   *  row (resp. vector along the last dimension).  Thus,
+   *  <pre>
+   *  values.shape = indices.shape = input.shape[:-1] + [k]
+   *  </pre>
+   *  <p>If two elements are equal, the lower-index element appears first.
+   *
+   * @param <T> data type for {@code values} output
+   * @param <V> data type for {@code indices} output
+   * @param input 1-D or higher with last dimension at least {@code k}.
+   * @param k 0-D.  Number of top elements to look for along the last dimension (along each
+   *  row for matrices).
+   * @param indexType The value of the indexType attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TopKV2} output and operands
+   * @param <V> data type for {@code TopKV2} output and operands
    * @return a new instance of TopK
    */
-  public <T extends TNumber> TopK<T> topK(Operand<T> input, Operand<TInt32> k,
-      TopK.Options... options) {
-    return TopK.create(scope, input, k, options);
+  public <T extends TNumber, V extends TNumber> TopK<T, V> topK(Operand<T> input,
+      Operand<? extends TNumber> k, Class<V> indexType, TopK.Options... options) {
+    return TopK.create(scope, input, k, indexType, options);
   }
 
   /**

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RequantizePerChannel"
+  endpoint {
+    name: "math.RequantizePerChannel"
+  }
+}

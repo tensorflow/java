@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "QuantizedConv2DWithBiasAndRequantize"
+  endpoint {
+    name: "nn.QuantizedConv2DWithBiasAndRequantize"
+  }
+}

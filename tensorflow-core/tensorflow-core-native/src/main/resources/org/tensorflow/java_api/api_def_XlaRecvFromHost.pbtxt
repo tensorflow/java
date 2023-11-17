@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaRecvFromHost"
+  endpoint: {
+    name: "xla.XlaRecvFromHost"
+  }
+}

@@ -29,7 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -70,18 +70,36 @@ public final class MergeDedupData extends RawOp implements Operand<TType> {
    * with first column as tuple element type, and second column as span of this type.
    * For example, an output tuple of (1, 2, 0.1, 3), its mask is [[0, 2], [1, 1], [0,
    * 1]]. We expect only two types of elements: integer(0) and float(1).
+   * @param options carries optional attribute values
    * @return a new instance of MergeDedupData
    */
   @Endpoint(
       describeByClass = true
   )
   public static MergeDedupData create(Scope scope, Operand<? extends TNumber> integerTensor,
-      Operand<? extends TNumber> floatTensor, String tupleMask) {
+      Operand<? extends TNumber> floatTensor, String tupleMask, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MergeDedupData");
     opBuilder.addInput(integerTensor.asOutput());
     opBuilder.addInput(floatTensor.asOutput());
     opBuilder.setAttr("tuple_mask", tupleMask);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.config != null) {
+          opBuilder.setAttr("config", opts.config);
+        }
+      }
+    }
     return new MergeDedupData(opBuilder.build());
+  }
+
+  /**
+   * Sets the config option.
+   *
+   * @param config the config option
+   * @return this Options instance.
+   */
+  public static Options config(String config) {
+    return new Options().config(config);
   }
 
   /**
@@ -97,6 +115,27 @@ public final class MergeDedupData extends RawOp implements Operand<TType> {
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.MergeDedupData}
+   */
+  public static class Options {
+    private String config;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     */
+    public Options config(String config) {
+      this.config = config;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -131,14 +170,20 @@ public final class MergeDedupData extends RawOp implements Operand<TType> {
      */
     public final DataType floatType;
 
+    /**
+     * The config attribute
+     */
+    public final String config;
+
     public Inputs(GraphOperation op) {
-      super(new MergeDedupData(op), op, Arrays.asList("tuple_mask", "integer_type", "float_type"));
+      super(new MergeDedupData(op), op, Arrays.asList("tuple_mask", "integer_type", "float_type", "config"));
       int inputIndex = 0;
       integerTensor = (Operand<? extends TNumber>) op.input(inputIndex++);
       floatTensor = (Operand<? extends TNumber>) op.input(inputIndex++);
       tupleMask = op.attributes().getAttrString("tuple_mask");
       integerType = op.attributes().getAttrType("integer_type");
       floatType = op.attributes().getAttrType("float_type");
+      config = op.attributes().getAttrString("config");
     }
   }
 }

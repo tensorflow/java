@@ -47,7 +47,6 @@ import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.exceptions.TensorFlowException;
-import org.tensorflow.internal.c_api.NativeGraphPointer;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
@@ -67,8 +66,8 @@ import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.train.Restore;
 import org.tensorflow.op.train.Save;
-import org.tensorflow.proto.framework.GraphDef;
-import org.tensorflow.proto.util.SaverDef;
+import org.tensorflow.proto.GraphDef;
+import org.tensorflow.proto.SaverDef;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -385,7 +384,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-    return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
+//    return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder); FIXME GRADIENT STUFF
+    return new GraphOperationBuilder(this, type, name, scope);
   }
 
   @Override
@@ -1313,21 +1313,22 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private static final Set<Graph> allGraphs =
       Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
-  /**
-   * Find the graph with the matching underlying native pointer.
-   *
-   * @return the graph if there is one, else null.
-   */
-  public static Graph findGraphForPointer(NativeGraphPointer pointer) {
-    for (Graph g : allGraphs) {
-      if (g.nativeHandle != null
-          && !g.nativeHandle.isNull()
-          && g.nativeHandle.graph().equals(pointer)) {
-        return g;
-      }
-    }
-    return null;
-  }
+  // FIXME GRADIENT STUFF
+//  /**
+//   * Find the graph with the matching underlying native pointer.
+//   *
+//   * @return the graph if there is one, else null.
+//   */
+//  public static Graph findGraphForPointer(NativeGraphPointer pointer) {
+//    for (Graph g : allGraphs) {
+//      if (g.nativeHandle != null
+//          && !g.nativeHandle.isNull()
+//          && g.nativeHandle.graph().equals(pointer)) {
+//        return g;
+//      }
+//    }
+//    return null;
+//  }
 
   static {
     try {

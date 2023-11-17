@@ -29,14 +29,14 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Generates values in an interval.
  * A sequence of {@code num} evenly-spaced values are generated beginning at {@code start}.
- * If {@code num > 1}, the values in the sequence increase by {@code stop - start / num - 1},
- * so that the last one is exactly {@code stop}.
+ * If {@code num > 1}, the values in the sequence increase by
+ * {@code (stop - start) / (num - 1)}, so that the last one is exactly {@code stop}.
  * <p>For example:
  * <pre>
  * tf.linspace(10.0, 12.0, 3, name=&quot;linspace&quot;) =&gt; [ 10.0  11.0  12.0]

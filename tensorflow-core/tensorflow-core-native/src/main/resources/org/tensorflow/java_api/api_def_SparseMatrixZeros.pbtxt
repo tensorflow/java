@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseMatrixZeros"
+  endpoint {
+    name: "linalg.sparse.SparseMatrixZeros"
+  }
+}

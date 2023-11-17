@@ -32,12 +32,12 @@ import org.tensorflow.ndarray.buffer.layout.DataLayout;
 import org.tensorflow.ndarray.buffer.layout.DataLayouts;
 import org.tensorflow.ndarray.impl.dense.DenseNdArray;
 import org.tensorflow.ndarray.impl.sparse.SparseNdArray;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.framework.DataType#DT_STRING} tensors to a
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_STRING} tensors to a
  * n-dimensional data space.
  */
 public final class TStringMapper extends TensorMapper<TString> {

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaEinsum"
+  endpoint {
+    name: "xla.Einsum"
+  }
+}

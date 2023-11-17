@@ -62,25 +62,34 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
-import org.tensorflow.proto.framework.AttrValue;
-import org.tensorflow.proto.framework.AttrValue.ListValue;
-import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.proto.framework.NameAttrList;
+import org.tensorflow.proto.AttrValue;
+import org.tensorflow.proto.AttrValue.ListValue;
+import org.tensorflow.proto.DataType;
+import org.tensorflow.proto.NameAttrList;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
 
-  GraphOperationBuilder(
-      Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
+  // FIXME GRADIENT STUFF
+//  GraphOperationBuilder(
+//      Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
+//    this.graph = graph;
+//    this.scope = scope;
+//    this.dangerousGradientBuilder = dangerousGradientBuilder;
+//    try (Graph.Reference r = graph.ref()) {
+//      if (dangerousGradientBuilder) {
+//        this.unsafeNativeHandle = allocateDangerousGradient(r.nativeHandle(), type, name);
+//      } else {
+//        this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
+//      }
+//    }
+//  }
+
+  GraphOperationBuilder(Graph graph, String type, String name, Scope scope) {
     this.graph = graph;
     this.scope = scope;
-    this.dangerousGradientBuilder = dangerousGradientBuilder;
     try (Graph.Reference r = graph.ref()) {
-      if (dangerousGradientBuilder) {
-        this.unsafeNativeHandle = allocateDangerousGradient(r.nativeHandle(), type, name);
-      } else {
-        this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
-      }
+      this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
     }
   }
 
@@ -93,12 +102,14 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperation build() {
     scope.apply(this);
     try (Graph.Reference r = graph.ref()) {
-      TF_Operation built;
-      if (dangerousGradientBuilder) {
-        built = finishDangerousGradient(r.nativeHandle(), unsafeNativeHandle);
-      } else {
-        built = finish(unsafeNativeHandle);
-      }
+      // FIXME GRADIENT STUFF
+//      TF_Operation built;
+//      if (dangerousGradientBuilder) {
+//        built = finishDangerousGradient(r.nativeHandle(), unsafeNativeHandle);
+//      } else {
+//        built = finish(unsafeNativeHandle);
+//      }
+      TF_Operation built = finish(unsafeNativeHandle);
       GraphOperation op = new GraphOperation(graph, built);
       unsafeNativeHandle = null;
       if (scope.isInit()) {
@@ -403,13 +414,14 @@ public final class GraphOperationBuilder implements OperationBuilder {
   private final Graph graph;
   private final Scope scope;
 
-  /**
-   * Use builders without locking. This should only be used during custom gradient building.
-   *
-   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
-   * locked by the gradient builder will fail without this.
-   */
-  private final boolean dangerousGradientBuilder;
+  // FIXME GRADIENT STUFF
+//  /**
+//   * Use builders without locking. This should only be used during custom gradient building.
+//   *
+//   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+//   * locked by the gradient builder will fail without this.
+//   */
+//  private final boolean dangerousGradientBuilder;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
@@ -463,23 +475,24 @@ public final class GraphOperationBuilder implements OperationBuilder {
     }
   }
 
-  /**
-   * Use builders without locking. This should only be used during custom gradient building.
-   *
-   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
-   * locked by the gradient builder will fail without this.
-   */
-  private static TF_Operation finishDangerousGradient(TF_Graph g, TF_OperationDescription handle) {
-    requireHandle(handle);
-
-    try (PointerScope scope = new PointerScope()) {
-      TF_Status status = TF_Status.newStatus();
-      TF_Operation op = TF_FinishOperationLocked(handle, status);
-      status.throwExceptionIfNotOK();
-      g.name_map().erase(TF_OperationName(op));
-      return op;
-    }
-  }
+  // FIXME GRADIENT STUFF
+//  /**
+//   * Use builders without locking. This should only be used during custom gradient building.
+//   *
+//   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+//   * locked by the gradient builder will fail without this.
+//   */
+//  private static TF_Operation finishDangerousGradient(TF_Graph g, TF_OperationDescription handle) {
+//    requireHandle(handle);
+//
+//    try (PointerScope scope = new PointerScope()) {
+//      TF_Status status = TF_Status.newStatus();
+//      TF_Operation op = TF_FinishOperationLocked(handle, status);
+//      status.throwExceptionIfNotOK();
+//      g.name_map().erase(TF_OperationName(op));
+//      return op;
+//    }
+//  }
 
   private static void addInput(TF_OperationDescription handle, TF_Operation opHandle, int index) {
     try (PointerScope scope = new PointerScope()) {

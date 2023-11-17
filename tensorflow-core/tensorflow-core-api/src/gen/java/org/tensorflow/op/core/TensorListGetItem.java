@@ -31,12 +31,15 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * The TensorListGetItem operation
+ * Returns the item in the list with the given index.
+ * input_handle: the list
+ * index: the position in the list from which an element will be retrieved
+ * item: the element at that position
  *
  * @param <T> data type for {@code item} output
  */

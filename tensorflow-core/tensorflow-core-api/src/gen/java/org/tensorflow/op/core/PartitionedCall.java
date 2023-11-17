@@ -17,25 +17,56 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
+import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
+import org.tensorflow.Operation;
+import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
+import org.tensorflow.op.RawOp;
+import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.OpInputsMetadata;
+import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
 /**
  * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
- *
- * <p>Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
+ * Asynchronously executes a function, potentially across multiple devices but
+ * within a single process. The kernel places and partitions a given function's
+ * underlying graph, and executes each of the partitioned subgraphs as a function.
  */
+@OpMetadata(
+    opType = PartitionedCall.OP_NAME,
+    inputsClass = PartitionedCall.Inputs.class
+)
 @Operator
-public interface PartitionedCall extends Iterable<Operand<TType>> {
+public final class PartitionedCall extends RawOp implements Iterable<Operand<TType>> {
   /**
-   * Factory method to create a class wrapping a new StatefulPartitionedCall operation.
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "PartitionedCall";
+
+  private List<Output<?>> output;
+
+  @SuppressWarnings("unchecked")
+  public PartitionedCall(Operation operation) {
+    super(operation, OP_NAME);
+    int outputIdx = 0;
+    int outputLength = operation.outputListLength("output");
+    output = Arrays.asList(operation.outputList(outputIdx, outputLength));
+    outputIdx += outputLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new PartitionedCall operation.
    *
    * @param scope current scope
    * @param args A list of input tensors.
@@ -44,8 +75,7 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
    *   A function that takes 'args', a list of tensors, and returns 'output',
    *   another list of tensors. Input and output types are specified by 'Tin'
    *   and 'Tout'. The function body of f will be placed and partitioned across
-   *   devices, setting this op apart from the regular Call op. This op is
-   *   stateful.
+   *   devices, setting this op apart from the regular Call op.
    * </pre>
    * @param options carries optional attribute values
    * @return a new instance of PartitionedCall
@@ -53,17 +83,26 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
   @Endpoint(
       describeByClass = true
   )
-  static PartitionedCall create(Scope scope, Iterable<Operand<?>> args,
+  public static PartitionedCall create(Scope scope, Iterable<Operand<?>> args,
       List<Class<? extends TType>> Tout, ConcreteFunction f, Options... options) {
-    boolean isStateful = false;
-    if (f.isStateful()) {
-      isStateful = true;
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "PartitionedCall");
+    opBuilder.addInputList(Operands.asOutputs(args));
+    opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
+    opBuilder.setAttr("f", f);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.config != null) {
+          opBuilder.setAttr("config", opts.config);
+        }
+        if (opts.configProto != null) {
+          opBuilder.setAttr("config_proto", opts.configProto);
+        }
+        if (opts.executorType != null) {
+          opBuilder.setAttr("executor_type", opts.executorType);
+        }
+      }
     }
-    if (isStateful) {
-      return StatefulPartitionedCall.create(scope, args, Tout, f, options);
-    } else {
-      return StatelessPartitionedCall.create(scope, args, Tout, f, options);
-    }
+    return new PartitionedCall(opBuilder.build());
   }
 
   /**
@@ -72,7 +111,7 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
    * @param config the config option
    * @return this Options instance.
    */
-  static Options config(String config) {
+  public static Options config(String config) {
     return new Options().config(config);
   }
 
@@ -82,7 +121,7 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
    * @param configProto the configProto option
    * @return this Options instance.
    */
-  static Options configProto(String configProto) {
+  public static Options configProto(String configProto) {
     return new Options().configProto(configProto);
   }
 
@@ -92,7 +131,7 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
    * @param executorType the executorType option
    * @return this Options instance.
    */
-  static Options executorType(String executorType) {
+  public static Options executorType(String executorType) {
     return new Options().executorType(executorType);
   }
 
@@ -101,21 +140,25 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
    * A list of return values.
    * @return output.
    */
-  List<Output<?>> output();
+  public List<Output<?>> output() {
+    return output;
+  }
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  Iterator<Operand<TType>> iterator();
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) output.iterator();
+  }
 
   /**
    * Optional attributes for {@link org.tensorflow.op.core.PartitionedCall}
    */
-  class Options {
-    String config;
+  public static class Options {
+    private String config;
 
-    String configProto;
+    private String configProto;
 
-    String executorType;
+    private String executorType;
 
     private Options() {
     }
@@ -151,6 +194,54 @@ public interface PartitionedCall extends Iterable<Operand<TType>> {
     public Options executorType(String executorType) {
       this.executorType = executorType;
       return this;
+    }
+  }
+
+  @OpInputsMetadata(
+      outputsClass = PartitionedCall.class
+  )
+  public static class Inputs extends RawOpInputs<PartitionedCall> {
+    /**
+     * A list of input tensors.
+     */
+    public final Iterable<Operand<?>> args;
+
+    /**
+     * A list of input types.
+     */
+    public final DataType[] Tin;
+
+    /**
+     * A list of output types.
+     */
+    public final DataType[] Tout;
+
+    /**
+     * The config attribute
+     */
+    public final String config;
+
+    /**
+     * The configProto attribute
+     */
+    public final String configProto;
+
+    /**
+     * The executorType attribute
+     */
+    public final String executorType;
+
+    public Inputs(GraphOperation op) {
+      super(new PartitionedCall(op), op, Arrays.asList("Tin", "Tout", "config", "config_proto", "executor_type"));
+      int inputIndex = 0;
+      int argsLength = op.inputListLength("args");
+      args = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, argsLength));
+      inputIndex += argsLength;
+      Tin = op.attributes().getAttrTypeList("Tin");
+      Tout = op.attributes().getAttrTypeList("Tout");
+      config = op.attributes().getAttrString("config");
+      configProto = op.attributes().getAttrString("config_proto");
+      executorType = op.attributes().getAttrString("executor_type");
     }
   }
 }

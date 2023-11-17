@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ThreadPoolDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ThreadPoolDataset"
+  }
+}

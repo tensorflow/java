@@ -33,8 +33,8 @@ import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.proto.framework.FunctionDef;
-import org.tensorflow.proto.framework.NodeDef;
+import org.tensorflow.proto.FunctionDef;
+import org.tensorflow.proto.NodeDef;
 
 /**
  * A class holding a native function handle and providing cached access to it's {@link FunctionDef}.

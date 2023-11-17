@@ -19,8 +19,8 @@ package org.tensorflow;
 
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.AttributeMetadata;
-import org.tensorflow.proto.framework.AttrValue;
-import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.AttrValue;
+import org.tensorflow.proto.DataType;
 
 /** Helper type for attribute getters, so we don't clutter the operation classes too much. */
 public interface OperationAttributeInspector {

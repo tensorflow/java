@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DebugNumericSummaryV2"
+  endpoint {
+    name: "debugging.DebugNumericsSummary"
+  }
+  visibility: HIDDEN
+}

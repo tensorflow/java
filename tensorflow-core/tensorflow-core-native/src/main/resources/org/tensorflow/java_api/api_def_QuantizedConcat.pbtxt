@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "QuantizedConcat"
+  endpoint {
+    name: "quantization.QuantizedConcat"
+  }
+}
