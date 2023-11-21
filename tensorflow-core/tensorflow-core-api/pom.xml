@@ -218,73 +218,6 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>org.tensorflow.core</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <!--
-              Create the native artifact
-                This artifact will contain only native libraries compiled by the javacpp-plugin,
-                and will be classified under the active platform (OS, arch, extension...)
-            -->
-            <id>native-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <classifier>${native.classifier}</classifier>
-              <skipIfEmpty>true</skipIfEmpty>
-              <includes>
-                <!-- In case of successive builds for multiple platforms without cleaning, ensures
-                     we only include files for this platform. -->
-                <include>org/tensorflow/internal/c_api/${native.classifier}/</include>
-              </includes>
-              <classesDirectory>${project.build.directory}/native</classesDirectory>
-              <excludes>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.exp</exclude>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.lib</exclude>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.obj</exclude>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*mklml*</exclude>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*msvcr120*</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <executions>
-          <execution>
-            <!--
-              Run the tests after packaging the artifacts
-                This is required as most of our unit tests are in fact integration tests that should
-                be executed in a TensorFlow runtime environment.
-            -->
-            <id>default-test</id>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <additionalClasspathElements>
-                <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
-                <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
-              </additionalClasspathElements>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <version>3.3.0</version>
         <executions>
@@ -313,9 +246,6 @@
               <failOnError>false</failOnError>
               <minmemory>256m</minmemory>
               <maxmemory>2048m</maxmemory>
-              <links>
-                <link>http://bytedeco.org/javacpp/apidocs</link>
-              </links>
             </configuration>
           </execution>
         </executions>
