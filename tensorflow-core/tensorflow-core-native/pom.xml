@@ -21,8 +21,9 @@
     <javacpp.build.skip>false</javacpp.build.skip>
     <javacpp.generate.skip>true</javacpp.generate.skip>
     <javacpp.clean.skip>true</javacpp.clean.skip>
-    <wheel.download.skip>false</wheel.download.skip>
-    <wheel.download.folder>${project.build.directory}/wheel/</wheel.download.folder>
+    <dist.download.skip>false</dist.download.skip>
+    <dist.download.url/>
+    <dist.download.folder>${project.build.directory}/dist/</dist.download.folder>
     <target.folder>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</target.folder>
     <java.module.name>org.tensorflow.core.native</java.module.name>
   </properties>
@@ -69,7 +70,7 @@
         <bazel.build.skip>false</bazel.build.skip>
         <bazel.clean.skip>false</bazel.clean.skip>
         <javacpp.clean.skip>false</javacpp.clean.skip>
-        <wheel.download.skip>true</wheel.download.skip>
+        <dist.download.skip>true</dist.download.skip>
       </properties>
     </profile>
 
@@ -87,6 +88,7 @@
         <javacpp.clean.skip>false</javacpp.clean.skip>
       </properties>
     </profile>
+
   </profiles>
 
   <build>
@@ -100,7 +102,7 @@
             <!--
               Run the full native build with Bazel
                 This will compile TensorFlow from sources to generate the runtime libraries, instead of using those
-                retrieved from the official Python wheels. It can be useful when someone wants to build a version
+                retrieved from the official Python distribution. It can be useful when someone wants to build a version
                 of TensorFlow Java for an architecture not officially supported.
             -->
             <id>bazel-build</id>
@@ -165,24 +167,25 @@
           <execution>
             <!--
               Download TensorFlow native libraries
-                This will download the official Python wheel distribution for the active platform, and extract the `tensorflow_cc` library
+                This will download the official Python distribution for the active platform, and extract the `tensorflow_cc` library
                 from it so that we can generate the JavaCPP API bindings and distribute it as a JAR. This will be executed only
                 when not building a full native build.
             -->
-            <id>wheel-download</id>
+            <id>dist-download</id>
             <phase>initialize</phase>
             <goals>
               <goal>exec</goal>
             </goals>
             <configuration>
-              <skip>${wheel.download.skip}</skip> <!-- skipped when full native build is enabled -->
+              <skip>${dist.download.skip}</skip> <!-- skipped when full native build is enabled -->
               <executable>/bin/bash</executable>
               <arguments>
-                <argument>scripts/wheel_download.sh</argument>
-                <argument>${wheel.download.url}</argument>
-                <argument>${wheel.download.folder}</argument>
-                <argument>${os.name}</argument>
+                <argument>scripts/dist_download.sh</argument>
+                <argument>${dist.download.folder}</argument>
               </arguments>
+              <environmentVariables>
+                <PLATFORM>${native.classifier}</PLATFORM>
+              </environmentVariables>
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
           </execution>
@@ -212,7 +215,7 @@
           <classPath>${project.build.outputDirectory}</classPath>
           <includePaths>
             <includePath>${project.basedir}/</includePath>
-            <includePath>${wheel.download.folder}/tensorflow/include/</includePath>
+            <includePath>${dist.download.folder}/tensorflow/include/</includePath>
             <includePath>${project.basedir}/target/classes/org/tensorflow/internal/c_api/include/</includePath>
             <!-- additional include paths in case of a full native build -->
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
@@ -222,7 +225,7 @@
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>
           </includePaths>
           <linkPaths>
-            <linkPath>${wheel.download.folder}/tensorflow</linkPath>
+            <linkPath>${dist.download.folder}/tensorflow</linkPath>
             <!-- additional link paths in case of a full native build -->
             <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
             <linkPath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/</linkPath>
