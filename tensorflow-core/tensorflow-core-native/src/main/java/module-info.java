@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
-module tensorflow.runtime {
+module tensorflow.nativelib {
   requires transitive org.bytedeco.javacpp;
   requires transitive com.google.protobuf;
   requires java.logging;
 
   exports org.tensorflow.exceptions;
+  exports org.tensorflow.internal;
   exports org.tensorflow.internal.c_api;
   exports org.tensorflow.internal.c_api.global;
   exports org.tensorflow.proto;
