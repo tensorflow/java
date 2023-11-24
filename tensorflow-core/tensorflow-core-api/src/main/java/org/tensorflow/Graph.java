@@ -384,7 +384,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-//    return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder); FIXME GRADIENT STUFF
+    // ---------------------------------------------------------
+    // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
+    // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
+    // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
+    // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
+    // ---------------------------------------------------------
+    //return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
+    // ---------------------------------------------------------
+    // END OF CUSTOM GRADIENT
+    // ---------------------------------------------------------
     return new GraphOperationBuilder(this, type, name, scope);
   }
 
@@ -1312,8 +1321,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   private static final Set<Graph> allGraphs =
       Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
-
-  // FIXME GRADIENT STUFF
+  // ---------------------------------------------------------
+  // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
+  // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
+  // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
+  // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
+  // ---------------------------------------------------------
 //  /**
 //   * Find the graph with the matching underlying native pointer.
 //   *
@@ -1329,6 +1342,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 //    }
 //    return null;
 //  }
+  // ---------------------------------------------------------
+  // END OF CUSTOM GRADIENT
+  // ---------------------------------------------------------
 
   static {
     try {
