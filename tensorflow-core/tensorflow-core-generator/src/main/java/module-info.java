@@ -15,7 +15,7 @@ limitations under the License.
 =======================================================================
 */
 module tensorflow.generator {
-  requires tensorflow.runtime;
+  requires tensorflow.nativelib;
   requires java.compiler;
   requires com.github.javaparser.core;
   requires com.google.protobuf;
