@@ -25,19 +25,19 @@ case ${PLATFORM:-} in
     return 1;
 esac
 
-mkdir -p $DOWNLOAD_FOLDER
+mkdir -p "$DOWNLOAD_FOLDER"
+cd "$DOWNLOAD_FOLDER"
 
-if [ ! -f $DOWNLOAD_FOLDER/$DOWNLOADED_FILE ]; then
-  curl -L $DOWNLOAD_URL --output-dir $DOWNLOAD_FOLDER --output $DOWNLOADED_FILE
+if [ ! -f $DOWNLOADED_FILE ]; then
+  curl -L $DOWNLOAD_URL --output $DOWNLOADED_FILE
 fi
-
-unzip -q -u -d $DOWNLOAD_FOLDER $DOWNLOAD_FOLDER/$DOWNLOADED_FILE
+unzip -q -u $DOWNLOADED_FILE
 
 if [[ "$PLATFORM" =~ "linux" ]]; then
-  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.so.2 $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.so
-  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.so.2 $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.so
+  ln -fs tensorflow/libtensorflow_cc.so.2 tensorflow/libtensorflow_cc.so
+  ln -fs tensorflow/libtensorflow_framework.so.2 tensorflow/libtensorflow_framework.so
 
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
-  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.2.dylib $DOWNLOAD_FOLDER/tensorflow/libtensorflow_cc.dylib
-  ln -fs $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.2.dylib $DOWNLOAD_FOLDER/tensorflow/libtensorflow_framework.dylib
+  ln -fs tensorflow/libtensorflow_cc.2.dylib tensorflow/libtensorflow_cc.dylib
+  ln -fs tensorflow/libtensorflow_framework.2.dylib tensorflow/libtensorflow_framework.dylib
 fi
