@@ -16,16 +16,11 @@ limitations under the License.
 */
 package org.tensorflow.internal.c_api.presets;
 
-import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.ClassProperties;
 import org.bytedeco.javacpp.LoadEnabled;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.annotation.Adapter;
-import org.bytedeco.javacpp.annotation.ByRef;
-import org.bytedeco.javacpp.annotation.ByVal;
 import org.bytedeco.javacpp.annotation.Cast;
-import org.bytedeco.javacpp.annotation.Const;
-import org.bytedeco.javacpp.annotation.Namespace;
 import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
@@ -63,25 +58,31 @@ import java.util.List;
             "tensorflow/c/eager/c_api.h",
             "tensorflow/c/eager/c_api_experimental.h",
 
-            // All the followings are imported to support custom gradient registration
+// ---------------------------------------------------------
+// NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
+// Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
+// TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
+// between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
+// ---------------------------------------------------------
 //            "absl/status/status.h",
-
 //            "tensorflow/tsl/platform/status.h",
 //            "tensorflow/tsl/platform/default/status.h",
 //            "tensorflow/core/util/port.h",
-                  //"tensorflow/c/tf_status_helper.h",
+//            "tensorflow/c/tf_status_helper.h",
 //            "tensorflow/c/kernels.h",
 //            "tensorflow/c/ops.h",
 //            "tensorflow/c/c_api_internal.h",
 //            "tensorflow/c/eager/abstract_context.h",
 //            "tensorflow/c/eager/abstract_tensor_handle.h",
 //            "tensorflow/c/eager/gradients.h",
-
 //            "tensorflow/cc/framework/ops.h",
 //            "tensorflow/cc/framework/scope.h",
 //            "tensorflow/cc/framework/grad_op_registry.h",
 //            "tensorflow/core/graph/graph.h",
 //            "tensorflow_adapters.h", // Keep this at the bottom, since it is not a real tensorflow header but one that we maintain (see main resources)
+// ---------------------------------------------------------
+// END OF CUSTOM GRADIENT
+// ---------------------------------------------------------
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
@@ -210,8 +211,12 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             .put(new Info("TF_PayloadVisitor", "TF_ForEachPayload").skip()); // avoids import of TSL_PayloadVisitor
 
 
-
-    // All the followings are set to support custom gradient registration
+    // ---------------------------------------------------------
+    // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
+    // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
+    // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
+    // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
+    // ---------------------------------------------------------
 //    infoMap
 //            .put(new Info("TF_Graph::graph")
 //                    .javaText("public native @MemberGetter @ByRef Pointer graph();"))
@@ -465,7 +470,9 @@ public class tensorflow implements LoadEnabled, InfoMapper {
 //                    "absl::flat_hash_map"
 //                    )
 //                .skip())
-    ;
+    // ---------------------------------------------------------
+    // END OF CUSTOM GRADIENT
+    // ---------------------------------------------------------
   }
 
   @Override

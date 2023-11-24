@@ -157,7 +157,12 @@ public final class TensorFlow {
     }
   }
 
-  // FIXME GRADIENT STUFF
+  // ---------------------------------------------------------
+  // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
+  // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
+  // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
+  // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
+  // ---------------------------------------------------------
 //  /**
 //   * Keeps references to custom gradient functions to prevent them from being deallocated. All
 //   * access of this set should be synchronized on this class.
@@ -257,6 +262,9 @@ public final class TensorFlow {
 //    gradientFuncs.add(g);
 //    return true;
 //  }
+  // ---------------------------------------------------------
+  // END OF CUSTOM GRADIENT
+  // ---------------------------------------------------------
 
   private static boolean isWindowsOs() {
     return System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("win");

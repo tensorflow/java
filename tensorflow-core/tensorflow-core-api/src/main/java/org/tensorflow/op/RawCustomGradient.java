@@ -18,7 +18,12 @@ package org.tensorflow.op;
 
 public interface RawCustomGradient {}
 
-// FIXME GRADIENT STUFF
+// ---------------------------------------------------------
+// NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
+// Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
+// TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
+// between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
+// ---------------------------------------------------------
 //import java.util.List;
 //import org.tensorflow.GraphOperation;
 //import org.tensorflow.Operand;
@@ -60,3 +65,6 @@ public interface RawCustomGradient {}
 //    return new RawGradientAdapter(gradient);
 //  }
 //}
+// ---------------------------------------------------------
+// END OF CUSTOM GRADIENT
+// ---------------------------------------------------------
