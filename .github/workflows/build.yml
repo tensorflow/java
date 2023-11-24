@@ -35,7 +35,7 @@ jobs:
         run: |
           mvn spotless:check -Pjdk17 -B -U -e
   prepare:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     outputs:
       stagingRepositoryId: ${{ steps.staging.outputs.stagingRepositoryId }}
     steps:
@@ -52,7 +52,7 @@ jobs:
           echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
   linux-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     needs: prepare
     strategy:
       matrix:
@@ -75,7 +75,7 @@ jobs:
           mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
   macosx-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: macos-10.15
+    runs-on: macos-11
     needs: prepare
     strategy:
       matrix:
