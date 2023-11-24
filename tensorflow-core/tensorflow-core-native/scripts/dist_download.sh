@@ -33,11 +33,13 @@ if [ ! -f $DOWNLOADED_FILE ]; then
 fi
 unzip -q -u $DOWNLOADED_FILE
 
+cd tensorflow
 if [[ "$PLATFORM" =~ "linux" ]]; then
-  ln -fs tensorflow/libtensorflow_cc.so.2 tensorflow/libtensorflow_cc.so
-  ln -fs tensorflow/libtensorflow_framework.so.2 tensorflow/libtensorflow_framework.so
+  ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
+  ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
 
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
-  ln -fs tensorflow/libtensorflow_cc.2.dylib tensorflow/libtensorflow_cc.dylib
-  ln -fs tensorflow/libtensorflow_framework.2.dylib tensorflow/libtensorflow_framework.dylib
+  ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
+  ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
 fi
+ls -l .
