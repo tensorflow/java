@@ -134,17 +134,9 @@ import java.util.List;
             "vcomp140",
             "msvcr120",
             "libiomp5md",
-            "mklml",
-            "tensorflow_framework"
+            "mklml"
           },
-          link = {"tensorflow_cc@.2"}),
-      @Platform(
-          value = "windows-x86",
-          preloadpath = {
-            "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/redist/x86/Microsoft.VC140.CRT/",
-            "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/redist/x86/Microsoft.VC140.OpenMP/",
-            "C:/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x86/"
-          }),
+          link = {"tensorflow"}),
       @Platform(
           value = "windows-x86_64",
           preloadpath = {
