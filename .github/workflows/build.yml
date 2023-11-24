@@ -1,0 +1,167 @@
+name: CI jobs
+on:
+  push:
+    branches:
+      - master
+      - staging
+      - r[0-9]+.*
+      - bazelcism-superclean2000-214 # temporary
+  pull_request:
+    branches:
+      - master
+      - r[0-9]+.*
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+env:
+  STAGING_PROFILE_ID: 46f80d0729c92d
+  GCP_CREDS: ${{ secrets.GCP_CREDS }}
+jobs:
+  check-format:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          gcc --version
+          mvn -version
+          mvn clean install -Pjdk17 -B -U -e -Dlint.skip=true -Dmaven.test.skip=true
+      - name: Run format checks
+        run: |
+          mvn spotless:check -Pjdk17 -B -U -e
+  prepare:
+    runs-on: ubuntu-18.04
+    outputs:
+      stagingRepositoryId: ${{ steps.staging.outputs.stagingRepositoryId }}
+    steps:
+      - name: Create staging repository
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/r')
+        id: staging
+        run: |
+          echo "Creating staging repository with profile $STAGING_PROFILE_ID"
+          echo "<promoteRequest><data><description>Releasing TF Java - created by CI build</description></data></promoteRequest>" > request.xml
+          curl -X POST -d @request.xml -s -o response.xml -u ${{ secrets.CI_DEPLOY_USERNAME }}:${{ secrets.CI_DEPLOY_PASSWORD }} -H "Content-Type:application/xml" \
+              https://oss.sonatype.org/service/local/staging/profiles/$STAGING_PROFILE_ID/start
+          STAGING_REPOSITORY_ID=`awk -F'[<>]' '/stagedRepositoryId/{print $3}' response.xml`
+          echo "Staging repository created: $STAGING_REPOSITORY_ID"
+          echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
+  linux-x86_64:
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
+    runs-on: ubuntu-18.04
+    needs: prepare
+    strategy:
+      matrix:
+        ext: ["", -gpu] #, -mkl, -mkl-gpu]
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          gcc --version
+          mvn -version
+          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          echo Executing Maven $MAVEN_PHASE
+          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
+  macosx-x86_64:
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
+    runs-on: macos-10.15
+    needs: prepare
+    strategy:
+      matrix:
+        ext: [""] # , -mkl]
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          clang --version
+          mvn -version
+          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          echo Executing Maven $MAVEN_PHASE
+          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
+  windows-x86_64:
+    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
+    runs-on: windows-2019
+    needs: prepare
+    strategy:
+       matrix:
+         ext: ["", -gpu] #, -mkl, -mkl-gpu]
+    steps:
+      - name: Configure page file
+        uses: al-cheb/configure-pagefile-action@v1.2
+        with:
+          minimum-size: 8GB
+          maximum-size: 16GB
+          disk-root: "C:"
+      - name: Install environment
+        shell: cmd
+        run: |
+          set "PATH=C:\msys64\usr\bin;%PATH%"
+          echo Removing broken stuff from WSL and MSYS2
+          rm "C:/WINDOWS/system32/bash.EXE" "C:/msys64/usr/bin/python.exe" "C:/msys64/usr/bin/python3.exe"
+          python -m pip install numpy six
+          echo Removing old versions of MSVC that interfere with Bazel
+          bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
+          set "EXT=${{ matrix.ext }}"
+          echo %JAVA_HOME%
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
+          set "PATH=C:\msys64\usr\bin;C:\bazel;C:\Program Files\Git\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2\libnvvp;%PATH%"
+          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
+          set "TEST_TMPDIR=C:\tmp"
+          set "TMPDIR=C:\tmp"
+          set "TEMP=C:\tmp"
+          set "TMP=C:\tmp"
+          mkdir C:\tmp
+          bash --version
+          git --version
+          cl
+          call mvn -version
+          if "${{ github.event_name }}" == "push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
+          echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
+          set "SKIP_EXPORT=true"
+          echo Executing Maven %MAVEN_PHASE%
+          call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=%BAZEL_CACHE%"
+          if ERRORLEVEL 1 exit /b
+  deploy:
+    if: github.event_name == 'push' && contains(github.ref, 'master')
+    needs: [linux-x86_64, macosx-x86_64, windows-x86_64]
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Deploy snapshot artifacts
+        run: |
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > settings.xml
+          bash deploy.sh
