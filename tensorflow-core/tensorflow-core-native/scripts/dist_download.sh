@@ -17,12 +17,12 @@ case ${PLATFORM:-} in
   'macosx-arm64')
     DOWNLOAD_URL='https://files.pythonhosted.org/packages/d3/4b/ae9037ea22ba94eb2cf267e991384c3444f3e6142fa49923352b4ab73e14/tensorflow_macos-2.14.0-cp311-cp311-macosx_12_0_arm64.whl'
     ;;
-  'windows')
-    DOWNLOAD_URL='https://files.pythonhosted.org/packages/ad/6e/1bfe367855dd87467564f7bf9fa14f3b17889988e79598bc37bf18f5ffb6/tensorflow_intel-2.14.0-cp311-cp311-win_amd64.whl'
+  'windows-x86_64')
+    DOWNLOAD_URL='https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.14.0.zip'
     ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"
-    return 1;
+    exit 1;
 esac
 
 mkdir -p "$DOWNLOAD_FOLDER"
@@ -33,13 +33,15 @@ if [ ! -f $DOWNLOADED_FILE ]; then
 fi
 unzip -q -u $DOWNLOADED_FILE
 
+mkdir -p tensorflow
 cd tensorflow
 if [[ "$PLATFORM" =~ "linux" ]]; then
   ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
   ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
-
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
+elif [[ "$PLATFORM" =~ "windows" ]]; then
+  ln -fs ../lib/tensorflow.dll tensorflow.dll
 fi
 ls -l .

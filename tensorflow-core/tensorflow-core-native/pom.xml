@@ -178,7 +178,7 @@
             </goals>
             <configuration>
               <skip>${dist.download.skip}</skip> <!-- skipped when full native build is enabled -->
-              <executable>/bin/bash</executable>
+              <executable>bash</executable>
               <arguments>
                 <argument>scripts/dist_download.sh</argument>
                 <argument>${dist.download.folder}</argument>
