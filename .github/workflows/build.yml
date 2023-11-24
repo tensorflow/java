@@ -13,7 +13,7 @@ on:
     types: [opened, reopened, synchronize, labeled, unlabeled]
 env:
   STAGING_PROFILE_ID: 46f80d0729c92d
-  GCP_CREDS: ${{ secrets.GCP_CREDS }}
+  MAVEN_PHASE: install # [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
 jobs:
   check-format:
     if: github.event_name == 'pull_request'
@@ -69,7 +69,6 @@ jobs:
         run: |
           gcc --version
           mvn -version
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           echo Executing Maven $MAVEN_PHASE
           mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
@@ -92,7 +91,6 @@ jobs:
         run: |
           clang --version
           mvn -version
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           echo Executing Maven $MAVEN_PHASE
           mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
@@ -114,11 +112,7 @@ jobs:
         shell: cmd
         run: |
           set "PATH=C:\msys64\usr\bin;%PATH%"
-          echo Removing broken stuff from WSL and MSYS2
-          rm "C:/WINDOWS/system32/bash.EXE" "C:/msys64/usr/bin/python.exe" "C:/msys64/usr/bin/python3.exe"
           python -m pip install numpy six
-          echo Removing old versions of MSVC that interfere with Bazel
-          bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
           set "EXT=${{ matrix.ext }}"
           echo %JAVA_HOME%
       - name: Configure Java
@@ -132,18 +126,12 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          set "PATH=C:\msys64\usr\bin;C:\bazel;C:\Program Files\Git\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.2\libnvvp;%PATH%"
-          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
-          set "TEST_TMPDIR=C:\tmp"
-          set "TMPDIR=C:\tmp"
-          set "TEMP=C:\tmp"
-          set "TMP=C:\tmp"
+          set "PATH=C:\msys64\usr\bin;%PATH%"
           mkdir C:\tmp
           bash --version
           git --version
           cl
           call mvn -version
-          if "${{ github.event_name }}" == "push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           set "SKIP_EXPORT=true"
           echo Executing Maven %MAVEN_PHASE%
