@@ -5,7 +5,7 @@ on:
       - master
       - staging
       - r[0-9]+.*
-      - bazelcism-superclean2000-214 # temporary
+      - bazelcism # temporary
   pull_request:
     branches:
       - master
@@ -56,7 +56,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        ext: ["", -gpu] #, -mkl, -mkl-gpu]
+        ext: ["", -gpu]
     steps:
       - name: Configure Java
         uses: actions/setup-java@v2
@@ -78,7 +78,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        ext: [""] # , -mkl]
+        ext: [""]
     steps:
       - name: Configure Java
         uses: actions/setup-java@v2
@@ -100,7 +100,7 @@ jobs:
     needs: prepare
     strategy:
        matrix:
-         ext: ["", -gpu] #, -mkl, -mkl-gpu]
+         ext: [""] #, -gpu]
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
