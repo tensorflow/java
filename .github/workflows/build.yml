@@ -131,7 +131,7 @@ jobs:
           call mvn -version
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           set "SKIP_EXPORT=true"
-          call mvn clean install -pl \!org.tensorflow:tensorflow-framework -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          call mvn clean install --projects \!org.tensorflow:tensorflow-framework -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
           if ERRORLEVEL 1 exit /b
   deploy:
     if: github.event_name == 'push' && contains(github.ref, 'master')
