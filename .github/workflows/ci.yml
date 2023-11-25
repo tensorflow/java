@@ -185,6 +185,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Build project
         run: |
+          python -V
           git --version
           clang --version
           mvn -version
