@@ -225,7 +225,8 @@
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_protobuf/src/</includePath>
           </includePaths>
           <linkPaths>
-            <linkPath>${dist.download.folder}/tensorflow</linkPath>
+            <linkPath>${dist.download.folder}/tensorflow/</linkPath>
+            <linkPath>${dist.download.folder}/tensorflow/lib/</linkPath>
             <!-- additional link paths in case of a full native build -->
             <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
             <linkPath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/</linkPath>

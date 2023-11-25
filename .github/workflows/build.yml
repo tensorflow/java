@@ -69,7 +69,7 @@ jobs:
           gcc --version
           mvn -version
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn clean install -pl '!:tensorflow-framework' -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
   macosx-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: macos-11
@@ -90,7 +90,7 @@ jobs:
           clang --version
           mvn -version
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn clean install -pl '!:tensorflow-framework' -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: windows-2019
@@ -131,12 +131,12 @@ jobs:
           call mvn -version
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
           set "SKIP_EXPORT=true"
-          call mvn clean install -pl '!:tensorflow-framework' -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          call mvn clean install -pl "!tensorflow-framework" -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
           if ERRORLEVEL 1 exit /b
   deploy:
     if: github.event_name == 'push' && contains(github.ref, 'master')
     needs: [linux-x86_64, macosx-x86_64, windows-x86_64]
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Configure Java
         uses: actions/setup-java@v2
