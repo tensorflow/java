@@ -29,6 +29,7 @@ mkdir -p "$DOWNLOAD_FOLDER"
 cd "$DOWNLOAD_FOLDER"
 
 if [[ -n "$WHEEL_URL" ]]; then
+  echo "Downloading $WHEEL_URL..."
   if [ ! -f 'tensorflow.whl' ]; then
     curl -L $WHEEL_URL --output 'tensorflow.whl'
   fi
@@ -36,6 +37,7 @@ if [[ -n "$WHEEL_URL" ]]; then
 fi
 
 if [[ -n "$CLIB_URL" ]]; then
+  echo "Downloading $CLIB_URL..."
   if [ ! -f 'tensorflow_c.zip' ]; then
     curl -L $CLIB_URL --output 'tensorflow_c.zip'
   fi
@@ -49,7 +51,5 @@ if [[ "$PLATFORM" =~ "linux" ]]; then
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
-elif [[ "$PLATFORM" =~ "windows" ]]; then
-  ln -fs lib/tensorflow.dll tensorflow.dll
 fi
 ls -l .
