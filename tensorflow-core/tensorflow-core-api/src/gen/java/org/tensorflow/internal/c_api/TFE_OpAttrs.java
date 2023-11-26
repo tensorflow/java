@@ -8,8 +8,15 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
-// Parsed from tensorflow/c/eager/c_api_experimental.h
 
+// APIs for generically dealing with op attributes (e.g. when forwarding them
+// through custom device implementations).
+//
+// TODO(allenl): Currently these are black boxes, but we should have some way to
+// inspect values. This would let people e.g. copy over most attributes and then
+// modify some based on their values.
+
+// A reference to an op's name -> attribute mapping
 @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public class TFE_OpAttrs extends Pointer {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
