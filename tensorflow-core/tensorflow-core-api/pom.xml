@@ -295,7 +295,7 @@
             <configuration>
               <skip>${javacpp.build.skip}</skip>
               <buildCommand>
-                <program>bash</program>
+                <program>${build.shell}</program>
                 <argument>${project.basedir}/build.sh</argument>
               </buildCommand>
               <environmentVariables>

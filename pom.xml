@@ -289,6 +289,30 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>shell-defined</id>
+      <activation>
+        <property>
+          <name>env.TF_JAVA_SHELL</name>
+        </property>
+      </activation>
+      <properties>
+        <build.shell>${env.TF_JAVA_SHELL}</build.shell>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>shell-undefined</id>
+      <activation>
+        <property>
+          <name>!env.TF_JAVA_SHELL</name>
+        </property>
+      </activation>
+      <properties>
+        <build.shell>bash</build.shell>
+      </properties>
+    </profile>
   </profiles>
 
   <!-- http://central.sonatype.org/pages/requirements.html#developer-information -->
