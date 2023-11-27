@@ -28,54 +28,30 @@
   <name>TensorFlow API Platform</name>
 
   <properties>
-    <javacpp.moduleId>tensorflow-core-api</javacpp.moduleId>
     <java.module.name>org.tensorflow.core.platform</java.module.name>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp</artifactId>
-      <version>${javacpp.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp</artifactId>
-      <version>${javacpp.version}</version>
-      <classifier>${javacpp.platform.linux-x86_64}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp</artifactId>
-      <version>${javacpp.version}</version>
-      <classifier>${javacpp.platform.macosx-x86_64}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacpp</artifactId>
-      <version>${javacpp.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64}</classifier>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>${javacpp.platform.linux-x86_64.extension}</classifier>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>${javacpp.moduleId}</artifactId>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
       <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
     </dependency>
@@ -91,7 +67,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Class-Path>${javacpp.moduleId}.jar ${javacpp.moduleId}-linux-x86_64.jar ${javacpp.moduleId}-macosx-x86_64.jar ${javacpp.moduleId}-windows-x86_64.jar</Class-Path>
+                  <Class-Path>tensorflow-core-api.jar tensorflow-core-native-linux-x86_64.jar tensorflow-core-native-macosx-x86_64.jar tensorflow-core-native-windows-x86_64.jar</Class-Path>
                   <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
                 </manifestEntries>
               </archive>
