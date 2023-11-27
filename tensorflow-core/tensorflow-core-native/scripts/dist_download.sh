@@ -29,7 +29,7 @@ mkdir -p "$DOWNLOAD_FOLDER"
 cd "$DOWNLOAD_FOLDER"
 
 if [[ -n "$WHEEL_URL" ]]; then
-  echo "Downloading $WHEEL_URL..."
+  echo "Downloading $WHEEL_URL"
   if [ ! -f 'tensorflow.whl' ]; then
     curl -L $WHEEL_URL --output 'tensorflow.whl'
   fi
@@ -37,7 +37,7 @@ if [[ -n "$WHEEL_URL" ]]; then
 fi
 
 if [[ -n "$CLIB_URL" ]]; then
-  echo "Downloading $CLIB_URL..."
+  echo "Downloading $CLIB_URL"
   if [ ! -f 'tensorflow_c.zip' ]; then
     curl -L $CLIB_URL --output 'tensorflow_c.zip'
   fi
