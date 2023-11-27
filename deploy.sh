@@ -74,23 +74,20 @@ else
 fi
 
 #
-# Copy tensorflow-core-api dependencies for each supported platforms to our local maven tree,
-# so retrieve the native artifacts that have been build and uploaded by the build servers
+# Copy tensorflow-core-native dependencies for each supported platforms to our local maven tree,
+# retrieving the native artifacts that have been build and uploaded by the build servers
 #
 echo "Downloading native artifacts from Maven repository..."
 for p in `find tensorflow-core -name tensorflow-core-platform* -type d -exec basename {} \;`; do
   if [[ $p =~ tensorflow-core-platform(.*) ]]; then
     # Remember each of our platform extension, we will it that when deploying the artifacts
-    # Note: Disable (temporarily?) MKL platforms for now, as their build is often broken
     PLATFORM_EXT=${BASH_REMATCH[1]}
-    if [[ $PLATFORM_EXT != -mkl* ]]; then                                                                                            
-        if [[ -n $PLATFORM_EXT ]]; then
-          [[ -n $PLATFORM_EXTS ]] && PLATFORM_EXTS="$PLATFORM_EXTS $PLATFORM_EXT" || PLATFORM_EXTS=$PLATFORM_EXT
-        fi
-        mvn dependency:copy-dependencies $MVN_OPTIONS -q \
-            -Djavacpp.platform.extension=$PLATFORM_EXT -DincludeArtifactIds=tensorflow-core-api \
-            -DoutputDirectory=../../tensorflow-core/tensorflow-core-api/target -pl tensorflow-core/$p
+    if [[ -n $PLATFORM_EXT ]]; then
+      [[ -n $PLATFORM_EXTS ]] && PLATFORM_EXTS="$PLATFORM_EXTS $PLATFORM_EXT" || PLATFORM_EXTS=$PLATFORM_EXT
     fi
+    mvn dependency:copy-dependencies $MVN_OPTIONS -q \
+        -Djavacpp.platform.extension=$PLATFORM_EXT -DincludeArtifactIds=tensorflow-core-native \
+        -DoutputDirectory=../../tensorflow-core/tensorflow-core-native/target -pl tensorflow-core/$p
   fi
 done
 
@@ -98,9 +95,9 @@ done
 # Feed the FILES,TYPES and CLASSIFIERS variables for the maven-deploy-plugin with our native artifacts
 # so that tensorflow-core-api can be deployed as a bundle
 #
-for f in tensorflow-core/tensorflow-core-api/target/tensorflow-core-api-$TF_VERSION-*.jar; do
+for f in tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-$TF_VERSION-*.jar; do
   echo "Found native artifact: $f"
-  if [[ $f =~ tensorflow-core-api-$TF_VERSION-(.*).jar ]]; then
+  if [[ $f =~ tensorflow-core-native-$TF_VERSION-(.*).jar ]]; then
     [[ -n $NATIVE_FILES ]] && NATIVE_FILES=$NATIVE_FILES,$f || NATIVE_FILES=$f
     [[ -n $NATIVE_FILE_TYPES ]] && NATIVE_FILE_TYPES=$NATIVE_FILE_TYPES,jar || NATIVE_FILE_TYPES=jar
     [[ -n $NATIVE_CLASSIFIERS ]] && NATIVE_CLASSIFIERS=$NATIVE_CLASSIFIERS,${BASH_REMATCH[1]} || NATIVE_CLASSIFIERS=${BASH_REMATCH[1]}
@@ -109,24 +106,27 @@ done
 
 #
 # Build and deploy the artifacts on OSSRH
-# We need to do it manually for all non-default platforms, as they are not automatically included as
-# modules in the POM and depends on the javacpp.platform.extension property.
-# Note that the tensorflow-core-api, which needs special care, won't be deployed yet, see below.
+# We take care of deploying all the tensorflow-core-native artifacts at once, to avoid some issues with Gradle when
+# snapshots artifacts of the same modules have mismatching timestamps.
 #
+mvn $DEPLOY_FILE_GOAL $MVN_OPTIONS -pl tensorflow-core/tensorflow-core-native \
+    -DgroupId=org.tensorflow -DartifactId=tensorflow-core-native -Dversion=$TF_VERSION -Dpackaging=jar \
+    -Dfile=target/tensorflow-core-native-$TF_VERSION.jar \
+    -Dfiles=$NATIVE_FILES -Dtypes=$NATIVE_FILE_TYPES -Dclassifiers=$NATIVE_CLASSIFIERS \
+    -Dsources=target/tensorflow-core-native-$TF_VERSION-sources.jar \
+    -Djavadoc=target/tensorflow-core-native-$TF_VERSION-javadoc.jar \
+    -DpomFile=pom.xml \
+    -DrepositoryId=ossrh -Durl=$DEPLOY_REPOSITORY_URL
+
+mvn deploy $MVN_OPTIONS -pl "!:tensorflow-core/tensorflow-core-native"
+
+# Now deploy all non-default platforms separately, as they are not automatically included as
+# modules in the POM and depends on the javacpp.platform.extension property.
 mvn deploy $MVN_OPTIONS
 for p in $PLATFORM_EXTS; do
   mvn deploy $MVN_OPTIONS -Djavacpp.platform.extension=$p -pl tensorflow-core/tensorflow-core-platform$p
 done
 
-# Now deploy manually the tensorflow-core-api with all its native artifacts.
-mvn $DEPLOY_FILE_GOAL $MVN_OPTIONS -pl tensorflow-core/tensorflow-core-api \
-    -DgroupId=org.tensorflow -DartifactId=tensorflow-core-api -Dversion=$TF_VERSION -Dpackaging=jar \
-    -Dfile=target/tensorflow-core-api-$TF_VERSION.jar \
-    -Dfiles=$NATIVE_FILES -Dtypes=$NATIVE_FILE_TYPES -Dclassifiers=$NATIVE_CLASSIFIERS \
-    -Dsources=target/tensorflow-core-api-$TF_VERSION-sources.jar \
-    -Djavadoc=target/tensorflow-core-api-$TF_VERSION-javadoc.jar \
-    -DpomFile=pom.xml \
-    -DrepositoryId=ossrh -Durl=$DEPLOY_REPOSITORY_URL
 
 echo
 if [[ $TF_VERSION = *-SNAPSHOT ]]; then
