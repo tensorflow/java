@@ -33,7 +33,7 @@ if [[ -n "$WHEEL_URL" ]]; then
   if [ ! -f 'tensorflow.whl' ]; then
     curl -L $WHEEL_URL --output 'tensorflow.whl'
   fi
-  unzip -q -u 'tensorflow.whl'
+  yes | unzip -q -u 'tensorflow.whl' # use 'yes' because for some reasons -u does not work on Windows
 fi
 
 if [[ -n "$CLIB_URL" ]]; then
@@ -41,7 +41,7 @@ if [[ -n "$CLIB_URL" ]]; then
   if [ ! -f 'tensorflow_c.zip' ]; then
     curl -L $CLIB_URL --output 'tensorflow_c.zip'
   fi
-  unzip -q -u -d tensorflow 'tensorflow_c.zip'
+  yes | unzip -q -u -d tensorflow 'tensorflow_c.zip'
 fi
 
 cd tensorflow
