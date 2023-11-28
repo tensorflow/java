@@ -905,12 +905,14 @@ public final class SparseOps {
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentMean} output and operands
    * @return a new instance of SparseSegmentMean
    */
   public <T extends TNumber> SparseSegmentMean<T> sparseSegmentMean(Operand<T> data,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
-    return SparseSegmentMean.create(scope, data, indices, segmentIds);
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      SparseSegmentMean.Options... options) {
+    return SparseSegmentMean.create(scope, data, indices, segmentIds, options);
   }
 
   /**
@@ -945,13 +947,14 @@ public final class SparseOps {
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentMeanWithNumSegments} output and operands
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
   public <T extends TNumber> SparseSegmentMeanWithNumSegments<T> sparseSegmentMeanWithNumSegments(
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<? extends TNumber> numSegments) {
-    return SparseSegmentMeanWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
+      Operand<? extends TNumber> numSegments, SparseSegmentMeanWithNumSegments.Options... options) {
+    return SparseSegmentMeanWithNumSegments.create(scope, data, indices, segmentIds, numSegments, options);
   }
 
   /**
@@ -963,12 +966,14 @@ public final class SparseOps {
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentSqrtN} output and operands
    * @return a new instance of SparseSegmentSqrtN
    */
   public <T extends TNumber> SparseSegmentSqrtN<T> sparseSegmentSqrtN(Operand<T> data,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
-    return SparseSegmentSqrtN.create(scope, data, indices, segmentIds);
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      SparseSegmentSqrtN.Options... options) {
+    return SparseSegmentSqrtN.create(scope, data, indices, segmentIds, options);
   }
 
   /**
@@ -1004,13 +1009,15 @@ public final class SparseOps {
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentSqrtNWithNumSegments} output and operands
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
   public <T extends TNumber> SparseSegmentSqrtNWithNumSegments<T> sparseSegmentSqrtNWithNumSegments(
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<? extends TNumber> numSegments) {
-    return SparseSegmentSqrtNWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
+      Operand<? extends TNumber> numSegments,
+      SparseSegmentSqrtNWithNumSegments.Options... options) {
+    return SparseSegmentSqrtNWithNumSegments.create(scope, data, indices, segmentIds, numSegments, options);
   }
 
   /**
@@ -1046,12 +1053,14 @@ public final class SparseOps {
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentSum} output and operands
    * @return a new instance of SparseSegmentSum
    */
   public <T extends TNumber> SparseSegmentSum<T> sparseSegmentSum(Operand<T> data,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
-    return SparseSegmentSum.create(scope, data, indices, segmentIds);
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      SparseSegmentSum.Options... options) {
+    return SparseSegmentSum.create(scope, data, indices, segmentIds, options);
   }
 
   /**
@@ -1105,13 +1114,14 @@ public final class SparseOps {
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentSumWithNumSegments} output and operands
    * @return a new instance of SparseSegmentSumWithNumSegments
    */
   public <T extends TNumber> SparseSegmentSumWithNumSegments<T> sparseSegmentSumWithNumSegments(
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<? extends TNumber> numSegments) {
-    return SparseSegmentSumWithNumSegments.create(scope, data, indices, segmentIds, numSegments);
+      Operand<? extends TNumber> numSegments, SparseSegmentSumWithNumSegments.Options... options) {
+    return SparseSegmentSumWithNumSegments.create(scope, data, indices, segmentIds, numSegments, options);
   }
 
   /**

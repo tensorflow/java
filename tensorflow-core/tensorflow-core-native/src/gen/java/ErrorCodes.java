@@ -22,8 +22,8 @@ public final class ErrorCodes {
   static {
     java.lang.String[] descriptorData = {
       "\n*tensorflow/core/lib/core/error_codes.p" +
-      "roto\032)tensorflow/tsl/protobuf/error_code" +
-      "s.protoP\000b\006proto3"
+      "roto\032\036tsl/protobuf/error_codes.protoP\000b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

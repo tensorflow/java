@@ -54,7 +54,8 @@ tfjava_cc_binary(
 java_proto_library(
     name = "java_proto_gen_sources",
     deps = [
-        clean_dep("//tensorflow/core:protos_all")
+        clean_dep("//tensorflow/core:protos_all"),
+        clean_dep("@local_tsl//tsl/protobuf:protos_all")
     ]
 )
 

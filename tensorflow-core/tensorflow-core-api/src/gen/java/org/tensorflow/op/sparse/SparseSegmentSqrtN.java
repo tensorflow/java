@@ -68,6 +68,7 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentSqrtN} output and operands
    * @return a new instance of SparseSegmentSqrtN
    */
@@ -75,12 +76,30 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
       describeByClass = true
   )
   public static <T extends TNumber> SparseSegmentSqrtN<T> create(Scope scope, Operand<T> data,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSegmentSqrtN");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.sparseGradient != null) {
+          opBuilder.setAttr("sparse_gradient", opts.sparseGradient);
+        }
+      }
+    }
     return new SparseSegmentSqrtN<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the sparseGradient option.
+   *
+   * @param sparseGradient the sparseGradient option
+   * @return this Options instance.
+   */
+  public static Options sparseGradient(Boolean sparseGradient) {
+    return new Options().sparseGradient(sparseGradient);
   }
 
   /**
@@ -96,6 +115,27 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseSegmentSqrtN}
+   */
+  public static class Options {
+    private Boolean sparseGradient;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the sparseGradient option.
+     *
+     * @param sparseGradient the sparseGradient option
+     * @return this Options instance.
+     */
+    public Options sparseGradient(Boolean sparseGradient) {
+      this.sparseGradient = sparseGradient;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -132,8 +172,13 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
      */
     public final DataType Tsegmentids;
 
+    /**
+     * The sparseGradient attribute
+     */
+    public final boolean sparseGradient;
+
     public Inputs(GraphOperation op) {
-      super(new SparseSegmentSqrtN<>(op), op, Arrays.asList("T", "Tidx", "Tsegmentids"));
+      super(new SparseSegmentSqrtN<>(op), op, Arrays.asList("T", "Tidx", "Tsegmentids", "sparse_gradient"));
       int inputIndex = 0;
       data = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
@@ -141,6 +186,7 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
       T = op.attributes().getAttrType("T");
       Tidx = op.attributes().getAttrType("Tidx");
       Tsegmentids = op.attributes().getAttrType("Tsegmentids");
+      sparseGradient = op.attributes().getAttrBool("sparse_gradient");
     }
   }
 }

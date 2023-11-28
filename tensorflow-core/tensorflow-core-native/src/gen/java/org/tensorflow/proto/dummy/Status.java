@@ -24,11 +24,11 @@ public final class Status {
   static {
     java.lang.String[] descriptorData = {
       "\n%tensorflow/core/protobuf/status.proto\022" +
-      "\020tensorflow.dummy\032$tensorflow/tsl/protob" +
-      "uf/status.protoBs\n\032org.tensorflow.proto." +
-      "dummyZUgithub.com/tensorflow/tensorflow/" +
-      "tensorflow/go/core/protobuf/for_core_pro" +
-      "tos_go_protoP\000b\006proto3"
+      "\020tensorflow.dummy\032\031tsl/protobuf/status.p" +
+      "rotoBs\n\032org.tensorflow.proto.dummyZUgith" +
+      "ub.com/tensorflow/tensorflow/tensorflow/" +
+      "go/core/protobuf/for_core_protos_go_prot" +
+      "oP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

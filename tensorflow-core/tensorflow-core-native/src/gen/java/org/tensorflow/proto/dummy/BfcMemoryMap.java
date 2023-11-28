@@ -24,11 +24,11 @@ public final class BfcMemoryMap {
   static {
     java.lang.String[] descriptorData = {
       "\n-tensorflow/core/protobuf/bfc_memory_ma" +
-      "p.proto\022\020tensorflow.dummy\032,tensorflow/ts" +
-      "l/protobuf/bfc_memory_map.protoBs\n\032org.t" +
-      "ensorflow.proto.dummyZUgithub.com/tensor" +
-      "flow/tensorflow/tensorflow/go/core/proto" +
-      "buf/for_core_protos_go_protoP\000b\006proto3"
+      "p.proto\022\020tensorflow.dummy\032!tsl/protobuf/" +
+      "bfc_memory_map.protoBs\n\032org.tensorflow.p" +
+      "roto.dummyZUgithub.com/tensorflow/tensor" +
+      "flow/tensorflow/go/core/protobuf/for_cor" +
+      "e_protos_go_protoP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

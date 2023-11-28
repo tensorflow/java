@@ -86,6 +86,9 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
         if (opts.sharedName != null) {
           opBuilder.setAttr("shared_name", opts.sharedName);
         }
+        if (opts.debugName != null) {
+          opBuilder.setAttr("debug_name", opts.debugName);
+        }
         if (opts.allowedDevices != null) {
           String[] allowedDevicesArray = new String[opts.allowedDevices.size()];
           for (int i = 0 ; i < allowedDevicesArray.length ; i++) {
@@ -116,6 +119,16 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
+  }
+
+  /**
+   * Sets the debugName option.
+   *
+   * @param debugName the user-given name, which still applies in anonymous mode.
+   * @return this Options instance.
+   */
+  public static Options debugName(String debugName) {
+    return new Options().debugName(debugName);
   }
 
   /**
@@ -163,6 +176,8 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
 
     private String sharedName;
 
+    private String debugName;
+
     private List<String> allowedDevices;
 
     private Options() {
@@ -187,6 +202,17 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
      */
     public Options sharedName(String sharedName) {
       this.sharedName = sharedName;
+      return this;
+    }
+
+    /**
+     * Sets the debugName option.
+     *
+     * @param debugName the user-given name, which still applies in anonymous mode.
+     * @return this Options instance.
+     */
+    public Options debugName(String debugName) {
+      this.debugName = debugName;
       return this;
     }
 
@@ -230,6 +256,11 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
     public final String sharedName;
 
     /**
+     * the user-given name, which still applies in anonymous mode.
+     */
+    public final String debugName;
+
+    /**
      * the type of this variable. Must agree with the dtypes
      * of all ops using this variable.
      */
@@ -247,10 +278,11 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
     public final String[] allowedDevices;
 
     public Inputs(GraphOperation op) {
-      super(new VarHandleOp(op), op, Arrays.asList("container", "shared_name", "dtype", "shape", "allowed_devices"));
+      super(new VarHandleOp(op), op, Arrays.asList("container", "shared_name", "debug_name", "dtype", "shape", "allowed_devices"));
       int inputIndex = 0;
       container = op.attributes().getAttrString("container");
       sharedName = op.attributes().getAttrString("shared_name");
+      debugName = op.attributes().getAttrString("debug_name");
       dtype = op.attributes().getAttrType("dtype");
       shape = op.attributes().getAttrShape("shape");
       allowedDevices = op.attributes().getAttrStringList("allowed_devices");

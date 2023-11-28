@@ -173,6 +173,22 @@ public enum DataType
   DT_FLOAT8_E4M3FN(25),
   /**
    * <pre>
+   * 2 NaNs (0bS1111111).
+   * TODO - b/299182407: Leaving room for remaining float8 types.
+   * DT_FLOAT8_E4M3FNUZ = 26;
+   * DT_FLOAT8_E4M3B11FNUZ = 27;
+   * DT_FLOAT8_E5M2FNUZ = 28;
+   * </pre>
+   *
+   * <code>DT_INT4 = 29;</code>
+   */
+  DT_INT4(29),
+  /**
+   * <code>DT_UINT4 = 30;</code>
+   */
+  DT_UINT4(30),
+  /**
+   * <pre>
    * Do not use!  These are only for TF1's obsolete reference Variables.
    * Every enum above should have a corresponding value below (verified by
    * types_test).
@@ -277,6 +293,21 @@ public enum DataType
    * <code>DT_FLOAT8_E4M3FN_REF = 125;</code>
    */
   DT_FLOAT8_E4M3FN_REF(125),
+  /**
+   * <pre>
+   * TODO - b/299182407: Leaving room for remaining float8 types.
+   * DT_FLOAT8_E4M3FNUZ_REF = 126;
+   * DT_FLOAT8_E4M3B11FNUZ_REF = 127;
+   * DT_FLOAT8_E5M2FNUZ_REF = 128;
+   * </pre>
+   *
+   * <code>DT_INT4_REF = 129;</code>
+   */
+  DT_INT4_REF(129),
+  /**
+   * <code>DT_UINT4_REF = 130;</code>
+   */
+  DT_UINT4_REF(130),
   UNRECOGNIZED(-1),
   ;
 
@@ -440,6 +471,22 @@ public enum DataType
   public static final int DT_FLOAT8_E4M3FN_VALUE = 25;
   /**
    * <pre>
+   * 2 NaNs (0bS1111111).
+   * TODO - b/299182407: Leaving room for remaining float8 types.
+   * DT_FLOAT8_E4M3FNUZ = 26;
+   * DT_FLOAT8_E4M3B11FNUZ = 27;
+   * DT_FLOAT8_E5M2FNUZ = 28;
+   * </pre>
+   *
+   * <code>DT_INT4 = 29;</code>
+   */
+  public static final int DT_INT4_VALUE = 29;
+  /**
+   * <code>DT_UINT4 = 30;</code>
+   */
+  public static final int DT_UINT4_VALUE = 30;
+  /**
+   * <pre>
    * Do not use!  These are only for TF1's obsolete reference Variables.
    * Every enum above should have a corresponding value below (verified by
    * types_test).
@@ -544,6 +591,21 @@ public enum DataType
    * <code>DT_FLOAT8_E4M3FN_REF = 125;</code>
    */
   public static final int DT_FLOAT8_E4M3FN_REF_VALUE = 125;
+  /**
+   * <pre>
+   * TODO - b/299182407: Leaving room for remaining float8 types.
+   * DT_FLOAT8_E4M3FNUZ_REF = 126;
+   * DT_FLOAT8_E4M3B11FNUZ_REF = 127;
+   * DT_FLOAT8_E5M2FNUZ_REF = 128;
+   * </pre>
+   *
+   * <code>DT_INT4_REF = 129;</code>
+   */
+  public static final int DT_INT4_REF_VALUE = 129;
+  /**
+   * <code>DT_UINT4_REF = 130;</code>
+   */
+  public static final int DT_UINT4_REF_VALUE = 130;
 
 
   public final int getNumber() {
@@ -596,6 +658,8 @@ public enum DataType
       case 23: return DT_UINT64;
       case 24: return DT_FLOAT8_E5M2;
       case 25: return DT_FLOAT8_E4M3FN;
+      case 29: return DT_INT4;
+      case 30: return DT_UINT4;
       case 101: return DT_FLOAT_REF;
       case 102: return DT_DOUBLE_REF;
       case 103: return DT_INT32_REF;
@@ -621,6 +685,8 @@ public enum DataType
       case 123: return DT_UINT64_REF;
       case 124: return DT_FLOAT8_E5M2_REF;
       case 125: return DT_FLOAT8_E4M3FN_REF;
+      case 129: return DT_INT4_REF;
+      case 130: return DT_UINT4_REF;
       default: return null;
     }
   }

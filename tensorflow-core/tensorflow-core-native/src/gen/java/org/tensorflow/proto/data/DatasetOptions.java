@@ -2954,17 +2954,6 @@ public final class DatasetOptions {
      */
     boolean getInjectPrefetch();
 
-    /**
-     * <code>bool warm_start = 20;</code>
-     * @return Whether the warmStart field is set.
-     */
-    boolean hasWarmStart();
-    /**
-     * <code>bool warm_start = 20;</code>
-     * @return The warmStart.
-     */
-    boolean getWarmStart();
-
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalApplyDefaultOptimizationsCase getOptionalApplyDefaultOptimizationsCase();
 
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalFilterFusionCase getOptionalFilterFusionCase();
@@ -2986,8 +2975,6 @@ public final class DatasetOptions {
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalFilterParallelizationCase getOptionalFilterParallelizationCase();
 
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalInjectPrefetchCase getOptionalInjectPrefetchCase();
-
-    public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalWarmStartCase getOptionalWarmStartCase();
   }
   /**
    * <pre>
@@ -3462,45 +3449,6 @@ public final class DatasetOptions {
           optionalInjectPrefetchCase_);
     }
 
-    private int optionalWarmStartCase_ = 0;
-    private java.lang.Object optionalWarmStart_;
-    public enum OptionalWarmStartCase
-        implements com.google.protobuf.Internal.EnumLite,
-            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      WARM_START(20),
-      OPTIONALWARMSTART_NOT_SET(0);
-      private final int value;
-      private OptionalWarmStartCase(int value) {
-        this.value = value;
-      }
-      /**
-       * @param value The number of the enum to look for.
-       * @return The enum associated with the given number.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static OptionalWarmStartCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static OptionalWarmStartCase forNumber(int value) {
-        switch (value) {
-          case 20: return WARM_START;
-          case 0: return OPTIONALWARMSTART_NOT_SET;
-          default: return null;
-        }
-      }
-      public int getNumber() {
-        return this.value;
-      }
-    };
-
-    public OptionalWarmStartCase
-    getOptionalWarmStartCase() {
-      return OptionalWarmStartCase.forNumber(
-          optionalWarmStartCase_);
-    }
-
     public static final int APPLY_DEFAULT_OPTIMIZATIONS_FIELD_NUMBER = 1;
     /**
      * <code>bool apply_default_optimizations = 1;</code>
@@ -3732,27 +3680,6 @@ public final class DatasetOptions {
       return false;
     }
 
-    public static final int WARM_START_FIELD_NUMBER = 20;
-    /**
-     * <code>bool warm_start = 20;</code>
-     * @return Whether the warmStart field is set.
-     */
-    @java.lang.Override
-    public boolean hasWarmStart() {
-      return optionalWarmStartCase_ == 20;
-    }
-    /**
-     * <code>bool warm_start = 20;</code>
-     * @return The warmStart.
-     */
-    @java.lang.Override
-    public boolean getWarmStart() {
-      if (optionalWarmStartCase_ == 20) {
-        return (java.lang.Boolean) optionalWarmStart_;
-      }
-      return false;
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3810,10 +3737,6 @@ public final class DatasetOptions {
       if (optionalInjectPrefetchCase_ == 19) {
         output.writeBool(
             19, (boolean)((java.lang.Boolean) optionalInjectPrefetch_));
-      }
-      if (optionalWarmStartCase_ == 20) {
-        output.writeBool(
-            20, (boolean)((java.lang.Boolean) optionalWarmStart_));
       }
       getUnknownFields().writeTo(output);
     }
@@ -3878,11 +3801,6 @@ public final class DatasetOptions {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(
               19, (boolean)((java.lang.Boolean) optionalInjectPrefetch_));
-      }
-      if (optionalWarmStartCase_ == 20) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(
-              20, (boolean)((java.lang.Boolean) optionalWarmStart_));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -3998,15 +3916,6 @@ public final class DatasetOptions {
         case 0:
         default:
       }
-      if (!getOptionalWarmStartCase().equals(other.getOptionalWarmStartCase())) return false;
-      switch (optionalWarmStartCase_) {
-        case 20:
-          if (getWarmStart()
-              != other.getWarmStart()) return false;
-          break;
-        case 0:
-        default:
-      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -4113,15 +4022,6 @@ public final class DatasetOptions {
           hash = (37 * hash) + INJECT_PREFETCH_FIELD_NUMBER;
           hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
               getInjectPrefetch());
-          break;
-        case 0:
-        default:
-      }
-      switch (optionalWarmStartCase_) {
-        case 20:
-          hash = (37 * hash) + WARM_START_FIELD_NUMBER;
-          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-              getWarmStart());
           break;
         case 0:
         default:
@@ -4280,8 +4180,6 @@ public final class DatasetOptions {
         optionalFilterParallelization_ = null;
         optionalInjectPrefetchCase_ = 0;
         optionalInjectPrefetch_ = null;
-        optionalWarmStartCase_ = 0;
-        optionalWarmStart_ = null;
         return this;
       }
 
@@ -4341,9 +4239,6 @@ public final class DatasetOptions {
         if (optionalInjectPrefetchCase_ == 19) {
           result.optionalInjectPrefetch_ = optionalInjectPrefetch_;
         }
-        if (optionalWarmStartCase_ == 20) {
-          result.optionalWarmStart_ = optionalWarmStart_;
-        }
         result.optionalApplyDefaultOptimizationsCase_ = optionalApplyDefaultOptimizationsCase_;
         result.optionalFilterFusionCase_ = optionalFilterFusionCase_;
         result.optionalMapAndBatchFusionCase_ = optionalMapAndBatchFusionCase_;
@@ -4355,7 +4250,6 @@ public final class DatasetOptions {
         result.optionalShuffleAndRepeatFusionCase_ = optionalShuffleAndRepeatFusionCase_;
         result.optionalFilterParallelizationCase_ = optionalFilterParallelizationCase_;
         result.optionalInjectPrefetchCase_ = optionalInjectPrefetchCase_;
-        result.optionalWarmStartCase_ = optionalWarmStartCase_;
         onBuilt();
         return result;
       }
@@ -4503,15 +4397,6 @@ public final class DatasetOptions {
             break;
           }
         }
-        switch (other.getOptionalWarmStartCase()) {
-          case WARM_START: {
-            setWarmStart(other.getWarmStart());
-            break;
-          }
-          case OPTIONALWARMSTART_NOT_SET: {
-            break;
-          }
-        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -4593,11 +4478,6 @@ public final class DatasetOptions {
                 optionalInjectPrefetchCase_ = 19;
                 break;
               } // case 152
-              case 160: {
-                optionalWarmStart_ = input.readBool();
-                optionalWarmStartCase_ = 20;
-                break;
-              } // case 160
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -4774,21 +4654,6 @@ public final class DatasetOptions {
       public Builder clearOptionalInjectPrefetch() {
         optionalInjectPrefetchCase_ = 0;
         optionalInjectPrefetch_ = null;
-        onChanged();
-        return this;
-      }
-
-      private int optionalWarmStartCase_ = 0;
-      private java.lang.Object optionalWarmStart_;
-      public OptionalWarmStartCase
-          getOptionalWarmStartCase() {
-        return OptionalWarmStartCase.forNumber(
-            optionalWarmStartCase_);
-      }
-
-      public Builder clearOptionalWarmStart() {
-        optionalWarmStartCase_ = 0;
-        optionalWarmStart_ = null;
         onChanged();
         return this;
       }
@@ -5240,47 +5105,6 @@ public final class DatasetOptions {
         if (optionalInjectPrefetchCase_ == 19) {
           optionalInjectPrefetchCase_ = 0;
           optionalInjectPrefetch_ = null;
-          onChanged();
-        }
-        return this;
-      }
-
-      /**
-       * <code>bool warm_start = 20;</code>
-       * @return Whether the warmStart field is set.
-       */
-      public boolean hasWarmStart() {
-        return optionalWarmStartCase_ == 20;
-      }
-      /**
-       * <code>bool warm_start = 20;</code>
-       * @return The warmStart.
-       */
-      public boolean getWarmStart() {
-        if (optionalWarmStartCase_ == 20) {
-          return (java.lang.Boolean) optionalWarmStart_;
-        }
-        return false;
-      }
-      /**
-       * <code>bool warm_start = 20;</code>
-       * @param value The warmStart to set.
-       * @return This builder for chaining.
-       */
-      public Builder setWarmStart(boolean value) {
-        optionalWarmStartCase_ = 20;
-        optionalWarmStart_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bool warm_start = 20;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearWarmStart() {
-        if (optionalWarmStartCase_ == 20) {
-          optionalWarmStartCase_ = 0;
-          optionalWarmStart_ = null;
           onChanged();
         }
         return this;
@@ -6124,7 +5948,7 @@ public final class DatasetOptions {
 
     /**
      * <pre>
-     * The distribution strategy options associated with the dataset.
+     * The autotune options associated with the dataset.
      * </pre>
      *
      * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -6133,7 +5957,7 @@ public final class DatasetOptions {
     boolean hasAutotuneOptions();
     /**
      * <pre>
-     * The distribution strategy options associated with the dataset.
+     * The autotune options associated with the dataset.
      * </pre>
      *
      * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -6142,7 +5966,7 @@ public final class DatasetOptions {
     org.tensorflow.proto.data.DatasetOptions.AutotuneOptions getAutotuneOptions();
     /**
      * <pre>
-     * The distribution strategy options associated with the dataset.
+     * The autotune options associated with the dataset.
      * </pre>
      *
      * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -6268,6 +6092,17 @@ public final class DatasetOptions {
      */
     boolean getSymbolicCheckpoint();
 
+    /**
+     * <code>bool warm_start = 9;</code>
+     * @return Whether the warmStart field is set.
+     */
+    boolean hasWarmStart();
+    /**
+     * <code>bool warm_start = 9;</code>
+     * @return The warmStart.
+     */
+    boolean getWarmStart();
+
     public org.tensorflow.proto.data.DatasetOptions.Options.OptionalDeterministicCase getOptionalDeterministicCase();
 
     public org.tensorflow.proto.data.DatasetOptions.Options.OptionalSlackCase getOptionalSlackCase();
@@ -6275,12 +6110,14 @@ public final class DatasetOptions {
     public org.tensorflow.proto.data.DatasetOptions.Options.OptionalExternalStatePolicyCase getOptionalExternalStatePolicyCase();
 
     public org.tensorflow.proto.data.DatasetOptions.Options.OptionalSymbolicCheckpointCase getOptionalSymbolicCheckpointCase();
+
+    public org.tensorflow.proto.data.DatasetOptions.Options.OptionalWarmStartCase getOptionalWarmStartCase();
   }
   /**
    * <pre>
    * Message stored with Dataset objects to control how datasets are processed and
    * optimized.
-   * next: 9
+   * next: 10
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.Options}
@@ -6478,6 +6315,45 @@ public final class DatasetOptions {
           optionalSymbolicCheckpointCase_);
     }
 
+    private int optionalWarmStartCase_ = 0;
+    private java.lang.Object optionalWarmStart_;
+    public enum OptionalWarmStartCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      WARM_START(9),
+      OPTIONALWARMSTART_NOT_SET(0);
+      private final int value;
+      private OptionalWarmStartCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static OptionalWarmStartCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static OptionalWarmStartCase forNumber(int value) {
+        switch (value) {
+          case 9: return WARM_START;
+          case 0: return OPTIONALWARMSTART_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public OptionalWarmStartCase
+    getOptionalWarmStartCase() {
+      return OptionalWarmStartCase.forNumber(
+          optionalWarmStartCase_);
+    }
+
     public static final int DETERMINISTIC_FIELD_NUMBER = 1;
     /**
      * <code>bool deterministic = 1;</code>
@@ -6503,7 +6379,7 @@ public final class DatasetOptions {
     private org.tensorflow.proto.data.DatasetOptions.AutotuneOptions autotuneOptions_;
     /**
      * <pre>
-     * The distribution strategy options associated with the dataset.
+     * The autotune options associated with the dataset.
      * </pre>
      *
      * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -6515,7 +6391,7 @@ public final class DatasetOptions {
     }
     /**
      * <pre>
-     * The distribution strategy options associated with the dataset.
+     * The autotune options associated with the dataset.
      * </pre>
      *
      * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -6527,7 +6403,7 @@ public final class DatasetOptions {
     }
     /**
      * <pre>
-     * The distribution strategy options associated with the dataset.
+     * The autotune options associated with the dataset.
      * </pre>
      *
      * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -6725,6 +6601,27 @@ public final class DatasetOptions {
       return false;
     }
 
+    public static final int WARM_START_FIELD_NUMBER = 9;
+    /**
+     * <code>bool warm_start = 9;</code>
+     * @return Whether the warmStart field is set.
+     */
+    @java.lang.Override
+    public boolean hasWarmStart() {
+      return optionalWarmStartCase_ == 9;
+    }
+    /**
+     * <code>bool warm_start = 9;</code>
+     * @return The warmStart.
+     */
+    @java.lang.Override
+    public boolean getWarmStart() {
+      if (optionalWarmStartCase_ == 9) {
+        return (java.lang.Boolean) optionalWarmStart_;
+      }
+      return false;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -6765,6 +6662,10 @@ public final class DatasetOptions {
       if (optionalSymbolicCheckpointCase_ == 8) {
         output.writeBool(
             8, (boolean)((java.lang.Boolean) optionalSymbolicCheckpoint_));
+      }
+      if (optionalWarmStartCase_ == 9) {
+        output.writeBool(
+            9, (boolean)((java.lang.Boolean) optionalWarmStart_));
       }
       getUnknownFields().writeTo(output);
     }
@@ -6809,6 +6710,11 @@ public final class DatasetOptions {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(
               8, (boolean)((java.lang.Boolean) optionalSymbolicCheckpoint_));
+      }
+      if (optionalWarmStartCase_ == 9) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              9, (boolean)((java.lang.Boolean) optionalWarmStart_));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -6881,6 +6787,15 @@ public final class DatasetOptions {
         case 0:
         default:
       }
+      if (!getOptionalWarmStartCase().equals(other.getOptionalWarmStartCase())) return false;
+      switch (optionalWarmStartCase_) {
+        case 9:
+          if (getWarmStart()
+              != other.getWarmStart()) return false;
+          break;
+        case 0:
+        default:
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -6939,6 +6854,15 @@ public final class DatasetOptions {
           hash = (37 * hash) + SYMBOLIC_CHECKPOINT_FIELD_NUMBER;
           hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
               getSymbolicCheckpoint());
+          break;
+        case 0:
+        default:
+      }
+      switch (optionalWarmStartCase_) {
+        case 9:
+          hash = (37 * hash) + WARM_START_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getWarmStart());
           break;
         case 0:
         default:
@@ -7042,7 +6966,7 @@ public final class DatasetOptions {
      * <pre>
      * Message stored with Dataset objects to control how datasets are processed and
      * optimized.
-     * next: 9
+     * next: 10
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.Options}
@@ -7109,6 +7033,8 @@ public final class DatasetOptions {
         optionalExternalStatePolicy_ = null;
         optionalSymbolicCheckpointCase_ = 0;
         optionalSymbolicCheckpoint_ = null;
+        optionalWarmStartCase_ = 0;
+        optionalWarmStart_ = null;
         return this;
       }
 
@@ -7167,10 +7093,14 @@ public final class DatasetOptions {
         if (optionalSymbolicCheckpointCase_ == 8) {
           result.optionalSymbolicCheckpoint_ = optionalSymbolicCheckpoint_;
         }
+        if (optionalWarmStartCase_ == 9) {
+          result.optionalWarmStart_ = optionalWarmStart_;
+        }
         result.optionalDeterministicCase_ = optionalDeterministicCase_;
         result.optionalSlackCase_ = optionalSlackCase_;
         result.optionalExternalStatePolicyCase_ = optionalExternalStatePolicyCase_;
         result.optionalSymbolicCheckpointCase_ = optionalSymbolicCheckpointCase_;
+        result.optionalWarmStartCase_ = optionalWarmStartCase_;
         onBuilt();
         return result;
       }
@@ -7267,6 +7197,15 @@ public final class DatasetOptions {
             break;
           }
         }
+        switch (other.getOptionalWarmStartCase()) {
+          case WARM_START: {
+            setWarmStart(other.getWarmStart());
+            break;
+          }
+          case OPTIONALWARMSTART_NOT_SET: {
+            break;
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -7342,6 +7281,11 @@ public final class DatasetOptions {
                 optionalSymbolicCheckpointCase_ = 8;
                 break;
               } // case 64
+              case 72: {
+                optionalWarmStart_ = input.readBool();
+                optionalWarmStartCase_ = 9;
+                break;
+              } // case 72
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -7417,6 +7361,21 @@ public final class DatasetOptions {
         return this;
       }
 
+      private int optionalWarmStartCase_ = 0;
+      private java.lang.Object optionalWarmStart_;
+      public OptionalWarmStartCase
+          getOptionalWarmStartCase() {
+        return OptionalWarmStartCase.forNumber(
+            optionalWarmStartCase_);
+      }
+
+      public Builder clearOptionalWarmStart() {
+        optionalWarmStartCase_ = 0;
+        optionalWarmStart_ = null;
+        onChanged();
+        return this;
+      }
+
 
       /**
        * <code>bool deterministic = 1;</code>
@@ -7464,7 +7423,7 @@ public final class DatasetOptions {
           org.tensorflow.proto.data.DatasetOptions.AutotuneOptions, org.tensorflow.proto.data.DatasetOptions.AutotuneOptions.Builder, org.tensorflow.proto.data.DatasetOptions.AutotuneOptionsOrBuilder> autotuneOptionsBuilder_;
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7475,7 +7434,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7490,7 +7449,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7510,7 +7469,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7528,7 +7487,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7550,7 +7509,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7568,7 +7527,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7580,7 +7539,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -7595,7 +7554,7 @@ public final class DatasetOptions {
       }
       /**
        * <pre>
-       * The distribution strategy options associated with the dataset.
+       * The autotune options associated with the dataset.
        * </pre>
        *
        * <code>.tensorflow.data.AutotuneOptions autotune_options = 7;</code>
@@ -8231,6 +8190,47 @@ public final class DatasetOptions {
         }
         return this;
       }
+
+      /**
+       * <code>bool warm_start = 9;</code>
+       * @return Whether the warmStart field is set.
+       */
+      public boolean hasWarmStart() {
+        return optionalWarmStartCase_ == 9;
+      }
+      /**
+       * <code>bool warm_start = 9;</code>
+       * @return The warmStart.
+       */
+      public boolean getWarmStart() {
+        if (optionalWarmStartCase_ == 9) {
+          return (java.lang.Boolean) optionalWarmStart_;
+        }
+        return false;
+      }
+      /**
+       * <code>bool warm_start = 9;</code>
+       * @param value The warmStart to set.
+       * @return This builder for chaining.
+       */
+      public Builder setWarmStart(boolean value) {
+        optionalWarmStartCase_ = 9;
+        optionalWarmStart_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool warm_start = 9;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearWarmStart() {
+        if (optionalWarmStartCase_ == 9) {
+          optionalWarmStartCase_ = 0;
+          optionalWarmStart_ = null;
+          onChanged();
+        }
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -8351,7 +8351,7 @@ public final class DatasetOptions {
       "ODERATE\020\002\"\177\n\021DistributeOptions\022;\n\021auto_s" +
       "hard_policy\030\001 \001(\0162 .tensorflow.data.Auto" +
       "ShardPolicy\022\025\n\013num_devices\030\002 \001(\005H\000B\026\n\024op" +
-      "tional_num_devices\"\231\006\n\023OptimizationOptio" +
+      "tional_num_devices\"\362\005\n\023OptimizationOptio" +
       "ns\022%\n\033apply_default_optimizations\030\001 \001(\010H" +
       "\000\022\027\n\rfilter_fusion\030\006 \001(\010H\001\022\036\n\024map_and_ba" +
       "tch_fusion\030\t \001(\010H\002\022\037\n\025map_and_filter_fus" +
@@ -8360,42 +8360,42 @@ public final class DatasetOptions {
       "tion\030\016 \001(\010H\006\022\030\n\016parallel_batch\030\017 \001(\010H\007\022#" +
       "\n\031shuffle_and_repeat_fusion\030\021 \001(\010H\010\022 \n\026f" +
       "ilter_parallelization\030\022 \001(\010H\t\022\031\n\017inject_" +
-      "prefetch\030\023 \001(\010H\n\022\024\n\nwarm_start\030\024 \001(\010H\013B&" +
-      "\n$optional_apply_default_optimizationsB\030" +
-      "\n\026optional_filter_fusionB\037\n\035optional_map" +
-      "_and_batch_fusionB \n\036optional_map_and_fi" +
-      "lter_fusionB\025\n\023optional_map_fusionB\036\n\034op" +
-      "tional_map_parallelizationB\033\n\031optional_n" +
-      "oop_eliminationB\031\n\027optional_parallel_bat" +
-      "chB$\n\"optional_shuffle_and_repeat_fusion" +
-      "B!\n\037optional_filter_parallelizationB\032\n\030o" +
-      "ptional_inject_prefetchB\025\n\023optional_warm" +
-      "_startJ\004\010\002\020\003J\004\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010" +
-      "\020\tJ\004\010\r\020\016J\004\010\020\020\021\"\242\001\n\020ThreadingOptions\022\"\n\030m" +
-      "ax_intra_op_parallelism\030\001 \001(\005H\000\022!\n\027priva" +
-      "te_threadpool_size\030\002 \001(\005H\001B#\n!optional_m" +
-      "ax_intra_op_parallelismB\"\n optional_priv" +
-      "ate_threadpool_size\"\205\004\n\007Options\022\027\n\rdeter" +
-      "ministic\030\001 \001(\010H\000\022:\n\020autotune_options\030\007 \001" +
-      "(\0132 .tensorflow.data.AutotuneOptions\022>\n\022" +
-      "distribute_options\030\002 \001(\0132\".tensorflow.da" +
-      "ta.DistributeOptions\022B\n\024optimization_opt" +
-      "ions\030\003 \001(\0132$.tensorflow.data.Optimizatio" +
-      "nOptions\022\017\n\005slack\030\004 \001(\010H\001\022<\n\021threading_o" +
-      "ptions\030\005 \001(\0132!.tensorflow.data.Threading" +
-      "Options\022E\n\025external_state_policy\030\006 \001(\0162$" +
-      ".tensorflow.data.ExternalStatePolicyH\002\022\035" +
-      "\n\023symbolic_checkpoint\030\010 \001(\010H\003B\030\n\026optiona" +
-      "l_deterministicB\020\n\016optional_slackB \n\036opt" +
-      "ional_external_state_policyB\036\n\034optional_" +
-      "symbolic_checkpoint*K\n\017AutoShardPolicy\022\010" +
-      "\n\004AUTO\020\000\022\010\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HINT\020\003\022\020" +
-      "\n\003OFF\020\377\377\377\377\377\377\377\377\377\001*J\n\023ExternalStatePolicy\022" +
-      "\017\n\013POLICY_WARN\020\000\022\021\n\rPOLICY_IGNORE\020\001\022\017\n\013P" +
-      "OLICY_FAIL\020\002Bs\n\031org.tensorflow.proto.dat" +
-      "aZVgithub.com/tensorflow/tensorflow/tens" +
-      "orflow/go/core/framework/dataset_options" +
-      "_go_protob\006proto3"
+      "prefetch\030\023 \001(\010H\nB&\n$optional_apply_defau" +
+      "lt_optimizationsB\030\n\026optional_filter_fusi" +
+      "onB\037\n\035optional_map_and_batch_fusionB \n\036o" +
+      "ptional_map_and_filter_fusionB\025\n\023optiona" +
+      "l_map_fusionB\036\n\034optional_map_paralleliza" +
+      "tionB\033\n\031optional_noop_eliminationB\031\n\027opt" +
+      "ional_parallel_batchB$\n\"optional_shuffle" +
+      "_and_repeat_fusionB!\n\037optional_filter_pa" +
+      "rallelizationB\032\n\030optional_inject_prefetc" +
+      "hJ\004\010\002\020\003J\004\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010\020\tJ\004\010" +
+      "\r\020\016J\004\010\020\020\021J\004\010\024\020\025\"\242\001\n\020ThreadingOptions\022\"\n\030" +
+      "max_intra_op_parallelism\030\001 \001(\005H\000\022!\n\027priv" +
+      "ate_threadpool_size\030\002 \001(\005H\001B#\n!optional_" +
+      "max_intra_op_parallelismB\"\n optional_pri" +
+      "vate_threadpool_size\"\262\004\n\007Options\022\027\n\rdete" +
+      "rministic\030\001 \001(\010H\000\022:\n\020autotune_options\030\007 " +
+      "\001(\0132 .tensorflow.data.AutotuneOptions\022>\n" +
+      "\022distribute_options\030\002 \001(\0132\".tensorflow.d" +
+      "ata.DistributeOptions\022B\n\024optimization_op" +
+      "tions\030\003 \001(\0132$.tensorflow.data.Optimizati" +
+      "onOptions\022\017\n\005slack\030\004 \001(\010H\001\022<\n\021threading_" +
+      "options\030\005 \001(\0132!.tensorflow.data.Threadin" +
+      "gOptions\022E\n\025external_state_policy\030\006 \001(\0162" +
+      "$.tensorflow.data.ExternalStatePolicyH\002\022" +
+      "\035\n\023symbolic_checkpoint\030\010 \001(\010H\003\022\024\n\nwarm_s" +
+      "tart\030\t \001(\010H\004B\030\n\026optional_deterministicB\020" +
+      "\n\016optional_slackB \n\036optional_external_st" +
+      "ate_policyB\036\n\034optional_symbolic_checkpoi" +
+      "ntB\025\n\023optional_warm_start*K\n\017AutoShardPo" +
+      "licy\022\010\n\004AUTO\020\000\022\010\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HI" +
+      "NT\020\003\022\020\n\003OFF\020\377\377\377\377\377\377\377\377\377\001*J\n\023ExternalStateP" +
+      "olicy\022\017\n\013POLICY_WARN\020\000\022\021\n\rPOLICY_IGNORE\020" +
+      "\001\022\017\n\013POLICY_FAIL\020\002Bs\n\031org.tensorflow.pro" +
+      "to.dataZVgithub.com/tensorflow/tensorflo" +
+      "w/tensorflow/go/core/framework/dataset_o" +
+      "ptions_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8425,7 +8425,7 @@ public final class DatasetOptions {
     internal_static_tensorflow_data_OptimizationOptions_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_OptimizationOptions_descriptor,
-        new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "InjectPrefetch", "WarmStart", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", "OptionalInjectPrefetch", "OptionalWarmStart", });
+        new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "InjectPrefetch", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", "OptionalInjectPrefetch", });
     internal_static_tensorflow_data_ThreadingOptions_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_tensorflow_data_ThreadingOptions_fieldAccessorTable = new
@@ -8437,7 +8437,7 @@ public final class DatasetOptions {
     internal_static_tensorflow_data_Options_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_Options_descriptor,
-        new java.lang.String[] { "Deterministic", "AutotuneOptions", "DistributeOptions", "OptimizationOptions", "Slack", "ThreadingOptions", "ExternalStatePolicy", "SymbolicCheckpoint", "OptionalDeterministic", "OptionalSlack", "OptionalExternalStatePolicy", "OptionalSymbolicCheckpoint", });
+        new java.lang.String[] { "Deterministic", "AutotuneOptions", "DistributeOptions", "OptimizationOptions", "Slack", "ThreadingOptions", "ExternalStatePolicy", "SymbolicCheckpoint", "WarmStart", "OptionalDeterministic", "OptionalSlack", "OptionalExternalStatePolicy", "OptionalSymbolicCheckpoint", "OptionalWarmStart", });
     org.tensorflow.proto.data.model.Model.getDescriptor();
   }
 
