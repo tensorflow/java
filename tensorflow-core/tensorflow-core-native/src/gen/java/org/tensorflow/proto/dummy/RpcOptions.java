@@ -24,11 +24,11 @@ public final class RpcOptions {
   static {
     java.lang.String[] descriptorData = {
       "\n*tensorflow/core/protobuf/rpc_options.p" +
-      "roto\022\020tensorflow.dummy\032)tensorflow/tsl/p" +
-      "rotobuf/rpc_options.protoBs\n\032org.tensorf" +
-      "low.proto.dummyZUgithub.com/tensorflow/t" +
-      "ensorflow/tensorflow/go/core/protobuf/fo" +
-      "r_core_protos_go_protoP\000b\006proto3"
+      "roto\022\020tensorflow.dummy\032\036tsl/protobuf/rpc" +
+      "_options.protoBs\n\032org.tensorflow.proto.d" +
+      "ummyZUgithub.com/tensorflow/tensorflow/t" +
+      "ensorflow/go/core/protobuf/for_core_prot" +
+      "os_go_protoP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

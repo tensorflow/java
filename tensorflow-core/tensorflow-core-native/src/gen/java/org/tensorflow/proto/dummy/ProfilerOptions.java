@@ -24,10 +24,9 @@ public final class ProfilerOptions {
   static {
     java.lang.String[] descriptorData = {
       "\n/tensorflow/core/profiler/profiler_opti" +
-      "ons.proto\022\020tensorflow.dummy\0327tensorflow/" +
-      "tsl/profiler/protobuf/profiler_options.p" +
-      "rotoB\034\n\032org.tensorflow.proto.dummyP\000b\006pr" +
-      "oto3"
+      "ons.proto\022\020tensorflow.dummy\032,tsl/profile" +
+      "r/protobuf/profiler_options.protoB\034\n\032org" +
+      ".tensorflow.proto.dummyP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

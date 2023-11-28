@@ -37,6 +37,9 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Mutually accumulates multiple tensors of identical type and shape.
+ * {@code is_stateless} means each op does not need control dependencies to other
+ * collective ops. In this case, keys that are unique at runtime
+ * (e.g. {@code instance_key}) should be used to distinguish collective groups.
  *
  * @param <T> data type for {@code data} output
  */
@@ -91,6 +94,9 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
         if (opts.timeoutSeconds != null) {
           opBuilder.setAttr("timeout_seconds", opts.timeoutSeconds);
         }
+        if (opts.isStateless != null) {
+          opBuilder.setAttr("is_stateless", opts.isStateless);
+        }
         if (opts.NorderingToken != null) {
           opBuilder.setAttr("Nordering_token", opts.NorderingToken);
         }
@@ -117,6 +123,16 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
    */
   public static Options timeoutSeconds(Float timeoutSeconds) {
     return new Options().timeoutSeconds(timeoutSeconds);
+  }
+
+  /**
+   * Sets the isStateless option.
+   *
+   * @param isStateless the isStateless option
+   * @return this Options instance.
+   */
+  public static Options isStateless(Boolean isStateless) {
+    return new Options().isStateless(isStateless);
   }
 
   /**
@@ -151,6 +167,8 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
 
     private Float timeoutSeconds;
 
+    private Boolean isStateless;
+
     private Long NorderingToken;
 
     private Options() {
@@ -175,6 +193,17 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
      */
     public Options timeoutSeconds(Float timeoutSeconds) {
       this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
+
+    /**
+     * Sets the isStateless option.
+     *
+     * @param isStateless the isStateless option
+     * @return this Options instance.
+     */
+    public Options isStateless(Boolean isStateless) {
+      this.isStateless = isStateless;
       return this;
     }
 
@@ -234,8 +263,13 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
      */
     public final float timeoutSeconds;
 
+    /**
+     * The isStateless attribute
+     */
+    public final boolean isStateless;
+
     public Inputs(GraphOperation op) {
-      super(new CollectiveGather<>(op), op, Arrays.asList("T", "communication_hint", "timeout_seconds"));
+      super(new CollectiveGather<>(op), op, Arrays.asList("T", "communication_hint", "timeout_seconds", "is_stateless"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       groupSize = (Operand<TInt32>) op.input(inputIndex++);
@@ -247,6 +281,7 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
       T = op.attributes().getAttrType("T");
       communicationHint = op.attributes().getAttrString("communication_hint");
       timeoutSeconds = op.attributes().getAttrFloat("timeout_seconds");
+      isStateless = op.attributes().getAttrBool("is_stateless");
     }
   }
 }

@@ -188,7 +188,7 @@ limitations under the License.
 // #include <stdint.h>
 // #include <stdlib.h>
 
-// #include "tensorflow/tsl/platform/ctstring_internal.h"
+// #include "tsl/platform/ctstring_internal.h"
 
 // Initialize a new tstring.  This must be called before using any function
 // below.
@@ -481,8 +481,14 @@ public static final int
   TF_UINT32 = 22,
   TF_UINT64 = 23,
   TF_FLOAT8_E5M2 = 24,    // 5 exponent bits, 2 mantissa bits.
-  TF_FLOAT8_E4M3FN = 25;  // 4 exponent bits, 3 mantissa bits, finite-only, with
+  TF_FLOAT8_E4M3FN = 25,  // 4 exponent bits, 3 mantissa bits, finite-only, with
                           // 2 NaNs (0bS1111111).
+  // TODO - b/299182407: Leaving room for remaining float8 types.
+  // TF_FLOAT8_E4M3FNUZ = 26,
+  // TF_FLOAT8_E4M3B11FNUZ = 27,
+  // TF_FLOAT8_E5M2FNUZ = 28,
+  TF_INT4 = 29,
+  TF_UINT4 = 30;
 
 // TF_DataTypeSize returns the sizeof() for the underlying type corresponding
 // to the given TF_DataType enum value. Returns 0 for variable length types
@@ -516,7 +522,7 @@ limitations under the License.
 // #define TENSORFLOW_C_TF_STATUS_H_
 
 // #include "tensorflow/c/c_api_macros.h"
-// #include "tensorflow/tsl/c/tsl_status.h"
+// #include "tsl/c/tsl_status.h"
 
 // #ifdef __cplusplus
 // Targeting ../TF_Status.java
@@ -3912,6 +3918,7 @@ limitations under the License.
 // #define TENSORFLOW_C_EAGER_C_API_EXPERIMENTAL_H_
 
 // #include "tensorflow/c/c_api.h"
+// #include "tensorflow/c/c_api_macros.h"
 // #include "tensorflow/c/eager/c_api.h"
 
 // #ifdef __cplusplus
@@ -4259,11 +4266,28 @@ public static native @Cast("uint64_t") long TFE_GetContextId(TFE_Context ctx);
 // Targeting ../TFE_CancellationManager.java
 
 
+// Targeting ../TFE_CancelCallback.java
+
+
 public static native TFE_CancellationManager TFE_NewCancellationManager();
 public static native @Cast("bool") boolean TFE_CancellationManagerIsCancelled(
     TFE_CancellationManager arg0);
+public static native @Cast("bool") boolean TFE_CancellationManagerIsCancelling(
+    TFE_CancellationManager arg0);
 public static native void TFE_CancellationManagerStartCancel(
     TFE_CancellationManager arg0);
+public static native @Cast("TFE_CancellationToken") long TFE_CancellationManagerGetToken(
+    TFE_CancellationManager arg0);
+public static native @Cast("bool") boolean TFE_CancellationManagerRegisterCallback(
+    TFE_CancellationManager arg0, @Cast("TFE_CancellationToken") long token,
+    @Const TFE_CancelCallback c_callback, @Cast("const char*") BytePointer callback_name);
+public static native @Cast("bool") boolean TFE_CancellationManagerRegisterCallback(
+    TFE_CancellationManager arg0, @Cast("TFE_CancellationToken") long token,
+    @Const TFE_CancelCallback c_callback, String callback_name);
+public static native @Cast("bool") boolean TFE_CancellationManagerDeregisterCallback(
+    TFE_CancellationManager arg0, @Cast("TFE_CancellationToken") long token);
+public static native @Cast("bool") boolean TFE_CancellationManagerTryDeregisterCallback(
+    TFE_CancellationManager arg0, @Cast("TFE_CancellationToken") long token);
 public static native void TFE_DeleteCancellationManager(
     TFE_CancellationManager arg0);
 
@@ -4351,6 +4375,14 @@ public static native void TFE_ContextUpdateServerDefWithTimeout(
 public static native void TFE_ContextSetServerDefWithTimeout(
     TFE_Context ctx, int keep_alive_secs, @Const Pointer proto, @Cast("size_t") long proto_len,
     @Cast("int64_t") long init_timeout_in_ms, TF_Status status);
+
+// Set server def with retries and timeout. This is helpful for fault-tolerant
+// initial connection in high-preemption environments, such as
+// ParameterServerStrategy training.
+// This API is for experimental usage and may be subject to change.
+public static native void TFE_ContextSetServerDefWithTimeoutAndRetries(
+    TFE_Context ctx, int keep_alive_secs, @Const Pointer proto, @Cast("size_t") long proto_len,
+    @Cast("int64_t") long init_timeout_in_ms, int retries, TF_Status status);
 
 // Checks whether a remote worker is alive or not. This will return true even if
 // the context doesn't exist on the remote worker.

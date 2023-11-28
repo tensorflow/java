@@ -30,7 +30,7 @@ public final class TypesProtos {
     java.lang.String[] descriptorData = {
       "\n%tensorflow/core/framework/types.proto\022" +
       "\ntensorflow\"9\n\017SerializedDType\022&\n\010dataty" +
-      "pe\030\001 \001(\0162\024.tensorflow.DataType*\206\007\n\010DataT" +
+      "pe\030\001 \001(\0162\024.tensorflow.DataType*\306\007\n\010DataT" +
       "ype\022\016\n\nDT_INVALID\020\000\022\014\n\010DT_FLOAT\020\001\022\r\n\tDT_" +
       "DOUBLE\020\002\022\014\n\010DT_INT32\020\003\022\014\n\010DT_UINT8\020\004\022\014\n\010" +
       "DT_INT16\020\005\022\013\n\007DT_INT8\020\006\022\r\n\tDT_STRING\020\007\022\020" +
@@ -41,22 +41,24 @@ public final class TypesProtos {
       "PLEX128\020\022\022\013\n\007DT_HALF\020\023\022\017\n\013DT_RESOURCE\020\024\022" +
       "\016\n\nDT_VARIANT\020\025\022\r\n\tDT_UINT32\020\026\022\r\n\tDT_UIN" +
       "T64\020\027\022\022\n\016DT_FLOAT8_E5M2\020\030\022\024\n\020DT_FLOAT8_E" +
-      "4M3FN\020\031\022\020\n\014DT_FLOAT_REF\020e\022\021\n\rDT_DOUBLE_R" +
-      "EF\020f\022\020\n\014DT_INT32_REF\020g\022\020\n\014DT_UINT8_REF\020h" +
-      "\022\020\n\014DT_INT16_REF\020i\022\017\n\013DT_INT8_REF\020j\022\021\n\rD" +
-      "T_STRING_REF\020k\022\024\n\020DT_COMPLEX64_REF\020l\022\020\n\014" +
-      "DT_INT64_REF\020m\022\017\n\013DT_BOOL_REF\020n\022\020\n\014DT_QI" +
-      "NT8_REF\020o\022\021\n\rDT_QUINT8_REF\020p\022\021\n\rDT_QINT3" +
-      "2_REF\020q\022\023\n\017DT_BFLOAT16_REF\020r\022\021\n\rDT_QINT1" +
-      "6_REF\020s\022\022\n\016DT_QUINT16_REF\020t\022\021\n\rDT_UINT16" +
-      "_REF\020u\022\025\n\021DT_COMPLEX128_REF\020v\022\017\n\013DT_HALF" +
-      "_REF\020w\022\023\n\017DT_RESOURCE_REF\020x\022\022\n\016DT_VARIAN" +
-      "T_REF\020y\022\021\n\rDT_UINT32_REF\020z\022\021\n\rDT_UINT64_" +
-      "REF\020{\022\026\n\022DT_FLOAT8_E5M2_REF\020|\022\030\n\024DT_FLOA" +
-      "T8_E4M3FN_REF\020}Bv\n\024org.tensorflow.protoB" +
-      "\013TypesProtosP\001ZLgithub.com/tensorflow/te" +
-      "nsorflow/tensorflow/go/core/framework/ty" +
-      "pes_go_proto\370\001\001b\006proto3"
+      "4M3FN\020\031\022\013\n\007DT_INT4\020\035\022\014\n\010DT_UINT4\020\036\022\020\n\014DT" +
+      "_FLOAT_REF\020e\022\021\n\rDT_DOUBLE_REF\020f\022\020\n\014DT_IN" +
+      "T32_REF\020g\022\020\n\014DT_UINT8_REF\020h\022\020\n\014DT_INT16_" +
+      "REF\020i\022\017\n\013DT_INT8_REF\020j\022\021\n\rDT_STRING_REF\020" +
+      "k\022\024\n\020DT_COMPLEX64_REF\020l\022\020\n\014DT_INT64_REF\020" +
+      "m\022\017\n\013DT_BOOL_REF\020n\022\020\n\014DT_QINT8_REF\020o\022\021\n\r" +
+      "DT_QUINT8_REF\020p\022\021\n\rDT_QINT32_REF\020q\022\023\n\017DT" +
+      "_BFLOAT16_REF\020r\022\021\n\rDT_QINT16_REF\020s\022\022\n\016DT" +
+      "_QUINT16_REF\020t\022\021\n\rDT_UINT16_REF\020u\022\025\n\021DT_" +
+      "COMPLEX128_REF\020v\022\017\n\013DT_HALF_REF\020w\022\023\n\017DT_" +
+      "RESOURCE_REF\020x\022\022\n\016DT_VARIANT_REF\020y\022\021\n\rDT" +
+      "_UINT32_REF\020z\022\021\n\rDT_UINT64_REF\020{\022\026\n\022DT_F" +
+      "LOAT8_E5M2_REF\020|\022\030\n\024DT_FLOAT8_E4M3FN_REF" +
+      "\020}\022\020\n\013DT_INT4_REF\020\201\001\022\021\n\014DT_UINT4_REF\020\202\001B" +
+      "v\n\024org.tensorflow.protoB\013TypesProtosP\001ZL" +
+      "github.com/tensorflow/tensorflow/tensorf" +
+      "low/go/core/framework/types_go_proto\370\001\001b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -24,12 +24,11 @@ public final class ErrorCodes {
   static {
     java.lang.String[] descriptorData = {
       "\n*tensorflow/core/protobuf/error_codes.p" +
-      "roto\022\026tensorflow.error.dummy\032)tensorflow" +
-      "/tsl/protobuf/error_codes.protoBy\n org.t" +
-      "ensorflow.proto.error.dummyZUgithub.com/" +
-      "tensorflow/tensorflow/tensorflow/go/core" +
-      "/protobuf/for_core_protos_go_protoP\000b\006pr" +
-      "oto3"
+      "roto\022\026tensorflow.error.dummy\032\036tsl/protob" +
+      "uf/error_codes.protoBy\n org.tensorflow.p" +
+      "roto.error.dummyZUgithub.com/tensorflow/" +
+      "tensorflow/tensorflow/go/core/protobuf/f" +
+      "or_core_protos_go_protoP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

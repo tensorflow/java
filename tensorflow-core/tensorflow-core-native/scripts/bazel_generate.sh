@@ -27,9 +27,9 @@ cp -f $TENSORFLOW_SRCS/core/ops/ops.pbtxt $GEN_RESOURCE_DIR/org/tensorflow
 cp -rf $TENSORFLOW_SRCS/core/api_def/base_api $GEN_RESOURCE_DIR/org/tensorflow/
 
 # Copy generated Java protos from source jars
-echo "Extracting TF proto Java sources"
+echo "Extracting TF/TSL proto Java sources"
 cd $GEN_SRCS_DIR
-find $TENSORFLOW_BIN -name \*-speed-src.jar -exec jar xf {} \;
+find $TENSORFLOW_BIN $BAZEL_BIN/external/local_tsl/tsl -name \*-speed-src.jar -exec jar xf {} \;
 rm -rf META-INF
 
 # Export op defs
