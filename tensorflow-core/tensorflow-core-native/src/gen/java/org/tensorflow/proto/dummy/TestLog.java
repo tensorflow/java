@@ -24,9 +24,9 @@ public final class TestLog {
   static {
     java.lang.String[] descriptorData = {
       "\n#tensorflow/core/util/test_log.proto\022\020t" +
-      "ensorflow.dummy\032&tensorflow/tsl/protobuf" +
-      "/test_log.protoB\034\n\032org.tensorflow.proto." +
-      "dummyP\000b\006proto3"
+      "ensorflow.dummy\032\033tsl/protobuf/test_log.p" +
+      "rotoB\034\n\032org.tensorflow.proto.dummyP\000b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

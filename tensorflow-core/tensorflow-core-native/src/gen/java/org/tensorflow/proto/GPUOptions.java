@@ -265,6 +265,19 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
+     * The number of virtual devices to create on each visible GPU. The
+     * available memory will be split equally among all virtual devices. If the
+     * field `memory_limit_mb` in `VirtualDevices` is not empty, this field will
+     * be ignored.
+     * </pre>
+     *
+     * <code>int32 num_virtual_devices_per_gpu = 15;</code>
+     * @return The numVirtualDevicesPerGpu.
+     */
+    int getNumVirtualDevicesPerGpu();
+
+    /**
+     * <pre>
      * If true, uses CUDA unified memory for memory allocations. If
      * per_process_gpu_memory_fraction option is greater than 1.0, then unified
      * memory is used regardless of the value for this field. See comments for
@@ -440,6 +453,20 @@ private static final long serialVersionUID = 0L;
      * @return The gpuHostMemDisallowGrowth.
      */
     boolean getGpuHostMemDisallowGrowth();
+
+    /**
+     * <pre>
+     * Memory limit for gpu system. This can also be set by
+     * TF_DEVICE_MIN_SYS_MEMORY_IN_MB, which takes precedence over
+     * gpu_system_memory_size_in_mb. With this, user can configure the gpu
+     * system memory size for better resource estimation of multi-tenancy(one
+     * gpu with multiple model) use case.
+     * </pre>
+     *
+     * <code>int32 gpu_system_memory_size_in_mb = 16;</code>
+     * @return The gpuSystemMemorySizeInMb.
+     */
+    int getGpuSystemMemorySizeInMb();
   }
   /**
    * Protobuf type {@code tensorflow.GPUOptions.Experimental}
@@ -492,8 +519,8 @@ private static final long serialVersionUID = 0L;
        * Per "virtual" device memory limit, in MB. The number of elements in
        * the list is the number of virtual devices to create on the
        * corresponding visible GPU (see "virtual_devices" below).
-       * If empty, it will create single virtual device taking all available
-       * memory from the device.
+       * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+       * single virtual device taking all available memory from the device.
        * For the concept of "visible" and "virtual" GPU, see the comments for
        * "visible_device_list" above for more information.
        * </pre>
@@ -507,8 +534,8 @@ private static final long serialVersionUID = 0L;
        * Per "virtual" device memory limit, in MB. The number of elements in
        * the list is the number of virtual devices to create on the
        * corresponding visible GPU (see "virtual_devices" below).
-       * If empty, it will create single virtual device taking all available
-       * memory from the device.
+       * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+       * single virtual device taking all available memory from the device.
        * For the concept of "visible" and "virtual" GPU, see the comments for
        * "visible_device_list" above for more information.
        * </pre>
@@ -522,8 +549,8 @@ private static final long serialVersionUID = 0L;
        * Per "virtual" device memory limit, in MB. The number of elements in
        * the list is the number of virtual devices to create on the
        * corresponding visible GPU (see "virtual_devices" below).
-       * If empty, it will create single virtual device taking all available
-       * memory from the device.
+       * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+       * single virtual device taking all available memory from the device.
        * For the concept of "visible" and "virtual" GPU, see the comments for
        * "visible_device_list" above for more information.
        * </pre>
@@ -677,8 +704,8 @@ private static final long serialVersionUID = 0L;
        * Per "virtual" device memory limit, in MB. The number of elements in
        * the list is the number of virtual devices to create on the
        * corresponding visible GPU (see "virtual_devices" below).
-       * If empty, it will create single virtual device taking all available
-       * memory from the device.
+       * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+       * single virtual device taking all available memory from the device.
        * For the concept of "visible" and "virtual" GPU, see the comments for
        * "visible_device_list" above for more information.
        * </pre>
@@ -696,8 +723,8 @@ private static final long serialVersionUID = 0L;
        * Per "virtual" device memory limit, in MB. The number of elements in
        * the list is the number of virtual devices to create on the
        * corresponding visible GPU (see "virtual_devices" below).
-       * If empty, it will create single virtual device taking all available
-       * memory from the device.
+       * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+       * single virtual device taking all available memory from the device.
        * For the concept of "visible" and "virtual" GPU, see the comments for
        * "visible_device_list" above for more information.
        * </pre>
@@ -713,8 +740,8 @@ private static final long serialVersionUID = 0L;
        * Per "virtual" device memory limit, in MB. The number of elements in
        * the list is the number of virtual devices to create on the
        * corresponding visible GPU (see "virtual_devices" below).
-       * If empty, it will create single virtual device taking all available
-       * memory from the device.
+       * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+       * single virtual device taking all available memory from the device.
        * For the concept of "visible" and "virtual" GPU, see the comments for
        * "visible_device_list" above for more information.
        * </pre>
@@ -1328,8 +1355,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -1347,8 +1374,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -1364,8 +1391,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -1382,8 +1409,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -1405,8 +1432,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -1426,8 +1453,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -1449,8 +1476,8 @@ private static final long serialVersionUID = 0L;
          * Per "virtual" device memory limit, in MB. The number of elements in
          * the list is the number of virtual devices to create on the
          * corresponding visible GPU (see "virtual_devices" below).
-         * If empty, it will create single virtual device taking all available
-         * memory from the device.
+         * If empty and `num_virtual_devices_per_gpu` is not set, it will create
+         * single virtual device taking all available memory from the device.
          * For the concept of "visible" and "virtual" GPU, see the comments for
          * "visible_device_list" above for more information.
          * </pre>
@@ -2042,6 +2069,24 @@ private static final long serialVersionUID = 0L;
       return virtualDevices_.get(index);
     }
 
+    public static final int NUM_VIRTUAL_DEVICES_PER_GPU_FIELD_NUMBER = 15;
+    private int numVirtualDevicesPerGpu_;
+    /**
+     * <pre>
+     * The number of virtual devices to create on each visible GPU. The
+     * available memory will be split equally among all virtual devices. If the
+     * field `memory_limit_mb` in `VirtualDevices` is not empty, this field will
+     * be ignored.
+     * </pre>
+     *
+     * <code>int32 num_virtual_devices_per_gpu = 15;</code>
+     * @return The numVirtualDevicesPerGpu.
+     */
+    @java.lang.Override
+    public int getNumVirtualDevicesPerGpu() {
+      return numVirtualDevicesPerGpu_;
+    }
+
     public static final int USE_UNIFIED_MEMORY_FIELD_NUMBER = 2;
     private boolean useUnifiedMemory_;
     /**
@@ -2301,6 +2346,25 @@ private static final long serialVersionUID = 0L;
       return gpuHostMemDisallowGrowth_;
     }
 
+    public static final int GPU_SYSTEM_MEMORY_SIZE_IN_MB_FIELD_NUMBER = 16;
+    private int gpuSystemMemorySizeInMb_;
+    /**
+     * <pre>
+     * Memory limit for gpu system. This can also be set by
+     * TF_DEVICE_MIN_SYS_MEMORY_IN_MB, which takes precedence over
+     * gpu_system_memory_size_in_mb. With this, user can configure the gpu
+     * system memory size for better resource estimation of multi-tenancy(one
+     * gpu with multiple model) use case.
+     * </pre>
+     *
+     * <code>int32 gpu_system_memory_size_in_mb = 16;</code>
+     * @return The gpuSystemMemorySizeInMb.
+     */
+    @java.lang.Override
+    public int getGpuSystemMemorySizeInMb() {
+      return gpuSystemMemorySizeInMb_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2353,6 +2417,12 @@ private static final long serialVersionUID = 0L;
       }
       if (gpuHostMemDisallowGrowth_ != false) {
         output.writeBool(14, gpuHostMemDisallowGrowth_);
+      }
+      if (numVirtualDevicesPerGpu_ != 0) {
+        output.writeInt32(15, numVirtualDevicesPerGpu_);
+      }
+      if (gpuSystemMemorySizeInMb_ != 0) {
+        output.writeInt32(16, gpuSystemMemorySizeInMb_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2414,6 +2484,14 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(14, gpuHostMemDisallowGrowth_);
       }
+      if (numVirtualDevicesPerGpu_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(15, numVirtualDevicesPerGpu_);
+      }
+      if (gpuSystemMemorySizeInMb_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(16, gpuSystemMemorySizeInMb_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2431,6 +2509,8 @@ private static final long serialVersionUID = 0L;
 
       if (!getVirtualDevicesList()
           .equals(other.getVirtualDevicesList())) return false;
+      if (getNumVirtualDevicesPerGpu()
+          != other.getNumVirtualDevicesPerGpu()) return false;
       if (getUseUnifiedMemory()
           != other.getUseUnifiedMemory()) return false;
       if (getNumDevToDevCopyStreams()
@@ -2457,6 +2537,8 @@ private static final long serialVersionUID = 0L;
               other.getGpuHostMemLimitInMb())) return false;
       if (getGpuHostMemDisallowGrowth()
           != other.getGpuHostMemDisallowGrowth()) return false;
+      if (getGpuSystemMemorySizeInMb()
+          != other.getGpuSystemMemorySizeInMb()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -2472,6 +2554,8 @@ private static final long serialVersionUID = 0L;
         hash = (37 * hash) + VIRTUAL_DEVICES_FIELD_NUMBER;
         hash = (53 * hash) + getVirtualDevicesList().hashCode();
       }
+      hash = (37 * hash) + NUM_VIRTUAL_DEVICES_PER_GPU_FIELD_NUMBER;
+      hash = (53 * hash) + getNumVirtualDevicesPerGpu();
       hash = (37 * hash) + USE_UNIFIED_MEMORY_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getUseUnifiedMemory());
@@ -2503,6 +2587,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + GPU_HOST_MEM_DISALLOW_GROWTH_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getGpuHostMemDisallowGrowth());
+      hash = (37 * hash) + GPU_SYSTEM_MEMORY_SIZE_IN_MB_FIELD_NUMBER;
+      hash = (53 * hash) + getGpuSystemMemorySizeInMb();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2638,6 +2724,8 @@ private static final long serialVersionUID = 0L;
           virtualDevicesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        numVirtualDevicesPerGpu_ = 0;
+
         useUnifiedMemory_ = false;
 
         numDevToDevCopyStreams_ = 0;
@@ -2661,6 +2749,8 @@ private static final long serialVersionUID = 0L;
         gpuHostMemLimitInMb_ = 0F;
 
         gpuHostMemDisallowGrowth_ = false;
+
+        gpuSystemMemorySizeInMb_ = 0;
 
         return this;
       }
@@ -2698,6 +2788,7 @@ private static final long serialVersionUID = 0L;
         } else {
           result.virtualDevices_ = virtualDevicesBuilder_.build();
         }
+        result.numVirtualDevicesPerGpu_ = numVirtualDevicesPerGpu_;
         result.useUnifiedMemory_ = useUnifiedMemory_;
         result.numDevToDevCopyStreams_ = numDevToDevCopyStreams_;
         result.collectiveRingOrder_ = collectiveRingOrder_;
@@ -2710,6 +2801,7 @@ private static final long serialVersionUID = 0L;
         result.disallowRetryOnAllocationFailure_ = disallowRetryOnAllocationFailure_;
         result.gpuHostMemLimitInMb_ = gpuHostMemLimitInMb_;
         result.gpuHostMemDisallowGrowth_ = gpuHostMemDisallowGrowth_;
+        result.gpuSystemMemorySizeInMb_ = gpuSystemMemorySizeInMb_;
         onBuilt();
         return result;
       }
@@ -2784,6 +2876,9 @@ private static final long serialVersionUID = 0L;
             }
           }
         }
+        if (other.getNumVirtualDevicesPerGpu() != 0) {
+          setNumVirtualDevicesPerGpu(other.getNumVirtualDevicesPerGpu());
+        }
         if (other.getUseUnifiedMemory() != false) {
           setUseUnifiedMemory(other.getUseUnifiedMemory());
         }
@@ -2820,6 +2915,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getGpuHostMemDisallowGrowth() != false) {
           setGpuHostMemDisallowGrowth(other.getGpuHostMemDisallowGrowth());
+        }
+        if (other.getGpuSystemMemorySizeInMb() != 0) {
+          setGpuSystemMemorySizeInMb(other.getGpuSystemMemorySizeInMb());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -2920,6 +3018,16 @@ private static final long serialVersionUID = 0L;
 
                 break;
               } // case 112
+              case 120: {
+                numVirtualDevicesPerGpu_ = input.readInt32();
+
+                break;
+              } // case 120
+              case 128: {
+                gpuSystemMemorySizeInMb_ = input.readInt32();
+
+                break;
+              } // case 128
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -3861,6 +3969,58 @@ private static final long serialVersionUID = 0L;
         return virtualDevicesBuilder_;
       }
 
+      private int numVirtualDevicesPerGpu_ ;
+      /**
+       * <pre>
+       * The number of virtual devices to create on each visible GPU. The
+       * available memory will be split equally among all virtual devices. If the
+       * field `memory_limit_mb` in `VirtualDevices` is not empty, this field will
+       * be ignored.
+       * </pre>
+       *
+       * <code>int32 num_virtual_devices_per_gpu = 15;</code>
+       * @return The numVirtualDevicesPerGpu.
+       */
+      @java.lang.Override
+      public int getNumVirtualDevicesPerGpu() {
+        return numVirtualDevicesPerGpu_;
+      }
+      /**
+       * <pre>
+       * The number of virtual devices to create on each visible GPU. The
+       * available memory will be split equally among all virtual devices. If the
+       * field `memory_limit_mb` in `VirtualDevices` is not empty, this field will
+       * be ignored.
+       * </pre>
+       *
+       * <code>int32 num_virtual_devices_per_gpu = 15;</code>
+       * @param value The numVirtualDevicesPerGpu to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNumVirtualDevicesPerGpu(int value) {
+        
+        numVirtualDevicesPerGpu_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * The number of virtual devices to create on each visible GPU. The
+       * available memory will be split equally among all virtual devices. If the
+       * field `memory_limit_mb` in `VirtualDevices` is not empty, this field will
+       * be ignored.
+       * </pre>
+       *
+       * <code>int32 num_virtual_devices_per_gpu = 15;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearNumVirtualDevicesPerGpu() {
+        
+        numVirtualDevicesPerGpu_ = 0;
+        onChanged();
+        return this;
+      }
+
       private boolean useUnifiedMemory_ ;
       /**
        * <pre>
@@ -4565,6 +4725,61 @@ private static final long serialVersionUID = 0L;
       public Builder clearGpuHostMemDisallowGrowth() {
         
         gpuHostMemDisallowGrowth_ = false;
+        onChanged();
+        return this;
+      }
+
+      private int gpuSystemMemorySizeInMb_ ;
+      /**
+       * <pre>
+       * Memory limit for gpu system. This can also be set by
+       * TF_DEVICE_MIN_SYS_MEMORY_IN_MB, which takes precedence over
+       * gpu_system_memory_size_in_mb. With this, user can configure the gpu
+       * system memory size for better resource estimation of multi-tenancy(one
+       * gpu with multiple model) use case.
+       * </pre>
+       *
+       * <code>int32 gpu_system_memory_size_in_mb = 16;</code>
+       * @return The gpuSystemMemorySizeInMb.
+       */
+      @java.lang.Override
+      public int getGpuSystemMemorySizeInMb() {
+        return gpuSystemMemorySizeInMb_;
+      }
+      /**
+       * <pre>
+       * Memory limit for gpu system. This can also be set by
+       * TF_DEVICE_MIN_SYS_MEMORY_IN_MB, which takes precedence over
+       * gpu_system_memory_size_in_mb. With this, user can configure the gpu
+       * system memory size for better resource estimation of multi-tenancy(one
+       * gpu with multiple model) use case.
+       * </pre>
+       *
+       * <code>int32 gpu_system_memory_size_in_mb = 16;</code>
+       * @param value The gpuSystemMemorySizeInMb to set.
+       * @return This builder for chaining.
+       */
+      public Builder setGpuSystemMemorySizeInMb(int value) {
+        
+        gpuSystemMemorySizeInMb_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Memory limit for gpu system. This can also be set by
+       * TF_DEVICE_MIN_SYS_MEMORY_IN_MB, which takes precedence over
+       * gpu_system_memory_size_in_mb. With this, user can configure the gpu
+       * system memory size for better resource estimation of multi-tenancy(one
+       * gpu with multiple model) use case.
+       * </pre>
+       *
+       * <code>int32 gpu_system_memory_size_in_mb = 16;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearGpuSystemMemorySizeInMb() {
+        
+        gpuSystemMemorySizeInMb_ = 0;
         onChanged();
         return this;
       }

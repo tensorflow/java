@@ -24,10 +24,9 @@ public final class Xplane {
   static {
     java.lang.String[] descriptorData = {
       "\n.tensorflow/core/profiler/protobuf/xpla" +
-      "ne.proto\022\031tensorflow.profiler.empty\032-ten" +
-      "sorflow/tsl/profiler/protobuf/xplane.pro" +
-      "toB%\n#org.tensorflow.proto.profiler.empt" +
-      "yP\000b\006proto3"
+      "ne.proto\022\031tensorflow.profiler.empty\032\"tsl" +
+      "/profiler/protobuf/xplane.protoB%\n#org.t" +
+      "ensorflow.proto.profiler.emptyP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

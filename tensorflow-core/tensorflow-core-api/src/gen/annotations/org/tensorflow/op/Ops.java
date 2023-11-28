@@ -97,6 +97,7 @@ import org.tensorflow.op.core.EncodeProto;
 import org.tensorflow.op.core.EnsureShape;
 import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
+import org.tensorflow.op.core.FFTND;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
 import org.tensorflow.op.core.For;
@@ -110,6 +111,8 @@ import org.tensorflow.op.core.GuaranteeConst;
 import org.tensorflow.op.core.HashTable;
 import org.tensorflow.op.core.Helpers;
 import org.tensorflow.op.core.HistogramFixedWidth;
+import org.tensorflow.op.core.IFFTND;
+import org.tensorflow.op.core.IRFFTND;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.If;
@@ -166,6 +169,7 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedReshape;
+import org.tensorflow.op.core.RFFTND;
 import org.tensorflow.op.core.RaggedFillEmptyRows;
 import org.tensorflow.op.core.RaggedFillEmptyRowsGrad;
 import org.tensorflow.op.core.RandomIndexShuffle;
@@ -2684,6 +2688,29 @@ public final class Ops {
   }
 
   /**
+   * ND fast Fourier transform.
+   *  Computes the n-dimensional discrete Fourier transform over
+   *  designated dimensions of {@code input}. The designated dimensions of
+   *  {@code input} are assumed to be the result of {@code FFTND}.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param <T> data type for {@code FFTND} output and operands
+   * @return a new instance of FFTND
+   */
+  public <T extends TType> FFTND<T> fFTND(Operand<T> input, Operand<TInt32> fftLength,
+      Operand<TInt32> axes) {
+    return FFTND.create(scope, input, fftLength, axes);
+  }
+
+  /**
    * Creates a tensor filled with a scalar value.
    *  This operation creates a tensor of shape {@code dims} and fills it with {@code value}.
    *  <p>For example:
@@ -3084,6 +3111,77 @@ public final class Ops {
   public <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> histogramFixedWidth(
       Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, Class<U> dtype) {
     return HistogramFixedWidth.create(scope, values, valueRange, nbins, dtype);
+  }
+
+  /**
+   * ND inverse fast Fourier transform.
+   *  Computes the n-dimensional inverse discrete Fourier transform over designated
+   *  dimensions of {@code input}. The designated dimensions of {@code input} are assumed to be
+   *  the result of {@code IFFTND}.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param <T> data type for {@code IFFTND} output and operands
+   * @return a new instance of IFFTND
+   */
+  public <T extends TType> IFFTND<T> iFFTND(Operand<T> input, Operand<TInt32> fftLength,
+      Operand<TInt32> axes) {
+    return IFFTND.create(scope, input, fftLength, axes);
+  }
+
+  /**
+   * ND inverse real fast Fourier transform.
+   *  Computes the n-dimensional inverse real discrete Fourier transform over
+   *  designated dimensions of {@code input}. The designated dimensions of {@code input} are
+   *  assumed to be the result of {@code IRFFTND}. The inner-most dimension contains the
+   *  {@code fft_length / 2 + 1} unique components of the DFT of a real-valued signal.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @return a new instance of IRFFTND, with default output types
+   */
+  public IRFFTND<TFloat32> iRFFTND(Operand<? extends TType> input, Operand<TInt32> fftLength,
+      Operand<TInt32> axes) {
+    return IRFFTND.create(scope, input, fftLength, axes);
+  }
+
+  /**
+   * ND inverse real fast Fourier transform.
+   *  Computes the n-dimensional inverse real discrete Fourier transform over
+   *  designated dimensions of {@code input}. The designated dimensions of {@code input} are
+   *  assumed to be the result of {@code IRFFTND}. The inner-most dimension contains the
+   *  {@code fft_length / 2 + 1} unique components of the DFT of a real-valued signal.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param Treal The value of the Treal attribute
+   * @param <U> data type for {@code IRFFTND} output and operands
+   * @return a new instance of IRFFTND
+   */
+  public <U extends TNumber> IRFFTND<U> iRFFTND(Operand<? extends TType> input,
+      Operand<TInt32> fftLength, Operand<TInt32> axes, Class<U> Treal) {
+    return IRFFTND.create(scope, input, fftLength, axes, Treal);
   }
 
   /**
@@ -4217,6 +4315,31 @@ public final class Ops {
   public <T extends TType> QuantizedReshape<T> quantizedReshape(Operand<T> tensor,
       Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
+  }
+
+  /**
+   * ND fast real Fourier transform.
+   *  Computes the n-dimensional real discrete Fourier transform over designated
+   *  dimensions of {@code input}. The designated dimensions of {@code input} are assumed to be
+   *  the result of {@code RFFTND}. The length of the last axis transformed will be
+   *  fft_length[-1]//2+1.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param Tcomplex The value of the Tcomplex attribute
+   * @param <U> data type for {@code RFFTND} output and operands
+   * @return a new instance of RFFTND
+   */
+  public <U extends TType> RFFTND<U> rFFTND(Operand<? extends TNumber> input,
+      Operand<TInt32> fftLength, Operand<TInt32> axes, Class<U> Tcomplex) {
+    return RFFTND.create(scope, input, fftLength, axes, Tcomplex);
   }
 
   /**

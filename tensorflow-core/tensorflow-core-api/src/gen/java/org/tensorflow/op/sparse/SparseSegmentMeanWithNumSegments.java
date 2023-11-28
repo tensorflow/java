@@ -72,6 +72,7 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
    * @param numSegments Should equal the number of distinct segment IDs.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code SparseSegmentMeanWithNumSegments} output and operands
    * @return a new instance of SparseSegmentMeanWithNumSegments
    */
@@ -80,13 +81,30 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
   )
   public static <T extends TNumber> SparseSegmentMeanWithNumSegments<T> create(Scope scope,
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<? extends TNumber> numSegments) {
+      Operand<? extends TNumber> numSegments, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSegmentMeanWithNumSegments");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.sparseGradient != null) {
+          opBuilder.setAttr("sparse_gradient", opts.sparseGradient);
+        }
+      }
+    }
     return new SparseSegmentMeanWithNumSegments<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the sparseGradient option.
+   *
+   * @param sparseGradient the sparseGradient option
+   * @return this Options instance.
+   */
+  public static Options sparseGradient(Boolean sparseGradient) {
+    return new Options().sparseGradient(sparseGradient);
   }
 
   /**
@@ -102,6 +120,27 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseSegmentMeanWithNumSegments}
+   */
+  public static class Options {
+    private Boolean sparseGradient;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the sparseGradient option.
+     *
+     * @param sparseGradient the sparseGradient option
+     * @return this Options instance.
+     */
+    public Options sparseGradient(Boolean sparseGradient) {
+      this.sparseGradient = sparseGradient;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -148,8 +187,13 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
      */
     public final DataType Tsegmentids;
 
+    /**
+     * The sparseGradient attribute
+     */
+    public final boolean sparseGradient;
+
     public Inputs(GraphOperation op) {
-      super(new SparseSegmentMeanWithNumSegments<>(op), op, Arrays.asList("T", "Tidx", "Tnumsegments", "Tsegmentids"));
+      super(new SparseSegmentMeanWithNumSegments<>(op), op, Arrays.asList("T", "Tidx", "Tnumsegments", "Tsegmentids", "sparse_gradient"));
       int inputIndex = 0;
       data = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
@@ -159,6 +203,7 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
       Tidx = op.attributes().getAttrType("Tidx");
       Tnumsegments = op.attributes().getAttrType("Tnumsegments");
       Tsegmentids = op.attributes().getAttrType("Tsegmentids");
+      sparseGradient = op.attributes().getAttrBool("sparse_gradient");
     }
   }
 }

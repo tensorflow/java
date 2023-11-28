@@ -409,6 +409,18 @@ private static final long serialVersionUID = 0L;
      * @return The disableOptimizeForStaticGraph.
      */
     boolean getDisableOptimizeForStaticGraph();
+
+    /**
+     * <pre>
+     * Whether eager remote execution will stream all the function calls or
+     * allow them to happen in parallel. When true, streaming execution is
+     * disabled, and parallel execution is allowed.
+     * </pre>
+     *
+     * <code>bool disable_eager_executor_streaming_enqueue = 26;</code>
+     * @return The disableEagerExecutorStreamingEnqueue.
+     */
+    boolean getDisableEagerExecutorStreamingEnqueue();
   }
   /**
    * <pre>
@@ -1112,6 +1124,23 @@ private static final long serialVersionUID = 0L;
       return disableOptimizeForStaticGraph_;
     }
 
+    public static final int DISABLE_EAGER_EXECUTOR_STREAMING_ENQUEUE_FIELD_NUMBER = 26;
+    private boolean disableEagerExecutorStreamingEnqueue_;
+    /**
+     * <pre>
+     * Whether eager remote execution will stream all the function calls or
+     * allow them to happen in parallel. When true, streaming execution is
+     * disabled, and parallel execution is allowed.
+     * </pre>
+     *
+     * <code>bool disable_eager_executor_streaming_enqueue = 26;</code>
+     * @return The disableEagerExecutorStreamingEnqueue.
+     */
+    @java.lang.Override
+    public boolean getDisableEagerExecutorStreamingEnqueue() {
+      return disableEagerExecutorStreamingEnqueue_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1188,6 +1217,9 @@ private static final long serialVersionUID = 0L;
       }
       if (disableOptimizeForStaticGraph_ != false) {
         output.writeBool(24, disableOptimizeForStaticGraph_);
+      }
+      if (disableEagerExecutorStreamingEnqueue_ != false) {
+        output.writeBool(26, disableEagerExecutorStreamingEnqueue_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1280,6 +1312,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(24, disableOptimizeForStaticGraph_);
       }
+      if (disableEagerExecutorStreamingEnqueue_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(26, disableEagerExecutorStreamingEnqueue_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1342,6 +1378,8 @@ private static final long serialVersionUID = 0L;
       }
       if (getDisableOptimizeForStaticGraph()
           != other.getDisableOptimizeForStaticGraph()) return false;
+      if (getDisableEagerExecutorStreamingEnqueue()
+          != other.getDisableEagerExecutorStreamingEnqueue()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -1414,6 +1452,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + DISABLE_OPTIMIZE_FOR_STATIC_GRAPH_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getDisableOptimizeForStaticGraph());
+      hash = (37 * hash) + DISABLE_EAGER_EXECUTOR_STREAMING_ENQUEUE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getDisableEagerExecutorStreamingEnqueue());
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1598,6 +1639,8 @@ private static final long serialVersionUID = 0L;
         }
         disableOptimizeForStaticGraph_ = false;
 
+        disableEagerExecutorStreamingEnqueue_ = false;
+
         return this;
       }
 
@@ -1653,6 +1696,7 @@ private static final long serialVersionUID = 0L;
           result.coordinationConfig_ = coordinationConfigBuilder_.build();
         }
         result.disableOptimizeForStaticGraph_ = disableOptimizeForStaticGraph_;
+        result.disableEagerExecutorStreamingEnqueue_ = disableEagerExecutorStreamingEnqueue_;
         onBuilt();
         return result;
       }
@@ -1765,6 +1809,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getDisableOptimizeForStaticGraph() != false) {
           setDisableOptimizeForStaticGraph(other.getDisableOptimizeForStaticGraph());
+        }
+        if (other.getDisableEagerExecutorStreamingEnqueue() != false) {
+          setDisableEagerExecutorStreamingEnqueue(other.getDisableEagerExecutorStreamingEnqueue());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -1901,6 +1948,11 @@ private static final long serialVersionUID = 0L;
 
                 break;
               } // case 192
+              case 208: {
+                disableEagerExecutorStreamingEnqueue_ = input.readBool();
+
+                break;
+              } // case 208
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -3389,6 +3441,55 @@ private static final long serialVersionUID = 0L;
       public Builder clearDisableOptimizeForStaticGraph() {
         
         disableOptimizeForStaticGraph_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean disableEagerExecutorStreamingEnqueue_ ;
+      /**
+       * <pre>
+       * Whether eager remote execution will stream all the function calls or
+       * allow them to happen in parallel. When true, streaming execution is
+       * disabled, and parallel execution is allowed.
+       * </pre>
+       *
+       * <code>bool disable_eager_executor_streaming_enqueue = 26;</code>
+       * @return The disableEagerExecutorStreamingEnqueue.
+       */
+      @java.lang.Override
+      public boolean getDisableEagerExecutorStreamingEnqueue() {
+        return disableEagerExecutorStreamingEnqueue_;
+      }
+      /**
+       * <pre>
+       * Whether eager remote execution will stream all the function calls or
+       * allow them to happen in parallel. When true, streaming execution is
+       * disabled, and parallel execution is allowed.
+       * </pre>
+       *
+       * <code>bool disable_eager_executor_streaming_enqueue = 26;</code>
+       * @param value The disableEagerExecutorStreamingEnqueue to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDisableEagerExecutorStreamingEnqueue(boolean value) {
+        
+        disableEagerExecutorStreamingEnqueue_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether eager remote execution will stream all the function calls or
+       * allow them to happen in parallel. When true, streaming execution is
+       * disabled, and parallel execution is allowed.
+       * </pre>
+       *
+       * <code>bool disable_eager_executor_streaming_enqueue = 26;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDisableEagerExecutorStreamingEnqueue() {
+        
+        disableEagerExecutorStreamingEnqueue_ = false;
         onChanged();
         return this;
       }
