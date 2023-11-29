@@ -51,5 +51,9 @@ if [[ "$PLATFORM" =~ "linux" ]]; then
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
+elif [[ "$PLATFORM" =~ "windows" ]]; then
+  # FIXME Looks like tsl headers are only present under the tensorflow folder for the windows build
+  # (while it is also available at the root of the include folder for other platforms)
+  cd include && ln -fs tensorflow/tsl tsl && cd -
 fi
 ls -l .
