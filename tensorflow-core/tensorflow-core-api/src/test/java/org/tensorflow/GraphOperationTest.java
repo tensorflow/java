@@ -279,7 +279,7 @@ public class GraphOperationTest {
               tf.scope(),
               a,
               DebugIdentity.debugUrls(Arrays.asList("a", "b")),
-              DebugIdentity.outputSlot(0L));
+              DebugIdentity.ioIndex(1L));
       Operand<TString> barrier =
           tf.barrier(
               Arrays.asList(TInt32.class, TInt32.class),
@@ -287,7 +287,7 @@ public class GraphOperationTest {
 
       GraphOperation op1 = (GraphOperation) c.op();
 
-      assertEquals(0, op1.attributes().getAttrInt("output_slot"));
+      assertEquals(1, op1.attributes().getAttrInt("io_index"));
       assertArrayEquals(new String[] {"a", "b"}, op1.attributes().getAttrStringList("debug_urls"));
 
       GraphOperation op2 = (GraphOperation) barrier.op();

@@ -29,10 +29,11 @@ public class TFRecordDataset extends Dataset {
       Ops tf,
       Operand<TString> filenames,
       Operand<TString> compressionType,
-      Operand<TInt64> bufferSize) {
+      Operand<TInt64> bufferSize,
+      Operand<TInt64> byteOffsets) {
     super(
         tf,
-        tf.data.tfRecordDataset(filenames, compressionType, bufferSize),
+        tf.data.tfRecordDataset(filenames, compressionType, bufferSize, byteOffsets),
         Collections.singletonList(TString.class),
         Collections.singletonList(Shape.scalar()));
   }

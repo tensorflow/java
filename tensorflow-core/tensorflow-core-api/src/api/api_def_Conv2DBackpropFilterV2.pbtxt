@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "Conv2DBackpropFilterV2"
+  visibility: VISIBLE
+  endpoint {
+    name: "nn.Conv2DBackpropFilter"
+  }
+}

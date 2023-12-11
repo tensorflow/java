@@ -918,20 +918,23 @@ public final class SparseOps {
   /**
    * Computes gradients for SparseSegmentMean.
    *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is output_dim0.
+   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
    *
    * @param <T> data type for {@code output} output
+   * @param <U> data type for {@code sorted_unique_indices} output
    * @param grad gradient propagated to the SparseSegmentMean op.
    * @param indices indices passed to the corresponding SparseSegmentMean op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentMean op.
-   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
-   * @param <T> data type for {@code SparseSegmentMeanGrad} output and operands
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
+   * @param <T> data type for {@code SparseSegmentMeanGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentMeanGradV2} output and operands
    * @return a new instance of SparseSegmentMeanGrad
    */
-  public <T extends TNumber> SparseSegmentMeanGrad<T> sparseSegmentMeanGrad(Operand<T> grad,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> outputDim0) {
-    return SparseSegmentMeanGrad.create(scope, grad, indices, segmentIds, outputDim0);
+  public <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T, U> sparseSegmentMeanGrad(
+      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
+    return SparseSegmentMeanGrad.create(scope, grad, indices, segmentIds, denseOutputDim0);
   }
 
   /**
@@ -979,20 +982,23 @@ public final class SparseOps {
   /**
    * Computes gradients for SparseSegmentSqrtN.
    *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is output_dim0.
+   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
    *
    * @param <T> data type for {@code output} output
+   * @param <U> data type for {@code sorted_unique_indices} output
    * @param grad gradient propagated to the SparseSegmentSqrtN op.
    * @param indices indices passed to the corresponding SparseSegmentSqrtN op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentSqrtN op.
-   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSqrtN op.
-   * @param <T> data type for {@code SparseSegmentSqrtNGrad} output and operands
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSqrtN op.
+   * @param <T> data type for {@code SparseSegmentSqrtNGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentSqrtNGradV2} output and operands
    * @return a new instance of SparseSegmentSqrtNGrad
    */
-  public <T extends TNumber> SparseSegmentSqrtNGrad<T> sparseSegmentSqrtNGrad(Operand<T> grad,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> outputDim0) {
-    return SparseSegmentSqrtNGrad.create(scope, grad, indices, segmentIds, outputDim0);
+  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGrad<T, U> sparseSegmentSqrtNGrad(
+      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
+    return SparseSegmentSqrtNGrad.create(scope, grad, indices, segmentIds, denseOutputDim0);
   }
 
   /**
@@ -1066,20 +1072,23 @@ public final class SparseOps {
   /**
    * Computes gradients for SparseSegmentSum.
    *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is output_dim0.
+   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
    *
    * @param <T> data type for {@code output} output
+   * @param <U> data type for {@code sorted_unique_indices} output
    * @param grad gradient propagated to the SparseSegmentSum op.
    * @param indices indices passed to the corresponding SparseSegmentSum op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
-   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
-   * @param <T> data type for {@code SparseSegmentSumGrad} output and operands
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
+   * @param <T> data type for {@code SparseSegmentSumGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentSumGradV2} output and operands
    * @return a new instance of SparseSegmentSumGrad
    */
-  public <T extends TNumber> SparseSegmentSumGrad<T> sparseSegmentSumGrad(Operand<T> grad,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> outputDim0) {
-    return SparseSegmentSumGrad.create(scope, grad, indices, segmentIds, outputDim0);
+  public <T extends TNumber, U extends TNumber> SparseSegmentSumGrad<T, U> sparseSegmentSumGrad(
+      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
+    return SparseSegmentSumGrad.create(scope, grad, indices, segmentIds, denseOutputDim0);
   }
 
   /**

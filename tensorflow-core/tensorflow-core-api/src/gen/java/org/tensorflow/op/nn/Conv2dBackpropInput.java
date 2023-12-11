@@ -1,4 +1,4 @@
-/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2023 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -41,32 +40,32 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output} output
  */
 @OpMetadata(
-    opType = Conv2dBackpropInput.OP_NAME,
-    inputsClass = Conv2dBackpropInput.Inputs.class
+    opType = Conv2DBackpropInput.OP_NAME,
+    inputsClass = Conv2DBackpropInput.Inputs.class
 )
 @Operator(
     group = "nn"
 )
-public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Conv2DBackpropInput<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "Conv2DBackpropInput";
+  public static final String OP_NAME = "Conv2DBackpropInputV2";
 
   private Output<T> output;
 
-  public Conv2dBackpropInput(Operation operation) {
+  public Conv2DBackpropInput(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new Conv2DBackpropInput operation.
+   * Factory method to create a class wrapping a new Conv2DBackpropInputV2 operation.
    *
    * @param scope current scope
-   * @param inputSizes An integer vector representing the shape of {@code input},
-   * where {@code input} is a 4-D {@code [batch, height, width, channels]} tensor.
+   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+   * Only shape of tensor is used.
    * @param filter 4-D with shape
    * {@code [filter_height, filter_width, in_channels, out_channels]}.
    * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
@@ -76,17 +75,17 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
    * format.
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropInput} output and operands
-   * @return a new instance of Conv2dBackpropInput
+   * @param <T> data type for {@code Conv2DBackpropInputV2} output and operands
+   * @return a new instance of Conv2DBackpropInput
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TNumber> Conv2dBackpropInput<T> create(Scope scope,
-      Operand<TInt32> inputSizes, Operand<T> filter, Operand<T> outBackprop, List<Long> strides,
-      String padding, Options... options) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv2dBackpropInput");
-    opBuilder.addInput(inputSizes.asOutput());
+  public static <T extends TNumber> Conv2DBackpropInput<T> create(Scope scope, Operand<T> input,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
+      Options... options) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv2DBackpropInput");
+    opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
     long[] stridesArray = new long[strides.size()];
@@ -119,7 +118,7 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
         }
       }
     }
-    return new Conv2dBackpropInput<>(opBuilder.build());
+    return new Conv2DBackpropInput<>(opBuilder.build());
   }
 
   /**
@@ -216,7 +215,7 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.Conv2dBackpropInput}
+   * Optional attributes for {@link org.tensorflow.op.nn.Conv2DBackpropInput}
    */
   public static class Options {
     private Boolean useCudnnOnGpu;
@@ -316,14 +315,14 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
   }
 
   @OpInputsMetadata(
-      outputsClass = Conv2dBackpropInput.class
+      outputsClass = Conv2DBackpropInput.class
   )
-  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2dBackpropInput<T>> {
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2DBackpropInput<T>> {
     /**
-     * An integer vector representing the shape of {@code input},
-     * where {@code input} is a 4-D {@code [batch, height, width, channels]} tensor.
+     * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+     * Only shape of tensor is used.
      */
-    public final Operand<TInt32> inputSizes;
+    public final Operand<T> input;
 
     /**
      * 4-D with shape
@@ -386,9 +385,9 @@ public final class Conv2dBackpropInput<T extends TNumber> extends RawOp implemen
     public final long[] dilations;
 
     public Inputs(GraphOperation op) {
-      super(new Conv2dBackpropInput<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
+      super(new Conv2DBackpropInput<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
       int inputIndex = 0;
-      inputSizes = (Operand<TInt32>) op.input(inputIndex++);
+      input = (Operand<T>) op.input(inputIndex++);
       filter = (Operand<T>) op.input(inputIndex++);
       outBackprop = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");

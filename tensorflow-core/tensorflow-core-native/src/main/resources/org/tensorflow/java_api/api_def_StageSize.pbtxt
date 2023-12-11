@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "StageSize"
-  out_arg {
-    name: "size"
-    rename_to: "output"
-  }
-}

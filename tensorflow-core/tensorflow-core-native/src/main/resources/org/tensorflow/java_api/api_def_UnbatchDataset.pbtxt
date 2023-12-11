@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "UnbatchDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.UnbatchDataset"
-  }
-}

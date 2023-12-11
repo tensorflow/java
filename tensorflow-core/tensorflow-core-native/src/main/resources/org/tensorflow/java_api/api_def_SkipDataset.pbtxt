@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "SkipDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.SkipDataset"
-  }
-}

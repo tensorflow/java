@@ -1,4 +1,4 @@
-/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2023 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,26 +30,28 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.DataType;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random numbers from a gamma distribution.
  * Outputs random values from a gamma distribution.
- * <p>The outputs are a deterministic function of {@code shape}, {@code seed}, and {@code alpha}.
+ * <p>The outputs are a deterministic function of the inputs.
  *
- * @param <V> data type for {@code output} output
+ * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomGamma.OP_NAME,
     inputsClass = StatelessRandomGamma.Inputs.class
 )
-public final class StatelessRandomGamma<V extends TNumber> extends RawOp implements Operand<V> {
+public final class StatelessRandomGamma<U extends TNumber> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "StatelessRandomGammaV2";
+  public static final String OP_NAME = "StatelessRandomGammaV3";
 
-  private Output<V> output;
+  private Output<U> output;
 
   public StatelessRandomGamma(Operation operation) {
     super(operation, OP_NAME);
@@ -58,24 +60,29 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
   }
 
   /**
-   * Factory method to create a class wrapping a new StatelessRandomGammaV2 operation.
+   * Factory method to create a class wrapping a new StatelessRandomGammaV3 operation.
    *
    * @param scope current scope
    * @param shape The shape of the output tensor.
-   * @param seed 2 seeds (shape [2]).
+   * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
+   * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
+   * @param alg The RNG algorithm (shape int32[]).
    * @param alpha The concentration of the gamma distribution. Shape must match the rightmost
    * dimensions of {@code shape}.
-   * @param <V> data type for {@code StatelessRandomGammaV2} output and operands
+   * @param <U> data type for {@code StatelessRandomGammaV3} output and operands
    * @return a new instance of StatelessRandomGamma
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <V extends TNumber> StatelessRandomGamma<V> create(Scope scope,
-      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> alpha) {
+  public static <U extends TNumber> StatelessRandomGamma<U> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TType> key,
+      Operand<? extends TType> counter, Operand<TInt32> alg, Operand<U> alpha) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessRandomGamma");
     opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(seed.asOutput());
+    opBuilder.addInput(key.asOutput());
+    opBuilder.addInput(counter.asOutput());
+    opBuilder.addInput(alg.asOutput());
     opBuilder.addInput(alpha.asOutput());
     return new StatelessRandomGamma<>(opBuilder.build());
   }
@@ -85,34 +92,44 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
    * Random values with specified shape.
    * @return output.
    */
-  public Output<V> output() {
+  public Output<U> output() {
     return output;
   }
 
   @Override
-  public Output<V> asOutput() {
+  public Output<U> asOutput() {
     return output;
   }
 
   @OpInputsMetadata(
       outputsClass = StatelessRandomGamma.class
   )
-  public static class Inputs<V extends TNumber> extends RawOpInputs<StatelessRandomGamma<V>> {
+  public static class Inputs<U extends TNumber> extends RawOpInputs<StatelessRandomGamma<U>> {
     /**
      * The shape of the output tensor.
      */
     public final Operand<? extends TNumber> shape;
 
     /**
-     * 2 seeds (shape [2]).
+     * Key for the counter-based RNG algorithm (shape uint64[1]).
      */
-    public final Operand<? extends TNumber> seed;
+    public final Operand<? extends TType> key;
+
+    /**
+     * Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
+     */
+    public final Operand<? extends TType> counter;
+
+    /**
+     * The RNG algorithm (shape int32[]).
+     */
+    public final Operand<TInt32> alg;
 
     /**
      * The concentration of the gamma distribution. Shape must match the rightmost
      * dimensions of {@code shape}.
      */
-    public final Operand<V> alpha;
+    public final Operand<U> alpha;
 
     /**
      * The type of the output.
@@ -120,24 +137,20 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
     public final DataType dtype;
 
     /**
-     * The T attribute
+     * The shapeDtype attribute
      */
-    public final DataType T;
-
-    /**
-     * The Tseed attribute
-     */
-    public final DataType Tseed;
+    public final DataType shapeDtype;
 
     public Inputs(GraphOperation op) {
-      super(new StatelessRandomGamma<>(op), op, Arrays.asList("dtype", "T", "Tseed"));
+      super(new StatelessRandomGamma<>(op), op, Arrays.asList("dtype", "shape_dtype"));
       int inputIndex = 0;
       shape = (Operand<? extends TNumber>) op.input(inputIndex++);
-      seed = (Operand<? extends TNumber>) op.input(inputIndex++);
-      alpha = (Operand<V>) op.input(inputIndex++);
+      key = (Operand<? extends TType>) op.input(inputIndex++);
+      counter = (Operand<? extends TType>) op.input(inputIndex++);
+      alg = (Operand<TInt32>) op.input(inputIndex++);
+      alpha = (Operand<U>) op.input(inputIndex++);
       dtype = op.attributes().getAttrType("dtype");
-      T = op.attributes().getAttrType("T");
-      Tseed = op.attributes().getAttrType("Tseed");
+      shapeDtype = op.attributes().getAttrType("shape_dtype");
     }
   }
 }

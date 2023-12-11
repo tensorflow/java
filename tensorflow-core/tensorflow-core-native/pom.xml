@@ -24,7 +24,6 @@
     <dist.download.skip>false</dist.download.skip>
     <dist.download.url/>
     <dist.download.folder>${project.build.directory}/dist/</dist.download.folder>
-    <target.folder>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</target.folder>
     <java.module.name>org.tensorflow.core.native</java.module.name>
   </properties>
 
@@ -277,7 +276,7 @@
             </goals>
             <configuration>
               <skip>${javacpp.build.skip}</skip>
-              <outputDirectory>${target.folder}/</outputDirectory>
+              <outputDirectory>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</outputDirectory>
               <classOrPackageName>org.tensorflow.internal.c_api.**</classOrPackageName>
               <copyLibs>true</copyLibs>
               <copyResources>true</copyResources>
@@ -361,7 +360,7 @@
           </execution>
           <execution>
             <!--
-              Copies generated resources straight to the main outputs
+              Copies generated resources to the definitions outputs
             -->
             <id>generated-resources-copy</id>
             <phase>process-resources</phase>
@@ -369,7 +368,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <outputDirectory>${project.build.directory}/defs-classes</outputDirectory>
               <resources>
                 <resource>
                   <directory>src/gen/resources</directory>
@@ -447,6 +446,24 @@
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*mklml*</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*msvcr120*</exclude>
               </excludes>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Create the definitions artifact
+                This artifact contains resources defining the list of operations available in the TensorFlow
+                native library and their APIs. It should be used only by the tensorflow-core-generator to populate
+                the Java classes that will wrap these operations.
+            -->
+            <id>defs-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>defs</classifier>
+              <skipIfEmpty>true</skipIfEmpty>
+              <classesDirectory>${project.build.directory}/defs-classes</classesDirectory>
             </configuration>
           </execution>
         </executions>

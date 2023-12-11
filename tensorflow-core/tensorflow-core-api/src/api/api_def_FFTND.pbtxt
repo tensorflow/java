@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "FFTND"
+  endpoint {
+    name: "signal.FftNd"
+  }
+}

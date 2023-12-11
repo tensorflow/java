@@ -1304,27 +1304,29 @@ public final class DataOps {
   /**
    * Creates a Dataset that returns pseudorandom numbers.
    *  Creates a Dataset that returns a stream of uniformly distributed
-   *  pseudorandom 64-bit signed integers.
+   *  pseudorandom 64-bit signed integers. It accepts a boolean attribute that
+   *  determines if the random number generators are re-applied at each epoch. The
+   *  default value is True which means that the seeds are applied and the same
+   *  sequence of random numbers are generated at each epoch. If set to False, the
+   *  seeds are not re-applied and a different sequence of random numbers are
+   *  generated at each epoch.
    *  <p>In the TensorFlow Python API, you can instantiate this dataset via the
-   *  class {@code tf.data.experimental.RandomDataset}.
-   *  <p>Instances of this dataset are also created as a result of the
-   *  {@code hoist_random_uniform} static optimization. Whether this optimization is
-   *  performed is determined by the {@code experimental_optimization.hoist_random_uniform}
-   *  option of {@code tf.data.Options}.
+   *  class {@code tf.data.experimental.RandomDatasetV2}.
    *
    * @param seed A scalar seed for the random number generator. If either seed or
    *  seed2 is set to be non-zero, the random number generator is seeded
    *  by the given seed.  Otherwise, a random seed is used.
    * @param seed2 A second scalar seed to avoid seed collision.
+   * @param seedGenerator A resource for the random number seed generator.
    * @param outputTypes The value of the outputTypes attribute
    * @param outputShapes The value of the outputShapes attribute
    * @param options carries optional attribute values
    * @return a new instance of RandomDataset
    */
   public RandomDataset randomDataset(Operand<TInt64> seed, Operand<TInt64> seed2,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
-      RandomDataset.Options... options) {
-    return RandomDataset.create(scope, seed, seed2, outputTypes, outputShapes, options);
+      Operand<? extends TType> seedGenerator, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, RandomDataset.Options... options) {
+    return RandomDataset.create(scope, seed, seed2, seedGenerator, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1770,13 +1772,15 @@ public final class DataOps {
    *  compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar representing the number of bytes to buffer. A value of
    *  0 means no buffering will be performed.
+   * @param byteOffsets A scalar or vector containing the number of bytes for each file
+   *  that will be skipped prior to reading.
    * @param options carries optional attribute values
    * @return a new instance of TfRecordDataset
    */
   public TfRecordDataset tfRecordDataset(Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize,
+      Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TInt64> byteOffsets,
       TfRecordDataset.Options... options) {
-    return TfRecordDataset.create(scope, filenames, compressionType, bufferSize, options);
+    return TfRecordDataset.create(scope, filenames, compressionType, bufferSize, byteOffsets, options);
   }
 
   /**

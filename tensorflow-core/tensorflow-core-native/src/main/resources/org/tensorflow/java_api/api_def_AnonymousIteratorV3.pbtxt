@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "AnonymousIteratorV3"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.AnonymousIterator"
-  }
-}
