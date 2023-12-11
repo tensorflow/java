@@ -107,6 +107,7 @@
                     <argument>${project.basedir}/src/api</argument>
                     <argument>-o</argument>
                     <argument>${project.basedir}/src/gen/java</argument>
+                    <argument>-c</argument>
                   </arguments>
                 </configuration>
               </execution>

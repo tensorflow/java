@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "FilterDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.FilterDataset"
-  }
-}

@@ -1,6 +1,4 @@
 op {
   graph_op_name: "SegmentProd"
-  endpoint {
-    name: "math.SegmentProd"
-  }
+  visibility: SKIP
 }

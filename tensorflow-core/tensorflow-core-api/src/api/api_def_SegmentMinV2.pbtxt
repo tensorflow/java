@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SegmentMinV2"
+  endpoint {
+    name: "math.SegmentMin"
+  }
+}

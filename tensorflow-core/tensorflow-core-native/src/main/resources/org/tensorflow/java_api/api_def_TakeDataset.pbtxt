@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "TakeDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.TakeDataset"
-  }
-}

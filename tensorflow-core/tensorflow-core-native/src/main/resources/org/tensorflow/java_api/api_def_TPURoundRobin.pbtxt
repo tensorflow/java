@@ -1,6 +1,0 @@
-op {
-  graph_op_name: "TPURoundRobin"
-  endpoint {
-    name: "tpu.TPURoundRobin"
-  }
-}

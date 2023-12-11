@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseSegmentSumGradV2"
+  endpoint {
+    name: "sparse.SparseSegmentSumGrad"
+  }
+}

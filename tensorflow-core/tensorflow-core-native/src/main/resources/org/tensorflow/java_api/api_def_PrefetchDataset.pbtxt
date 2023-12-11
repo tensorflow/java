@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "PrefetchDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.PrefetchDataset"
-  }
-}

@@ -1731,21 +1731,33 @@ public final class MathOps {
    *  <p>Computes a tensor such that
    *  \(output_i = \max_j(data_j)\) where {@code max} is over {@code j} such
    *  that {@code segment_ids[j] == i}.
-   *  <p>If the max is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+   *  <p>If the maximum is empty for a given segment ID {@code i}, it outputs the smallest
+   *  possible value for the specific numeric type,
+   *  {@code output[i] = numeric_limits<T>::lowest()}.
+   *  <p>Note: That this op is currently only supported with jit_compile=True.
    *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
    *  and an error is thrown for indices that are not increasing. On GPU, this
    *  does not throw an error for unsorted indices. On GPU, out-of-order indices
    *  result in safe but unspecified behavior, which may include treating
    *  out-of-order indices as the same as a smaller following index.
-   *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
-   *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentMax.png" alt>
-   *  </div>
+   *  <p>The only difference with SegmentMax is the additional input  {@code num_segments}.
+   *  This helps in evaluating the output shape in compile time.
+   *  {@code num_segments} should be consistent with segment_ids.
+   *  e.g. Max(segment_ids) should be equal to {@code num_segments} - 1 for a 1-d segment_ids
+   *  With inconsistent num_segments, the op still runs. only difference is,
+   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
+   *  for num_segments less than expected output size, the last elements are ignored
+   *  for num_segments more than the expected output size, last elements are assigned
+   *  smallest possible value for the specific numeric type.
    *  <p>For example:
    *  <blockquote>
    *  <blockquote>
    *  <blockquote>
-   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.math.segment_max(c, tf.constant([0, 0, 1])).numpy()
+   *  <p>{@literal @}tf.function(jit_compile=True)
+   *  ... def test(c):
+   *  ...   return tf.raw_ops.SegmentMaxV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
+   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  test(c).numpy()
    *  array([[4, 3, 3, 4],
    *  [5, 6, 7, 8]], dtype=int32)
    *  </blockquote>
@@ -1756,14 +1768,16 @@ public final class MathOps {
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  The values must be less than {@code num_segments}.
    *  <p>Caution: The values are always validated to be sorted on CPU, never validated
    *  on GPU.
-   * @param <T> data type for {@code SegmentMax} output and operands
+   * @param numSegments The numSegments value
+   * @param <T> data type for {@code SegmentMaxV2} output and operands
    * @return a new instance of SegmentMax
    */
   public <T extends TNumber> SegmentMax<T> segmentMax(Operand<T> data,
-      Operand<? extends TNumber> segmentIds) {
-    return SegmentMax.create(scope, data, segmentIds);
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+    return SegmentMax.create(scope, data, segmentIds, numSegments);
   }
 
   /**
@@ -1819,21 +1833,33 @@ public final class MathOps {
    *  <p>Computes a tensor such that
    *  \(output_i = \min_j(data_j)\) where {@code min} is over {@code j} such
    *  that {@code segment_ids[j] == i}.
-   *  <p>If the min is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+   *  <p>If the minimum is empty for a given segment ID {@code i}, it outputs the largest
+   *  possible value for the specific numeric type,
+   *  {@code output[i] = numeric_limits<T>::max()}.
+   *  <p>Note: That this op is currently only supported with jit_compile=True.
    *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
    *  and an error is thrown for indices that are not increasing. On GPU, this
    *  does not throw an error for unsorted indices. On GPU, out-of-order indices
    *  result in safe but unspecified behavior, which may include treating
    *  out-of-order indices as the same as a smaller following index.
-   *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
-   *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentMin.png" alt>
-   *  </div>
+   *  <p>The only difference with SegmentMin is the additional input  {@code num_segments}.
+   *  This helps in evaluating the output shape in compile time.
+   *  {@code num_segments} should be consistent with segment_ids.
+   *  e.g. Max(segment_ids) should be equal to {@code num_segments} - 1 for a 1-d segment_ids
+   *  With inconsistent num_segments, the op still runs. only difference is,
+   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
+   *  for num_segments less than expected output size, the last elements are ignored
+   *  for num_segments more than the expected output size, last elements are assigned
+   *  the largest possible value for the specific numeric type.
    *  <p>For example:
    *  <blockquote>
    *  <blockquote>
    *  <blockquote>
-   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.math.segment_min(c, tf.constant([0, 0, 1])).numpy()
+   *  <p>{@literal @}tf.function(jit_compile=True)
+   *  ... def test(c):
+   *  ...   return tf.raw_ops.SegmentMinV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
+   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  test(c).numpy()
    *  array([[1, 2, 2, 1],
    *  [5, 6, 7, 8]], dtype=int32)
    *  </blockquote>
@@ -1844,14 +1870,16 @@ public final class MathOps {
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  The values must be less than {@code num_segments}.
    *  <p>Caution: The values are always validated to be sorted on CPU, never validated
    *  on GPU.
-   * @param <T> data type for {@code SegmentMin} output and operands
+   * @param numSegments The numSegments value
+   * @param <T> data type for {@code SegmentMinV2} output and operands
    * @return a new instance of SegmentMin
    */
   public <T extends TNumber> SegmentMin<T> segmentMin(Operand<T> data,
-      Operand<? extends TNumber> segmentIds) {
-    return SegmentMin.create(scope, data, segmentIds);
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+    return SegmentMin.create(scope, data, segmentIds, numSegments);
   }
 
   /**
@@ -1863,20 +1891,24 @@ public final class MathOps {
    *  \(output_i = \prod_j data_j\) where the product is over {@code j} such
    *  that {@code segment_ids[j] == i}.
    *  <p>If the product is empty for a given segment ID {@code i}, {@code output[i] = 1}.
-   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
-   *  and an error is thrown for indices that are not increasing. On GPU, this
-   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
-   *  result in safe but unspecified behavior, which may include treating
-   *  out-of-order indices as the same as a smaller following index.
-   *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
-   *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentProd.png" alt>
-   *  </div>
+   *  <p>Note: That this op is currently only supported with jit_compile=True.
+   *  <p>The only difference with SegmentProd is the additional input  {@code num_segments}.
+   *  This helps in evaluating the output shape in compile time.
+   *  {@code num_segments} should be consistent with segment_ids.
+   *  e.g. Max(segment_ids) - 1 should be equal to {@code num_segments} for a 1-d segment_ids
+   *  With inconsistent num_segments, the op still runs. only difference is,
+   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
+   *  for num_segments less than expected output size, the last elements are ignored
+   *  for num_segments more than the expected output size, last elements are assigned 1.
    *  <p>For example:
    *  <blockquote>
    *  <blockquote>
    *  <blockquote>
-   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.math.segment_prod(c, tf.constant([0, 0, 1])).numpy()
+   *  <p>{@literal @}tf.function(jit_compile=True)
+   *  ... def test(c):
+   *  ...   return tf.raw_ops.SegmentProdV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
+   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
+   *  test(c).numpy()
    *  array([[4, 6, 6, 4],
    *  [5, 6, 7, 8]], dtype=int32)
    *  </blockquote>
@@ -1887,14 +1919,16 @@ public final class MathOps {
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  The values must be less than {@code num_segments}.
    *  <p>Caution: The values are always validated to be sorted on CPU, never validated
    *  on GPU.
-   * @param <T> data type for {@code SegmentProd} output and operands
+   * @param numSegments The numSegments value
+   * @param <T> data type for {@code SegmentProdV2} output and operands
    * @return a new instance of SegmentProd
    */
   public <T extends TType> SegmentProd<T> segmentProd(Operand<T> data,
-      Operand<? extends TNumber> segmentIds) {
-    return SegmentProd.create(scope, data, segmentIds);
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+    return SegmentProd.create(scope, data, segmentIds, numSegments);
   }
 
   /**
@@ -1906,38 +1940,23 @@ public final class MathOps {
    *  \(output_i = \sum_j data_j\) where sum is over {@code j} such
    *  that {@code segment_ids[j] == i}.
    *  <p>If the sum is empty for a given segment ID {@code i}, {@code output[i] = 0}.
-   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
-   *  and an error is thrown for indices that are not increasing. On GPU, this
-   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
-   *  result in safe but unspecified behavior, which may include treating
-   *  out-of-order indices as the same as a smaller following index.
-   *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
-   *  <img style="width:100%" src="https://www.tensorflow.org/images/SegmentSum.png" alt>
+   *  <p>Note that this op is currently only supported with jit_compile=True.
    *  </div>
-   *  <p>For example:
-   *  <blockquote>
-   *  <blockquote>
-   *  <blockquote>
-   *  <p>c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  tf.math.segment_sum(c, tf.constant([0, 0, 1])).numpy()
-   *  array([[5, 5, 5, 5],
-   *  [5, 6, 7, 8]], dtype=int32)
-   *  </blockquote>
-   *  </blockquote>
-   *  </blockquote>
    *
    * @param <T> data type for {@code output} output
    * @param data The data value
    * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
    *  first dimension.  Values should be sorted and can be repeated.
+   *  The values must be less than {@code num_segments}.
    *  <p>Caution: The values are always validated to be sorted on CPU, never validated
    *  on GPU.
-   * @param <T> data type for {@code SegmentSum} output and operands
+   * @param numSegments The numSegments value
+   * @param <T> data type for {@code SegmentSumV2} output and operands
    * @return a new instance of SegmentSum
    */
   public <T extends TType> SegmentSum<T> segmentSum(Operand<T> data,
-      Operand<? extends TNumber> segmentIds) {
-    return SegmentSum.create(scope, data, segmentIds);
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+    return SegmentSum.create(scope, data, segmentIds, numSegments);
   }
 
   /**

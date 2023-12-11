@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "TextLineDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.TextLineDataset"
-  }
-}

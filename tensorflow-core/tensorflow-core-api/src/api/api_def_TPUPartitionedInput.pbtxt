@@ -1,6 +1,4 @@
 op {
   graph_op_name: "TPUPartitionedInput"
-  endpoint: {
-    name: "tpu.PartitionedInput"
-  }
+  visibility: SKIP
 }

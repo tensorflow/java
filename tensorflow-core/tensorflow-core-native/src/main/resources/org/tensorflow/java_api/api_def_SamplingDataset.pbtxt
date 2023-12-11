@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "SamplingDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.SamplingDataset"
-  }
-}

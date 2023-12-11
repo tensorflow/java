@@ -30,6 +30,12 @@
       <classifier>${native.classifier}</classifier>
     </dependency>
     <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>${project.version}</version>
+      <classifier>defs</classifier>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>32.1.3-jre</version>

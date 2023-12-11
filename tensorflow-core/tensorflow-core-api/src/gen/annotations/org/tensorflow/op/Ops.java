@@ -76,9 +76,6 @@ import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
-import org.tensorflow.op.core.Conv;
-import org.tensorflow.op.core.Conv2DBackpropFilterV2;
-import org.tensorflow.op.core.Conv2DBackpropInputV2;
 import org.tensorflow.op.core.CopyToMesh;
 import org.tensorflow.op.core.CopyToMeshGrad;
 import org.tensorflow.op.core.CountUpTo;
@@ -97,7 +94,6 @@ import org.tensorflow.op.core.EncodeProto;
 import org.tensorflow.op.core.EnsureShape;
 import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
-import org.tensorflow.op.core.FFTND;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
 import org.tensorflow.op.core.For;
@@ -111,8 +107,6 @@ import org.tensorflow.op.core.GuaranteeConst;
 import org.tensorflow.op.core.HashTable;
 import org.tensorflow.op.core.Helpers;
 import org.tensorflow.op.core.HistogramFixedWidth;
-import org.tensorflow.op.core.IFFTND;
-import org.tensorflow.op.core.IRFFTND;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.If;
@@ -169,9 +163,6 @@ import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
 import org.tensorflow.op.core.Prod;
 import org.tensorflow.op.core.QuantizedReshape;
-import org.tensorflow.op.core.RFFTND;
-import org.tensorflow.op.core.RaggedFillEmptyRows;
-import org.tensorflow.op.core.RaggedFillEmptyRowsGrad;
 import org.tensorflow.op.core.RandomIndexShuffle;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
@@ -220,10 +211,6 @@ import org.tensorflow.op.core.ScatterNdSub;
 import org.tensorflow.op.core.ScatterNdUpdate;
 import org.tensorflow.op.core.ScatterSub;
 import org.tensorflow.op.core.ScatterUpdate;
-import org.tensorflow.op.core.SegmentMaxV2;
-import org.tensorflow.op.core.SegmentMinV2;
-import org.tensorflow.op.core.SegmentProdV2;
-import org.tensorflow.op.core.SegmentSumV2;
 import org.tensorflow.op.core.Select;
 import org.tensorflow.op.core.SetDiff1d;
 import org.tensorflow.op.core.SetSize;
@@ -233,9 +220,6 @@ import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.core.Snapshot;
 import org.tensorflow.op.core.SpaceToBatchNd;
-import org.tensorflow.op.core.SparseSegmentMeanGradV2;
-import org.tensorflow.op.core.SparseSegmentSqrtNGradV2;
-import org.tensorflow.op.core.SparseSegmentSumGradV2;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
@@ -257,7 +241,6 @@ import org.tensorflow.op.core.StridedSliceGrad;
 import org.tensorflow.op.core.StridedSliceHelper;
 import org.tensorflow.op.core.Sum;
 import org.tensorflow.op.core.SwitchCond;
-import org.tensorflow.op.core.TPUPartitionedOutputV2;
 import org.tensorflow.op.core.TemporaryVariable;
 import org.tensorflow.op.core.TensorArray;
 import org.tensorflow.op.core.TensorArrayClose;
@@ -2103,80 +2086,6 @@ public final class Ops {
   }
 
   /**
-   * Computes a N-D convolution given (N+1+batch_dims)-D {@code input} and (N+2)-D {@code filter} tensors.
-   *  General function for computing a N-D convolution. It is required that
-   *  {@code 1 <= N <= 3}.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input Tensor of type T and shape {@code batch_shape + spatial_shape + [in_channels]} in the
-   *  case that {@code channels_last_format = true} or shape
-   *  {@code batch_shape + [in_channels] + spatial_shape} if {@code channels_last_format = false}.
-   *  spatial_shape is N-dimensional with {@code N=2} or {@code N=3}.
-   *  Also note that {@code batch_shape} is dictated by the parameter {@code batch_dims}
-   *  and defaults to 1.
-   * @param filter An {@code (N+2)-D} Tensor with the same type as {@code input} and shape
-   *  {@code spatial_filter_shape + [in_channels, out_channels]}, where spatial_filter_shape
-   *  is N-dimensional with {@code N=2} or {@code N=3}.
-   * @param strides 1-D tensor of length {@code N+2}. The stride of the sliding window for each
-   *  dimension of {@code input}. Must have {@code strides[0] = strides[N+1] = 1}.
-   * @param padding The type of padding algorithm to use.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv} output and operands
-   * @return a new instance of Conv
-   */
-  public <T extends TNumber> Conv<T> conv(Operand<T> input, Operand<T> filter, List<Long> strides,
-      String padding, Conv.Options... options) {
-    return Conv.create(scope, input, filter, strides, padding, options);
-  }
-
-  /**
-   * Computes the gradients of convolution with respect to the filter.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   * @param filter 4-D with shape {@code [filter_height, filter_width, in_channels, out_channels]}.
-   *  Only shape of tensor is used.
-   * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
-   *  Gradients w.r.t. the output of the convolution.
-   * @param strides The stride of the sliding window for each dimension of the input
-   *  of the convolution. Must be in the same order as the dimension specified with
-   *  format.
-   * @param padding The type of padding algorithm to use.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropFilterV2} output and operands
-   * @return a new instance of Conv2DBackpropFilterV2
-   */
-  public <T extends TNumber> Conv2DBackpropFilterV2<T> conv2DBackpropFilterV2(Operand<T> input,
-      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
-      Conv2DBackpropFilterV2.Options... options) {
-    return Conv2DBackpropFilterV2.create(scope, input, filter, outBackprop, strides, padding, options);
-  }
-
-  /**
-   * Computes the gradients of convolution with respect to the input.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   *  Only shape of tensor is used.
-   * @param filter 4-D with shape
-   *  {@code [filter_height, filter_width, in_channels, out_channels]}.
-   * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
-   *  Gradients w.r.t. the output of the convolution.
-   * @param strides The stride of the sliding window for each dimension of the input
-   *  of the convolution. Must be in the same order as the dimension specified with
-   *  format.
-   * @param padding The type of padding algorithm to use.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropInputV2} output and operands
-   * @return a new instance of Conv2DBackpropInputV2
-   */
-  public <T extends TNumber> Conv2DBackpropInputV2<T> conv2DBackpropInputV2(Operand<T> input,
-      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
-      Conv2DBackpropInputV2.Options... options) {
-    return Conv2DBackpropInputV2.create(scope, input, filter, outBackprop, strides, padding, options);
-  }
-
-  /**
    * The CopyToMesh operation
    *
    * @param <T> data type for {@code output} output
@@ -2688,29 +2597,6 @@ public final class Ops {
   }
 
   /**
-   * ND fast Fourier transform.
-   *  Computes the n-dimensional discrete Fourier transform over
-   *  designated dimensions of {@code input}. The designated dimensions of
-   *  {@code input} are assumed to be the result of {@code FFTND}.
-   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
-   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
-   *  is not given, the default shape(input) is used.
-   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
-   *  all axes.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor. The FFT length for each dimension.
-   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @param <T> data type for {@code FFTND} output and operands
-   * @return a new instance of FFTND
-   */
-  public <T extends TType> FFTND<T> fFTND(Operand<T> input, Operand<TInt32> fftLength,
-      Operand<TInt32> axes) {
-    return FFTND.create(scope, input, fftLength, axes);
-  }
-
-  /**
    * Creates a tensor filled with a scalar value.
    *  This operation creates a tensor of shape {@code dims} and fills it with {@code value}.
    *  <p>For example:
@@ -3111,77 +2997,6 @@ public final class Ops {
   public <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> histogramFixedWidth(
       Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, Class<U> dtype) {
     return HistogramFixedWidth.create(scope, values, valueRange, nbins, dtype);
-  }
-
-  /**
-   * ND inverse fast Fourier transform.
-   *  Computes the n-dimensional inverse discrete Fourier transform over designated
-   *  dimensions of {@code input}. The designated dimensions of {@code input} are assumed to be
-   *  the result of {@code IFFTND}.
-   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
-   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
-   *  is not given, the default shape(input) is used.
-   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
-   *  all axes.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor. The FFT length for each dimension.
-   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @param <T> data type for {@code IFFTND} output and operands
-   * @return a new instance of IFFTND
-   */
-  public <T extends TType> IFFTND<T> iFFTND(Operand<T> input, Operand<TInt32> fftLength,
-      Operand<TInt32> axes) {
-    return IFFTND.create(scope, input, fftLength, axes);
-  }
-
-  /**
-   * ND inverse real fast Fourier transform.
-   *  Computes the n-dimensional inverse real discrete Fourier transform over
-   *  designated dimensions of {@code input}. The designated dimensions of {@code input} are
-   *  assumed to be the result of {@code IRFFTND}. The inner-most dimension contains the
-   *  {@code fft_length / 2 + 1} unique components of the DFT of a real-valued signal.
-   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
-   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
-   *  is not given, the default shape(input) is used.
-   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
-   *  all axes.
-   *
-   * @param <U> data type for {@code output} output
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor. The FFT length for each dimension.
-   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @return a new instance of IRFFTND, with default output types
-   */
-  public IRFFTND<TFloat32> iRFFTND(Operand<? extends TType> input, Operand<TInt32> fftLength,
-      Operand<TInt32> axes) {
-    return IRFFTND.create(scope, input, fftLength, axes);
-  }
-
-  /**
-   * ND inverse real fast Fourier transform.
-   *  Computes the n-dimensional inverse real discrete Fourier transform over
-   *  designated dimensions of {@code input}. The designated dimensions of {@code input} are
-   *  assumed to be the result of {@code IRFFTND}. The inner-most dimension contains the
-   *  {@code fft_length / 2 + 1} unique components of the DFT of a real-valued signal.
-   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
-   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
-   *  is not given, the default shape(input) is used.
-   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
-   *  all axes.
-   *
-   * @param <U> data type for {@code output} output
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor. The FFT length for each dimension.
-   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @param Treal The value of the Treal attribute
-   * @param <U> data type for {@code IRFFTND} output and operands
-   * @return a new instance of IRFFTND
-   */
-  public <U extends TNumber> IRFFTND<U> iRFFTND(Operand<? extends TType> input,
-      Operand<TInt32> fftLength, Operand<TInt32> axes, Class<U> Treal) {
-    return IRFFTND.create(scope, input, fftLength, axes, Treal);
   }
 
   /**
@@ -4315,61 +4130,6 @@ public final class Ops {
   public <T extends TType> QuantizedReshape<T> quantizedReshape(Operand<T> tensor,
       Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
-  }
-
-  /**
-   * ND fast real Fourier transform.
-   *  Computes the n-dimensional real discrete Fourier transform over designated
-   *  dimensions of {@code input}. The designated dimensions of {@code input} are assumed to be
-   *  the result of {@code RFFTND}. The length of the last axis transformed will be
-   *  fft_length[-1]//2+1.
-   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
-   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
-   *  is not given, the default shape(input) is used.
-   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
-   *  all axes.
-   *
-   * @param <U> data type for {@code output} output
-   * @param input A complex tensor.
-   * @param fftLength An int32 tensor. The FFT length for each dimension.
-   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @param Tcomplex The value of the Tcomplex attribute
-   * @param <U> data type for {@code RFFTND} output and operands
-   * @return a new instance of RFFTND
-   */
-  public <U extends TType> RFFTND<U> rFFTND(Operand<? extends TNumber> input,
-      Operand<TInt32> fftLength, Operand<TInt32> axes, Class<U> Tcomplex) {
-    return RFFTND.create(scope, input, fftLength, axes, Tcomplex);
-  }
-
-  /**
-   * The RaggedFillEmptyRows operation
-   *
-   * @param <T> data type for {@code output_values} output
-   * @param valueRowids The valueRowids value
-   * @param values The values value
-   * @param nrows The nrows value
-   * @param defaultValue The defaultValue value
-   * @param <T> data type for {@code RaggedFillEmptyRows} output and operands
-   * @return a new instance of RaggedFillEmptyRows
-   */
-  public <T extends TType> RaggedFillEmptyRows<T> raggedFillEmptyRows(Operand<TInt64> valueRowids,
-      Operand<T> values, Operand<TInt64> nrows, Operand<T> defaultValue) {
-    return RaggedFillEmptyRows.create(scope, valueRowids, values, nrows, defaultValue);
-  }
-
-  /**
-   * The RaggedFillEmptyRowsGrad operation
-   *
-   * @param <T> data type for {@code d_values} output
-   * @param reverseIndexMap The reverseIndexMap value
-   * @param gradValues The gradValues value
-   * @param <T> data type for {@code RaggedFillEmptyRowsGrad} output and operands
-   * @return a new instance of RaggedFillEmptyRowsGrad
-   */
-  public <T extends TType> RaggedFillEmptyRowsGrad<T> raggedFillEmptyRowsGrad(
-      Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
-    return RaggedFillEmptyRowsGrad.create(scope, reverseIndexMap, gradValues);
   }
 
   /**
@@ -5835,197 +5595,6 @@ public final class Ops {
   }
 
   /**
-   * Computes the maximum along segments of a tensor.
-   *  Read
-   *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
-   *  for an explanation of segments.
-   *  <p>Computes a tensor such that
-   *  \(output_i = \max_j(data_j)\) where {@code max} is over {@code j} such
-   *  that {@code segment_ids[j] == i}.
-   *  <p>If the maximum is empty for a given segment ID {@code i}, it outputs the smallest
-   *  possible value for the specific numeric type,
-   *  {@code output[i] = numeric_limits<T>::lowest()}.
-   *  <p>Note: That this op is currently only supported with jit_compile=True.
-   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
-   *  and an error is thrown for indices that are not increasing. On GPU, this
-   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
-   *  result in safe but unspecified behavior, which may include treating
-   *  out-of-order indices as the same as a smaller following index.
-   *  <p>The only difference with SegmentMax is the additional input  {@code num_segments}.
-   *  This helps in evaluating the output shape in compile time.
-   *  {@code num_segments} should be consistent with segment_ids.
-   *  e.g. Max(segment_ids) should be equal to {@code num_segments} - 1 for a 1-d segment_ids
-   *  With inconsistent num_segments, the op still runs. only difference is,
-   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
-   *  for num_segments less than expected output size, the last elements are ignored
-   *  for num_segments more than the expected output size, last elements are assigned
-   *  smallest possible value for the specific numeric type.
-   *  <p>For example:
-   *  <blockquote>
-   *  <blockquote>
-   *  <blockquote>
-   *  <p>{@literal @}tf.function(jit_compile=True)
-   *  ... def test(c):
-   *  ...   return tf.raw_ops.SegmentMaxV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  test(c).numpy()
-   *  array([[4, 3, 3, 4],
-   *  [5, 6, 7, 8]], dtype=int32)
-   *  </blockquote>
-   *  </blockquote>
-   *  </blockquote>
-   *
-   * @param <T> data type for {@code output} output
-   * @param data The data value
-   * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
-   *  first dimension.  Values should be sorted and can be repeated.
-   *  The values must be less than {@code num_segments}.
-   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
-   *  on GPU.
-   * @param numSegments The numSegments value
-   * @param <T> data type for {@code SegmentMaxV2} output and operands
-   * @return a new instance of SegmentMaxV2
-   */
-  public <T extends TNumber> SegmentMaxV2<T> segmentMaxV2(Operand<T> data,
-      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    return SegmentMaxV2.create(scope, data, segmentIds, numSegments);
-  }
-
-  /**
-   * Computes the minimum along segments of a tensor.
-   *  Read
-   *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
-   *  for an explanation of segments.
-   *  <p>Computes a tensor such that
-   *  \(output_i = \min_j(data_j)\) where {@code min} is over {@code j} such
-   *  that {@code segment_ids[j] == i}.
-   *  <p>If the minimum is empty for a given segment ID {@code i}, it outputs the largest
-   *  possible value for the specific numeric type,
-   *  {@code output[i] = numeric_limits<T>::max()}.
-   *  <p>Note: That this op is currently only supported with jit_compile=True.
-   *  <p>Caution: On CPU, values in {@code segment_ids} are always validated to be sorted,
-   *  and an error is thrown for indices that are not increasing. On GPU, this
-   *  does not throw an error for unsorted indices. On GPU, out-of-order indices
-   *  result in safe but unspecified behavior, which may include treating
-   *  out-of-order indices as the same as a smaller following index.
-   *  <p>The only difference with SegmentMin is the additional input  {@code num_segments}.
-   *  This helps in evaluating the output shape in compile time.
-   *  {@code num_segments} should be consistent with segment_ids.
-   *  e.g. Max(segment_ids) should be equal to {@code num_segments} - 1 for a 1-d segment_ids
-   *  With inconsistent num_segments, the op still runs. only difference is,
-   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
-   *  for num_segments less than expected output size, the last elements are ignored
-   *  for num_segments more than the expected output size, last elements are assigned
-   *  the largest possible value for the specific numeric type.
-   *  <p>For example:
-   *  <blockquote>
-   *  <blockquote>
-   *  <blockquote>
-   *  <p>{@literal @}tf.function(jit_compile=True)
-   *  ... def test(c):
-   *  ...   return tf.raw_ops.SegmentMinV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  test(c).numpy()
-   *  array([[1, 2, 2, 1],
-   *  [5, 6, 7, 8]], dtype=int32)
-   *  </blockquote>
-   *  </blockquote>
-   *  </blockquote>
-   *
-   * @param <T> data type for {@code output} output
-   * @param data The data value
-   * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
-   *  first dimension.  Values should be sorted and can be repeated.
-   *  The values must be less than {@code num_segments}.
-   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
-   *  on GPU.
-   * @param numSegments The numSegments value
-   * @param <T> data type for {@code SegmentMinV2} output and operands
-   * @return a new instance of SegmentMinV2
-   */
-  public <T extends TNumber> SegmentMinV2<T> segmentMinV2(Operand<T> data,
-      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    return SegmentMinV2.create(scope, data, segmentIds, numSegments);
-  }
-
-  /**
-   * Computes the product along segments of a tensor.
-   *  Read
-   *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
-   *  for an explanation of segments.
-   *  <p>Computes a tensor such that
-   *  \(output_i = \prod_j data_j\) where the product is over {@code j} such
-   *  that {@code segment_ids[j] == i}.
-   *  <p>If the product is empty for a given segment ID {@code i}, {@code output[i] = 1}.
-   *  <p>Note: That this op is currently only supported with jit_compile=True.
-   *  <p>The only difference with SegmentProd is the additional input  {@code num_segments}.
-   *  This helps in evaluating the output shape in compile time.
-   *  {@code num_segments} should be consistent with segment_ids.
-   *  e.g. Max(segment_ids) - 1 should be equal to {@code num_segments} for a 1-d segment_ids
-   *  With inconsistent num_segments, the op still runs. only difference is,
-   *  the output takes the size of num_segments irrespective of size of segment_ids and data.
-   *  for num_segments less than expected output size, the last elements are ignored
-   *  for num_segments more than the expected output size, last elements are assigned 1.
-   *  <p>For example:
-   *  <blockquote>
-   *  <blockquote>
-   *  <blockquote>
-   *  <p>{@literal @}tf.function(jit_compile=True)
-   *  ... def test(c):
-   *  ...   return tf.raw_ops.SegmentProdV2(data=c, segment_ids=tf.constant([0, 0, 1]), num_segments=2)
-   *  c = tf.constant([[1,2,3,4], [4, 3, 2, 1], [5,6,7,8]])
-   *  test(c).numpy()
-   *  array([[4, 6, 6, 4],
-   *  [5, 6, 7, 8]], dtype=int32)
-   *  </blockquote>
-   *  </blockquote>
-   *  </blockquote>
-   *
-   * @param <T> data type for {@code output} output
-   * @param data The data value
-   * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
-   *  first dimension.  Values should be sorted and can be repeated.
-   *  The values must be less than {@code num_segments}.
-   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
-   *  on GPU.
-   * @param numSegments The numSegments value
-   * @param <T> data type for {@code SegmentProdV2} output and operands
-   * @return a new instance of SegmentProdV2
-   */
-  public <T extends TType> SegmentProdV2<T> segmentProdV2(Operand<T> data,
-      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    return SegmentProdV2.create(scope, data, segmentIds, numSegments);
-  }
-
-  /**
-   * Computes the sum along segments of a tensor.
-   *  Read
-   *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
-   *  for an explanation of segments.
-   *  <p>Computes a tensor such that
-   *  \(output_i = \sum_j data_j\) where sum is over {@code j} such
-   *  that {@code segment_ids[j] == i}.
-   *  <p>If the sum is empty for a given segment ID {@code i}, {@code output[i] = 0}.
-   *  <p>Note that this op is currently only supported with jit_compile=True.
-   *  </div>
-   *
-   * @param <T> data type for {@code output} output
-   * @param data The data value
-   * @param segmentIds A 1-D tensor whose size is equal to the size of {@code data}'s
-   *  first dimension.  Values should be sorted and can be repeated.
-   *  The values must be less than {@code num_segments}.
-   *  <p>Caution: The values are always validated to be sorted on CPU, never validated
-   *  on GPU.
-   * @param numSegments The numSegments value
-   * @param <T> data type for {@code SegmentSumV2} output and operands
-   * @return a new instance of SegmentSumV2
-   */
-  public <T extends TType> SegmentSumV2<T> segmentSumV2(Operand<T> data,
-      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    return SegmentSumV2.create(scope, data, segmentIds, numSegments);
-  }
-
-  /**
    * The SelectV2 operation
    *
    * @param <T> data type for {@code output} output
@@ -6386,72 +5955,6 @@ public final class Ops {
   public <T extends TType> SpaceToBatchNd<T> spaceToBatchNd(Operand<T> input,
       Operand<? extends TNumber> blockShape, Operand<? extends TNumber> paddings) {
     return SpaceToBatchNd.create(scope, input, blockShape, paddings);
-  }
-
-  /**
-   * Computes gradients for SparseSegmentMean.
-   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
-   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
-   *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code sorted_unique_indices} output
-   * @param grad gradient propagated to the SparseSegmentMean op.
-   * @param indices indices passed to the corresponding SparseSegmentMean op.
-   * @param segmentIds segment_ids passed to the corresponding SparseSegmentMean op.
-   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
-   * @param <T> data type for {@code SparseSegmentMeanGradV2} output and operands
-   * @param <U> data type for {@code SparseSegmentMeanGradV2} output and operands
-   * @return a new instance of SparseSegmentMeanGradV2
-   */
-  public <T extends TNumber, U extends TNumber> SparseSegmentMeanGradV2<T, U> sparseSegmentMeanGradV2(
-      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> denseOutputDim0) {
-    return SparseSegmentMeanGradV2.create(scope, grad, indices, segmentIds, denseOutputDim0);
-  }
-
-  /**
-   * Computes gradients for SparseSegmentSqrtN.
-   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
-   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
-   *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code sorted_unique_indices} output
-   * @param grad gradient propagated to the SparseSegmentSqrtN op.
-   * @param indices indices passed to the corresponding SparseSegmentSqrtN op.
-   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSqrtN op.
-   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSqrtN op.
-   * @param <T> data type for {@code SparseSegmentSqrtNGradV2} output and operands
-   * @param <U> data type for {@code SparseSegmentSqrtNGradV2} output and operands
-   * @return a new instance of SparseSegmentSqrtNGradV2
-   */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSqrtNGradV2<T, U> sparseSegmentSqrtNGradV2(
-      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> denseOutputDim0) {
-    return SparseSegmentSqrtNGradV2.create(scope, grad, indices, segmentIds, denseOutputDim0);
-  }
-
-  /**
-   * Computes gradients for SparseSegmentSum.
-   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
-   *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
-   *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code sorted_unique_indices} output
-   * @param grad gradient propagated to the SparseSegmentSum op.
-   * @param indices indices passed to the corresponding SparseSegmentSum op.
-   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
-   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
-   * @param <T> data type for {@code SparseSegmentSumGradV2} output and operands
-   * @param <U> data type for {@code SparseSegmentSumGradV2} output and operands
-   * @return a new instance of SparseSegmentSumGradV2
-   */
-  public <T extends TNumber, U extends TNumber> SparseSegmentSumGradV2<T, U> sparseSegmentSumGradV2(
-      Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> denseOutputDim0) {
-    return SparseSegmentSumGradV2.create(scope, grad, indices, segmentIds, denseOutputDim0);
   }
 
   /**
@@ -7119,23 +6622,6 @@ public final class Ops {
    */
   public <T extends TType> SwitchCond<T> switchCond(Operand<T> data, Operand<TBool> pred) {
     return SwitchCond.create(scope, data, pred);
-  }
-
-  /**
-   * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
-   *  outputs outside the XLA computation. Supports ND sharding.
-   *
-   * @param <T> data type for {@code output} output
-   * @param inputs A tensor which represents the full shape of partitioned tensors.
-   * @param numSplits The value of the numSplits attribute
-   * @param partitionDims A list of integers describing how each dimension is partitioned. Emptiness
-   *  indicates the inputs are replicated.
-   * @param <T> data type for {@code TPUPartitionedOutputV2} output and operands
-   * @return a new instance of TPUPartitionedOutputV2
-   */
-  public <T extends TType> TPUPartitionedOutputV2<T> tPUPartitionedOutputV2(Operand<T> inputs,
-      Long numSplits, List<Long> partitionDims) {
-    return TPUPartitionedOutputV2.create(scope, inputs, numSplits, partitionDims);
   }
 
   /**

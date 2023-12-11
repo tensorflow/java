@@ -33,7 +33,6 @@ import org.tensorflow.op.tpu.Execute;
 import org.tensorflow.op.tpu.ExecuteAndUpdateVariables;
 import org.tensorflow.op.tpu.ExecuteTPUEmbeddingPartitioner;
 import org.tensorflow.op.tpu.FinalizeTPUEmbedding;
-import org.tensorflow.op.tpu.PartitionedInput;
 import org.tensorflow.op.tpu.PartitionedOutput;
 import org.tensorflow.op.tpu.ShutdownTPUSystem;
 import org.tensorflow.op.tpu.TPURoundRobin;
@@ -246,33 +245,20 @@ public final class TpuOps {
   }
 
   /**
-   * An op that groups a list of partitioned inputs together. This op
-   *
-   * @param <T> data type for {@code output} output
-   * @param inputs A list of partitioned inputs which must have the same shape.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code TPUPartitionedInput} output and operands
-   * @return a new instance of PartitionedInput
-   */
-  public <T extends TType> PartitionedInput<T> partitionedInput(Iterable<Operand<T>> inputs,
-      PartitionedInput.Options... options) {
-    return PartitionedInput.create(scope, inputs, options);
-  }
-
-  /**
    * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
-   *  outputs outside the XLA computation.
+   *  outputs outside the XLA computation. Supports ND sharding.
    *
    * @param <T> data type for {@code output} output
    * @param inputs A tensor which represents the full shape of partitioned tensors.
    * @param numSplits The value of the numSplits attribute
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code TPUPartitionedOutput} output and operands
+   * @param partitionDims A list of integers describing how each dimension is partitioned. Emptiness
+   *  indicates the inputs are replicated.
+   * @param <T> data type for {@code TPUPartitionedOutputV2} output and operands
    * @return a new instance of PartitionedOutput
    */
   public <T extends TType> PartitionedOutput<T> partitionedOutput(Operand<T> inputs, Long numSplits,
-      PartitionedOutput.Options... options) {
-    return PartitionedOutput.create(scope, inputs, numSplits, options);
+      List<Long> partitionDims) {
+    return PartitionedOutput.create(scope, inputs, numSplits, partitionDims);
   }
 
   /**

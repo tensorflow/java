@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "AssertNextDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.AssertNextDataset"
-  }
-}
