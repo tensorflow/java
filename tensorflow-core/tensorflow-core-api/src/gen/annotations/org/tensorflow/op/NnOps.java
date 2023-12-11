@@ -28,9 +28,9 @@ import org.tensorflow.op.nn.BiasAdd;
 import org.tensorflow.op.nn.BiasAddGrad;
 import org.tensorflow.op.nn.ComputeAccidentalHits;
 import org.tensorflow.op.nn.Conv;
-import org.tensorflow.op.nn.Conv2DBackpropFilter;
-import org.tensorflow.op.nn.Conv2DBackpropInput;
 import org.tensorflow.op.nn.Conv2d;
+import org.tensorflow.op.nn.Conv2dBackpropFilter;
+import org.tensorflow.op.nn.Conv2dBackpropInput;
 import org.tensorflow.op.nn.Conv3d;
 import org.tensorflow.op.nn.Conv3dBackpropFilter;
 import org.tensorflow.op.nn.Conv3dBackpropInput;
@@ -310,53 +310,6 @@ public final class NnOps {
   }
 
   /**
-   * Computes the gradients of convolution with respect to the filter.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   * @param filter 4-D with shape {@code [filter_height, filter_width, in_channels, out_channels]}.
-   *  Only shape of tensor is used.
-   * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
-   *  Gradients w.r.t. the output of the convolution.
-   * @param strides The stride of the sliding window for each dimension of the input
-   *  of the convolution. Must be in the same order as the dimension specified with
-   *  format.
-   * @param padding The type of padding algorithm to use.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropFilterV2} output and operands
-   * @return a new instance of Conv2DBackpropFilter
-   */
-  public <T extends TNumber> Conv2DBackpropFilter<T> conv2DBackpropFilter(Operand<T> input,
-      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
-      Conv2DBackpropFilter.Options... options) {
-    return Conv2DBackpropFilter.create(scope, input, filter, outBackprop, strides, padding, options);
-  }
-
-  /**
-   * Computes the gradients of convolution with respect to the input.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   *  Only shape of tensor is used.
-   * @param filter 4-D with shape
-   *  {@code [filter_height, filter_width, in_channels, out_channels]}.
-   * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
-   *  Gradients w.r.t. the output of the convolution.
-   * @param strides The stride of the sliding window for each dimension of the input
-   *  of the convolution. Must be in the same order as the dimension specified with
-   *  format.
-   * @param padding The type of padding algorithm to use.
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropInputV2} output and operands
-   * @return a new instance of Conv2DBackpropInput
-   */
-  public <T extends TNumber> Conv2DBackpropInput<T> conv2DBackpropInput(Operand<T> input,
-      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
-      Conv2DBackpropInput.Options... options) {
-    return Conv2DBackpropInput.create(scope, input, filter, outBackprop, strides, padding, options);
-  }
-
-  /**
    * Computes a 2-D convolution given 4-D {@code input} and {@code filter} tensors.
    *  Given an input tensor of shape {@code [batch, in_height, in_width, in_channels]}
    *  and a filter / kernel tensor of shape
@@ -395,6 +348,53 @@ public final class NnOps {
   public <T extends TNumber> Conv2d<T> conv2d(Operand<T> input, Operand<T> filter,
       List<Long> strides, String padding, Conv2d.Options... options) {
     return Conv2d.create(scope, input, filter, strides, padding, options);
+  }
+
+  /**
+   * Computes the gradients of convolution with respect to the filter.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+   * @param filter 4-D with shape {@code [filter_height, filter_width, in_channels, out_channels]}.
+   *  Only shape of tensor is used.
+   * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
+   *  Gradients w.r.t. the output of the convolution.
+   * @param strides The stride of the sliding window for each dimension of the input
+   *  of the convolution. Must be in the same order as the dimension specified with
+   *  format.
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Conv2DBackpropFilterV2} output and operands
+   * @return a new instance of Conv2dBackpropFilter
+   */
+  public <T extends TNumber> Conv2dBackpropFilter<T> conv2dBackpropFilter(Operand<T> input,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
+      Conv2dBackpropFilter.Options... options) {
+    return Conv2dBackpropFilter.create(scope, input, filter, outBackprop, strides, padding, options);
+  }
+
+  /**
+   * Computes the gradients of convolution with respect to the input.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+   *  Only shape of tensor is used.
+   * @param filter 4-D with shape
+   *  {@code [filter_height, filter_width, in_channels, out_channels]}.
+   * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
+   *  Gradients w.r.t. the output of the convolution.
+   * @param strides The stride of the sliding window for each dimension of the input
+   *  of the convolution. Must be in the same order as the dimension specified with
+   *  format.
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Conv2DBackpropInputV2} output and operands
+   * @return a new instance of Conv2dBackpropInput
+   */
+  public <T extends TNumber> Conv2dBackpropInput<T> conv2dBackpropInput(Operand<T> input,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
+      Conv2dBackpropInput.Options... options) {
+    return Conv2dBackpropInput.create(scope, input, filter, outBackprop, strides, padding, options);
   }
 
   /**
