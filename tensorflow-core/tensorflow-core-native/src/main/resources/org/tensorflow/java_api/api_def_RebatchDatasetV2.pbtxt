@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "RebatchDatasetV2"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.RebatchDatasetV2"
-  }
-}

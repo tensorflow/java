@@ -19,8 +19,11 @@ package org.tensorflow.op;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.ragged.RaggedBincount;
+import org.tensorflow.op.ragged.RaggedFillEmptyRows;
+import org.tensorflow.op.ragged.RaggedFillEmptyRowsGrad;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * An API for building {@code ragged} operations as {@link Op Op}s
@@ -62,6 +65,36 @@ public final class RaggedOps {
       Operand<TInt64> splits, Operand<T> values, Operand<T> sizeOutput, Operand<U> weights,
       RaggedBincount.Options... options) {
     return RaggedBincount.create(scope, splits, values, sizeOutput, weights, options);
+  }
+
+  /**
+   * The RaggedFillEmptyRows operation
+   *
+   * @param <T> data type for {@code output_values} output
+   * @param valueRowids The valueRowids value
+   * @param values The values value
+   * @param nrows The nrows value
+   * @param defaultValue The defaultValue value
+   * @param <T> data type for {@code RaggedFillEmptyRows} output and operands
+   * @return a new instance of RaggedFillEmptyRows
+   */
+  public <T extends TType> RaggedFillEmptyRows<T> raggedFillEmptyRows(Operand<TInt64> valueRowids,
+      Operand<T> values, Operand<TInt64> nrows, Operand<T> defaultValue) {
+    return RaggedFillEmptyRows.create(scope, valueRowids, values, nrows, defaultValue);
+  }
+
+  /**
+   * The RaggedFillEmptyRowsGrad operation
+   *
+   * @param <T> data type for {@code d_values} output
+   * @param reverseIndexMap The reverseIndexMap value
+   * @param gradValues The gradValues value
+   * @param <T> data type for {@code RaggedFillEmptyRowsGrad} output and operands
+   * @return a new instance of RaggedFillEmptyRowsGrad
+   */
+  public <T extends TType> RaggedFillEmptyRowsGrad<T> raggedFillEmptyRowsGrad(
+      Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
+    return RaggedFillEmptyRowsGrad.create(scope, reverseIndexMap, gradValues);
   }
 
   /**

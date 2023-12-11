@@ -1,4 +1,4 @@
-/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2023 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
- * outputs outside the XLA computation.
+ * outputs outside the XLA computation. Supports ND sharding.
  *
  * @param <T> data type for {@code output} output
  */
@@ -52,7 +52,7 @@ public final class PartitionedOutput<T extends TType> extends RawOp implements I
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TPUPartitionedOutput";
+  public static final String OP_NAME = "TPUPartitionedOutputV2";
 
   private List<Output<T>> output;
 
@@ -66,46 +66,35 @@ public final class PartitionedOutput<T extends TType> extends RawOp implements I
   }
 
   /**
-   * Factory method to create a class wrapping a new TPUPartitionedOutput operation.
+   * Factory method to create a class wrapping a new TPUPartitionedOutputV2 operation.
    *
    * @param scope current scope
    * @param inputs A tensor which represents the full shape of partitioned tensors.
    * @param numSplits The value of the numSplits attribute
-   * @param options carries optional attribute values
-   * @param <T> data type for {@code TPUPartitionedOutput} output and operands
+   * @param partitionDims A list of integers describing how each dimension is partitioned. Emptiness
+   * indicates the inputs are replicated.
+   * @param <T> data type for {@code TPUPartitionedOutputV2} output and operands
    * @return a new instance of PartitionedOutput
    */
   @Endpoint(
       describeByClass = true
   )
   public static <T extends TType> PartitionedOutput<T> create(Scope scope, Operand<T> inputs,
-      Long numSplits, Options... options) {
+      Long numSplits, List<Long> partitionDims) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "PartitionedOutput");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.setAttr("num_splits", numSplits);
-    if (options != null) {
-      for (Options opts : options) {
-        if (opts.partitionDim != null) {
-          opBuilder.setAttr("partition_dim", opts.partitionDim);
-        }
-      }
+    long[] partitionDimsArray = new long[partitionDims.size()];
+    for (int i = 0 ; i < partitionDimsArray.length ; i++) {
+      partitionDimsArray[i] = partitionDims.get(i);
     }
+    opBuilder.setAttr("partition_dims", partitionDimsArray);
     return new PartitionedOutput<>(opBuilder.build());
   }
 
   /**
-   * Sets the partitionDim option.
-   *
-   * @param partitionDim An integer describles which dimension is partitioned.
-   * @return this Options instance.
-   */
-  public static Options partitionDim(Long partitionDim) {
-    return new Options().partitionDim(partitionDim);
-  }
-
-  /**
    * Gets output.
-   * A list of partitioned inputs which must have the same shape.
+   * A list of partitioned outputs which have the same shape.
    * @return output.
    */
   public List<Output<T>> output() {
@@ -116,27 +105,6 @@ public final class PartitionedOutput<T extends TType> extends RawOp implements I
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<T>> iterator() {
     return (Iterator) output.iterator();
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.PartitionedOutput}
-   */
-  public static class Options {
-    private Long partitionDim;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the partitionDim option.
-     *
-     * @param partitionDim An integer describles which dimension is partitioned.
-     * @return this Options instance.
-     */
-    public Options partitionDim(Long partitionDim) {
-      this.partitionDim = partitionDim;
-      return this;
-    }
   }
 
   @OpInputsMetadata(
@@ -154,16 +122,17 @@ public final class PartitionedOutput<T extends TType> extends RawOp implements I
     public final DataType T;
 
     /**
-     * An integer describles which dimension is partitioned.
+     * A list of integers describing how each dimension is partitioned. Emptiness
+     * indicates the inputs are replicated.
      */
-    public final long partitionDim;
+    public final long[] partitionDims;
 
     public Inputs(GraphOperation op) {
-      super(new PartitionedOutput<>(op), op, Arrays.asList("T", "partition_dim"));
+      super(new PartitionedOutput<>(op), op, Arrays.asList("T", "partition_dims"));
       int inputIndex = 0;
       inputs = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
-      partitionDim = op.attributes().getAttrInt("partition_dim");
+      partitionDims = op.attributes().getAttrIntList("partition_dims");
     }
   }
 }

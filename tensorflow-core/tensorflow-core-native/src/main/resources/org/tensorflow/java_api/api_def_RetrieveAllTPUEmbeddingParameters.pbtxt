@@ -1,6 +1,0 @@
-op {
-  graph_op_name: "RetrieveAllTPUEmbeddingParameters"
-  endpoint {
-    name: "tpu.RetrieveAllTPUEmbeddingParameters"
-  }
-}

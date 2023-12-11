@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "NonSerializableDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.NonSerializableDataset"
-  }
-}

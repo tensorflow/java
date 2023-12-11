@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ComputeDedupDataTupleMask"
+  endpoint {
+    name: "tpu.ComputeDedupDataTupleMask"
+  }
+}

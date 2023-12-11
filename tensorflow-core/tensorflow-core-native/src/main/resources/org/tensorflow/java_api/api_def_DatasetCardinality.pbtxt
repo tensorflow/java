@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "DatasetCardinality"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.DatasetCardinality"
-  }
-}

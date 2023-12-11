@@ -27,15 +27,19 @@ import org.tensorflow.op.signal.BatchIfft3d;
 import org.tensorflow.op.signal.Fft;
 import org.tensorflow.op.signal.Fft2d;
 import org.tensorflow.op.signal.Fft3d;
+import org.tensorflow.op.signal.FftNd;
 import org.tensorflow.op.signal.Ifft;
 import org.tensorflow.op.signal.Ifft2d;
 import org.tensorflow.op.signal.Ifft3d;
+import org.tensorflow.op.signal.IfftNd;
 import org.tensorflow.op.signal.Irfft;
 import org.tensorflow.op.signal.Irfft2d;
 import org.tensorflow.op.signal.Irfft3d;
+import org.tensorflow.op.signal.IrfftNd;
 import org.tensorflow.op.signal.Rfft;
 import org.tensorflow.op.signal.Rfft2d;
 import org.tensorflow.op.signal.Rfft3d;
+import org.tensorflow.op.signal.RfftNd;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -159,6 +163,29 @@ public final class SignalOps {
   }
 
   /**
+   * ND fast Fourier transform.
+   *  Computes the n-dimensional discrete Fourier transform over
+   *  designated dimensions of {@code input}. The designated dimensions of
+   *  {@code input} are assumed to be the result of {@code signal.FftNd}.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param <T> data type for {@code FFTND} output and operands
+   * @return a new instance of FftNd
+   */
+  public <T extends TType> FftNd<T> fftNd(Operand<T> input, Operand<TInt32> fftLength,
+      Operand<TInt32> axes) {
+    return FftNd.create(scope, input, fftLength, axes);
+  }
+
+  /**
    * Inverse fast Fourier transform.
    *  Computes the inverse 1-dimensional discrete Fourier transform over the
    *  inner-most dimension of {@code input}.
@@ -198,6 +225,29 @@ public final class SignalOps {
    */
   public <T extends TType> Ifft3d<T> ifft3d(Operand<T> input) {
     return Ifft3d.create(scope, input);
+  }
+
+  /**
+   * ND inverse fast Fourier transform.
+   *  Computes the n-dimensional inverse discrete Fourier transform over designated
+   *  dimensions of {@code input}. The designated dimensions of {@code input} are assumed to be
+   *  the result of {@code signal.IfftNd}.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param <T> data type for {@code IFFTND} output and operands
+   * @return a new instance of IfftNd
+   */
+  public <T extends TType> IfftNd<T> ifftNd(Operand<T> input, Operand<TInt32> fftLength,
+      Operand<TInt32> axes) {
+    return IfftNd.create(scope, input, fftLength, axes);
   }
 
   /**
@@ -352,6 +402,54 @@ public final class SignalOps {
   }
 
   /**
+   * ND inverse real fast Fourier transform.
+   *  Computes the n-dimensional inverse real discrete Fourier transform over
+   *  designated dimensions of {@code input}. The designated dimensions of {@code input} are
+   *  assumed to be the result of {@code signal.IrfftNd}. The inner-most dimension contains the
+   *  {@code fft_length / 2 + 1} unique components of the DFT of a real-valued signal.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @return a new instance of IrfftNd, with default output types
+   */
+  public IrfftNd<TFloat32> irfftNd(Operand<? extends TType> input, Operand<TInt32> fftLength,
+      Operand<TInt32> axes) {
+    return IrfftNd.create(scope, input, fftLength, axes);
+  }
+
+  /**
+   * ND inverse real fast Fourier transform.
+   *  Computes the n-dimensional inverse real discrete Fourier transform over
+   *  designated dimensions of {@code input}. The designated dimensions of {@code input} are
+   *  assumed to be the result of {@code signal.IrfftNd}. The inner-most dimension contains the
+   *  {@code fft_length / 2 + 1} unique components of the DFT of a real-valued signal.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param Treal The value of the Treal attribute
+   * @param <U> data type for {@code IRFFTND} output and operands
+   * @return a new instance of IrfftNd
+   */
+  public <U extends TNumber> IrfftNd<U> irfftNd(Operand<? extends TType> input,
+      Operand<TInt32> fftLength, Operand<TInt32> axes, Class<U> Treal) {
+    return IrfftNd.create(scope, input, fftLength, axes, Treal);
+  }
+
+  /**
    * Real-valued fast Fourier transform.
    *  Computes the 1-dimensional discrete Fourier transform of a real-valued signal
    *  over the inner-most dimension of {@code input}.
@@ -420,6 +518,31 @@ public final class SignalOps {
   public <U extends TType> Rfft3d<U> rfft3d(Operand<? extends TNumber> input,
       Operand<TInt32> fftLength, Class<U> Tcomplex) {
     return Rfft3d.create(scope, input, fftLength, Tcomplex);
+  }
+
+  /**
+   * ND fast real Fourier transform.
+   *  Computes the n-dimensional real discrete Fourier transform over designated
+   *  dimensions of {@code input}. The designated dimensions of {@code input} are assumed to be
+   *  the result of {@code signal.RfftNd}. The length of the last axis transformed will be
+   *  fft_length[-1]//2+1.
+   *  <p>If fft_length[i]&lt;shape(input)[i], the input is cropped. If
+   *  fft_length[i]&gt;shape(input)[i], the input is padded with zeros. If fft_length
+   *  is not given, the default shape(input) is used.
+   *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
+   *  all axes.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A complex tensor.
+   * @param fftLength An int32 tensor. The FFT length for each dimension.
+   * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
+   * @param Tcomplex The value of the Tcomplex attribute
+   * @param <U> data type for {@code RFFTND} output and operands
+   * @return a new instance of RfftNd
+   */
+  public <U extends TType> RfftNd<U> rfftNd(Operand<? extends TNumber> input,
+      Operand<TInt32> fftLength, Operand<TInt32> axes, Class<U> Tcomplex) {
+    return RfftNd.create(scope, input, fftLength, axes, Tcomplex);
   }
 
   /**

@@ -1,4 +1,4 @@
-/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2023 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TFRecordDataset";
+  public static final String OP_NAME = "TFRecordDatasetV2";
 
   private Output<? extends TType> handle;
 
@@ -60,7 +60,7 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Factory method to create a class wrapping a new TFRecordDataset operation.
+   * Factory method to create a class wrapping a new TFRecordDatasetV2 operation.
    *
    * @param scope current scope
    * @param filenames A scalar or vector containing the name(s) of the file(s) to be
@@ -69,6 +69,8 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
    * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar representing the number of bytes to buffer. A value of
    * 0 means no buffering will be performed.
+   * @param byteOffsets A scalar or vector containing the number of bytes for each file
+   * that will be skipped prior to reading.
    * @param options carries optional attribute values
    * @return a new instance of TfRecordDataset
    */
@@ -76,11 +78,13 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static TfRecordDataset create(Scope scope, Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize, Options... options) {
+      Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TInt64> byteOffsets,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TfRecordDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
+    opBuilder.addInput(byteOffsets.asOutput());
     if (options != null) {
       for (Options opts : options) {
         if (opts.metadata != null) {
@@ -160,6 +164,12 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
     public final Operand<TInt64> bufferSize;
 
     /**
+     * A scalar or vector containing the number of bytes for each file
+     * that will be skipped prior to reading.
+     */
+    public final Operand<TInt64> byteOffsets;
+
+    /**
      * The metadata attribute
      */
     public final String metadata;
@@ -170,6 +180,7 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
       filenames = (Operand<TString>) op.input(inputIndex++);
       compressionType = (Operand<TString>) op.input(inputIndex++);
       bufferSize = (Operand<TInt64>) op.input(inputIndex++);
+      byteOffsets = (Operand<TInt64>) op.input(inputIndex++);
       metadata = op.attributes().getAttrString("metadata");
     }
   }

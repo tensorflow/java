@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "DeleteIterator"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.DeleteIterator"
-  }
-}

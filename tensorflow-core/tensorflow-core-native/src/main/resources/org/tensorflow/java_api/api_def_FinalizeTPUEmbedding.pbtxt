@@ -1,6 +1,0 @@
-op {
-  graph_op_name: "FinalizeTPUEmbedding"
-  endpoint {
-    name: "tpu.FinalizeTPUEmbedding"
-  }
-}

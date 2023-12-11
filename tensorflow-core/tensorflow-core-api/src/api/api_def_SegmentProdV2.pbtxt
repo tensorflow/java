@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SegmentProdV2"
+  endpoint {
+    name: "math.SegmentProd"
+  }
+}

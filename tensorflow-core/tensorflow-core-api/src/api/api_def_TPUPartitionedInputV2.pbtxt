@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "TPUPartitionedInputV2"
+  endpoint {
+    name: "tpu.PartitionedInput"
+  }
+}

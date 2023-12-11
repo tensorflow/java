@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SparseSegmentSqrtNGradV2"
+  endpoint {
+    name: "sparse.SparseSegmentSqrtNGrad"
+  }
+}

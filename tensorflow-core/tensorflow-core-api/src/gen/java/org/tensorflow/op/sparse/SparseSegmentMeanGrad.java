@@ -1,4 +1,4 @@
-/* Copyright 2018-2022 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2018-2023 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,9 +37,12 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes gradients for SparseSegmentMean.
  * Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
- * value is output_dim0.
+ * value is the number of unique indexes in &quot;indices&quot;. Also returns vector
+ * &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
  *
  * @param <T> data type for {@code output} output
+ *
+ * @param <U> data type for {@code sorted_unique_indices} output
  */
 @OpMetadata(
     opType = SparseSegmentMeanGrad.OP_NAME,
@@ -48,42 +51,46 @@ import org.tensorflow.types.family.TNumber;
 @Operator(
     group = "sparse"
 )
-public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implements Operand<T> {
+public final class SparseSegmentMeanGrad<T extends TNumber, U extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "SparseSegmentMeanGrad";
+  public static final String OP_NAME = "SparseSegmentMeanGradV2";
 
   private Output<T> output;
+
+  private Output<U> sortedUniqueIndices;
 
   public SparseSegmentMeanGrad(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+    sortedUniqueIndices = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new SparseSegmentMeanGrad operation.
+   * Factory method to create a class wrapping a new SparseSegmentMeanGradV2 operation.
    *
    * @param scope current scope
    * @param grad gradient propagated to the SparseSegmentMean op.
    * @param indices indices passed to the corresponding SparseSegmentMean op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentMean op.
-   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
-   * @param <T> data type for {@code SparseSegmentMeanGrad} output and operands
+   * @param denseOutputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
+   * @param <T> data type for {@code SparseSegmentMeanGradV2} output and operands
+   * @param <U> data type for {@code SparseSegmentMeanGradV2} output and operands
    * @return a new instance of SparseSegmentMeanGrad
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TNumber> SparseSegmentMeanGrad<T> create(Scope scope, Operand<T> grad,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> outputDim0) {
+  public static <T extends TNumber, U extends TNumber> SparseSegmentMeanGrad<T, U> create(
+      Scope scope, Operand<T> grad, Operand<U> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> denseOutputDim0) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSegmentMeanGrad");
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder.addInput(outputDim0.asOutput());
+    opBuilder.addInput(denseOutputDim0.asOutput());
     return new SparseSegmentMeanGrad<>(opBuilder.build());
   }
 
@@ -96,15 +103,19 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
     return output;
   }
 
-  @Override
-  public Output<T> asOutput() {
-    return output;
+  /**
+   * Gets sortedUniqueIndices.
+   *
+   * @return sortedUniqueIndices.
+   */
+  public Output<U> sortedUniqueIndices() {
+    return sortedUniqueIndices;
   }
 
   @OpInputsMetadata(
       outputsClass = SparseSegmentMeanGrad.class
   )
-  public static class Inputs<T extends TNumber> extends RawOpInputs<SparseSegmentMeanGrad<T>> {
+  public static class Inputs<T extends TNumber, U extends TNumber> extends RawOpInputs<SparseSegmentMeanGrad<T, U>> {
     /**
      * gradient propagated to the SparseSegmentMean op.
      */
@@ -113,7 +124,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
     /**
      * indices passed to the corresponding SparseSegmentMean op.
      */
-    public final Operand<? extends TNumber> indices;
+    public final Operand<U> indices;
 
     /**
      * segment_ids passed to the corresponding SparseSegmentMean op.
@@ -123,7 +134,7 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
     /**
      * dimension 0 of &quot;data&quot; passed to SparseSegmentMean op.
      */
-    public final Operand<TInt32> outputDim0;
+    public final Operand<TInt32> denseOutputDim0;
 
     /**
      * The T attribute
@@ -144,9 +155,9 @@ public final class SparseSegmentMeanGrad<T extends TNumber> extends RawOp implem
       super(new SparseSegmentMeanGrad<>(op), op, Arrays.asList("T", "Tidx", "Tsegmentids"));
       int inputIndex = 0;
       grad = (Operand<T>) op.input(inputIndex++);
-      indices = (Operand<? extends TNumber>) op.input(inputIndex++);
+      indices = (Operand<U>) op.input(inputIndex++);
       segmentIds = (Operand<? extends TNumber>) op.input(inputIndex++);
-      outputDim0 = (Operand<TInt32>) op.input(inputIndex++);
+      denseOutputDim0 = (Operand<TInt32>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       Tidx = op.attributes().getAttrType("Tidx");
       Tsegmentids = op.attributes().getAttrType("Tsegmentids");

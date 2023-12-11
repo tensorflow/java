@@ -1,7 +1,0 @@
-op {
-  graph_op_name: "WindowDataset"
-  visibility: VISIBLE
-  endpoint {
-    name: "data.WindowDataset"
-  }
-}
