@@ -40,13 +40,13 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> data type for {@code output} output
  */
 @OpMetadata(
-    opType = Conv2DBackpropFilter.OP_NAME,
-    inputsClass = Conv2DBackpropFilter.Inputs.class
+    opType = Conv2dBackpropFilter.OP_NAME,
+    inputsClass = Conv2dBackpropFilter.Inputs.class
 )
 @Operator(
     group = "nn"
 )
-public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -54,7 +54,7 @@ public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp impleme
 
   private Output<T> output;
 
-  public Conv2DBackpropFilter(Operation operation) {
+  public Conv2dBackpropFilter(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
@@ -75,15 +75,15 @@ public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp impleme
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
    * @param <T> data type for {@code Conv2DBackpropFilterV2} output and operands
-   * @return a new instance of Conv2DBackpropFilter
+   * @return a new instance of Conv2dBackpropFilter
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TNumber> Conv2DBackpropFilter<T> create(Scope scope, Operand<T> input,
+  public static <T extends TNumber> Conv2dBackpropFilter<T> create(Scope scope, Operand<T> input,
       Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv2DBackpropFilter");
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv2dBackpropFilter");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
@@ -117,7 +117,7 @@ public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp impleme
         }
       }
     }
-    return new Conv2DBackpropFilter<>(opBuilder.build());
+    return new Conv2dBackpropFilter<>(opBuilder.build());
   }
 
   /**
@@ -215,7 +215,7 @@ public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp impleme
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.Conv2DBackpropFilter}
+   * Optional attributes for {@link org.tensorflow.op.nn.Conv2dBackpropFilter}
    */
   public static class Options {
     private Boolean useCudnnOnGpu;
@@ -315,9 +315,9 @@ public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp impleme
   }
 
   @OpInputsMetadata(
-      outputsClass = Conv2DBackpropFilter.class
+      outputsClass = Conv2dBackpropFilter.class
   )
-  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2DBackpropFilter<T>> {
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2dBackpropFilter<T>> {
     /**
      * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
      */
@@ -384,7 +384,7 @@ public final class Conv2DBackpropFilter<T extends TNumber> extends RawOp impleme
     public final long[] dilations;
 
     public Inputs(GraphOperation op) {
-      super(new Conv2DBackpropFilter<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
+      super(new Conv2dBackpropFilter<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       filter = (Operand<T>) op.input(inputIndex++);
