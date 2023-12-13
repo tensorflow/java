@@ -1,25 +1,22 @@
 # Building and Contributing to TensorFlow Java
 
+## Contributing
+
+### Formatting
+
+Java sources should be formatted according to the [Google style guide](https://google.github.io/styleguide/javaguide.html). It can be included
+in [IntelliJ](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml) and
+[Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).
+[Google's C++ style guide](https://google.github.io/styleguide/cppguide.html) should also be used for C++ code.
+
+### Dependencies
+
+For dependencies, we can use anything compliant with [this list](https://opensource.google/docs/thirdparty/licenses/#notice), but we want to keep the core libraries as dependency free as possible.
+
 ## Building
 
-To build all the artifacts, simply invoke the command `mvn install` at the root of this repository (or the Maven command of your choice). It is also
-possible to build artifacts with support for MKL enabled with
-`mvn install -Djavacpp.platform.extension=-mkl` or CUDA with `mvn install -Djavacpp.platform.extension=-gpu`
-or both with `mvn install -Djavacpp.platform.extension=-mkl-gpu`.
-
-When building this project for the first time in a given workspace, the script will attempt to download
-the [TensorFlow native library sources](https://github.com/tensorflow/tensorflow) and build of all the native code for your platform. This requires a
-valid environment for building TensorFlow, including the [bazel](https://bazel.build/)
-build tool and a few Python dependencies (please read [TensorFlow documentation](https://www.tensorflow.org/install/source)
-for more details).
-
-This step can take multiple hours on a regular laptop. It is possible though to skip completely the native build if you are working on a version that
-already has pre-compiled native artifacts for your platform [available on Sonatype OSS Nexus repository](#Snapshots). You just need to activate
-the `dev` profile in your Maven command to use those artifacts instead of building them from scratch
-(e.g. `mvn install -Pdev`).
-
-Modifying the native op generation code (not the annotation processor) or the JavaCPP configuration (not the abstract Pointers) will require a
-complete build could be required to reflect the changes, otherwise `-Pdev` should be fine.
+To build all the artifacts locally, simply invoke the command `mvn install -Djavacpp.platform.host` at the root of this repository (or the Maven command of your choice). It is also
+possible to build artifacts with support for CUDA® by adding the `-Djavacpp.platform.extension=-gpu` argument to the Maven command.
 
 ### JDK 16+
 
@@ -37,16 +34,10 @@ This can be done in `.mvn/jvm.config` or `MAVEN_OPTS`.
 
 ### Native Builds
 
-In some cases, like when adding GPU support or re-generating op classes, you will need to re-build the native library. 99% of this is building
-TensorFlow, which by default is configured for the [CI](.github/workflows/ci.yml). The build configuration can be customized using the same methods as
-TensorFlow, so if you're building locally, you may need to clone the [tensorflow](https://github.com/tensorflow/tensorflow) project, run its
-configuration script (`./configure`), and copy the resulting
-`.tf_configure.bazelrc` to `tensorflow-core-api`. This overrides the default options, and you can add to it manually (i.e. adding `build --copt="-g"`
-to build with debugging info).
-
-The `tensorflow-core/tensorflow-core-api/.bazelversion` file must be kept in sync with `@org_tensorflow/.bazel_version`. 
-This allows using [Bazelisk](https://github.com/bazelbuild/bazelisk) which runs the bazel version given in .bazelversion instead of having to 
-physically reinstall a specific `bazel` version each time the TensorFlow version changes.
+By default, the build will attempt to download the existing TensorFlow binaries from the web for the platform it is running on (so you need to have an active internet connection).
+If such binaries are not available for your platform, you will need to build the TensorFlow runtime library from sources, by adding the `-Dnative.build` argument to your Maven
+command. This requires a valid environment for building TensorFlow, including the [bazel](https://bazel.build/) build tool and a few Python dependencies
+(please read [TensorFlow documentation](https://www.tensorflow.org/install/source) for more details). Note that building from sources can take multiple hours on a regular laptop.
 
 ### GPU Support
 
@@ -64,19 +55,9 @@ precedence if present.
 
 The TensorFlow Java project relies on [GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)
 to build and distribute the native binaries for TensorFlow. Unfortunately at the moment, GitHub Actions still does not support runners with a
-Apple Silicon chip (such as M1). Therefore, we cannot distribute the binaries for this platform, so they must be compiled and installed locally on such systems.
+Apple Silicon chip (such as M1). Therefore, we cannot distribute artifacts for this platform, so they must be build locally on these systems.
 
-Please follow the present [procedure](CONTRIBUTING.md#building) for building TensorFlow Java from sources.
-
-:warning: As of 12-16-2022, TensorFlow fails to build on XCode command line tools version 14+. If you have such version installed, it might 
-be necessary to downgrade it to a [previous version](https://developer.apple.com/download/all/?q=Xcode), like 13.4.1.
-
-## Running Tests
-
-`ndarray` can be tested using the maven `test` target.  `tensorflow-core` and `tensorflow-framework`, however, should be tested using
-the `integration-test` target, due to the need to include native binaries. It will **not** be ran when using the `test` target of parent projects, but
-will be ran by `install` or `integration-test`. If you see a `no jnitensorflow in java.library.path` error from tests it is likely because you're
-running the wrong test target.
+Please follow the present [procedure](CONTRIBUTING.md#building) for building TensorFlow Java.
 
 ### Native Crashes
 
@@ -116,19 +97,18 @@ To upgrade the version of TensorFlow that is embedded within TensorFlow Java, pl
 
 1. Download locally the archive of the tensorflow release at https://github.com/tensorflow/tensorflow/archive/refs/tags/vX.X.X.tar.gz
 2. Compute the SHA sum using the shell command `sha256sum <tensorflow-x.x.x.tar.gz>`
-3. Update `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule in Bazel [workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/WORKSPACE#L19)
+3. Update `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule in Bazel [workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-native/WORKSPACE#L19)
 4. Extract the archive in a temporary folder
-5. Copy the content of `tensorflow-x.x.x/.bazelrc` file to `tensorflow-core/tensorflow-core-api/tensorflow.bazelrc` under TensorFlow Java source tree
-6. Copy the content of `tensorflow-x.x.x/WORKSPACE` after the "###### Copy content of..." notice if `tensorflow-core/tensorflow-core-api/WORKSPACE`, read notice for more details
+5. Copy the content of `tensorflow-x.x.x/.bazelrc` file to `tensorflow-core/tensorflow-core-native/tensorflow.bazelrc` under TensorFlow Java source tree
+6. Copy the content of `tensorflow-x.x.x/WORKSPACE` after the "###### Copy content of..." notice if `tensorflow-core/tensorflow-core-native/WORKSPACE`, read notice for more details
+7. Copy the content of `tensorflow-x.x.x/.bazelversion` file to `tensorflow-core/tensorflow-core-native/.bazelversion`
+8. Validate that options in `tensorflow-core/tensorflow-core-native/.bazelrc` are still accurate or update them accordingly
+9. Update URLs of existing TensorFlow binaries in the `tensorflow-core/tensorflow-core-native/scripts/dist_download` script
 
-If the version of `tensorflow-x.x.x/.bazelversion` is different than the one found in `tensorflow-core/tensorflow-core-api/.bazelversion`
-
-1. Update the version of `tensorflow-core/tensorflow-core-api/.bazelversion` to match TensorFlow's one
-2. Update the CI build scripts at `.github/workflows/ci.yml` under TensorFlow Java source tree to reflect the version of Bazel to download and run for all platforms
-3. Validate that options in `tensorflow-core/tensorflow-core-api/.bazelrc` are still accurate or update them accordingly
+#### Patching TensorFlow Sources
 
 In order to build the TensorFlow native library to work with TensorFlow Java, we sometimes need to apply some patches to the TensorFlow sources. These
-patches are found in `tensorflow-core/tensorflow-core-api/external`.
+patches are found in `tensorflow-core/tensorflow-core-native/external`.
 
 - If you have an error like "Error in fail: Error applying patch //external:xxx.patch:", verify why the patch is failing by looking at the TensorFlow source code.
   Chances are that this code has changed and the patch needs to be updated.
@@ -137,41 +117,39 @@ patches are found in `tensorflow-core/tensorflow-core-api/external`.
 
 Once these steps have been executed, you can run `mvn install` to build the new version but make sure to delete completely the `src/gen` directory of `tensorflow-core-api` first.
 
-### Ops Classification
+### Generating Java Bindings
 
-After building with the version of TensorFlow, you might notice that a lot of new operations appeared in the `org.tensorflow.ops.core`
-package of the [generated sources](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow/op/core) of
-the `tensorflow-core-api` module. Many of these ops must be reclassified manually after running this initial build.
+After upgrading the TensorFlow library, you need to regenerate all Java bindings that depends on the native code. That includes Java protos, C API bindings (JavaCPP) and
+operator classes. You can trigger the regeneration of these bindings with the Maven command `mvn clean install -Pgenerating -Djavacpp.platform.host`.
 
-The actual classification process is a bit arbitrary and based on the good jugement of the developer. The reason is that most ops in Python
+This will trigger a small Bazel build of the TensorFlow sources to regenerate the Java protos, so make sure your [environment](CONTRIBUTING.md#native-builds) is setup properly.
+
+#### Operations Classification
+
+When generating the operator classes, the build process might prompt you to provide information about the new operations found in the targeted TensorFlow version. This will generate a new API definition
+under the [tensorflow-core/tensorflow-core-api/api](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/api) folder. The required 
+information is:
+* The visibility for this op
+  * VISIBLE to force the creation of a Java class that will be also exposed by the `*Ops` API classes.
+  * HIDDEN for creating a Java class that won't be exposed by the `*Ops` API classes.
+  * SKIP for not creating a Java class for this operation
+  * DEFAULT to rely on the visibility settings set in TensorFlow sources
+* The name group for this operator
+  * This name is used to place this operator under the right subpackage and `*Ops` API.
+  * For example, the group `nn` will place the operator `Conv` under the `org.tensorflow.op.nn` package and in the `NnOps` API class.
+  * When no group is specified, the operator will go under the `org.tensorflow.op.core` package and in the `Ops` API class.
+* The name for this op
+  * By default is the name found in TensorFlow registry but can be useful in some cases to rename it in case it clashes with Java keywords (e.g. `Switch`-> `SwitchCond`)
+  * Can also be used to remove the suffix of an operation that has multiple versions (e.g. `RestoreV2` -> `Restore`)
+
+The actual classification process is a bit arbitrary and based on the good judgement of the developer. The reason is that most ops in Python
 are being wrapped by a higher-level API and therefore are left unclassified, while in Java they are exposed and can be used directly by
-the users.
+the users. 
 
-For classifying an op, an `api_def` proto must be added to the [`tensorflow-core-api/src/bazel/api_def`](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/bazel/api_def)
-folder for this purpose, redefining optionally its endpoints or its visibility.
+Please review the location of the new generated operators after the build is complete and make necessary adjustments to the API definitions protos 
+manually if some of them seems to be in the "wrong" place, making sure to repeat this process until satisfaction.
 
-Writing these protos and trying the guess the right location for each new operation can become a tedious job so an utility program called `java_api_import`
-has been created to help you with this task. This utility is available under the `bazel-bin` folder of `tensorflow-core-api` after the
-initial build. Here is how to invoke it:
-
-```
-cd tensorflow-core/tensorflow-core-api
-./bazel-bin/java_api_import \
-  --java_api_dir=src/bazel/api_def \
-  --tf_src_dir=bazel-tensorflow-core-api/external/org_tensorflow
-```
-
-For each new operation detected (i.e. any operation that does not have a valid `api_def` proto yet), the utility will suggest you some possible
-package names that can be a good match for its classification (unless a "perfect match" has been found in the Python code, in which case the utility
-will automatically classify the op). It is also possible to enter manually the name of the package to use, and the package can have multiple levels (e.g. `linalg.sparse`). The utility
-application will then take care to write the `api_def` proto for each operation classified.
-
-Make sure to erase completely the generated source folder of the `tensorflow-core-api` module before rerunning the build so you can see
-if your ops have been classified properly. Don't worry, that second run of the build will be faster! Please review the location of the new generated ops 
-after rebuilding and make necessary adjustments to the `api_def`protos manually if some of them seems to be in the "wrong" place, making sure to repeat this process
-until satisfaction.
-
-#### Ops Kernel Upgrade
+#### New Operation Version
 
 Some operations might be just an upgrade of another existing operations. For instance, there are many version of the `BatchMatMul` kernel (V1, V2, V3...).
 When you see that a new op is just an upgrade from another other one, make sure that the latest version has a valid endpoint and that all other
@@ -180,47 +158,20 @@ previous versions of this operation are marked as `VISIBILITY: SKIP`.
 ### Java Protos Classification
 
 TensorFlow Java distributes a large number proto definitions found in the TensorFlow native library as Java classes. Again, new protos might not
-be classified properly since they may be lacking the `option java_*` statements at the beginning of their definition. If you notice in the
-[generated protos](https://github.com/tensorflow/java/tree/master/tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow/proto) of the `tensorflow-core-api`
-that some new proto classes seems to be in the wrong package, create a Bazel patch at this effect to add the missing options.
-See [existing patches](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-api/external/tensorflow-proto.patch) for examples.
+be classified properly since they may be lacking the `option java_*` statements at the beginning of their definition. The build script will attempt
+to mitigate this omission by generating the proto bindings under the same package as the `package` statement (if also present), and under the root package
+`org.tensorflow.proto`.
 
-## Contributing
-
-### Formatting
-
-Java sources should be formatted according to the [Google style guide](https://google.github.io/styleguide/javaguide.html). It can be included
-in [IntelliJ](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml) and
-[Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).
-[Google's C++ style guide](https://google.github.io/styleguide/cppguide.html) should also be used for C++ code.
-
-### Dependencies
-
-For dependencies, we can use anything compliant with [this list](https://opensource.google/docs/thirdparty/licenses/#notice), but we want to keep the core libraries as dependency free as possible.
-
-### Code generation
+#### Custom Operators
 
 Code generation for `Ops` and related classes is done during `tensorflow-core-api`'s `compile` phase, using the annotation processor in
 `tensorflow-core-generator`. If you change or add any operator classes (annotated with `org.tensorflow.op.annotation.Operator`), endpoint methods (
 annotated with `org.tensorflow.op.annotation.Endpoint`), or change the annotation processor, be sure to re-run a
-`mvn install` in `tensorflow-core-api` (`-Pdev` is fine for this, it just needs to run the annotation processor).
+`mvn clean install -Pgenerating` in `tensorflow-core-api`.
 
-### Working with Bazel generation
+## Known Issues
 
-`tensorflow-core-api` uses Bazel-built C++ code generation to generate most of the `@Operator` classes. See [Native Builds](#native-builds) for
-instructions on configuring the bazel build. To run the code generation, use the `//:java_op_generator` target. The resulting binary has good help
-text (viewable in
-[op_gen_main.cc](tensorflow-core/tensorflow-core-api/src/bazel/op_generator/op_gen_main.cc#L31-L48)). Generally, it should be called with arguments
-that are something like:
-
-```
-bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so --output_dir=src/gen/java --api_dirs=bazel-tensorflow-core-api/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def
-```
-
-(called in `tensorflow-core-api`).
-
-
-## Adding Gradients
+### Missing Gradients
 
 In some cases, a op supported by Tensorflow Java will not have a gradient defined, resulting in errors like this:
 ```
@@ -229,4 +180,7 @@ org.tensorflow.exceptions.TensorFlowException: No gradient defined for op: ReadV
 	at org.tensorflow.Graph.addGradients(Graph.java:708)
 	at org.tensorflow.Graph.addGradients(Graph.java:291)
 ```
-The description in the [linked file](https://www.tensorflow.org/code/tensorflow/cc/gradients/README.md) are accurate for adding C++ Graph gradients, which are used by our `Graph`.  Eexamples of doing that are [tensorflow/tensorflow#46115](https://github.com/tensorflow/tensorflow/pull/46115) and [tensorflow/tensorflow#47774](https://github.com/tensorflow/tensorflow/pull/47774).  However, Tensorflow Core is in the process of migrating gradient definitions to [`c/experimental/gradients`](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c/experimental/gradients), which will be what our eager mode uses once it has gradient support. Anyone adding gradients is strongly encouraged to add one there as well, and eventually it should replace the legacy `cc/gradients` gradients.
+The description in the [linked file](https://www.tensorflow.org/code/tensorflow/cc/gradients/README.md) are accurate for adding C++ Graph gradients, which are used by our `Graph`.  Examples of doing that are [tensorflow/tensorflow#46115](https://github.com/tensorflow/tensorflow/pull/46115) and [tensorflow/tensorflow#47774](https://github.com/tensorflow/tensorflow/pull/47774).  
+
+However, Tensorflow Core is in the process of migrating gradient definitions to [`c/experimental/gradients`](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c/experimental/gradients), which will be what our eager mode uses once it has gradient support. 
+Anyone adding gradients is strongly encouraged to add one there as well, and eventually it should replace the legacy `cc/gradients` gradients.
