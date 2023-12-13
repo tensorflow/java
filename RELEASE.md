@@ -59,10 +59,11 @@ version number.
     ```
     mvn versions:set -DnewVersion=1.0.0
     ```
-4.  In the [README.md](https://github.com/tensorflow/java/blob/master/README.md) file,
-    update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
-    section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
-    table to reflect the new version being released.
+4.  Update the TensorFlow Java version to reflect the new release at the following locations:
+    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L61
+    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L167
+    - https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts
+    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support
 
 5.  Commit the changes and push the new branch to the GitHub repository
     ```
@@ -89,12 +90,11 @@ version number.
     ```
     mvn versions:set -DnewVersion=1.0.1
     ```
-5.  In the [README.md](https://github.com/tensorflow/java/blob/master/README.md) file,
-    update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
-    section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
-    table to reflect the new version being released.
-    Also update all references to the previous version in the [installation instructions](https://github.com/tensorflow/java/blob/master/docs/install.md)
-    for the new one.
+5.  Update the TensorFlow Java version to reflect the new release at the following locations:
+    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L61
+    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L167
+    - https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts
+    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support
 
 6.  Commit the changes and push the branch to the GitHub repository
     ```
@@ -195,10 +195,10 @@ Some things of note:
    ```
    mvn versions:set -DnewVersion=1.1.0-SNAPSHOT
    ```
-3.  In the [README.md](https://github.com/tensorflow/java/blob/master/README.md) file,
-    update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
-    section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
-    table to reflect the new snapshot version.
+3. Update the TensorFlow Java version to reflect the new snapshot at the following locations:
+    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L104
+    - https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts
+    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support
 
 4. Commit your changes and push the master branch to the GitHub repository
    ```
