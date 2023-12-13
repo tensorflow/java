@@ -9,10 +9,6 @@ http_archive(
     name = "org_tensorflow",
     patches = [
         ":tensorflow-visibility.patch",
-#        ":tensorflow-windows.patch",
-#        ":tensorflow-proto.patch",
-#        ":custom-grad-symbols.patch",
-#        ":tensorflow-nccl.patch"
     ],
     patch_tool = "patch",
     patch_args = ["-p1"],

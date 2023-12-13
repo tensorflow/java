@@ -32,10 +32,10 @@ The following describes the layout of the repository and its different artifacts
 
 ## Communication
 
-This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join the group
-by subscribing to the [jvm@tensorflow.org](https://groups.google.com/a/tensorflow.org/forum/#!forum/jvm)
-mailing list, or you can simply send pull requests and raise issues to this repository.
-There is also a [sig-jvm Gitter channel](https://gitter.im/tensorflow/sig-jvm).
+This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily contact the group
+by posting to the [TensorFlow Forum](https://discuss.tensorflow.org), adding the `sig_jvm` tag, or by writing to us on
+the [sig-jvm Gitter channel](https://gitter.im/tensorflow/sig-jvm). You can also simply send pull requests 
+and raise issues to this repository.
 
 ## Building Sources
 
@@ -48,19 +48,18 @@ for each targeted platforms or with a single dependency that target them all.
 
 ### Individual dependencies
 
-With this option, you must first add an unclassified dependency to `tensorflow-core-api` and then add one or multiple
-native dependencies to this same artifact with a classifier targeting a specific platform. This option is preferred as 
+With this option, you must first add a dependency to `tensorflow-core-api` and then one or multiple
+dependencies to `tensorflow-core-native` with a classifier targeting a specific platform. This option is preferred as 
 it minimize the size of your application by only including the TensorFlow builds you need, at the cost of being more 
 restrictive. 
 
-While TensorFlow Java can be compiled for [multiple platforms](https://github.com/tensorflow/java/blob/dc64755ee948c71f1321be27478828a51f1f3cf7/tensorflow-core/pom.xml#L54),
+While TensorFlow Java can be compiled for [multiple platforms](https://github.com/tensorflow/java/blob/master/tensorflow-core/pom.xml#L54),
 only binaries for the followings are being **supported and distributed** by this project:
 
 - `linux-x86_64`: Linux platforms on Intel chips
 - `linux-x86_64-gpu`: Linux platforms on Intel chips with Cuda GPU support
 - `macosx-x86_64`: MacOS X platforms on Intel chips
 - `windows-x86_64`: Windows platforms on Intel chips
-- `windows-x86_64-gpu`: Windows platforms on Intel chips with Cuda GPU support
 
 *Note: No binaries are distributed to run TensorFlow Java on machines with Apple Silicon chips (`macosx-arm64`), these 
 should be build from sources. See [here](CONTRIBUTING.md#apple-silicon) for more details.*
@@ -75,7 +74,7 @@ systems with no GPU support, you should add the following dependencies:
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-api</artifactId>
+  <artifactId>tensorflow-core-native</artifactId>
   <version>0.5.0</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
@@ -91,21 +90,21 @@ native dependencies as follows:
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-api</artifactId>
+  <artifactId>tensorflow-core-native</artifactId>
   <version>0.5.0</version>
   <classifier>linux-x86_64-gpu</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-api</artifactId>
+  <artifactId>tensorflow-core-native</artifactId>
   <version>0.5.0</version>
   <classifier>macosx-x86_64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-api</artifactId>
+  <artifactId>tensorflow-core-native</artifactId>
   <version>0.5.0</version>
-  <classifier>windows-x86_64-gpu</classifier>
+  <classifier>windows-x86_64</classifier>
 </dependency>
 ```
 
@@ -117,8 +116,7 @@ Only one dependency can be added per platform, meaning that you cannot add nativ
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
 required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
 
-- `tensorflow-core-platform`: Includes TenSupports for `linux-x86_64`, `macosx-x86_64` and `windows-x86_64`
-- `tensorflow-core-platform-gpu`: Supports `linux-x86_64-gpu` and `windows-x86_64-gpu`
+- `tensorflow-core-platform`: Includes supports for `linux-x86_64`, `macosx-x86_64` and `windows-x86_64`
 
 For example, to run TensorFlow Java on any platform for which a binary is being distributed by this project, you can 
 simply add this dependency to your application:
@@ -126,14 +124,6 @@ simply add this dependency to your application:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>0.5.0</version>
-</dependency>
-```
-or this dependency if you want to run it only on platforms with GPU support:
-```xml
-<dependency>
-  <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-platform-gpu</artifactId>
   <version>0.5.0</version>
 </dependency>
 ```
@@ -174,17 +164,17 @@ to add Sonatype OSS repository in your pom.xml, like the following
 This table shows the mapping between TensorFlow, TensorFlow Java and minimum supported Java versions.
 
 | TensorFlow Java Version  | TensorFlow Version | Minimum Java Version |
-| ------------- | ------------- | --------------- |
-| 0.2.0  | 2.3.1  | 8 |
-| 0.3.0  | 2.4.1  | 8 |
-| 0.3.1  | 2.4.1  | 8 |
-| 0.3.2  | 2.4.1  | 8 |
-| 0.3.3  | 2.4.1  | 8 |
-| 0.4.0  | 2.7.0  | 8 |
-| 0.4.1  | 2.7.1  | 8 |
-| 0.4.2  | 2.7.4  | 8 |
-| 0.5.0  | 2.10.1 | 11 |
-| 0.6.0-SNAPSHOT | 2.10.1 | 11 |
+| ------------- |--------------------| --------------- |
+| 0.2.0  | 2.3.1              | 8 |
+| 0.3.0  | 2.4.1              | 8 |
+| 0.3.1  | 2.4.1              | 8 |
+| 0.3.2  | 2.4.1              | 8 |
+| 0.3.3  | 2.4.1              | 8 |
+| 0.4.0  | 2.7.0              | 8 |
+| 0.4.1  | 2.7.1              | 8 |
+| 0.4.2  | 2.7.4              | 8 |
+| 0.5.0  | 2.10.1             | 11 |
+| 0.6.0-SNAPSHOT | 2.15.0             | 11 |
 
 ## How to Contribute?
 
