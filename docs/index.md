@@ -44,8 +44,9 @@ The following describes the layout of the repository and its different artifacts
 
 ## Communication
 
-This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join the group
-by writing at the [sig-jvm Gitter channel](https://gitter.im/tensorflow/sig-jvm), or you can simply send pull requests
+This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily contact the group
+by posting to the [TensorFlow Forum](https://discuss.tensorflow.org), adding the `sig_jvm` tag, or by writing to us on
+the [sig-jvm Gitter channel](https://gitter.im/tensorflow/sig-jvm). You can also simply send pull requests
 and raise issues to this repository.
 
 
