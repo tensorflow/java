@@ -111,7 +111,7 @@
             <phase>initialize</phase>
             <configuration>
               <skip>${bazel.build.skip}</skip>
-              <executable>/bin/bash</executable>
+              <executable>bash</executable>
               <arguments>
                 <argument>scripts/bazel_build.sh</argument>
               </arguments>
@@ -134,7 +134,7 @@
             <phase>generate-sources</phase>
             <configuration>
               <skip>${bazel.generate.skip}</skip>
-              <executable>/bin/bash</executable>
+              <executable>bash</executable>
               <arguments>
                 <argument>scripts/bazel_generate.sh</argument>
               </arguments>
@@ -157,7 +157,7 @@
             <phase>clean</phase>
             <configuration>
               <skip>${bazel.clean.skip}</skip>
-              <executable>/bin/bash</executable>
+              <executable>bash</executable>
               <arguments>
                 <argument>scripts/bazel_clean.sh</argument>
               </arguments>
