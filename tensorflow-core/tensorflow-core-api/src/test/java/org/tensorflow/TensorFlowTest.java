@@ -18,7 +18,6 @@ package org.tensorflow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
@@ -40,30 +39,16 @@ public class TensorFlowTest {
   }
 
   @Test
-  public void loadLibrary() {
-    File customOpLibrary = Paths.get("").resolve("bazel-bin/libcustom_ops_test.so").toFile();
+  public void loadTFTextLibrary() {
+    String libname = System.mapLibraryName("_sentence_breaking_ops").substring(3); // strips off the lib on macOS & Linux, don't care about Windows.
+    File customOpLibrary = Paths.get("", "target","tf-text-download","tensorflow_text","python","ops",libname).toFile();
 
-    // Disable this test if the custom op library is not available. This may happen on some
-    // platforms (e.g. Windows) or when using a development profile that skips the native build
+    // Disable this test if the tf-text library is not available. This may happen on some platforms (e.g. Windows)
     assumeTrue(customOpLibrary.exists());
 
-    try (Graph g = new Graph()) {
-      // Build a graph with an unrecognized operation.
-      try {
-        g.baseScope().opBuilder("MyTest", "MyTest").build();
-        fail("should not be able to construct graphs with unregistered ops");
-      } catch (IllegalArgumentException e) {
-        // expected exception
-      }
-
-      // Load the library containing the operation.
-      OpList opList = TensorFlow.loadLibrary(customOpLibrary.getAbsolutePath());
-      assertNotNull(opList);
-      assertEquals(1, opList.getOpCount());
-      assertEquals(opList.getOpList().get(0).getName(), "MyTest");
-
-      // Now graph building should succeed.
-      g.baseScope().opBuilder("MyTest", "MyTest").build();
-    }
+    OpList opList = TensorFlow.loadLibrary(customOpLibrary.getAbsolutePath());
+    assertNotNull(opList);
+    assertEquals(1, opList.getOpCount());
+    assertEquals(opList.getOpList().get(0).getName(), "SentenceFragments");
   }
 }
