@@ -18,6 +18,8 @@
     <java.module.name>org.tensorflow.core.api</java.module.name>
     <ndarray.version>0.4.0</ndarray.version>
     <truth.version>1.1.5</truth.version>
+    <test.download.skip>false</test.download.skip>
+    <test.download.folder>${project.build.directory}/tf-text-download/</test.download.folder>
   </properties>
 
   <dependencies>
@@ -259,6 +261,35 @@
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <!--
+              Download TF-Text for the custom op loading test.
+            -->
+            <id>dist-download</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${test.download.skip}</skip>
+              <executable>bash</executable>
+              <arguments>
+                <argument>scripts/test_download.sh</argument>
+                <argument>${test.download.folder}</argument>
+              </arguments>
+              <environmentVariables>
+                <PLATFORM>${native.classifier}</PLATFORM>
+              </environmentVariables>
+              <workingDirectory>${project.basedir}</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
