@@ -25,6 +25,7 @@
     <dist.download.url/>
     <dist.download.folder>${project.build.directory}/dist/</dist.download.folder>
     <java.module.name>org.tensorflow.core.native</java.module.name>
+    <nativeSourceDirectory>${project.basedir}/src/main/native</nativeSourceDirectory>
   </properties>
 
   <dependencies>
@@ -213,9 +214,8 @@
           </propertyKeysAndValues>
           <classPath>${project.build.outputDirectory}</classPath>
           <includePaths>
-            <includePath>${project.basedir}/</includePath>
             <includePath>${dist.download.folder}/tensorflow/include/</includePath>
-            <includePath>${project.basedir}/target/classes/org/tensorflow/internal/c_api/include/</includePath>
+            <includePath>${nativeSourceDirectory}/org/tensorflow/internal/c_api/</includePath>
             <!-- additional include paths in case of a full native build -->
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
             <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>
@@ -276,6 +276,7 @@
             </goals>
             <configuration>
               <skip>${javacpp.build.skip}</skip>
+              <!--deleteJniFiles>false</deleteJniFiles-->
               <outputDirectory>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</outputDirectory>
               <classOrPackageName>org.tensorflow.internal.c_api.**</classOrPackageName>
               <copyLibs>true</copyLibs>
@@ -382,6 +383,11 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
+        <configuration>
+          <!-- Forcing the default version here prevents IntelliJ to set project at Java8 level when importing
+               Maven settings, caused by the override in javacpp-compiler configuration -->
+          <release>${maven.compiler.release}</release>
+        </configuration>
         <executions>
           <execution>
             <!--
@@ -411,13 +417,6 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>org.tensorflow.core</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
         <executions>
           <execution>
             <!--
@@ -497,10 +496,6 @@
         <artifactId>maven-source-plugin</artifactId>
         <version>3.3.0</version>
         <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>leave-disabled-to-not-generate-sources-twice-on-release</phase>
-          </execution>
           <execution>
             <id>attach-source</id>
             <goals>

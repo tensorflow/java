@@ -15,32 +15,6 @@ limitations under the License.
 */
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddControlInput;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInput;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInputList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperation;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperationLocked;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperation;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperationLocked;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationName;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBool;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBoolList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloat;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloatList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFuncName;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrInt;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrIntList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrShape;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrShapeList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrString;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrStringList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTensor;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTensorList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrType;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTypeList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrValueProto;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetDevice;
-
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -67,37 +41,22 @@ import org.tensorflow.proto.AttrValue.ListValue;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.proto.NameAttrList;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
+
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
 
-  // ---------------------------------------------------------
-  // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-  // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-  // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-  // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-  // ---------------------------------------------------------
-//  GraphOperationBuilder(
-//      Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
-//    this.graph = graph;
-//    this.scope = scope;
-//    this.dangerousGradientBuilder = dangerousGradientBuilder;
-//    try (Graph.Reference r = graph.ref()) {
-//      if (dangerousGradientBuilder) {
-//        this.unsafeNativeHandle = allocateDangerousGradient(r.nativeHandle(), type, name);
-//      } else {
-//        this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
-//      }
-//    }
-//  }
-  // ---------------------------------------------------------
-  // END OF CUSTOM GRADIENT
-  // ---------------------------------------------------------
-
-  GraphOperationBuilder(Graph graph, String type, String name, Scope scope) {
+  GraphOperationBuilder(
+      Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
     this.graph = graph;
     this.scope = scope;
+    this.dangerousGradientBuilder = dangerousGradientBuilder;
     try (Graph.Reference r = graph.ref()) {
-      this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
+      if (dangerousGradientBuilder) {
+        this.unsafeNativeHandle = allocateDangerousGradient(r.nativeHandle(), type, name);
+      } else {
+        this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
+      }
     }
   }
 
@@ -110,22 +69,12 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperation build() {
     scope.apply(this);
     try (Graph.Reference r = graph.ref()) {
-      // ---------------------------------------------------------
-      // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-      // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-      // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-      // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-      // ---------------------------------------------------------
-//      TF_Operation built;
-//      if (dangerousGradientBuilder) {
-//        built = finishDangerousGradient(r.nativeHandle(), unsafeNativeHandle);
-//      } else {
-//        built = finish(unsafeNativeHandle);
-//      }
-      // ---------------------------------------------------------
-      // END OF CUSTOM GRADIENT
-      // ---------------------------------------------------------
-      TF_Operation built = finish(unsafeNativeHandle);
+      TF_Operation built;
+      if (dangerousGradientBuilder) {
+        built = finishDangerousGradient(r.nativeHandle(), unsafeNativeHandle);
+      } else {
+        built = finish(unsafeNativeHandle);
+      }
       GraphOperation op = new GraphOperation(graph, built);
       unsafeNativeHandle = null;
       if (scope.isInit()) {
@@ -430,22 +379,13 @@ public final class GraphOperationBuilder implements OperationBuilder {
   private final Graph graph;
   private final Scope scope;
 
-  // ---------------------------------------------------------
-  // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-  // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-  // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-  // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-  // ---------------------------------------------------------
-//  /**
-//   * Use builders without locking. This should only be used during custom gradient building.
-//   *
-//   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
-//   * locked by the gradient builder will fail without this.
-//   */
-//  private final boolean dangerousGradientBuilder;
-  // ---------------------------------------------------------
-  // END OF CUSTOM GRADIENT
-  // ---------------------------------------------------------
+  /**
+   * Use builders without locking. This should only be used during custom gradient building.
+   *
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
+   */
+  private final boolean dangerousGradientBuilder;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
@@ -499,32 +439,23 @@ public final class GraphOperationBuilder implements OperationBuilder {
     }
   }
 
-  // ---------------------------------------------------------
-  // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-  // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-  // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-  // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-  // ---------------------------------------------------------
-//  /**
-//   * Use builders without locking. This should only be used during custom gradient building.
-//   *
-//   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
-//   * locked by the gradient builder will fail without this.
-//   */
-//  private static TF_Operation finishDangerousGradient(TF_Graph g, TF_OperationDescription handle) {
-//    requireHandle(handle);
-//
-//    try (PointerScope scope = new PointerScope()) {
-//      TF_Status status = TF_Status.newStatus();
-//      TF_Operation op = TF_FinishOperationLocked(handle, status);
-//      status.throwExceptionIfNotOK();
-//      g.name_map().erase(TF_OperationName(op));
-//      return op;
-//    }
-//  }
-  // ---------------------------------------------------------
-  // END OF CUSTOM GRADIENT
-  // ---------------------------------------------------------
+  /**
+   * Use builders without locking. This should only be used during custom gradient building.
+   *
+   * <p>The graph locks are not re-entrant, so attempting to add an op to a graph that has been
+   * locked by the gradient builder will fail without this.
+   */
+  private static TF_Operation finishDangerousGradient(TF_Graph g, TF_OperationDescription handle) {
+    requireHandle(handle);
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_Operation op = TF_FinishOperationLocked(handle, status);
+      status.throwExceptionIfNotOK();
+      TF_UnmapOperationName(g, op);
+      return op;
+    }
+  }
 
   private static void addInput(TF_OperationDescription handle, TF_Operation opHandle, int index) {
     try (PointerScope scope = new PointerScope()) {

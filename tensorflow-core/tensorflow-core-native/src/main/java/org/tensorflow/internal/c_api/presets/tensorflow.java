@@ -42,7 +42,7 @@ import java.util.List;
     value = {
       @Platform(
           value = {"linux", "macosx", "windows"},
-          compiler = "cpp11",
+          compiler = "cpp17",
           include = {
             "tensorflow/tsl/platform/ctstring_internal.h",
             "tensorflow/tsl/platform/ctstring.h",
@@ -58,31 +58,12 @@ import java.util.List;
             "tensorflow/c/eager/c_api.h",
             "tensorflow/c/eager/c_api_experimental.h",
 
-// ---------------------------------------------------------
-// NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-// Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-// TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-// between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-// ---------------------------------------------------------
-//            "absl/status/status.h",
-//            "tensorflow/tsl/platform/status.h",
-//            "tensorflow/tsl/platform/default/status.h",
-//            "tensorflow/core/util/port.h",
-//            "tensorflow/c/tf_status_helper.h",
-//            "tensorflow/c/kernels.h",
-//            "tensorflow/c/ops.h",
-//            "tensorflow/c/c_api_internal.h",
-//            "tensorflow/c/eager/abstract_context.h",
-//            "tensorflow/c/eager/abstract_tensor_handle.h",
-//            "tensorflow/c/eager/gradients.h",
-//            "tensorflow/cc/framework/ops.h",
-//            "tensorflow/cc/framework/scope.h",
-//            "tensorflow/cc/framework/grad_op_registry.h",
-//            "tensorflow/core/graph/graph.h",
-//            "tensorflow_adapters.h", // Keep this at the bottom, since it is not a real tensorflow header but one that we maintain (see main resources)
-// ---------------------------------------------------------
-// END OF CUSTOM GRADIENT
-// ---------------------------------------------------------
+            // Following are C API extensions maintained within TF Java, see src/main/native.
+            // Binding directly the C++ API with JavaCPP turned out to be too precarious between different releases,
+            // so it is simpler to write our own C API only exposing what we need from it.
+            "graph.h",
+            "scope.h",
+            "gradients.h",
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
@@ -198,273 +179,13 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             .put(new Info("TFE_TensorHandle")
                     .pointerTypes("TFE_TensorHandle")
                     .base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
-            .put(new Info("TF_WhileParams").purify())
-            .put(new Info("TFE_CustomDeviceTensorHandle::deallocator").javaNames("cdt_deallocator"))
-            .put(new Info("TF_PayloadVisitor", "TF_ForEachPayload").skip()); // avoids import of TSL_PayloadVisitor
-
-
-    // ---------------------------------------------------------
-    // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-    // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-    // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-    // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-    // ---------------------------------------------------------
-//    infoMap
-//            .put(new Info("TF_Graph::graph")
-//                    .javaText("public native @MemberGetter @ByRef Pointer graph();"))
-//            .put(new Info("ABSL_MUST_USE_RESULT")
-//                    .cppTypes()
-//                    .annotations())
-//            .put(new Info("absl::Span", "tensorflow::gtl::ArraySlice").annotations("@Span"))
-//            .put(new Info("string", "tensorflow::string")
-//                    .annotations("@StdString")
-//                    .valueTypes("BytePointer", "String")
-//                    .pointerTypes("BytePointer"))
-//            .put(new Info("absl::Status").javaNames("NativeStatus"))
-//            .put(new Info("tensorflow::Scope").javaNames("NativeScope"))
-//            .put(new Info("tensorflow::Node").cppTypes("tensorflow::Node").javaNames("NativeNode").purify())
-//            .put(new Info("tensorflow::NodeBuilder").pointerTypes("NativeNodeBuilder"))
-//            .put(new Info("std::vector<tensorflow::Output>").pointerTypes("NativeOutputVector").define())
-//            .put(new Info("tensorflow::Output").javaNames("NativeOutput"))
-//            .put(new Info("tensorflow::Operation").javaNames("NativeOperation"))
-//            .put(new Info("tensorflow::Graph").javaNames("NativeGraphPointer"))
-//            .put(new Info(
-//                    "absl::Status::ForEachPayload",
-//                    "tensorflow::Input",
-//                    "tensorflow::InputList",
-//                    "tensorflow::Scope::ToGraph",
-//                    // from graph.h
-//                    "tensorflow::Edge",
-//                    "tensorflow::GraphEdgesIterable",
-//                    "tensorflow::Graph",
-//                    "tensorflow::NodeIter",
-//                    "tensorflow::NeighborIter")
-//                    .skip())
-//            .put(new Info(
-//                    "auto",
-//                    "ska::flat_hash_map",
-//                    "std::atomic",
-//                    "std::bitset",
-//                    "std::conditional",
-//                    "std::iterator_traits",
-//                    "std::initializer_list",
-//                    "std::integral_constant",
-//                    "std::mutex",
-//                    "std::reverse_iterator",
-//                    "std::weak_ptr",
-//                    "absl::string_view",
-//                    "absl::flat_hash_map")
-//                    .skip());
-
-//    infoMap
-//        .put(
-//            new Info("c_api_internal.h")
-//                .linePatterns(
-//                    "struct TF_OperationDescription \\{",
-//                    "\\};",
-//                    "struct TF_Graph \\{",
-//                    "\\};",
-//                    "struct TF_Operation \\{",
-//                    "\\};",
-//                    "// Exposed helper functions",
-//                    "// End Exposed helper functions"))
-//        .put(
-//            new Info("graph.h")
-//                .linePatterns(
-//                    "class Node \\{", "// Stores debug information associated with the Node."))
-//        .put(new Info("Node").cppTypes("tensorflow::Node").purify())
-//        .put(
-//            new Info(
-//                    "tensorflow::NodeDef",
-//                    "tensorflow::OpDef",
-//                    "tensorflow::AttrSlice",
-//                    "tensorflow::Edge",
-//                    "tensorflow::EdgeSet",
-//                    "tensorflow::WhileContext",
-//                    "tensorflow::NodeProperties",
-//                    "protobuf::RepeatedPtrField",
-//                    "gtl::iterator_range<NeighborIter>",
-//                    "tensorflow::DataType",
-//                    "tensorflow::DataTypeVector",
-//                    "tensorflow::Node::set_original_func_names",
-//                    "tensorflow::Node::set_original_node_names",
-//                    "tensorflow::Node::AddAttr",
-//                    "tensorflow::Node::ClearAttr",
-//                    "tensorflow::Node::input_node",
-//                    "tensorflow::Node::RunForwardTypeInference")
-//                .skip())
-//        .put(
-//            new Info("c_api.cc")
-//                .linePatterns(
-//                    "// Helper functions -+",
-//                    "// Shape functions -+",
-//                    "static TF_OperationDescription\\* TF_NewOperationLocked\\(TF_Graph\\* graph,",
-//                    "\\}",
-//                    "static TF_Operation\\* TF_FinishOperationLocked\\(TF_OperationDescription\\* desc,",
-//                    "\\}"))
-//        .put(new Info("OutputTensor", "TensorId", "tensorflow::AttrValue").skip())
-//        .put(
-//            new Info("c_api_experimental.h")
-//                .linePatterns(
-//                    "typedef struct TFE_OpAttrs TFE_OpAttrs;",
-//                    "#define TFE_CUSTOM_DEVICE_VERSION 4"))
-//        .put(new Info("TF_DISALLOW_COPY_AND_ASSIGN").skip())
-//        .put(
-//            new Info(
-//                    "TF_Graph::refiner",
-//                    "TF_Graph::mu",
-//                    "TF_Graph::sessions",
-//                    "TF_Graph::delete_requested")
-//                .skip())
-//        .put(
-//            new Info("std::unordered_map<tensorflow::string,tensorflow::Node*>")
-//                .pointerTypes("NameMap")
-//                .define()
-//                .javaText("public native long erase(@StdString BytePointer key);"))
-//        .put(new Info("TF_Operation").purify())
-//        .put(
-//            new Info("TF_Operation::node")
-//                .javaText("public native @MemberGetter @ByRef Node node();"))
-//        .put(
-//            new Info("TFE_Context::context")
-//                .javaText("@MemberGetter public native @ByRef EagerContext context();"))
-//        .put(
-//            new Info("TFE_Op::operation")
-//                .javaText("@MemberGetter public native @ByRef EagerOperation operation();"))
-//        .put(new Info("SP_Stream").cast().pointerTypes("Pointer"))
-//        .put(
-//            new Info(
-//                    "TF_ShapeInferenceContextDimValueKnown",
-//                    "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
-//                    "TF_InitKernel",
-//                    "TFE_MonitoringCounterCell",
-//                    "TFE_MonitoringCounter0",
-//                    "TFE_MonitoringCounter1",
-//                    "TFE_MonitoringCounter2",
-//                    "TFE_MonitoringIntGaugeCell",
-//                    "TFE_MonitoringIntGauge0",
-//                    "TFE_MonitoringIntGauge1",
-//                    "TFE_MonitoringIntGauge2",
-//                    "TFE_MonitoringStringGaugeCell",
-//                    "TFE_MonitoringStringGauge0",
-//                    "TFE_MonitoringStringGauge1",
-//                    "TFE_MonitoringStringGauge2",
-//                    "TFE_MonitoringBoolGaugeCell",
-//                    "TFE_MonitoringBoolGauge0",
-//                    "TFE_MonitoringBoolGauge1",
-//                    "TFE_MonitoringBoolGauge2",
-//                    "TFE_MonitoringSamplerCell",
-//                    "TFE_MonitwringSampler0",
-//                    "TFE_MonitoringSampler1",
-//                    "TFE_MonitoringSampler2",
-//                    "TFE_CustomDeviceTensorHandle",
-//                    "TFE_CustomDevice")
-//                .skip())
-//        .put(new Info("TF_OperationDescription").pointerTypes("TF_OperationDescription").purify())
-
-//        //.put(new Info("tensorflow::Status").javaNames("TF_Status").purify())
-//        .put(new Info("absl::Status").javaNames("Status").purify())
-//        .put(
-//            new Info("tensorflow::int32", "tensorflow::error::Code")
-//                .cast()
-//                .valueTypes("int")
-//                .pointerTypes("IntPointer", "IntBuffer", "int[]"))
-//        .put(
-//            new Info(
-//                    "tensorflow::CompositeOpScopes",
-//                    "tensorflow::Input",
-//                    "tensorflow::InputList",
-//                    "tensorflow::OutputHash",
-//                    "tensorflow::StackFrame",
-//                    "tensorflow::StatusGroup",
-//                    "tsl::StatusGroup",
-//                    "tensorflow::internal::TF_StatusDeleter",
-//                    "tensorflow::GraphDef",
-//                    "tensorflow::Scope::graph_as_shared_ptr",
-//                    "tensorflow::Scope::ToGraphDef",
-//                    "tensorflow::Scope::ToGraph",
-//                    "tensorflow::Scope::DoShapeInference",
-//                    "tensorflow::Scope::DisabledShapeInferenceScope",
-//                    "tensorflow::Scope::control_deps",
-//                    "tensorflow::Scope::WithKernelLabel",
-//                    "tensorflow::Scope::ClearColocation",
-//                    "tensorflow::Scope::ColocateWith",
-//                    "tensorflow::Scope::ColocateWith",
-//                    "tensorflow::Scope::WithXlaCluster",
-//                    "tensorflow::Scope::WithAssignedDevice",
-//                    "tensorflow::Scope::status",
-//                    "tensorflow::Scope::UpdateStatus",
-//                    "tensorflow::Status::code",
-//                    "tensorflow::CreateOutputWithScope",
-//                    "TF_OperationDescription::colocation_constraints",
-//                    "tensorflow::Operation::num_inputs",
-//                    "tensorflow::Operation::input_type",
-//                    "tensorflow::Operation::input",
-//                    "tensorflow::Operation::num_outputs",
-//                    "tensorflow::Operation::output_type",
-//                    "tensorflow::Operation::output",
-//                    "tensorflow::Operation::hash",
-//                    "tensorflow::Output::hash",
-//                    "tensorflow::Output::type",
-//                    "tensorflow::Status::GetAllPayloads",
-//                    "tensorflow::Status::ReplaceAllPayloads",
-//                    "tensorflow::Status::ErasePayload",
-//                    "tensorflow::Status::SetPayload",
-//                    "tensorflow::Status::GetPayload",
-//                    "tensorflow::Status::ForEachPayload",
-//                    "tensorflow::Status::GetSourceLocations",
-//                    "tsl::GetSourceLocations",
-//                    "tsl::SourceLocationImpl",
-//                    "tsl::SourceLocation",
-//                    "tensorflow::SourceLocationImpl",
-//                    "tensorflow::SourceLocation",
-//                    "tsl::Status::SourceLocationImpl",
-//                    "tsl::Status::SourceLocation",
-//                    "tensorflow::Status::SourceLocationImpl",
-//                    "tensorflow::Status::SourceLocation",
-//                    "tsl::Status::GetAllPayloads",
-//                    "tsl::Status::ReplaceAllPayloads",
-//                    "tsl::Status::ErasePayload",
-//                    "tsl::Status::SetPayload",
-//                    "tsl::Status::GetPayload",
-//                    "tsl::Status::ForEachPayload",
-//                    "tensorflow::Node::SetStackTrace",
-//                    "tensorflow::Node::GetStackTrace",
-//                    "tsl::Status::SetStackTrace",
-//                    "tsl::Status::GetStackTrace",
-//                    "tsl::errors::SetStackTrace",
-//                    "tsl::errors::GetStackTrace",
-//                    "tsl::TfCheckOpHelperOutOfLine",
-//                    "tsl::TfCheckOpHelper",
-//                    "tsl::ToAbslStatus",
-//                    "tsl::FromAbslStatus",
-//                    "tsl::OkStatus",
-//                    "tsl::NullTerminatedMessage",
-//                    "tsl::errors::Code",
-//                    "absl::StatusCode",
-//                    "TF_PayloadVisitor",
-//                    "TSL_PayloadVisitor"
-//                    )
-//                .skip())
-//            .put(new Info(
-//                    "auto",
-//                    "ska::flat_hash_map",
-//                    "std::atomic",
-//                    "std::bitset",
-//                    "std::conditional",
-//                    "std::iterator_traits",
-//                    "std::initializer_list",
-//                    "std::integral_constant",
-//                    "std::mutex",
-//                    "std::reverse_iterator",
-//                    "std::weak_ptr",
-//                    "absl::string_view",
-//                    "absl::flat_hash_map"
-//                    )
-//                .skip())
-    // ---------------------------------------------------------
-    // END OF CUSTOM GRADIENT
-    // ---------------------------------------------------------
+            .put(new Info("TF_WhileParams")
+                    .purify())
+            .put(new Info("TFE_CustomDeviceTensorHandle::deallocator")
+                    .javaNames("cdt_deallocator"))
+            .put(new Info("TF_PayloadVisitor", "TF_ForEachPayload")
+                    .skip() // avoids import of TSL_PayloadVisitor
+    );
   }
 
   @Override

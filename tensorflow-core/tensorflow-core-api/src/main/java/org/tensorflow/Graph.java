@@ -1,4 +1,4 @@
-/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,20 +15,6 @@ limitations under the License.
 */
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphCopyFunction;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetFunctions;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNumFunctions;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
-
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -37,6 +23,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -50,6 +38,7 @@ import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
+import org.tensorflow.internal.c_api.TF_GraphId;
 import org.tensorflow.internal.c_api.TF_ImportGraphDefOptions;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
@@ -71,6 +60,8 @@ import org.tensorflow.proto.SaverDef;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
+
 /**
  * A data flow graph representing a TensorFlow computation.
  *
@@ -89,8 +80,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
+    this.nativeId = TF_GetGraphId(nativeHandle);
     this.baseScope = new OpScope(this);
-    allGraphs.add(this);
+
+    // Add graph to global map, so we can retrieve it later from a single ID
+    ALL_GRAPHS.put(nativeId, this);
   }
 
   Graph(TF_Graph nativeHandle, SaverDef saverDef) {
@@ -106,6 +100,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   @Override
   public void close() {
+    ALL_GRAPHS.remove(nativeId);
+    nativeId = null;
+
     synchronized (nativeHandleLock) {
       if (nativeHandle == null || nativeHandle.isNull()) {
         return;
@@ -121,7 +118,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
       delete(nativeHandle);
       nativeHandle = null;
-      allGraphs.remove(this);
     }
   }
 
@@ -384,17 +380,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-    // ---------------------------------------------------------
-    // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-    // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-    // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-    // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-    // ---------------------------------------------------------
-    //return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
-    // ---------------------------------------------------------
-    // END OF CUSTOM GRADIENT
-    // ---------------------------------------------------------
-    return new GraphOperationBuilder(this, type, name, scope);
+    return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
   }
 
   @Override
@@ -860,7 +846,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /**
    * Returns a set of ops that will run all initializers added to the graph via {@link
-   * #registerInitOp(Operation)}.
+   * #registerInitializer(GraphOperation, boolean)}.
    *
    * <p>Note that NoOps aren't included in this list, since any inputs or control dependencies are
    * guaranteed to also be in this list, and including the no-ops wouldn't change the initialization
@@ -872,6 +858,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   private final Object nativeHandleLock = new Object();
   private TF_Graph nativeHandle;
+  private TF_GraphId nativeId;
   private int refcount = 0;
   private SaverDef saverDef;
   private final Scope baseScope;
@@ -1319,32 +1306,21 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .build();
   }
 
-  private static final Set<Graph> allGraphs =
-      Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
-  // ---------------------------------------------------------
-  // NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-  // Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-  // TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-  // between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-  // ---------------------------------------------------------
-//  /**
-//   * Find the graph with the matching underlying native pointer.
-//   *
-//   * @return the graph if there is one, else null.
-//   */
-//  public static Graph findGraphForPointer(NativeGraphPointer pointer) {
-//    for (Graph g : allGraphs) {
-//      if (g.nativeHandle != null
-//          && !g.nativeHandle.isNull()
-//          && g.nativeHandle.graph().equals(pointer)) {
-//        return g;
-//      }
-//    }
-//    return null;
-//  }
-  // ---------------------------------------------------------
-  // END OF CUSTOM GRADIENT
-  // ---------------------------------------------------------
+  private static final Map<TF_GraphId, Graph> ALL_GRAPHS = Collections.synchronizedMap(new WeakHashMap<>());
+
+  /**
+   * Find the graph with the matching ID.
+   *
+   * @return the graph if there is one
+   * @throws NoSuchElementException if graph is not found
+   */
+  public static Graph findGraph(TF_GraphId graphId) {
+    var graph = ALL_GRAPHS.get(graphId);
+    if (graph == null || graph.nativeHandle == null) {
+      throw new NoSuchElementException("Graph not found");
+    }
+    return graph;
+  }
 
   static {
     try {
