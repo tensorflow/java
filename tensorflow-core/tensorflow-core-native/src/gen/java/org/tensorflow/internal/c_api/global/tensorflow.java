@@ -4793,8 +4793,11 @@ limitations under the License.
 
 
 
+/** Returns the unique identifier of the graph {@code g} */
 public static native TF_GraphId TF_GetGraphId(@Const TF_Graph g);
 
+/** Remove an operation from the name map of the graph {@code g}, so that it cannot be reversely looked up by name.
+ *  This is particularly useful for preventing custom gradient operations to pollute the graph namespace. */
 public static native void TF_UnmapOperationName(TF_Graph g, TF_Operation operation);
 
 // #ifdef __cplusplus /* end extern "C" */
@@ -4896,15 +4899,21 @@ limitations under the License.
 
 
 
+/** Returns true if a gradient function has already be registered for operations of type {@code op_type} */
+
+///
 public static native @Cast("bool") boolean TF_HasGradient(@Cast("const char*") BytePointer op_type);
 public static native @Cast("bool") boolean TF_HasGradient(String op_type);
 
+/** Registers a gradient function for operations of type {@code op_type}. It is possible to register a new function even if another has already been registered for this
+ *  type of operations (this will only generate a warning).
+ * 
+ *  Returns true if the function has been registered successfully */
 public static native @Cast("bool") boolean TF_RegisterCustomGradient(@Cast("const char*") BytePointer op_type, TF_GradFuncAdapter custom_gradient_adapter);
 public static native @Cast("bool") boolean TF_RegisterCustomGradient(String op_type, TF_GradFuncAdapter custom_gradient_adapter);
 
 // #ifdef __cplusplus /* end extern "C" */
 // #include "gradients_impl.cc"
-//#include "gradients_jni.cc"
 // #endif
 
 // #endif  // TENSORFLOW_JAVA_GRADIENTS_H_

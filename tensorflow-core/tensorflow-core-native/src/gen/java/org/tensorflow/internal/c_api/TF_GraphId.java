@@ -10,6 +10,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 // #endif
 
+/** Unique identifier of a TensorFlow graph instance */
 @Namespace @Name("void") @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public class TF_GraphId extends Pointer {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */

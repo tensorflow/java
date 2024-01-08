@@ -10,6 +10,13 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 // #endif
 
+/** Function to be implemented on the JVM side to be called back by the native library when it is time to attach gradient operations for the given op, graph and scope.
+ * 
+ *  {@code grad_inputs} are the inputs available to the gradient operations. {@code grad_outputs} must received the address of an array of {@code TF_Output} allocated by the JVM, which
+ *  represents the outputs of the gradient operations to attach to the graph. It is important to guarantee that the JVM won't try to trigger the deallocation
+ *  of that pointer, since the native code will take care of that when it won't need the array anymore.
+ * 
+ *  Returns the number of elements pointed by grad_outputs. */
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public class TF_GradFuncAdapter extends FunctionPointer {
     static { Loader.load(); }

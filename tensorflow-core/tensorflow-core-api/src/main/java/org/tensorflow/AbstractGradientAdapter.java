@@ -19,6 +19,7 @@ package org.tensorflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_GradFuncAdapter;
@@ -78,18 +79,15 @@ public abstract class AbstractGradientAdapter extends TF_GradFuncAdapter {
    * @return pointer to the native array of outputs
    */
   private static TF_Output toNativeOutputs(List<Operand<?>> outputs) {
-    var nativeOutputs = new TF_Output(outputs.size());
+    // Use malloc to allocate native outputs, as they will be freed by the native layer and we do not want JavaCPP to deallocate them
+    var nativeOutputs = new TF_Output(Pointer.malloc((long)outputs.size() * Pointer.sizeof(TF_Output.class)));
+
     for (int i = 0; i < outputs.size(); ++i) {
       var output = outputs.get(i).asOutput();
       var nativeOutput = nativeOutputs.getPointer(i);
       nativeOutput.oper(((GraphOperation)output.op()).getUnsafeNativeHandle());
       nativeOutput.index(output.index());
     }
-
-    // Native outputs must be freed by native invoker of this method, prevent deallocation from JVM
-    nativeOutputs.retainReference(); // prevent deallocation when pointer scope closes
-    nativeOutputs.deallocate(false); // disable garbage collection
-
     return nativeOutputs;
   }
 }
