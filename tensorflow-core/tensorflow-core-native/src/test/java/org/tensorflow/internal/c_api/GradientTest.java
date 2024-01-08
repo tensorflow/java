@@ -1,5 +1,5 @@
 /*
- Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,95 +29,13 @@ public class GradientTest {
       assertTrue(TF_HasGradient("Cast"));
   }
 
-    @Test
-    public void testNonExistingGradientCheck() {
-        assertFalse(TF_HasGradient("NthElement"));
-    }
+  @Test
+  public void testNonExistingGradientCheck() {
+      assertFalse(TF_HasGradient("NthElement"));
+  }
 
-    @Test
-    public void testNonExistingOpGradientCheck() {
-        assertFalse(TF_HasGradient("IDontExists"));
-    }
+  @Test
+  public void testNonExistingOpGradientCheck() {
+      assertFalse(TF_HasGradient("IDontExists"));
+  }
 }
-
-// ---------------------------------------------------------
-// NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-// Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-// TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-// between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-// ---------------------------------------------------------
-//// FIXME: Since TF 2.10.1, custom gradient registration is failing on Windows, see
-////        https://github.com/tensorflow/java/issues/486
-//public class CustomGradientTest {
-//
-//  @EnabledOnOs(OS.WINDOWS)
-//  @Test
-//  public void customGradientRegistrationUnsupportedOnWindows() {
-//    assertThrows(
-//        UnsupportedOperationException.class,
-//        () ->
-//            TensorFlow.registerCustomGradient(
-//                NthElement.OP_NAME,
-//                (tf, op, gradInputs) ->
-//                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
-//
-//    assertThrows(
-//        UnsupportedOperationException.class,
-//        () ->
-//            TensorFlow.registerCustomGradient(
-//                NthElement.Inputs.class,
-//                (tf, op, gradInputs) ->
-//                    Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
-//  }
-//
-//  @DisabledOnOs(OS.WINDOWS)
-//  @Test
-//  public void testAlreadyExisting() {
-//    assertFalse(
-//        TensorFlow.registerCustomGradient(
-//            Cast.Inputs.class,
-//            (tf, op, gradInputs) -> {
-//              Operand<?> out = gradInputs.get(0);
-//              Operand<?> a = tf.stridedSlice(out, Indices.slice(0, 1));
-//              Operand<?> b = tf.stridedSlice(out, Indices.slice(1, 2));
-//              return Arrays.asList(a, b, tf.constant(0f));
-//            }));
-//  }
-//
-//  @DisabledOnOs(OS.WINDOWS)
-//  @Test
-//  public void testCustomGradient() {
-//    try (Graph g = new Graph();
-//        Session s = new Session(g)) {
-//      assertTrue(
-//          TensorFlow.registerCustomGradient(
-//              NthElement.Inputs.class,
-//              (tf, op, gradInputs) ->
-//                  Arrays.asList(tf.withName("inAGrad").constant(0f), tf.constant(0f))));
-//
-//      Ops tf = Ops.create(g);
-//      Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
-//      Output<TFloat32> y =
-//          tf.math.add(tf.nn.nthElement(x, tf.constant(2)), tf.constant(4f)).asOutput();
-//
-//      Output<?>[] grads0 = g.addGradients(y, toArray(x));
-//      assertNotNull(grads0);
-//      assertEquals(1, grads0.length);
-//      assertEquals(DataType.DT_FLOAT, grads0[0].dataType());
-//
-//      try (TFloat32 c1 = TFloat32.vectorOf(3.0f, 2.0f, 1.0f, 0.0f);
-//          Result outputs = s.runner().feed(x, c1).fetch(grads0[0]).run()) {
-//
-//        assertEquals(1, outputs.size());
-//        assertEquals(0.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
-//      }
-//    }
-//  }
-//
-//  private static Output<?>[] toArray(Output<?>... outputs) {
-//    return outputs;
-//  }
-//}
-// ---------------------------------------------------------
-// END OF CUSTOM GRADIENT
-// ---------------------------------------------------------
