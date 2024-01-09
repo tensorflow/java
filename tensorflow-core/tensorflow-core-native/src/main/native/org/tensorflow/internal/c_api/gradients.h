@@ -43,7 +43,7 @@ TF_CAPI_EXPORT extern bool TF_RegisterCustomGradient(const char* op_type, TF_Gra
 
 #ifdef __cplusplus
 } /* end extern "C" */
-#include "gradients_impl.cc"
+#include "gradients_impl.cc" // include CC file in its header to compile it with JavaCPP
 #endif
 
 #endif  // TENSORFLOW_JAVA_GRADIENTS_H_

@@ -15,6 +15,21 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetGraphId;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphCopyFunction;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetFunctions;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNumFunctions;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -59,8 +74,6 @@ import org.tensorflow.proto.GraphDef;
 import org.tensorflow.proto.SaverDef;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /**
  * A data flow graph representing a TensorFlow computation.

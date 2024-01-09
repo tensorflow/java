@@ -65,7 +65,7 @@ public final class NativeScope implements Scope {
 
   @Override
   public Scope withInitScope() {
-    throw new IllegalStateException("Can't add init operations in a gradient scope");
+    throw new IllegalStateException("Can't add init operations in a native scope");
   }
 
   @Override
@@ -116,7 +116,7 @@ public final class NativeScope implements Scope {
   public String getDeviceString() {
     if (device == null) {
       throw new UnsupportedOperationException(
-          "Can't get device string for gradient scope unless it has been explicitly set");
+          "Can't get device string for native scope unless it has been explicitly set");
     } else {
       return device;
     }

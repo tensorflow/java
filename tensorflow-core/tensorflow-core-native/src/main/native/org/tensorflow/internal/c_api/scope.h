@@ -53,7 +53,7 @@ TF_CAPI_EXPORT extern std::string TF_GetUniqueNameForOp(const TF_Scope* scope, c
 
 #ifdef __cplusplus
 } /* end extern "C" */
-#include "scope_impl.cc"
+#include "scope_impl.cc" // include CC file in its header to compile it with JavaCPP
 #endif
 
 #endif  // TENSORFLOW_JAVA_SCOPE_H_

@@ -15,6 +15,32 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddControlInput;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInput;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInputList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperationLocked;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperationLocked;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBool;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBoolList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloat;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloatList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFuncName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrInt;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrIntList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrShape;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrShapeList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrString;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrStringList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTensorList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrType;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTypeList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrValueProto;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetDevice;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_UnmapOperationName;
+
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +66,6 @@ import org.tensorflow.proto.AttrValue;
 import org.tensorflow.proto.AttrValue.ListValue;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.proto.NameAttrList;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {

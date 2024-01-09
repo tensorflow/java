@@ -34,7 +34,7 @@ TF_CAPI_EXPORT extern void TF_UnmapOperationName(TF_Graph* g, TF_Operation* oper
 
 #ifdef __cplusplus
 } /* end extern "C" */
-#include "graph_impl.cc"
+#include "graph_impl.cc" // include CC file in its header to compile it with JavaCPP
 #endif
 
 #endif  // TENSORFLOW_JAVA_GRAPH_H_

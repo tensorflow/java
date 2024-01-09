@@ -35,11 +35,11 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends AbstractGradi
   private final Class<T> opInputClass;
   private final Constructor<T> ctor;
 
+  @SuppressWarnings("unchecked")
   TypedGradientAdapter(CustomGradient<T> gradient, Class<T> opInputClass) {
     super();
     this.gradient = gradient;
     this.opInputClass = opInputClass;
-    //noinspection unchecked
     this.ctor = (Constructor<T>) this.opInputClass.getDeclaredConstructors()[0];
   }
 

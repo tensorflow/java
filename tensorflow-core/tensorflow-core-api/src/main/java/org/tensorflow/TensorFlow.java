@@ -15,6 +15,16 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHandle;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_HasGradient;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_RegisterCustomGradient;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_RegisterFilesystemPlugin;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
@@ -35,8 +45,6 @@ import java.util.IdentityHashMap;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /** Static utility methods describing the TensorFlow runtime. */
 public final class TensorFlow {

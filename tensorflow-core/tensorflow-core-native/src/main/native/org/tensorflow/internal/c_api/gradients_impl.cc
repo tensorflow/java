@@ -29,10 +29,18 @@ namespace tensorflow {
 
         unordered_map<string, TF_GradFuncAdapter> g_grad_func_adapters;
 
+        /// This method can be used to cast a pointer to/from a C struct that contains only that pointer. It is a bit
+        /// nasty but it simplifies a lot the code since we don't need to allocate and free that struct.
+        /// It has been "inspired" by the TensorFlow C API code, as found at this location when time of writing:
+        /// https://github.com/tensorflow/tensorflow/blob/9d637f69f699c0c422716b56153a8b27b681891a/tensorflow/c/c_api.cc#L658
         template <typename T, typename U> T* struct_cast(U* ptr) {
             return static_cast<T*>(static_cast<void*>(ptr));
         }
 
+        /// This function is called by the TensorFlow runtime when it is time to add gradient operations of `op` to the
+        /// graph using the given `scope`.
+        /// We use it as a bridge between the C++ signature in TensorFlow (tensorflow::op::GradFunc) and our custom
+        /// "C" version (TF_GradFuncAdapter).
         Status CustomGradFunc(const Scope& scope,
                               const Operation& op,
                               const vector<Output>& grad_inputs,
