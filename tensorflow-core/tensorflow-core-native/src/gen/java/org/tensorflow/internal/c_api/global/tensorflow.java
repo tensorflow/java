@@ -4766,4 +4766,157 @@ public static native void TFE_InitializeLocalOnlyContext(TFE_Context ctx,
 // #endif  // TENSORFLOW_C_EAGER_C_API_EXPERIMENTAL_H_
 
 
+// Parsed from tfj_graph.h
+
+/* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_JAVA_GRAPH_H_
+// #define TENSORFLOW_JAVA_GRAPH_H_
+
+// #include "tensorflow/c/c_api.h"
+
+// #ifdef __cplusplus
+// Targeting ../TFJ_GraphId.java
+
+
+
+/** Returns the unique identifier of the graph {@code g} */
+public static native TFJ_GraphId TFJ_GetGraphId(@Const TF_Graph g);
+
+/** Remove an operation from the name map of the graph {@code g}, so that it cannot be reversely looked up by name.
+ *  This is particularly useful for preventing custom gradient operations to pollute the graph namespace. */
+public static native void TFJ_UnmapOperationName(TF_Graph g, TF_Operation operation);
+
+// #ifdef __cplusplus /* end extern "C" */
+// #include "tfj_graph_impl.cc" // include CC file in its header to compile it with JavaCPP
+// #endif
+
+// #endif  // TENSORFLOW_JAVA_GRAPH_H_
+
+
+// Parsed from tfj_scope.h
+
+/* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_JAVA_SCOPE_H_
+// #define TENSORFLOW_JAVA_SCOPE_H_
+
+// #include "tensorflow/c/c_api.h"
+
+// #ifdef __cplusplus
+// Targeting ../TFJ_Scope.java
+
+
+
+// The following functions are for users making graphs. They return brand new
+// scopes, or scopes derived from an existing scope object.
+
+/** Return a new scope.
+ *  This creates a new graph and all operations constructed in this graph
+ *  should use the returned object as the "root" scope. */
+public static native @ByVal TFJ_Scope TFJ_NewRootScope();
+
+/** Return a new scope. Ops created with this scope will have
+ *  {@code name/child_scope_name} as the prefix. The actual name will be unique
+ *  in the current scope. All other properties are inherited from the current
+ *  scope. If {@code child_scope_name} is empty, the {@code /} is elided. */
+public static native @ByVal TFJ_Scope TFJ_NewSubScope(@Const TFJ_Scope scope, @Cast("const char*") BytePointer child_scope_name);
+public static native @ByVal TFJ_Scope TFJ_NewSubScope(@Const TFJ_Scope scope, String child_scope_name);
+
+/** Return a new scope. All ops created within the returned scope will have as
+ *  control dependencies the union of operations in the control_deps vector
+ *  and the control dependencies of the current scope. */
+public static native @ByVal TFJ_Scope TFJ_NewScopeWithControlDependencies(@Const TFJ_Scope scope, TF_Operation control_deps, int control_deps_size);
+
+/** Return a new scope. All ops created within the returned scope will have
+ *  the device field set to 'device'. */
+public static native @ByVal TFJ_Scope TFJ_NewScopeWithDevice(@Const TFJ_Scope scope, @Cast("const char*") BytePointer device);
+public static native @ByVal TFJ_Scope TFJ_NewScopeWithDevice(@Const TFJ_Scope scope, String device);
+
+/** Return a unique name, using default_name if an op name has not been specified.
+ *  Note: returns C++ std string to prevent buffer to be freed up before consuming the characters */
+public static native @StdString BytePointer TFJ_GetUniqueNameForOp(@Const TFJ_Scope scope, @Cast("const char*") BytePointer default_name);
+public static native @StdString String TFJ_GetUniqueNameForOp(@Const TFJ_Scope scope, String default_name);
+
+// #ifdef __cplusplus /* end extern "C" */
+// #include "tfj_scope_impl.cc" // include CC file in its header to compile it with JavaCPP
+// #endif
+
+// #endif  // TENSORFLOW_JAVA_SCOPE_H_
+
+
+// Parsed from tfj_gradients.h
+
+/* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_JAVA_GRADIENTS_H_
+// #define TENSORFLOW_JAVA_GRADIENTS_H_
+
+// #include "tfj_scope.h"
+// #include "tensorflow/c/c_api.h"
+
+// #ifdef __cplusplus
+// Targeting ../TFJ_GradFuncAdapter.java
+
+
+
+/** Returns true if a gradient function has already be registered for operations of type {@code op_type} */
+
+///
+public static native @Cast("bool") boolean TFJ_HasGradient(@Cast("const char*") BytePointer op_type);
+public static native @Cast("bool") boolean TFJ_HasGradient(String op_type);
+
+/** Registers a gradient function for operations of type {@code op_type}. It is possible to register a new function even if another has already been registered for this
+ *  type of operations (this will only generate a warning).
+ * 
+ *  Returns true if the function has been registered successfully */
+public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(@Cast("const char*") BytePointer op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
+public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(String op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
+
+// #ifdef __cplusplus /* end extern "C" */
+// #include "tfj_gradients_impl.cc" // include CC file in its header to compile it with JavaCPP
+// #endif
+
+// #endif  // TENSORFLOW_JAVA_GRADIENTS_H_
+
+
 }
