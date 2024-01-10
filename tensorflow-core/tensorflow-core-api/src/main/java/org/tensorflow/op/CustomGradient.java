@@ -1,5 +1,5 @@
 /*
- Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,58 +16,47 @@ limitations under the License.
 */
 package org.tensorflow.op;
 
-public interface CustomGradient {}
+import org.tensorflow.Operand;
+import org.tensorflow.Output;
+import org.tensorflow.TensorFlow;
+import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
 
-// ---------------------------------------------------------
-// NOTICE CUSTOM GRADIENT: In TF Java 0.6.0, custom gradient registration has been disabled due to the precarity of the
-// Java bindings issued from the internal TensorFlow C++ APIs using JavaCPP. These APIs are subject to changes between
-// TF releases, which make them difficult to maintain. If you want to reenable this feature, please uncomment the code
-// between all occurrences of this notice and the "END OF CUSTOM GRADIENT" mention.
-// ---------------------------------------------------------
-//import java.util.List;
-//import org.tensorflow.Operand;
-//import org.tensorflow.Output;
-//import org.tensorflow.TensorFlow;
-//import org.tensorflow.internal.c_api.NativeGradFunc;
-//
-///**
-// * A custom gradient for ops of type {@link T}. Should be registered using {@link
-// * TensorFlow#registerCustomGradient(Class, CustomGradient)}.
-// *
-// * <p>Creates the gradient based off of an instance of the op inputs class, which is created using
-// * reflection. To operate on the {@link org.tensorflow.GraphOperation} directly use {@link
-// * RawCustomGradient}.
-// *
-// * <p>The type of the op is not checked here, but it is required to match the class given to the
-// * adapter.
-// *
-// * @param <T> the type of op this gradient is for.
-// */
-//@SuppressWarnings("rawtypes")
-//@FunctionalInterface
-//public interface CustomGradient<T extends RawOpInputs> {
-//
-//  /**
-//   * Calculate the gradients for {@code op}.
-//   *
-//   * @param tf the {@link Ops} instance used to create ops
-//   * @param op the op to calculate the gradients of.
-//   * @param gradInputs the gradients of the op's outputs.
-//   * @return the gradients of the op's inputs.
-//   */
-//  List<Operand<?>> call(Ops tf, T op, List<Output<?>> gradInputs);
-//
-//  /**
-//   * Create an adapter for the custom gradient so that it can be used by native code.
-//   *
-//   * <p>You should not be calling this yourself, use {@link TensorFlow#registerCustomGradient(Class,
-//   * CustomGradient)}.
-//   */
-//  public static <T extends RawOpInputs<?>> NativeGradFunc adapter(
-//      CustomGradient<T> gradient, Class<T> opClass) {
-//    return new TypedGradientAdapter<T>(gradient, opClass);
-//  }
-//}
-// ---------------------------------------------------------
-// END OF CUSTOM GRADIENT
-// ---------------------------------------------------------
+import java.util.List;
+
+/**
+ * A custom gradient for ops of type {@link T}. Should be registered using {@link
+ * TensorFlow#registerCustomGradient(Class, CustomGradient)}.
+ *
+ * <p>Creates the gradient based off of an instance of the op inputs class, which is created using
+ * reflection. To operate on the {@link org.tensorflow.GraphOperation} directly use {@link
+ * RawCustomGradient}.
+ *
+ * <p>The type of the op is not checked here, but it is required to match the class given to the
+ * adapter.
+ *
+ * @param <T> the type of op this gradient is for.
+ */
+@SuppressWarnings("rawtypes")
+@FunctionalInterface
+public interface CustomGradient<T extends RawOpInputs> {
+
+  /**
+   * Calculate the gradients for {@code op}.
+   *
+   * @param tf the {@link Ops} instance used to create ops
+   * @param op the op to calculate the gradients of.
+   * @param gradInputs the gradients of the op's outputs.
+   * @return the gradients of the op's inputs.
+   */
+  List<Operand<?>> call(Ops tf, T op, List<Output<?>> gradInputs);
+
+  /**
+   * Create an adapter for the custom gradient so that it can be used by native code.
+   *
+   * <p>You should not be calling this yourself, use {@link TensorFlow#registerCustomGradient(Class,
+   * CustomGradient)}.
+   */
+  static <T extends RawOpInputs<?>> TFJ_GradFuncAdapter adapter(CustomGradient<T> gradient, Class<T> opClass) {
+    return new TypedGradientAdapter<T>(gradient, opClass);
+  }
+}

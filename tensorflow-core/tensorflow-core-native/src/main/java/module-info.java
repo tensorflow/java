@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+Copyright 2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ module tensorflow.nativelib {
   exports org.tensorflow.internal;
   exports org.tensorflow.internal.c_api;
   exports org.tensorflow.internal.c_api.global;
+  exports org.tensorflow.internal.c_api.presets to org.bytedeco.javacpp;
   exports org.tensorflow.proto;
   exports org.tensorflow.proto.data;
   exports org.tensorflow.proto.data.model;
