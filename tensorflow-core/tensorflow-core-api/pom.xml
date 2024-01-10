@@ -225,10 +225,6 @@
         <version>3.3.0</version>
         <executions>
           <execution>
-            <id>attach-sources</id>
-            <phase>leave-disabled-to-not-generate-sources-twice-on-release</phase>
-          </execution>
-          <execution>
             <id>attach-source</id>
             <goals>
               <goal>jar-no-fork</goal>
@@ -236,6 +232,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.6.0</version>
