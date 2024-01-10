@@ -23,18 +23,18 @@ extern "C" {
 #endif
 
 /// Unique identifier of a TensorFlow graph instance
-typedef void* TF_GraphId;
+typedef void* TFJ_GraphId;
 
 /// Returns the unique identifier of the graph `g`
-TF_CAPI_EXPORT extern TF_GraphId TF_GetGraphId(const TF_Graph* g);
+TF_CAPI_EXPORT extern TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g);
 
 /// Remove an operation from the name map of the graph `g`, so that it cannot be reversely looked up by name.
 /// This is particularly useful for preventing custom gradient operations to pollute the graph namespace.
-TF_CAPI_EXPORT extern void TF_UnmapOperationName(TF_Graph* g, TF_Operation* operation);
+TF_CAPI_EXPORT extern void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation);
 
 #ifdef __cplusplus
 } /* end extern "C" */
-#include "graph_impl.cc" // include CC file in its header to compile it with JavaCPP
+#include "tfj_graph_impl.cc" // include CC file in its header to compile it with JavaCPP
 #endif
 
 #endif  // TENSORFLOW_JAVA_GRAPH_H_

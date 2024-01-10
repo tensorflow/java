@@ -22,23 +22,23 @@ import java.util.List;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.internal.c_api.TF_GradFuncAdapter;
-import org.tensorflow.internal.c_api.TF_GraphId;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
-import org.tensorflow.internal.c_api.TF_Scope;
+import org.tensorflow.internal.c_api.TFJ_Scope;
+import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
+import org.tensorflow.internal.c_api.TFJ_GraphId;
 
 /** Helper base class for custom gradient adapters <b>INTERNAL USE ONLY</b> */
-public abstract class AbstractGradientAdapter extends TF_GradFuncAdapter {
+public abstract class AbstractGradientAdapter extends TFJ_GradFuncAdapter {
 
   protected AbstractGradientAdapter() {
     super();
   }
 
-  protected abstract List<Operand<?>> apply(Graph graph, TF_Scope scope, GraphOperation operation, List<Output<?>> gradInputs);
+  protected abstract List<Operand<?>> apply(Graph graph, TFJ_Scope scope, GraphOperation operation, List<Output<?>> gradInputs);
 
   @Override
-  public int call(TF_GraphId nativeGraphId, TF_Scope nativeScope, TF_Operation nativeOperation, TF_Output nativeGradInputs, int nativeGradInputsLength, PointerPointer nativeGradOutputsPtr) {
+  public int call(TFJ_GraphId nativeGraphId, TFJ_Scope nativeScope, TF_Operation nativeOperation, TF_Output nativeGradInputs, int nativeGradInputsLength, PointerPointer nativeGradOutputsPtr) {
     try (PointerScope callScope = new PointerScope()) {
       var graph = Graph.findGraph(nativeGraphId);
       var operation = new GraphOperation(graph, nativeOperation);

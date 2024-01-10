@@ -19,7 +19,7 @@ package org.tensorflow.op;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.TensorFlow;
-import org.tensorflow.internal.c_api.TF_GradFuncAdapter;
+import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public interface CustomGradient<T extends RawOpInputs> {
    * <p>You should not be calling this yourself, use {@link TensorFlow#registerCustomGradient(Class,
    * CustomGradient)}.
    */
-  static <T extends RawOpInputs<?>> TF_GradFuncAdapter adapter(CustomGradient<T> gradient, Class<T> opClass) {
+  static <T extends RawOpInputs<?>> TFJ_GradFuncAdapter adapter(CustomGradient<T> gradient, Class<T> opClass) {
     return new TypedGradientAdapter<T>(gradient, opClass);
   }
 }

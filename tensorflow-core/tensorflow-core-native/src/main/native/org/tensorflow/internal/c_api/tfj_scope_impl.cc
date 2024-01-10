@@ -23,21 +23,21 @@ extern "C" {
 
 using namespace tensorflow;
 
-struct TF_Scope {
+struct TFJ_Scope {
     Scope s;
 };
 
-TF_Scope TF_NewRootScope() {
+TFJ_Scope TFJ_NewRootScope() {
     Scope new_scope = Scope::NewRootScope();
     return {new_scope};
 }
 
-TF_Scope TF_NewSubScope(const TF_Scope* scope, const char* child_scope_name) {
+TFJ_Scope TFJ_NewSubScope(const TFJ_Scope* scope, const char* child_scope_name) {
     Scope new_scope = scope->s.NewSubScope(child_scope_name);
     return {new_scope};
 }
 
-TF_Scope TF_NewScopeWithControlDependencies(const TF_Scope* scope, TF_Operation* control_deps, int control_deps_size) {
+TFJ_Scope TFJ_NewScopeWithControlDependencies(const TFJ_Scope* scope, TF_Operation* control_deps, int control_deps_size) {
     std::vector<Operation> ops;
     for (int i = 0; i < control_deps_size; ++i) {
         ops.push_back(Operation(&control_deps[i].node));
@@ -46,12 +46,12 @@ TF_Scope TF_NewScopeWithControlDependencies(const TF_Scope* scope, TF_Operation*
     return {new_scope};
 }
 
-TF_Scope TF_NewScopeWithDevice(const TF_Scope* scope, const char* device) {
+TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, const char* device) {
     Scope new_scope = scope->s.WithDevice(device);
     return {new_scope};
 }
 
-std::string TF_GetUniqueNameForOp(const TF_Scope* scope, const char* default_name) {
+std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name) {
     return scope->s.GetUniqueNameForOp(default_name);
 }
 

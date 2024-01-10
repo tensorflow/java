@@ -18,11 +18,11 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
  * 
  *  Returns the number of elements pointed by grad_outputs. */
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
-public class TF_GradFuncAdapter extends FunctionPointer {
+public class TFJ_GradFuncAdapter extends FunctionPointer {
     static { Loader.load(); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
-    public    TF_GradFuncAdapter(Pointer p) { super(p); }
-    protected TF_GradFuncAdapter() { allocate(); }
+    public    TFJ_GradFuncAdapter(Pointer p) { super(p); }
+    protected TFJ_GradFuncAdapter() { allocate(); }
     private native void allocate();
-    public native int call(TF_GraphId graphId, TF_Scope scope, TF_Operation operation, TF_Output grad_inputs, int grad_inputs_length, @Cast("TF_Output**") PointerPointer grad_outputs);
+    public native int call(TFJ_GraphId graphId, TFJ_Scope scope, TF_Operation operation, TF_Output grad_inputs, int grad_inputs_length, @Cast("TF_Output**") PointerPointer grad_outputs);
 }

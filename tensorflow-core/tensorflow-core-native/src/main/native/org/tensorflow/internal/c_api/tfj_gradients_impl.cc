@@ -16,7 +16,7 @@ limitations under the License.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "graph.h"
+#include "tfj_graph.h"
 #include "tsl/platform/errors.h"
 #include "tensorflow/c/c_api.h"
 #include "tensorflow/c/tf_status.h"
@@ -27,10 +27,10 @@ namespace tensorflow {
         using namespace tsl;
         using namespace std;
 
-        unordered_map<string, TF_GradFuncAdapter> g_grad_func_adapters;
+        unordered_map<string, TFJ_GradFuncAdapter> g_grad_func_adapters;
 
         /// This method can be used to cast a pointer to/from a C struct that contains only that pointer. It is a bit
-        /// nasty but it simplifies a lot the code since we don't need to allocate and free that struct.
+
         /// It has been "inspired" by the TensorFlow C API code, as found at this location when time of writing:
         /// https://github.com/tensorflow/tensorflow/blob/9d637f69f699c0c422716b56153a8b27b681891a/tensorflow/c/c_api.cc#L658
         template <typename T, typename U> T* struct_cast(U* ptr) {
@@ -40,7 +40,7 @@ namespace tensorflow {
         /// This function is called by the TensorFlow runtime when it is time to add gradient operations of `op` to the
         /// graph using the given `scope`.
         /// We use it as a bridge between the C++ signature in TensorFlow (tensorflow::op::GradFunc) and our custom
-        /// "C" version (TF_GradFuncAdapter).
+        /// "C" version (TFJ_GradFuncAdapter).
         Status CustomGradFunc(const Scope& scope,
                               const Operation& op,
                               const vector<Output>& grad_inputs,
@@ -60,8 +60,8 @@ namespace tensorflow {
             TF_Output* outputs = NULL;
             LOG(INFO) << "Calling custom gradient function for operation " << op.node()->name();
             int num_outputs = found_adapter->second(
-                static_cast<TF_GraphId>(scope.graph()),
-                struct_cast<TF_Scope>(const_cast<Scope*>(&scope)),
+                static_cast<TFJ_GraphId>(scope.graph()),
+                struct_cast<TFJ_Scope>(const_cast<Scope*>(&scope)),
                 struct_cast<TF_Operation>(op.node()),
                 inputs,
                 num_inputs,
@@ -83,14 +83,14 @@ extern "C" {
 using namespace tensorflow::ops;
 using namespace tensorflow::java;
 
-bool TF_HasGradient(const char* op_type) {
+bool TFJ_HasGradient(const char* op_type) {
     GradFunc dummy;
     tsl::Status status = GradOpRegistry::Global()->Lookup(op_type, &dummy);
     return status.ok();
 }
 
-bool TF_RegisterCustomGradient(const char* op_type, TF_GradFuncAdapter grad_func_adapter) {
-    if (TF_HasGradient(op_type)) {
+bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter grad_func_adapter) {
+    if (TFJ_HasGradient(op_type)) {
         LOG(WARNING) << "Registering gradient function for operation " << op_type
                      << ", which has already an existing gradient function";
     } else {

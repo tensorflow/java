@@ -19,11 +19,11 @@ extern "C" {
 
 using namespace tensorflow;
 
-TF_GraphId TF_GetGraphId(const TF_Graph* g) {
+TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g) {
     return static_cast<void*>(const_cast<Graph*>(&g->graph));
 }
 
-void TF_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {
+void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {
     g->name_map.erase(operation->node.name());
 }
 

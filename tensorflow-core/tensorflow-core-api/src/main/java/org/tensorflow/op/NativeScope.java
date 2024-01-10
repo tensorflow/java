@@ -16,6 +16,11 @@ limitations under the License.
 */
 package org.tensorflow.op;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_GetUniqueNameForOp;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_NewScopeWithControlDependencies;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_NewScopeWithDevice;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_NewSubScope;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,9 +31,7 @@ import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.internal.c_api.TF_Operation;
-import org.tensorflow.internal.c_api.TF_Scope;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
+import org.tensorflow.internal.c_api.TFJ_Scope;
 
 /** A {@link Scope} implementation backed by a native scope. */
 public final class NativeScope implements Scope {
@@ -40,7 +43,7 @@ public final class NativeScope implements Scope {
 
   @Override
   public NativeScope withSubScope(String childScopeName) {
-    return new NativeScope(TF_NewSubScope(nativeScope, childScopeName), graph, null, device);
+    return new NativeScope(TFJ_NewSubScope(nativeScope, childScopeName), graph, null, device);
   }
 
   @Override
@@ -60,7 +63,7 @@ public final class NativeScope implements Scope {
   @Override
   public NativeScope withDevice(DeviceSpec newDevice) {
     return new NativeScope(
-        TF_NewScopeWithDevice(nativeScope, newDevice.toString()), graph, newDevice.toString());
+        TFJ_NewScopeWithDevice(nativeScope, newDevice.toString()), graph, newDevice.toString());
   }
 
   @Override
@@ -71,12 +74,12 @@ public final class NativeScope implements Scope {
   @Override
   public String makeOpName(String defaultName) {
     String name = opName != null ? opName : defaultName;
-    return TF_GetUniqueNameForOp(nativeScope, name);
+    return TFJ_GetUniqueNameForOp(nativeScope, name);
   }
 
   @Override
   public String makeUnique(String id) {
-    return TF_GetUniqueNameForOp(nativeScope, id);
+    return TFJ_GetUniqueNameForOp(nativeScope, id);
   }
 
   @Override
@@ -104,7 +107,7 @@ public final class NativeScope implements Scope {
     }
 
     return new NativeScope(
-        TF_NewScopeWithControlDependencies(nativeScope, ops[0], ops.length), graph, device);
+        TFJ_NewScopeWithControlDependencies(nativeScope, ops[0], ops.length), graph, device);
   }
 
   @Override
@@ -127,11 +130,11 @@ public final class NativeScope implements Scope {
     return false;
   }
 
-  NativeScope(TF_Scope nativeScope, Graph graph, String device) {
+  NativeScope(TFJ_Scope nativeScope, Graph graph, String device) {
     this(nativeScope, graph, null, device);
   }
 
-  private NativeScope(TF_Scope nativeScope, Graph graph, String opName, String device) {
+  private NativeScope(TFJ_Scope nativeScope, Graph graph, String opName, String device) {
     this.graph = graph;
     this.nativeScope = nativeScope;
     this.opName = opName;
@@ -139,7 +142,7 @@ public final class NativeScope implements Scope {
   }
 
   private final Graph graph;
-  private final TF_Scope nativeScope;
+  private final TFJ_Scope nativeScope;
   private final String opName;
   private final String device;
 }

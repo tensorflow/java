@@ -39,7 +39,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrType;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTypeList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetDevice;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_UnmapOperationName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_UnmapOperationName;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -476,7 +476,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
       TF_Status status = TF_Status.newStatus();
       TF_Operation op = TF_FinishOperationLocked(handle, status);
       status.throwExceptionIfNotOK();
-      TF_UnmapOperationName(g, op);
+      TFJ_UnmapOperationName(g, op);
       return op;
     }
   }

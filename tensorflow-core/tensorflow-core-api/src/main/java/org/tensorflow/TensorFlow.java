@@ -19,20 +19,20 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHandle;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_HasGradient;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_RegisterCustomGradient;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_RegisterFilesystemPlugin;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_HasGradient;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_RegisterCustomGradient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
-import org.tensorflow.internal.c_api.TF_GradFuncAdapter;
 import org.tensorflow.internal.c_api.TF_Library;
-import org.tensorflow.internal.c_api.TF_RuntimeLibrary;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
+import org.tensorflow.internal.c_api.TFJ_RuntimeLibrary;
 import org.tensorflow.op.CustomGradient;
 import org.tensorflow.op.RawCustomGradient;
 import org.tensorflow.op.RawOpInputs;
@@ -154,7 +154,7 @@ public final class TensorFlow {
   /** Load the TensorFlow runtime C library. */
   static {
     try {
-      TF_RuntimeLibrary.load();
+      TFJ_RuntimeLibrary.load();
     } catch (Exception e) {
       /*
        * This code is called during static initialization of this and of other classes.
@@ -174,11 +174,11 @@ public final class TensorFlow {
    *
    * <p><b>Required for correctness</b>
    */
-  private static final Set<TF_GradFuncAdapter> gradientFuncs =
+  private static final Set<TFJ_GradFuncAdapter> gradientFuncs =
       Collections.newSetFromMap(new IdentityHashMap<>());
 
   static synchronized boolean hasGradient(String opType) {
-    return TF_HasGradient(opType);
+    return TFJ_HasGradient(opType);
   }
 
   /**
@@ -207,8 +207,8 @@ public final class TensorFlow {
     if (hasGradient(opType)) {
       return false;
     }
-    TF_GradFuncAdapter g = RawCustomGradient.adapter(gradient);
-    if (!TF_RegisterCustomGradient(opType, g)) {
+    TFJ_GradFuncAdapter g = RawCustomGradient.adapter(gradient);
+    if (!TFJ_RegisterCustomGradient(opType, g)) {
       return false;
     }
     gradientFuncs.add(g);
@@ -255,8 +255,8 @@ public final class TensorFlow {
     if (hasGradient(opType)) {
       return false;
     }
-    TF_GradFuncAdapter g = CustomGradient.adapter(gradient, inputClass);
-    if (!TF_RegisterCustomGradient(opType, g)) {
+    TFJ_GradFuncAdapter g = CustomGradient.adapter(gradient, inputClass);
+    if (!TFJ_RegisterCustomGradient(opType, g)) {
       return false;
     }
     gradientFuncs.add(g);

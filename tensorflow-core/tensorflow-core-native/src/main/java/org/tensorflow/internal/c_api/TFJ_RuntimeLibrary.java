@@ -31,7 +31,7 @@ import java.io.InputStream;
  * -Djava.library.path command-line argument). However, doing so requires an additional step of
  * configuration.
  *
- * <p>Alternatively, the native libraries can be packaed in a .jar, making them easily usable from
+ * <p>Alternatively, the native libraries can be packaged in a .jar, making them easily usable from
  * build systems like Maven. However, in such cases, the native library has to be extracted from the
  * .jar archive.
  *
@@ -41,7 +41,7 @@ import java.io.InputStream;
  * lookup must be consistent with any packaging (such as on Maven Central) of the TensorFlow Java
  * native libraries.
  */
-public final class TF_RuntimeLibrary {
+public final class TFJ_RuntimeLibrary {
   private static final boolean DEBUG =
       System.getProperty("org.tensorflow.NativeLibrary.DEBUG") != null;
   private static final String JNI_LIBNAME = "tensorflow_jni";
@@ -66,14 +66,14 @@ public final class TF_RuntimeLibrary {
     final String jniResourceName = makeResourceName(jniLibName);
     log("jniResourceName: " + jniResourceName);
     final InputStream jniResource =
-        TF_RuntimeLibrary.class.getClassLoader().getResourceAsStream(jniResourceName);
+        TFJ_RuntimeLibrary.class.getClassLoader().getResourceAsStream(jniResourceName);
     // Extract the JNI's dependency
     final String frameworkLibName =
         getVersionedLibraryName(System.mapLibraryName("tensorflow_framework"));
     final String frameworkResourceName = makeResourceName(frameworkLibName);
     log("frameworkResourceName: " + frameworkResourceName);
     final InputStream frameworkResource =
-        TF_RuntimeLibrary.class.getClassLoader().getResourceAsStream(frameworkResourceName);
+        TFJ_RuntimeLibrary.class.getClassLoader().getResourceAsStream(frameworkResourceName);
     // Do not complain if the framework resource wasn't found. This may just mean that we're
     // building with --config=monolithic (in which case it's not needed and not included).
     if (jniResource == null) {
@@ -130,7 +130,7 @@ public final class TF_RuntimeLibrary {
   }
 
   private static boolean resourceExists(String baseName) {
-    return TF_RuntimeLibrary.class.getClassLoader().getResource(makeResourceName(baseName)) != null;
+    return TFJ_RuntimeLibrary.class.getClassLoader().getResource(makeResourceName(baseName)) != null;
   }
 
   private static String getVersionedLibraryName(String libFilename) {
@@ -176,7 +176,7 @@ public final class TF_RuntimeLibrary {
    * determined.
    */
   private static String getMajorVersionNumber() {
-    String version = TF_RuntimeLibrary.class.getPackage().getImplementationVersion();
+    String version = TFJ_RuntimeLibrary.class.getPackage().getImplementationVersion();
     // expecting a string like 1.14.0, we want to get the first '1'.
     int dotIndex;
     if (version == null || (dotIndex = version.indexOf('.')) == -1) {
@@ -264,5 +264,5 @@ public final class TF_RuntimeLibrary {
             + "*) to extract TensorFlow native libraries.");
   }
 
-  private TF_RuntimeLibrary() {}
+  private TFJ_RuntimeLibrary() {}
 }

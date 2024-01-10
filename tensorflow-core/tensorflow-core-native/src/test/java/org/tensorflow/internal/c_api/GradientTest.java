@@ -20,22 +20,22 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_HasGradient;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_HasGradient;
 
 public class GradientTest {
 
   @Test
   public void testExistingGradientCheck() {
-      assertTrue(TF_HasGradient("Cast"));
+      assertTrue(TFJ_HasGradient("Cast"));
   }
 
   @Test
   public void testNonExistingGradientCheck() {
-      assertFalse(TF_HasGradient("NthElement"));
+      assertFalse(TFJ_HasGradient("NthElement"));
   }
 
   @Test
   public void testNonExistingOpGradientCheck() {
-      assertFalse(TF_HasGradient("IDontExists"));
+      assertFalse(TFJ_HasGradient("IDontExists"));
   }
 }

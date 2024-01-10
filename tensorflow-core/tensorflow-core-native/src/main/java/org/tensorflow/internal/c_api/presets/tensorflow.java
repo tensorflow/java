@@ -61,9 +61,9 @@ import java.util.List;
             // Following are C API extensions maintained within TF Java, see src/main/native.
             // Binding directly the C++ API with JavaCPP turned out to be too precarious between different releases,
             // so it is simpler to write our own C API only exposing what we need from it.
-            "graph.h",
-            "scope.h",
-            "gradients.h",
+            "tfj_graph.h",
+            "tfj_scope.h",
+            "tfj_gradients.h",
           },
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),

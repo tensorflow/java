@@ -22,7 +22,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
-import org.tensorflow.internal.c_api.TF_Scope;
+import org.tensorflow.internal.c_api.TFJ_Scope;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ final class RawGradientAdapter extends AbstractGradientAdapter {
   }
 
   @Override
-  protected List<Operand<?>> apply(Graph graph, TF_Scope scope, GraphOperation operation, List<Output<?>> gradInputs) {
+  protected List<Operand<?>> apply(Graph graph, TFJ_Scope scope, GraphOperation operation, List<Output<?>> gradInputs) {
     Scope nativeScope = new NativeScope(scope, graph, null).withSubScope(operation.name());
     return gradient.call(new Ops(nativeScope), operation, gradInputs);
   }
