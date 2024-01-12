@@ -23,7 +23,7 @@ module tensorflow.nativelib {
   exports org.tensorflow.internal;
   exports org.tensorflow.internal.c_api;
   exports org.tensorflow.internal.c_api.global;
-  exports org.tensorflow.internal.c_api.presets to org.bytedeco.javacpp;
+  exports org.tensorflow.internal.c_api.presets to org.bytedeco.javacpp,tensorflow;
   exports org.tensorflow.proto;
   exports org.tensorflow.proto.data;
   exports org.tensorflow.proto.data.model;
