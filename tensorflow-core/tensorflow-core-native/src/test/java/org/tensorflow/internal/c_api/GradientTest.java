@@ -16,26 +16,39 @@ limitations under the License.
 */
 package org.tensorflow.internal.c_api;
 
+import org.bytedeco.javacpp.PointerPointer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_HasGradient;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_RegisterCustomGradient;
 
+// WARNING: Gradient registry in native library is stateful across all tests
 public class GradientTest {
 
   @Test
   public void testExistingGradientCheck() {
-      assertTrue(TFJ_HasGradient("Cast"));
+    assertTrue(TFJ_HasGradient("Cast"));
   }
 
   @Test
   public void testNonExistingGradientCheck() {
-      assertFalse(TFJ_HasGradient("NthElement"));
+    assertFalse(TFJ_HasGradient("NthElement"));
   }
 
   @Test
   public void testNonExistingOpGradientCheck() {
-      assertFalse(TFJ_HasGradient("IDontExists"));
+    assertFalse(TFJ_HasGradient("IDontExists"));
+  }
+
+  @Test
+  public void registerCustomGradientAdapter() {
+    assertTrue(TFJ_RegisterCustomGradient("Merge", new TFJ_GradFuncAdapter()));
+  }
+
+  @Test
+  public void registerCustomGradientAdapterFailedIfGradFuncAlreadyRegistered() {
+    assertFalse(TFJ_RegisterCustomGradient("Add", new TFJ_GradFuncAdapter()));
   }
 }

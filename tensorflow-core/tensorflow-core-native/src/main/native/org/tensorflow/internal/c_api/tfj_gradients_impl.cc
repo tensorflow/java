@@ -46,9 +46,10 @@ namespace tensorflow {
                               const vector<Output>& grad_inputs,
                               vector<Output>* grad_outputs)
         {
-            auto found_adapter = g_grad_func_adapters.find(op.node()->name());
+            const string& op_type = op.node()->type_string();
+            auto found_adapter = g_grad_func_adapters.find(op_type);
             if (found_adapter == g_grad_func_adapters.end()) {
-                return errors::NotFound("No gradient adapter found for operation ", op.node()->name());
+                return errors::NotFound("No gradient adapter found for operation ", op_type);
             }
             int num_inputs = grad_inputs.size();
             TF_Output* inputs = (TF_Output*)malloc(num_inputs * sizeof(TF_Output));
@@ -58,7 +59,7 @@ namespace tensorflow {
                 inputs[i].index = grad_input.index();
             }
             TF_Output* outputs = NULL;
-            LOG(INFO) << "Calling custom gradient function for operation " << op.node()->name();
+            LOG(INFO) << "Calling Java gradient function for operation of type " << op_type;
             int num_outputs = found_adapter->second(
                 static_cast<TFJ_GraphId>(scope.graph()),
                 struct_cast<TFJ_Scope>(const_cast<Scope*>(&scope)),
@@ -90,11 +91,10 @@ bool TFJ_HasGradient(const char* op_type) {
 }
 
 bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter grad_func_adapter) {
-    if (TFJ_HasGradient(op_type)) {
-        LOG(WARNING) << "Registering gradient function for operation " << op_type
-                     << ", which has already an existing gradient function";
-    } else {
-        LOG(INFO) << "Registering gradient function for operation " << op_type;
+    if (TFJ_HasGradient(op_type)) { // Check if gradient already exists otherwise the JVM might abort/crash
+        LOG(WARNING) << "Tried to register Java gradient function for operation " << op_type
+                     << ", which has already a registered function";
+        return false;
     }
     bool registered = GradOpRegistry::Global()->Register(op_type, CustomGradFunc);
     if (registered) {
