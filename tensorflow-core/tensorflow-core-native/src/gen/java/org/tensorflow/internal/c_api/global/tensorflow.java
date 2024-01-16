@@ -4905,10 +4905,9 @@ limitations under the License.
 public static native @Cast("bool") boolean TFJ_HasGradient(@Cast("const char*") BytePointer op_type);
 public static native @Cast("bool") boolean TFJ_HasGradient(String op_type);
 
-/** Registers a gradient function for operations of type {@code op_type}. It is possible to register a new function even if another has already been registered for this
- *  type of operations (this will only generate a warning).
+/** Registers a gradient function for operations of type {@code op_type}.
  * 
- *  Returns true if the function has been registered successfully */
+ *  Returns true if the function has been registered successfully, false if operation failed or if gradient function is already registered to that {@code op_type}. */
 public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(@Cast("const char*") BytePointer op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
 public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(String op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
 
