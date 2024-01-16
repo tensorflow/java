@@ -22,12 +22,15 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Merge;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.nn.NthElement;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -97,6 +100,24 @@ public class CustomGradientTest {
         assertEquals(1, outputs.size());
         assertEquals(0.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
       }
+    }
+  }
+
+  @DisabledOnOs(OS.WINDOWS)
+  @Test
+  public void applyGradientOnMultipleNodesOfSameOpType() {
+    try (Graph g = new Graph()) {
+      assertTrue(TensorFlow.registerCustomGradient(
+              Merge.Inputs.class,
+              (tf, op, gradInputs) -> gradInputs.stream().map(i -> tf.constant(-10)).collect(Collectors.toList())
+      ));
+      var tf = Ops.create(g);
+      var initialValue = tf.constant(10);
+      var merge1 = tf.merge(List.of(initialValue, tf.constant(20)));
+      var merge2 = tf.merge(List.of(merge1.output(), tf.constant(30)));
+
+      // Just make sure that it won't throw
+      g.addGradients(merge2.output(), toArray(initialValue.asOutput()));
     }
   }
 
