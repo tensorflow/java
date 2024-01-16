@@ -35,10 +35,9 @@ typedef int (*TFJ_GradFuncAdapter)(TFJ_GraphId graphId, TFJ_Scope* scope, TF_Ope
 /// Returns true if a gradient function has already be registered for operations of type `op_type`
 TF_CAPI_EXPORT extern bool TFJ_HasGradient(const char* op_type);
 
-/// Registers a gradient function for operations of type `op_type`. It is possible to register a new function even if another has already been registered for this
-/// type of operations (this will only generate a warning).
+/// Registers a gradient function for operations of type `op_type`.
 ///
-/// Returns true if the function has been registered successfully
+/// Returns true if the function has been registered successfully, false if operation failed or if gradient function is already registered to that `op_type`.
 TF_CAPI_EXPORT extern bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
 
 #ifdef __cplusplus
