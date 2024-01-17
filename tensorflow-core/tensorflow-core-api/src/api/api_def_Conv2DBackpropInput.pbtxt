@@ -1,4 +1,7 @@
 op {
   graph_op_name: "Conv2DBackpropInput"
-  visibility: SKIP
+  visibility: VISIBLE
+  endpoint {
+    name: "nn.Conv2dBackpropInput"
+  }
 }
