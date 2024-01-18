@@ -30,45 +30,40 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the gradients of convolution with respect to the filter.
+ * Computes the gradients of convolution with respect to the input.
  *
  * @param <T> data type for {@code output} output
  */
 @OpMetadata(
-    opType = Conv2dBackpropFilter.OP_NAME,
-    inputsClass = Conv2dBackpropFilter.Inputs.class
+    opType = Conv2dBackpropInputV2.OP_NAME,
+    inputsClass = Conv2dBackpropInputV2.Inputs.class
 )
-@Operator(
-    group = "nn"
-)
-public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp implements Operand<T> {
+public final class Conv2dBackpropInputV2<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "Conv2DBackpropFilter";
+  public static final String OP_NAME = "Conv2DBackpropInputV2";
 
   private Output<T> output;
 
-  public Conv2dBackpropFilter(Operation operation) {
+  public Conv2dBackpropInputV2(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new Conv2DBackpropFilter operation.
+   * Factory method to create a class wrapping a new Conv2DBackpropInputV2 operation.
    *
    * @param scope current scope
    * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   * @param filterSizes An integer vector representing the tensor shape of {@code filter},
-   * where {@code filter} is a 4-D
-   * {@code [filter_height, filter_width, in_channels, out_channels]} tensor.
+   * Only shape of tensor is used.
+   * @param filter 4-D with shape
+   * {@code [filter_height, filter_width, in_channels, out_channels]}.
    * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
    * Gradients w.r.t. the output of the convolution.
    * @param strides The stride of the sliding window for each dimension of the input
@@ -76,18 +71,18 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
    * format.
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropFilter} output and operands
-   * @return a new instance of Conv2dBackpropFilter
+   * @param <T> data type for {@code Conv2DBackpropInputV2} output and operands
+   * @return a new instance of Conv2dBackpropInputV2
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TNumber> Conv2dBackpropFilter<T> create(Scope scope, Operand<T> input,
-      Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding,
+  public static <T extends TNumber> Conv2dBackpropInputV2<T> create(Scope scope, Operand<T> input,
+      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv2dBackpropFilter");
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv2dBackpropInputV2");
     opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(filterSizes.asOutput());
+    opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {
@@ -119,7 +114,7 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
         }
       }
     }
-    return new Conv2dBackpropFilter<>(opBuilder.build());
+    return new Conv2dBackpropInputV2<>(opBuilder.build());
   }
 
   /**
@@ -202,9 +197,8 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
 
   /**
    * Gets output.
-   * 4-D with shape
-   * {@code [filter_height, filter_width, in_channels, out_channels]}.  Gradient w.r.t.
-   * the {@code filter} input of the convolution.
+   * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.  Gradient
+   * w.r.t. the input of the convolution.
    * @return output.
    */
   public Output<T> output() {
@@ -217,7 +211,7 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.Conv2dBackpropFilter}
+   * Optional attributes for {@link org.tensorflow.op.nn.Conv2dBackpropInputV2}
    */
   public static class Options {
     private Boolean useCudnnOnGpu;
@@ -317,20 +311,20 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
   }
 
   @OpInputsMetadata(
-      outputsClass = Conv2dBackpropFilter.class
+      outputsClass = Conv2dBackpropInputV2.class
   )
-  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2dBackpropFilter<T>> {
+  public static class Inputs<T extends TNumber> extends RawOpInputs<Conv2dBackpropInputV2<T>> {
     /**
      * 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
+     * Only shape of tensor is used.
      */
     public final Operand<T> input;
 
     /**
-     * An integer vector representing the tensor shape of {@code filter},
-     * where {@code filter} is a 4-D
-     * {@code [filter_height, filter_width, in_channels, out_channels]} tensor.
+     * 4-D with shape
+     * {@code [filter_height, filter_width, in_channels, out_channels]}.
      */
-    public final Operand<TInt32> filterSizes;
+    public final Operand<T> filter;
 
     /**
      * 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
@@ -387,10 +381,10 @@ public final class Conv2dBackpropFilter<T extends TNumber> extends RawOp impleme
     public final long[] dilations;
 
     public Inputs(GraphOperation op) {
-      super(new Conv2dBackpropFilter<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
+      super(new Conv2dBackpropInputV2<>(op), op, Arrays.asList("T", "strides", "use_cudnn_on_gpu", "padding", "explicit_paddings", "data_format", "dilations"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
-      filterSizes = (Operand<TInt32>) op.input(inputIndex++);
+      filter = (Operand<T>) op.input(inputIndex++);
       outBackprop = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       strides = op.attributes().getAttrIntList("strides");
