@@ -355,8 +355,9 @@ public final class NnOps {
    *
    * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   * @param filter 4-D with shape {@code [filter_height, filter_width, in_channels, out_channels]}.
-   *  Only shape of tensor is used.
+   * @param filterSizes An integer vector representing the tensor shape of {@code filter},
+   *  where {@code filter} is a 4-D
+   *  {@code [filter_height, filter_width, in_channels, out_channels]} tensor.
    * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
    *  Gradients w.r.t. the output of the convolution.
    * @param strides The stride of the sliding window for each dimension of the input
@@ -364,21 +365,21 @@ public final class NnOps {
    *  format.
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropFilterV2} output and operands
+   * @param <T> data type for {@code Conv2DBackpropFilter} output and operands
    * @return a new instance of Conv2dBackpropFilter
    */
   public <T extends TNumber> Conv2dBackpropFilter<T> conv2dBackpropFilter(Operand<T> input,
-      Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
+      Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides, String padding,
       Conv2dBackpropFilter.Options... options) {
-    return Conv2dBackpropFilter.create(scope, input, filter, outBackprop, strides, padding, options);
+    return Conv2dBackpropFilter.create(scope, input, filterSizes, outBackprop, strides, padding, options);
   }
 
   /**
    * Computes the gradients of convolution with respect to the input.
    *
    * @param <T> data type for {@code output} output
-   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
-   *  Only shape of tensor is used.
+   * @param inputSizes An integer vector representing the shape of {@code input},
+   *  where {@code input} is a 4-D {@code [batch, height, width, channels]} tensor.
    * @param filter 4-D with shape
    *  {@code [filter_height, filter_width, in_channels, out_channels]}.
    * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, out_channels]}.
@@ -388,13 +389,13 @@ public final class NnOps {
    *  format.
    * @param padding The type of padding algorithm to use.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code Conv2DBackpropInputV2} output and operands
+   * @param <T> data type for {@code Conv2DBackpropInput} output and operands
    * @return a new instance of Conv2dBackpropInput
    */
-  public <T extends TNumber> Conv2dBackpropInput<T> conv2dBackpropInput(Operand<T> input,
+  public <T extends TNumber> Conv2dBackpropInput<T> conv2dBackpropInput(Operand<TInt32> inputSizes,
       Operand<T> filter, Operand<T> outBackprop, List<Long> strides, String padding,
       Conv2dBackpropInput.Options... options) {
-    return Conv2dBackpropInput.create(scope, input, filter, outBackprop, strides, padding, options);
+    return Conv2dBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
   }
 
   /**
