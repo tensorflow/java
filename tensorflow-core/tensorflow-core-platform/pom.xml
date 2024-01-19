@@ -28,7 +28,7 @@
   <name>TensorFlow API Platform</name>
 
   <properties>
-    <java.module.name>org.tensorflow.core.platform</java.module.name>
+    <java.module.name>tensorflow.platform</java.module.name>
   </properties>
 
   <dependencies>
