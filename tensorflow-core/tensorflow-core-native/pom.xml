@@ -24,7 +24,6 @@
     <dist.download.skip>false</dist.download.skip>
     <dist.download.url/>
     <dist.download.folder>${project.build.directory}/dist/</dist.download.folder>
-    <java.module.name>org.tensorflow.core.native</java.module.name>
     <nativeSourceDirectory>${project.basedir}/src/main/native</nativeSourceDirectory>
   </properties>
 

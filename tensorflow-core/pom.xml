@@ -66,14 +66,43 @@
 
   <profiles>
     <profile>
-      <id>javacpp-platform-default</id>
+      <!--
+        When deploying, the build packages and distributes native binaries for all supported platforms. These native artifacts
+        must have already been built, tested and published priorly on their respective platform.
+      -->
+      <id>deploying</id>
+      <properties>
+        <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
+      </properties>
+    </profile>
+
+    <profile>
+      <!--
+        All supported platforms are being replaced by the current host platform, mostly useful for local builds.
+        The artifacts produced by this build can only run on the current host (or other machines of the same
+        platform). This is the default profile.
+      -->
+      <id>javacpp-platform-host</id>
       <activation>
+        <activeByDefault>true</activeByDefault>
         <property>
-          <name>!javacpp.platform</name>
+          <name>javacpp.platform.host</name>
         </property>
       </activation>
       <properties>
         <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
+        <javacpp.platform.linux-armhf>${os.name}-${os.arch}</javacpp.platform.linux-armhf>
+        <javacpp.platform.linux-arm64>${os.name}-${os.arch}</javacpp.platform.linux-arm64>
+        <javacpp.platform.linux-x86_64>${os.name}-${os.arch}</javacpp.platform.linux-x86_64>
+        <javacpp.platform.macosx-arm64>${os.name}-${os.arch}</javacpp.platform.macosx-arm64>
+        <javacpp.platform.macosx-x86_64>${os.name}-${os.arch}</javacpp.platform.macosx-x86_64>
+        <javacpp.platform.windows-x86_64>${os.name}-${os.arch}</javacpp.platform.windows-x86_64>
+        <javacpp.platform.linux-armhf.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-armhf.extension>
+        <javacpp.platform.linux-arm64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
+        <javacpp.platform.linux-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86_64.extension>
+        <javacpp.platform.macosx-arm64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64.extension>
+        <javacpp.platform.macosx-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
+        <javacpp.platform.windows-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
       </properties>
     </profile>
 
@@ -103,30 +132,6 @@
         <javacpp.platform.macosx-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
         <javacpp.platform.windows-x86.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
         <javacpp.platform.windows-x86_64.extension>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>javacpp-platform-host</id>
-      <activation>
-        <property>
-          <name>javacpp.platform.host</name>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
-        <javacpp.platform.linux-armhf>${os.name}-${os.arch}</javacpp.platform.linux-armhf>
-        <javacpp.platform.linux-arm64>${os.name}-${os.arch}</javacpp.platform.linux-arm64>
-        <javacpp.platform.linux-x86_64>${os.name}-${os.arch}</javacpp.platform.linux-x86_64>
-        <javacpp.platform.macosx-arm64>${os.name}-${os.arch}</javacpp.platform.macosx-arm64>
-        <javacpp.platform.macosx-x86_64>${os.name}-${os.arch}</javacpp.platform.macosx-x86_64>
-        <javacpp.platform.windows-x86_64>${os.name}-${os.arch}</javacpp.platform.windows-x86_64>
-        <javacpp.platform.linux-armhf.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-armhf.extension>
-        <javacpp.platform.linux-arm64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-arm64.extension>
-        <javacpp.platform.linux-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86_64.extension>
-        <javacpp.platform.macosx-arm64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-arm64.extension>
-        <javacpp.platform.macosx-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
-        <javacpp.platform.windows-x86_64.extension>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
       </properties>
     </profile>
 

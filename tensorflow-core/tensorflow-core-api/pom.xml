@@ -15,7 +15,6 @@
   <description>Platform-dependent native code and pure-Java code for the TensorFlow machine intelligence library.</description>
 
   <properties>
-    <java.module.name>org.tensorflow.core.api</java.module.name>
     <ndarray.version>0.4.0</ndarray.version>
     <truth.version>1.1.5</truth.version>
     <test.download.skip>false</test.download.skip>
