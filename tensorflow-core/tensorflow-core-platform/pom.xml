@@ -31,56 +31,29 @@
     <java.module.name>tensorflow.platform</java.module.name>
   </properties>
 
-  <profiles>
-    <!--
-      Include native artifacts of all available platforms only when deploying to Sonatype. When just building locally,
-      we only need the native artifact of the current host platform.
-    -->
-    <profile>
-      <id>deploying</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-native</artifactId>
-          <version>${project.version}</version>
-          <classifier>${javacpp.platform.linux-x86_64.extension}</classifier>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-native</artifactId>
-          <version>${project.version}</version>
-          <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
-        </dependency>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-native</artifactId>
-          <version>${project.version}</version>
-          <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <profile>
-      <id>host-only</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.tensorflow</groupId>
-          <artifactId>tensorflow-core-native</artifactId>
-          <version>${project.version}</version>
-          <classifier>${native.classifier}</classifier>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
-
   <dependencies>
     <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-api</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>${project.version}</version>
+      <classifier>${javacpp.platform.linux-x86_64.extension}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>${project.version}</version>
+      <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>${project.version}</version>
+      <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
     </dependency>
   </dependencies>
 
