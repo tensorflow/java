@@ -15,7 +15,7 @@ For dependencies, we can use anything compliant with [this list](https://opensou
 
 ## Building
 
-To build all the artifacts locally, simply invoke the command `mvn install -Djavacpp.platform.host` at the root of this repository (or the Maven command of your choice). It is also
+To build all the artifacts locally, simply invoke the command `mvn install` at the root of this repository (or the Maven command of your choice). It is also
 possible to build artifacts with support for CUDA® by adding the `-Djavacpp.platform.extension=-gpu` argument to the Maven command.
 
 ### JDK 16+
@@ -120,7 +120,7 @@ Once these steps have been executed, you can run `mvn install` to build the new 
 ### Generating Java Bindings
 
 After upgrading the TensorFlow library, you need to regenerate all Java bindings that depends on the native code. That includes Java protos, C API bindings (JavaCPP) and
-operator classes. You can trigger the regeneration of these bindings with the Maven command `mvn clean install -Pgenerating -Djavacpp.platform.host`.
+operator classes. You can trigger the regeneration of these bindings with the Maven command `mvn clean install -Pgenerating`.
 
 This will trigger a small Bazel build of the TensorFlow sources to regenerate the Java protos, so make sure your [environment](CONTRIBUTING.md#native-builds) is setup properly.
 
