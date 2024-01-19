@@ -13,10 +13,6 @@
   <name>TensorFlow Generators</name>
   <description>Code generators for TensorFlow Java client</description>
 
-  <properties>
-    <java.module.name>org.tensorflow.core.generator</java.module.name>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.tensorflow</groupId>
@@ -70,17 +66,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>

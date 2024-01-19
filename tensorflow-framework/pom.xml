@@ -35,7 +35,6 @@
 
   <properties>
     <javacpp.platform.extension></javacpp.platform.extension>
-    <java.module.name>org.tensorflow.framework</java.module.name>
   </properties>
 
   <dependencies>
@@ -76,17 +75,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
