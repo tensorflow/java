@@ -122,7 +122,12 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
           set "PATH=C:\msys64\usr\bin;%PATH%"
+          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
           mkdir C:\tmp
+          set "TEST_TMPDIR=C:\tmp"
+          set "TMPDIR=C:\tmp"
+          set "TEMP=C:\tmp"
+          set "TMP=C:\tmp"      
           bash --version
           git --version
           cl
