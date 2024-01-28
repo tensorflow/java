@@ -15,7 +15,7 @@ http_archive(
     patch_args = ["-p1"],
     patch_cmds = [
         "find tensorflow third_party/xla/third_party/tsl -name \\*.proto | xargs sed -i.bak '/^option java_package/d'",
-        "find tensorflow third_party/xla/third_party/tsl -name \\*.proto | xargs sed -i.bak 's/^package tensorflow\\([^;\\s]*\\).*$/package tensorflow\\1;\\roption java_package = \"org.tensorflow.proto\\1\";/'",
+        "find tensorflow third_party/xla/third_party/tsl -name \\*.proto | xargs sed -i.bak 's/^package tensorflow\\([^;]*\\).*$/package tensorflow\\1;\\noption java_package = \"org.tensorflow.proto\\1\";/'",
     ],
     urls = [
        "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.15.0.tar.gz",
