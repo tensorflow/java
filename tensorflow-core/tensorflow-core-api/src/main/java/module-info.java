@@ -16,7 +16,7 @@ limitations under the License.
 */
 module tensorflow {
   requires transitive org.tensorflow.ndarray;
-  requires tensorflow.nativelib;
+  requires transitive tensorflow.nativelib;
   requires java.logging;
 
   exports org.tensorflow;
