@@ -17,8 +17,6 @@ limitations under the License.
 
 #include "tensorflow/c/c_api_internal.h"
 
-extern "C" {
-
 using namespace tensorflow;
 
 TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g) {
@@ -29,19 +27,11 @@ void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {
     g->name_map.erase(operation->node.name());
 }
 
-} /* end extern "C" */
-
 #else // #indef _WIN32
 
 /* This extension is not available on Windows */
-extern "C" {
 
-TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g) {
-    return NULL;
-}
-
+TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g) { return NULL; }
 void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {}
-
-} /* end extern "C" */
 
 #endif // #indef _WIN32

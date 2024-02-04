@@ -4787,8 +4787,6 @@ limitations under the License.
 // #define TENSORFLOW_JAVA_GRAPH_H_
 
 // #include "tensorflow/c/c_api.h"
-
-// #ifdef __cplusplus
 // Targeting ../TFJ_GraphId.java
 
 
@@ -4800,9 +4798,7 @@ public static native TFJ_GraphId TFJ_GetGraphId(@Const TF_Graph g);
  *  This is particularly useful for preventing custom gradient operations to pollute the graph namespace. */
 public static native void TFJ_UnmapOperationName(TF_Graph g, TF_Operation operation);
 
-// #ifdef __cplusplus /* end extern "C" */
 // #include "tfj_graph_impl.cc" // include CC file in its header to compile it with JavaCPP
-// #endif
 
 // #endif  // TENSORFLOW_JAVA_GRAPH_H_
 
@@ -4828,8 +4824,6 @@ limitations under the License.
 // #define TENSORFLOW_JAVA_SCOPE_H_
 
 // #include "tensorflow/c/c_api.h"
-
-// #ifdef __cplusplus
 // Targeting ../TFJ_Scope.java
 
 
@@ -4864,9 +4858,7 @@ public static native @ByVal TFJ_Scope TFJ_NewScopeWithDevice(@Const TFJ_Scope sc
 public static native @StdString BytePointer TFJ_GetUniqueNameForOp(@Const TFJ_Scope scope, @Cast("const char*") BytePointer default_name);
 public static native @StdString String TFJ_GetUniqueNameForOp(@Const TFJ_Scope scope, String default_name);
 
-// #ifdef __cplusplus /* end extern "C" */
 // #include "tfj_scope_impl.cc" // include CC file in its header to compile it with JavaCPP
-// #endif
 
 // #endif  // TENSORFLOW_JAVA_SCOPE_H_
 
@@ -4892,9 +4884,10 @@ limitations under the License.
 // #define TENSORFLOW_JAVA_GRADIENTS_H_
 
 // #include "tfj_scope.h"
-// #include "tensorflow/c/c_api.h"
 
-// #ifdef __cplusplus
+///
+///
+// #include "tensorflow/c/c_api.h"
 // Targeting ../TFJ_GradFuncAdapter.java
 
 
@@ -4911,9 +4904,7 @@ public static native @Cast("bool") boolean TFJ_HasGradient(String op_type);
 public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(@Cast("const char*") BytePointer op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
 public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(String op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
 
-// #ifdef __cplusplus /* end extern "C" */
 // #include "tfj_gradients_impl.cc" // include CC file in its header to compile it with JavaCPP
-// #endif
 
 // #endif  // TENSORFLOW_JAVA_GRADIENTS_H_
 

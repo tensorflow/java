@@ -81,8 +81,6 @@ namespace tensorflow {
     }
 }
 
-extern "C" {
-
 using namespace tensorflow::ops;
 using namespace tensorflow::java;
 
@@ -105,21 +103,11 @@ bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter grad_fu
     return registered;
 }
 
-} /* end extern "C" */
-
 #else // #ifndef _WIN32
 
 /* This extension is not available on Windows */
-extern "C" {
 
-bool TFJ_HasGradient(const char* op_type) {
-    return true;
-}
-
-bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter grad_func_adapter) {
-    return false;
-}
-
-} /* end extern "C" */
+bool TFJ_HasGradient(const char* op_type) { return true; }
+bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter grad_func_adapter) { return false; }
 
 #endif // #ifndef _WIN32
