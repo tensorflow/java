@@ -19,9 +19,7 @@ limitations under the License.
 #include "tfj_scope.h"
 #include "tensorflow/c/c_api.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
 
 /// Function to be implemented on the JVM side to be called back by the native library when it is time to attach gradient operations for the given op, graph and scope.
 ///
@@ -40,9 +38,8 @@ TF_CAPI_EXPORT extern bool TFJ_HasGradient(const char* op_type);
 /// Returns true if the function has been registered successfully, false if operation failed or if gradient function is already registered to that `op_type`.
 TF_CAPI_EXPORT extern bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
 
-#ifdef __cplusplus
 } /* end extern "C" */
+
 #include "tfj_gradients_impl.cc" // include CC file in its header to compile it with JavaCPP
-#endif
 
 #endif  // TENSORFLOW_JAVA_GRADIENTS_H_

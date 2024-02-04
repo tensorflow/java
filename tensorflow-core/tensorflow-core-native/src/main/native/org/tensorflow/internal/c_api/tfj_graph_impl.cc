@@ -13,6 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#ifndef _WIN32
+
 #include "tensorflow/c/c_api_internal.h"
 
 extern "C" {
@@ -28,3 +30,18 @@ void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {
 }
 
 } /* end extern "C" */
+
+#else // #indef _WIN32
+
+/* This extension is not available on Windows */
+extern "C" {
+
+TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g) {
+    return NULL;
+}
+
+void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {}
+
+} /* end extern "C" */
+
+#endif // #indef _WIN32
