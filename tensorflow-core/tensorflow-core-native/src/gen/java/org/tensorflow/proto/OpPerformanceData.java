@@ -4877,7 +4877,7 @@ org.tensorflow.proto.AttrValue defaultValue);
      *
      * <code>.tensorflow.SessionInfo session_info = 12 [deprecated = true];</code>
      * @deprecated tensorflow.OpPerformance.session_info is deprecated.
-     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=74
+     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=75
      * @return Whether the sessionInfo field is set.
      */
     @java.lang.Deprecated boolean hasSessionInfo();
@@ -4888,7 +4888,7 @@ org.tensorflow.proto.AttrValue defaultValue);
      *
      * <code>.tensorflow.SessionInfo session_info = 12 [deprecated = true];</code>
      * @deprecated tensorflow.OpPerformance.session_info is deprecated.
-     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=74
+     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=75
      * @return The sessionInfo.
      */
     @java.lang.Deprecated org.tensorflow.proto.OpPerformanceData.SessionInfo getSessionInfo();
@@ -5127,7 +5127,7 @@ org.tensorflow.proto.AttrValue defaultValue);
       /**
        * <code>int64 device_temp_memory = 3 [deprecated = true];</code>
        * @deprecated tensorflow.OpPerformance.OpMemory.device_temp_memory is deprecated.
-       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=113
+       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
        * @return The deviceTempMemory.
        */
       @java.lang.Deprecated long getDeviceTempMemory();
@@ -5135,7 +5135,7 @@ org.tensorflow.proto.AttrValue defaultValue);
       /**
        * <code>int64 device_persistent_memory = 5 [deprecated = true];</code>
        * @deprecated tensorflow.OpPerformance.OpMemory.device_persistent_memory is deprecated.
-       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
+       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=115
        * @return The devicePersistentMemory.
        */
       @java.lang.Deprecated long getDevicePersistentMemory();
@@ -5256,7 +5256,7 @@ org.tensorflow.proto.AttrValue defaultValue);
       /**
        * <code>int64 device_temp_memory = 3 [deprecated = true];</code>
        * @deprecated tensorflow.OpPerformance.OpMemory.device_temp_memory is deprecated.
-       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=113
+       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
        * @return The deviceTempMemory.
        */
       @java.lang.Override
@@ -5269,7 +5269,7 @@ org.tensorflow.proto.AttrValue defaultValue);
       /**
        * <code>int64 device_persistent_memory = 5 [deprecated = true];</code>
        * @deprecated tensorflow.OpPerformance.OpMemory.device_persistent_memory is deprecated.
-       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
+       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=115
        * @return The devicePersistentMemory.
        */
       @java.lang.Override
@@ -5914,7 +5914,7 @@ org.tensorflow.proto.AttrValue defaultValue);
         /**
          * <code>int64 device_temp_memory = 3 [deprecated = true];</code>
          * @deprecated tensorflow.OpPerformance.OpMemory.device_temp_memory is deprecated.
-         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=113
+         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
          * @return The deviceTempMemory.
          */
         @java.lang.Override
@@ -5924,7 +5924,7 @@ org.tensorflow.proto.AttrValue defaultValue);
         /**
          * <code>int64 device_temp_memory = 3 [deprecated = true];</code>
          * @deprecated tensorflow.OpPerformance.OpMemory.device_temp_memory is deprecated.
-         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=113
+         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
          * @param value The deviceTempMemory to set.
          * @return This builder for chaining.
          */
@@ -5937,7 +5937,7 @@ org.tensorflow.proto.AttrValue defaultValue);
         /**
          * <code>int64 device_temp_memory = 3 [deprecated = true];</code>
          * @deprecated tensorflow.OpPerformance.OpMemory.device_temp_memory is deprecated.
-         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=113
+         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
          * @return This builder for chaining.
          */
         @java.lang.Deprecated public Builder clearDeviceTempMemory() {
@@ -5951,7 +5951,7 @@ org.tensorflow.proto.AttrValue defaultValue);
         /**
          * <code>int64 device_persistent_memory = 5 [deprecated = true];</code>
          * @deprecated tensorflow.OpPerformance.OpMemory.device_persistent_memory is deprecated.
-         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
+         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=115
          * @return The devicePersistentMemory.
          */
         @java.lang.Override
@@ -5961,7 +5961,7 @@ org.tensorflow.proto.AttrValue defaultValue);
         /**
          * <code>int64 device_persistent_memory = 5 [deprecated = true];</code>
          * @deprecated tensorflow.OpPerformance.OpMemory.device_persistent_memory is deprecated.
-         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
+         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=115
          * @param value The devicePersistentMemory to set.
          * @return This builder for chaining.
          */
@@ -5974,7 +5974,7 @@ org.tensorflow.proto.AttrValue defaultValue);
         /**
          * <code>int64 device_persistent_memory = 5 [deprecated = true];</code>
          * @deprecated tensorflow.OpPerformance.OpMemory.device_persistent_memory is deprecated.
-         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=114
+         *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=115
          * @return This builder for chaining.
          */
         @java.lang.Deprecated public Builder clearDevicePersistentMemory() {
@@ -6135,7 +6135,7 @@ org.tensorflow.proto.AttrValue defaultValue);
      *
      * <code>.tensorflow.SessionInfo session_info = 12 [deprecated = true];</code>
      * @deprecated tensorflow.OpPerformance.session_info is deprecated.
-     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=74
+     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=75
      * @return Whether the sessionInfo field is set.
      */
     @java.lang.Override
@@ -6149,7 +6149,7 @@ org.tensorflow.proto.AttrValue defaultValue);
      *
      * <code>.tensorflow.SessionInfo session_info = 12 [deprecated = true];</code>
      * @deprecated tensorflow.OpPerformance.session_info is deprecated.
-     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=74
+     *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=75
      * @return The sessionInfo.
      */
     @java.lang.Override
@@ -7233,7 +7233,7 @@ org.tensorflow.proto.AttrValue defaultValue);
        *
        * <code>.tensorflow.SessionInfo session_info = 12 [deprecated = true];</code>
        * @deprecated tensorflow.OpPerformance.session_info is deprecated.
-       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=74
+       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=75
        * @return Whether the sessionInfo field is set.
        */
       @java.lang.Deprecated public boolean hasSessionInfo() {
@@ -7246,7 +7246,7 @@ org.tensorflow.proto.AttrValue defaultValue);
        *
        * <code>.tensorflow.SessionInfo session_info = 12 [deprecated = true];</code>
        * @deprecated tensorflow.OpPerformance.session_info is deprecated.
-       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=74
+       *     See tensorflow/core/grappler/costs/op_performance_data.proto;l=75
        * @return The sessionInfo.
        */
       @java.lang.Deprecated public org.tensorflow.proto.OpPerformanceData.SessionInfo getSessionInfo() {

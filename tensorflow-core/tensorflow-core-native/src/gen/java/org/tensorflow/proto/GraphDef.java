@@ -143,7 +143,7 @@ private static final long serialVersionUID = 0L;
    *
    * <code>int32 version = 3 [deprecated = true];</code>
    * @deprecated tensorflow.GraphDef.version is deprecated.
-   *     See tensorflow/core/framework/graph.proto;l=26
+   *     See tensorflow/core/framework/graph.proto;l=27
    * @return The version.
    */
   @java.lang.Override
@@ -1210,7 +1210,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>int32 version = 3 [deprecated = true];</code>
      * @deprecated tensorflow.GraphDef.version is deprecated.
-     *     See tensorflow/core/framework/graph.proto;l=26
+     *     See tensorflow/core/framework/graph.proto;l=27
      * @return The version.
      */
     @java.lang.Override
@@ -1226,7 +1226,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>int32 version = 3 [deprecated = true];</code>
      * @deprecated tensorflow.GraphDef.version is deprecated.
-     *     See tensorflow/core/framework/graph.proto;l=26
+     *     See tensorflow/core/framework/graph.proto;l=27
      * @param value The version to set.
      * @return This builder for chaining.
      */
@@ -1245,7 +1245,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>int32 version = 3 [deprecated = true];</code>
      * @deprecated tensorflow.GraphDef.version is deprecated.
-     *     See tensorflow/core/framework/graph.proto;l=26
+     *     See tensorflow/core/framework/graph.proto;l=27
      * @return This builder for chaining.
      */
     @java.lang.Deprecated public Builder clearVersion() {

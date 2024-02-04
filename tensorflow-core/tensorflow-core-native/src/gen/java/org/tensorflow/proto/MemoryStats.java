@@ -104,7 +104,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>int64 device_temp_memory_size = 2 [deprecated = true];</code>
    * @deprecated tensorflow.MemoryStats.device_temp_memory_size is deprecated.
-   *     See tensorflow/core/framework/step_stats.proto;l=47
+   *     See tensorflow/core/framework/step_stats.proto;l=48
    * @return The deviceTempMemorySize.
    */
   @java.lang.Override
@@ -117,7 +117,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>int64 device_persistent_memory_size = 4 [deprecated = true];</code>
    * @deprecated tensorflow.MemoryStats.device_persistent_memory_size is deprecated.
-   *     See tensorflow/core/framework/step_stats.proto;l=48
+   *     See tensorflow/core/framework/step_stats.proto;l=49
    * @return The devicePersistentMemorySize.
    */
   @java.lang.Override
@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
    * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-   *     See tensorflow/core/framework/step_stats.proto;l=49
+   *     See tensorflow/core/framework/step_stats.proto;l=50
    * @return A list containing the devicePersistentTensorAllocIds.
    */
   @java.lang.Override
@@ -141,7 +141,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
    * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-   *     See tensorflow/core/framework/step_stats.proto;l=49
+   *     See tensorflow/core/framework/step_stats.proto;l=50
    * @return The count of devicePersistentTensorAllocIds.
    */
   @java.lang.Deprecated public int getDevicePersistentTensorAllocIdsCount() {
@@ -150,7 +150,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
    * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-   *     See tensorflow/core/framework/step_stats.proto;l=49
+   *     See tensorflow/core/framework/step_stats.proto;l=50
    * @param index The index of the element to return.
    * @return The devicePersistentTensorAllocIds at the given index.
    */
@@ -816,7 +816,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_temp_memory_size = 2 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=47
+     *     See tensorflow/core/framework/step_stats.proto;l=48
      * @return The deviceTempMemorySize.
      */
     @java.lang.Override
@@ -826,7 +826,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_temp_memory_size = 2 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=47
+     *     See tensorflow/core/framework/step_stats.proto;l=48
      * @param value The deviceTempMemorySize to set.
      * @return This builder for chaining.
      */
@@ -839,7 +839,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_temp_memory_size = 2 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=47
+     *     See tensorflow/core/framework/step_stats.proto;l=48
      * @return This builder for chaining.
      */
     @java.lang.Deprecated public Builder clearDeviceTempMemorySize() {
@@ -853,7 +853,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_persistent_memory_size = 4 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_memory_size is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=48
+     *     See tensorflow/core/framework/step_stats.proto;l=49
      * @return The devicePersistentMemorySize.
      */
     @java.lang.Override
@@ -863,7 +863,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_persistent_memory_size = 4 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_memory_size is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=48
+     *     See tensorflow/core/framework/step_stats.proto;l=49
      * @param value The devicePersistentMemorySize to set.
      * @return This builder for chaining.
      */
@@ -876,7 +876,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_persistent_memory_size = 4 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_memory_size is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=48
+     *     See tensorflow/core/framework/step_stats.proto;l=49
      * @return This builder for chaining.
      */
     @java.lang.Deprecated public Builder clearDevicePersistentMemorySize() {
@@ -896,7 +896,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @return A list containing the devicePersistentTensorAllocIds.
      */
     @java.lang.Deprecated public java.util.List<java.lang.Long>
@@ -907,7 +907,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @return The count of devicePersistentTensorAllocIds.
      */
     @java.lang.Deprecated public int getDevicePersistentTensorAllocIdsCount() {
@@ -916,7 +916,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @param index The index of the element to return.
      * @return The devicePersistentTensorAllocIds at the given index.
      */
@@ -926,7 +926,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @param index The index to set the value at.
      * @param value The devicePersistentTensorAllocIds to set.
      * @return This builder for chaining.
@@ -941,7 +941,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @param value The devicePersistentTensorAllocIds to add.
      * @return This builder for chaining.
      */
@@ -954,7 +954,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @param values The devicePersistentTensorAllocIds to add.
      * @return This builder for chaining.
      */
@@ -969,7 +969,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated int64 device_persistent_tensor_alloc_ids = 6 [deprecated = true];</code>
      * @deprecated tensorflow.MemoryStats.device_persistent_tensor_alloc_ids is deprecated.
-     *     See tensorflow/core/framework/step_stats.proto;l=49
+     *     See tensorflow/core/framework/step_stats.proto;l=50
      * @return This builder for chaining.
      */
     @java.lang.Deprecated public Builder clearDevicePersistentTensorAllocIds() {

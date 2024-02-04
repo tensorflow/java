@@ -172,7 +172,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 host_temp_memory_size = 10 [deprecated = true];</code>
      * @deprecated tensorflow.CostGraphDef.Node.host_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/cost_graph.proto;l=51
+     *     See tensorflow/core/framework/cost_graph.proto;l=52
      * @return The hostTempMemorySize.
      */
     @java.lang.Deprecated long getHostTempMemorySize();
@@ -180,7 +180,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_temp_memory_size = 11 [deprecated = true];</code>
      * @deprecated tensorflow.CostGraphDef.Node.device_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/cost_graph.proto;l=52
+     *     See tensorflow/core/framework/cost_graph.proto;l=53
      * @return The deviceTempMemorySize.
      */
     @java.lang.Deprecated long getDeviceTempMemorySize();
@@ -188,7 +188,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_persistent_memory_size = 16 [deprecated = true];</code>
      * @deprecated tensorflow.CostGraphDef.Node.device_persistent_memory_size is deprecated.
-     *     See tensorflow/core/framework/cost_graph.proto;l=53
+     *     See tensorflow/core/framework/cost_graph.proto;l=54
      * @return The devicePersistentMemorySize.
      */
     @java.lang.Deprecated long getDevicePersistentMemorySize();
@@ -1979,7 +1979,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 host_temp_memory_size = 10 [deprecated = true];</code>
      * @deprecated tensorflow.CostGraphDef.Node.host_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/cost_graph.proto;l=51
+     *     See tensorflow/core/framework/cost_graph.proto;l=52
      * @return The hostTempMemorySize.
      */
     @java.lang.Override
@@ -1992,7 +1992,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_temp_memory_size = 11 [deprecated = true];</code>
      * @deprecated tensorflow.CostGraphDef.Node.device_temp_memory_size is deprecated.
-     *     See tensorflow/core/framework/cost_graph.proto;l=52
+     *     See tensorflow/core/framework/cost_graph.proto;l=53
      * @return The deviceTempMemorySize.
      */
     @java.lang.Override
@@ -2005,7 +2005,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>int64 device_persistent_memory_size = 16 [deprecated = true];</code>
      * @deprecated tensorflow.CostGraphDef.Node.device_persistent_memory_size is deprecated.
-     *     See tensorflow/core/framework/cost_graph.proto;l=53
+     *     See tensorflow/core/framework/cost_graph.proto;l=54
      * @return The devicePersistentMemorySize.
      */
     @java.lang.Override
@@ -3729,7 +3729,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 host_temp_memory_size = 10 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.host_temp_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=51
+       *     See tensorflow/core/framework/cost_graph.proto;l=52
        * @return The hostTempMemorySize.
        */
       @java.lang.Override
@@ -3739,7 +3739,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 host_temp_memory_size = 10 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.host_temp_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=51
+       *     See tensorflow/core/framework/cost_graph.proto;l=52
        * @param value The hostTempMemorySize to set.
        * @return This builder for chaining.
        */
@@ -3752,7 +3752,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 host_temp_memory_size = 10 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.host_temp_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=51
+       *     See tensorflow/core/framework/cost_graph.proto;l=52
        * @return This builder for chaining.
        */
       @java.lang.Deprecated public Builder clearHostTempMemorySize() {
@@ -3766,7 +3766,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 device_temp_memory_size = 11 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.device_temp_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=52
+       *     See tensorflow/core/framework/cost_graph.proto;l=53
        * @return The deviceTempMemorySize.
        */
       @java.lang.Override
@@ -3776,7 +3776,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 device_temp_memory_size = 11 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.device_temp_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=52
+       *     See tensorflow/core/framework/cost_graph.proto;l=53
        * @param value The deviceTempMemorySize to set.
        * @return This builder for chaining.
        */
@@ -3789,7 +3789,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 device_temp_memory_size = 11 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.device_temp_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=52
+       *     See tensorflow/core/framework/cost_graph.proto;l=53
        * @return This builder for chaining.
        */
       @java.lang.Deprecated public Builder clearDeviceTempMemorySize() {
@@ -3803,7 +3803,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 device_persistent_memory_size = 16 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.device_persistent_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=53
+       *     See tensorflow/core/framework/cost_graph.proto;l=54
        * @return The devicePersistentMemorySize.
        */
       @java.lang.Override
@@ -3813,7 +3813,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 device_persistent_memory_size = 16 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.device_persistent_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=53
+       *     See tensorflow/core/framework/cost_graph.proto;l=54
        * @param value The devicePersistentMemorySize to set.
        * @return This builder for chaining.
        */
@@ -3826,7 +3826,7 @@ private static final long serialVersionUID = 0L;
       /**
        * <code>int64 device_persistent_memory_size = 16 [deprecated = true];</code>
        * @deprecated tensorflow.CostGraphDef.Node.device_persistent_memory_size is deprecated.
-       *     See tensorflow/core/framework/cost_graph.proto;l=53
+       *     See tensorflow/core/framework/cost_graph.proto;l=54
        * @return This builder for chaining.
        */
       @java.lang.Deprecated public Builder clearDevicePersistentMemorySize() {

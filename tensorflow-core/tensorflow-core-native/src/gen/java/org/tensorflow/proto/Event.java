@@ -284,7 +284,7 @@ private static final long serialVersionUID = 0L;
    *
    * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    * @deprecated tensorflow.Event.log_message is deprecated.
-   *     See tensorflow/core/util/event.proto;l=33
+   *     See tensorflow/core/util/event.proto;l=34
    * @return Whether the logMessage field is set.
    */
   @java.lang.Override
@@ -300,7 +300,7 @@ private static final long serialVersionUID = 0L;
    *
    * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    * @deprecated tensorflow.Event.log_message is deprecated.
-   *     See tensorflow/core/util/event.proto;l=33
+   *     See tensorflow/core/util/event.proto;l=34
    * @return The logMessage.
    */
   @java.lang.Override
@@ -1602,7 +1602,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      * @deprecated tensorflow.Event.log_message is deprecated.
-     *     See tensorflow/core/util/event.proto;l=33
+     *     See tensorflow/core/util/event.proto;l=34
      * @return Whether the logMessage field is set.
      */
     @java.lang.Override
@@ -1618,7 +1618,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      * @deprecated tensorflow.Event.log_message is deprecated.
-     *     See tensorflow/core/util/event.proto;l=33
+     *     See tensorflow/core/util/event.proto;l=34
      * @return The logMessage.
      */
     @java.lang.Override
