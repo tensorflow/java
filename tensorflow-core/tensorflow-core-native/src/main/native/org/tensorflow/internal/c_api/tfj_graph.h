@@ -18,9 +18,7 @@ limitations under the License.
 
 #include "tensorflow/c/c_api.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
 
 /// Unique identifier of a TensorFlow graph instance
 typedef void* TFJ_GraphId;
@@ -32,9 +30,8 @@ TF_CAPI_EXPORT extern TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g);
 /// This is particularly useful for preventing custom gradient operations to pollute the graph namespace.
 TF_CAPI_EXPORT extern void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation);
 
-#ifdef __cplusplus
 } /* end extern "C" */
+
 #include "tfj_graph_impl.cc" // include CC file in its header to compile it with JavaCPP
-#endif
 
 #endif  // TENSORFLOW_JAVA_GRAPH_H_
