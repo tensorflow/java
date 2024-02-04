@@ -18,9 +18,7 @@ limitations under the License.
 
 #include "tensorflow/c/c_api.h"
 
-#ifdef __cplusplus
 extern "C" {
-#endif
 
 typedef struct TFJ_Scope TFJ_Scope;
 
@@ -51,9 +49,8 @@ TF_CAPI_EXPORT extern TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, c
 /// Note: returns C++ std string to prevent buffer to be freed up before consuming the characters
 TF_CAPI_EXPORT extern std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name);
 
-#ifdef __cplusplus
 } /* end extern "C" */
+
 #include "tfj_scope_impl.cc" // include CC file in its header to compile it with JavaCPP
-#endif
 
 #endif  // TENSORFLOW_JAVA_SCOPE_H_
