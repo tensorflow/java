@@ -16,6 +16,8 @@ limitations under the License.
 #ifndef TENSORFLOW_JAVA_SCOPE_H_
 #define TENSORFLOW_JAVA_SCOPE_H_
 
+#include <string>
+
 #include "tensorflow/c/c_api.h"
 
 typedef struct TFJ_Scope TFJ_Scope;
