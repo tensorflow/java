@@ -329,14 +329,4 @@ public class tensorflow implements LoadEnabled, InfoMapper {
       resources.add("/org/bytedeco/tensorrt/");
     }
   }
-
-  @Documented
-  @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.METHOD, ElementType.PARAMETER})
-  @Cast({"absl::Span", "&"})
-  @Adapter("SpanAdapter")
-  public @interface Span {
-
-    String value() default "";
-  }
 }
