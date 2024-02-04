@@ -18,8 +18,6 @@ limitations under the License.
 
 #include "tensorflow/c/c_api.h"
 
-extern "C" {
-
 typedef struct TFJ_Scope TFJ_Scope;
 
 // The following functions are for users making graphs. They return brand new
@@ -48,8 +46,6 @@ TF_CAPI_EXPORT extern TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, c
 /// Return a unique name, using default_name if an op name has not been specified.
 /// Note: returns C++ std string to prevent buffer to be freed up before consuming the characters
 TF_CAPI_EXPORT extern std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name);
-
-} /* end extern "C" */
 
 #include "tfj_scope_impl.cc" // include CC file in its header to compile it with JavaCPP
 
