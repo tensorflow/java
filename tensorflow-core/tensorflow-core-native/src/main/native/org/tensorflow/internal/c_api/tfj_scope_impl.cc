@@ -13,6 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#ifndef _WIN32
+
 #include <vector>
 
 #include "tensorflow/c/c_api_internal.h"
@@ -56,3 +58,34 @@ std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_n
 }
 
 } /* end extern "C" */
+
+#else // #ifndef _WIN32
+
+/* This extension is not available on Windows */
+extern "C" {
+
+struct TFJ_Scope {};
+
+TFJ_Scope TFJ_NewRootScope() {
+    return {};
+}
+
+TFJ_Scope TFJ_NewSubScope(const TFJ_Scope* scope, const char* child_scope_name) {
+    return {};
+}
+
+TFJ_Scope TFJ_NewScopeWithControlDependencies(const TFJ_Scope* scope, TF_Operation* control_deps, int control_deps_size) {
+    return {};
+}
+
+TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, const char* device) {
+    return {};
+}
+
+std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name) {
+    return "";
+}
+
+} /* end extern "C" */
+
+#endif // #ifndef _WIN32
