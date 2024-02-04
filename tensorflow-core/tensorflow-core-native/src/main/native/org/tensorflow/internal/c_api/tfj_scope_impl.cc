@@ -64,22 +64,24 @@ std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_n
 /* This extension is not available on Windows */
 extern "C" {
 
-struct TFJ_Scope {};
+struct TFJ_Scope {
+    long dummy;
+};
 
 TFJ_Scope TFJ_NewRootScope() {
-    return {};
+    return {0};
 }
 
 TFJ_Scope TFJ_NewSubScope(const TFJ_Scope* scope, const char* child_scope_name) {
-    return {};
+    return {0};
 }
 
 TFJ_Scope TFJ_NewScopeWithControlDependencies(const TFJ_Scope* scope, TF_Operation* control_deps, int control_deps_size) {
-    return {};
+    return {0};
 }
 
 TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, const char* device) {
-    return {};
+    return {0};
 }
 
 std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name) {
