@@ -17,7 +17,7 @@ case ${PLATFORM:-} in
     WHEEL_URL='https://files.pythonhosted.org/packages/eb/9f/0759e2fea4a3c48f070b64811c2c57036b46353ba87263afc810b8f4188a/tensorflow_macos-2.15.0-cp311-cp311-macosx_12_0_arm64.whl'
     ;;
   'windows-x86_64')
-    #WHEEL_URL='https://files.pythonhosted.org/packages/4c/48/1a5a15517f18eaa4ff8d598b1c000300b20c1bb0e624539d702117a0c369/tensorflow_intel-2.15.0-cp311-cp311-win_amd64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/4c/48/1a5a15517f18eaa4ff8d598b1c000300b20c1bb0e624539d702117a0c369/tensorflow_intel-2.15.0-cp311-cp311-win_amd64.whl'
     #CLIB_URL='https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.15.0.zip'
     CLIB_URL='https://storage.googleapis.com/libtensorflow-nightly/prod/tensorflow/release/windows/latest/cpu/windows_cpu_libtensorflow_binaries.tar.gz'
     ;;
@@ -49,7 +49,7 @@ if [[ -n "$CLIB_URL" ]]; then
     curl -L $CLIB_URL --output 'tensorflow_c.tar.gz'
   fi
   yes | tar xzvf 'tensorflow_c.tar.gz'
-  yes | unzip -q -u 'lib_package/libtensorflow-cpu-windows-x86_64.zip'
+  yes | unzip -q -u -d tensorflow 'lib_package/libtensorflow-cpu-windows-x86_64.zip'
 fi
 
 cd tensorflow
