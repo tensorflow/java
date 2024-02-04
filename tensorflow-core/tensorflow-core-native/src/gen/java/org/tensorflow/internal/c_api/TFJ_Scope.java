@@ -8,7 +8,6 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
-// #endif
 
 @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public class TFJ_Scope extends Pointer {

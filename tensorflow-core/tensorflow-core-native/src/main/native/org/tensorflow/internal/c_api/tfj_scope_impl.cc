@@ -21,8 +21,6 @@ limitations under the License.
 #include "tensorflow/cc/framework/scope.h"
 #include "tensorflow/cc/framework/ops.h"
 
-extern "C" {
-
 using namespace tensorflow;
 
 struct TFJ_Scope {
@@ -57,37 +55,15 @@ std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_n
     return scope->s.GetUniqueNameForOp(default_name);
 }
 
-} /* end extern "C" */
-
 #else // #ifndef _WIN32
 
 /* This extension is not available on Windows */
-extern "C" {
 
-struct TFJ_Scope {
-    long dummy;
-};
-
-TFJ_Scope TFJ_NewRootScope() {
-    return {0};
-}
-
-TFJ_Scope TFJ_NewSubScope(const TFJ_Scope* scope, const char* child_scope_name) {
-    return {0};
-}
-
-TFJ_Scope TFJ_NewScopeWithControlDependencies(const TFJ_Scope* scope, TF_Operation* control_deps, int control_deps_size) {
-    return {0};
-}
-
-TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, const char* device) {
-    return {0};
-}
-
-std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name) {
-    return "";
-}
-
-} /* end extern "C" */
+struct TFJ_Scope {};
+TFJ_Scope TFJ_NewRootScope() { return {}; }
+TFJ_Scope TFJ_NewSubScope(const TFJ_Scope* scope, const char* child_scope_name) { return {}; }
+TFJ_Scope TFJ_NewScopeWithControlDependencies(const TFJ_Scope* scope, TF_Operation* control_deps, int control_deps_size) { return {}; }
+TFJ_Scope TFJ_NewScopeWithDevice(const TFJ_Scope* scope, const char* device) { return {}; }
+std::string TFJ_GetUniqueNameForOp(const TFJ_Scope* scope, const char* default_name) { return ""; }
 
 #endif // #ifndef _WIN32

@@ -8,7 +8,6 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
-// #endif
 
 /** Function to be implemented on the JVM side to be called back by the native library when it is time to attach gradient operations for the given op, graph and scope.
  * 
