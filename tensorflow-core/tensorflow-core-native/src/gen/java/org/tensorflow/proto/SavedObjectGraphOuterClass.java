@@ -6479,7 +6479,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
      *
      * <code>string metadata = 3 [deprecated = true];</code>
      * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
      * @return The metadata.
      */
     @java.lang.Deprecated java.lang.String getMetadata();
@@ -6493,7 +6493,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
      *
      * <code>string metadata = 3 [deprecated = true];</code>
      * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
      * @return The bytes for metadata.
      */
     @java.lang.Deprecated com.google.protobuf.ByteString
@@ -6645,7 +6645,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
      *
      * <code>string metadata = 3 [deprecated = true];</code>
      * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
      * @return The metadata.
      */
     @java.lang.Override
@@ -6671,7 +6671,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
      *
      * <code>string metadata = 3 [deprecated = true];</code>
      * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+     *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
      * @return The bytes for metadata.
      */
     @java.lang.Override
@@ -7333,7 +7333,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
        *
        * <code>string metadata = 3 [deprecated = true];</code>
        * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
        * @return The metadata.
        */
       @java.lang.Deprecated public java.lang.String getMetadata() {
@@ -7358,7 +7358,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
        *
        * <code>string metadata = 3 [deprecated = true];</code>
        * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
        * @return The bytes for metadata.
        */
       @java.lang.Deprecated public com.google.protobuf.ByteString
@@ -7384,7 +7384,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
        *
        * <code>string metadata = 3 [deprecated = true];</code>
        * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
        * @param value The metadata to set.
        * @return This builder for chaining.
        */
@@ -7408,7 +7408,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
        *
        * <code>string metadata = 3 [deprecated = true];</code>
        * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
        * @return This builder for chaining.
        */
       @java.lang.Deprecated public Builder clearMetadata() {
@@ -7427,7 +7427,7 @@ org.tensorflow.proto.SavedObjectGraphOuterClass.SaveableObject defaultValue);
        *
        * <code>string metadata = 3 [deprecated = true];</code>
        * @deprecated tensorflow.SavedUserObject.metadata is deprecated.
-       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=122
+       *     See tensorflow/core/protobuf/saved_object_graph.proto;l=123
        * @param value The bytes for metadata to set.
        * @return This builder for chaining.
        */

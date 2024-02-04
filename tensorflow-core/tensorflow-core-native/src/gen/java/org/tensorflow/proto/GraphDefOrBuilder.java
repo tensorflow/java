@@ -73,7 +73,7 @@ public interface GraphDefOrBuilder extends
    *
    * <code>int32 version = 3 [deprecated = true];</code>
    * @deprecated tensorflow.GraphDef.version is deprecated.
-   *     See tensorflow/core/framework/graph.proto;l=26
+   *     See tensorflow/core/framework/graph.proto;l=27
    * @return The version.
    */
   @java.lang.Deprecated int getVersion();
