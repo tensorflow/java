@@ -295,9 +295,7 @@ limitations under the License.
 // #define TENSORFLOW_TSL_C_TSL_STATUS_H_
 
 // #ifdef __cplusplus
-// Targeting ../TSL_Status.java
-
-
+// #endif
 
 // --------------------------------------------------------------------------
 // TSL_Code holds an error code.  The enum values here are identical to
@@ -325,43 +323,30 @@ public static final int
 // --------------------------------------------------------------------------
 
 // Return a new status object.
-public static native TSL_Status TSL_NewStatus();
 
 // Delete a previously created status object.
-public static native void TSL_DeleteStatus(TSL_Status arg0);
 
 // Record <code, msg> in *s.  Any previous information is lost.
 // A common use is to clear a status: TSL_SetStatus(s, TSL_OK, "");
-public static native void TSL_SetStatus(TSL_Status s, @Cast("TSL_Code") int code, @Cast("const char*") BytePointer msg);
-public static native void TSL_SetStatus(TSL_Status s, @Cast("TSL_Code") int code, String msg);
 
 // Record <key, value> as a payload in *s. The previous payload having the
 // same key (if any) is overwritten. Payload will not be added if the Status
 // is OK.
-public static native void TSL_SetPayload(TSL_Status s, @Cast("const char*") BytePointer key, @Cast("const char*") BytePointer value);
-public static native void TSL_SetPayload(TSL_Status s, String key, String value);
-// Targeting ../TSL_PayloadVisitor.java
 
-
-public static native void TSL_ForEachPayload(@Const TSL_Status s, TSL_PayloadVisitor visitor,
-                               Pointer capture);
+// Iterates over the stored payloads and calls the `visitor(key, value)`
+// callable for each one. `key` and `value` is only usable during the callback.
+// `capture` will be passed to the callback without modification.
 
 // Convert from an I/O error code (e.g., errno) to a TSL_Status value.
 // Any previous information is lost. Prefer to use this instead of TSL_SetStatus
 // when the error comes from I/O operations.
-public static native void TSL_SetStatusFromIOError(TSL_Status s, int error_code,
-                                     @Cast("const char*") BytePointer context);
-public static native void TSL_SetStatusFromIOError(TSL_Status s, int error_code,
-                                     String context);
 
 // Return the code record in *s.
-public static native @Cast("TSL_Code") int TSL_GetCode(@Const TSL_Status s);
 
 // Return a pointer to the (null-terminated) error message in *s.  The
 // return value points to memory that is only usable until the next
 // mutation to *s.  Always returns an empty string if TSL_GetCode(s) is
 // TSL_OK.
-public static native @Cast("const char*") BytePointer TSL_Message(@Const TSL_Status s);
 
 // #ifdef __cplusplus /* end extern "C" */
 // #endif
@@ -4822,6 +4807,8 @@ limitations under the License.
 
 // #ifndef TENSORFLOW_JAVA_SCOPE_H_
 // #define TENSORFLOW_JAVA_SCOPE_H_
+
+// #include <string>
 
 // #include "tensorflow/c/c_api.h"
 // Targeting ../TFJ_Scope.java

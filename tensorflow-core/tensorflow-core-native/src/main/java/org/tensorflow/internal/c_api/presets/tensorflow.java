@@ -182,10 +182,13 @@ public class tensorflow implements LoadEnabled, InfoMapper {
             .put(new Info("TF_WhileParams")
                     .purify())
             .put(new Info("TFE_CustomDeviceTensorHandle::deallocator")
-                    .javaNames("cdt_deallocator"))
-            .put(new Info("TF_PayloadVisitor", "TF_ForEachPayload")
-                    .skip() // avoids import of TSL_PayloadVisitor
+                    .javaNames("cdt_deallocator")
     );
+
+    // TensorFlow is remapping all TSL symbols into its own namespace, so avoid generate bindings that requires linkage
+    // to TSL symbols directly (at this time 02/12/2024, this is still not possible in Windows, see
+    // https://github.com/tensorflow/tensorflow/issues/62579)
+    infoMap.put(new Info("TSL_Status", "TSL_PayloadVisitor", "TF_PayloadVisitor", "TF_ForEachPayload").skip());
   }
 
   @Override
