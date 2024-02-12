@@ -154,7 +154,7 @@ to add Sonatype OSS repository in your pom.xml, like the following
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -163,18 +163,19 @@ to add Sonatype OSS repository in your pom.xml, like the following
 
 This table shows the mapping between TensorFlow, TensorFlow Java and minimum supported Java versions.
 
-| TensorFlow Java Version  | TensorFlow Version | Minimum Java Version |
-| ------------- |--------------------| --------------- |
-| 0.2.0  | 2.3.1              | 8 |
-| 0.3.0  | 2.4.1              | 8 |
-| 0.3.1  | 2.4.1              | 8 |
-| 0.3.2  | 2.4.1              | 8 |
-| 0.3.3  | 2.4.1              | 8 |
-| 0.4.0  | 2.7.0              | 8 |
-| 0.4.1  | 2.7.1              | 8 |
-| 0.4.2  | 2.7.4              | 8 |
-| 0.5.0  | 2.10.1             | 11 |
-| 0.6.0-SNAPSHOT | 2.15.0             | 11 |
+| TensorFlow Java Version | TensorFlow Version | Minimum Java Version |
+|-------------------------|--------------------| --------------- |
+| 0.2.0                   | 2.3.1              | 8 |
+| 0.3.0                   | 2.4.1              | 8 |
+| 0.3.1                   | 2.4.1              | 8 |
+| 0.3.2                   | 2.4.1              | 8 |
+| 0.3.3                   | 2.4.1              | 8 |
+| 0.4.0                   | 2.7.0              | 8 |
+| 0.4.1                   | 2.7.1              | 8 |
+| 0.4.2                   | 2.7.4              | 8 |
+| 0.5.0                   | 2.10.1             | 11 |
+| 0.6.0-SNAPSHOT          | 2.10.1             | 11 |
+| 1.0.0-SNAPSHOT          | 2.15.0             | 11 |
 
 ## How to Contribute?
 
