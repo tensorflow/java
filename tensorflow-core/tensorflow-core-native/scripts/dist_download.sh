@@ -18,8 +18,7 @@ case ${PLATFORM:-} in
     ;;
   'windows-x86_64')
     WHEEL_URL='https://files.pythonhosted.org/packages/4c/48/1a5a15517f18eaa4ff8d598b1c000300b20c1bb0e624539d702117a0c369/tensorflow_intel-2.15.0-cp311-cp311-win_amd64.whl'
-    #CLIB_URL='https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.15.0.zip'
-    CLIB_URL='https://storage.googleapis.com/libtensorflow-nightly/prod/tensorflow/release/windows/latest/cpu/windows_cpu_libtensorflow_binaries.tar.gz'
+    CLIB_URL='https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.15.0.zip'
     ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"
@@ -39,17 +38,10 @@ fi
 
 if [[ -n "$CLIB_URL" ]]; then
   echo "Downloading $CLIB_URL"
-#  if [ ! -f 'tensorflow_c.zip' ]; then
-#    curl -L $CLIB_URL --output 'tensorflow_c.zip'
-#  fi
-#  yes | unzip -q -u -d tensorflow 'tensorflow_c.zip'
-
-  # FIXME Temporary experiment to validate windows build from nightly snapshot
-  if [ ! -f 'tensorflow_c.tar.gz' ]; then
-    curl -L $CLIB_URL --output 'tensorflow_c.tar.gz'
+  if [ ! -f 'tensorflow_c.zip' ]; then
+    curl -L $CLIB_URL --output 'tensorflow_c.zip'
   fi
-  yes | tar xzvf 'tensorflow_c.tar.gz'
-  yes | unzip -q -u -d tensorflow 'lib_package/libtensorflow-cpu-windows-x86_64.zip'
+  yes | unzip -q -u -d tensorflow 'tensorflow_c.zip'
 fi
 
 cd tensorflow
