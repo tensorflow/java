@@ -47,7 +47,7 @@
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
-      <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
+      <classifier>${javacpp.platform.macosx-arm64.extension}</classifier>
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
