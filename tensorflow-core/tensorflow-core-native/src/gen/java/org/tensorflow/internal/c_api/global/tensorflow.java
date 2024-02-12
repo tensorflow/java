@@ -3876,8 +3876,7 @@ public static native void TFE_ContextEndStep(TFE_Context ctx);
 
   // namespace tensorflow
 
-public static native TFE_TensorHandle TFE_NewTensorHandle(@Const @ByRef Tensor t,
-                                      TF_Status status);
+
 // #endif
 
 // #endif  // TENSORFLOW_C_EAGER_C_API_H_

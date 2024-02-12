@@ -189,6 +189,9 @@ public class tensorflow implements LoadEnabled, InfoMapper {
     // to TSL symbols directly (at this time 02/12/2024, this is still not possible in Windows, see
     // https://github.com/tensorflow/tensorflow/issues/62579)
     infoMap.put(new Info("TSL_Status", "TSL_PayloadVisitor", "TF_PayloadVisitor", "TF_ForEachPayload").skip());
+
+    // This C++-API dependent method appears somehow at the bottom of c/eager/c_api.h, skip it
+    infoMap.put(new Info("TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)").skip());
   }
 
   @Override
