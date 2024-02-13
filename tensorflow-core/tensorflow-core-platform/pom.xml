@@ -53,6 +53,12 @@
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
+      <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-native</artifactId>
+      <version>${project.version}</version>
       <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
     </dependency>
   </dependencies>
@@ -67,7 +73,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Class-Path>tensorflow-core-api.jar tensorflow-core-native-linux-x86_64.jar tensorflow-core-native-macosx-x86_64.jar tensorflow-core-native-windows-x86_64.jar</Class-Path>
+                  <Class-Path>tensorflow-core-api.jar tensorflow-core-native.jar tensorflow-core-native-linux-x86_64.jar tensorflow-core-native-macosx-arm64.jar tensorflow-core-native-macosx-x86_64.jar tensorflow-core-native-windows-x86_64.jar</Class-Path>
                   <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
                 </manifestEntries>
               </archive>

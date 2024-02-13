@@ -24,7 +24,7 @@
     <dist.download.skip>false</dist.download.skip>
     <dist.download.url/>
     <dist.download.folder>${project.build.directory}/dist/</dist.download.folder>
-    <nativeSourceDirectory>${project.basedir}/src/main/native</nativeSourceDirectory>
+    <native.source.directory>${project.basedir}/src/main/native</native.source.directory>
   </properties>
 
   <dependencies>
@@ -81,6 +81,99 @@
         <javacpp.build.skip>true</javacpp.build.skip>
         <dist.download.skip>true</dist.download.skip>
       </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.6.1</version>
+            <executions>
+              <execution>
+                <id>copy-native-artifacts</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <overWriteSnapshots>true</overWriteSnapshots>
+                  <overWriteReleases>true</overWriteReleases>
+                  <useBaseVersion>true</useBaseVersion>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>${project.artifactId}</artifactId>
+                      <version>${project.version}</version>
+                      <classifier>${javacpp.platform.linux-x86_64}</classifier>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>${project.artifactId}</artifactId>
+                      <version>${project.version}</version>
+                      <classifier>${javacpp.platform.linux-x86_64}-gpu</classifier>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>${project.artifactId}</artifactId>
+                      <version>${project.version}</version>
+                      <classifier>${javacpp.platform.macosx-x86_64}</classifier>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>${project.artifactId}</artifactId>
+                      <version>${project.version}</version>
+                      <classifier>${javacpp.platform.macosx-arm64}</classifier>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>${project.groupId}</groupId>
+                      <artifactId>${project.artifactId}</artifactId>
+                      <version>${project.version}</version>
+                      <classifier>${javacpp.platform.windows-x86_64}</classifier>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+              <execution>
+                <id>attach-artifacts</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>attach-artifact</goal>
+                </goals>
+                <configuration>
+                  <artifacts>
+                    <artifact>
+                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.linux-x86_64}.jar</file>
+                      <classifier>${javacpp.platform.linux-x86_64}</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.linux-x86_64}-gpu.jar</file>
+                      <classifier>${javacpp.platform.linux-x86_64}-gpu</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.macosx-arm64}.jar</file>
+                      <classifier>${javacpp.platform.macosx-arm64}</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.macosx-x86_64}.jar</file>
+                      <classifier>${javacpp.platform.macosx-x86_64}</classifier>
+                    </artifact>
+                    <artifact>
+                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.windows-x86_64}.jar</file>
+                      <classifier>${javacpp.platform.windows-x86_64}</classifier>
+                    </artifact>
+                  </artifacts>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <!-- Generating mode: produce Java files from native resources -->
@@ -220,7 +313,7 @@
           <classPath>${project.build.outputDirectory}</classPath>
           <includePaths>
             <includePath>${dist.download.folder}/tensorflow/include/</includePath>
-            <includePath>${nativeSourceDirectory}/org/tensorflow/internal/c_api/</includePath>
+            <includePath>${native.source.directory}/org/tensorflow/internal/c_api/</includePath>
             <!-- additional include paths in case of a full native build -->
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
             <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>
@@ -530,7 +623,7 @@
         <version>3.3.0</version>
         <executions>
           <execution>
-            <id>attach-source</id>
+            <id>attach-sources</id>
             <goals>
               <goal>jar-no-fork</goal>
             </goals>

@@ -15,7 +15,7 @@
 # ==============================================================================
 #
 # Script to upload release artifacts for the TensorFlow Java library to
-# Maven Central. See RELEASE.md for an explanation.
+# Maven Central. See RELEASE.md for explanation.
 
 cd $(dirname "$0")
 STAGING_SEQ="$1"
@@ -34,11 +34,16 @@ fi
 # To get a shell to poke around the maven artifacts with.
 if [[ -z "${CMD}" ]]
 then
-  CMD="bash deploy.sh"
+  CMD="mvn clean deploy -B -e --settings ./settings.xml -Pdeploying -Preleasing"
 fi
 
 export GPG_TTY=$(tty)
 set -ex
+
+if [[ ! -f settings.xml ]]
+then
+  cp -f ~/.m2/settings.xml .
+fi
 
 docker run \
   -e IN_CONTAINER="true" \
@@ -51,3 +56,9 @@ docker run \
   --platform linux/amd64 \
   maven:3.8.6-jdk-11  \
   ${CMD}
+
+echo
+echo "Uploaded to the staging repository"
+echo "After validating the release: "
+echo "* Login to https://oss.sonatype.org/#stagingRepositories"
+echo "* Find the 'org.tensorflow' staging release and click either 'Release' to release or 'Drop' to abort"
