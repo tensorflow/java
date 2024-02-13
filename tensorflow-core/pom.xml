@@ -68,7 +68,7 @@
     <profile>
       <!--
         When deploying, the build packages and distributes native binaries for all supported platforms. These native artifacts
-        must have already been built, tested and published priorly on their respective platform.
+        must have already been built, tested and deployed priorly from their respective platform.
       -->
       <id>deploying</id>
       <properties>

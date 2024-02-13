@@ -177,18 +177,6 @@
         </plugins>
       </build>
     </profile>
-
-    <profile>
-      <!--
-        Deploying Profile
-          Avoid deploying snapshots since all artifacts must have the same timestamp to avoid
-          issues when using Gradle.
-      -->
-      <id>deploying</id>
-      <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-      </properties>
-    </profile>
   </profiles>
 
   <build>
