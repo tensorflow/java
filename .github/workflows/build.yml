@@ -192,5 +192,5 @@ jobs:
         uses: actions/checkout@v1
       - name: Deploy snapshot artifacts
         run: |
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > settings.xml
-          bash deploy.sh
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn clean deploy -Pdeploying
