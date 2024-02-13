@@ -148,6 +148,7 @@
         <maven.source.skip>false</maven.source.skip>
       </properties>
     </profile>
+
     <!--
     Releasing profile
         Activate GPG signing on all built artifacts and fetch native artifacts from staging repository

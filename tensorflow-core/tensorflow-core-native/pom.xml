@@ -58,6 +58,7 @@
   </dependencies>
 
   <profiles>
+    <!-- Do a full native build using Bazel -->
     <profile>
       <id>native-build</id>
       <activation>
@@ -73,13 +74,18 @@
       </properties>
     </profile>
 
+    <!-- Deploying mode: don't create native artifacts, use ones published by CI build -->
+    <profile>
+      <id>deploying</id>
+      <properties>
+        <javacpp.build.skip>true</javacpp.build.skip>
+        <dist.download.skip>true</dist.download.skip>
+      </properties>
+    </profile>
+
+    <!-- Generating mode: produce Java files from native resources -->
     <profile>
       <id>generating</id>
-      <activation>
-        <property>
-          <name>native.generate</name>
-        </property>
-      </activation>
       <properties>
         <bazel.generate.skip>false</bazel.generate.skip>
         <bazel.clean.skip>false</bazel.clean.skip>
@@ -462,6 +468,34 @@
               <classifier>defs</classifier>
               <skipIfEmpty>true</skipIfEmpty>
               <classesDirectory>${project.build.directory}/defs-classes</classesDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <!--
+              Deploy only native artifact
+                This is used by the CI build to only deploy the native JAR artifact in the platform-specific runners.
+                Other artifacts will be deployed in a second pass, when activating the `deploying` profile
+            -->
+            <id>native-only</id>
+            <goals>
+              <goal>deploy-file</goal>
+            </goals>
+            <configuration>
+              <!-- 'url' property must be provided in command line -->
+              <file>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</file>
+              <repositoryId>ossrh</repositoryId>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <classifier>${native.classifier}</classifier>
+              <pomFile>pom.xml</pomFile>
+              <generatePom>false</generatePom>
             </configuration>
           </execution>
         </executions>
