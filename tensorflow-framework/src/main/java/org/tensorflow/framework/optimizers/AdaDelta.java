@@ -20,6 +20,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdadelta;
 import org.tensorflow.types.family.TType;
@@ -150,16 +151,16 @@ public class AdaDelta extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> accumUpdateSlot = getSlot(variable, ACCUMULATOR_UPDATE).get();
-    return tf.train.applyAdadelta(
+    return deps.train.applyAdadelta(
         variable,
         accumSlot,
         accumUpdateSlot,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
-        tf.dtypes.cast(tf.constant(rho), gradient.type()),
-        tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
+        deps.dtypes.cast(deps.constant(rho), gradient.type()),
+        deps.dtypes.cast(deps.constant(epsilon), gradient.type()),
         gradient,
         ApplyAdadelta.useLocking(true));
   }

@@ -20,6 +20,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyMomentum;
 import org.tensorflow.types.family.TType;
@@ -130,14 +131,14 @@ public class Momentum extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, MOMENTUM).get();
-    return tf.train.applyMomentum(
+    return deps.train.applyMomentum(
         variable,
         slot,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
         gradient,
-        tf.dtypes.cast(tf.constant(momentum), gradient.type()),
+        deps.dtypes.cast(deps.constant(momentum), gradient.type()),
         ApplyMomentum.useNesterov(useNesterov),
         ApplyMomentum.useLocking(true));
   }

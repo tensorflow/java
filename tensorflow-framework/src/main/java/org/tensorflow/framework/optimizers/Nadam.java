@@ -7,6 +7,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
@@ -224,53 +225,53 @@ public class Nadam extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Class<T> type = gradient.type();
     Variable<T> m = getSlot(variable, FIRST_MOMENT).get(); // first Moment
     Variable<T> v = getSlot(variable, SECOND_MOMENT).get(); // Second Moment
 
     //  gPrime = grad / coefficients['oneMinusMScheduleNew']
-    Operand<T> gPrime = tf.math.div(gradient, tf.dtypes.cast(oneMinusMScheduleNew, type));
+    Operand<T> gPrime = deps.math.div(gradient, deps.dtypes.cast(oneMinusMScheduleNew, type));
     // mT = (coefficients['beta_1_t'] * m + coefficients['one_minus_beta_1_t'] * grad)
     Operand<T> mT =
-        tf.math.add(
-            tf.math.mul(tf.dtypes.cast(betaOneConst, type), m),
-            tf.math.mul(tf.dtypes.cast(oneMinusBeta1, type), gradient));
+        deps.math.add(
+            deps.math.mul(deps.dtypes.cast(betaOneConst, type), m),
+            deps.math.mul(deps.dtypes.cast(oneMinusBeta1, type), gradient));
     // mT = state_ops.assign(m, mT, use_locking=self._use_locking)
     // update m
-    mT = tf.assign(m, mT, Assign.useLocking(true));
+    mT = deps.assign(m, mT, Assign.useLocking(true));
 
     // mTPrime = mT / coefficients['oneMinusMScheduleNext']
-    Operand<T> mTPrime = tf.math.div(mT, tf.dtypes.cast(oneMinusMScheduleNext, type));
+    Operand<T> mTPrime = deps.math.div(mT, deps.dtypes.cast(oneMinusMScheduleNext, type));
 
     // vT = (coefficients['beta_2_t'] * v + coefficients['one_minus_beta_2_t'] *
     // math_ops.square(grad))
     Operand<T> vT =
-        tf.math.add(
-            tf.math.mul(tf.dtypes.cast(betaTwoConst, type), v),
-            tf.math.mul(tf.dtypes.cast(oneMinusBeta2, type), tf.math.square(gradient)));
+        deps.math.add(
+            deps.math.mul(deps.dtypes.cast(betaTwoConst, type), v),
+            deps.math.mul(deps.dtypes.cast(oneMinusBeta2, type), deps.math.square(gradient)));
     // vT = state_ops.assign(v, vT, use_locking=self._use_locking)
     // update v
-    vT = tf.assign(v, vT, Assign.useLocking(true));
+    vT = deps.assign(v, vT, Assign.useLocking(true));
 
     // vTPrime = vT / coefficients['vTPrimeDenominator']
-    Operand<T> vTPrime = tf.math.div(vT, tf.dtypes.cast(vTPrimeDenominator, type));
+    Operand<T> vTPrime = deps.math.div(vT, deps.dtypes.cast(vTPrimeDenominator, type));
 
     // m_t_bar = (coefficients['oneMinusMT'] * gPrime + coefficients['mT1'] * mTPrime)
     Operand<T> m_t_bar =
-        tf.math.add(
-            tf.math.mul(tf.dtypes.cast(oneMinusMT, type), gPrime),
-            tf.math.mul(tf.dtypes.cast(mT1, type), mTPrime));
+        deps.math.add(
+            deps.math.mul(deps.dtypes.cast(oneMinusMT, type), gPrime),
+            deps.math.mul(deps.dtypes.cast(mT1, type), mTPrime));
     // varT = var - coefficients['lr_t'] * m_t_bar / (math_ops.sqrt(vTPrime) +
     // coefficients['epsilon'])
     Operand<T> varT =
-        tf.math.sub(
+        deps.math.sub(
             variable,
-            tf.math.div(
-                tf.math.mul(tf.dtypes.cast(learningRateConst, type), m_t_bar),
-                tf.math.add(tf.math.sqrt(vTPrime), tf.dtypes.cast(epsilonConst, type))));
+            deps.math.div(
+                deps.math.mul(deps.dtypes.cast(learningRateConst, type), m_t_bar),
+                deps.math.add(deps.math.sqrt(vTPrime), deps.dtypes.cast(epsilonConst, type))));
 
-    return tf.assign(variable, varT, Assign.useLocking(true));
+    return deps.assign(variable, varT, Assign.useLocking(true));
   }
 
   /**
