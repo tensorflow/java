@@ -7,6 +7,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdaMax;
@@ -155,19 +156,19 @@ public class Adamax extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> firstMomentSlot = getSlot(variable, FIRST_MOMENT).get();
     Variable<T> secondMomentSlot = getSlot(variable, SECOND_MOMENT).get();
     return ApplyAdaMax.create(
-        this.tf.scope(),
+        deps.scope(),
         variable,
         firstMomentSlot,
         secondMomentSlot,
-        tf.dtypes.cast(betaOnePower, gradient.type()),
-        tf.dtypes.cast(learningRateConst, gradient.type()),
-        tf.dtypes.cast(betaOneConst, gradient.type()),
-        tf.dtypes.cast(betaTwoConst, gradient.type()),
-        tf.dtypes.cast(epsilonConst, gradient.type()),
+        deps.dtypes.cast(betaOnePower, gradient.type()),
+        deps.dtypes.cast(learningRateConst, gradient.type()),
+        deps.dtypes.cast(betaOneConst, gradient.type()),
+        deps.dtypes.cast(betaTwoConst, gradient.type()),
+        deps.dtypes.cast(epsilonConst, gradient.type()),
         gradient,
         ApplyAdaMax.useLocking(true));
   }

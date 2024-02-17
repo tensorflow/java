@@ -22,6 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdagradDa;
 import org.tensorflow.types.TInt64;
@@ -209,17 +210,17 @@ public class AdaGradDA extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> gradSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> gradSquaredSlot = getSlot(variable, SQUARED_ACCUMULATOR).get();
-    return tf.train.applyAdagradDa(
+    return deps.train.applyAdagradDa(
         variable,
         gradSlot,
         gradSquaredSlot,
         gradient,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
-        tf.dtypes.cast(tf.constant(l1Strength), gradient.type()),
-        tf.dtypes.cast(tf.constant(l2Strength), gradient.type()),
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
+        deps.dtypes.cast(deps.constant(l1Strength), gradient.type()),
+        deps.dtypes.cast(deps.constant(l2Strength), gradient.type()),
         globalStep,
         ApplyAdagradDa.useLocking(true));
   }

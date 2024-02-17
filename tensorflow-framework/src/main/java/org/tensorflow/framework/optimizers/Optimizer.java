@@ -168,6 +168,8 @@ public abstract class Optimizer {
         gradsAndVars.stream().map(GradAndVar::getVariable).collect(Collectors.toList());
 
     createSlots(variables);
+    List<Op> gradients = gradsAndVars.stream().map(GradAndVar::getGradient).filter(g -> !g.isClosed()).collect(Collectors.toList());
+    Ops tfOpsGrads = tf.withControlDependencies(gradients);
 
     Optional<Op> prepOp = prepare(name + "/prepare");
 
@@ -175,7 +177,7 @@ public abstract class Optimizer {
     prepOp.ifPresent(updateOps::add);
     for (GradAndVar<? extends TType> pair : gradsAndVars) {
       if (!pair.gradient.isClosed()) {
-        updateOps.add(applyDense(pair));
+        updateOps.add(applyDense(tfOpsGrads, pair));
       }
     }
 
@@ -261,8 +263,8 @@ public abstract class Optimizer {
    * @param <T> the datatype of the gradients and variables.
    * @return An operand which applies the desired optimizer update to the variable.
    */
-  private <T extends TType> Op applyDense(GradAndVar<T> gradVarPair) {
-    return applyDense(gradVarPair.getGradient(), gradVarPair.getVariable());
+  private <T extends TType> Op applyDense(Ops opDependencies, GradAndVar<T> gradVarPair) {
+    return applyDense(opDependencies, gradVarPair.getGradient(), gradVarPair.getVariable());
   }
 
   /**
@@ -273,7 +275,7 @@ public abstract class Optimizer {
    * @param <T> The type of the variable.
    * @return An operand which applies the desired optimizer update to the variable.
    */
-  protected abstract <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable);
+  protected abstract <T extends TType> Op applyDense(Ops opDependencies, Output<T> gradient, Output<T> variable);
 
   /**
    * Gathers up the update operations into a single op that can be used as a run target.

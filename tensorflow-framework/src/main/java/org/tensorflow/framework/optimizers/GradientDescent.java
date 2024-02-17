@@ -18,6 +18,7 @@ package org.tensorflow.framework.optimizers;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.train.ApplyGradientDescent;
 import org.tensorflow.types.family.TType;
 
@@ -65,10 +66,10 @@ public class GradientDescent extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
-    return tf.train.applyGradientDescent(
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
+    return deps.train.applyGradientDescent(
         variable,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
         gradient,
         ApplyGradientDescent.useLocking(true));
   }

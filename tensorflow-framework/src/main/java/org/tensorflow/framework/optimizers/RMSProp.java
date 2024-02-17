@@ -20,6 +20,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyCenteredRmsProp;
 import org.tensorflow.op.train.ApplyRmsProp;
@@ -189,31 +190,31 @@ public class RMSProp extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> rmsSlot = getSlot(variable, RMS).get();
     Variable<T> momentumSlot = getSlot(variable, MOMENTUM).get();
     if (centered) {
       Variable<T> mgSlot = getSlot(variable, MG).get();
-      return tf.train.applyCenteredRmsProp(
+      return deps.train.applyCenteredRmsProp(
           variable,
           mgSlot,
           rmsSlot,
           momentumSlot,
-          tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
-          tf.dtypes.cast(tf.constant(decay), gradient.type()),
-          tf.dtypes.cast(tf.constant(momentum), gradient.type()),
-          tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
+          deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
+          deps.dtypes.cast(deps.constant(decay), gradient.type()),
+          deps.dtypes.cast(deps.constant(momentum), gradient.type()),
+          deps.dtypes.cast(deps.constant(epsilon), gradient.type()),
           gradient,
           ApplyCenteredRmsProp.useLocking(true));
     }
-    return tf.train.applyRmsProp(
+    return deps.train.applyRmsProp(
         variable,
         rmsSlot,
         momentumSlot,
-        tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
-        tf.dtypes.cast(tf.constant(decay), gradient.type()),
-        tf.dtypes.cast(tf.constant(momentum), gradient.type()),
-        tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
+        deps.dtypes.cast(deps.constant(decay), gradient.type()),
+        deps.dtypes.cast(deps.constant(momentum), gradient.type()),
+        deps.dtypes.cast(deps.constant(epsilon), gradient.type()),
         gradient,
         ApplyRmsProp.useLocking(true));
   }
