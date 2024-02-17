@@ -193,4 +193,4 @@ jobs:
       - name: Deploy snapshot artifacts
         run: |
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn clean deploy -Pdeploying
+          mvn clean deploy -Pdeploying -B -e
