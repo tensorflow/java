@@ -22,6 +22,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -223,19 +224,19 @@ public class Adam extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> firstMomentSlot = getSlot(variable, FIRST_MOMENT).get();
     Variable<T> secondMomentSlot = getSlot(variable, SECOND_MOMENT).get();
-    return tf.train.applyAdam(
+    return deps.train.applyAdam(
         variable,
         firstMomentSlot,
         secondMomentSlot,
-        tf.dtypes.cast(betaOnePower, gradient.type()),
-        tf.dtypes.cast(betaTwoPower, gradient.type()),
-        tf.dtypes.cast(learningRateConst, gradient.type()),
-        tf.dtypes.cast(betaOneConst, gradient.type()),
-        tf.dtypes.cast(betaTwoConst, gradient.type()),
-        tf.dtypes.cast(epsilonConst, gradient.type()),
+        deps.dtypes.cast(betaOnePower, gradient.type()),
+        deps.dtypes.cast(betaTwoPower, gradient.type()),
+        deps.dtypes.cast(learningRateConst, gradient.type()),
+        deps.dtypes.cast(betaOneConst, gradient.type()),
+        deps.dtypes.cast(betaTwoConst, gradient.type()),
+        deps.dtypes.cast(epsilonConst, gradient.type()),
         gradient,
         ApplyAdam.useLocking(true));
   }

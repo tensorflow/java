@@ -110,10 +110,6 @@ public class GradientDescentTest {
     }
   }
 
-  // This test fails due to incorrect gradients being generated some of the time, when
-  // using an identical graph on identical data. It should not, but it seems to be a
-  // problem in TF-core.
-  @Disabled
   @Test
   public void testDeterminism() {
     ConfigProto config =

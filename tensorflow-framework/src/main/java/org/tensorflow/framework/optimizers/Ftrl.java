@@ -5,6 +5,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyFtrl;
 import org.tensorflow.types.family.TType;
@@ -238,21 +239,21 @@ public class Ftrl extends Optimizer {
 
   /** {@inheritDoc} */
   @Override
-  protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
+  protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> accumSlot = getSlot(variable, ACCUMULATOR).get();
     Variable<T> linearSlot = getSlot(variable, LINEAR_ACCUMULATOR).get();
     ApplyFtrl.Options options = ApplyFtrl.useLocking(true);
-    return this.tf.train.applyFtrl(
+    return deps.train.applyFtrl(
         variable,
         accumSlot, // accum
         linearSlot, // linear
         gradient, // gradient
-        tf.dtypes.cast(tf.constant(learningRate), gradient.type()), // lr
-        tf.dtypes.cast(tf.constant(l1RegularizationStrength), gradient.type()), // l1
-        tf.dtypes.cast(tf.constant(l2RegularizationStrength), gradient.type()), // l2
-        tf.dtypes.cast(
-            tf.constant(l2ShrinkageRegularizationStrength), gradient.type()), // l2Shrinkage
-        tf.dtypes.cast(tf.constant(learningRatePower), gradient.type()), // lrPower
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()), // lr
+        deps.dtypes.cast(deps.constant(l1RegularizationStrength), gradient.type()), // l1
+        deps.dtypes.cast(deps.constant(l2RegularizationStrength), gradient.type()), // l2
+        deps.dtypes.cast(
+            deps.constant(l2ShrinkageRegularizationStrength), gradient.type()), // l2Shrinkage
+        deps.dtypes.cast(deps.constant(learningRatePower), gradient.type()), // lrPower
         options);
   }
 
