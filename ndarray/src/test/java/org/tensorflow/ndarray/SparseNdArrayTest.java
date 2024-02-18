@@ -25,6 +25,7 @@ import org.tensorflow.ndarray.impl.sparse.ShortSparseNdArray;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SparseNdArrayTest {
@@ -187,5 +188,11 @@ public class SparseNdArrayTest {
     assertEquals((short) 0, instance.getShort(2, 1));
     assertEquals((short) 0, instance.getShort(2, 2));
     assertEquals((short) 0xff00, instance.getShort(2, 3));
+  }
+
+  @Test
+  public void withShape() {
+    NdArray<?> sparseArray = NdArrays.sparseOf(indices, NdArrays.vectorOf(1, 2, 3), shape);
+    assertThrows(UnsupportedOperationException.class, () -> sparseArray.withShape(shape.prepend(1)));
   }
 }

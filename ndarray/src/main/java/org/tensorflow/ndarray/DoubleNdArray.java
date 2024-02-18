@@ -84,6 +84,9 @@ public interface DoubleNdArray extends NdArray<Double> {
   }
 
   @Override
+  DoubleNdArray withShape(Shape shape);
+
+  @Override
   DoubleNdArray slice(Index... indices);
 
   @Override

@@ -84,6 +84,9 @@ public interface IntNdArray extends NdArray<Integer> {
   }
 
   @Override
+  IntNdArray withShape(Shape shape);
+
+  @Override
   IntNdArray slice(Index... indices);
 
   @Override

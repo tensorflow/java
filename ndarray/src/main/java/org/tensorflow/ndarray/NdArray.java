@@ -16,13 +16,13 @@
  */
 package org.tensorflow.ndarray;
 
+import org.tensorflow.ndarray.buffer.DataBuffer;
+import org.tensorflow.ndarray.index.Index;
+
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.index.Index;
 
 /**
  * A data structure of N-dimensions.
@@ -100,6 +100,32 @@ public interface NdArray<T> extends Shaped {
    * @return an {@code NdArray} sequence
    */
   NdArraySequence<? extends NdArray<T>> scalars();
+
+  /**
+   * Returns a new N-dimensional view of this array with the given {@code shape}.
+   *
+   * <p>The provided {@code shape} must comply to the following characteristics:
+   * <ul>
+   *     <li>new shape is known (i.e. has no unknown dimension)</li>
+   *     <li>new shape size is equal to the size of the current shape (i.e. same number of elements)</li>
+   * </ul>
+   * For example,
+   * <pre>{@code
+   *    NdArrays.ofInts(Shape.scalar()).withShape(Shape.of(1, 1));  // ok
+   *    NdArrays.ofInts(Shape.of(2, 3).withShape(Shape.of(3, 2));   // ok
+   *    NdArrays.ofInts(Shape.scalar()).withShape(Shape.of(1, 2));  // not ok, sizes are different (1 != 2)
+   *    NdArrays.ofInts(Shape.of(2, 3)).withShape(Shape.unknown()); // not ok, new shape unknown
+   * }</pre>
+   *
+   * <p>Any changes applied to the returned view affect the data of this array as well, as there
+   * is no copy involved.
+   *
+   * @param shape the new shape to apply
+   * @return a new array viewing the data according to the new shape, or this array if shapes are the same
+   * @throws IllegalArgumentException if the provided {@code shape} is not compliant
+   * @throws UnsupportedOperationException if this array does not support this operation
+   */
+  NdArray<T> withShape(Shape shape);
 
   /**
    * Creates a multi-dimensional view (or slice) of this array by mapping one or more dimensions

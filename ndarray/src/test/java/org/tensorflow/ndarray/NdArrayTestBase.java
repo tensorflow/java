@@ -384,4 +384,31 @@ public abstract class NdArrayTestBase<T> {
     values = matrix.streamOfObjects().collect(Collectors.toList());
     assertIterableEquals(List.of(valueOf(1L), valueOf(2L), valueOf(3L), valueOf(4L)), values);
   }
+
+  @Test
+  public void withShape() {
+    Shape originalShape = Shape.scalar();
+    Shape newShape = originalShape.prepend(1).prepend(1); // [1, 1]
+
+    NdArray<T> originalArray = allocate(originalShape);
+    originalArray.setObject(valueOf(10L));
+    assertEquals(valueOf(10L), originalArray.getObject());
+
+    NdArray<T> newArray = originalArray.withShape(newShape);
+    assertNotNull(newArray);
+    assertEquals(newShape, newArray.shape());
+    assertEquals(originalShape, originalArray.shape());
+    assertEquals(valueOf(10L), newArray.getObject(0, 0));
+
+    NdArray<T> sameArray = originalArray.withShape(Shape.scalar());
+    assertSame(originalArray, sameArray);
+
+    assertThrows(IllegalArgumentException.class, () -> originalArray.withShape(Shape.of(2)));
+    assertThrows(IllegalArgumentException.class, () -> originalArray.withShape(Shape.unknown()));
+
+    NdArray<T> originalMatrix = allocate(Shape.of(2, 3));
+    assertThrows(IllegalArgumentException.class, () -> originalMatrix.withShape(Shape.scalar()));
+    NdArray<T> newMatrix = originalMatrix.withShape(Shape.of(3, 2));
+    assertEquals(Shape.of(3, 2), newMatrix.shape());
+  }
 }

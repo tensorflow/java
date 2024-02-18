@@ -73,7 +73,7 @@ public class FloatDenseNdArray extends AbstractDenseNdArray<Float, FloatNdArray>
   }
 
   @Override
-  FloatDenseNdArray instantiate(DataBuffer<Float> buffer, DimensionalSpace dimensions) {
+  FloatDenseNdArray instantiateView(DataBuffer<Float> buffer, DimensionalSpace dimensions) {
     return new FloatDenseNdArray((FloatDataBuffer) buffer, dimensions);
   }
 

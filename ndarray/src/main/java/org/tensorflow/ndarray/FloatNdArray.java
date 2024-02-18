@@ -69,6 +69,9 @@ public interface FloatNdArray extends NdArray<Float> {
   FloatNdArray setFloat(float value, long... coordinates);
 
   @Override
+  FloatNdArray withShape(Shape shape);
+
+  @Override
   FloatNdArray slice(Index... coordinates);
 
   @Override

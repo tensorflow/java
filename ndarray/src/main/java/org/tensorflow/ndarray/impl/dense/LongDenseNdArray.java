@@ -73,7 +73,7 @@ public class LongDenseNdArray extends AbstractDenseNdArray<Long, LongNdArray>
   }
 
   @Override
-  LongDenseNdArray instantiate(DataBuffer<Long> buffer, DimensionalSpace dimensions) {
+  LongDenseNdArray instantiateView(DataBuffer<Long> buffer, DimensionalSpace dimensions) {
     return new LongDenseNdArray((LongDataBuffer)buffer, dimensions);
   }
 

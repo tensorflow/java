@@ -18,6 +18,7 @@ package org.tensorflow.ndarray.impl.dense;
 
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArraySequence;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.impl.AbstractNdArray;
 import org.tensorflow.ndarray.impl.dimension.RelativeDimensionalSpace;
 import org.tensorflow.ndarray.impl.sequence.FastElementSequence;
@@ -43,7 +44,7 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
     DimensionalSpace elemDims = dimensions().from(dimensionIdx + 1);
     try {
       DataBufferWindow<? extends DataBuffer<T>> elemWindow = buffer().window(elemDims.physicalSize());
-      U element = instantiate(elemWindow.buffer(), elemDims);
+      U element = instantiateView(elemWindow.buffer(), elemDims);
       return new FastElementSequence(this, dimensionIdx, element, elemWindow);
     } catch (UnsupportedOperationException e) {
       // If buffer windows are not supported, fallback to slicing (and slower) sequence
@@ -52,9 +53,20 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
   }
 
   @Override
+  public U withShape(Shape shape) {
+    if (shape == null || shape.isUnknown() || shape.size() != this.shape().size()) {
+      throw new IllegalArgumentException("Shape " + shape + " cannot be used to reshape ndarray of shape " + this.shape());
+    }
+    if (shape.equals(this.shape())) {
+      return (U)this;
+    }
+    return instantiateView(buffer(), DimensionalSpace.create(shape));
+  }
+
+  @Override
   public U slice(long position, DimensionalSpace sliceDimensions) {
     DataBuffer<T> sliceBuffer = buffer().slice(position, sliceDimensions.physicalSize());
-    return instantiate(sliceBuffer, sliceDimensions);
+    return instantiateView(sliceBuffer, sliceDimensions);
   }
 
   @Override
@@ -147,7 +159,7 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
 
   abstract protected DataBuffer<T> buffer();
 
-  abstract U instantiate(DataBuffer<T> buffer, DimensionalSpace dimensions);
+  abstract U instantiateView(DataBuffer<T> buffer, DimensionalSpace dimensions);
 
   long positionOf(long[] coords, boolean isValue) {
     if (coords == null || coords.length == 0) {

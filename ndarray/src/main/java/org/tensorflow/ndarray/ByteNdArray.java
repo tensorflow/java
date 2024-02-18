@@ -69,6 +69,9 @@ public interface ByteNdArray extends NdArray<Byte> {
   ByteNdArray setByte(byte value, long... coordinates);
 
   @Override
+  ByteNdArray withShape(Shape shape);
+
+  @Override
   ByteNdArray slice(Index... indices);
 
   @Override

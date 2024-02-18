@@ -73,7 +73,7 @@ public class ByteDenseNdArray extends AbstractDenseNdArray<Byte, ByteNdArray>
   }
 
   @Override
-  ByteDenseNdArray instantiate(DataBuffer<Byte> buffer, DimensionalSpace dimensions) {
+  ByteDenseNdArray instantiateView(DataBuffer<Byte> buffer, DimensionalSpace dimensions) {
     return new ByteDenseNdArray((ByteDataBuffer)buffer, dimensions);
   }
 

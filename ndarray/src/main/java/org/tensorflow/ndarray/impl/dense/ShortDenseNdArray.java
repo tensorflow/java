@@ -73,7 +73,7 @@ public class ShortDenseNdArray extends AbstractDenseNdArray<Short, ShortNdArray>
   }
 
   @Override
-  ShortDenseNdArray instantiate(DataBuffer<Short> buffer, DimensionalSpace dimensions) {
+  ShortDenseNdArray instantiateView(DataBuffer<Short> buffer, DimensionalSpace dimensions) {
     return new ShortDenseNdArray((ShortDataBuffer)buffer, dimensions);
   }
 

@@ -212,6 +212,11 @@ public abstract class AbstractSparseNdArray<T, U extends NdArray<T>> extends Abs
    */
   public abstract U toDense();
 
+  @Override
+  public U withShape(Shape shape) {
+    throw new UnsupportedOperationException("Sparse NdArrays cannot be viewed with a different shape");
+  }
+
   /** {@inheritDoc} */
   @Override
   public NdArray<T> slice(Index... indices) {

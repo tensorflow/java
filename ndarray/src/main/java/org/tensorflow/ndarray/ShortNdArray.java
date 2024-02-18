@@ -69,6 +69,9 @@ public interface ShortNdArray extends NdArray<Short> {
   ShortNdArray setShort(short value, long... coordinates);
 
   @Override
+  ShortNdArray withShape(Shape shape);
+
+  @Override
   ShortNdArray slice(Index... coordinates);
 
   @Override

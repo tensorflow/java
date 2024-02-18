@@ -84,6 +84,9 @@ public interface LongNdArray extends NdArray<Long> {
   }
 
   @Override
+  LongNdArray withShape(Shape shape);
+
+  @Override
   LongNdArray slice(Index... indices);
 
   @Override

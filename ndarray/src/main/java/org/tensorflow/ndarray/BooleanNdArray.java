@@ -69,6 +69,9 @@ public interface BooleanNdArray extends NdArray<Boolean> {
   BooleanNdArray setBoolean(boolean value, long... coordinates);
 
   @Override
+  BooleanNdArray withShape(Shape shape);
+
+  @Override
   BooleanNdArray slice(Index... indices);
 
   @Override

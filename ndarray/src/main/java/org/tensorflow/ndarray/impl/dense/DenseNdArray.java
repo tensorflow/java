@@ -45,7 +45,7 @@ public class DenseNdArray<T> extends AbstractDenseNdArray<T, NdArray<T>> {
   }
 
   @Override
-  DenseNdArray<T> instantiate(DataBuffer<T> buffer, DimensionalSpace dimensions) {
+  DenseNdArray<T> instantiateView(DataBuffer<T> buffer, DimensionalSpace dimensions) {
     return new DenseNdArray<>(buffer, dimensions);
   }
 

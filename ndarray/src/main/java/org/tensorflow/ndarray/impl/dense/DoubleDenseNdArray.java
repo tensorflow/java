@@ -73,7 +73,7 @@ public class DoubleDenseNdArray extends AbstractDenseNdArray<Double, DoubleNdArr
   }
 
   @Override
-  DoubleDenseNdArray instantiate(DataBuffer<Double> buffer, DimensionalSpace dimensions) {
+  DoubleDenseNdArray instantiateView(DataBuffer<Double> buffer, DimensionalSpace dimensions) {
     return new DoubleDenseNdArray((DoubleDataBuffer)buffer, dimensions);
   }
 

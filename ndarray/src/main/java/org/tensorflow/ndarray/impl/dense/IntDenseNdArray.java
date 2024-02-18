@@ -73,7 +73,7 @@ public class IntDenseNdArray extends AbstractDenseNdArray<Integer, IntNdArray>
   }
 
   @Override
-  IntDenseNdArray instantiate(DataBuffer<Integer> buffer, DimensionalSpace dimensions) {
+  IntDenseNdArray instantiateView(DataBuffer<Integer> buffer, DimensionalSpace dimensions) {
     return new IntDenseNdArray((IntDataBuffer)buffer, dimensions);
   }
 

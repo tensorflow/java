@@ -73,7 +73,7 @@ public class BooleanDenseNdArray extends AbstractDenseNdArray<Boolean, BooleanNd
   }
 
   @Override
-  BooleanDenseNdArray instantiate(DataBuffer<Boolean> buffer, DimensionalSpace dimensions) {
+  BooleanDenseNdArray instantiateView(DataBuffer<Boolean> buffer, DimensionalSpace dimensions) {
     return new BooleanDenseNdArray((BooleanDataBuffer)buffer, dimensions);
   }
 
