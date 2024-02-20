@@ -64,12 +64,12 @@ public class StringSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     SparseNdArray<String, NdArray<String>> instance =
         new SparseNdArray<>(String.class, indices, values, DimensionalSpace.create(shape));
     DataBuffer<String> dataBuffer = DataBuffers.ofObjects(String.class, instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     String[] array = new String[denseArray.length];
     dataBuffer.read(array);
@@ -77,13 +77,13 @@ public class StringSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBuffer() {
 
     DataBuffer<String> dataBuffer = DataBuffers.ofObjects(denseArray);
     // use a zero buffer
     SparseNdArray<String, NdArray<String>> instance =
         SparseNdArray.create(String.class, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -103,7 +103,7 @@ public class StringSparseNdArrayTest {
     // use a zero buffer
     SparseNdArray<String, NdArray<String>> instance =
         SparseNdArray.create(String.class, defaultValue, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -282,7 +282,7 @@ public class StringSparseNdArrayTest {
     // use a zero buffer
     SparseNdArray<String, NdArray<String>> instanceB =
         SparseNdArray.create(String.class, DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     SparseNdArray<String, NdArray<String>> instanceC =

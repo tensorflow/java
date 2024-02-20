@@ -100,12 +100,12 @@ public interface ByteNdArray extends NdArray<Byte> {
   ByteNdArray copyTo(NdArray<Byte> dst);
 
   @Override
-  ByteNdArray read(DataBuffer<Byte> dst);
+  ByteNdArray copyTo(DataBuffer<Byte> dst);
 
-  ByteNdArray read(ByteDataBuffer dst);
+  ByteNdArray copyTo(ByteDataBuffer dst);
 
   @Override
-  ByteNdArray write(DataBuffer<Byte> src);
+  ByteNdArray copyFrom(DataBuffer<Byte> src);
 
-  ByteNdArray write(ByteDataBuffer src);
+  ByteNdArray copyFrom(ByteDataBuffer src);
 }

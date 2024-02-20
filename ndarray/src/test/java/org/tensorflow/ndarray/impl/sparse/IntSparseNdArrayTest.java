@@ -47,12 +47,12 @@ class IntSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     IntSparseNdArray instance =
         new IntSparseNdArray(indices, values, DimensionalSpace.create(shape));
     IntDataBuffer dataBuffer = DataBuffers.ofInts(instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     int[] array = new int[denseArray.length];
     dataBuffer.read(array);
@@ -60,12 +60,12 @@ class IntSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBufferBuffer() {
 
     IntDataBuffer dataBuffer = NioDataBufferFactory.create(IntBuffer.wrap(denseArray));
     // use a zero buffer
     IntSparseNdArray instance = IntSparseNdArray.create(DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -79,7 +79,7 @@ class IntSparseNdArrayTest {
     IntDataBuffer dataBuffer = RawDataBufferFactory.create(denseArrayDefaultValue, false);
     // use a zero buffer
     IntSparseNdArray instance = IntSparseNdArray.create(-1, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -272,7 +272,7 @@ class IntSparseNdArrayTest {
     IntDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     IntSparseNdArray instanceB = IntSparseNdArray.create(DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     IntSparseNdArray instanceC =

@@ -55,15 +55,15 @@ public class DoubleDenseNdArray extends AbstractDenseNdArray<Double, DoubleNdArr
   }
 
   @Override
-  public DoubleNdArray read(DoubleDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public DoubleNdArray copyTo(DoubleDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofDouble);
     return this;
   }
 
   @Override
-  public DoubleNdArray write(DoubleDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public DoubleNdArray copyFrom(DoubleDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofDouble);
     return this;
   }

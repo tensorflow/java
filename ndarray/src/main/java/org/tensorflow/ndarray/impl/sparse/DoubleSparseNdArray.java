@@ -118,7 +118,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
       DoubleDataBuffer dataBuffer, double defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -257,7 +257,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
    */
   public static DoubleSparseNdArray create(DoubleNdArray src) {
     DoubleDataBuffer buffer = DataBuffers.ofDoubles(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new DoubleSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
   /**
@@ -269,7 +269,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
    */
   public static DoubleSparseNdArray create(DoubleNdArray src, double defaultValue) {
     DoubleDataBuffer buffer = DataBuffers.ofDoubles(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new DoubleSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -303,13 +303,13 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
 
   /** {@inheritDoc} */
   @Override
-  public DoubleNdArray read(DataBuffer<Double> dst) {
-    return read((DoubleDataBuffer) dst);
+  public DoubleNdArray copyTo(DataBuffer<Double> dst) {
+    return copyTo((DoubleDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public DoubleNdArray read(DoubleDataBuffer dst) {
+  public DoubleNdArray copyTo(DoubleDataBuffer dst) {
     // set buf to the default values, then overwrite with the indices/values.
     Double[] defaults = new Double[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -329,7 +329,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
 
   /** {@inheritDoc} */
   @Override
-  public DoubleNdArray write(DoubleDataBuffer src) {
+  public DoubleNdArray copyFrom(DoubleDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Double> values = new ArrayList<>();
 
@@ -353,8 +353,8 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
 
   /** {@inheritDoc} */
   @Override
-  public DoubleNdArray write(DataBuffer<Double> src) {
-    return write((DoubleDataBuffer) src);
+  public DoubleNdArray copyFrom(DataBuffer<Double> src) {
+    return copyFrom((DoubleDataBuffer) src);
   }
 
   /**
@@ -364,7 +364,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
    */
   public DoubleNdArray toDense() {
     DoubleDataBuffer dataBuffer = DataBuffers.ofDoubles(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -376,8 +376,8 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
    */
   public DoubleNdArray fromDense(DoubleNdArray src) {
     DoubleDataBuffer buffer = DataBuffers.ofDoubles(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

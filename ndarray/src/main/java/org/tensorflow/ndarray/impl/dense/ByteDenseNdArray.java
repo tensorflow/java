@@ -55,15 +55,15 @@ public class ByteDenseNdArray extends AbstractDenseNdArray<Byte, ByteNdArray>
   }
 
   @Override
-  public ByteNdArray read(ByteDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public ByteNdArray copyTo(ByteDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofByte);
     return this;
   }
 
   @Override
-  public ByteNdArray write(ByteDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public ByteNdArray copyFrom(ByteDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofByte);
     return this;
   }

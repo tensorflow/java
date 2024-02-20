@@ -55,15 +55,15 @@ public class LongDenseNdArray extends AbstractDenseNdArray<Long, LongNdArray>
   }
 
   @Override
-  public LongNdArray read(LongDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public LongNdArray copyTo(LongDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofLong);
     return this;
   }
 
   @Override
-  public LongNdArray write(LongDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public LongNdArray copyFrom(LongDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofLong);
     return this;
   }

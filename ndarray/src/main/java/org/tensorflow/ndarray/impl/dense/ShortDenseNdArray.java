@@ -55,15 +55,15 @@ public class ShortDenseNdArray extends AbstractDenseNdArray<Short, ShortNdArray>
   }
 
   @Override
-  public ShortNdArray read(ShortDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public ShortNdArray copyTo(ShortDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofShort);
     return this;
   }
 
   @Override
-  public ShortNdArray write(ShortDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public ShortNdArray copyFrom(ShortDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofShort);
     return this;
   }

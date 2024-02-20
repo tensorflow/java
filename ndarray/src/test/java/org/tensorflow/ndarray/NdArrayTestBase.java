@@ -258,7 +258,7 @@ public abstract class NdArrayTestBase<T> {
       buffer.setObject(valueOf(val), val);
     }
     NdArray<T> matrix = allocate(Shape.of(3, 5));
-    matrix.write(buffer);
+    matrix.copyFrom(buffer);
     assertEquals(valueOf(0L), matrix.getObject(0, 0));
     assertEquals(valueOf(4L), matrix.getObject(0, 4));
     assertEquals(valueOf(5L), matrix.getObject(1, 0));
@@ -266,7 +266,7 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(valueOf(14L), matrix.getObject(2, 4));
 
     matrix.setObject(valueOf(100L), 1, 0);
-    matrix.read(buffer);
+    matrix.copyTo(buffer);
     assertEquals(valueOf(0L), buffer.getObject(0));
     assertEquals(valueOf(4L), buffer.getObject(4));
     assertEquals(valueOf(100L), buffer.getObject(5));
@@ -274,13 +274,13 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(valueOf(14L), buffer.getObject(14));
 
     try {
-      matrix.write(buffer.narrow(10));
+      matrix.copyFrom(buffer.narrow(10));
       fail();
     } catch (BufferUnderflowException e) {
       // as expected
     }
     try {
-      matrix.read(buffer.narrow(10));
+      matrix.copyTo(buffer.narrow(10));
       fail();
     } catch (BufferOverflowException e) {
       // as expected

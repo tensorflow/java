@@ -100,12 +100,12 @@ public interface ShortNdArray extends NdArray<Short> {
   ShortNdArray copyTo(NdArray<Short> dst);
 
   @Override
-  ShortNdArray read(DataBuffer<Short> dst);
+  ShortNdArray copyTo(DataBuffer<Short> dst);
 
-  ShortNdArray read(ShortDataBuffer dst);
+  ShortNdArray copyTo(ShortDataBuffer dst);
 
   @Override
-  ShortNdArray write(DataBuffer<Short> src);
+  ShortNdArray copyFrom(DataBuffer<Short> src);
 
-  ShortNdArray write(ShortDataBuffer src);
+  ShortNdArray copyFrom(ShortDataBuffer src);
 }

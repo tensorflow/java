@@ -47,12 +47,12 @@ class BooleanSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     BooleanSparseNdArray instance =
         new BooleanSparseNdArray(indices, values, DimensionalSpace.create(shape));
     BooleanDataBuffer dataBuffer = DataBuffers.ofBooleans(instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     boolean[] array = new boolean[denseArray.length];
     dataBuffer.read(array);
@@ -60,12 +60,12 @@ class BooleanSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBuffer() {
 
     BooleanDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     BooleanSparseNdArray instance = BooleanSparseNdArray.create(DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -84,7 +84,7 @@ class BooleanSparseNdArrayTest {
     // use a zero buffer
     BooleanSparseNdArray instance =
         BooleanSparseNdArray.create(true, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(valuesDefault, instance.getValues());
@@ -274,7 +274,7 @@ class BooleanSparseNdArrayTest {
     BooleanDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     BooleanSparseNdArray instanceB = BooleanSparseNdArray.create(DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     BooleanSparseNdArray instanceC =

@@ -55,15 +55,15 @@ public class IntDenseNdArray extends AbstractDenseNdArray<Integer, IntNdArray>
   }
 
   @Override
-  public IntNdArray read(IntDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public IntNdArray copyTo(IntDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofInt);
     return this;
   }
 
   @Override
-  public IntNdArray write(IntDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public IntNdArray copyFrom(IntDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofInt);
     return this;
   }

@@ -118,7 +118,7 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
   ShortSparseNdArray(ShortDataBuffer dataBuffer, short defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -255,7 +255,7 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
    */
   public static ShortSparseNdArray create(ShortNdArray src) {
     ShortDataBuffer buffer = DataBuffers.ofShorts(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new ShortSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
 
@@ -268,7 +268,7 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
    */
   public static ShortSparseNdArray create(ShortNdArray src, short defaultValue) {
     ShortDataBuffer buffer = DataBuffers.ofShorts(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new ShortSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -302,13 +302,13 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
 
   /** {@inheritDoc} */
   @Override
-  public ShortNdArray read(DataBuffer<Short> dst) {
-    return read((ShortDataBuffer) dst);
+  public ShortNdArray copyTo(DataBuffer<Short> dst) {
+    return copyTo((ShortDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public ShortNdArray read(ShortDataBuffer dst) {
+  public ShortNdArray copyTo(ShortDataBuffer dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Short[] defaults = new Short[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -328,7 +328,7 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
 
   /** {@inheritDoc} */
   @Override
-  public ShortNdArray write(ShortDataBuffer src) {
+  public ShortNdArray copyFrom(ShortDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Short> values = new ArrayList<>();
 
@@ -352,8 +352,8 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
 
   /** {@inheritDoc} */
   @Override
-  public ShortNdArray write(DataBuffer<Short> src) {
-    return write((ShortDataBuffer) src);
+  public ShortNdArray copyFrom(DataBuffer<Short> src) {
+    return copyFrom((ShortDataBuffer) src);
   }
 
   /**
@@ -363,7 +363,7 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
    */
   public ShortNdArray toDense() {
     ShortDataBuffer dataBuffer = DataBuffers.ofShorts(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -375,8 +375,8 @@ public class ShortSparseNdArray extends AbstractSparseNdArray<Short, ShortNdArra
    */
   public ShortNdArray fromDense(ShortNdArray src) {
     ShortDataBuffer buffer = DataBuffers.ofShorts(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

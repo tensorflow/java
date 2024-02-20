@@ -45,12 +45,12 @@ class ByteSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     ByteSparseNdArray instance =
         new ByteSparseNdArray(indices, values, DimensionalSpace.create(shape));
     ByteDataBuffer dataBuffer = DataBuffers.ofBytes(instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     byte[] array = new byte[denseArray.length];
     dataBuffer.read(array);
@@ -58,12 +58,12 @@ class ByteSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBuffer() {
 
     ByteDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     ByteSparseNdArray instance = ByteSparseNdArray.create(DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -80,7 +80,7 @@ class ByteSparseNdArrayTest {
     // use a zero buffer
     ByteSparseNdArray instance =
         ByteSparseNdArray.create((byte) -1, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -265,7 +265,7 @@ class ByteSparseNdArrayTest {
     ByteDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     ByteSparseNdArray instanceB = ByteSparseNdArray.create(DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     ByteSparseNdArray instanceC =

@@ -123,7 +123,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
     super(defaultValue, dimensions);
     this.type = type;
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -266,7 +266,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
    */
   public static <T, U extends NdArray<T>> SparseNdArray<T, U> create(Class<T> type, U src) {
     DataBuffer<T> buffer = DataBuffers.ofObjects(type, src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new SparseNdArray<>(type, buffer, DimensionalSpace.create(src.shape()));
   }
   /**
@@ -279,7 +279,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
   public static <T, U extends NdArray<T>> SparseNdArray<T, U> create(
       Class<T> type, U src, T defaultValue) {
     DataBuffer<T> buffer = DataBuffers.ofObjects(type, src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new SparseNdArray<>(type, buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -312,7 +312,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
 
   /** {@inheritDoc} */
   @Override
-  public NdArray<T> read(DataBuffer<T> dst) {
+  public NdArray<T> copyTo(DataBuffer<T> dst) {
     // set the values in buf to the default, then overwrite with indices/values
     @SuppressWarnings("unchecked")
     T[] defaults = (T[]) Array.newInstance(type, (int) dst.size());
@@ -336,7 +336,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
   @SuppressWarnings({
     "unchecked",
   })
-  public NdArray<T> write(DataBuffer<T> src) {
+  public NdArray<T> copyFrom(DataBuffer<T> src) {
     List<long[]> indices = new ArrayList<>();
     List<T> values = new ArrayList<>();
 
@@ -368,7 +368,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
   @SuppressWarnings("unchecked")
   public U toDense() {
     DataBuffer<T> dataBuffer = DataBuffers.ofObjects(type, shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     // unchecked cast, suppressed.
     return (U) NdArrays.wrap(shape(), dataBuffer);
   }
@@ -381,8 +381,8 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
    */
   public NdArray<T> fromDense(NdArray<T> src) {
     DataBuffer<T> buffer = DataBuffers.ofObjects(type, src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

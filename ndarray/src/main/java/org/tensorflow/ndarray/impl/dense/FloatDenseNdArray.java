@@ -55,15 +55,15 @@ public class FloatDenseNdArray extends AbstractDenseNdArray<Float, FloatNdArray>
   }
 
   @Override
-  public FloatNdArray read(FloatDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public FloatNdArray copyTo(FloatDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofFloat);
     return this;
   }
 
   @Override
-  public FloatNdArray write(FloatDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public FloatNdArray copyFrom(FloatDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofFloat);
     return this;
   }

@@ -55,15 +55,15 @@ public class BooleanDenseNdArray extends AbstractDenseNdArray<Boolean, BooleanNd
   }
 
   @Override
-  public BooleanNdArray read(BooleanDataBuffer dst) {
-    Validator.readToBufferArgs(this, dst);
+  public BooleanNdArray copyTo(BooleanDataBuffer dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer, dimensions(), dst, DataTransfer::ofBoolean);
     return this;
   }
 
   @Override
-  public BooleanNdArray write(BooleanDataBuffer src) {
-    Validator.writeFromBufferArgs(this, src);
+  public BooleanNdArray copyFrom(BooleanDataBuffer src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer, dimensions(), DataTransfer::ofBoolean);
     return this;
   }

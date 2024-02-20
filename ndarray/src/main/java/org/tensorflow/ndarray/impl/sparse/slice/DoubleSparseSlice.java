@@ -49,7 +49,7 @@ public class DoubleSparseSlice extends SparseSlice<Double, DoubleNdArray> implem
   @Override
   public DoubleNdArray toDense() {
     DoubleDataBuffer dataBuffer = DataBuffers.ofDoubles(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -75,7 +75,7 @@ public class DoubleSparseSlice extends SparseSlice<Double, DoubleNdArray> implem
 
   /** {@inheritDoc} */
   @Override
-  public DoubleNdArray read(DataBuffer<Double> dst) {
+  public DoubleNdArray copyTo(DataBuffer<Double> dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Double[] defaults = new Double[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -94,17 +94,17 @@ public class DoubleSparseSlice extends SparseSlice<Double, DoubleNdArray> implem
   }
 
   @Override
-  public DoubleNdArray read(DoubleDataBuffer dst) {
-    return read((DataBuffer<Double>) dst);
+  public DoubleNdArray copyTo(DoubleDataBuffer dst) {
+    return this.copyTo((DataBuffer<Double>) dst);
   }
 
   @Override
-  public DoubleNdArray write(DataBuffer<Double> src) {
+  public DoubleNdArray copyFrom(DataBuffer<Double> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public DoubleNdArray write(DoubleDataBuffer src) {
+  public DoubleNdArray copyFrom(DoubleDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

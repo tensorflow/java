@@ -49,7 +49,7 @@ public class LongSparseSlice extends SparseSlice<Long, LongNdArray> implements L
   @Override
   public LongNdArray toDense() {
     LongDataBuffer dataBuffer = DataBuffers.ofLongs(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -75,7 +75,7 @@ public class LongSparseSlice extends SparseSlice<Long, LongNdArray> implements L
 
   /** {@inheritDoc} */
   @Override
-  public LongNdArray read(DataBuffer<Long> dst) {
+  public LongNdArray copyTo(DataBuffer<Long> dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Long[] defaults = new Long[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -94,17 +94,17 @@ public class LongSparseSlice extends SparseSlice<Long, LongNdArray> implements L
   }
 
   @Override
-  public LongNdArray read(LongDataBuffer dst) {
-    return read((DataBuffer<Long>) dst);
+  public LongNdArray copyTo(LongDataBuffer dst) {
+    return copyTo((DataBuffer<Long>) dst);
   }
 
   @Override
-  public LongNdArray write(DataBuffer<Long> src) {
+  public LongNdArray copyFrom(DataBuffer<Long> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public LongNdArray write(LongDataBuffer src) {
+  public LongNdArray copyFrom(LongDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

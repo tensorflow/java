@@ -49,7 +49,7 @@ public class ShortSparseSlice extends SparseSlice<Short, ShortNdArray> implement
   @Override
   public ShortNdArray toDense() {
     ShortDataBuffer dataBuffer = DataBuffers.ofShorts(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -75,7 +75,7 @@ public class ShortSparseSlice extends SparseSlice<Short, ShortNdArray> implement
 
   /** {@inheritDoc} */
   @Override
-  public ShortNdArray read(DataBuffer<Short> dst) {
+  public ShortNdArray copyTo(DataBuffer<Short> dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Short[] defaults = new Short[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -94,17 +94,17 @@ public class ShortSparseSlice extends SparseSlice<Short, ShortNdArray> implement
   }
 
   @Override
-  public ShortNdArray read(ShortDataBuffer dst) {
-    return read((DataBuffer<Short>) dst);
+  public ShortNdArray copyTo(ShortDataBuffer dst) {
+    return this.copyTo((DataBuffer<Short>) dst);
   }
 
   @Override
-  public ShortNdArray write(DataBuffer<Short> src) {
+  public ShortNdArray copyFrom(DataBuffer<Short> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public ShortNdArray write(ShortDataBuffer src) {
+  public ShortNdArray copyFrom(ShortDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

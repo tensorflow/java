@@ -100,12 +100,12 @@ public interface FloatNdArray extends NdArray<Float> {
   FloatNdArray copyTo(NdArray<Float> dst);
 
   @Override
-  FloatNdArray read(DataBuffer<Float> dst);
+  FloatNdArray copyTo(DataBuffer<Float> dst);
 
-  FloatNdArray read(FloatDataBuffer dst);
+  FloatNdArray copyTo(FloatDataBuffer dst);
 
   @Override
-  FloatNdArray write(DataBuffer<Float> src);
+  FloatNdArray copyFrom(DataBuffer<Float> src);
 
-  FloatNdArray write(FloatDataBuffer src);
+  FloatNdArray copyFrom(FloatDataBuffer src);
 }

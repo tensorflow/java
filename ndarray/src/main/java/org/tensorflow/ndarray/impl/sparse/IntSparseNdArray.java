@@ -116,7 +116,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
   IntSparseNdArray(IntDataBuffer dataBuffer, int defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -269,7 +269,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
    */
   public static IntSparseNdArray create(IntNdArray src) {
     IntDataBuffer buffer = DataBuffers.ofInts(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new IntSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
 
@@ -282,7 +282,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
    */
   public static IntSparseNdArray create(IntNdArray src, int defaultValue) {
     IntDataBuffer buffer = DataBuffers.ofInts(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new IntSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -316,13 +316,13 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public IntNdArray read(DataBuffer<Integer> dst) {
-    return read((IntDataBuffer) dst);
+  public IntNdArray copyTo(DataBuffer<Integer> dst) {
+    return copyTo((IntDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public IntNdArray read(IntDataBuffer dst) {
+  public IntNdArray copyTo(IntDataBuffer dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Integer[] defaults = new Integer[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -342,7 +342,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public IntNdArray write(IntDataBuffer src) {
+  public IntNdArray copyFrom(IntDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Integer> values = new ArrayList<>();
 
@@ -366,8 +366,8 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public IntNdArray write(DataBuffer<Integer> src) {
-    return write((IntDataBuffer) src);
+  public IntNdArray copyFrom(DataBuffer<Integer> src) {
+    return copyFrom((IntDataBuffer) src);
   }
 
   /**
@@ -377,7 +377,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
    */
   public IntNdArray toDense() {
     IntDataBuffer dataBuffer = DataBuffers.ofInts(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -389,8 +389,8 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
    */
   public IntNdArray fromDense(IntNdArray src) {
     IntDataBuffer buffer = DataBuffers.ofInts(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

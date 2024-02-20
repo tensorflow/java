@@ -48,7 +48,7 @@ public class ByteSparseSlice extends SparseSlice<Byte, ByteNdArray> implements B
   @Override
   public ByteNdArray toDense() {
     ByteDataBuffer dataBuffer = DataBuffers.ofBytes(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -74,7 +74,7 @@ public class ByteSparseSlice extends SparseSlice<Byte, ByteNdArray> implements B
 
   /** {@inheritDoc} */
   @Override
-  public ByteNdArray read(DataBuffer<Byte> dst) {
+  public ByteNdArray copyTo(DataBuffer<Byte> dst) {
     // zero out buf.
     Byte[] defaults = new Byte[(int) shape().size()];
     dst.write(defaults);
@@ -92,17 +92,17 @@ public class ByteSparseSlice extends SparseSlice<Byte, ByteNdArray> implements B
   }
 
   @Override
-  public ByteNdArray read(ByteDataBuffer dst) {
-    return read((DataBuffer<Byte>) dst);
+  public ByteNdArray copyTo(ByteDataBuffer dst) {
+    return this.copyTo((DataBuffer<Byte>) dst);
   }
 
   @Override
-  public ByteNdArray write(DataBuffer<Byte> src) {
+  public ByteNdArray copyFrom(DataBuffer<Byte> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public ByteNdArray write(ByteDataBuffer src) {
+  public ByteNdArray copyFrom(ByteDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

@@ -115,12 +115,12 @@ public interface LongNdArray extends NdArray<Long> {
   LongNdArray copyTo(NdArray<Long> dst);
 
   @Override
-  LongNdArray read(DataBuffer<Long> dst);
+  LongNdArray copyTo(DataBuffer<Long> dst);
 
-  LongNdArray read(LongDataBuffer dst);
+  LongNdArray copyTo(LongDataBuffer dst);
 
   @Override
-  LongNdArray write(DataBuffer<Long> src);
+  LongNdArray copyFrom(DataBuffer<Long> src);
 
-  LongNdArray write(LongDataBuffer src);
+  LongNdArray copyFrom(LongDataBuffer src);
 }

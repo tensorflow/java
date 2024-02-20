@@ -124,7 +124,7 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
       BooleanDataBuffer dataBuffer, boolean defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -266,7 +266,7 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
    */
   public static BooleanSparseNdArray create(BooleanNdArray src) {
     BooleanDataBuffer buffer = DataBuffers.ofBooleans(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new BooleanSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
   /**
@@ -278,7 +278,7 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
    */
   public static BooleanSparseNdArray create(BooleanNdArray src, boolean defaultValue) {
     BooleanDataBuffer buffer = DataBuffers.ofBooleans(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new BooleanSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -318,13 +318,13 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
 
   /** {@inheritDoc} */
   @Override
-  public BooleanNdArray read(DataBuffer<Boolean> dst) {
-    return read((BooleanDataBuffer) dst);
+  public BooleanNdArray copyTo(DataBuffer<Boolean> dst) {
+    return copyTo((BooleanDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public BooleanNdArray read(BooleanDataBuffer dst) {
+  public BooleanNdArray copyTo(BooleanDataBuffer dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Boolean[] defaults = new Boolean[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -344,7 +344,7 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
 
   /** {@inheritDoc} */
   @Override
-  public BooleanNdArray write(BooleanDataBuffer src) {
+  public BooleanNdArray copyFrom(BooleanDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Boolean> values = new ArrayList<>();
 
@@ -368,8 +368,8 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
 
   /** {@inheritDoc} */
   @Override
-  public BooleanNdArray write(DataBuffer<Boolean> src) {
-    return write((BooleanDataBuffer) src);
+  public BooleanNdArray copyFrom(DataBuffer<Boolean> src) {
+    return copyFrom((BooleanDataBuffer) src);
   }
 
   /**
@@ -379,7 +379,7 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
    */
   public BooleanNdArray toDense() {
     BooleanDataBuffer dataBuffer = DataBuffers.ofBooleans(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -391,8 +391,8 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
    */
   public BooleanNdArray fromDense(BooleanNdArray src) {
     BooleanDataBuffer buffer = DataBuffers.ofBooleans(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

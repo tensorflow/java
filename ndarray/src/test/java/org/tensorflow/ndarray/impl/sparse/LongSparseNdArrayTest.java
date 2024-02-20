@@ -46,12 +46,12 @@ class LongSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     LongSparseNdArray instance =
         new LongSparseNdArray(indices, values, DimensionalSpace.create(shape));
     LongDataBuffer dataBuffer = DataBuffers.ofLongs(instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     long[] array = new long[denseArray.length];
     dataBuffer.read(array);
@@ -59,12 +59,12 @@ class LongSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBuffer() {
 
     LongDataBuffer dataBuffer = NioDataBufferFactory.create(LongBuffer.wrap(denseArray));
     // use a zero buffer
     LongSparseNdArray instance = LongSparseNdArray.create(DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -78,7 +78,7 @@ class LongSparseNdArrayTest {
     LongDataBuffer dataBuffer = RawDataBufferFactory.create(denseArrayDefaultValue, false);
     // use a zero buffer
     LongSparseNdArray instance = LongSparseNdArray.create(-1L, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -271,7 +271,7 @@ class LongSparseNdArrayTest {
     LongDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     LongSparseNdArray instanceB = LongSparseNdArray.create(DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     LongSparseNdArray instanceC =

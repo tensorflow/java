@@ -49,7 +49,7 @@ public class IntSparseSlice extends SparseSlice<Integer, IntNdArray> implements 
   @Override
   public IntNdArray toDense() {
     IntDataBuffer dataBuffer = DataBuffers.ofInts(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -75,7 +75,7 @@ public class IntSparseSlice extends SparseSlice<Integer, IntNdArray> implements 
 
   /** {@inheritDoc} */
   @Override
-  public IntNdArray read(DataBuffer<Integer> dst) {
+  public IntNdArray copyTo(DataBuffer<Integer> dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Integer[] defaults = new Integer[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -94,17 +94,17 @@ public class IntSparseSlice extends SparseSlice<Integer, IntNdArray> implements 
   }
 
   @Override
-  public IntNdArray read(IntDataBuffer dst) {
-    return read((DataBuffer<Integer>) dst);
+  public IntNdArray copyTo(IntDataBuffer dst) {
+    return this.copyTo((DataBuffer<Integer>) dst);
   }
 
   @Override
-  public IntNdArray write(DataBuffer<Integer> src) {
+  public IntNdArray copyFrom(DataBuffer<Integer> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public IntNdArray write(IntDataBuffer src) {
+  public IntNdArray copyFrom(IntDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

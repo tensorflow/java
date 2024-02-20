@@ -49,12 +49,12 @@ class DoubleSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     DoubleSparseNdArray instance =
         new DoubleSparseNdArray(indices, values, DimensionalSpace.create(shape));
     DoubleDataBuffer dataBuffer = DataBuffers.ofDoubles(instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     double[] array = new double[denseArray.length];
     dataBuffer.read(array);
@@ -62,12 +62,12 @@ class DoubleSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBuffer() {
 
     DoubleDataBuffer dataBuffer = NioDataBufferFactory.create(DoubleBuffer.wrap(denseArray));
     // use a zero buffer
     DoubleSparseNdArray instance = DoubleSparseNdArray.create(DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -80,7 +80,7 @@ class DoubleSparseNdArrayTest {
     DoubleDataBuffer dataBuffer = RawDataBufferFactory.create(denseArrayDefaultValue, false);
     // use a zero buffer
     DoubleSparseNdArray instance = DoubleSparseNdArray.create(-1d, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -266,7 +266,7 @@ class DoubleSparseNdArrayTest {
     DoubleDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     DoubleSparseNdArray instanceB = DoubleSparseNdArray.create(DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     DoubleSparseNdArray instanceC =

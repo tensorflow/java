@@ -118,7 +118,7 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
   FloatSparseNdArray(FloatDataBuffer dataBuffer, float defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -255,7 +255,7 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
    */
   public static FloatSparseNdArray create(FloatNdArray src) {
     FloatDataBuffer buffer = DataBuffers.ofFloats(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new FloatSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
   /**
@@ -267,7 +267,7 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
    */
   public static FloatSparseNdArray create(FloatNdArray src, float defaultValue) {
     FloatDataBuffer buffer = DataBuffers.ofFloats(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new FloatSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -301,13 +301,13 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
 
   /** {@inheritDoc} */
   @Override
-  public FloatNdArray read(DataBuffer<Float> dst) {
-    return read((FloatDataBuffer) dst);
+  public FloatNdArray copyTo(DataBuffer<Float> dst) {
+    return copyTo((FloatDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public FloatNdArray read(FloatDataBuffer dst) {
+  public FloatNdArray copyTo(FloatDataBuffer dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Float[] defaults = new Float[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -327,7 +327,7 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
 
   /** {@inheritDoc} */
   @Override
-  public FloatNdArray write(FloatDataBuffer src) {
+  public FloatNdArray copyFrom(FloatDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Float> values = new ArrayList<>();
 
@@ -351,8 +351,8 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
 
   /** {@inheritDoc} */
   @Override
-  public FloatNdArray write(DataBuffer<Float> src) {
-    return write((FloatDataBuffer) src);
+  public FloatNdArray copyFrom(DataBuffer<Float> src) {
+    return copyFrom((FloatDataBuffer) src);
   }
 
   /**
@@ -362,7 +362,7 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
    */
   public FloatNdArray toDense() {
     FloatDataBuffer dataBuffer = DataBuffers.ofFloats(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -374,8 +374,8 @@ public class FloatSparseNdArray extends AbstractSparseNdArray<Float, FloatNdArra
    */
   public FloatNdArray fromDense(FloatNdArray src) {
     FloatDataBuffer buffer = DataBuffers.ofFloats(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

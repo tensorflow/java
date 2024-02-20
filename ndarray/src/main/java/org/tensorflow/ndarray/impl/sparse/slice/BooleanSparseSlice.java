@@ -49,7 +49,7 @@ public class BooleanSparseSlice extends SparseSlice<Boolean, BooleanNdArray>
   @Override
   public BooleanNdArray toDense() {
     BooleanDataBuffer dataBuffer = DataBuffers.ofBooleans(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -75,7 +75,7 @@ public class BooleanSparseSlice extends SparseSlice<Boolean, BooleanNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public BooleanNdArray read(DataBuffer<Boolean> dst) {
+  public BooleanNdArray copyTo(DataBuffer<Boolean> dst) {
     // zero out buf.
     Boolean[] defaults = new Boolean[(int) shape().size()];
     dst.write(defaults);
@@ -93,17 +93,17 @@ public class BooleanSparseSlice extends SparseSlice<Boolean, BooleanNdArray>
   }
 
   @Override
-  public BooleanNdArray read(BooleanDataBuffer dst) {
-    return read((DataBuffer<Boolean>) dst);
+  public BooleanNdArray copyTo(BooleanDataBuffer dst) {
+    return copyTo((DataBuffer<Boolean>) dst);
   }
 
   @Override
-  public BooleanNdArray write(DataBuffer<Boolean> src) {
+  public BooleanNdArray copyFrom(DataBuffer<Boolean> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public BooleanNdArray write(BooleanDataBuffer src) {
+  public BooleanNdArray copyFrom(BooleanDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

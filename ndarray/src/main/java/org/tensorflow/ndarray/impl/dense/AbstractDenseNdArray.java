@@ -101,15 +101,15 @@ public abstract class AbstractDenseNdArray<T, U extends NdArray<T>> extends Abst
   }
 
   @Override
-  public U read(DataBuffer<T> dst) {
-    Validator.readToBufferArgs(this, dst);
+  public U copyTo(DataBuffer<T> dst) {
+    Validator.copyToBufferArgs(this, dst);
     DataTransfer.execute(buffer(), dimensions(), dst, DataTransfer::ofValue);
     return (U)this;
   }
 
   @Override
-  public U write(DataBuffer<T> src) {
-    Validator.writeFromBufferArgs(this, src);
+  public U copyFrom(DataBuffer<T> src) {
+    Validator.copyFromBufferArgs(this, src);
     DataTransfer.execute(src, buffer(), dimensions(), DataTransfer::ofValue);
     return (U)this;
   }

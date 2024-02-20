@@ -117,7 +117,7 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
   LongSparseNdArray(LongDataBuffer dataBuffer, long defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -254,7 +254,7 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
    */
   public static LongSparseNdArray create(LongNdArray src) {
     LongDataBuffer buffer = DataBuffers.ofLongs(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new LongSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
 
@@ -267,7 +267,7 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
    */
   public static LongSparseNdArray create(LongNdArray src, long defaultValue) {
     LongDataBuffer buffer = DataBuffers.ofLongs(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new LongSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -301,13 +301,13 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public LongNdArray read(DataBuffer<Long> dst) {
-    return read((LongDataBuffer) dst);
+  public LongNdArray copyTo(DataBuffer<Long> dst) {
+    return copyTo((LongDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public LongNdArray read(LongDataBuffer dst) {
+  public LongNdArray copyTo(LongDataBuffer dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Long[] defaults = new Long[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -327,7 +327,7 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public LongNdArray write(LongDataBuffer src) {
+  public LongNdArray copyFrom(LongDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Long> values = new ArrayList<>();
 
@@ -351,8 +351,8 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public LongNdArray write(DataBuffer<Long> src) {
-    return write((LongDataBuffer) src);
+  public LongNdArray copyFrom(DataBuffer<Long> src) {
+    return copyFrom((LongDataBuffer) src);
   }
 
   /**
@@ -362,7 +362,7 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
    */
   public LongNdArray toDense() {
     LongDataBuffer dataBuffer = DataBuffers.ofLongs(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -374,8 +374,8 @@ public class LongSparseNdArray extends AbstractSparseNdArray<Long, LongNdArray>
    */
   public LongNdArray fromDense(LongNdArray src) {
     LongDataBuffer buffer = DataBuffers.ofLongs(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

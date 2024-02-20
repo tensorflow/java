@@ -115,12 +115,12 @@ public interface DoubleNdArray extends NdArray<Double> {
   DoubleNdArray copyTo(NdArray<Double> dst);
 
   @Override
-  DoubleNdArray read(DataBuffer<Double> dst);
+  DoubleNdArray copyTo(DataBuffer<Double> dst);
 
-  DoubleNdArray read(DoubleDataBuffer dst);
+  DoubleNdArray copyTo(DoubleDataBuffer dst);
 
   @Override
-  DoubleNdArray write(DataBuffer<Double> src);
+  DoubleNdArray copyFrom(DataBuffer<Double> src);
 
-  DoubleNdArray write(DoubleDataBuffer src);
+  DoubleNdArray copyFrom(DoubleDataBuffer src);
 }

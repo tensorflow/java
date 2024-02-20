@@ -2010,7 +2010,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2113,7 +2113,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2216,7 +2216,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2319,7 +2319,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2422,7 +2422,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2525,7 +2525,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2628,7 +2628,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**
@@ -2732,7 +2732,7 @@ public final class StdArrays {
     if (src.size() > dst.length) {
       throw new ArrayIndexOutOfBoundsException(String.valueOf(src.size()) + " > " + dst.length);
     }
-    src.read(DataBuffers.of(dst, false, false));
+    src.copyTo(DataBuffers.of(dst, false, false));
   }
 
   /**

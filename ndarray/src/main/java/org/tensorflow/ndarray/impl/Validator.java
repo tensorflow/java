@@ -30,13 +30,13 @@ public class Validator {
     }
   }
 
-  public static void readToBufferArgs(NdArray<?> ndArray, DataBuffer<?> dst) {
+  public static void copyToBufferArgs(NdArray<?> ndArray, DataBuffer<?> dst) {
     if (dst.size() < ndArray.size()) {
       throw new BufferOverflowException();
     }
   }
 
-  public static void writeFromBufferArgs(NdArray<?> ndArray, DataBuffer<?> src) {
+  public static void copyFromBufferArgs(NdArray<?> ndArray, DataBuffer<?> src) {
     if (src.size() < ndArray.size()) {
       throw new BufferUnderflowException();
     }

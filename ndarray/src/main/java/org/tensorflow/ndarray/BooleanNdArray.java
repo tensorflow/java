@@ -100,12 +100,12 @@ public interface BooleanNdArray extends NdArray<Boolean> {
   BooleanNdArray copyTo(NdArray<Boolean> dst);
 
   @Override
-  BooleanNdArray read(DataBuffer<Boolean> dst);
+  BooleanNdArray copyTo(DataBuffer<Boolean> dst);
 
-  BooleanNdArray read(BooleanDataBuffer dst);
+  BooleanNdArray copyTo(BooleanDataBuffer dst);
 
   @Override
-  BooleanNdArray write(DataBuffer<Boolean> src);
+  BooleanNdArray copyFrom(DataBuffer<Boolean> src);
 
-  BooleanNdArray write(BooleanDataBuffer src);
+  BooleanNdArray copyFrom(BooleanDataBuffer src);
 }

@@ -133,7 +133,7 @@ public abstract class SparseSlice<T, U extends NdArray<T>> extends AbstractSpars
 
   /** {@inheritDoc} */
   @Override
-  public NdArray<T> write(DataBuffer<T> src) {
+  public NdArray<T> copyFrom(DataBuffer<T> src) {
     throw new ReadOnlyBufferException();
   }
 

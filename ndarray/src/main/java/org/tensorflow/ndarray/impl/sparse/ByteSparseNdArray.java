@@ -118,7 +118,7 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
   ByteSparseNdArray(ByteDataBuffer dataBuffer, byte defaultValue, DimensionalSpace dimensions) {
     super(defaultValue, dimensions);
     // use write to set up the indices and values
-    write(dataBuffer);
+    copyFrom(dataBuffer);
   }
 
   /**
@@ -255,7 +255,7 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
    */
   public static ByteSparseNdArray create(ByteNdArray src) {
     ByteDataBuffer buffer = DataBuffers.ofBytes(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new ByteSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
 
@@ -268,7 +268,7 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
    */
   public static ByteSparseNdArray create(ByteNdArray src, byte defaultValue) {
     ByteDataBuffer buffer = DataBuffers.ofBytes(src.size());
-    src.read(buffer);
+    src.copyTo(buffer);
     return new ByteSparseNdArray(buffer, defaultValue, DimensionalSpace.create(src.shape()));
   }
 
@@ -302,13 +302,13 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public ByteNdArray read(DataBuffer<Byte> dst) {
-    return read((ByteDataBuffer) dst);
+  public ByteNdArray copyTo(DataBuffer<Byte> dst) {
+    return copyTo((ByteDataBuffer) dst);
   }
 
   /** {@inheritDoc} */
   @Override
-  public ByteNdArray read(ByteDataBuffer dst) {
+  public ByteNdArray copyTo(ByteDataBuffer dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Byte[] defaults = new Byte[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -328,7 +328,7 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public ByteNdArray write(ByteDataBuffer src) {
+  public ByteNdArray copyFrom(ByteDataBuffer src) {
     List<long[]> indices = new ArrayList<>();
     List<Byte> values = new ArrayList<>();
 
@@ -352,8 +352,8 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
 
   /** {@inheritDoc} */
   @Override
-  public ByteNdArray write(DataBuffer<Byte> src) {
-    return write((ByteDataBuffer) src);
+  public ByteNdArray copyFrom(DataBuffer<Byte> src) {
+    return copyFrom((ByteDataBuffer) src);
   }
 
   /**
@@ -363,7 +363,7 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
    */
   public ByteNdArray toDense() {
     ByteDataBuffer dataBuffer = DataBuffers.ofBytes(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -375,8 +375,8 @@ public class ByteSparseNdArray extends AbstractSparseNdArray<Byte, ByteNdArray>
    */
   public ByteNdArray fromDense(ByteNdArray src) {
     ByteDataBuffer buffer = DataBuffers.ofBytes(src.size());
-    src.read(buffer);
-    write(buffer);
+    src.copyTo(buffer);
+    copyFrom(buffer);
     return this;
   }
 

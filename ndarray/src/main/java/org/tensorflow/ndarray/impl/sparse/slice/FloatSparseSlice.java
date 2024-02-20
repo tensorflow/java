@@ -49,7 +49,7 @@ public class FloatSparseSlice extends SparseSlice<Float, FloatNdArray> implement
   @Override
   public FloatNdArray toDense() {
     FloatDataBuffer dataBuffer = DataBuffers.ofFloats(shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     return NdArrays.wrap(shape(), dataBuffer);
   }
 
@@ -75,7 +75,7 @@ public class FloatSparseSlice extends SparseSlice<Float, FloatNdArray> implement
 
   /** {@inheritDoc} */
   @Override
-  public FloatNdArray read(DataBuffer<Float> dst) {
+  public FloatNdArray copyTo(DataBuffer<Float> dst) {
     // set the values in buf to the default, then overwrite with indices/values
     Float[] defaults = new Float[(int) shape().size()];
     Arrays.fill(defaults, getDefaultValue());
@@ -94,17 +94,17 @@ public class FloatSparseSlice extends SparseSlice<Float, FloatNdArray> implement
   }
 
   @Override
-  public FloatNdArray read(FloatDataBuffer dst) {
-    return read((DataBuffer<Float>) dst);
+  public FloatNdArray copyTo(FloatDataBuffer dst) {
+    return this.copyTo((DataBuffer<Float>) dst);
   }
 
   @Override
-  public FloatNdArray write(DataBuffer<Float> src) {
+  public FloatNdArray copyFrom(DataBuffer<Float> src) {
     throw new ReadOnlyBufferException();
   }
 
   @Override
-  public FloatNdArray write(FloatDataBuffer src) {
+  public FloatNdArray copyFrom(FloatDataBuffer src) {
     throw new ReadOnlyBufferException();
   }
 

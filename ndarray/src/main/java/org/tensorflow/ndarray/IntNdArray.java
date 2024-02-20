@@ -115,12 +115,12 @@ public interface IntNdArray extends NdArray<Integer> {
   IntNdArray copyTo(NdArray<Integer> dst);
 
   @Override
-  IntNdArray read(DataBuffer<Integer> dst);
+  IntNdArray copyTo(DataBuffer<Integer> dst);
 
-  IntNdArray read(IntDataBuffer dst);
+  IntNdArray copyTo(IntDataBuffer dst);
 
   @Override
-  IntNdArray write(DataBuffer<Integer> src);
+  IntNdArray copyFrom(DataBuffer<Integer> src);
 
-  IntNdArray write(IntDataBuffer src);
+  IntNdArray copyFrom(IntDataBuffer src);
 }

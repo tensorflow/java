@@ -48,7 +48,7 @@ public class ObjectSparseSlice<T, U extends NdArray<T>> extends SparseSlice<T, U
   @SuppressWarnings("unchecked")
   public U toDense() {
     DataBuffer<T> dataBuffer = DataBuffers.ofObjects(getType(), shape().size());
-    read(dataBuffer);
+    copyTo(dataBuffer);
     // unchecked NdArray<T> to U
     return (U) NdArrays.wrap(shape(), dataBuffer);
   }
@@ -66,7 +66,7 @@ public class ObjectSparseSlice<T, U extends NdArray<T>> extends SparseSlice<T, U
   /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
-  public U read(DataBuffer<T> dst) {
+  public U copyTo(DataBuffer<T> dst) {
     // unchecked Object to T[]
     T[] defaults = (T[]) Array.newInstance(getType(), (int) dst.size());
     Arrays.fill(defaults, getDefaultValue());

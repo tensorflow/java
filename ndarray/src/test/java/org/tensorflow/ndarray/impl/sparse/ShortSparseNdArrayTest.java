@@ -45,12 +45,12 @@ class ShortSparseNdArrayTest {
   }
 
   @Test
-  public void testRead() {
+  public void testCopyToBuffer() {
     ShortSparseNdArray instance =
         new ShortSparseNdArray(indices, values, DimensionalSpace.create(shape));
     ShortDataBuffer dataBuffer = DataBuffers.ofShorts(instance.shape().size());
 
-    instance.read(dataBuffer);
+    instance.copyTo(dataBuffer);
 
     short[] array = new short[denseArray.length];
     dataBuffer.read(array);
@@ -58,12 +58,12 @@ class ShortSparseNdArrayTest {
   }
 
   @Test
-  public void testWrite() {
+  public void testCopyFromBuffer() {
 
     ShortDataBuffer dataBuffer = NioDataBufferFactory.create(ShortBuffer.wrap(denseArray));
     // use a zero buffer
     ShortSparseNdArray instance = ShortSparseNdArray.create(DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -81,7 +81,7 @@ class ShortSparseNdArrayTest {
     // use a zero buffer
     ShortSparseNdArray instance =
         ShortSparseNdArray.create((short) -1, DimensionalSpace.create(shape));
-    instance.write(dataBuffer);
+    instance.copyFrom(dataBuffer);
 
     assertEquals(indices, instance.getIndices());
     assertEquals(values, instance.getValues());
@@ -275,7 +275,7 @@ class ShortSparseNdArrayTest {
     ShortDataBuffer dataBuffer = RawDataBufferFactory.create(denseArray, false);
     // use a zero buffer
     ShortSparseNdArray instanceB = ShortSparseNdArray.create(DimensionalSpace.create(shape));
-    instanceB.write(dataBuffer);
+    instanceB.copyFrom(dataBuffer);
     assertEquals(instance, instanceB);
 
     ShortSparseNdArray instanceC =
