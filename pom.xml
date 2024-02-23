@@ -63,6 +63,7 @@
       </snapshots>
     </repository>
   </repositories>
+
   <pluginRepositories>
     <pluginRepository>
       <id>ossrh-snapshots</id>

@@ -35,29 +35,12 @@ This can be done in `.mvn/jvm.config` or `MAVEN_OPTS`.
 ### Native Builds
 
 By default, the build will attempt to download the existing TensorFlow binaries from the web for the platform it is running on (so you need to have an active internet connection).
-If such binaries are not available for your platform, you will need to build the TensorFlow runtime library from sources, by adding the `-Dnative.build` argument to your Maven
+If such binaries are not available for your platform, you will need to build the TensorFlow runtime library from sources, by appending the `-Dnative.build` argument to your Maven
 command. This requires a valid environment for building TensorFlow, including the [bazel](https://bazel.build/) build tool and a few Python dependencies
 (please read [TensorFlow documentation](https://www.tensorflow.org/install/source) for more details). Note that building from sources can take multiple hours on a regular laptop.
 
-### GPU Support
-
-Currently, due to build time constraints, the GPU binaries only support compute capacities 3.5 and 7.0.  
-To use with un-supported GPUs, you have to build it yourself, after changing the value [here](tensorflow-core/tensorflow-core-api/build.sh#L27),
-setting the environment variable `TF_CUDA_COMPUTE_CAPABILITIES`, or configuring it in a bazel rc file (
-i.e. `build --action_env TF_CUDA_COMPUTE_CAPABILITIES="6.1"`). While this is far from ideal, we are working on getting more build resources, and for
-now this is the best option.
-
-To build for GPU, pass `-Djavacpp.platform.extension=-gpu` to maven. By default, the CI options are used for the bazel build, see the above section
-for more info. If you add `bazelrc` files, make sure the `TF_CUDA_COMPUTE_CAPABILITIES` value in them matches the value set elsewhere, as it will take
-precedence if present.
-
-### Apple Silicon
-
-The TensorFlow Java project relies on [GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)
-to build and distribute the native binaries for TensorFlow. Unfortunately at the moment, GitHub Actions still does not support runners with a
-Apple Silicon chip (such as M1). Therefore, we cannot distribute artifacts for this platform, so they must be build locally on these systems.
-
-Please follow the present [procedure](CONTRIBUTING.md#building) for building TensorFlow Java.
+To build for GPU, pass `-Djavacpp.platform.extension=-gpu` to maven. If you want to use TensorFlow Java with unsupported GPUs, set the environment variable `TF_CUDA_COMPUTE_CAPABILITIES`, or 
+configure it in a bazel rc file (i.e. `build --action_env TF_CUDA_COMPUTE_CAPABILITIES="6.1"`). 
 
 ### Native Crashes
 
@@ -115,14 +98,12 @@ patches are found in `tensorflow-core/tensorflow-core-native/external`.
 - To create a new patch or update one, you can make a copy of the TensorFlow source file to change, make your change and generate a patch using `git diff <file> <file-updated>`
 - If more than one file needs to be added to the patch, it's easier to clone the [TensorFlow repository](https://github.com/tensorflow/tensorflow), apply the changes and use `git diff` at the root of the tree
 
-Once these steps have been executed, you can run `mvn install` to build the new version but make sure to delete completely the `src/gen` directory of `tensorflow-core-api` first.
-
 ### Generating Java Bindings
 
 After upgrading the TensorFlow library, you need to regenerate all Java bindings that depends on the native code. That includes Java protos, C API bindings (JavaCPP) and
 operator classes. You can trigger the regeneration of these bindings with the Maven command `mvn clean install -Pgenerating`.
 
-This will trigger a small Bazel build of the TensorFlow sources to regenerate the Java protos, so make sure your [environment](CONTRIBUTING.md#native-builds) is setup properly.
+This will also trigger a small Bazel build of the TensorFlow sources to regenerate the Java protos, so make sure your [environment](CONTRIBUTING.md#native-builds) is setup properly.
 
 #### Operations Classification
 
@@ -182,5 +163,4 @@ org.tensorflow.exceptions.TensorFlowException: No gradient defined for op: ReadV
 ```
 The description in the [linked file](https://www.tensorflow.org/code/tensorflow/cc/gradients/README.md) are accurate for adding C++ Graph gradients, which are used by our `Graph`.  Examples of doing that are [tensorflow/tensorflow#46115](https://github.com/tensorflow/tensorflow/pull/46115) and [tensorflow/tensorflow#47774](https://github.com/tensorflow/tensorflow/pull/47774).  
 
-However, Tensorflow Core is in the process of migrating gradient definitions to [`c/experimental/gradients`](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c/experimental/gradients), which will be what our eager mode uses once it has gradient support. 
-Anyone adding gradients is strongly encouraged to add one there as well, and eventually it should replace the legacy `cc/gradients` gradients.
+You can also code and register the missing gradients in Java, using the TensorFlow Java custom gradient registration capabilities. Check at the JavaDoc of `tensorflow-core-api` for more details.

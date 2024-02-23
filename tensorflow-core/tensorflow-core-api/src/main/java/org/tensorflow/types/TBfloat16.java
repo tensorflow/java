@@ -104,7 +104,7 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TBfloat16 tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(TBfloat16.class, shape, d -> d.write(data));
+    return Tensor.of(TBfloat16.class, shape, d -> d.copyFrom(data));
   }
 
   /**

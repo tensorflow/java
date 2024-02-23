@@ -74,7 +74,7 @@ public class TensorTest {
     {
       try (TBool t = Tensor.of(TBool.class, bools_shape, DataBuffers.of(bools_))) {
         boolean[] actual = new boolean[bools_.length];
-        t.read(DataBuffers.of(actual));
+        t.copyTo(DataBuffers.of(actual));
         assertArrayEquals(bools, actual);
       }
 
@@ -91,9 +91,9 @@ public class TensorTest {
               .order(ByteOrder.nativeOrder())
               .asDoubleBuffer()
               .put(doubles);
-      try (TFloat64 t = TFloat64.tensorOf(doubles_shape, d -> d.write(DataBuffers.of(buf)))) {
+      try (TFloat64 t = TFloat64.tensorOf(doubles_shape, d -> d.copyFrom(DataBuffers.of(buf)))) {
         double[] actual = new double[doubles.length];
-        t.read(DataBuffers.of(actual));
+        t.copyTo(DataBuffers.of(actual));
         assertArrayEquals(doubles, actual, EPSILON);
       }
     }
@@ -117,7 +117,7 @@ public class TensorTest {
     flipBuffer(buf);
     try (TFloat64 t = TFloat64.tensorOf(Shape.of(4), DataBuffers.of(buf))) {
       double[] actual = new double[doubles.length];
-      t.read(DataBuffers.of(actual));
+      t.copyTo(DataBuffers.of(actual));
       assertArrayEquals(doubles, actual, EPSILON);
     }
   }
@@ -136,7 +136,7 @@ public class TensorTest {
     flipBuffer(buf);
     try (TFloat64 t = TFloat64.tensorOf(Shape.of(4), DataBuffers.of(buf))) {
       double[] actual = new double[doubles.length];
-      t.read(DataBuffers.of(actual));
+      t.copyTo(DataBuffers.of(actual));
       assertArrayEquals(doubles, actual, EPSILON);
     }
   }
@@ -153,22 +153,22 @@ public class TensorTest {
       Shape shape = Shape.of(4);
       try (TFloat64 t = TFloat64.tensorOf(shape, DataBuffers.of(doubles))) {
         DoubleBuffer actual = DoubleBuffer.allocate(doubles.capacity());
-        t.read(DataBuffers.of(actual));
+        t.copyTo(DataBuffers.of(actual));
         assertEquals(doubles, actual);
       }
       try (TFloat32 t = TFloat32.tensorOf(shape, DataBuffers.of(floats))) {
         FloatBuffer actual = FloatBuffer.allocate(floats.capacity());
-        t.read(DataBuffers.of(actual));
+        t.copyTo(DataBuffers.of(actual));
         assertEquals(floats, actual);
       }
       try (TInt32 t = TInt32.tensorOf(shape, DataBuffers.of(ints))) {
         IntBuffer actual = IntBuffer.allocate(ints.capacity());
-        t.read(DataBuffers.of(actual));
+        t.copyTo(DataBuffers.of(actual));
         assertEquals(ints, actual);
       }
       try (TInt64 t = TInt64.tensorOf(shape, DataBuffers.of(longs))) {
         LongBuffer actual = LongBuffer.allocate(longs.capacity());
-        t.read(DataBuffers.of(actual));
+        t.copyTo(DataBuffers.of(actual));
         assertEquals(longs, actual);
       }
     }
@@ -422,7 +422,7 @@ public class TensorTest {
       assertEquals(4, t.shape().size(0));
 
       byte[] got = new byte[4];
-      t.read(DataBuffers.of(got));
+      t.copyTo(DataBuffers.of(got));
       assertArrayEquals(vector, got);
     }
   }
@@ -430,14 +430,14 @@ public class TensorTest {
   @Test
   public void testCreateFromArrayOfBoxed() {
     Integer[] vector = new Integer[] {1, 2, 3, 4};
-    try (TInt32 t = TInt32.tensorOf(Shape.of(4), d -> d.write(DataBuffers.ofObjects(vector)))) {
+    try (TInt32 t = TInt32.tensorOf(Shape.of(4), d -> d.copyFrom(DataBuffers.ofObjects(vector)))) {
       assertEquals(TInt32.class, t.type());
       assertEquals(DataType.DT_INT32, t.dataType());
       assertEquals(1, t.shape().numDimensions());
       assertEquals(4, t.shape().size(0));
 
       Integer[] got = new Integer[4];
-      t.read(DataBuffers.ofObjects(got));
+      t.copyTo(DataBuffers.ofObjects(got));
       assertArrayEquals(vector, got);
     }
   }

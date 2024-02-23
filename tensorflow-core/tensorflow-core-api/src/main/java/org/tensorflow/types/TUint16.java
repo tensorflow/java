@@ -89,7 +89,7 @@ public interface TUint16 extends ShortNdArray, TIntegral {
    * @return the new tensor
    */
   static TUint16 tensorOf(Shape shape, ShortDataBuffer data) {
-    return Tensor.of(TUint16.class, shape, d -> d.write(data));
+    return Tensor.of(TUint16.class, shape, d -> d.copyFrom(data));
   }
 
   /**

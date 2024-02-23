@@ -89,7 +89,7 @@ public interface TFloat64 extends DoubleNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat64 tensorOf(Shape shape, DoubleDataBuffer data) {
-    return Tensor.of(TFloat64.class, shape, d -> d.write(data));
+    return Tensor.of(TFloat64.class, shape, d -> d.copyFrom(data));
   }
 
   /**

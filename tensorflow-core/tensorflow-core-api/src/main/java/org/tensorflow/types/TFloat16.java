@@ -101,7 +101,7 @@ public interface TFloat16 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat16 tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(TFloat16.class, shape, d -> d.write(data));
+    return Tensor.of(TFloat16.class, shape, d -> d.copyFrom(data));
   }
 
   /**

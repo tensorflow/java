@@ -160,7 +160,7 @@ for temporary staging.
 2.  Execute the `release.sh` script. This will deploy artifacts on OSS Sonatype. All native artifacts
     previously temporarily staged by GitHub Actions will be fetched, signed and redeployed as well.
 
-    The script takes in paramater the sequence number of the staging repository created in OSSRH
+    The script takes in a parameter the sequence number of the staging repository created in OSSRH
     by the GitHub Actions workflow. You can retrieve this ID by looking in the staging repositories
     in OSSRH console directly, or check at the output of the step `Create Staging Repository` of the
     `prepare` job in the workflow execution, where the ID is printed.
