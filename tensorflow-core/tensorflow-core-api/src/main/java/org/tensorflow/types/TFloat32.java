@@ -89,7 +89,7 @@ public interface TFloat32 extends FloatNdArray, TFloating {
    * @return the new tensor
    */
   static TFloat32 tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(TFloat32.class, shape, d -> d.write(data));
+    return Tensor.of(TFloat32.class, shape, d -> d.copyFrom(data));
   }
 
   /**

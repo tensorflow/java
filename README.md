@@ -59,10 +59,8 @@ only binaries for the followings are being **supported and distributed** by this
 - `linux-x86_64`: Linux platforms on Intel chips
 - `linux-x86_64-gpu`: Linux platforms on Intel chips with Cuda GPU support
 - `macosx-x86_64`: MacOS X platforms on Intel chips
+- `macosx-arm64`: MacOS X platforms on Apple Silicon chips
 - `windows-x86_64`: Windows platforms on Intel chips
-
-*Note: No binaries are distributed to run TensorFlow Java on machines with Apple Silicon chips (`macosx-arm64`), these 
-should be build from sources. See [here](CONTRIBUTING.md#apple-silicon) for more details.*
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
 systems with no GPU support, you should add the following dependencies:
@@ -98,7 +96,7 @@ native dependencies as follows:
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
   <version>0.5.0</version>
-  <classifier>macosx-x86_64</classifier>
+  <classifier>macosx-arm64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
@@ -116,7 +114,7 @@ Only one dependency can be added per platform, meaning that you cannot add nativ
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
 required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
 
-- `tensorflow-core-platform`: Includes supports for `linux-x86_64`, `macosx-x86_64` and `windows-x86_64`
+- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `macosx-arm64`, `macosx-x86_64` and `windows-x86_64`
 
 For example, to run TensorFlow Java on any platform for which a binary is being distributed by this project, you can 
 simply add this dependency to your application:

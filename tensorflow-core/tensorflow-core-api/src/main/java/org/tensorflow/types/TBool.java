@@ -95,7 +95,7 @@ public interface TBool extends BooleanNdArray, TType {
    * @return the new tensor
    */
   static TBool tensorOf(Shape shape, BooleanDataBuffer data) {
-    return Tensor.of(TBool.class, shape, d -> d.write(data));
+    return Tensor.of(TBool.class, shape, d -> d.copyFrom(data));
   }
 
   /**

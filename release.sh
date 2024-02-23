@@ -34,7 +34,7 @@ fi
 # To get a shell to poke around the maven artifacts with.
 if [[ -z "${CMD}" ]]
 then
-  CMD="mvn clean deploy -B -e --settings ./settings.xml -Pdeploying -Preleasing"
+  CMD="mvn clean deploy -B -e --settings ./settings.xml -Pdeploying -Preleasing -DstagingRepositoryId=${STAGING_SEQ}"
 fi
 
 export GPG_TTY=$(tty)
@@ -46,8 +46,6 @@ then
 fi
 
 docker run \
-  -e IN_CONTAINER="true" \
-  -e STAGING_SEQ="${STAGING_SEQ}" \
   -e GPG_TTY="${GPG_TTY}" \
   -v ${PWD}:/tensorflow-java \
   -v ${HOME}/.gnupg:/root/.gnupg \

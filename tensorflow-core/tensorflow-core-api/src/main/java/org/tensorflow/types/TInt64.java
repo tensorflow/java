@@ -88,7 +88,7 @@ public interface TInt64 extends LongNdArray, TIntegral {
    * @return the new tensor
    */
   static TInt64 tensorOf(Shape shape, LongDataBuffer data) {
-    return Tensor.of(TInt64.class, shape, d -> d.write(data));
+    return Tensor.of(TInt64.class, shape, d -> d.copyFrom(data));
   }
 
   /**

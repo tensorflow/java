@@ -88,7 +88,7 @@ public interface TInt32 extends IntNdArray, TIntegral {
    * @return the new tensor
    */
   static TInt32 tensorOf(Shape shape, IntDataBuffer data) {
-    return Tensor.of(TInt32.class, shape, d -> d.write(data));
+    return Tensor.of(TInt32.class, shape, d -> d.copyFrom(data));
   }
 
   /**

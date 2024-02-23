@@ -88,7 +88,7 @@ public interface TUint8 extends ByteNdArray, TIntegral {
    * @return the new tensor
    */
   static TUint8 tensorOf(Shape shape, ByteDataBuffer data) {
-    return Tensor.of(TUint8.class, shape, d -> d.write(data));
+    return Tensor.of(TUint8.class, shape, d -> d.copyFrom(data));
   }
 
   /**
