@@ -194,7 +194,7 @@ jobs:
         run: |
           java -version
           mvn -version
-          mvn clean install -B -U -e
+          mvn clean install -B -U -e -Pdeploying
       - name: Deploy snapshot artifacts
         run: |
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
