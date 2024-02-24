@@ -144,7 +144,11 @@ public class AdaGrad extends Optimizer {
   protected <T extends TType> Op applyDense(Ops deps, Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
     return deps.train.applyAdagrad(
-        variable, slot, deps.dtypes.cast(deps.constant(learningRate), gradient.type()), gradient, opts);
+        variable,
+        slot,
+        deps.dtypes.cast(deps.constant(learningRate), gradient.type()),
+        gradient,
+        opts);
   }
 
   /** {@inheritDoc} */

@@ -29,8 +29,8 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_BOOL} tensors to a n-dimensional
- * data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_BOOL} tensors to a n-dimensional data
+ * space.
  */
 public final class TBoolMapper extends TensorMapper<TBool> {
 

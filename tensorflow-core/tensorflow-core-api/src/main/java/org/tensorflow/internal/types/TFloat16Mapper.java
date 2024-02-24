@@ -30,8 +30,8 @@ import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_HALF} tensors to a n-dimensional
- * data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_HALF} tensors to a n-dimensional data
+ * space.
  */
 public final class TFloat16Mapper extends TensorMapper<TFloat16> {
 

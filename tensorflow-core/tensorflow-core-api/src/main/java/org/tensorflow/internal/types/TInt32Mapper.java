@@ -29,8 +29,8 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_INT32} tensors to a
- * n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_INT32} tensors to a n-dimensional data
+ * space.
  */
 public final class TInt32Mapper extends TensorMapper<TInt32> {
 

@@ -40,10 +40,15 @@ public class TensorFlowTest {
 
   @Test
   public void loadTFTextLibrary() {
-    String libname = System.mapLibraryName("_sentence_breaking_ops").substring(3); // strips off the lib on macOS & Linux, don't care about Windows.
-    File customOpLibrary = Paths.get("", "target","tf-text-download","tensorflow_text","python","ops",libname).toFile();
+    String libname =
+        System.mapLibraryName("_sentence_breaking_ops")
+            .substring(3); // strips off the lib on macOS & Linux, don't care about Windows.
+    File customOpLibrary =
+        Paths.get("", "target", "tf-text-download", "tensorflow_text", "python", "ops", libname)
+            .toFile();
 
-    // Disable this test if the tf-text library is not available. This may happen on some platforms (e.g. Windows)
+    // Disable this test if the tf-text library is not available. This may happen on some platforms
+    // (e.g. Windows)
     assumeTrue(customOpLibrary.exists());
 
     OpList opList = TensorFlow.loadLibrary(customOpLibrary.getAbsolutePath());

@@ -30,8 +30,8 @@ import org.tensorflow.Graph;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TFJ_Scope;
+import org.tensorflow.internal.c_api.TF_Operation;
 
 /** A {@link Scope} implementation backed by a native scope. */
 public final class NativeScope implements Scope {
@@ -87,7 +87,8 @@ public final class NativeScope implements Scope {
 
   @Override
   public Scope withControlDependencies(Iterable<Op> controls) {
-    return withControlDependencyOps(StreamSupport.stream(controls.spliterator(), false)
+    return withControlDependencyOps(
+        StreamSupport.stream(controls.spliterator(), false)
             .map(Op::op)
             .collect(Collectors.toList()));
   }

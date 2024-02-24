@@ -661,7 +661,7 @@ public class MetricsHelper {
     Class<T> type = x.type();
     Shape xShape = x.shape();
     // top has the same rank as x; the last dimension becomes indices of the topK features.
-    TopK<T, TInt32> top = tf.nn.topK(x, tf.constant(topK), new Options[]{TopK.sorted(false)});
+    TopK<T, TInt32> top = tf.nn.topK(x, tf.constant(topK), new Options[] {TopK.sorted(false)});
     // oneHot has an additional dimension: the one-hot representation of each topK index.
     OneHot<TInt32> oneHot =
         tf.oneHot(

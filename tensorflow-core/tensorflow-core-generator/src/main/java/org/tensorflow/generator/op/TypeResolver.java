@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.tensorflow.proto.AttrValue;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.proto.OpDef;
@@ -41,6 +40,7 @@ final class TypeResolver {
 
   static TypeName WILDCARD = WildcardTypeName.subtypeOf(TypeName.OBJECT);
   static TypeName STRING = TypeName.get(java.lang.String.class);
+
   /** Data types that are real numbers. */
   private static final Set<DataType> realNumberTypes = new HashSet<>();
 
@@ -66,10 +66,13 @@ final class TypeResolver {
 
   /** The op def to get types for. */
   private final OpDef op;
+
   /** The processed argument types. */
   private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
+
   /** Known types. Not simply a cache. */
   private final Map<String, ResolvedType> known = new HashMap<>();
+
   /**
    * Attributes that were reached while getting the types of inputs.
    *

@@ -17,14 +17,13 @@ limitations under the License.
 
 package org.tensorflow.internal.c_api;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
+
 import com.google.protobuf.Message;
+import java.nio.ByteBuffer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
-
-import java.nio.ByteBuffer;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Buffer extends Pointer {

@@ -16,24 +16,16 @@ limitations under the License.
 */
 package org.tensorflow.internal.c_api.presets;
 
+import java.util.List;
 import org.bytedeco.javacpp.ClassProperties;
 import org.bytedeco.javacpp.LoadEnabled;
 import org.bytedeco.javacpp.Loader;
-import org.bytedeco.javacpp.annotation.Adapter;
-import org.bytedeco.javacpp.annotation.Cast;
 import org.bytedeco.javacpp.annotation.NoException;
 import org.bytedeco.javacpp.annotation.Platform;
 import org.bytedeco.javacpp.annotation.Properties;
 import org.bytedeco.javacpp.tools.Info;
 import org.bytedeco.javacpp.tools.InfoMap;
 import org.bytedeco.javacpp.tools.InfoMapper;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
 
 /**
  * @author Samuel Audet
@@ -59,7 +51,8 @@ import java.util.List;
             "tensorflow/c/eager/c_api_experimental.h",
 
             // Following are C API extensions maintained within TF Java, see src/main/native.
-            // Binding directly the C++ API with JavaCPP turned out to be too precarious between different releases,
+            // Binding directly the C++ API with JavaCPP turned out to be too precarious between
+            // different releases,
             // so it is simpler to write our own C API only exposing what we need from it.
             "tfj_graph.h",
             "tfj_scope.h",
@@ -137,58 +130,73 @@ public class tensorflow implements LoadEnabled, InfoMapper {
   @Override
   public void map(InfoMap infoMap) {
     infoMap
-            .put(new Info("TF_CAPI_EXPORT", "TF_Bool", "TF_GUARDED_BY", "TF_MUST_USE_RESULT")
-                    .cppTypes()
-                    .annotations())
-            .put(new Info("TF_Buffer::data")
-                    .javaText("public native @Const Pointer data(); public native TF_Buffer data(Pointer data);"))
-            .put(new Info("TF_Status")
-                    .pointerTypes("TF_Status")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_Status"))
-            .put(new Info("TF_Buffer")
-                    .pointerTypes("TF_Buffer")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_Buffer"))
-            .put(new Info("TF_Tensor")
-                    .pointerTypes("TF_Tensor")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_Tensor"))
-            .put(new Info("TF_Session")
-                    .pointerTypes("TF_Session")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_Session"))
-            .put(new Info("TF_SessionOptions")
-                    .pointerTypes("TF_SessionOptions")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_SessionOptions"))
-            .put(new Info("TF_Graph")
-                    .pointerTypes("TF_Graph")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_Graph")
-                    .purify())
-            .put(new Info("TF_Function")
-                    .pointerTypes("TF_Function")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_Function"))
-            .put(new Info("TF_ImportGraphDefOptions")
-                    .pointerTypes("TF_ImportGraphDefOptions")
-                    .base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
-            .put(new Info("TFE_Context")
-                    .pointerTypes("TFE_Context")
-                    .base("org.tensorflow.internal.c_api.AbstractTFE_Context"))
-            .put(new Info("TFE_ContextOptions")
-                    .pointerTypes("TFE_ContextOptions")
-                    .base("org.tensorflow.internal.c_api.AbstractTFE_ContextOptions"))
-            .put(new Info("TFE_Op")
-                    .pointerTypes("TFE_Op")
-                    .base("org.tensorflow.internal.c_api.AbstractTFE_Op"))
-            .put(new Info("TFE_TensorHandle")
-                    .pointerTypes("TFE_TensorHandle")
-                    .base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
-            .put(new Info("TF_WhileParams")
-                    .purify())
-            .put(new Info("TFE_CustomDeviceTensorHandle::deallocator")
-                    .javaNames("cdt_deallocator")
-    );
+        .put(
+            new Info("TF_CAPI_EXPORT", "TF_Bool", "TF_GUARDED_BY", "TF_MUST_USE_RESULT")
+                .cppTypes()
+                .annotations())
+        .put(
+            new Info("TF_Buffer::data")
+                .javaText(
+                    "public native @Const Pointer data(); public native TF_Buffer data(Pointer data);"))
+        .put(
+            new Info("TF_Status")
+                .pointerTypes("TF_Status")
+                .base("org.tensorflow.internal.c_api.AbstractTF_Status"))
+        .put(
+            new Info("TF_Buffer")
+                .pointerTypes("TF_Buffer")
+                .base("org.tensorflow.internal.c_api.AbstractTF_Buffer"))
+        .put(
+            new Info("TF_Tensor")
+                .pointerTypes("TF_Tensor")
+                .base("org.tensorflow.internal.c_api.AbstractTF_Tensor"))
+        .put(
+            new Info("TF_Session")
+                .pointerTypes("TF_Session")
+                .base("org.tensorflow.internal.c_api.AbstractTF_Session"))
+        .put(
+            new Info("TF_SessionOptions")
+                .pointerTypes("TF_SessionOptions")
+                .base("org.tensorflow.internal.c_api.AbstractTF_SessionOptions"))
+        .put(
+            new Info("TF_Graph")
+                .pointerTypes("TF_Graph")
+                .base("org.tensorflow.internal.c_api.AbstractTF_Graph")
+                .purify())
+        .put(
+            new Info("TF_Function")
+                .pointerTypes("TF_Function")
+                .base("org.tensorflow.internal.c_api.AbstractTF_Function"))
+        .put(
+            new Info("TF_ImportGraphDefOptions")
+                .pointerTypes("TF_ImportGraphDefOptions")
+                .base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
+        .put(
+            new Info("TFE_Context")
+                .pointerTypes("TFE_Context")
+                .base("org.tensorflow.internal.c_api.AbstractTFE_Context"))
+        .put(
+            new Info("TFE_ContextOptions")
+                .pointerTypes("TFE_ContextOptions")
+                .base("org.tensorflow.internal.c_api.AbstractTFE_ContextOptions"))
+        .put(
+            new Info("TFE_Op")
+                .pointerTypes("TFE_Op")
+                .base("org.tensorflow.internal.c_api.AbstractTFE_Op"))
+        .put(
+            new Info("TFE_TensorHandle")
+                .pointerTypes("TFE_TensorHandle")
+                .base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
+        .put(new Info("TF_WhileParams").purify())
+        .put(new Info("TFE_CustomDeviceTensorHandle::deallocator").javaNames("cdt_deallocator"));
 
-    // TensorFlow is remapping all TSL symbols into its own namespace, so avoid generate bindings that requires linkage
+    // TensorFlow is remapping all TSL symbols into its own namespace, so avoid generate bindings
+    // that requires linkage
     // to TSL symbols directly (at this time 02/12/2024, this is still not possible in Windows, see
     // https://github.com/tensorflow/tensorflow/issues/62579)
-    infoMap.put(new Info("TSL_Status", "TSL_PayloadVisitor", "TF_PayloadVisitor", "TF_ForEachPayload").skip());
+    infoMap.put(
+        new Info("TSL_Status", "TSL_PayloadVisitor", "TF_PayloadVisitor", "TF_ForEachPayload")
+            .skip());
 
     // This C++-API dependent method appears somehow at the bottom of c/eager/c_api.h, skip it
     infoMap.put(new Info("TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)").skip());

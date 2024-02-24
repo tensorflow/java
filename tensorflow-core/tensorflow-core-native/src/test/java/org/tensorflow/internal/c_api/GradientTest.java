@@ -16,14 +16,14 @@ limitations under the License.
 */
 package org.tensorflow.internal.c_api;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_HasGradient;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_RegisterCustomGradient;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 // WARNING: Gradient registry in native library is stateful across all tests
 @DisabledOnOs(OS.WINDOWS)

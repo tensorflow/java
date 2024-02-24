@@ -29,8 +29,8 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_DOUBLE} tensors to a
- * n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_DOUBLE} tensors to a n-dimensional data
+ * space.
  */
 public final class TFloat64Mapper extends TensorMapper<TFloat64> {
 

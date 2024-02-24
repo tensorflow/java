@@ -15,12 +15,11 @@ limitations under the License.
 
 package org.tensorflow.internal.c_api;
 
-import org.tensorflow.internal.c_api.global.tensorflow;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.tensorflow.internal.c_api.global.tensorflow;
 
 /**
  * Helper class for loading the TensorFlow Java native library.
@@ -130,7 +129,8 @@ public final class TFJ_RuntimeLibrary {
   }
 
   private static boolean resourceExists(String baseName) {
-    return TFJ_RuntimeLibrary.class.getClassLoader().getResource(makeResourceName(baseName)) != null;
+    return TFJ_RuntimeLibrary.class.getClassLoader().getResource(makeResourceName(baseName))
+        != null;
   }
 
   private static String getVersionedLibraryName(String libFilename) {

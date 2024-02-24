@@ -30,8 +30,8 @@ import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_BFLOAT16} tensors to a
- * n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_BFLOAT16} tensors to a n-dimensional data
+ * space.
  */
 public final class TBfloat16Mapper extends TensorMapper<TBfloat16> {
 

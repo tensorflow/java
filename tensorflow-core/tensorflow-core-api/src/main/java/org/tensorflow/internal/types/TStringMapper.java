@@ -37,8 +37,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_STRING} tensors to a
- * n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_STRING} tensors to a n-dimensional data
+ * space.
  */
 public final class TStringMapper extends TensorMapper<TString> {
 

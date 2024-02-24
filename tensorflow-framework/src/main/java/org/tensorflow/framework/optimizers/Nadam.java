@@ -33,6 +33,7 @@ public class Nadam extends Optimizer {
   public static final String MOMENTUM = "momentum";
   private static final float DECAY_BASE = 0.96f;
   private static final float DECAY = 0.004f;
+
   /** The learning rate. */
   private final float learningRate;
 

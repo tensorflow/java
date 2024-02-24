@@ -16,6 +16,11 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -27,12 +32,6 @@ import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.nn.NthElement;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 // FIXME: Since TF 2.10.1, custom gradient registration is failing on Windows, see
 //        https://github.com/tensorflow/java/issues/486
@@ -107,10 +106,11 @@ public class CustomGradientTest {
   @Test
   public void applyGradientOnMultipleNodesOfSameOpType() {
     try (Graph g = new Graph()) {
-      assertTrue(TensorFlow.registerCustomGradient(
+      assertTrue(
+          TensorFlow.registerCustomGradient(
               Merge.Inputs.class,
-              (tf, op, gradInputs) -> gradInputs.stream().map(i -> tf.constant(-10)).collect(Collectors.toList())
-      ));
+              (tf, op, gradInputs) ->
+                  gradInputs.stream().map(i -> tf.constant(-10)).collect(Collectors.toList())));
       var tf = Ops.create(g);
       var initialValue = tf.constant(10);
       var merge1 = tf.merge(List.of(initialValue, tf.constant(20)));

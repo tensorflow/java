@@ -28,8 +28,8 @@ import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_INT64} tensors to a
- * n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_INT64} tensors to a n-dimensional data
+ * space.
  */
 public final class TInt64Mapper extends TensorMapper<TInt64> {
 
