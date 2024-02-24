@@ -17,13 +17,13 @@ limitations under the License.
 
 package org.tensorflow.internal.c_api;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
+
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.annotation.Properties;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Session extends Pointer {

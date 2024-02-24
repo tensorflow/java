@@ -18,17 +18,6 @@ package org.tensorflow.generator.op;
 import com.google.protobuf.TextFormat;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import org.bytedeco.javacpp.BytePointer;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.tensorflow.internal.c_api.TF_ApiDefMap;
-import org.tensorflow.internal.c_api.TF_Buffer;
-import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.internal.c_api.global.tensorflow;
-import org.tensorflow.proto.ApiDef;
-import org.tensorflow.proto.ApiDefs;
-import org.tensorflow.proto.OpDef;
-import org.tensorflow.proto.OpList;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,6 +37,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import org.bytedeco.javacpp.BytePointer;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.tensorflow.internal.c_api.TF_ApiDefMap;
+import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.c_api.global.tensorflow;
+import org.tensorflow.proto.ApiDef;
+import org.tensorflow.proto.ApiDefs;
+import org.tensorflow.proto.OpDef;
+import org.tensorflow.proto.OpList;
 
 public final class OpGenerator {
 
@@ -68,7 +67,8 @@ public final class OpGenerator {
           + "=======================================================================*/"
           + "\n";
 
-  private static final String HELP_TEXT = "Args should be: [--help] [-p <basePackage>] [-a <apiDefsPath>] [-o <outputPath>] [-c] [<opDefPath>]";
+  private static final String HELP_TEXT =
+      "Args should be: [--help] [-p <basePackage>] [-a <apiDefsPath>] [-o <outputPath>] [-c] [<opDefPath>]";
 
   private static final String DEFAULT_OP_DEF_FILE = "org/tensorflow/ops.pbtxt";
 
@@ -148,7 +148,8 @@ public final class OpGenerator {
       var opDefsFile = OpGenerator.class.getClassLoader().getResource(DEFAULT_OP_DEF_FILE);
 
       if (opDefsFile == null) {
-        throw new FileNotFoundException("\"" + DEFAULT_OP_DEF_FILE + "\" cannot be found in native artifact");
+        throw new FileNotFoundException(
+            "\"" + DEFAULT_OP_DEF_FILE + "\" cannot be found in native artifact");
       }
       try (var opDefsInput = opDefsFile.openStream()) {
         opList = readOpList(opDefsFile.getFile(), opDefsInput);
@@ -208,7 +209,8 @@ public final class OpGenerator {
   private final File outputDir;
   private final boolean createMissingApiDefs;
 
-  private OpGenerator(String basePackage, String apiDefsPath, File outputDir, boolean createMissingApiDefs) {
+  private OpGenerator(
+      String basePackage, String apiDefsPath, File outputDir, boolean createMissingApiDefs) {
     this.basePackage = basePackage;
     this.apiDefsPath = Path.of(apiDefsPath);
     this.outputDir = outputDir;
@@ -221,7 +223,8 @@ public final class OpGenerator {
       apiDefMap = tensorflow.TF_NewApiDefMap(TF_Buffer.newBufferFromString(opList), status);
       status.throwExceptionIfNotOK();
 
-      // Check if there is any missing APIs in the provided path, if so give a chance to the invoker of this generator
+      // Check if there is any missing APIs in the provided path, if so give a chance to the invoker
+      // of this generator
       // to create one before continuing
       for (OpDef opDef : opList.getOpList()) {
         var apiDefFile = apiDefsPath.resolve("api_def_" + opDef.getName() + ".pbtxt").toFile();
@@ -241,13 +244,15 @@ public final class OpGenerator {
 
       Map<OpDef, ApiDef> defs = new LinkedHashMap<>();
       for (OpDef opDef : opList.getOpList()) {
-        var apiDef = tensorflow.TF_ApiDefMapGet(apiDefMap, opDef.getName(), opDef.getName().length(), status);
+        var apiDef =
+            tensorflow.TF_ApiDefMapGet(
+                apiDefMap, opDef.getName(), opDef.getName().length(), status);
         defs.put(opDef, ApiDef.parseFrom(apiDef.copyData()));
       }
       return defs;
 
     } catch (Exception e) {
-      throw e instanceof RuntimeException ? (RuntimeException)e : new RuntimeException(e);
+      throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
 
     } finally {
       if (apiDefMap != null) {
@@ -258,34 +263,48 @@ public final class OpGenerator {
 
   private void mergeBaseApiDefs(TF_ApiDefMap apiDefMap, TF_Status status) {
     try {
-      var resourceResolver = new PathMatchingResourcePatternResolver(OpGenerator.class.getClassLoader());
+      var resourceResolver =
+          new PathMatchingResourcePatternResolver(OpGenerator.class.getClassLoader());
       var apiDefs = resourceResolver.getResources("org/tensorflow/base_api/api_def_*.pbtxt");
       for (var apiDef : apiDefs) {
         try (var apiDefInput = apiDef.getInputStream()) {
-          tensorflow.TF_ApiDefMapPut(apiDefMap, new BytePointer(apiDefInput.readAllBytes()), apiDef.contentLength(), status);
+          tensorflow.TF_ApiDefMapPut(
+              apiDefMap,
+              new BytePointer(apiDefInput.readAllBytes()),
+              apiDef.contentLength(),
+              status);
           status.throwExceptionIfNotOK();
         } catch (IOException e) {
-          throw new RuntimeException("Failed to parse API definition in resource \"" + apiDef.getURI() + "\"", e);
+          throw new RuntimeException(
+              "Failed to parse API definition in resource \"" + apiDef.getURI() + "\"", e);
         }
       }
     } catch (IOException e) {
-      throw new RuntimeException("Failed to browse API definitions in resource folder \"" + apiDefsPath + "\"", e);
+      throw new RuntimeException(
+          "Failed to browse API definitions in resource folder \"" + apiDefsPath + "\"", e);
     }
   }
 
   private void mergeApiDefs(TF_ApiDefMap apiDefMap, TF_Status status) {
     try {
-      Files.walk(apiDefsPath).filter(p -> p.toString().endsWith(".pbtxt")).forEach(p -> {
-        try {
-          byte[] content = Files.readAllBytes(p);
-          tensorflow.TF_ApiDefMapPut(apiDefMap, new BytePointer(content), content.length, status);
-          status.throwExceptionIfNotOK();
-        } catch (IOException e) {
-          throw new RuntimeException("Failed to parse API definition in resource file \"" + p.toString() + "\"", e);
-        }
-      });
+      Files.walk(apiDefsPath)
+          .filter(p -> p.toString().endsWith(".pbtxt"))
+          .forEach(
+              p -> {
+                try {
+                  byte[] content = Files.readAllBytes(p);
+                  tensorflow.TF_ApiDefMapPut(
+                      apiDefMap, new BytePointer(content), content.length, status);
+                  status.throwExceptionIfNotOK();
+                } catch (IOException e) {
+                  throw new RuntimeException(
+                      "Failed to parse API definition in resource file \"" + p.toString() + "\"",
+                      e);
+                }
+              });
     } catch (IOException e) {
-      throw new RuntimeException("Failed to browse API definitions in resource folder \"" + apiDefsPath + "\"", e);
+      throw new RuntimeException(
+          "Failed to browse API definitions in resource folder \"" + apiDefsPath + "\"", e);
     }
   }
 
@@ -296,23 +315,28 @@ public final class OpGenerator {
 
     ApiDef.Visibility visibility = null;
     do {
-      System.out.print("    Choose visibility of this op [v]isible/[h]idden/[s]kip/[d]efault (default=d): ");
+      System.out.print(
+          "    Choose visibility of this op [v]isible/[h]idden/[s]kip/[d]efault (default=d): ");
       var value = USER_PROMPT.nextLine().trim();
       if (!value.isEmpty()) {
         switch (value) {
-          case "V": case "v":
+          case "V":
+          case "v":
             visibility = ApiDef.Visibility.VISIBLE;
             apiDef.setVisibility(visibility);
             break;
-          case "H": case "h":
+          case "H":
+          case "h":
             visibility = ApiDef.Visibility.HIDDEN;
             apiDef.setVisibility(visibility);
             break;
-          case "S": case "s":
+          case "S":
+          case "s":
             visibility = ApiDef.Visibility.SKIP;
             apiDef.setVisibility(visibility);
             break;
-          case "D": case "d":
+          case "D":
+          case "d":
             visibility = ApiDef.Visibility.DEFAULT_VISIBILITY;
             break;
           default:
@@ -350,7 +374,10 @@ public final class OpGenerator {
     } catch (Exception e) {
       // If something goes wrong, erase the file we've just created
       if (!apiDefFile.delete()) {
-        System.err.println("Cannot delete invalid API definition file \"" + apiDefFile.getPath() + "\", please clean up manually");
+        System.err.println(
+            "Cannot delete invalid API definition file \""
+                + apiDefFile.getPath()
+                + "\", please clean up manually");
       }
       throw e;
     }
@@ -407,7 +434,7 @@ public final class OpGenerator {
                               return new FullOpDef(
                                   entry.getKey(),
                                   entry.getValue(),
-                                      basePackage,
+                                  basePackage,
                                   basePackage + "." + pack,
                                   pack,
                                   name,
@@ -425,8 +452,7 @@ public final class OpGenerator {
 
     statefulPairs.forEach(
         (pair) -> {
-          pair.buildOpClasses()
-              .forEach((spec) -> writeToFile(spec, pair.getPackageName()));
+          pair.buildOpClasses().forEach((spec) -> writeToFile(spec, pair.getPackageName()));
         });
   }
 }

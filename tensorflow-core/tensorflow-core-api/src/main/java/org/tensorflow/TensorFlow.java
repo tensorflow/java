@@ -15,6 +15,8 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_HasGradient;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_RegisterCustomGradient;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHandle;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
@@ -22,29 +24,26 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetOpList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_RegisterFilesystemPlugin;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_HasGradient;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_RegisterCustomGradient;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
+import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
+import org.tensorflow.internal.c_api.TFJ_RuntimeLibrary;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
-import org.tensorflow.internal.c_api.TFJ_RuntimeLibrary;
 import org.tensorflow.op.CustomGradient;
 import org.tensorflow.op.RawCustomGradient;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.proto.OpList;
-
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /** Static utility methods describing the TensorFlow runtime. */
 public final class TensorFlow {
@@ -199,7 +198,8 @@ public final class TensorFlow {
    * @return {@code true} if the gradient was registered, {@code false} if there was already a
    *     gradient registered for this op
    */
-  public static synchronized boolean registerCustomGradient(String opType, RawCustomGradient gradient) {
+  public static synchronized boolean registerCustomGradient(
+      String opType, RawCustomGradient gradient) {
     if (isWindowsOs()) {
       throw new UnsupportedOperationException(
           "Custom gradient registration is not supported on Windows systems.");

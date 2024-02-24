@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.tensorflow.internal.c_api;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.*;
+
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
 import org.tensorflow.exceptions.TFFailedPreconditionException;
@@ -27,8 +29,6 @@ import org.tensorflow.exceptions.TFResourceExhaustedException;
 import org.tensorflow.exceptions.TFUnauthenticatedException;
 import org.tensorflow.exceptions.TFUnimplementedException;
 import org.tensorflow.exceptions.TensorFlowException;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Status extends Pointer {

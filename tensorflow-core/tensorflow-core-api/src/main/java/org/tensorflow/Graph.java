@@ -15,6 +15,7 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_GetGraphId;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
@@ -28,7 +29,6 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_GetGraphId;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayDeque;
@@ -50,6 +50,7 @@ import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.exceptions.TensorFlowException;
+import org.tensorflow.internal.c_api.TFJ_GraphId;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
@@ -58,7 +59,6 @@ import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
-import org.tensorflow.internal.c_api.TFJ_GraphId;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.OpScope;
@@ -1319,7 +1319,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .build();
   }
 
-  private static final Map<TFJ_GraphId, Graph> ALL_GRAPHS = Collections.synchronizedMap(new WeakHashMap<>());
+  private static final Map<TFJ_GraphId, Graph> ALL_GRAPHS =
+      Collections.synchronizedMap(new WeakHashMap<>());
 
   /**
    * Find the graph with the matching ID.

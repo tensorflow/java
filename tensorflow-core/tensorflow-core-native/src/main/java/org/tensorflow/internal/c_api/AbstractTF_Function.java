@@ -15,10 +15,10 @@ limitations under the License.
 */
 package org.tensorflow.internal.c_api;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteFunction;
+
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
-
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteFunction;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Function extends Pointer {

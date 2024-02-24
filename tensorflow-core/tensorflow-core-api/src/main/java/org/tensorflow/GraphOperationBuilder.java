@@ -15,6 +15,7 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_UnmapOperationName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddControlInput;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInput;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInputList;
@@ -39,7 +40,6 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrType;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTypeList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetDevice;
-import static org.tensorflow.internal.c_api.global.tensorflow.TFJ_UnmapOperationName;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;

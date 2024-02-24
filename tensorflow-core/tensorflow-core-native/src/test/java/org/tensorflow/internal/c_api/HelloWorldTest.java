@@ -15,10 +15,10 @@ limitations under the License.
 
 package org.tensorflow.internal.c_api;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
+
+import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
 

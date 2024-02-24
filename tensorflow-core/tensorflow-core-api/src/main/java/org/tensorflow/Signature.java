@@ -39,6 +39,7 @@ public class Signature {
 
     /** The name of the tensor's operand in the graph */
     public final String name;
+
     /** The data type of the tensor */
     public final DataType dataType;
 

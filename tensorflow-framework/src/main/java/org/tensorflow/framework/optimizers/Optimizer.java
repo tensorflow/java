@@ -37,11 +37,14 @@ import org.tensorflow.types.family.TType;
 public abstract class Optimizer {
 
   public static final String VARIABLE_V2 = "VariableV2";
+
   /** Global state variables */
   // TODO make this be used.
   protected final List<Variable<?>> globals;
+
   /** The Graph this optimizer is operating on. */
   protected final Graph graph;
+
   /** The ops builder for the graph. */
   protected final Ops tf;
 
@@ -168,7 +171,11 @@ public abstract class Optimizer {
         gradsAndVars.stream().map(GradAndVar::getVariable).collect(Collectors.toList());
 
     createSlots(variables);
-    List<Op> gradients = gradsAndVars.stream().map(GradAndVar::getGradient).filter(g -> !g.isClosed()).collect(Collectors.toList());
+    List<Op> gradients =
+        gradsAndVars.stream()
+            .map(GradAndVar::getGradient)
+            .filter(g -> !g.isClosed())
+            .collect(Collectors.toList());
     Ops tfOpsGrads = tf.withControlDependencies(gradients);
 
     Optional<Op> prepOp = prepare(name + "/prepare");
@@ -275,7 +282,8 @@ public abstract class Optimizer {
    * @param <T> The type of the variable.
    * @return An operand which applies the desired optimizer update to the variable.
    */
-  protected abstract <T extends TType> Op applyDense(Ops opDependencies, Output<T> gradient, Output<T> variable);
+  protected abstract <T extends TType> Op applyDense(
+      Ops opDependencies, Output<T> gradient, Output<T> variable);
 
   /**
    * Gathers up the update operations into a single op that can be used as a run target.

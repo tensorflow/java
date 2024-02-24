@@ -29,8 +29,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_FLOAT} tensors to a
- * n-dimensional data space.
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_FLOAT} tensors to a n-dimensional data
+ * space.
  */
 public final class TFloat32Mapper extends TensorMapper<TFloat32> {
 

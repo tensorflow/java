@@ -41,9 +41,9 @@ import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.proto.ConfigProto;
 import org.tensorflow.proto.RunOptions;
+import org.tensorflow.proto.SaverDef;
 import org.tensorflow.proto.SignatureDef;
 import org.tensorflow.proto.TensorInfo;
-import org.tensorflow.proto.SaverDef;
 import org.tensorflow.types.TFloat32;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */

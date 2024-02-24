@@ -296,7 +296,11 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   public static Dataset tfRecordDataset(
       Ops tf, String filename, String compressionType, long bufferSize) {
     return new TFRecordDataset(
-        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize), tf.constant(0L));
+        tf,
+        tf.constant(filename),
+        tf.constant(compressionType),
+        tf.constant(bufferSize),
+        tf.constant(0L));
   }
 
   /**

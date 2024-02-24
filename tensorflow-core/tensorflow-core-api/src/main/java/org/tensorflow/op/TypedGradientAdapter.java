@@ -17,16 +17,15 @@ limitations under the License.
 */
 package org.tensorflow.op;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import org.tensorflow.AbstractGradientAdapter;
 import org.tensorflow.Graph;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.internal.c_api.TFJ_Scope;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 /** A native adapter for {@link CustomGradient}. */
 final class TypedGradientAdapter<T extends RawOpInputs<?>> extends AbstractGradientAdapter {
@@ -44,10 +43,12 @@ final class TypedGradientAdapter<T extends RawOpInputs<?>> extends AbstractGradi
   }
 
   @Override
-  protected List<Operand<?>> apply(Graph graph, TFJ_Scope scope, GraphOperation operation, List<Output<?>> gradInputs) {
+  protected List<Operand<?>> apply(
+      Graph graph, TFJ_Scope scope, GraphOperation operation, List<Output<?>> gradInputs) {
     try {
       T rawOp = ctor.newInstance(operation);
-      Scope nativeScope = new NativeScope(scope, graph, null).withSubScope(rawOp.getOutputs().op().name());
+      Scope nativeScope =
+          new NativeScope(scope, graph, null).withSubScope(rawOp.getOutputs().op().name());
       return gradient.call(new Ops(nativeScope), rawOp, gradInputs);
 
     } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {

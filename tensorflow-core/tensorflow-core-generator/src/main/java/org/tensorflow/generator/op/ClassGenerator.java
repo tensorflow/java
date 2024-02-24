@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import javax.lang.model.element.Modifier;
-
 import org.tensorflow.proto.ApiDef;
 import org.tensorflow.proto.ApiDef.Endpoint;
 import org.tensorflow.proto.ApiDef.Visibility;
