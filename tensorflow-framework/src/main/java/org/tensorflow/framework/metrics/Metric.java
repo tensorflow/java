@@ -22,7 +22,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /** Interface for metrics */
-interface Metric {
+public interface Metric {
 
   /**
    * Creates a List of Operations to update the metric state based on input values.
