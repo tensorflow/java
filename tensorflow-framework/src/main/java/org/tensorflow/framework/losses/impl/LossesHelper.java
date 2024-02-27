@@ -282,11 +282,12 @@ public class LossesHelper {
     if (reduction == Reduction.NONE) {
       loss = weightedLoss;
     } else {
-      loss =
-          tf.reduceSum(weightedLoss, allAxes(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
       if (reduction == Reduction.AUTO || reduction == Reduction.SUM_OVER_BATCH_SIZE) {
-        loss = safeMean(tf, loss, weightedLoss.shape().size());
+        loss = safeMean(tf, weightedLoss);
       }
+      else
+    	  loss = tf.reduceSum(weightedLoss, allAxes(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
+    	  
     }
     return loss;
   }
@@ -302,9 +303,9 @@ public class LossesHelper {
    *     zero, then zero is returned.
    */
   public static <T extends TNumber> Operand<T> safeMean(
-      Ops tf, Operand<T> losses, long numElements) {
-    Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses));
-    return tf.math.divNoNan(totalLoss, cast(tf, tf.constant(numElements), losses.type()));
+      Ops tf, Operand<T> losses) {
+    Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses),ReduceSum.keepDims(Boolean.FALSE));
+    return tf.math.divNoNan(totalLoss, cast(tf,tf.shape.size(tf.shape(losses)),losses.type()));
   }
 
   /**
