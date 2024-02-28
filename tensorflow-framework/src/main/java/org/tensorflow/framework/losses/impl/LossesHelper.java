@@ -51,7 +51,7 @@ public class LossesHelper {
    * @param tf the TensorFlow Ops
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
-   *     </code>.
+   *     </code> .
    * @param <T> the data type for the labels, predictions and result
    * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will
    *     be null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
@@ -77,7 +77,7 @@ public class LossesHelper {
    * @param tf the TensorFlow Ops
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
-   *     </code>.
+   *     </code> .
    * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match
    *     <code>
    *     prediction</code>.
@@ -179,7 +179,7 @@ public class LossesHelper {
    *
    * @param tf the TensorFlowOps
    * @param labels Label values, a <code>Tensor</code> whose dimensions match <code>predictions
-   *     </code>.
+   *     </code> .
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
    * @param <T> the data type for the labels, predictions and result
    * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
@@ -194,7 +194,7 @@ public class LossesHelper {
    *
    * @param tf the TensorFlowOps
    * @param labels Label values, a <code>Operand</code> whose dimensions match <code>predictions
-   *     </code>.
+   *     </code> .
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
    * @param expectedRankDiff Expected result of <code>rank(predictions) - rank(labels)</code>.
    * @param <T> the data type for the labels, predictions and result
@@ -222,11 +222,13 @@ public class LossesHelper {
     // Use dynamic rank.
 
     // TODO: hold for lazy select feature,
-    //  Operand<TInt32> rankDiff = tf.math.sub(tf.rank(predictions), tf.rank(labels));
+    // Operand<TInt32> rankDiff = tf.math.sub(tf.rank(predictions),
+    // tf.rank(labels));
     if (predictionsRank == Shape.UNKNOWN_SIZE && Shape.isCompatible(predictionsShape.size(-1), 1)) {
       /*
-       * TODO, if we ever get a select that does lazy evaluation, but for now do the tf.squeeze
-       * predictions = tf.select( tf.math.equal(tf.constant(expectedRankDiff+1),rankDiff ),
+       * TODO, if we ever get a select that does lazy evaluation, but for now do the
+       * tf.squeeze predictions = tf.select(
+       * tf.math.equal(tf.constant(expectedRankDiff+1),rankDiff ),
        * tf.squeeze(predictions, Squeeze.axis(Arrays.asList(-1L))), predictions ); *
        */
       predictions = tf.squeeze(predictions, Squeeze.axis(Collections.singletonList(-1L)));
@@ -284,10 +286,10 @@ public class LossesHelper {
     } else {
       if (reduction == Reduction.AUTO || reduction == Reduction.SUM_OVER_BATCH_SIZE) {
         loss = safeMean(tf, weightedLoss);
-      }
-      else
-    	  loss = tf.reduceSum(weightedLoss, allAxes(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
-    	  
+      } else
+        loss =
+            tf.reduceSum(
+                weightedLoss, allAxes(tf, weightedLoss), ReduceSum.keepDims(Boolean.FALSE));
     }
     return loss;
   }
@@ -302,10 +304,10 @@ public class LossesHelper {
    * @return A scalar representing the mean of <code>losses</code>. If <code>numElements</code> is
    *     zero, then zero is returned.
    */
-  public static <T extends TNumber> Operand<T> safeMean(
-      Ops tf, Operand<T> losses) {
-    Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses),ReduceSum.keepDims(Boolean.FALSE));
-    return tf.math.divNoNan(totalLoss, cast(tf,tf.shape.size(tf.shape(losses)),losses.type()));
+  public static <T extends TNumber> Operand<T> safeMean(Ops tf, Operand<T> losses) {
+    Operand<T> totalLoss =
+        tf.reduceSum(losses, allAxes(tf, losses), ReduceSum.keepDims(Boolean.FALSE));
+    return tf.math.divNoNan(totalLoss, cast(tf, tf.shape.size(tf.shape(losses)), losses.type()));
   }
 
   /**
@@ -349,7 +351,8 @@ public class LossesHelper {
         tf.math.logicalAnd(
             tf.reduceAll(tf.math.greaterEqual(values, minValue), allDims),
             tf.reduceAll(tf.math.lessEqual(values, maxValue), allDims));
-    // Graph and Eager mode need to be handled differently, control dependencies are not allowed in
+    // Graph and Eager mode need to be handled differently, control dependencies are
+    // not allowed in
     // Eager mode
     if (tf.scope().env().isGraph()) {
       AssertThat assertThat =
@@ -399,7 +402,8 @@ public class LossesHelper {
       } else return values;
     } else { // use dynamic shape
       Operand<TBool> cond = tf.math.equal(tf.shape.size(tf.shape(diff.out())), tf.constant(0));
-      // Graph and Eager mode need to be handled differently, control dependencies are not allowed
+      // Graph and Eager mode need to be handled differently, control dependencies are
+      // not allowed
       // in Eager mode
       if (tf.scope().env().isGraph()) {
         AssertThat assertThat =
