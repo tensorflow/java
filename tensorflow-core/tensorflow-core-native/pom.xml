@@ -148,23 +148,23 @@
                 <configuration>
                   <artifacts>
                     <artifact>
-                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.linux-x86_64}.jar</file>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.linux-x86_64}.jar</file>
                       <classifier>${javacpp.platform.linux-x86_64}</classifier>
                     </artifact>
                     <artifact>
-                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.linux-x86_64}-gpu.jar</file>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.linux-x86_64}-gpu.jar</file>
                       <classifier>${javacpp.platform.linux-x86_64}-gpu</classifier>
                     </artifact>
                     <artifact>
-                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.macosx-arm64}.jar</file>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.macosx-arm64}.jar</file>
                       <classifier>${javacpp.platform.macosx-arm64}</classifier>
                     </artifact>
                     <artifact>
-                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.macosx-x86_64}.jar</file>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.macosx-x86_64}.jar</file>
                       <classifier>${javacpp.platform.macosx-x86_64}</classifier>
                     </artifact>
                     <artifact>
-                      <file>${project.build.directory}/${artifactId}-${project.version}-${javacpp.platform.windows-x86_64}.jar</file>
+                      <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.windows-x86_64}.jar</file>
                       <classifier>${javacpp.platform.windows-x86_64}</classifier>
                     </artifact>
                   </artifacts>
@@ -528,6 +528,11 @@
               <goal>jar</goal>
             </goals>
             <configuration>
+              <archive>
+                <manifestEntries>
+                  <Automatic-Module-Name>tensorflow.nativelib.${os.name}.${os.arch}</Automatic-Module-Name>
+                </manifestEntries>
+              </archive>
               <classifier>${native.classifier}</classifier>
               <skipIfEmpty>true</skipIfEmpty>
               <includes>
