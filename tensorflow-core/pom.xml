@@ -34,7 +34,6 @@
     <module>tensorflow-core-native</module>
     <module>tensorflow-core-generator</module>
     <module>tensorflow-core-api</module>
-    <module>tensorflow-core-platform</module>
   </modules>
 
   <properties>
@@ -73,6 +72,9 @@
       <properties>
         <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
       </properties>
+      <modules>
+        <module>tensorflow-core-platform</module>
+      </modules>
     </profile>
 
     <profile>
@@ -83,17 +85,13 @@
       -->
       <id>javacpp-platform-host</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
         <property>
-          <name>javacpp.platform.host</name>
+          <name>!javacpp.platform</name>
         </property>
       </activation>
       <properties>
         <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
       </properties>
     </profile>
-
   </profiles>
-
 </project>
-
