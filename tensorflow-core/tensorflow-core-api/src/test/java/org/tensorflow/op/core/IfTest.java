@@ -50,7 +50,7 @@ public class IfTest {
               // Casts around the math.neg operator as it's not implemented correctly for int32 in
               // GPUs at some point between TF 2.10 and TF 2.15.
               Operand<TInt32> y =
-                  ops.dtypes.cast(ops.math.neg(ops.dtypes.cast(a1, TFloat32.class)), TInt32.class);
+                  ops.dtypes.cast(ops.math.neg(ops.dtypes.cast(b1, TFloat32.class)), TInt32.class);
               return Signature.builder().input("a", a1).input("b", b1).output("y", y).build();
             });
 
