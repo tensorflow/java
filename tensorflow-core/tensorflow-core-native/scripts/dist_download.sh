@@ -5,20 +5,20 @@ DOWNLOAD_FOLDER="$1"
 
 case ${PLATFORM:-} in
   'linux-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/fa/44/a1698c62942d20cab378ba201a6cbfcce579418351a0c6e4ea9d66c9adf2/tensorflow_cpu-2.15.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/9b/0b/c18d6464a19d4c9b63df8880dd3ce0c67b5145ada9092f3ac67d82726566/tensorflow_cpu-2.16.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
     ;;
   'linux-x86_64-gpu')
-    WHEEL_URL='https://files.pythonhosted.org/packages/93/c0/a774286d0383419f558deb27096e5de9f9facd6c27df8e9f9af6fba2f77e/tensorflow-2.15.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/58/70/e8ac764ec80810eefcbab0cb1d21dbba6cf26719c44cd6d9a5e9f0407935/tensorflow-2.16.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
     ;;
   'macosx-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/92/2d/880fcd65e4414b05088193e6f2cfb86fdf90003dd2dd0f4d1bc465348f0e/tensorflow-2.15.0-cp311-cp311-macosx_10_15_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/b8/75/ce4d8eeb1fb100726634358411bc4a8b12f889f6ce560b0973c0a5dbac39/tensorflow-2.16.1-cp311-cp311-macosx_10_15_x86_64.whl'
     ;;
   'macosx-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/eb/9f/0759e2fea4a3c48f070b64811c2c57036b46353ba87263afc810b8f4188a/tensorflow_macos-2.15.0-cp311-cp311-macosx_12_0_arm64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/f9/14/67e9b2b2379cb530c0412123a674d045eca387dfcfa7db1c0028857b0a66/tensorflow-2.16.1-cp311-cp311-macosx_12_0_arm64.whl'
     ;;
   'windows-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/4c/48/1a5a15517f18eaa4ff8d598b1c000300b20c1bb0e624539d702117a0c369/tensorflow_intel-2.15.0-cp311-cp311-win_amd64.whl'
-    CLIB_URL='https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.15.0.zip'
+    WHEEL_URL='https://files.pythonhosted.org/packages/e0/36/6278e4e7e69a90c00e0f82944d8f2713dd85a69d1add455d9e50446837ab/tensorflow_intel-2.16.1-cp311-cp311-win_amd64.whl'
+    CLIB_URL='https://storage.googleapis.com/tensorflow/versions/2.16.1/libtensorflow-cpu-windows-x86_64.zip'
     ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"

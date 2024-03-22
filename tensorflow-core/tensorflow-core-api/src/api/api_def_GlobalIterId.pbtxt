@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "GlobalIterId"
+  visibility: VISIBLE
+  endpoint {
+    name: "tpu.GlobalIterId"
+  }
+}

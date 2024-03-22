@@ -93,7 +93,7 @@ public final class Tile<T extends TType> extends RawOp implements Operand<T> {
    * Factory method to create a class wrapping a new Tile operation.
    *
    * @param scope current scope
-   * @param input 1-D or higher.
+   * @param input Can be of any rank.
    * @param multiples 1-D. Length must be the same as the number of dimensions in {@code input}
    * @param <T> data type for {@code Tile} output and operands
    * @return a new instance of Tile
@@ -128,7 +128,7 @@ public final class Tile<T extends TType> extends RawOp implements Operand<T> {
   )
   public static class Inputs<T extends TType> extends RawOpInputs<Tile<T>> {
     /**
-     * 1-D or higher.
+     * Can be of any rank.
      */
     public final Operand<T> input;
 

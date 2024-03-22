@@ -2954,6 +2954,17 @@ public final class DatasetOptions {
      */
     boolean getInjectPrefetch();
 
+    /**
+     * <code>bool seq_interleave_prefetch = 21;</code>
+     * @return Whether the seqInterleavePrefetch field is set.
+     */
+    boolean hasSeqInterleavePrefetch();
+    /**
+     * <code>bool seq_interleave_prefetch = 21;</code>
+     * @return The seqInterleavePrefetch.
+     */
+    boolean getSeqInterleavePrefetch();
+
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalApplyDefaultOptimizationsCase getOptionalApplyDefaultOptimizationsCase();
 
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalFilterFusionCase getOptionalFilterFusionCase();
@@ -2975,10 +2986,12 @@ public final class DatasetOptions {
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalFilterParallelizationCase getOptionalFilterParallelizationCase();
 
     public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalInjectPrefetchCase getOptionalInjectPrefetchCase();
+
+    public org.tensorflow.proto.data.DatasetOptions.OptimizationOptions.OptionalSeqInterleavePrefetchCase getOptionalSeqInterleavePrefetchCase();
   }
   /**
    * <pre>
-   * next: 21
+   * next: 22
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.OptimizationOptions}
@@ -3449,6 +3462,45 @@ public final class DatasetOptions {
           optionalInjectPrefetchCase_);
     }
 
+    private int optionalSeqInterleavePrefetchCase_ = 0;
+    private java.lang.Object optionalSeqInterleavePrefetch_;
+    public enum OptionalSeqInterleavePrefetchCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      SEQ_INTERLEAVE_PREFETCH(21),
+      OPTIONALSEQINTERLEAVEPREFETCH_NOT_SET(0);
+      private final int value;
+      private OptionalSeqInterleavePrefetchCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static OptionalSeqInterleavePrefetchCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static OptionalSeqInterleavePrefetchCase forNumber(int value) {
+        switch (value) {
+          case 21: return SEQ_INTERLEAVE_PREFETCH;
+          case 0: return OPTIONALSEQINTERLEAVEPREFETCH_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public OptionalSeqInterleavePrefetchCase
+    getOptionalSeqInterleavePrefetchCase() {
+      return OptionalSeqInterleavePrefetchCase.forNumber(
+          optionalSeqInterleavePrefetchCase_);
+    }
+
     public static final int APPLY_DEFAULT_OPTIMIZATIONS_FIELD_NUMBER = 1;
     /**
      * <code>bool apply_default_optimizations = 1;</code>
@@ -3680,6 +3732,27 @@ public final class DatasetOptions {
       return false;
     }
 
+    public static final int SEQ_INTERLEAVE_PREFETCH_FIELD_NUMBER = 21;
+    /**
+     * <code>bool seq_interleave_prefetch = 21;</code>
+     * @return Whether the seqInterleavePrefetch field is set.
+     */
+    @java.lang.Override
+    public boolean hasSeqInterleavePrefetch() {
+      return optionalSeqInterleavePrefetchCase_ == 21;
+    }
+    /**
+     * <code>bool seq_interleave_prefetch = 21;</code>
+     * @return The seqInterleavePrefetch.
+     */
+    @java.lang.Override
+    public boolean getSeqInterleavePrefetch() {
+      if (optionalSeqInterleavePrefetchCase_ == 21) {
+        return (java.lang.Boolean) optionalSeqInterleavePrefetch_;
+      }
+      return false;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3737,6 +3810,10 @@ public final class DatasetOptions {
       if (optionalInjectPrefetchCase_ == 19) {
         output.writeBool(
             19, (boolean)((java.lang.Boolean) optionalInjectPrefetch_));
+      }
+      if (optionalSeqInterleavePrefetchCase_ == 21) {
+        output.writeBool(
+            21, (boolean)((java.lang.Boolean) optionalSeqInterleavePrefetch_));
       }
       getUnknownFields().writeTo(output);
     }
@@ -3801,6 +3878,11 @@ public final class DatasetOptions {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(
               19, (boolean)((java.lang.Boolean) optionalInjectPrefetch_));
+      }
+      if (optionalSeqInterleavePrefetchCase_ == 21) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              21, (boolean)((java.lang.Boolean) optionalSeqInterleavePrefetch_));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -3916,6 +3998,15 @@ public final class DatasetOptions {
         case 0:
         default:
       }
+      if (!getOptionalSeqInterleavePrefetchCase().equals(other.getOptionalSeqInterleavePrefetchCase())) return false;
+      switch (optionalSeqInterleavePrefetchCase_) {
+        case 21:
+          if (getSeqInterleavePrefetch()
+              != other.getSeqInterleavePrefetch()) return false;
+          break;
+        case 0:
+        default:
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -4026,6 +4117,15 @@ public final class DatasetOptions {
         case 0:
         default:
       }
+      switch (optionalSeqInterleavePrefetchCase_) {
+        case 21:
+          hash = (37 * hash) + SEQ_INTERLEAVE_PREFETCH_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getSeqInterleavePrefetch());
+          break;
+        case 0:
+        default:
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -4123,7 +4223,7 @@ public final class DatasetOptions {
     }
     /**
      * <pre>
-     * next: 21
+     * next: 22
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.OptimizationOptions}
@@ -4180,6 +4280,8 @@ public final class DatasetOptions {
         optionalFilterParallelization_ = null;
         optionalInjectPrefetchCase_ = 0;
         optionalInjectPrefetch_ = null;
+        optionalSeqInterleavePrefetchCase_ = 0;
+        optionalSeqInterleavePrefetch_ = null;
         return this;
       }
 
@@ -4239,6 +4341,9 @@ public final class DatasetOptions {
         if (optionalInjectPrefetchCase_ == 19) {
           result.optionalInjectPrefetch_ = optionalInjectPrefetch_;
         }
+        if (optionalSeqInterleavePrefetchCase_ == 21) {
+          result.optionalSeqInterleavePrefetch_ = optionalSeqInterleavePrefetch_;
+        }
         result.optionalApplyDefaultOptimizationsCase_ = optionalApplyDefaultOptimizationsCase_;
         result.optionalFilterFusionCase_ = optionalFilterFusionCase_;
         result.optionalMapAndBatchFusionCase_ = optionalMapAndBatchFusionCase_;
@@ -4250,6 +4355,7 @@ public final class DatasetOptions {
         result.optionalShuffleAndRepeatFusionCase_ = optionalShuffleAndRepeatFusionCase_;
         result.optionalFilterParallelizationCase_ = optionalFilterParallelizationCase_;
         result.optionalInjectPrefetchCase_ = optionalInjectPrefetchCase_;
+        result.optionalSeqInterleavePrefetchCase_ = optionalSeqInterleavePrefetchCase_;
         onBuilt();
         return result;
       }
@@ -4397,6 +4503,15 @@ public final class DatasetOptions {
             break;
           }
         }
+        switch (other.getOptionalSeqInterleavePrefetchCase()) {
+          case SEQ_INTERLEAVE_PREFETCH: {
+            setSeqInterleavePrefetch(other.getSeqInterleavePrefetch());
+            break;
+          }
+          case OPTIONALSEQINTERLEAVEPREFETCH_NOT_SET: {
+            break;
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -4478,6 +4593,11 @@ public final class DatasetOptions {
                 optionalInjectPrefetchCase_ = 19;
                 break;
               } // case 152
+              case 168: {
+                optionalSeqInterleavePrefetch_ = input.readBool();
+                optionalSeqInterleavePrefetchCase_ = 21;
+                break;
+              } // case 168
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -4654,6 +4774,21 @@ public final class DatasetOptions {
       public Builder clearOptionalInjectPrefetch() {
         optionalInjectPrefetchCase_ = 0;
         optionalInjectPrefetch_ = null;
+        onChanged();
+        return this;
+      }
+
+      private int optionalSeqInterleavePrefetchCase_ = 0;
+      private java.lang.Object optionalSeqInterleavePrefetch_;
+      public OptionalSeqInterleavePrefetchCase
+          getOptionalSeqInterleavePrefetchCase() {
+        return OptionalSeqInterleavePrefetchCase.forNumber(
+            optionalSeqInterleavePrefetchCase_);
+      }
+
+      public Builder clearOptionalSeqInterleavePrefetch() {
+        optionalSeqInterleavePrefetchCase_ = 0;
+        optionalSeqInterleavePrefetch_ = null;
         onChanged();
         return this;
       }
@@ -5105,6 +5240,47 @@ public final class DatasetOptions {
         if (optionalInjectPrefetchCase_ == 19) {
           optionalInjectPrefetchCase_ = 0;
           optionalInjectPrefetch_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>bool seq_interleave_prefetch = 21;</code>
+       * @return Whether the seqInterleavePrefetch field is set.
+       */
+      public boolean hasSeqInterleavePrefetch() {
+        return optionalSeqInterleavePrefetchCase_ == 21;
+      }
+      /**
+       * <code>bool seq_interleave_prefetch = 21;</code>
+       * @return The seqInterleavePrefetch.
+       */
+      public boolean getSeqInterleavePrefetch() {
+        if (optionalSeqInterleavePrefetchCase_ == 21) {
+          return (java.lang.Boolean) optionalSeqInterleavePrefetch_;
+        }
+        return false;
+      }
+      /**
+       * <code>bool seq_interleave_prefetch = 21;</code>
+       * @param value The seqInterleavePrefetch to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSeqInterleavePrefetch(boolean value) {
+        optionalSeqInterleavePrefetchCase_ = 21;
+        optionalSeqInterleavePrefetch_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool seq_interleave_prefetch = 21;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSeqInterleavePrefetch() {
+        if (optionalSeqInterleavePrefetchCase_ == 21) {
+          optionalSeqInterleavePrefetchCase_ = 0;
+          optionalSeqInterleavePrefetch_ = null;
           onChanged();
         }
         return this;
@@ -5936,6 +6112,64 @@ public final class DatasetOptions {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <code>string dataset_name = 10;</code>
+     * @return Whether the datasetName field is set.
+     */
+    boolean hasDatasetName();
+    /**
+     * <code>string dataset_name = 10;</code>
+     * @return The datasetName.
+     */
+    java.lang.String getDatasetName();
+    /**
+     * <code>string dataset_name = 10;</code>
+     * @return The bytes for datasetName.
+     */
+    com.google.protobuf.ByteString
+        getDatasetNameBytes();
+
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @return A list containing the frameworkType.
+     */
+    java.util.List<java.lang.String>
+        getFrameworkTypeList();
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @return The count of frameworkType.
+     */
+    int getFrameworkTypeCount();
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @param index The index of the element to return.
+     * @return The frameworkType at the given index.
+     */
+    java.lang.String getFrameworkType(int index);
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the frameworkType at the given index.
+     */
+    com.google.protobuf.ByteString
+        getFrameworkTypeBytes(int index);
+
+    /**
      * <code>bool deterministic = 1;</code>
      * @return Whether the deterministic field is set.
      */
@@ -6103,6 +6337,8 @@ public final class DatasetOptions {
      */
     boolean getWarmStart();
 
+    public org.tensorflow.proto.data.DatasetOptions.Options.OptionalDatasetNameCase getOptionalDatasetNameCase();
+
     public org.tensorflow.proto.data.DatasetOptions.Options.OptionalDeterministicCase getOptionalDeterministicCase();
 
     public org.tensorflow.proto.data.DatasetOptions.Options.OptionalSlackCase getOptionalSlackCase();
@@ -6117,7 +6353,7 @@ public final class DatasetOptions {
    * <pre>
    * Message stored with Dataset objects to control how datasets are processed and
    * optimized.
-   * next: 10
+   * next: 12
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.Options}
@@ -6132,6 +6368,7 @@ public final class DatasetOptions {
       super(builder);
     }
     private Options() {
+      frameworkType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -6157,6 +6394,45 @@ public final class DatasetOptions {
       return org.tensorflow.proto.data.DatasetOptions.internal_static_tensorflow_data_Options_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.tensorflow.proto.data.DatasetOptions.Options.class, org.tensorflow.proto.data.DatasetOptions.Options.Builder.class);
+    }
+
+    private int optionalDatasetNameCase_ = 0;
+    private java.lang.Object optionalDatasetName_;
+    public enum OptionalDatasetNameCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      DATASET_NAME(10),
+      OPTIONALDATASETNAME_NOT_SET(0);
+      private final int value;
+      private OptionalDatasetNameCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static OptionalDatasetNameCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static OptionalDatasetNameCase forNumber(int value) {
+        switch (value) {
+          case 10: return DATASET_NAME;
+          case 0: return OPTIONALDATASETNAME_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public OptionalDatasetNameCase
+    getOptionalDatasetNameCase() {
+      return OptionalDatasetNameCase.forNumber(
+          optionalDatasetNameCase_);
     }
 
     private int optionalDeterministicCase_ = 0;
@@ -6352,6 +6628,109 @@ public final class DatasetOptions {
     getOptionalWarmStartCase() {
       return OptionalWarmStartCase.forNumber(
           optionalWarmStartCase_);
+    }
+
+    public static final int DATASET_NAME_FIELD_NUMBER = 10;
+    /**
+     * <code>string dataset_name = 10;</code>
+     * @return Whether the datasetName field is set.
+     */
+    public boolean hasDatasetName() {
+      return optionalDatasetNameCase_ == 10;
+    }
+    /**
+     * <code>string dataset_name = 10;</code>
+     * @return The datasetName.
+     */
+    public java.lang.String getDatasetName() {
+      java.lang.Object ref = "";
+      if (optionalDatasetNameCase_ == 10) {
+        ref = optionalDatasetName_;
+      }
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (optionalDatasetNameCase_ == 10) {
+          optionalDatasetName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>string dataset_name = 10;</code>
+     * @return The bytes for datasetName.
+     */
+    public com.google.protobuf.ByteString
+        getDatasetNameBytes() {
+      java.lang.Object ref = "";
+      if (optionalDatasetNameCase_ == 10) {
+        ref = optionalDatasetName_;
+      }
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        if (optionalDatasetNameCase_ == 10) {
+          optionalDatasetName_ = b;
+        }
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int FRAMEWORK_TYPE_FIELD_NUMBER = 11;
+    private com.google.protobuf.LazyStringList frameworkType_;
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @return A list containing the frameworkType.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getFrameworkTypeList() {
+      return frameworkType_;
+    }
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @return The count of frameworkType.
+     */
+    public int getFrameworkTypeCount() {
+      return frameworkType_.size();
+    }
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @param index The index of the element to return.
+     * @return The frameworkType at the given index.
+     */
+    public java.lang.String getFrameworkType(int index) {
+      return frameworkType_.get(index);
+    }
+    /**
+     * <pre>
+     * List of frameworks used to generate this dataset.
+     * </pre>
+     *
+     * <code>repeated string framework_type = 11;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the frameworkType at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getFrameworkTypeBytes(int index) {
+      return frameworkType_.getByteString(index);
     }
 
     public static final int DETERMINISTIC_FIELD_NUMBER = 1;
@@ -6667,6 +7046,12 @@ public final class DatasetOptions {
         output.writeBool(
             9, (boolean)((java.lang.Boolean) optionalWarmStart_));
       }
+      if (optionalDatasetNameCase_ == 10) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, optionalDatasetName_);
+      }
+      for (int i = 0; i < frameworkType_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, frameworkType_.getRaw(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -6716,6 +7101,17 @@ public final class DatasetOptions {
           .computeBoolSize(
               9, (boolean)((java.lang.Boolean) optionalWarmStart_));
       }
+      if (optionalDatasetNameCase_ == 10) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, optionalDatasetName_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < frameworkType_.size(); i++) {
+          dataSize += computeStringSizeNoTag(frameworkType_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getFrameworkTypeList().size();
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -6731,6 +7127,8 @@ public final class DatasetOptions {
       }
       org.tensorflow.proto.data.DatasetOptions.Options other = (org.tensorflow.proto.data.DatasetOptions.Options) obj;
 
+      if (!getFrameworkTypeList()
+          .equals(other.getFrameworkTypeList())) return false;
       if (hasAutotuneOptions() != other.hasAutotuneOptions()) return false;
       if (hasAutotuneOptions()) {
         if (!getAutotuneOptions()
@@ -6750,6 +7148,15 @@ public final class DatasetOptions {
       if (hasThreadingOptions()) {
         if (!getThreadingOptions()
             .equals(other.getThreadingOptions())) return false;
+      }
+      if (!getOptionalDatasetNameCase().equals(other.getOptionalDatasetNameCase())) return false;
+      switch (optionalDatasetNameCase_) {
+        case 10:
+          if (!getDatasetName()
+              .equals(other.getDatasetName())) return false;
+          break;
+        case 0:
+        default:
       }
       if (!getOptionalDeterministicCase().equals(other.getOptionalDeterministicCase())) return false;
       switch (optionalDeterministicCase_) {
@@ -6807,6 +7214,10 @@ public final class DatasetOptions {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (getFrameworkTypeCount() > 0) {
+        hash = (37 * hash) + FRAMEWORK_TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getFrameworkTypeList().hashCode();
+      }
       if (hasAutotuneOptions()) {
         hash = (37 * hash) + AUTOTUNE_OPTIONS_FIELD_NUMBER;
         hash = (53 * hash) + getAutotuneOptions().hashCode();
@@ -6822,6 +7233,14 @@ public final class DatasetOptions {
       if (hasThreadingOptions()) {
         hash = (37 * hash) + THREADING_OPTIONS_FIELD_NUMBER;
         hash = (53 * hash) + getThreadingOptions().hashCode();
+      }
+      switch (optionalDatasetNameCase_) {
+        case 10:
+          hash = (37 * hash) + DATASET_NAME_FIELD_NUMBER;
+          hash = (53 * hash) + getDatasetName().hashCode();
+          break;
+        case 0:
+        default:
       }
       switch (optionalDeterministicCase_) {
         case 1:
@@ -6966,7 +7385,7 @@ public final class DatasetOptions {
      * <pre>
      * Message stored with Dataset objects to control how datasets are processed and
      * optimized.
-     * next: 10
+     * next: 12
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.Options}
@@ -7001,6 +7420,8 @@ public final class DatasetOptions {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        frameworkType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (autotuneOptionsBuilder_ == null) {
           autotuneOptions_ = null;
         } else {
@@ -7025,6 +7446,8 @@ public final class DatasetOptions {
           threadingOptions_ = null;
           threadingOptionsBuilder_ = null;
         }
+        optionalDatasetNameCase_ = 0;
+        optionalDatasetName_ = null;
         optionalDeterministicCase_ = 0;
         optionalDeterministic_ = null;
         optionalSlackCase_ = 0;
@@ -7061,6 +7484,15 @@ public final class DatasetOptions {
       @java.lang.Override
       public org.tensorflow.proto.data.DatasetOptions.Options buildPartial() {
         org.tensorflow.proto.data.DatasetOptions.Options result = new org.tensorflow.proto.data.DatasetOptions.Options(this);
+        int from_bitField0_ = bitField0_;
+        if (optionalDatasetNameCase_ == 10) {
+          result.optionalDatasetName_ = optionalDatasetName_;
+        }
+        if (((bitField0_ & 0x00000001) != 0)) {
+          frameworkType_ = frameworkType_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.frameworkType_ = frameworkType_;
         if (optionalDeterministicCase_ == 1) {
           result.optionalDeterministic_ = optionalDeterministic_;
         }
@@ -7096,6 +7528,7 @@ public final class DatasetOptions {
         if (optionalWarmStartCase_ == 9) {
           result.optionalWarmStart_ = optionalWarmStart_;
         }
+        result.optionalDatasetNameCase_ = optionalDatasetNameCase_;
         result.optionalDeterministicCase_ = optionalDeterministicCase_;
         result.optionalSlackCase_ = optionalSlackCase_;
         result.optionalExternalStatePolicyCase_ = optionalExternalStatePolicyCase_;
@@ -7149,6 +7582,16 @@ public final class DatasetOptions {
 
       public Builder mergeFrom(org.tensorflow.proto.data.DatasetOptions.Options other) {
         if (other == org.tensorflow.proto.data.DatasetOptions.Options.getDefaultInstance()) return this;
+        if (!other.frameworkType_.isEmpty()) {
+          if (frameworkType_.isEmpty()) {
+            frameworkType_ = other.frameworkType_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureFrameworkTypeIsMutable();
+            frameworkType_.addAll(other.frameworkType_);
+          }
+          onChanged();
+        }
         if (other.hasAutotuneOptions()) {
           mergeAutotuneOptions(other.getAutotuneOptions());
         }
@@ -7160,6 +7603,17 @@ public final class DatasetOptions {
         }
         if (other.hasThreadingOptions()) {
           mergeThreadingOptions(other.getThreadingOptions());
+        }
+        switch (other.getOptionalDatasetNameCase()) {
+          case DATASET_NAME: {
+            optionalDatasetNameCase_ = 10;
+            optionalDatasetName_ = other.optionalDatasetName_;
+            onChanged();
+            break;
+          }
+          case OPTIONALDATASETNAME_NOT_SET: {
+            break;
+          }
         }
         switch (other.getOptionalDeterministicCase()) {
           case DETERMINISTIC: {
@@ -7286,6 +7740,18 @@ public final class DatasetOptions {
                 optionalWarmStartCase_ = 9;
                 break;
               } // case 72
+              case 82: {
+                java.lang.String s = input.readStringRequireUtf8();
+                optionalDatasetNameCase_ = 10;
+                optionalDatasetName_ = s;
+                break;
+              } // case 82
+              case 90: {
+                java.lang.String s = input.readStringRequireUtf8();
+                ensureFrameworkTypeIsMutable();
+                frameworkType_.add(s);
+                break;
+              } // case 90
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -7301,6 +7767,21 @@ public final class DatasetOptions {
         } // finally
         return this;
       }
+      private int optionalDatasetNameCase_ = 0;
+      private java.lang.Object optionalDatasetName_;
+      public OptionalDatasetNameCase
+          getOptionalDatasetNameCase() {
+        return OptionalDatasetNameCase.forNumber(
+            optionalDatasetNameCase_);
+      }
+
+      public Builder clearOptionalDatasetName() {
+        optionalDatasetNameCase_ = 0;
+        optionalDatasetName_ = null;
+        onChanged();
+        return this;
+      }
+
       private int optionalDeterministicCase_ = 0;
       private java.lang.Object optionalDeterministic_;
       public OptionalDeterministicCase
@@ -7376,6 +7857,250 @@ public final class DatasetOptions {
         return this;
       }
 
+      private int bitField0_;
+
+      /**
+       * <code>string dataset_name = 10;</code>
+       * @return Whether the datasetName field is set.
+       */
+      @java.lang.Override
+      public boolean hasDatasetName() {
+        return optionalDatasetNameCase_ == 10;
+      }
+      /**
+       * <code>string dataset_name = 10;</code>
+       * @return The datasetName.
+       */
+      @java.lang.Override
+      public java.lang.String getDatasetName() {
+        java.lang.Object ref = "";
+        if (optionalDatasetNameCase_ == 10) {
+          ref = optionalDatasetName_;
+        }
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (optionalDatasetNameCase_ == 10) {
+            optionalDatasetName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string dataset_name = 10;</code>
+       * @return The bytes for datasetName.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getDatasetNameBytes() {
+        java.lang.Object ref = "";
+        if (optionalDatasetNameCase_ == 10) {
+          ref = optionalDatasetName_;
+        }
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          if (optionalDatasetNameCase_ == 10) {
+            optionalDatasetName_ = b;
+          }
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string dataset_name = 10;</code>
+       * @param value The datasetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatasetName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  optionalDatasetNameCase_ = 10;
+        optionalDatasetName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string dataset_name = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDatasetName() {
+        if (optionalDatasetNameCase_ == 10) {
+          optionalDatasetNameCase_ = 0;
+          optionalDatasetName_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <code>string dataset_name = 10;</code>
+       * @param value The bytes for datasetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatasetNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        optionalDatasetNameCase_ = 10;
+        optionalDatasetName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList frameworkType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureFrameworkTypeIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          frameworkType_ = new com.google.protobuf.LazyStringArrayList(frameworkType_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @return A list containing the frameworkType.
+       */
+      public com.google.protobuf.ProtocolStringList
+          getFrameworkTypeList() {
+        return frameworkType_.getUnmodifiableView();
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @return The count of frameworkType.
+       */
+      public int getFrameworkTypeCount() {
+        return frameworkType_.size();
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @param index The index of the element to return.
+       * @return The frameworkType at the given index.
+       */
+      public java.lang.String getFrameworkType(int index) {
+        return frameworkType_.get(index);
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the frameworkType at the given index.
+       */
+      public com.google.protobuf.ByteString
+          getFrameworkTypeBytes(int index) {
+        return frameworkType_.getByteString(index);
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @param index The index to set the value at.
+       * @param value The frameworkType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFrameworkType(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureFrameworkTypeIsMutable();
+        frameworkType_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @param value The frameworkType to add.
+       * @return This builder for chaining.
+       */
+      public Builder addFrameworkType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureFrameworkTypeIsMutable();
+        frameworkType_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @param values The frameworkType to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllFrameworkType(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureFrameworkTypeIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, frameworkType_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFrameworkType() {
+        frameworkType_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * List of frameworks used to generate this dataset.
+       * </pre>
+       *
+       * <code>repeated string framework_type = 11;</code>
+       * @param value The bytes of the frameworkType to add.
+       * @return This builder for chaining.
+       */
+      public Builder addFrameworkTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        ensureFrameworkTypeIsMutable();
+        frameworkType_.add(value);
+        onChanged();
+        return this;
+      }
 
       /**
        * <code>bool deterministic = 1;</code>
@@ -8351,7 +9076,7 @@ public final class DatasetOptions {
       "ODERATE\020\002\"\177\n\021DistributeOptions\022;\n\021auto_s" +
       "hard_policy\030\001 \001(\0162 .tensorflow.data.Auto" +
       "ShardPolicy\022\025\n\013num_devices\030\002 \001(\005H\000B\026\n\024op" +
-      "tional_num_devices\"\362\005\n\023OptimizationOptio" +
+      "tional_num_devices\"\271\006\n\023OptimizationOptio" +
       "ns\022%\n\033apply_default_optimizations\030\001 \001(\010H" +
       "\000\022\027\n\rfilter_fusion\030\006 \001(\010H\001\022\036\n\024map_and_ba" +
       "tch_fusion\030\t \001(\010H\002\022\037\n\025map_and_filter_fus" +
@@ -8360,42 +9085,46 @@ public final class DatasetOptions {
       "tion\030\016 \001(\010H\006\022\030\n\016parallel_batch\030\017 \001(\010H\007\022#" +
       "\n\031shuffle_and_repeat_fusion\030\021 \001(\010H\010\022 \n\026f" +
       "ilter_parallelization\030\022 \001(\010H\t\022\031\n\017inject_" +
-      "prefetch\030\023 \001(\010H\nB&\n$optional_apply_defau" +
-      "lt_optimizationsB\030\n\026optional_filter_fusi" +
-      "onB\037\n\035optional_map_and_batch_fusionB \n\036o" +
-      "ptional_map_and_filter_fusionB\025\n\023optiona" +
-      "l_map_fusionB\036\n\034optional_map_paralleliza" +
-      "tionB\033\n\031optional_noop_eliminationB\031\n\027opt" +
-      "ional_parallel_batchB$\n\"optional_shuffle" +
-      "_and_repeat_fusionB!\n\037optional_filter_pa" +
-      "rallelizationB\032\n\030optional_inject_prefetc" +
-      "hJ\004\010\002\020\003J\004\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010\020\tJ\004\010" +
-      "\r\020\016J\004\010\020\020\021J\004\010\024\020\025\"\242\001\n\020ThreadingOptions\022\"\n\030" +
-      "max_intra_op_parallelism\030\001 \001(\005H\000\022!\n\027priv" +
-      "ate_threadpool_size\030\002 \001(\005H\001B#\n!optional_" +
-      "max_intra_op_parallelismB\"\n optional_pri" +
-      "vate_threadpool_size\"\262\004\n\007Options\022\027\n\rdete" +
-      "rministic\030\001 \001(\010H\000\022:\n\020autotune_options\030\007 " +
-      "\001(\0132 .tensorflow.data.AutotuneOptions\022>\n" +
-      "\022distribute_options\030\002 \001(\0132\".tensorflow.d" +
-      "ata.DistributeOptions\022B\n\024optimization_op" +
-      "tions\030\003 \001(\0132$.tensorflow.data.Optimizati" +
-      "onOptions\022\017\n\005slack\030\004 \001(\010H\001\022<\n\021threading_" +
-      "options\030\005 \001(\0132!.tensorflow.data.Threadin" +
-      "gOptions\022E\n\025external_state_policy\030\006 \001(\0162" +
-      "$.tensorflow.data.ExternalStatePolicyH\002\022" +
-      "\035\n\023symbolic_checkpoint\030\010 \001(\010H\003\022\024\n\nwarm_s" +
-      "tart\030\t \001(\010H\004B\030\n\026optional_deterministicB\020" +
-      "\n\016optional_slackB \n\036optional_external_st" +
-      "ate_policyB\036\n\034optional_symbolic_checkpoi" +
-      "ntB\025\n\023optional_warm_start*K\n\017AutoShardPo" +
-      "licy\022\010\n\004AUTO\020\000\022\010\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HI" +
-      "NT\020\003\022\020\n\003OFF\020\377\377\377\377\377\377\377\377\377\001*J\n\023ExternalStateP" +
-      "olicy\022\017\n\013POLICY_WARN\020\000\022\021\n\rPOLICY_IGNORE\020" +
-      "\001\022\017\n\013POLICY_FAIL\020\002Bs\n\031org.tensorflow.pro" +
-      "to.dataZVgithub.com/tensorflow/tensorflo" +
-      "w/tensorflow/go/core/framework/dataset_o" +
-      "ptions_go_protob\006proto3"
+      "prefetch\030\023 \001(\010H\n\022!\n\027seq_interleave_prefe" +
+      "tch\030\025 \001(\010H\013B&\n$optional_apply_default_op" +
+      "timizationsB\030\n\026optional_filter_fusionB\037\n" +
+      "\035optional_map_and_batch_fusionB \n\036option" +
+      "al_map_and_filter_fusionB\025\n\023optional_map" +
+      "_fusionB\036\n\034optional_map_parallelizationB" +
+      "\033\n\031optional_noop_eliminationB\031\n\027optional" +
+      "_parallel_batchB$\n\"optional_shuffle_and_" +
+      "repeat_fusionB!\n\037optional_filter_paralle" +
+      "lizationB\032\n\030optional_inject_prefetchB\"\n " +
+      "optional_seq_interleave_prefetchJ\004\010\002\020\003J\004" +
+      "\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010\020\tJ\004\010\r\020\016J\004\010\020\020\021" +
+      "J\004\010\024\020\025\"\242\001\n\020ThreadingOptions\022\"\n\030max_intra" +
+      "_op_parallelism\030\001 \001(\005H\000\022!\n\027private_threa" +
+      "dpool_size\030\002 \001(\005H\001B#\n!optional_max_intra" +
+      "_op_parallelismB\"\n optional_private_thre" +
+      "adpool_size\"\373\004\n\007Options\022\026\n\014dataset_name\030" +
+      "\n \001(\tH\000\022\026\n\016framework_type\030\013 \003(\t\022\027\n\rdeter" +
+      "ministic\030\001 \001(\010H\001\022:\n\020autotune_options\030\007 \001" +
+      "(\0132 .tensorflow.data.AutotuneOptions\022>\n\022" +
+      "distribute_options\030\002 \001(\0132\".tensorflow.da" +
+      "ta.DistributeOptions\022B\n\024optimization_opt" +
+      "ions\030\003 \001(\0132$.tensorflow.data.Optimizatio" +
+      "nOptions\022\017\n\005slack\030\004 \001(\010H\002\022<\n\021threading_o" +
+      "ptions\030\005 \001(\0132!.tensorflow.data.Threading" +
+      "Options\022E\n\025external_state_policy\030\006 \001(\0162$" +
+      ".tensorflow.data.ExternalStatePolicyH\003\022\035" +
+      "\n\023symbolic_checkpoint\030\010 \001(\010H\004\022\024\n\nwarm_st" +
+      "art\030\t \001(\010H\005B\027\n\025optional_dataset_nameB\030\n\026" +
+      "optional_deterministicB\020\n\016optional_slack" +
+      "B \n\036optional_external_state_policyB\036\n\034op" +
+      "tional_symbolic_checkpointB\025\n\023optional_w" +
+      "arm_start*K\n\017AutoShardPolicy\022\010\n\004AUTO\020\000\022\010" +
+      "\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HINT\020\003\022\020\n\003OFF\020\377\377\377\377" +
+      "\377\377\377\377\377\001*J\n\023ExternalStatePolicy\022\017\n\013POLICY_" +
+      "WARN\020\000\022\021\n\rPOLICY_IGNORE\020\001\022\017\n\013POLICY_FAIL" +
+      "\020\002Bs\n\031org.tensorflow.proto.dataZVgithub." +
+      "com/tensorflow/tensorflow/tensorflow/go/" +
+      "core/framework/dataset_options_go_protob" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8425,7 +9154,7 @@ public final class DatasetOptions {
     internal_static_tensorflow_data_OptimizationOptions_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_OptimizationOptions_descriptor,
-        new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "InjectPrefetch", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", "OptionalInjectPrefetch", });
+        new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "InjectPrefetch", "SeqInterleavePrefetch", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", "OptionalInjectPrefetch", "OptionalSeqInterleavePrefetch", });
     internal_static_tensorflow_data_ThreadingOptions_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_tensorflow_data_ThreadingOptions_fieldAccessorTable = new
@@ -8437,7 +9166,7 @@ public final class DatasetOptions {
     internal_static_tensorflow_data_Options_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_Options_descriptor,
-        new java.lang.String[] { "Deterministic", "AutotuneOptions", "DistributeOptions", "OptimizationOptions", "Slack", "ThreadingOptions", "ExternalStatePolicy", "SymbolicCheckpoint", "WarmStart", "OptionalDeterministic", "OptionalSlack", "OptionalExternalStatePolicy", "OptionalSymbolicCheckpoint", "OptionalWarmStart", });
+        new java.lang.String[] { "DatasetName", "FrameworkType", "Deterministic", "AutotuneOptions", "DistributeOptions", "OptimizationOptions", "Slack", "ThreadingOptions", "ExternalStatePolicy", "SymbolicCheckpoint", "WarmStart", "OptionalDatasetName", "OptionalDeterministic", "OptionalSlack", "OptionalExternalStatePolicy", "OptionalSymbolicCheckpoint", "OptionalWarmStart", });
     org.tensorflow.proto.data.model.Model.getDescriptor();
   }
 

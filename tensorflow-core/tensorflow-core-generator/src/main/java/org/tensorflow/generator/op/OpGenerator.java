@@ -316,7 +316,7 @@ public final class OpGenerator {
     ApiDef.Visibility visibility = null;
     do {
       System.out.print(
-          "    Choose visibility of this op [v]isible/[h]idden/[s]kip/[d]efault (default=d): ");
+          "    Choose visibility of this op [v]isible/[h]idden/[s]kip/[d]efault (default=v): ");
       var value = USER_PROMPT.nextLine().trim();
       if (!value.isEmpty()) {
         switch (value) {
@@ -335,15 +335,15 @@ public final class OpGenerator {
             visibility = ApiDef.Visibility.SKIP;
             apiDef.setVisibility(visibility);
             break;
-          case "D":
-          case "d":
+          case "B":
+          case "b":
             visibility = ApiDef.Visibility.DEFAULT_VISIBILITY;
             break;
           default:
             break;
         }
       } else {
-        visibility = ApiDef.Visibility.DEFAULT_VISIBILITY;
+        visibility = ApiDef.Visibility.VISIBLE;
       }
     } while (visibility == null);
 

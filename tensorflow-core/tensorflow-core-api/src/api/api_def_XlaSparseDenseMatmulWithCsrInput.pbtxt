@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "XlaSparseDenseMatmulWithCsrInput"
+  visibility: VISIBLE
+  endpoint {
+    name: "xla.XlaSparseDenseMatmulWithCsrInput"
+  }
+}
