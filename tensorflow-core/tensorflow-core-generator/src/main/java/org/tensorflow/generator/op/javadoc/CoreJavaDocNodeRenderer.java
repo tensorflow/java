@@ -150,10 +150,11 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
     "<wbr>",
   };
   private static final Set<String> allowedHtml5Tags = new HashSet<>(Arrays.asList(html5Tags));
-  private static final Map<String, String> urlLinkConversion = Map.of(
+  private static final Map<String, String> urlLinkConversion =
+      Map.of(
           "../../../api_docs/python/math_ops", "org.tensorflow.op.MathOps",
-          "https://www.tensorflow.org/api_docs/python/tf/tensor_scatter_nd_update", "org.tensorflow.op.Ops#tensorScatterNdUpdate"
-  );
+          "https://www.tensorflow.org/api_docs/python/tf/tensor_scatter_nd_update",
+              "org.tensorflow.op.Ops#tensorScatterNdUpdate");
   protected final JavaDocNodeRendererContext context;
   private final JavaDocWriter writer;
   private boolean firstParagraph;
