@@ -18,10 +18,10 @@ http_archive(
         "find tensorflow third_party/xla/third_party/tsl -name \\*.proto | xargs sed -i.bak 's/^package tensorflow\\([^;]*\\).*$/package tensorflow\\1;\\noption java_package = \"org.tensorflow.proto\\1\";/'",
     ],
     urls = [
-       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.15.0.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.16.1.tar.gz",
     ],
-    sha256 = "9cec5acb0ecf2d47b16891f8bc5bc6fbfdffe1700bdadc0d9ebe27ea34f0c220",
-    strip_prefix = "tensorflow-2.15.0"
+    sha256 = "c729e56efc945c6df08efe5c9f5b8b89329c7c91b8f40ad2bb3e13900bd4876d",
+    strip_prefix = "tensorflow-2.16.1"
 )
 
 ##### Copy content of tensorflow/WORKSPACE here (make sure to change references of default package "//" to "@org_tensorflow//")
@@ -57,12 +57,12 @@ load(
 
 python_repository(name = "python_version_repo")
 
-load("@python_version_repo//:py_version.bzl", "HERMETIC_PYTHON_VERSION")
+load("@python_version_repo//:py_version.bzl", "TF_PYTHON_VERSION")
 
 python_register_toolchains(
     name = "python",
     ignore_root_user_error = True,
-    python_version = HERMETIC_PYTHON_VERSION,
+    python_version = TF_PYTHON_VERSION,
 )
 
 load("@python//:defs.bzl", "interpreter")

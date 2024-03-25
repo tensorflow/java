@@ -1,3 +1,5 @@
-#build --remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm
-#build --remote_upload_local_results=false
 build --experimental_ui_max_stdouterr_bytes=-1
+
+# We don't need this cache, since we are not building TF from GitHub Actions anymore. Just keeping this here for reference
+# build --remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm
+# build --remote_upload_local_results=false

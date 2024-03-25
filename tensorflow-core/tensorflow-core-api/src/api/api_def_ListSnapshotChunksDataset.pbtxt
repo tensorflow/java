@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ListSnapshotChunksDataset"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.ListSnapshotChunksDataset"
+  }
+}

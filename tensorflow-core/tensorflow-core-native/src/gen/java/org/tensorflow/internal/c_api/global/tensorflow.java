@@ -517,6 +517,7 @@ limitations under the License.
 // --------------------------------------------------------------------------
 // TF_Code holds an error code.  The enum values here are identical to
 // corresponding values in error_codes.proto.
+// LINT.IfChange
 public static final int TF_OK = TSL_OK;
 public static final int TF_CANCELLED = TSL_CANCELLED;
 public static final int TF_UNKNOWN = TSL_UNKNOWN;
@@ -534,6 +535,7 @@ public static final int TF_UNIMPLEMENTED = TSL_UNIMPLEMENTED;
 public static final int TF_INTERNAL = TSL_INTERNAL;
 public static final int TF_UNAVAILABLE = TSL_UNAVAILABLE;
 public static final int TF_DATA_LOSS = TSL_DATA_LOSS;
+// LINT.ThenChange(//tensorflow/python/py_exception_registry_wrapper.cc)
 
 // --------------------------------------------------------------------------
 
@@ -2142,6 +2144,13 @@ public static native void TF_DeleteImportGraphDefResults(
 public static native TF_ImportGraphDefResults TF_GraphImportGraphDefWithResults(TF_Graph graph, @Const TF_Buffer graph_def,
                                   @Const TF_ImportGraphDefOptions options,
                                   TF_Status status);
+
+// Has the same behavior as TF_GraphImportGraphDefWithResults, but instead of
+// taking in a serialized tensorflow::GraphDef, it takes in a *pointer* to the
+// C++ *in memory representation* of the GraphDef, stored in `graph_def->data`
+public static native TF_ImportGraphDefResults TF_GraphImportGraphDefWithResultsNoSerialization(
+    TF_Graph graph, @Const TF_Buffer graph_def,
+    @Const TF_ImportGraphDefOptions options, TF_Status status);
 
 // Import the graph serialized in `graph_def` into `graph`.
 // Convenience function for when only return outputs are needed.

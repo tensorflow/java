@@ -91,6 +91,12 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
         if (opts.transposeB != null) {
           opBuilder.setAttr("transpose_b", opts.transposeB);
         }
+        if (opts.gradA != null) {
+          opBuilder.setAttr("grad_a", opts.gradA);
+        }
+        if (opts.gradB != null) {
+          opBuilder.setAttr("grad_b", opts.gradB);
+        }
       }
     }
     return new MatMul<>(opBuilder.build());
@@ -117,6 +123,26 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
   }
 
   /**
+   * Sets the gradA option.
+   *
+   * @param gradA the gradA option
+   * @return this Options instance.
+   */
+  public static Options gradA(Boolean gradA) {
+    return new Options().gradA(gradA);
+  }
+
+  /**
+   * Sets the gradB option.
+   *
+   * @param gradB the gradB option
+   * @return this Options instance.
+   */
+  public static Options gradB(Boolean gradB) {
+    return new Options().gradB(gradB);
+  }
+
+  /**
    * Gets product.
    *
    * @return product.
@@ -137,6 +163,10 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
     private Boolean transposeA;
 
     private Boolean transposeB;
+
+    private Boolean gradA;
+
+    private Boolean gradB;
 
     private Options() {
     }
@@ -160,6 +190,28 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
      */
     public Options transposeB(Boolean transposeB) {
       this.transposeB = transposeB;
+      return this;
+    }
+
+    /**
+     * Sets the gradA option.
+     *
+     * @param gradA the gradA option
+     * @return this Options instance.
+     */
+    public Options gradA(Boolean gradA) {
+      this.gradA = gradA;
+      return this;
+    }
+
+    /**
+     * Sets the gradB option.
+     *
+     * @param gradB the gradB option
+     * @return this Options instance.
+     */
+    public Options gradB(Boolean gradB) {
+      this.gradB = gradB;
       return this;
     }
   }
@@ -193,14 +245,26 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
      */
     public final DataType T;
 
+    /**
+     * The gradA attribute
+     */
+    public final boolean gradA;
+
+    /**
+     * The gradB attribute
+     */
+    public final boolean gradB;
+
     public Inputs(GraphOperation op) {
-      super(new MatMul<>(op), op, Arrays.asList("transpose_a", "transpose_b", "T"));
+      super(new MatMul<>(op), op, Arrays.asList("transpose_a", "transpose_b", "T", "grad_a", "grad_b"));
       int inputIndex = 0;
       a = (Operand<T>) op.input(inputIndex++);
       b = (Operand<T>) op.input(inputIndex++);
       transposeA = op.attributes().getAttrBool("transpose_a");
       transposeB = op.attributes().getAttrBool("transpose_b");
       T = op.attributes().getAttrType("T");
+      gradA = op.attributes().getAttrBool("grad_a");
+      gradB = op.attributes().getAttrBool("grad_b");
     }
   }
 }

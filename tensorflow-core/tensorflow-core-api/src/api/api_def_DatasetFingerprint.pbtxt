@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "DatasetFingerprint"
+  visibility: VISIBLE
+  endpoint {
+    name: "data.DatasetFingerprint"
+  }
+}

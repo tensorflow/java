@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ConvertToCooTensor"
+  visibility: VISIBLE
+  endpoint {
+    name: "tpu.ConvertToCooTensor"
+  }
+}

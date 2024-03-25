@@ -87,6 +87,7 @@ To upgrade the version of TensorFlow that is embedded within TensorFlow Java, pl
 7. Copy the content of `tensorflow-x.x.x/.bazelversion` file to `tensorflow-core/tensorflow-core-native/.bazelversion`
 8. Validate that options in `tensorflow-core/tensorflow-core-native/.bazelrc` are still accurate or update them accordingly
 9. Update URLs of existing TensorFlow binaries in the `tensorflow-core/tensorflow-core-native/scripts/dist_download` script
+10. Update URLs of TensorFlow-Text binaries used for testing in the `tensorflow-core/tensorflow-core-api/scripts/test_download` script
 
 #### Patching TensorFlow Sources
 

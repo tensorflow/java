@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TPUCopyWithDynamicShape"
+  visibility: VISIBLE
+  endpoint {
+    name: "tpu.TPUCopyWithDynamicShape"
+  }
+}

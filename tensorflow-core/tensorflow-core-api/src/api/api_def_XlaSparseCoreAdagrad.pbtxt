@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "XlaSparseCoreAdagrad"
+  visibility: VISIBLE
+  endpoint {
+    name: "xla.XlaSparseCoreAdagrad"
+  }
+}

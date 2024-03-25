@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "GetMinibatchSplitsWithPhysicalReplica"
+  visibility: VISIBLE
+  endpoint {
+    name: "tpu.GetMinibatchSplitsWithPhysicalReplica"
+  }
+}
