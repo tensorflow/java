@@ -335,8 +335,8 @@ public final class OpGenerator {
             visibility = ApiDef.Visibility.SKIP;
             apiDef.setVisibility(visibility);
             break;
-          case "B":
-          case "b":
+          case "D":
+          case "d":
             visibility = ApiDef.Visibility.DEFAULT_VISIBILITY;
             break;
           default:
