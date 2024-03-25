@@ -24,19 +24,29 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.tpu.CollateTPUEmbeddingMemory;
 import org.tensorflow.op.tpu.Compile;
 import org.tensorflow.op.tpu.CompileSucceededAssert;
+import org.tensorflow.op.tpu.ComputeDedupDataSize;
 import org.tensorflow.op.tpu.ConfigureAndInitializeGlobalTPU;
 import org.tensorflow.op.tpu.ConfigureTPUEmbeddingHost;
 import org.tensorflow.op.tpu.ConfigureTPUEmbeddingMemory;
 import org.tensorflow.op.tpu.ConnectTPUEmbeddingHosts;
+import org.tensorflow.op.tpu.ConvertToCooTensor;
 import org.tensorflow.op.tpu.DTensorRestore;
 import org.tensorflow.op.tpu.Execute;
 import org.tensorflow.op.tpu.ExecuteAndUpdateVariables;
 import org.tensorflow.op.tpu.ExecuteTPUEmbeddingPartitioner;
 import org.tensorflow.op.tpu.FinalizeTPUEmbedding;
+import org.tensorflow.op.tpu.GetMinibatchSplitsWithPhysicalReplica;
+import org.tensorflow.op.tpu.GetMinibatchesInCsrWithPhysicalReplica;
+import org.tensorflow.op.tpu.GlobalIterId;
 import org.tensorflow.op.tpu.PartitionedOutput;
 import org.tensorflow.op.tpu.ShutdownTPUSystem;
+import org.tensorflow.op.tpu.StoreMinibatchStatisticsInFdo;
+import org.tensorflow.op.tpu.TPUAnnotateTensorsWithDynamicShape;
+import org.tensorflow.op.tpu.TPUCopyWithDynamicShape;
 import org.tensorflow.op.tpu.TPURoundRobin;
 import org.tensorflow.op.tpu.TpuHandleToProtoKey;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -112,6 +122,19 @@ public final class TpuOps {
   }
 
   /**
+   * An op computes the size of the deduplication data from embedding core and returns the updated config.
+   *  This op is to compute size of the deduplication data so to provide this
+   *  information to the op that computes the tuple mask of deduplication data can
+   *  have static output shape.
+   *
+   * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @return a new instance of ComputeDedupDataSize
+   */
+  public ComputeDedupDataSize computeDedupDataSize(String config) {
+    return ComputeDedupDataSize.create(scope, config);
+  }
+
+  /**
    * An op that sets up the centralized structures for a distributed TPU system.
    *
    * @param options carries optional attribute values
@@ -161,6 +184,21 @@ public final class TpuOps {
   public ConnectTPUEmbeddingHosts connectTPUEmbeddingHosts(
       Iterable<Operand<TString>> networkConfigs) {
     return ConnectTPUEmbeddingHosts.create(scope, networkConfigs);
+  }
+
+  /**
+   * The ConvertToCooTensor operation
+   *
+   * @param indicesOrRowSplits The indicesOrRowSplits value
+   * @param values The values value
+   * @param weights The weights value
+   * @param sampleCount The value of the sampleCount attribute
+   * @param combiner The value of the combiner attribute
+   * @return a new instance of ConvertToCooTensor
+   */
+  public ConvertToCooTensor convertToCooTensor(Operand<TInt32> indicesOrRowSplits,
+      Operand<TInt32> values, Operand<TFloat32> weights, Long sampleCount, String combiner) {
+    return ConvertToCooTensor.create(scope, indicesOrRowSplits, values, weights, sampleCount, combiner);
   }
 
   /**
@@ -245,6 +283,66 @@ public final class TpuOps {
   }
 
   /**
+   * The GetMinibatchSplitsWithPhysicalReplica operation
+   *
+   * @param programKey The programKey value
+   * @param rowIds The rowIds value
+   * @param colIds The colIds value
+   * @param gains The gains value
+   * @param sampleCount The value of the sampleCount attribute
+   * @param numReplica The value of the numReplica attribute
+   * @param tableVocabSize The value of the tableVocabSize attribute
+   * @param featureWidth The value of the featureWidth attribute
+   * @param numScPerChip The value of the numScPerChip attribute
+   * @param tableName The value of the tableName attribute
+   * @param miniBatchSplits The value of the miniBatchSplits attribute
+   * @return a new instance of GetMinibatchSplitsWithPhysicalReplica
+   */
+  public GetMinibatchSplitsWithPhysicalReplica getMinibatchSplitsWithPhysicalReplica(
+      Operand<TString> programKey, Operand<TInt32> rowIds, Operand<TInt32> colIds,
+      Operand<TFloat32> gains, Long sampleCount, Long numReplica, Long tableVocabSize,
+      Long featureWidth, Long numScPerChip, String tableName, String miniBatchSplits) {
+    return GetMinibatchSplitsWithPhysicalReplica.create(scope, programKey, rowIds, colIds, gains, sampleCount, numReplica, tableVocabSize, featureWidth, numScPerChip, tableName, miniBatchSplits);
+  }
+
+  /**
+   * The GetMinibatchesInCsrWithPhysicalReplica operation
+   *
+   * @param programKey The programKey value
+   * @param rowIds The rowIds value
+   * @param colIds The colIds value
+   * @param gains The gains value
+   * @param splits The splits value
+   * @param idCounts The idCounts value
+   * @param sampleCount The value of the sampleCount attribute
+   * @param numReplica The value of the numReplica attribute
+   * @param maxMinibatchesPerSc The value of the maxMinibatchesPerSc attribute
+   * @param maxIdsPerChipPerSample The value of the maxIdsPerChipPerSample attribute
+   * @param tableVocabSize The value of the tableVocabSize attribute
+   * @param featureWidth The value of the featureWidth attribute
+   * @param numScPerChip The value of the numScPerChip attribute
+   * @param tableName The value of the tableName attribute
+   * @param miniBatchInCsr The value of the miniBatchInCsr attribute
+   * @return a new instance of GetMinibatchesInCsrWithPhysicalReplica
+   */
+  public GetMinibatchesInCsrWithPhysicalReplica getMinibatchesInCsrWithPhysicalReplica(
+      Operand<TString> programKey, Operand<TInt32> rowIds, Operand<TInt32> colIds,
+      Operand<TFloat32> gains, Operand<TInt64> splits, Operand<TInt32> idCounts, Long sampleCount,
+      Long numReplica, Long maxMinibatchesPerSc, Long maxIdsPerChipPerSample, Long tableVocabSize,
+      Long featureWidth, Long numScPerChip, String tableName, String miniBatchInCsr) {
+    return GetMinibatchesInCsrWithPhysicalReplica.create(scope, programKey, rowIds, colIds, gains, splits, idCounts, sampleCount, numReplica, maxMinibatchesPerSc, maxIdsPerChipPerSample, tableVocabSize, featureWidth, numScPerChip, tableName, miniBatchInCsr);
+  }
+
+  /**
+   * The GlobalIterId operation
+   *
+   * @return a new instance of GlobalIterId
+   */
+  public GlobalIterId globalIterId() {
+    return GlobalIterId.create(scope);
+  }
+
+  /**
    * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
    *  outputs outside the XLA computation. Supports ND sharding.
    *
@@ -268,6 +366,50 @@ public final class TpuOps {
    */
   public ShutdownTPUSystem shutdownTPUSystem() {
     return ShutdownTPUSystem.create(scope);
+  }
+
+  /**
+   * The StoreMinibatchStatisticsInFdo operation
+   *
+   * @param programKey The programKey value
+   * @param maxIds The maxIds value
+   * @param maxUniques The maxUniques value
+   * @param sampleCount The value of the sampleCount attribute
+   * @param numReplica The value of the numReplica attribute
+   * @param featureWidth The value of the featureWidth attribute
+   * @param numScPerChip The value of the numScPerChip attribute
+   * @param tableName The value of the tableName attribute
+   * @param miniBatchSplits The value of the miniBatchSplits attribute
+   * @return a new instance of StoreMinibatchStatisticsInFdo
+   */
+  public StoreMinibatchStatisticsInFdo storeMinibatchStatisticsInFdo(Operand<TString> programKey,
+      Operand<TInt32> maxIds, Operand<TInt32> maxUniques, Long sampleCount, Long numReplica,
+      Long featureWidth, Long numScPerChip, String tableName, String miniBatchSplits) {
+    return StoreMinibatchStatisticsInFdo.create(scope, programKey, maxIds, maxUniques, sampleCount, numReplica, featureWidth, numScPerChip, tableName, miniBatchSplits);
+  }
+
+  /**
+   * The TPUAnnotateTensorsWithDynamicShape operation
+   *
+   * @param tensors The tensors value
+   * @return a new instance of TPUAnnotateTensorsWithDynamicShape
+   */
+  public TPUAnnotateTensorsWithDynamicShape tPUAnnotateTensorsWithDynamicShape(
+      Iterable<Operand<?>> tensors) {
+    return TPUAnnotateTensorsWithDynamicShape.create(scope, tensors);
+  }
+
+  /**
+   * Op that copies host tensor to device with dynamic shape support.
+   *  For internal use only.
+   *
+   * @param tensors The tensors value
+   * @param unpaddedSizes The unpaddedSizes value
+   * @return a new instance of TPUCopyWithDynamicShape
+   */
+  public TPUCopyWithDynamicShape tPUCopyWithDynamicShape(Iterable<Operand<?>> tensors,
+      Iterable<Operand<TInt32>> unpaddedSizes) {
+    return TPUCopyWithDynamicShape.create(scope, tensors, unpaddedSizes);
   }
 
   /**

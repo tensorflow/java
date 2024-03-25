@@ -24,6 +24,20 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.xla.XlaHostCompute;
 import org.tensorflow.op.xla.XlaRecvFromHost;
 import org.tensorflow.op.xla.XlaSendToHost;
+import org.tensorflow.op.xla.XlaSparseCoreAdagrad;
+import org.tensorflow.op.xla.XlaSparseCoreAdagradMomentum;
+import org.tensorflow.op.xla.XlaSparseCoreAdam;
+import org.tensorflow.op.xla.XlaSparseCoreFtrl;
+import org.tensorflow.op.xla.XlaSparseCoreSgd;
+import org.tensorflow.op.xla.XlaSparseDenseMatmul;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithAdagradAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithAdamAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithFtrlAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithSgdAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulWithCsrInput;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -92,6 +106,304 @@ public final class XlaOps {
    */
   public XlaSendToHost xlaSendToHost(Operand<? extends TType> input, String key) {
     return XlaSendToHost.create(scope, input, key);
+  }
+
+  /**
+   * The XlaSparseCoreAdagrad operation
+   *
+   * @param indices The indices value
+   * @param gradient The gradient value
+   * @param learningRate The learningRate value
+   * @param accumulator The accumulator value
+   * @param embeddingTable The embeddingTable value
+   * @param featureWidth The value of the featureWidth attribute
+   * @return a new instance of XlaSparseCoreAdagrad
+   */
+  public XlaSparseCoreAdagrad xlaSparseCoreAdagrad(Operand<TInt32> indices,
+      Operand<TFloat32> gradient, Operand<TFloat32> learningRate, Operand<TFloat32> accumulator,
+      Operand<TFloat32> embeddingTable, Long featureWidth) {
+    return XlaSparseCoreAdagrad.create(scope, indices, gradient, learningRate, accumulator, embeddingTable, featureWidth);
+  }
+
+  /**
+   * The XlaSparseCoreAdagradMomentum operation
+   *
+   * @param indices The indices value
+   * @param gradient The gradient value
+   * @param learningRate The learningRate value
+   * @param beta1 The beta1 value
+   * @param epsilon The epsilon value
+   * @param accumulator The accumulator value
+   * @param momentum The momentum value
+   * @param embeddingTable The embeddingTable value
+   * @param featureWidth The value of the featureWidth attribute
+   * @param useNesterov The value of the useNesterov attribute
+   * @param beta2 The value of the beta2 attribute
+   * @param exponent The value of the exponent attribute
+   * @return a new instance of XlaSparseCoreAdagradMomentum
+   */
+  public XlaSparseCoreAdagradMomentum xlaSparseCoreAdagradMomentum(Operand<TInt32> indices,
+      Operand<TFloat32> gradient, Operand<TFloat32> learningRate, Operand<TFloat32> beta1,
+      Operand<TFloat32> epsilon, Operand<TFloat32> accumulator, Operand<TFloat32> momentum,
+      Operand<TFloat32> embeddingTable, Long featureWidth, Boolean useNesterov, Float beta2,
+      Float exponent) {
+    return XlaSparseCoreAdagradMomentum.create(scope, indices, gradient, learningRate, beta1, epsilon, accumulator, momentum, embeddingTable, featureWidth, useNesterov, beta2, exponent);
+  }
+
+  /**
+   * The XlaSparseCoreAdam operation
+   *
+   * @param embeddingTable The embeddingTable value
+   * @param indices The indices value
+   * @param gradient The gradient value
+   * @param learningRate The learningRate value
+   * @param momentum The momentum value
+   * @param velocity The velocity value
+   * @param beta1 The beta1 value
+   * @param beta2 The beta2 value
+   * @param epsilon The epsilon value
+   * @param featureWidth The value of the featureWidth attribute
+   * @param useSumInsideSqrt The value of the useSumInsideSqrt attribute
+   * @return a new instance of XlaSparseCoreAdam
+   */
+  public XlaSparseCoreAdam xlaSparseCoreAdam(Operand<TFloat32> embeddingTable,
+      Operand<TInt32> indices, Operand<TFloat32> gradient, Operand<TFloat32> learningRate,
+      Operand<TFloat32> momentum, Operand<TFloat32> velocity, Operand<TFloat32> beta1,
+      Operand<TFloat32> beta2, Operand<TFloat32> epsilon, Long featureWidth,
+      Boolean useSumInsideSqrt) {
+    return XlaSparseCoreAdam.create(scope, embeddingTable, indices, gradient, learningRate, momentum, velocity, beta1, beta2, epsilon, featureWidth, useSumInsideSqrt);
+  }
+
+  /**
+   * The XlaSparseCoreFtrl operation
+   *
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param linear The linear value
+   * @param learningRate The learningRate value
+   * @param indices The indices value
+   * @param gradient The gradient value
+   * @param beta The beta value
+   * @param learningRatePower The learningRatePower value
+   * @param l2RegularizationStrength The l2RegularizationStrength value
+   * @param featureWidth The value of the featureWidth attribute
+   * @param multiplyLinearByLearningRate The value of the multiplyLinearByLearningRate attribute
+   * @param l1RegularizationStrength The value of the l1RegularizationStrength attribute
+   * @return a new instance of XlaSparseCoreFtrl
+   */
+  public XlaSparseCoreFtrl xlaSparseCoreFtrl(Operand<TFloat32> embeddingTable,
+      Operand<TFloat32> accumulator, Operand<TFloat32> linear, Operand<TFloat32> learningRate,
+      Operand<TInt32> indices, Operand<TFloat32> gradient, Operand<TFloat32> beta,
+      Operand<TFloat32> learningRatePower, Operand<TFloat32> l2RegularizationStrength,
+      Long featureWidth, Boolean multiplyLinearByLearningRate, Float l1RegularizationStrength) {
+    return XlaSparseCoreFtrl.create(scope, embeddingTable, accumulator, linear, learningRate, indices, gradient, beta, learningRatePower, l2RegularizationStrength, featureWidth, multiplyLinearByLearningRate, l1RegularizationStrength);
+  }
+
+  /**
+   * The XlaSparseCoreSgd operation
+   *
+   * @param indices The indices value
+   * @param gradient The gradient value
+   * @param learningRate The learningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param featureWidth The value of the featureWidth attribute
+   * @return a new instance of XlaSparseCoreSgd
+   */
+  public XlaSparseCoreSgd xlaSparseCoreSgd(Operand<TInt32> indices, Operand<TFloat32> gradient,
+      Operand<TFloat32> learningRate, Operand<TFloat32> embeddingTable, Long featureWidth) {
+    return XlaSparseCoreSgd.create(scope, indices, gradient, learningRate, embeddingTable, featureWidth);
+  }
+
+  /**
+   * The XlaSparseDenseMatmul operation
+   *
+   * @param rowIds The rowIds value
+   * @param colIds The colIds value
+   * @param values The values value
+   * @param offsets The offsets value
+   * @param embeddingTable The embeddingTable value
+   * @param maxIdsPerPartition The value of the maxIdsPerPartition attribute
+   * @param maxUniqueIdsPerPartition The value of the maxUniqueIdsPerPartition attribute
+   * @param inputSize The value of the inputSize attribute
+   * @return a new instance of XlaSparseDenseMatmul
+   */
+  public XlaSparseDenseMatmul xlaSparseDenseMatmul(Operand<TInt32> rowIds,
+      Operand<? extends TType> colIds, Operand<TFloat32> values, Operand<? extends TType> offsets,
+      Operand<TFloat32> embeddingTable, Long maxIdsPerPartition, Long maxUniqueIdsPerPartition,
+      Long inputSize) {
+    return XlaSparseDenseMatmul.create(scope, rowIds, colIds, values, offsets, embeddingTable, maxIdsPerPartition, maxUniqueIdsPerPartition, inputSize);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulGradWithAdagradAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedGains The sortedGains value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulGradWithAdagradAndCsrInput
+   */
+  public XlaSparseDenseMatmulGradWithAdagradAndCsrInput xlaSparseDenseMatmulGradWithAdagradAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> embeddingTable,
+      Operand<TFloat32> accumulator, Operand<TInt32> numMinibatchesPerPhysicalSparseCore,
+      String tableName, XlaSparseDenseMatmulGradWithAdagradAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulGradWithAdagradAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, activationGradients, learningRate, embeddingTable, accumulator, numMinibatchesPerPhysicalSparseCore, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedGains The sortedGains value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param momenta The momenta value
+   * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
+   * @param useNesterov The value of the useNesterov attribute
+   * @param exponent The value of the exponent attribute
+   * @param beta1 The value of the beta1 attribute
+   * @param beta2 The value of the beta2 attribute
+   * @param epsilon The value of the epsilon attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput
+   */
+  public XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput xlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> embeddingTable,
+      Operand<TFloat32> accumulator, Operand<TFloat32> momenta,
+      Operand<TInt32> numMinibatchesPerPhysicalSparseCore, Boolean useNesterov, Float exponent,
+      Float beta1, Float beta2, Float epsilon, String tableName,
+      XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, activationGradients, learningRate, embeddingTable, accumulator, momenta, numMinibatchesPerPhysicalSparseCore, useNesterov, exponent, beta1, beta2, epsilon, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulGradWithAdamAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedGains The sortedGains value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param momenta The momenta value
+   * @param velocity The velocity value
+   * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
+   * @param useSumInsideSqrt The value of the useSumInsideSqrt attribute
+   * @param beta1 The value of the beta1 attribute
+   * @param beta2 The value of the beta2 attribute
+   * @param epsilon The value of the epsilon attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulGradWithAdamAndCsrInput
+   */
+  public XlaSparseDenseMatmulGradWithAdamAndCsrInput xlaSparseDenseMatmulGradWithAdamAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> embeddingTable, Operand<TFloat32> momenta,
+      Operand<TFloat32> velocity, Operand<TInt32> numMinibatchesPerPhysicalSparseCore,
+      Boolean useSumInsideSqrt, Float beta1, Float beta2, Float epsilon, String tableName,
+      XlaSparseDenseMatmulGradWithAdamAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulGradWithAdamAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, activationGradients, learningRate, embeddingTable, momenta, velocity, numMinibatchesPerPhysicalSparseCore, useSumInsideSqrt, beta1, beta2, epsilon, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulGradWithFtrlAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedGains The sortedGains value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param linear The linear value
+   * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
+   * @param multiplyLinearByLearningRate The value of the multiplyLinearByLearningRate attribute
+   * @param beta The value of the beta attribute
+   * @param learningRatePower The value of the learningRatePower attribute
+   * @param l1RegularizationStrength The value of the l1RegularizationStrength attribute
+   * @param l2RegularizationStrength The value of the l2RegularizationStrength attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulGradWithFtrlAndCsrInput
+   */
+  public XlaSparseDenseMatmulGradWithFtrlAndCsrInput xlaSparseDenseMatmulGradWithFtrlAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> embeddingTable,
+      Operand<TFloat32> accumulator, Operand<TFloat32> linear,
+      Operand<TInt32> numMinibatchesPerPhysicalSparseCore, Boolean multiplyLinearByLearningRate,
+      Float beta, Float learningRatePower, Float l1RegularizationStrength,
+      Float l2RegularizationStrength, String tableName,
+      XlaSparseDenseMatmulGradWithFtrlAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulGradWithFtrlAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, activationGradients, learningRate, embeddingTable, accumulator, linear, numMinibatchesPerPhysicalSparseCore, multiplyLinearByLearningRate, beta, learningRatePower, l1RegularizationStrength, l2RegularizationStrength, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulGradWithSgdAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedGains The sortedGains value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulGradWithSgdAndCsrInput
+   */
+  public XlaSparseDenseMatmulGradWithSgdAndCsrInput xlaSparseDenseMatmulGradWithSgdAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> embeddingTable,
+      Operand<TInt32> numMinibatchesPerPhysicalSparseCore, String tableName,
+      XlaSparseDenseMatmulGradWithSgdAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulGradWithSgdAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, activationGradients, learningRate, embeddingTable, numMinibatchesPerPhysicalSparseCore, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulWithCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedGains The sortedGains value
+   * @param embeddingTable The embeddingTable value
+   * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
+   * @param inputSize The value of the inputSize attribute
+   * @param quantizationConfigLow The value of the quantizationConfigLow attribute
+   * @param quantizationConfigHigh The value of the quantizationConfigHigh attribute
+   * @param quantizationConfigNumBuckets The value of the quantizationConfigNumBuckets attribute
+   * @param tableName The value of the tableName attribute
+   * @return a new instance of XlaSparseDenseMatmulWithCsrInput
+   */
+  public XlaSparseDenseMatmulWithCsrInput xlaSparseDenseMatmulWithCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<TFloat32> embeddingTable,
+      Operand<TInt32> numMinibatchesPerPhysicalSparseCore, Long inputSize,
+      Float quantizationConfigLow, Float quantizationConfigHigh, Long quantizationConfigNumBuckets,
+      String tableName) {
+    return XlaSparseDenseMatmulWithCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, embeddingTable, numMinibatchesPerPhysicalSparseCore, inputSize, quantizationConfigLow, quantizationConfigHigh, quantizationConfigNumBuckets, tableName);
   }
 
   /**

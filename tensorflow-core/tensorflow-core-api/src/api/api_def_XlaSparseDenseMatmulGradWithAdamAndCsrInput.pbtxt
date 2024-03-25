@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "XlaSparseDenseMatmulGradWithAdamAndCsrInput"
+  visibility: VISIBLE
+  endpoint {
+    name: "xla.XlaSparseDenseMatmulGradWithAdamAndCsrInput"
+  }
+}

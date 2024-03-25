@@ -346,6 +346,60 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
+     * If true, use Pathways with TFRT API for multi host support.
+     * </pre>
+     *
+     * <code>bool enable_multi_host = 27;</code>
+     * @return The enableMultiHost.
+     */
+    boolean getEnableMultiHost();
+
+    /**
+     * <pre>
+     * Port for the Pathways server. Ignored if enable_multi_host=false.
+     * </pre>
+     *
+     * <code>int32 backend_server_port = 28;</code>
+     * @return The backendServerPort.
+     */
+    int getBackendServerPort();
+
+    /**
+     * <pre>
+     * If true, TFRT will use TPU specific compiler passes and perform TPU
+     * specific initialization.
+     * </pre>
+     *
+     * <code>bool target_tpu = 29;</code>
+     * @return The targetTpu.
+     */
+    boolean getTargetTpu();
+
+    /**
+     * <pre>
+     * If true, TFRT will use GPU specific compiler passes and perform GPU
+     * specific initialization.
+     * </pre>
+     *
+     * <code>bool target_gpu = 30;</code>
+     * @return The targetGpu.
+     */
+    boolean getTargetGpu();
+
+    /**
+     * <pre>
+     * The threshold to merge small streams in TFRT. The stream with cost
+     * smaller than the threshold will be merged. Setting it to value 1
+     * disables all merges.
+     * </pre>
+     *
+     * <code>int32 stream_merge_threshold = 31;</code>
+     * @return The streamMergeThreshold.
+     */
+    int getStreamMergeThreshold();
+
+    /**
+     * <pre>
      * Whether functional control flow op lowering should be disabled. This is
      * useful when executing within a portable runtime where control flow op
      * kernels may not be loaded due to selective registration.
@@ -1032,6 +1086,85 @@ private static final long serialVersionUID = 0L;
       return useTfrt_;
     }
 
+    public static final int ENABLE_MULTI_HOST_FIELD_NUMBER = 27;
+    private boolean enableMultiHost_;
+    /**
+     * <pre>
+     * If true, use Pathways with TFRT API for multi host support.
+     * </pre>
+     *
+     * <code>bool enable_multi_host = 27;</code>
+     * @return The enableMultiHost.
+     */
+    @java.lang.Override
+    public boolean getEnableMultiHost() {
+      return enableMultiHost_;
+    }
+
+    public static final int BACKEND_SERVER_PORT_FIELD_NUMBER = 28;
+    private int backendServerPort_;
+    /**
+     * <pre>
+     * Port for the Pathways server. Ignored if enable_multi_host=false.
+     * </pre>
+     *
+     * <code>int32 backend_server_port = 28;</code>
+     * @return The backendServerPort.
+     */
+    @java.lang.Override
+    public int getBackendServerPort() {
+      return backendServerPort_;
+    }
+
+    public static final int TARGET_TPU_FIELD_NUMBER = 29;
+    private boolean targetTpu_;
+    /**
+     * <pre>
+     * If true, TFRT will use TPU specific compiler passes and perform TPU
+     * specific initialization.
+     * </pre>
+     *
+     * <code>bool target_tpu = 29;</code>
+     * @return The targetTpu.
+     */
+    @java.lang.Override
+    public boolean getTargetTpu() {
+      return targetTpu_;
+    }
+
+    public static final int TARGET_GPU_FIELD_NUMBER = 30;
+    private boolean targetGpu_;
+    /**
+     * <pre>
+     * If true, TFRT will use GPU specific compiler passes and perform GPU
+     * specific initialization.
+     * </pre>
+     *
+     * <code>bool target_gpu = 30;</code>
+     * @return The targetGpu.
+     */
+    @java.lang.Override
+    public boolean getTargetGpu() {
+      return targetGpu_;
+    }
+
+    public static final int STREAM_MERGE_THRESHOLD_FIELD_NUMBER = 31;
+    private int streamMergeThreshold_;
+    /**
+     * <pre>
+     * The threshold to merge small streams in TFRT. The stream with cost
+     * smaller than the threshold will be merged. Setting it to value 1
+     * disables all merges.
+     * </pre>
+     *
+     * <code>int32 stream_merge_threshold = 31;</code>
+     * @return The streamMergeThreshold.
+     */
+    @java.lang.Override
+    public int getStreamMergeThreshold() {
+      return streamMergeThreshold_;
+    }
+
     public static final int DISABLE_FUNCTIONAL_OPS_LOWERING_FIELD_NUMBER = 21;
     private boolean disableFunctionalOpsLowering_;
     /**
@@ -1221,6 +1354,21 @@ private static final long serialVersionUID = 0L;
       if (disableEagerExecutorStreamingEnqueue_ != false) {
         output.writeBool(26, disableEagerExecutorStreamingEnqueue_);
       }
+      if (enableMultiHost_ != false) {
+        output.writeBool(27, enableMultiHost_);
+      }
+      if (backendServerPort_ != 0) {
+        output.writeInt32(28, backendServerPort_);
+      }
+      if (targetTpu_ != false) {
+        output.writeBool(29, targetTpu_);
+      }
+      if (targetGpu_ != false) {
+        output.writeBool(30, targetGpu_);
+      }
+      if (streamMergeThreshold_ != 0) {
+        output.writeInt32(31, streamMergeThreshold_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1316,6 +1464,26 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(26, disableEagerExecutorStreamingEnqueue_);
       }
+      if (enableMultiHost_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(27, enableMultiHost_);
+      }
+      if (backendServerPort_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(28, backendServerPort_);
+      }
+      if (targetTpu_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(29, targetTpu_);
+      }
+      if (targetGpu_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(30, targetGpu_);
+      }
+      if (streamMergeThreshold_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(31, streamMergeThreshold_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1367,6 +1535,16 @@ private static final long serialVersionUID = 0L;
           != other.getXlaFusionAutotunerThresh()) return false;
       if (getUseTfrt()
           != other.getUseTfrt()) return false;
+      if (getEnableMultiHost()
+          != other.getEnableMultiHost()) return false;
+      if (getBackendServerPort()
+          != other.getBackendServerPort()) return false;
+      if (getTargetTpu()
+          != other.getTargetTpu()) return false;
+      if (getTargetGpu()
+          != other.getTargetGpu()) return false;
+      if (getStreamMergeThreshold()
+          != other.getStreamMergeThreshold()) return false;
       if (getDisableFunctionalOpsLowering()
           != other.getDisableFunctionalOpsLowering()) return false;
       if (getXlaPreferSingleGraphCluster()
@@ -1439,6 +1617,19 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + USE_TFRT_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getUseTfrt());
+      hash = (37 * hash) + ENABLE_MULTI_HOST_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getEnableMultiHost());
+      hash = (37 * hash) + BACKEND_SERVER_PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getBackendServerPort();
+      hash = (37 * hash) + TARGET_TPU_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getTargetTpu());
+      hash = (37 * hash) + TARGET_GPU_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getTargetGpu());
+      hash = (37 * hash) + STREAM_MERGE_THRESHOLD_FIELD_NUMBER;
+      hash = (53 * hash) + getStreamMergeThreshold();
       hash = (37 * hash) + DISABLE_FUNCTIONAL_OPS_LOWERING_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getDisableFunctionalOpsLowering());
@@ -1627,6 +1818,16 @@ private static final long serialVersionUID = 0L;
 
         useTfrt_ = false;
 
+        enableMultiHost_ = false;
+
+        backendServerPort_ = 0;
+
+        targetTpu_ = false;
+
+        targetGpu_ = false;
+
+        streamMergeThreshold_ = 0;
+
         disableFunctionalOpsLowering_ = false;
 
         xlaPreferSingleGraphCluster_ = false;
@@ -1688,6 +1889,11 @@ private static final long serialVersionUID = 0L;
         result.disableOutputPartitionGraphs_ = disableOutputPartitionGraphs_;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
         result.useTfrt_ = useTfrt_;
+        result.enableMultiHost_ = enableMultiHost_;
+        result.backendServerPort_ = backendServerPort_;
+        result.targetTpu_ = targetTpu_;
+        result.targetGpu_ = targetGpu_;
+        result.streamMergeThreshold_ = streamMergeThreshold_;
         result.disableFunctionalOpsLowering_ = disableFunctionalOpsLowering_;
         result.xlaPreferSingleGraphCluster_ = xlaPreferSingleGraphCluster_;
         if (coordinationConfigBuilder_ == null) {
@@ -1797,6 +2003,21 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getUseTfrt() != false) {
           setUseTfrt(other.getUseTfrt());
+        }
+        if (other.getEnableMultiHost() != false) {
+          setEnableMultiHost(other.getEnableMultiHost());
+        }
+        if (other.getBackendServerPort() != 0) {
+          setBackendServerPort(other.getBackendServerPort());
+        }
+        if (other.getTargetTpu() != false) {
+          setTargetTpu(other.getTargetTpu());
+        }
+        if (other.getTargetGpu() != false) {
+          setTargetGpu(other.getTargetGpu());
+        }
+        if (other.getStreamMergeThreshold() != 0) {
+          setStreamMergeThreshold(other.getStreamMergeThreshold());
         }
         if (other.getDisableFunctionalOpsLowering() != false) {
           setDisableFunctionalOpsLowering(other.getDisableFunctionalOpsLowering());
@@ -1953,6 +2174,31 @@ private static final long serialVersionUID = 0L;
 
                 break;
               } // case 208
+              case 216: {
+                enableMultiHost_ = input.readBool();
+
+                break;
+              } // case 216
+              case 224: {
+                backendServerPort_ = input.readInt32();
+
+                break;
+              } // case 224
+              case 232: {
+                targetTpu_ = input.readBool();
+
+                break;
+              } // case 232
+              case 240: {
+                targetGpu_ = input.readBool();
+
+                break;
+              } // case 240
+              case 248: {
+                streamMergeThreshold_ = input.readInt32();
+
+                break;
+              } // case 248
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -3130,6 +3376,233 @@ private static final long serialVersionUID = 0L;
       public Builder clearUseTfrt() {
         
         useTfrt_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean enableMultiHost_ ;
+      /**
+       * <pre>
+       * If true, use Pathways with TFRT API for multi host support.
+       * </pre>
+       *
+       * <code>bool enable_multi_host = 27;</code>
+       * @return The enableMultiHost.
+       */
+      @java.lang.Override
+      public boolean getEnableMultiHost() {
+        return enableMultiHost_;
+      }
+      /**
+       * <pre>
+       * If true, use Pathways with TFRT API for multi host support.
+       * </pre>
+       *
+       * <code>bool enable_multi_host = 27;</code>
+       * @param value The enableMultiHost to set.
+       * @return This builder for chaining.
+       */
+      public Builder setEnableMultiHost(boolean value) {
+        
+        enableMultiHost_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If true, use Pathways with TFRT API for multi host support.
+       * </pre>
+       *
+       * <code>bool enable_multi_host = 27;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearEnableMultiHost() {
+        
+        enableMultiHost_ = false;
+        onChanged();
+        return this;
+      }
+
+      private int backendServerPort_ ;
+      /**
+       * <pre>
+       * Port for the Pathways server. Ignored if enable_multi_host=false.
+       * </pre>
+       *
+       * <code>int32 backend_server_port = 28;</code>
+       * @return The backendServerPort.
+       */
+      @java.lang.Override
+      public int getBackendServerPort() {
+        return backendServerPort_;
+      }
+      /**
+       * <pre>
+       * Port for the Pathways server. Ignored if enable_multi_host=false.
+       * </pre>
+       *
+       * <code>int32 backend_server_port = 28;</code>
+       * @param value The backendServerPort to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBackendServerPort(int value) {
+        
+        backendServerPort_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Port for the Pathways server. Ignored if enable_multi_host=false.
+       * </pre>
+       *
+       * <code>int32 backend_server_port = 28;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBackendServerPort() {
+        
+        backendServerPort_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private boolean targetTpu_ ;
+      /**
+       * <pre>
+       * If true, TFRT will use TPU specific compiler passes and perform TPU
+       * specific initialization.
+       * </pre>
+       *
+       * <code>bool target_tpu = 29;</code>
+       * @return The targetTpu.
+       */
+      @java.lang.Override
+      public boolean getTargetTpu() {
+        return targetTpu_;
+      }
+      /**
+       * <pre>
+       * If true, TFRT will use TPU specific compiler passes and perform TPU
+       * specific initialization.
+       * </pre>
+       *
+       * <code>bool target_tpu = 29;</code>
+       * @param value The targetTpu to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetTpu(boolean value) {
+        
+        targetTpu_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If true, TFRT will use TPU specific compiler passes and perform TPU
+       * specific initialization.
+       * </pre>
+       *
+       * <code>bool target_tpu = 29;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTargetTpu() {
+        
+        targetTpu_ = false;
+        onChanged();
+        return this;
+      }
+
+      private boolean targetGpu_ ;
+      /**
+       * <pre>
+       * If true, TFRT will use GPU specific compiler passes and perform GPU
+       * specific initialization.
+       * </pre>
+       *
+       * <code>bool target_gpu = 30;</code>
+       * @return The targetGpu.
+       */
+      @java.lang.Override
+      public boolean getTargetGpu() {
+        return targetGpu_;
+      }
+      /**
+       * <pre>
+       * If true, TFRT will use GPU specific compiler passes and perform GPU
+       * specific initialization.
+       * </pre>
+       *
+       * <code>bool target_gpu = 30;</code>
+       * @param value The targetGpu to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetGpu(boolean value) {
+        
+        targetGpu_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If true, TFRT will use GPU specific compiler passes and perform GPU
+       * specific initialization.
+       * </pre>
+       *
+       * <code>bool target_gpu = 30;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTargetGpu() {
+        
+        targetGpu_ = false;
+        onChanged();
+        return this;
+      }
+
+      private int streamMergeThreshold_ ;
+      /**
+       * <pre>
+       * The threshold to merge small streams in TFRT. The stream with cost
+       * smaller than the threshold will be merged. Setting it to value 1
+       * disables all merges.
+       * </pre>
+       *
+       * <code>int32 stream_merge_threshold = 31;</code>
+       * @return The streamMergeThreshold.
+       */
+      @java.lang.Override
+      public int getStreamMergeThreshold() {
+        return streamMergeThreshold_;
+      }
+      /**
+       * <pre>
+       * The threshold to merge small streams in TFRT. The stream with cost
+       * smaller than the threshold will be merged. Setting it to value 1
+       * disables all merges.
+       * </pre>
+       *
+       * <code>int32 stream_merge_threshold = 31;</code>
+       * @param value The streamMergeThreshold to set.
+       * @return This builder for chaining.
+       */
+      public Builder setStreamMergeThreshold(int value) {
+        
+        streamMergeThreshold_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * The threshold to merge small streams in TFRT. The stream with cost
+       * smaller than the threshold will be merged. Setting it to value 1
+       * disables all merges.
+       * </pre>
+       *
+       * <code>int32 stream_merge_threshold = 31;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearStreamMergeThreshold() {
+        
+        streamMergeThreshold_ = 0;
         onChanged();
         return this;
       }

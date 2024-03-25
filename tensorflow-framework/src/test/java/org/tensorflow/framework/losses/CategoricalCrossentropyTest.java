@@ -17,10 +17,14 @@ package org.tensorflow.framework.losses;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
+import org.tensorflow.Session;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -36,16 +40,8 @@ public class CategoricalCrossentropyTest {
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
 
-        long[] trueArray = {
-          1L, 0L, 0L,
-          0L, 1L, 0L,
-          0L, 0L, 1L
-        };
-        float[] predArray = {
-          1.F, 0.F, 0.F,
-          0.F, 1.F, 0.F,
-          0.F, 0.F, 1.F
-        };
+        long[] trueArray = {1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L};
+        float[] predArray = {1.F, 0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 0.F, 1.F};
         Operand<TInt64> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         CategoricalCrossentropy instance = new CategoricalCrossentropy();
@@ -55,11 +51,7 @@ public class CategoricalCrossentropyTest {
         testSession.evaluate(expected, loss);
 
         // Test with logits.
-        float[] logitsArray = {
-          10.F, 0.F, 0.F,
-          0.F, 10.F, 0.F,
-          0.F, 0.F, 10.F
-        };
+        float[] logitsArray = {10.F, 0.F, 0.F, 0.F, 10.F, 0.F, 0.F, 0.F, 10.F};
         yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
@@ -85,11 +77,7 @@ public class CategoricalCrossentropyTest {
               Ops tf = testSession.getTF();
               CategoricalCrossentropy instance = new CategoricalCrossentropy();
 
-              float[] trueArray = {
-                1L, 0L, 0L,
-                0L, 1L, 0L,
-                0L, 0L, 1L
-              };
+              float[] trueArray = {1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L};
               float[] predArray = {-1.F, 0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 0.F, 1.F};
               Operand<TFloat32> yTrue =
                   tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
@@ -111,11 +99,7 @@ public class CategoricalCrossentropyTest {
         CategoricalCrossentropy instance = new CategoricalCrossentropy();
 
         int[] trueArray = {1, 0, 0, 0, 1, 0, 0, 0, 1};
-        float[] predArray = {
-          .9F, .05F, .05F,
-          .5F, .89F, .6F,
-          .05F, .01F, .94F
-        };
+        float[] predArray = {.9F, .05F, .05F, .5F, .89F, .6F, .05F, .01F, .94F};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
@@ -123,11 +107,7 @@ public class CategoricalCrossentropyTest {
         testSession.evaluate(expected, loss);
 
         // Test with logits.
-        float[] logitsArray = {
-          8.F, 1.F, 1.F,
-          0.F, 9.F, 1.F,
-          2.F, 3.F, 5.F
-        };
+        float[] logitsArray = {8.F, 1.F, 1.F, 0.F, 9.F, 1.F, 2.F, 3.F, 5.F};
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
         instance = new CategoricalCrossentropy(true);
@@ -145,16 +125,8 @@ public class CategoricalCrossentropyTest {
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
 
-        int[] trueArray = {
-          1, 0, 0,
-          0, 1, 0,
-          0, 0, 1
-        };
-        float[] predArray = {
-          .9F, .05F, .05F,
-          .5F, .89F, .6F,
-          .05F, .01F, .94F
-        };
+        int[] trueArray = {1, 0, 0, 0, 1, 0, 0, 0, 1};
+        float[] predArray = {.9F, .05F, .05F, .5F, .89F, .6F, .05F, .01F, .94F};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3F);
@@ -166,11 +138,7 @@ public class CategoricalCrossentropyTest {
         testSession.evaluate(expected, loss);
 
         // Test with logits.
-        float[] logitsArray = {
-          8.F, 1.F, 1.F,
-          0.F, 9.F, 1.F,
-          2.F, 3.F, 5.F
-        };
+        float[] logitsArray = {8.F, 1.F, 1.F, 0.F, 9.F, 1.F, 2.F, 3.F, 5.F};
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
         instance = new CategoricalCrossentropy(true);
@@ -189,16 +157,8 @@ public class CategoricalCrossentropyTest {
         CategoricalCrossentropy instance = new CategoricalCrossentropy();
 
         float[] sampeWeightArray = {1.2F, 3.4F, 5.6F};
-        int[] trueArray = {
-          1, 0, 0,
-          0, 1, 0,
-          0, 0, 1
-        };
-        float[] predArray = {
-          .9F, .05F, .05F,
-          .5F, .89F, .6F,
-          .05F, .01F, .94F
-        };
+        int[] trueArray = {1, 0, 0, 0, 1, 0, 0, 0, 1};
+        float[] predArray = {.9F, .05F, .05F, .5F, .89F, .6F, .05F, .01F, .94F};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> sampleWeight =
@@ -208,11 +168,7 @@ public class CategoricalCrossentropyTest {
         testSession.evaluate(expected, loss);
 
         // Test with logits.
-        float[] logitsArray = {
-          8.F, 1.F, 1.F,
-          0.F, 9.F, 1.F,
-          2.F, 3.F, 5.F
-        };
+        float[] logitsArray = {8.F, 1.F, 1.F, 0.F, 9.F, 1.F, 2.F, 3.F, 5.F};
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
         instance = new CategoricalCrossentropy(true);
@@ -231,11 +187,7 @@ public class CategoricalCrossentropyTest {
 
         // Test with logits.
         int[] trueArray = {1, 0, 0, 0, 1, 0, 0, 0, 1};
-        float[] logitsArray = {
-          8.F, 1.F, 1.F,
-          0.F, 9.F, 1.F,
-          2.F, 3.F, 5.F
-        };
+        float[] logitsArray = {8.F, 1.F, 1.F, 0.F, 9.F, 1.F, 2.F, 3.F, 5.F};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
@@ -265,5 +217,35 @@ public class CategoricalCrossentropyTest {
         float expected = 400.0F * labelSmoothing / 3.0F;
         testSession.evaluate(expected, loss);
       }
+  }
+
+  @Test
+  public void testCategoricalCrossEntopyWithDynamicBatchSize() {
+    try (Graph graph = new Graph()) {
+      Ops tf = Ops.create(graph);
+      Operand yPred = tf.placeholder(TFloat32.class, Placeholder.shape(Shape.of(-1, 3)));
+      Operand yTrue =
+          tf.reshape(tf.constant(new float[] {1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f}), tf.array(3, 3));
+      CategoricalCrossentropy instance = new CategoricalCrossentropy(true);
+      Operand loss =
+          instance.call(tf, yTrue, yPred); // Throw TFInvalidArgument Exception without fix
+      try (Session session = new Session(graph);
+          TFloat32 result =
+              (TFloat32)
+                  session
+                      .runner()
+                      .feed(
+                          yPred,
+                          TFloat32.tensorOf(
+                              Shape.of(3, 3),
+                              DataBuffers.of(
+                                  new float[] {1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 1.f})))
+                      .fetch(loss)
+                      .run()
+                      .get(0)) {
+        if (Math.abs(0.5514477f - result.getFloat()) > 0.01)
+          throw new IllegalStateException("Invalid result :" + result.getFloat());
+      }
+    }
   }
 }

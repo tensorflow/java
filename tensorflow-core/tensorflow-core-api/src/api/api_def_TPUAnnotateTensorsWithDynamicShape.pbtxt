@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TPUAnnotateTensorsWithDynamicShape"
+  visibility: VISIBLE
+  endpoint {
+    name: "tpu.TPUAnnotateTensorsWithDynamicShape"
+  }
+}

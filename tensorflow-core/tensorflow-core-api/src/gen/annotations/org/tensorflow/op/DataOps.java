@@ -35,6 +35,7 @@ import org.tensorflow.op.data.ChooseFastestDataset;
 import org.tensorflow.op.data.ConcatenateDataset;
 import org.tensorflow.op.data.DataServiceDataset;
 import org.tensorflow.op.data.DatasetCardinality;
+import org.tensorflow.op.data.DatasetFingerprint;
 import org.tensorflow.op.data.DatasetFromGraph;
 import org.tensorflow.op.data.DatasetToGraph;
 import org.tensorflow.op.data.DatasetToSingleElement;
@@ -62,6 +63,7 @@ import org.tensorflow.op.data.IteratorToStringHandle;
 import org.tensorflow.op.data.LMDBDataset;
 import org.tensorflow.op.data.LatencyStatsDataset;
 import org.tensorflow.op.data.LegacyParallelInterleaveDataset;
+import org.tensorflow.op.data.ListSnapshotChunksDataset;
 import org.tensorflow.op.data.LoadDataset;
 import org.tensorflow.op.data.MakeIterator;
 import org.tensorflow.op.data.MapAndBatchDataset;
@@ -388,6 +390,17 @@ public final class DataOps {
   public DatasetCardinality datasetCardinality(Operand<? extends TType> inputDataset,
       DatasetCardinality.Options... options) {
     return DatasetCardinality.create(scope, inputDataset, options);
+  }
+
+  /**
+   * Returns the fingerprint of {@code input_dataset}.
+   *  Returns the fingerprint of {@code input_dataset}.
+   *
+   * @param inputDataset A variant tensor representing the dataset to return fingerprint for.
+   * @return a new instance of DatasetFingerprint
+   */
+  public DatasetFingerprint datasetFingerprint(Operand<? extends TType> inputDataset) {
+    return DatasetFingerprint.create(scope, inputDataset);
   }
 
   /**
@@ -871,6 +884,19 @@ public final class DataOps {
       ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       LegacyParallelInterleaveDataset.Options... options) {
     return LegacyParallelInterleaveDataset.create(scope, inputDataset, otherArguments, cycleLength, blockLength, bufferOutputElements, prefetchInputElements, f, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * The ListSnapshotChunksDataset operation
+   *
+   * @param snapshotPath The snapshotPath value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of ListSnapshotChunksDataset
+   */
+  public ListSnapshotChunksDataset listSnapshotChunksDataset(Operand<TString> snapshotPath,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return ListSnapshotChunksDataset.create(scope, snapshotPath, outputTypes, outputShapes);
   }
 
   /**

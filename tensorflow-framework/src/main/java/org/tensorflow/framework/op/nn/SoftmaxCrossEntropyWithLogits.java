@@ -42,15 +42,12 @@ public class SoftmaxCrossEntropyWithLogits {
    * <p>Usage:
    *
    * <pre>
-   *   Operand&lt;TFloat32&gt; logits =
-   *       tf.constant(new float[][] {{4.0F, 2.0F, 1.0F}, {0.0F, 5.0F, 1.0F}} );
-   *   Operand&lt;TFloat32&gt; labels =
-   *       tf.constant(new float[][] {{1.0F, 0.0F, 0.0F}, {0.0F, 0.8F, 0.2F}} );
-   *   Operand&lt;TFloat32&gt; output =
-   *       tf.nn.softmaxCrossEntropyWithLogits(labels, logits, -1);
-   *   // output Shape = [2]
-   *   // dataType = FLOAT (1)
-   *   // values { 0.169846, 0.824745 }
+   * Operand&lt;TFloat32&gt; logits = tf.constant(new float[][] { { 4.0F, 2.0F, 1.0F }, { 0.0F, 5.0F, 1.0F } });
+   * Operand&lt;TFloat32&gt; labels = tf.constant(new float[][] { { 1.0F, 0.0F, 0.0F }, { 0.0F, 0.8F, 0.2F } });
+   * Operand&lt;TFloat32&gt; output = tf.nn.softmaxCrossEntropyWithLogits(labels, logits, -1);
+   * // output Shape = [2]
+   * // dataType = FLOAT (1)
+   * // values { 0.169846, 0.824745 }
    * </pre>
    *
    * <p>Backpropagation will happen into both <code>logits</code> and <code>labels</code>. To
@@ -157,7 +154,7 @@ public class SoftmaxCrossEntropyWithLogits {
    * @return the flattened logits
    */
   private static <T extends TNumber> Operand<T> flattenOuterDims(Scope scope, Operand<T> logits) {
-    Operand<TInt64> one = Constant.scalarOf(scope, 1L);
+    Operand<TInt64> one = Constant.arrayOf(scope, 1L);
 
     Shape shape = logits.shape();
     int ndims = shape.numDimensions();

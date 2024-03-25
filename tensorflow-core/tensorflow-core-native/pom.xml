@@ -69,7 +69,9 @@
       <properties>
         <bazel.build.skip>false</bazel.build.skip>
         <bazel.clean.skip>false</bazel.clean.skip>
+        <bazel.generate.skip>false</bazel.generate.skip>
         <javacpp.clean.skip>false</javacpp.clean.skip>
+        <javacpp.generate.skip>false</javacpp.generate.skip>
         <dist.download.skip>true</dist.download.skip>
       </properties>
     </profile>

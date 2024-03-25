@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "XlaSparseCoreFtrl"
+  visibility: VISIBLE
+  endpoint {
+    name: "xla.XlaSparseCoreFtrl"
+  }
+}

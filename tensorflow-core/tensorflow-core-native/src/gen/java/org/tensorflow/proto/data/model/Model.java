@@ -316,6 +316,26 @@ public final class Model {
 
     /**
      * <pre>
+     * User-defined name for the dataset. Empty if no name was set.
+     * </pre>
+     *
+     * <code>string dataset_name = 7;</code>
+     * @return The datasetName.
+     */
+    java.lang.String getDatasetName();
+    /**
+     * <pre>
+     * User-defined name for the dataset. Empty if no name was set.
+     * </pre>
+     *
+     * <code>string dataset_name = 7;</code>
+     * @return The bytes for datasetName.
+     */
+    com.google.protobuf.ByteString
+        getDatasetNameBytes();
+
+    /**
+     * <pre>
      * Map of node IDs to nodes of this model.
      * </pre>
      *
@@ -440,6 +460,7 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
       super(builder);
     }
     private ModelProto() {
+      datasetName_ = "";
       gapTimes_ = emptyLongList();
     }
 
@@ -5007,6 +5028,52 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
 
     }
 
+    public static final int DATASET_NAME_FIELD_NUMBER = 7;
+    private volatile java.lang.Object datasetName_;
+    /**
+     * <pre>
+     * User-defined name for the dataset. Empty if no name was set.
+     * </pre>
+     *
+     * <code>string dataset_name = 7;</code>
+     * @return The datasetName.
+     */
+    @java.lang.Override
+    public java.lang.String getDatasetName() {
+      java.lang.Object ref = datasetName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        datasetName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * User-defined name for the dataset. Empty if no name was set.
+     * </pre>
+     *
+     * <code>string dataset_name = 7;</code>
+     * @return The bytes for datasetName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDatasetNameBytes() {
+      java.lang.Object ref = datasetName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        datasetName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     public static final int NODES_FIELD_NUMBER = 1;
     private static final class NodesDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
@@ -5225,6 +5292,9 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
       for (int i = 0; i < gapTimes_.size(); i++) {
         output.writeUInt64NoTag(gapTimes_.getLong(i));
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(datasetName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, datasetName_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5270,6 +5340,9 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
         }
         gapTimesMemoizedSerializedSize = dataSize;
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(datasetName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, datasetName_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -5285,6 +5358,8 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
       }
       org.tensorflow.proto.data.model.Model.ModelProto other = (org.tensorflow.proto.data.model.Model.ModelProto) obj;
 
+      if (!getDatasetName()
+          .equals(other.getDatasetName())) return false;
       if (!internalGetNodes().equals(
           other.internalGetNodes())) return false;
       if (getOutput()
@@ -5309,6 +5384,8 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + DATASET_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getDatasetName().hashCode();
       if (!internalGetNodes().getMap().isEmpty()) {
         hash = (37 * hash) + NODES_FIELD_NUMBER;
         hash = (53 * hash) + internalGetNodes().hashCode();
@@ -5482,6 +5559,8 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        datasetName_ = "";
+
         internalGetMutableNodes().clear();
         output_ = 0L;
 
@@ -5522,6 +5601,7 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
       public org.tensorflow.proto.data.model.Model.ModelProto buildPartial() {
         org.tensorflow.proto.data.model.Model.ModelProto result = new org.tensorflow.proto.data.model.Model.ModelProto(this);
         int from_bitField0_ = bitField0_;
+        result.datasetName_ = datasetName_;
         result.nodes_ = internalGetNodes();
         result.nodes_.makeImmutable();
         result.output_ = output_;
@@ -5584,6 +5664,10 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
 
       public Builder mergeFrom(org.tensorflow.proto.data.model.Model.ModelProto other) {
         if (other == org.tensorflow.proto.data.model.Model.ModelProto.getDefaultInstance()) return this;
+        if (!other.getDatasetName().isEmpty()) {
+          datasetName_ = other.datasetName_;
+          onChanged();
+        }
         internalGetMutableNodes().mergeFrom(
             other.internalGetNodes());
         if (other.getOutput() != 0L) {
@@ -5672,6 +5756,11 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
                 input.popLimit(limit);
                 break;
               } // case 50
+              case 58: {
+                datasetName_ = input.readStringRequireUtf8();
+
+                break;
+              } // case 58
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -5688,6 +5777,102 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
         return this;
       }
       private int bitField0_;
+
+      private java.lang.Object datasetName_ = "";
+      /**
+       * <pre>
+       * User-defined name for the dataset. Empty if no name was set.
+       * </pre>
+       *
+       * <code>string dataset_name = 7;</code>
+       * @return The datasetName.
+       */
+      public java.lang.String getDatasetName() {
+        java.lang.Object ref = datasetName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          datasetName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * User-defined name for the dataset. Empty if no name was set.
+       * </pre>
+       *
+       * <code>string dataset_name = 7;</code>
+       * @return The bytes for datasetName.
+       */
+      public com.google.protobuf.ByteString
+          getDatasetNameBytes() {
+        java.lang.Object ref = datasetName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          datasetName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * User-defined name for the dataset. Empty if no name was set.
+       * </pre>
+       *
+       * <code>string dataset_name = 7;</code>
+       * @param value The datasetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatasetName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        datasetName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * User-defined name for the dataset. Empty if no name was set.
+       * </pre>
+       *
+       * <code>string dataset_name = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDatasetName() {
+        
+        datasetName_ = getDefaultInstance().getDatasetName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * User-defined name for the dataset. Empty if no name was set.
+       * </pre>
+       *
+       * <code>string dataset_name = 7;</code>
+       * @param value The bytes for datasetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatasetNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        datasetName_ = value;
+        onChanged();
+        return this;
+      }
 
       private com.google.protobuf.MapField<
           java.lang.Long, org.tensorflow.proto.data.model.Model.ModelProto.Node> nodes_;
@@ -6230,43 +6415,43 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
   static {
     java.lang.String[] descriptorData = {
       "\n%tensorflow/core/framework/model.proto\022" +
-      "\025tensorflow.data.model\"\207\010\n\nModelProto\022;\n" +
-      "\005nodes\030\001 \003(\0132,.tensorflow.data.model.Mod" +
-      "elProto.NodesEntry\022\016\n\006output\030\002 \001(\003\022\022\n\nid" +
-      "_counter\030\003 \001(\003\022Q\n\023optimization_params\030\005 " +
-      "\001(\01324.tensorflow.data.model.ModelProto.O" +
-      "ptimizationParams\022\021\n\tgap_times\030\006 \003(\004\032\277\004\n" +
-      "\004Node\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\020\n\010autot" +
-      "une\030\003 \001(\010\022\026\n\016buffered_bytes\030\004 \001(\003\022\031\n\021buf" +
-      "fered_elements\030\005 \001(\003\022\026\n\016bytes_consumed\030\006" +
-      " \001(\003\022\026\n\016bytes_produced\030\007 \001(\003\022\024\n\014num_elem" +
-      "ents\030\010 \001(\003\022\027\n\017processing_time\030\t \001(\003\022\026\n\016r" +
-      "ecord_metrics\030\n \001(\010\022D\n\nparameters\030\013 \003(\0132" +
-      "0.tensorflow.data.model.ModelProto.Node." +
-      "Parameter\022!\n\031input_processing_time_sum\030\014" +
-      " \001(\001\022#\n\033input_processing_time_count\030\r \001(" +
-      "\003\022\016\n\006inputs\030\016 \003(\003\0224\n\nnode_class\030\017 \001(\0162 ." +
-      "tensorflow.data.model.NodeClass\022\r\n\005ratio" +
-      "\030\020 \001(\001\022\024\n\014memory_ratio\030\021 \001(\001\032h\n\tParamete" +
-      "r\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\001\022\023\n\013state_" +
-      "value\030\003 \001(\001\022\013\n\003min\030\004 \001(\001\022\013\n\003max\030\005 \001(\001\022\017\n" +
-      "\007tunable\030\006 \001(\010\032T\n\nNodesEntry\022\013\n\003key\030\001 \001(" +
-      "\003\0225\n\005value\030\002 \001(\0132&.tensorflow.data.model" +
-      ".ModelProto.Node:\0028\001\032\223\001\n\022OptimizationPar" +
-      "ams\022;\n\talgorithm\030\001 \001(\0162(.tensorflow.data" +
-      ".model.AutotuneAlgorithm\022\022\n\ncpu_budget\030\002" +
-      " \001(\003\022\022\n\nram_budget\030\003 \001(\003\022\030\n\020model_input_" +
-      "time\030\004 \001(\001J\004\010\004\020\005*\234\001\n\tNodeClass\022\013\n\007UNKNOW" +
-      "N\020\000\022\023\n\017INTERLEAVE_MANY\020\001\022\031\n\025ASYNC_INTERL" +
-      "EAVE_MANY\020\002\022\017\n\013KNOWN_RATIO\020\003\022\025\n\021ASYNC_KN" +
-      "OWN_RATIO\020\004\022\021\n\rUNKNOWN_RATIO\020\005\022\027\n\023ASYNC_" +
-      "UNKNOWN_RATIO\020\006*l\n\021AutotuneAlgorithm\022\013\n\007" +
-      "DEFAULT\020\000\022\016\n\nHILL_CLIMB\020\001\022\024\n\020GRADIENT_DE" +
-      "SCENT\020\002\022\023\n\017MAX_PARALLELISM\020\003\022\017\n\013STAGE_BA" +
-      "SED\020\004Br\n\037org.tensorflow.proto.data.model" +
-      "ZLgithub.com/tensorflow/tensorflow/tenso" +
-      "rflow/go/core/framework/model_go_proto\370\001" +
-      "\001b\006proto3"
+      "\025tensorflow.data.model\"\235\010\n\nModelProto\022\024\n" +
+      "\014dataset_name\030\007 \001(\t\022;\n\005nodes\030\001 \003(\0132,.ten" +
+      "sorflow.data.model.ModelProto.NodesEntry" +
+      "\022\016\n\006output\030\002 \001(\003\022\022\n\nid_counter\030\003 \001(\003\022Q\n\023" +
+      "optimization_params\030\005 \001(\01324.tensorflow.d" +
+      "ata.model.ModelProto.OptimizationParams\022" +
+      "\021\n\tgap_times\030\006 \003(\004\032\277\004\n\004Node\022\n\n\002id\030\001 \001(\003\022" +
+      "\014\n\004name\030\002 \001(\t\022\020\n\010autotune\030\003 \001(\010\022\026\n\016buffe" +
+      "red_bytes\030\004 \001(\003\022\031\n\021buffered_elements\030\005 \001" +
+      "(\003\022\026\n\016bytes_consumed\030\006 \001(\003\022\026\n\016bytes_prod" +
+      "uced\030\007 \001(\003\022\024\n\014num_elements\030\010 \001(\003\022\027\n\017proc" +
+      "essing_time\030\t \001(\003\022\026\n\016record_metrics\030\n \001(" +
+      "\010\022D\n\nparameters\030\013 \003(\01320.tensorflow.data." +
+      "model.ModelProto.Node.Parameter\022!\n\031input" +
+      "_processing_time_sum\030\014 \001(\001\022#\n\033input_proc" +
+      "essing_time_count\030\r \001(\003\022\016\n\006inputs\030\016 \003(\003\022" +
+      "4\n\nnode_class\030\017 \001(\0162 .tensorflow.data.mo" +
+      "del.NodeClass\022\r\n\005ratio\030\020 \001(\001\022\024\n\014memory_r" +
+      "atio\030\021 \001(\001\032h\n\tParameter\022\014\n\004name\030\001 \001(\t\022\r\n" +
+      "\005value\030\002 \001(\001\022\023\n\013state_value\030\003 \001(\001\022\013\n\003min" +
+      "\030\004 \001(\001\022\013\n\003max\030\005 \001(\001\022\017\n\007tunable\030\006 \001(\010\032T\n\n" +
+      "NodesEntry\022\013\n\003key\030\001 \001(\003\0225\n\005value\030\002 \001(\0132&" +
+      ".tensorflow.data.model.ModelProto.Node:\002" +
+      "8\001\032\223\001\n\022OptimizationParams\022;\n\talgorithm\030\001" +
+      " \001(\0162(.tensorflow.data.model.AutotuneAlg" +
+      "orithm\022\022\n\ncpu_budget\030\002 \001(\003\022\022\n\nram_budget" +
+      "\030\003 \001(\003\022\030\n\020model_input_time\030\004 \001(\001J\004\010\004\020\005*\234" +
+      "\001\n\tNodeClass\022\013\n\007UNKNOWN\020\000\022\023\n\017INTERLEAVE_" +
+      "MANY\020\001\022\031\n\025ASYNC_INTERLEAVE_MANY\020\002\022\017\n\013KNO" +
+      "WN_RATIO\020\003\022\025\n\021ASYNC_KNOWN_RATIO\020\004\022\021\n\rUNK" +
+      "NOWN_RATIO\020\005\022\027\n\023ASYNC_UNKNOWN_RATIO\020\006*l\n" +
+      "\021AutotuneAlgorithm\022\013\n\007DEFAULT\020\000\022\016\n\nHILL_" +
+      "CLIMB\020\001\022\024\n\020GRADIENT_DESCENT\020\002\022\023\n\017MAX_PAR" +
+      "ALLELISM\020\003\022\017\n\013STAGE_BASED\020\004Br\n\037org.tenso" +
+      "rflow.proto.data.modelZLgithub.com/tenso" +
+      "rflow/tensorflow/tensorflow/go/core/fram" +
+      "ework/model_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6277,7 +6462,7 @@ org.tensorflow.proto.data.model.Model.ModelProto.Node defaultValue);
     internal_static_tensorflow_data_model_ModelProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_model_ModelProto_descriptor,
-        new java.lang.String[] { "Nodes", "Output", "IdCounter", "OptimizationParams", "GapTimes", });
+        new java.lang.String[] { "DatasetName", "Nodes", "Output", "IdCounter", "OptimizationParams", "GapTimes", });
     internal_static_tensorflow_data_model_ModelProto_Node_descriptor =
       internal_static_tensorflow_data_model_ModelProto_descriptor.getNestedTypes().get(0);
     internal_static_tensorflow_data_model_ModelProto_Node_fieldAccessorTable = new

@@ -108,6 +108,12 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
         if (opts.adjY != null) {
           opBuilder.setAttr("adj_y", opts.adjY);
         }
+        if (opts.gradX != null) {
+          opBuilder.setAttr("grad_x", opts.gradX);
+        }
+        if (opts.gradY != null) {
+          opBuilder.setAttr("grad_y", opts.gradY);
+        }
       }
     }
     return new BatchMatMul<>(opBuilder.build());
@@ -134,6 +140,26 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
   }
 
   /**
+   * Sets the gradX option.
+   *
+   * @param gradX the gradX option
+   * @return this Options instance.
+   */
+  public static Options gradX(Boolean gradX) {
+    return new Options().gradX(gradX);
+  }
+
+  /**
+   * Sets the gradY option.
+   *
+   * @param gradY the gradY option
+   * @return this Options instance.
+   */
+  public static Options gradY(Boolean gradY) {
+    return new Options().gradY(gradY);
+  }
+
+  /**
    * Gets output.
    * 3-D or higher with shape {@code [..., r_o, c_o]}
    * @return output.
@@ -154,6 +180,10 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
     private Boolean adjX;
 
     private Boolean adjY;
+
+    private Boolean gradX;
+
+    private Boolean gradY;
 
     private Options() {
     }
@@ -177,6 +207,28 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
      */
     public Options adjY(Boolean adjY) {
       this.adjY = adjY;
+      return this;
+    }
+
+    /**
+     * Sets the gradX option.
+     *
+     * @param gradX the gradX option
+     * @return this Options instance.
+     */
+    public Options gradX(Boolean gradX) {
+      this.gradX = gradX;
+      return this;
+    }
+
+    /**
+     * Sets the gradY option.
+     *
+     * @param gradY the gradY option
+     * @return this Options instance.
+     */
+    public Options gradY(Boolean gradY) {
+      this.gradY = gradY;
       return this;
     }
   }
@@ -220,8 +272,18 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
      */
     public final boolean adjY;
 
+    /**
+     * The gradX attribute
+     */
+    public final boolean gradX;
+
+    /**
+     * The gradY attribute
+     */
+    public final boolean gradY;
+
     public Inputs(GraphOperation op) {
-      super(new BatchMatMul<>(op), op, Arrays.asList("Ta", "Tb", "Tout", "adj_x", "adj_y"));
+      super(new BatchMatMul<>(op), op, Arrays.asList("Ta", "Tb", "Tout", "adj_x", "adj_y", "grad_x", "grad_y"));
       int inputIndex = 0;
       x = (Operand<? extends TType>) op.input(inputIndex++);
       y = (Operand<? extends TType>) op.input(inputIndex++);
@@ -230,6 +292,8 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
       Tout = op.attributes().getAttrType("Tout");
       adjX = op.attributes().getAttrBool("adj_x");
       adjY = op.attributes().getAttrBool("adj_y");
+      gradX = op.attributes().getAttrBool("grad_x");
+      gradY = op.attributes().getAttrBool("grad_y");
     }
   }
 }

@@ -2338,7 +2338,7 @@ public final class Ops {
    *  must have {@code data[i].shape = indices[i].shape + constant}.  In terms of this
    *  {@code constant}, the output shape is
    *  <pre>
-   *  merged.shape = [max(indices)] + constant
+   *  merged.shape = [max(indices) + 1] + constant
    *  </pre>
    *  <p>Values are merged in order, so if an index appears in both {@code indices[m][i]} and
    *  {@code indices[n][j]} for {@code (m,i) < (n,j)} the slice {@code data[n][j]} will appear in the
@@ -7599,7 +7599,7 @@ public final class Ops {
    *  </blockquote>
    *
    * @param <T> data type for {@code output} output
-   * @param input 1-D or higher.
+   * @param input Can be of any rank.
    * @param multiples 1-D. Length must be the same as the number of dimensions in {@code input}
    * @param <T> data type for {@code Tile} output and operands
    * @return a new instance of Tile
