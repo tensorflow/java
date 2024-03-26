@@ -155,6 +155,7 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
           "../../../api_docs/python/math_ops", "org.tensorflow.op.MathOps",
           "https://www.tensorflow.org/api_docs/python/tf/tensor_scatter_nd_update",
               "org.tensorflow.op.Ops#tensorScatterNdUpdate");
+
   protected final JavaDocNodeRendererContext context;
   private final JavaDocWriter writer;
   private boolean firstParagraph;
