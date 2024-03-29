@@ -69,29 +69,9 @@
         must have already been built, tested and deployed priorly from their respective platform.
       -->
       <id>deploying</id>
-      <properties>
-        <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
-      </properties>
       <modules>
         <module>tensorflow-core-platform</module>
       </modules>
-    </profile>
-
-    <profile>
-      <!--
-        All supported platforms are being replaced by the current host platform, mostly useful for local builds.
-        The artifacts produced by this build can only run on the current host (or other machines of the same
-        platform). This is the default profile.
-      -->
-      <id>javacpp-platform-host</id>
-      <activation>
-        <property>
-          <name>!javacpp.platform</name>
-        </property>
-      </activation>
-      <properties>
-        <javacpp.platform>${os.name}-${os.arch}</javacpp.platform>
-      </properties>
     </profile>
   </profiles>
 </project>
