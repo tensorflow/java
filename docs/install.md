@@ -25,7 +25,7 @@ following platforms:
 
 ## Versions
 
-TensorFlow Java has its own release cycle, independent from the
+TensorFlow Java has its own release cycle, independent of the
 [TensorFlow runtime](https://github.com/tensorflow/tensorflow). Consequently,
 its version does not match the version of TensorFlow runtime it runs on. Consult
 the TensorFlow Java
@@ -58,7 +58,7 @@ For example,
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>0.5.0</version>
+  <version>1.0.0-rc1</version>
 </dependency>
 ```
 
@@ -118,7 +118,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.5.0'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0-rc1'
 }
 ```
 
@@ -164,7 +164,7 @@ add the TensorFlow dependency to the project's `pom.xml` file:
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow-core-platform</artifactId>
-            <version>0.5.0</version>
+            <version>1.0.0-rc1</version>
         </dependency>
     </dependencies>
 </project>
