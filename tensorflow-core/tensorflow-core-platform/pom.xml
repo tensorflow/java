@@ -41,25 +41,25 @@
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
-      <classifier>${javacpp.platform.linux-x86_64.extension}</classifier>
+      <classifier>linux-x86_64</classifier>
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
-      <classifier>${javacpp.platform.macosx-arm64.extension}</classifier>
+      <classifier>macosx-arm64</classifier>
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
-      <classifier>${javacpp.platform.macosx-x86_64.extension}</classifier>
+      <classifier>macosx-x86_64</classifier>
     </dependency>
     <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-native</artifactId>
       <version>${project.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64.extension}</classifier>
+      <classifier>windows-x86_64</classifier>
     </dependency>
   </dependencies>
 
