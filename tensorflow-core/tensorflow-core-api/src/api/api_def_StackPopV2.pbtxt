@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "StackPopV2"
   endpoint {
     name: "StackPop"

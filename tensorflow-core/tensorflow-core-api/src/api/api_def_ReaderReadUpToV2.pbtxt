@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "ReaderReadUpToV2"
   endpoint {
     name: "io.ReaderReadUpTo"

@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "MaxPoolGradGradV2"
   endpoint {
     name: "nn.MaxPoolGradGrad"

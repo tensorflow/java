@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "ExperimentalMapAndBatchDataset"
   endpoint {
     name: "data.experimental.MapAndBatchDataset"

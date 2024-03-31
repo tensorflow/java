@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "UniqueV2"
   endpoint {
     name: "Unique"

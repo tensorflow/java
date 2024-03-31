@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "Inv"
   endpoint {
     name: "linalg.Inv"

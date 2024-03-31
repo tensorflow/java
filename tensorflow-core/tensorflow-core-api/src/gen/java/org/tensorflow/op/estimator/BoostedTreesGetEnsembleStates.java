@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -39,6 +40,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = BoostedTreesGetEnsembleStates.OP_NAME,
     inputsClass = BoostedTreesGetEnsembleStates.Inputs.class
+)
+@Operator(
+    group = "estimator"
 )
 public final class BoostedTreesGetEnsembleStates extends RawOp {
   /**

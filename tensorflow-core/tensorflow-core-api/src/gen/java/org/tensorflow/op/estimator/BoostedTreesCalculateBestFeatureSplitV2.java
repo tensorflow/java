@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -44,6 +45,9 @@ import org.tensorflow.types.TString;
 @OpMetadata(
     opType = BoostedTreesCalculateBestFeatureSplitV2.OP_NAME,
     inputsClass = BoostedTreesCalculateBestFeatureSplitV2.Inputs.class
+)
+@Operator(
+    group = "estimator"
 )
 public final class BoostedTreesCalculateBestFeatureSplitV2 extends RawOp {
   /**

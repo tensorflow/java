@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -42,6 +43,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = QuantizedMatMulWithBiasAndDequantize.OP_NAME,
     inputsClass = QuantizedMatMulWithBiasAndDequantize.Inputs.class
+)
+@Operator(
+    group = "quantization"
 )
 public final class QuantizedMatMulWithBiasAndDequantize<W extends TNumber> extends RawOp implements Operand<W> {
   /**

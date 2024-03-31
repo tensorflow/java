@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -105,6 +106,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = SparseMatrixSparseMatMul.OP_NAME,
     inputsClass = SparseMatrixSparseMatMul.Inputs.class
+)
+@Operator(
+    group = "linalg.sparse"
 )
 public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TType> {
   /**

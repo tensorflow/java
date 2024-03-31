@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -42,6 +43,9 @@ import org.tensorflow.types.TInt64;
 @OpMetadata(
     opType = KmeansPlusPlusInitialization.OP_NAME,
     inputsClass = KmeansPlusPlusInitialization.Inputs.class
+)
+@Operator(
+    group = "cluster"
 )
 public final class KmeansPlusPlusInitialization extends RawOp implements Operand<TFloat32> {
   /**

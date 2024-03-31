@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "FFT3D"
   endpoint {
     name: "signal.Fft3d"

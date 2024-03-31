@@ -19,6 +19,7 @@ package org.tensorflow.op;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.linalg.BandPart;
+import org.tensorflow.op.linalg.BandedTriangularSolve;
 import org.tensorflow.op.linalg.BatchCholesky;
 import org.tensorflow.op.linalg.BatchCholeskyGrad;
 import org.tensorflow.op.linalg.BatchMatrixBandPart;
@@ -49,10 +50,15 @@ import org.tensorflow.op.linalg.MatrixDiag;
 import org.tensorflow.op.linalg.MatrixDiagPart;
 import org.tensorflow.op.linalg.MatrixDiagPartV3;
 import org.tensorflow.op.linalg.MatrixDiagV3;
+import org.tensorflow.op.linalg.MatrixExponential;
+import org.tensorflow.op.linalg.MatrixLogarithm;
 import org.tensorflow.op.linalg.MatrixSetDiag;
 import org.tensorflow.op.linalg.MatrixSolveLs;
 import org.tensorflow.op.linalg.Qr;
 import org.tensorflow.op.linalg.QuantizedMatMul;
+import org.tensorflow.op.linalg.QuantizedMatMulWithBias;
+import org.tensorflow.op.linalg.QuantizedMatMulWithBiasAndRelu;
+import org.tensorflow.op.linalg.QuantizedMatMulWithBiasAndReluAndRequantize;
 import org.tensorflow.op.linalg.SelfAdjointEig;
 import org.tensorflow.op.linalg.Solve;
 import org.tensorflow.op.linalg.Sqrtm;
@@ -61,6 +67,8 @@ import org.tensorflow.op.linalg.TensorDiag;
 import org.tensorflow.op.linalg.TensorDiagPart;
 import org.tensorflow.op.linalg.Transpose;
 import org.tensorflow.op.linalg.TriangularSolve;
+import org.tensorflow.op.linalg.TridiagonalMatMul;
+import org.tensorflow.op.linalg.TridiagonalSolve;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
@@ -75,6 +83,8 @@ import org.tensorflow.types.family.TType;
  * @see {@link Ops}
  */
 public final class LinalgOps {
+  public final LinalgSparseOps sparse;
+
   private final Scope scope;
 
   private final Ops ops;
@@ -82,6 +92,7 @@ public final class LinalgOps {
   LinalgOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+    sparse = new LinalgSparseOps(ops);
   }
 
   /**
@@ -129,6 +140,21 @@ public final class LinalgOps {
   public <T extends TType, U extends TNumber> BandPart<T> bandPart(Operand<T> input,
       Operand<U> numLower, Operand<U> numUpper) {
     return BandPart.create(scope, input, numLower, numUpper);
+  }
+
+  /**
+   * The BandedTriangularSolve operation
+   *
+   * @param <T> data type for {@code output} output
+   * @param matrix The matrix value
+   * @param rhs The rhs value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BandedTriangularSolve} output and operands
+   * @return a new instance of BandedTriangularSolve
+   */
+  public <T extends TType> BandedTriangularSolve<T> bandedTriangularSolve(Operand<T> matrix,
+      Operand<T> rhs, BandedTriangularSolve.Options... options) {
+    return BandedTriangularSolve.create(scope, matrix, rhs, options);
   }
 
   /**
@@ -1122,6 +1148,41 @@ public final class LinalgOps {
   }
 
   /**
+   * Deprecated, use python implementation tf.linalg.matrix_exponential.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input value
+   * @param <T> data type for {@code MatrixExponential} output and operands
+   * @return a new instance of MatrixExponential
+   */
+  public <T extends TType> MatrixExponential<T> matrixExponential(Operand<T> input) {
+    return MatrixExponential.create(scope, input);
+  }
+
+  /**
+   * Computes the matrix logarithm of one or more square matrices:
+   *  \(log(exp(A)) = A\)
+   *  <p>This op is only defined for complex matrices. If A is positive-definite and
+   *  real, then casting to a complex matrix, taking the logarithm and casting back
+   *  to a real matrix will give the correct result.
+   *  <p>This function computes the matrix logarithm using the Schur-Parlett algorithm.
+   *  Details of the algorithm can be found in Section 11.6.2 of:
+   *  Nicholas J. Higham, Functions of Matrices: Theory and Computation, SIAM 2008.
+   *  ISBN 978-0-898716-46-7.
+   *  <p>The input is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
+   *  form square matrices. The output is a tensor of the same shape as the input
+   *  containing the exponential for all input submatrices {@code [..., :, :]}.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input Shape is {@code [..., M, M]}.
+   * @param <T> data type for {@code MatrixLogarithm} output and operands
+   * @return a new instance of MatrixLogarithm
+   */
+  public <T extends TType> MatrixLogarithm<T> matrixLogarithm(Operand<T> input) {
+    return MatrixLogarithm.create(scope, input);
+  }
+
+  /**
    * Returns a batched matrix tensor with new batched diagonal values.
    *  Given {@code input} and {@code diagonal}, this operation returns a tensor with the
    *  same shape and values as {@code input}, except for the specified diagonals of the
@@ -1342,6 +1403,103 @@ public final class LinalgOps {
   }
 
   /**
+   * Performs a quantized matrix multiplication of {@code a} by the matrix {@code b} with bias
+   *  add.
+   *  The inputs must be two-dimensional matrices and 1D bias vector. And the inner
+   *  dimension of {@code a} (after being transposed if {@code transpose_a} is non-zero) must
+   *  match the outer dimension of {@code b} (after being transposed if {@code transposed_b} is
+   *  non-zero). Then do broadcast add operation with bias values on the matrix
+   *  multiplication result. The bias size must match inner dimension of {@code b}.
+   *
+   * @param <W> data type for {@code out} output
+   * @param a A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
+   * @param b A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
+   * @param bias A 1D bias tensor with size matching inner dimension of {@code b} (after being
+   *  transposed if {@code transposed_b} is non-zero).
+   * @param minA The float value that the lowest quantized {@code a} value represents.
+   * @param maxA The float value that the highest quantized {@code a} value represents.
+   * @param minB The float value that the lowest quantized {@code b} value represents.
+   * @param maxB The float value that the highest quantized {@code b} value represents.
+   * @param Toutput The value of the Toutput attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedMatMulWithBias} output and operands
+   * @return a new instance of QuantizedMatMulWithBias
+   */
+  public <W extends TNumber> QuantizedMatMulWithBias<W> quantizedMatMulWithBias(
+      Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<? extends TNumber> bias,
+      Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
+      Operand<TFloat32> maxB, Class<W> Toutput, QuantizedMatMulWithBias.Options... options) {
+    return QuantizedMatMulWithBias.create(scope, a, b, bias, minA, maxA, minB, maxB, Toutput, options);
+  }
+
+  /**
+   * Perform a quantized matrix multiplication of  {@code a} by the matrix {@code b} with bias
+   *  add and relu fusion.
+   *  The inputs must be two-dimensional matrices and 1D bias vector. And the inner
+   *  dimension of {@code a} (after being transposed if {@code transpose_a} is non-zero) must
+   *  match the outer dimension of {@code b} (after being transposed if {@code transposed_b} is
+   *  non-zero). Then do broadcast add operation with bias values on the matrix
+   *  multiplication result. The bias size must match inner dimension of {@code b}. Then do
+   *  relu activation to get non-negative result.
+   *
+   * @param <V> data type for {@code out} output
+   * @param a A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
+   * @param b A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
+   * @param bias A 1D bias tensor with size matching with inner dimension of {@code b} (after being
+   *  transposed if {@code transposed_b} is non-zero).
+   * @param minA The float value that the lowest quantized {@code a} value represents.
+   * @param maxA The float value that the highest quantized {@code a} value represents.
+   * @param minB The float value that the lowest quantized {@code b} value represents.
+   * @param maxB The float value that the highest quantized {@code b} value represents.
+   * @param Toutput The value of the Toutput attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedMatMulWithBiasAndRelu} output and operands
+   * @return a new instance of QuantizedMatMulWithBiasAndRelu
+   */
+  public <V extends TNumber> QuantizedMatMulWithBiasAndRelu<V> quantizedMatMulWithBiasAndRelu(
+      Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<TFloat32> bias,
+      Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
+      Operand<TFloat32> maxB, Class<V> Toutput, QuantizedMatMulWithBiasAndRelu.Options... options) {
+    return QuantizedMatMulWithBiasAndRelu.create(scope, a, b, bias, minA, maxA, minB, maxB, Toutput, options);
+  }
+
+  /**
+   * Perform a quantized matrix multiplication of  {@code a} by the matrix {@code b} with bias
+   *  add and relu and requantize fusion.
+   *  The inputs must be two-dimensional matrices and 1D bias vector. And the inner
+   *  dimension of {@code a} (after being transposed if {@code transpose_a} is non-zero) must
+   *  match the outer dimension of {@code b} (after being transposed if {@code transposed_b} is
+   *  non-zero). Then do broadcast add operation with bias values on the matrix
+   *  multiplication result. The bias size must match inner dimension of {@code b}.  Then do
+   *  relu activation to get non-negative result. Then do requantize operation to get
+   *  final uint8 result.
+   *
+   * @param <W> data type for {@code out} output
+   * @param a A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
+   * @param b A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
+   * @param bias A 1D bias tensor with size matching with inner dimension of {@code b} (after being
+   *  transposed if {@code transposed_b} is non-zero).
+   * @param minA The float value that the lowest quantized {@code a} value represents.
+   * @param maxA The float value that the highest quantized {@code a} value represents.
+   * @param minB The float value that the lowest quantized {@code b} value represents.
+   * @param maxB The float value that the highest quantized {@code b} value represents.
+   * @param minFreezedOutput The float value that the highest quantized output value after requantize.
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param Toutput The value of the Toutput attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedMatMulWithBiasAndReluAndRequantize} output and operands
+   * @return a new instance of QuantizedMatMulWithBiasAndReluAndRequantize
+   */
+  public <W extends TNumber> QuantizedMatMulWithBiasAndReluAndRequantize<W> quantizedMatMulWithBiasAndReluAndRequantize(
+      Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<? extends TNumber> bias,
+      Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
+      Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> Toutput,
+      QuantizedMatMulWithBiasAndReluAndRequantize.Options... options) {
+    return QuantizedMatMulWithBiasAndReluAndRequantize.create(scope, a, b, bias, minA, maxA, minB, maxB, minFreezedOutput, maxFreezedOutput, Toutput, options);
+  }
+
+  /**
    * Computes the eigen decomposition of one or more square self-adjoint matrices.
    *  Computes the eigenvalues and (optionally) eigenvectors of each inner matrix in
    *  {@code input} such that {@code input[..., :, :] = v[..., :, :] * diag(e[..., :])}. The eigenvalues
@@ -1555,6 +1713,53 @@ public final class LinalgOps {
   public <T extends TType> TriangularSolve<T> triangularSolve(Operand<T> matrix, Operand<T> rhs,
       TriangularSolve.Options... options) {
     return TriangularSolve.create(scope, matrix, rhs, options);
+  }
+
+  /**
+   * Calculate product with tridiagonal matrix.
+   *  Calculates product of two matrices, where left matrix is a tridiagonal matrix.
+   *
+   * @param <T> data type for {@code output} output
+   * @param superdiag Tensor of shape {@code [..., 1, M]}, representing superdiagonals of
+   *  tri-diagonal matrices to the left of multiplication. Last element is ignored.
+   * @param maindiag Tensor of shape {@code [..., 1, M]}, representing main diagonals of tri-diagonal
+   *  matrices to the left of multiplication.
+   * @param subdiag Tensor of shape {@code [..., 1, M]}, representing subdiagonals of tri-diagonal
+   *  matrices to the left of multiplication. First element is ignored.
+   * @param rhs Tensor of shape {@code [..., M, N]}, representing MxN matrices to the right of
+   *  multiplication.
+   * @param <T> data type for {@code TridiagonalMatMul} output and operands
+   * @return a new instance of TridiagonalMatMul
+   */
+  public <T extends TType> TridiagonalMatMul<T> tridiagonalMatMul(Operand<T> superdiag,
+      Operand<T> maindiag, Operand<T> subdiag, Operand<T> rhs) {
+    return TridiagonalMatMul.create(scope, superdiag, maindiag, subdiag, rhs);
+  }
+
+  /**
+   * Solves tridiagonal systems of equations.
+   *  Solves tridiagonal systems of equations.
+   *  Supports batch dimensions and multiple right-hand sides per each left-hand
+   *  side.
+   *  On CPU, solution is computed via Gaussian elimination with or without partial
+   *  pivoting, depending on {@code partial_pivoting} attribute. On GPU, Nvidia's cuSPARSE
+   *  library is used: https://docs.nvidia.com/cuda/cusparse/index.html#gtsv
+   *  Partial pivoting is not yet supported by XLA backends.
+   *
+   * @param <T> data type for {@code output} output
+   * @param diagonals Tensor of shape {@code [..., 3, M]} whose innermost 2 dimensions represent the
+   *  tridiagonal matrices with three rows being the superdiagonal, diagonals, and
+   *  subdiagonals, in order. The last element of the superdiagonal and the first
+   *  element of the subdiagonal is ignored.
+   * @param rhs Tensor of shape {@code [..., M, K]}, representing K right-hand sides per each
+   *  left-hand side.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TridiagonalSolve} output and operands
+   * @return a new instance of TridiagonalSolve
+   */
+  public <T extends TType> TridiagonalSolve<T> tridiagonalSolve(Operand<T> diagonals,
+      Operand<T> rhs, TridiagonalSolve.Options... options) {
+    return TridiagonalSolve.create(scope, diagonals, rhs, options);
   }
 
   /**

@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "FloorDiv"
   endpoint {
     name: "math.FloorDiv"

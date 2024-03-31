@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "StatelessRandomGammaV3"
   endpoint {
     name: "random.StatelessRandomGamma"

@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "SqrtGrad"
   endpoint {
     name: "math.SqrtGrad"

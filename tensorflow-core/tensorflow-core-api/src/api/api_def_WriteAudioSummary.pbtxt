@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "WriteAudioSummary"
   endpoint {
     name: "summary.WriteAudioSummary"

@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "RaggedTensorFromVariant"
   endpoint {
     name: "ragged.RaggedTensorFromVariant"

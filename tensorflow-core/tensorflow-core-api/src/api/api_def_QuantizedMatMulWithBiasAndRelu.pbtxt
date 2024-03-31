@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "QuantizedMatMulWithBiasAndRelu"
   endpoint {
     name: "linalg.QuantizedMatMulWithBiasAndRelu"

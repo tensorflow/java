@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -40,6 +41,9 @@ import org.tensorflow.types.TInt32;
 @OpMetadata(
     opType = OrdinalSelector.OP_NAME,
     inputsClass = OrdinalSelector.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class OrdinalSelector extends RawOp implements Operand<TInt32> {
   /**

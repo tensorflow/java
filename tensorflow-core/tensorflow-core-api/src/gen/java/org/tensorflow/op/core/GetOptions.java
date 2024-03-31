@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -39,6 +40,7 @@ import org.tensorflow.types.family.TType;
     opType = GetOptions.OP_NAME,
     inputsClass = GetOptions.Inputs.class
 )
+@Operator
 public final class GetOptions extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine

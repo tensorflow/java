@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
@@ -41,6 +42,9 @@ import org.tensorflow.types.TInt64;
 @OpMetadata(
     opType = NearestNeighbors.OP_NAME,
     inputsClass = NearestNeighbors.Inputs.class
+)
+@Operator(
+    group = "image"
 )
 public final class NearestNeighbors extends RawOp {
   /**

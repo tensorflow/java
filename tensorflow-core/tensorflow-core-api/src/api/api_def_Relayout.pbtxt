@@ -1,3 +1,4 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "Relayout"
 }

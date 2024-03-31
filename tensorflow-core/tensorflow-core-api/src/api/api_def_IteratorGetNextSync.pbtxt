@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "IteratorGetNextSync"
   endpoint {
     name: "data.IteratorGetNextSync"

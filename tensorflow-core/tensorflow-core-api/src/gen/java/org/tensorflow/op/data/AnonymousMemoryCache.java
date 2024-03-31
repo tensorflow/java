@@ -28,6 +28,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -36,6 +37,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = AnonymousMemoryCache.OP_NAME,
     inputsClass = AnonymousMemoryCache.Inputs.class
+)
+@Operator(
+    group = "data"
 )
 public final class AnonymousMemoryCache extends RawOp {
   /**

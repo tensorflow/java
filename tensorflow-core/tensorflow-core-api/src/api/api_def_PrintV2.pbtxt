@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "PrintV2"
   endpoint {
     name: "Print"

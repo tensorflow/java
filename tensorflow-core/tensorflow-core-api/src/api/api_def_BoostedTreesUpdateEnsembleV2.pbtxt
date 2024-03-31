@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "BoostedTreesUpdateEnsembleV2"
   endpoint {
     name: "estimator.BoostedTreesUpdateEnsembleV2"

@@ -25,9 +25,11 @@ import org.tensorflow.op.train.AccumulatorApplyGradient;
 import org.tensorflow.op.train.AccumulatorNumAccumulated;
 import org.tensorflow.op.train.AccumulatorSetGlobalStep;
 import org.tensorflow.op.train.AccumulatorTakeGradient;
+import org.tensorflow.op.train.ApplyAdaMax;
 import org.tensorflow.op.train.ApplyAdadelta;
 import org.tensorflow.op.train.ApplyAdagrad;
 import org.tensorflow.op.train.ApplyAdagradDa;
+import org.tensorflow.op.train.ApplyAdagradV2;
 import org.tensorflow.op.train.ApplyAdam;
 import org.tensorflow.op.train.ApplyAddSign;
 import org.tensorflow.op.train.ApplyCenteredRmsProp;
@@ -39,12 +41,20 @@ import org.tensorflow.op.train.ApplyProximalAdagrad;
 import org.tensorflow.op.train.ApplyProximalGradientDescent;
 import org.tensorflow.op.train.ApplyRmsProp;
 import org.tensorflow.op.train.BatchMatMul;
+import org.tensorflow.op.train.ComputeBatchSize;
 import org.tensorflow.op.train.ConditionalAccumulator;
+import org.tensorflow.op.train.DistributedSave;
 import org.tensorflow.op.train.GenerateVocabRemapping;
 import org.tensorflow.op.train.MergeV2Checkpoints;
 import org.tensorflow.op.train.NegTrain;
 import org.tensorflow.op.train.PreventGradient;
+import org.tensorflow.op.train.ResourceAccumulatorApplyGradient;
+import org.tensorflow.op.train.ResourceAccumulatorNumAccumulated;
+import org.tensorflow.op.train.ResourceAccumulatorSetGlobalStep;
+import org.tensorflow.op.train.ResourceAccumulatorTakeGradient;
+import org.tensorflow.op.train.ResourceApplyAdaMax;
 import org.tensorflow.op.train.ResourceApplyAdadelta;
+import org.tensorflow.op.train.ResourceApplyAdagrad;
 import org.tensorflow.op.train.ResourceApplyAdagradDa;
 import org.tensorflow.op.train.ResourceApplyAdam;
 import org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad;
@@ -58,9 +68,11 @@ import org.tensorflow.op.train.ResourceApplyPowerSign;
 import org.tensorflow.op.train.ResourceApplyProximalAdagrad;
 import org.tensorflow.op.train.ResourceApplyProximalGradientDescent;
 import org.tensorflow.op.train.ResourceApplyRmsProp;
+import org.tensorflow.op.train.ResourceConditionalAccumulator;
 import org.tensorflow.op.train.ResourceSparseApplyAdadelta;
 import org.tensorflow.op.train.ResourceSparseApplyAdagrad;
 import org.tensorflow.op.train.ResourceSparseApplyAdagradDa;
+import org.tensorflow.op.train.ResourceSparseApplyAdagradV2;
 import org.tensorflow.op.train.ResourceSparseApplyCenteredRmsProp;
 import org.tensorflow.op.train.ResourceSparseApplyFtrl;
 import org.tensorflow.op.train.ResourceSparseApplyKerasMomentum;
@@ -73,8 +85,10 @@ import org.tensorflow.op.train.RestoreSlice;
 import org.tensorflow.op.train.Save;
 import org.tensorflow.op.train.SaveSlices;
 import org.tensorflow.op.train.SdcaFprint;
+import org.tensorflow.op.train.SdcaOptimizer;
 import org.tensorflow.op.train.SdcaShrinkL1;
 import org.tensorflow.op.train.SparseApplyAdadelta;
+import org.tensorflow.op.train.SparseApplyAdagrad;
 import org.tensorflow.op.train.SparseApplyAdagradDa;
 import org.tensorflow.op.train.SparseApplyCenteredRmsProp;
 import org.tensorflow.op.train.SparseApplyFtrl;
@@ -166,6 +180,32 @@ public final class TrainOps {
   }
 
   /**
+   * Update '*var' according to the AdaMax algorithm.
+   *  m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+   *  v_t &lt;- max(beta2 * v_{t-1}, abs(g))
+   *  variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
+   *
+   * @param <T> data type for {@code out} output
+   * @param var Should be from a Variable().
+   * @param m Should be from a Variable().
+   * @param v Should be from a Variable().
+   * @param beta1Power Must be a scalar.
+   * @param lr Scaling factor. Must be a scalar.
+   * @param beta1 Momentum factor. Must be a scalar.
+   * @param beta2 Momentum factor. Must be a scalar.
+   * @param epsilon Ridge term. Must be a scalar.
+   * @param grad The gradient.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyAdaMax} output and operands
+   * @return a new instance of ApplyAdaMax
+   */
+  public <T extends TType> ApplyAdaMax<T> applyAdaMax(Operand<T> var, Operand<T> m, Operand<T> v,
+      Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon,
+      Operand<T> grad, ApplyAdaMax.Options... options) {
+    return ApplyAdaMax.create(scope, var, m, v, beta1Power, lr, beta1, beta2, epsilon, grad, options);
+  }
+
+  /**
    * Update '*var' according to the adadelta scheme.
    *  accum = rho() * accum + (1 - rho()) * grad.square();
    *  update = (update_accum + epsilon).sqrt() * (accum + epsilon()).rsqrt() * grad;
@@ -230,6 +270,26 @@ public final class TrainOps {
       Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep,
       ApplyAdagradDa.Options... options) {
     return ApplyAdagradDa.create(scope, var, gradientAccumulator, gradientSquaredAccumulator, grad, lr, l1, l2, globalStep, options);
+  }
+
+  /**
+   * Update '*var' according to the adagrad scheme.
+   *  accum += grad * grad
+   *  var -= lr * grad * (1 / sqrt(accum))
+   *
+   * @param <T> data type for {@code out} output
+   * @param var Should be from a Variable().
+   * @param accum Should be from a Variable().
+   * @param lr Scaling factor. Must be a scalar.
+   * @param epsilon Constant factor. Must be a scalar.
+   * @param grad The gradient.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyAdagradV2} output and operands
+   * @return a new instance of ApplyAdagradV2
+   */
+  public <T extends TType> ApplyAdagradV2<T> applyAdagradV2(Operand<T> var, Operand<T> accum,
+      Operand<T> lr, Operand<T> epsilon, Operand<T> grad, ApplyAdagradV2.Options... options) {
+    return ApplyAdagradV2.create(scope, var, accum, lr, epsilon, grad, options);
   }
 
   /**
@@ -524,6 +584,16 @@ public final class TrainOps {
   }
 
   /**
+   * Computes the static batch size of a dataset sans partial batches.
+   *
+   * @param inputDataset The inputDataset value
+   * @return a new instance of ComputeBatchSize
+   */
+  public ComputeBatchSize computeBatchSize(Operand<? extends TType> inputDataset) {
+    return ComputeBatchSize.create(scope, inputDataset);
+  }
+
+  /**
    * A conditional accumulator for aggregating gradients.
    *  The accumulator accepts gradients marked with local_step greater or
    *  equal to the most recent global_step known to the accumulator. The
@@ -541,6 +611,20 @@ public final class TrainOps {
   public <T extends TType> ConditionalAccumulator conditionalAccumulator(Class<T> dtype,
       Shape shape, ConditionalAccumulator.Options... options) {
     return ConditionalAccumulator.create(scope, dtype, shape, options);
+  }
+
+  /**
+   * The DistributedSave operation
+   *
+   * @param dataset The dataset value
+   * @param directory The directory value
+   * @param address The address value
+   * @param options carries optional attribute values
+   * @return a new instance of DistributedSave
+   */
+  public DistributedSave distributedSave(Operand<? extends TType> dataset,
+      Operand<TString> directory, Operand<TString> address, DistributedSave.Options... options) {
+    return DistributedSave.create(scope, dataset, directory, address, options);
   }
 
   /**
@@ -645,6 +729,93 @@ public final class TrainOps {
   }
 
   /**
+   * Applies a gradient to a given accumulator.
+   *  Does not add if local_step is lesser than the accumulator's global_step.
+   *
+   * @param handle The handle to a accumulator.
+   * @param localStep The local_step value at which the gradient was computed.
+   * @param gradient A tensor of the gradient to be accumulated.
+   * @return a new instance of ResourceAccumulatorApplyGradient
+   */
+  public ResourceAccumulatorApplyGradient resourceAccumulatorApplyGradient(
+      Operand<? extends TType> handle, Operand<TInt64> localStep,
+      Operand<? extends TType> gradient) {
+    return ResourceAccumulatorApplyGradient.create(scope, handle, localStep, gradient);
+  }
+
+  /**
+   * Returns the number of gradients aggregated in the given accumulators.
+   *
+   * @param handle The handle to an accumulator.
+   * @return a new instance of ResourceAccumulatorNumAccumulated
+   */
+  public ResourceAccumulatorNumAccumulated resourceAccumulatorNumAccumulated(
+      Operand<? extends TType> handle) {
+    return ResourceAccumulatorNumAccumulated.create(scope, handle);
+  }
+
+  /**
+   * Updates the accumulator with a new value for global_step.
+   *  Logs warning if the accumulator's value is already higher than
+   *  new_global_step.
+   *
+   * @param handle The handle to an accumulator.
+   * @param newGlobalStep The new global_step value to set.
+   * @return a new instance of ResourceAccumulatorSetGlobalStep
+   */
+  public ResourceAccumulatorSetGlobalStep resourceAccumulatorSetGlobalStep(
+      Operand<? extends TType> handle, Operand<TInt64> newGlobalStep) {
+    return ResourceAccumulatorSetGlobalStep.create(scope, handle, newGlobalStep);
+  }
+
+  /**
+   * Extracts the average gradient in the given ConditionalAccumulator.
+   *  The op blocks until sufficient (i.e., more than num_required)
+   *  gradients have been accumulated.  If the accumulator has already
+   *  aggregated more than num_required gradients, it returns the average of
+   *  the accumulated gradients.  Also automatically increments the recorded
+   *  global_step in the accumulator by 1, and resets the aggregate to 0.
+   *
+   * @param <T> data type for {@code average} output
+   * @param handle The handle to an accumulator.
+   * @param numRequired Number of gradients required before we return an aggregate.
+   * @param dtype The data type of accumulated gradients. Needs to correspond to the type
+   *  of the accumulator.
+   * @param <T> data type for {@code ResourceAccumulatorTakeGradient} output and operands
+   * @return a new instance of ResourceAccumulatorTakeGradient
+   */
+  public <T extends TType> ResourceAccumulatorTakeGradient<T> resourceAccumulatorTakeGradient(
+      Operand<? extends TType> handle, Operand<TInt32> numRequired, Class<T> dtype) {
+    return ResourceAccumulatorTakeGradient.create(scope, handle, numRequired, dtype);
+  }
+
+  /**
+   * Update '*var' according to the AdaMax algorithm.
+   *  m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+   *  v_t &lt;- max(beta2 * v_{t-1}, abs(g))
+   *  variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
+   *
+   * @param var Should be from a Variable().
+   * @param m Should be from a Variable().
+   * @param v Should be from a Variable().
+   * @param beta1Power Must be a scalar.
+   * @param lr Scaling factor. Must be a scalar.
+   * @param beta1 Momentum factor. Must be a scalar.
+   * @param beta2 Momentum factor. Must be a scalar.
+   * @param epsilon Ridge term. Must be a scalar.
+   * @param grad The gradient.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyAdaMax} output and operands
+   * @return a new instance of ResourceApplyAdaMax
+   */
+  public <T extends TType> ResourceApplyAdaMax resourceApplyAdaMax(Operand<? extends TType> var,
+      Operand<? extends TType> m, Operand<? extends TType> v, Operand<T> beta1Power, Operand<T> lr,
+      Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad,
+      ResourceApplyAdaMax.Options... options) {
+    return ResourceApplyAdaMax.create(scope, var, m, v, beta1Power, lr, beta1, beta2, epsilon, grad, options);
+  }
+
+  /**
    * Update '*var' according to the adadelta scheme.
    *  accum = rho() * accum + (1 - rho()) * grad.square();
    *  update = (update_accum + epsilon).sqrt() * (accum + epsilon()).rsqrt() * grad;
@@ -667,6 +838,26 @@ public final class TrainOps {
       Operand<T> rho, Operand<T> epsilon, Operand<T> grad,
       ResourceApplyAdadelta.Options... options) {
     return ResourceApplyAdadelta.create(scope, var, accum, accumUpdate, lr, rho, epsilon, grad, options);
+  }
+
+  /**
+   * Update '*var' according to the adagrad scheme.
+   *  accum += grad * grad
+   *  var -= lr * grad * (1 / (sqrt(accum) + epsilon))
+   *
+   * @param var Should be from a Variable().
+   * @param accum Should be from a Variable().
+   * @param lr Scaling factor. Must be a scalar.
+   * @param epsilon Constant factor. Must be a scalar.
+   * @param grad The gradient.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyAdagradV2} output and operands
+   * @return a new instance of ResourceApplyAdagrad
+   */
+  public <T extends TType> ResourceApplyAdagrad resourceApplyAdagrad(Operand<? extends TType> var,
+      Operand<? extends TType> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad,
+      ResourceApplyAdagrad.Options... options) {
+    return ResourceApplyAdagrad.create(scope, var, accum, lr, epsilon, grad, options);
   }
 
   /**
@@ -996,6 +1187,28 @@ public final class TrainOps {
   }
 
   /**
+   * A conditional accumulator for aggregating gradients.
+   *  The accumulator accepts gradients marked with local_step greater or
+   *  equal to the most recent global_step known to the accumulator. The
+   *  average can be extracted from the accumulator, provided sufficient
+   *  gradients have been accumulated. Extracting the average automatically
+   *  resets the aggregate to 0, and increments the global_step recorded by
+   *  the accumulator.
+   *  This is a resource version of ConditionalAccumulator that will work in TF2.0
+   *  with tf.cond version 2.
+   *
+   * @param dtype The type of the value being accumulated.
+   * @param shape The shape of the values, can be [], in which case shape is unknown.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceConditionalAccumulator} output and operands
+   * @return a new instance of ResourceConditionalAccumulator
+   */
+  public <T extends TType> ResourceConditionalAccumulator resourceConditionalAccumulator(
+      Class<T> dtype, Shape shape, ResourceConditionalAccumulator.Options... options) {
+    return ResourceConditionalAccumulator.create(scope, dtype, shape, options);
+  }
+
+  /**
    * var: Should be from a Variable().
    *
    * @param var The var value
@@ -1061,6 +1274,29 @@ public final class TrainOps {
       Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
       Operand<TInt64> globalStep, ResourceSparseApplyAdagradDa.Options... options) {
     return ResourceSparseApplyAdagradDa.create(scope, var, gradientAccumulator, gradientSquaredAccumulator, grad, indices, lr, l1, l2, globalStep, options);
+  }
+
+  /**
+   * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
+   *  That is for rows we have grad for, we update var and accum as follows:
+   *  accum += grad * grad
+   *  var -= lr * grad * (1 / sqrt(accum))
+   *
+   * @param var Should be from a Variable().
+   * @param accum Should be from a Variable().
+   * @param lr Learning rate. Must be a scalar.
+   * @param epsilon Constant factor. Must be a scalar.
+   * @param grad The gradient.
+   * @param indices A vector of indices into the first dimension of var and accum.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceSparseApplyAdagradV2} output and operands
+   * @return a new instance of ResourceSparseApplyAdagradV2
+   */
+  public <T extends TType> ResourceSparseApplyAdagradV2 resourceSparseApplyAdagradV2(
+      Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr,
+      Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices,
+      ResourceSparseApplyAdagradV2.Options... options) {
+    return ResourceSparseApplyAdagradV2.create(scope, var, accum, lr, epsilon, grad, indices, options);
   }
 
   /**
@@ -1383,6 +1619,59 @@ public final class TrainOps {
   }
 
   /**
+   * Distributed version of Stochastic Dual Coordinate Ascent (SDCA) optimizer for
+   *  linear models with L1 + L2 regularization. As global optimization objective is
+   *  strongly-convex, the optimizer optimizes the dual objective at each step. The
+   *  optimizer applies each update one example at a time. Examples are sampled
+   *  uniformly, and the optimizer is learning rate free and enjoys linear convergence
+   *  rate.
+   *  <p> <a href="http://arxiv.org/pdf/1211.2717v1.pdf">Proximal Stochastic Dual Coordinate Ascent</a> .<br>
+   *  Shai Shalev-Shwartz, Tong Zhang. 2012
+   *  <p>$$Loss Objective = \sum f_{i} (wx_{i}) + (l2 / 2) * |w|^2 + l1 * |w|$$
+   *  <p> <a href="http://arxiv.org/abs/1502.03508">Adding vs. Averaging in Distributed Primal-Dual Optimization</a> .<br>
+   *  Chenxin Ma, Virginia Smith, Martin Jaggi, Michael I. Jordan,
+   *  Peter Richtarik, Martin Takac. 2015
+   *  <p> <a href="https://arxiv.org/abs/1502.08053">Stochastic Dual Coordinate Ascent with Adaptive Probabilities</a> .<br>
+   *  Dominik Csiba, Zheng Qu, Peter Richtarik. 2015
+   *
+   * @param sparseExampleIndices a list of vectors which contain example indices.
+   * @param sparseFeatureIndices a list of vectors which contain feature indices.
+   * @param sparseFeatureValues a list of vectors which contains feature value
+   *  associated with each feature group.
+   * @param denseFeatures a list of matrices which contains the dense feature values.
+   * @param exampleWeights a vector which contains the weight associated with each
+   *  example.
+   * @param exampleLabels a vector which contains the label/target associated with each
+   *  example.
+   * @param sparseIndices a list of vectors where each value is the indices which has
+   *  corresponding weights in sparse_weights. This field maybe omitted for the
+   *  dense approach.
+   * @param sparseWeights a list of vectors where each value is the weight associated with
+   *  a sparse feature group.
+   * @param denseWeights a list of vectors where the values are the weights associated
+   *  with a dense feature group.
+   * @param exampleStateData a list of vectors containing the example state data.
+   * @param lossType Type of the primal loss. Currently SdcaSolver supports logistic,
+   *  squared and hinge losses.
+   * @param l1 Symmetric l1 regularization strength.
+   * @param l2 Symmetric l2 regularization strength.
+   * @param numLossPartitions Number of partitions of the global loss function.
+   * @param numInnerIterations Number of iterations per mini-batch.
+   * @param options carries optional attribute values
+   * @return a new instance of SdcaOptimizer
+   */
+  public SdcaOptimizer sdcaOptimizer(Iterable<Operand<TInt64>> sparseExampleIndices,
+      Iterable<Operand<TInt64>> sparseFeatureIndices,
+      Iterable<Operand<TFloat32>> sparseFeatureValues, Iterable<Operand<TFloat32>> denseFeatures,
+      Operand<TFloat32> exampleWeights, Operand<TFloat32> exampleLabels,
+      Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat32>> sparseWeights,
+      Iterable<Operand<TFloat32>> denseWeights, Operand<TFloat32> exampleStateData, String lossType,
+      Float l1, Float l2, Long numLossPartitions, Long numInnerIterations,
+      SdcaOptimizer.Options... options) {
+    return SdcaOptimizer.create(scope, sparseExampleIndices, sparseFeatureIndices, sparseFeatureValues, denseFeatures, exampleWeights, exampleLabels, sparseIndices, sparseWeights, denseWeights, exampleStateData, lossType, l1, l2, numLossPartitions, numInnerIterations, options);
+  }
+
+  /**
    * Applies L1 regularization shrink step on the parameters.
    *
    * @param weights a list of vectors where each value is the weight associated with a
@@ -1415,6 +1704,29 @@ public final class TrainOps {
       Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
       Operand<T> grad, Operand<? extends TNumber> indices, SparseApplyAdadelta.Options... options) {
     return SparseApplyAdadelta.create(scope, var, accum, accumUpdate, lr, rho, epsilon, grad, indices, options);
+  }
+
+  /**
+   * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
+   *  That is for rows we have grad for, we update var and accum as follows:
+   *  $$accum += grad * grad$$
+   *  $$var -= lr * grad * (1 / sqrt(accum))$$
+   *
+   * @param <T> data type for {@code out} output
+   * @param var Should be from a Variable().
+   * @param accum Should be from a Variable().
+   * @param lr Learning rate. Must be a scalar.
+   * @param epsilon Constant factor. Must be a scalar.
+   * @param grad The gradient.
+   * @param indices A vector of indices into the first dimension of var and accum.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseApplyAdagradV2} output and operands
+   * @return a new instance of SparseApplyAdagrad
+   */
+  public <T extends TType> SparseApplyAdagrad<T> sparseApplyAdagrad(Operand<T> var,
+      Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad,
+      Operand<? extends TNumber> indices, SparseApplyAdagrad.Options... options) {
+    return SparseApplyAdagrad.create(scope, var, accum, lr, epsilon, grad, indices, options);
   }
 
   /**

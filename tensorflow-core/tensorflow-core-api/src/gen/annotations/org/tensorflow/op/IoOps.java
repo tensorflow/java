@@ -27,7 +27,9 @@ import org.tensorflow.op.io.DecodeJsonExample;
 import org.tensorflow.op.io.DecodePaddedRaw;
 import org.tensorflow.op.io.DecodeRaw;
 import org.tensorflow.op.io.DeserializeManySparse;
+import org.tensorflow.op.io.DisableCopyOnRead;
 import org.tensorflow.op.io.EncodeBase64;
+import org.tensorflow.op.io.FakeQueue;
 import org.tensorflow.op.io.FifoQueue;
 import org.tensorflow.op.io.FixedLengthRecordReader;
 import org.tensorflow.op.io.IdentityReader;
@@ -242,6 +244,17 @@ public final class IoOps {
   }
 
   /**
+   * Turns off the copy-on-read mode.
+   *  Turns off the copy-on-read mode of a resource variable. If the variable is not in copy-on-read mode, this op has no effect.
+   *
+   * @param resource The resource handle of the resource variable.
+   * @return a new instance of DisableCopyOnRead
+   */
+  public DisableCopyOnRead disableCopyOnRead(Operand<? extends TType> resource) {
+    return DisableCopyOnRead.create(scope, resource);
+  }
+
+  /**
    * Encode strings into web-safe base64 format.
    *  Refer to  <a href="https://en.wikipedia.org/wiki/Base64">this article</a>  for more information on
    *  base64 format. Base64 strings may have padding with '=' at the
@@ -255,6 +268,16 @@ public final class IoOps {
    */
   public EncodeBase64 encodeBase64(Operand<TString> input, EncodeBase64.Options... options) {
     return EncodeBase64.create(scope, input, options);
+  }
+
+  /**
+   * Deprecated. Do not use.
+   *
+   * @param resource The resource value
+   * @return a new instance of FakeQueue
+   */
+  public FakeQueue fakeQueue(Operand<? extends TType> resource) {
+    return FakeQueue.create(scope, resource);
   }
 
   /**

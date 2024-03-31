@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "StatsAggregatorHandleV2"
   endpoint {
     name: "data.StatsAggregatorHandle"

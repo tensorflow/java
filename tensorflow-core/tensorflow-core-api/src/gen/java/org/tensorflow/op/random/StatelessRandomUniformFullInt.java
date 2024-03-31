@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -43,6 +44,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = StatelessRandomUniformFullInt.OP_NAME,
     inputsClass = StatelessRandomUniformFullInt.Inputs.class
+)
+@Operator(
+    group = "random"
 )
 public final class StatelessRandomUniformFullInt<V extends TNumber> extends RawOp implements Operand<V> {
   /**

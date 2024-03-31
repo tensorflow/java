@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -40,6 +41,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = SoftsignGrad.OP_NAME,
     inputsClass = SoftsignGrad.Inputs.class
+)
+@Operator(
+    group = "nn"
 )
 public final class SoftsignGrad<T extends TNumber> extends RawOp implements Operand<T> {
   /**

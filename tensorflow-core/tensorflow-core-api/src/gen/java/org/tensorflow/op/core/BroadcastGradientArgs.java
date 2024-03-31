@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TNumber;
 
@@ -42,6 +43,7 @@ import org.tensorflow.types.family.TNumber;
     opType = BroadcastGradientArgs.OP_NAME,
     inputsClass = BroadcastGradientArgs.Inputs.class
 )
+@Operator
 public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine

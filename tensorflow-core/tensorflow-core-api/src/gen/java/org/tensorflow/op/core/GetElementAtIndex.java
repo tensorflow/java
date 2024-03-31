@@ -33,6 +33,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -44,6 +45,7 @@ import org.tensorflow.types.family.TType;
     opType = GetElementAtIndex.OP_NAME,
     inputsClass = GetElementAtIndex.Inputs.class
 )
+@Operator
 public final class GetElementAtIndex extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine

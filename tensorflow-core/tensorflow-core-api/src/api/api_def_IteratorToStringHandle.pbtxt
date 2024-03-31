@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "IteratorToStringHandle"
   endpoint {
     name: "data.IteratorToStringHandle"

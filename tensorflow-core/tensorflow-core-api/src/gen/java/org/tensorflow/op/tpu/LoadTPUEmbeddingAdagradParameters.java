@@ -28,6 +28,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
@@ -41,6 +42,9 @@ import org.tensorflow.types.TFloat32;
 @OpMetadata(
     opType = LoadTPUEmbeddingAdagradParameters.OP_NAME,
     inputsClass = LoadTPUEmbeddingAdagradParameters.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class LoadTPUEmbeddingAdagradParameters extends RawOp {
   /**

@@ -1,6 +1,7 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "StackV2"
   endpoint {
-    name: "Stack"
+    name: "StackCreate"
   }
 }

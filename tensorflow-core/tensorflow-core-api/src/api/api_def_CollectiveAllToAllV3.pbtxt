@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "CollectiveAllToAllV3"
   endpoint {
     name: "collective.CollectiveAllToAll"

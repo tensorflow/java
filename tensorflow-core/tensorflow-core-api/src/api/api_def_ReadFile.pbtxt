@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "ReadFile"
   endpoint {
     name: "io.ReadFile"

@@ -28,6 +28,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
@@ -41,6 +42,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = WriteAudioSummary.OP_NAME,
     inputsClass = WriteAudioSummary.Inputs.class
+)
+@Operator(
+    group = "summary"
 )
 public final class WriteAudioSummary extends RawOp {
   /**

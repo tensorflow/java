@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -41,6 +42,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = BoostedTreesUpdateEnsembleV2.OP_NAME,
     inputsClass = BoostedTreesUpdateEnsembleV2.Inputs.class
+)
+@Operator(
+    group = "estimator"
 )
 public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
   /**

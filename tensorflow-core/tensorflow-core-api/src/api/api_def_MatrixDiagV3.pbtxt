@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "MatrixDiagV3"
   endpoint {
     name: "linalg.MatrixDiagV3"

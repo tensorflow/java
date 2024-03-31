@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
@@ -39,6 +40,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = RiscBinaryComparison.OP_NAME,
     inputsClass = RiscBinaryComparison.Inputs.class
+)
+@Operator(
+    group = "risc"
 )
 public final class RiscBinaryComparison extends RawOp implements Operand<TBool> {
   /**

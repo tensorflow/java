@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -49,6 +50,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = UniformQuantizedDot.OP_NAME,
     inputsClass = UniformQuantizedDot.Inputs.class
+)
+@Operator(
+    group = "quantization"
 )
 public final class UniformQuantizedDot<U extends TNumber> extends RawOp implements Operand<U> {
   /**

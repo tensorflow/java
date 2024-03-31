@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "DrawBoundingBoxesV2"
   endpoint {
     name: "image.DrawBoundingBoxes"

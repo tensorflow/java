@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "DepthwiseConv2dNative"
   endpoint {
     name: "nn.DepthwiseConv2dNative"

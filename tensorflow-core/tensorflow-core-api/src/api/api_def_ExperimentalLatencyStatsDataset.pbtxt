@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "ExperimentalLatencyStatsDataset"
   endpoint {
     name: "data.experimental.LatencyStatsDataset"

@@ -32,6 +32,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -44,6 +45,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = RebatchDataset.OP_NAME,
     inputsClass = RebatchDataset.Inputs.class
+)
+@Operator(
+    group = "data.experimental"
 )
 public final class RebatchDataset extends RawOp implements Operand<TType> {
   /**

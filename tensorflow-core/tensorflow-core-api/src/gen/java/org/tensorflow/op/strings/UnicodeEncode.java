@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
@@ -52,6 +53,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = UnicodeEncode.OP_NAME,
     inputsClass = UnicodeEncode.Inputs.class
+)
+@Operator(
+    group = "strings"
 )
 public final class UnicodeEncode extends RawOp implements Operand<TString> {
   /**

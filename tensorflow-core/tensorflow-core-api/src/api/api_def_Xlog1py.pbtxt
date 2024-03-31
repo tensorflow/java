@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "Xlog1py"
   endpoint {
     name: "math.Xlog1py"

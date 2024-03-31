@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +42,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = BoostedTreesQuantileStreamResourceAddSummaries.OP_NAME,
     inputsClass = BoostedTreesQuantileStreamResourceAddSummaries.Inputs.class
+)
+@Operator(
+    group = "estimator"
 )
 public final class BoostedTreesQuantileStreamResourceAddSummaries extends RawOp {
   /**

@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
 /**
@@ -37,6 +38,9 @@ import org.tensorflow.types.TBool;
 @OpMetadata(
     opType = RiscLogicalAnd.OP_NAME,
     inputsClass = RiscLogicalAnd.Inputs.class
+)
+@Operator(
+    group = "risc"
 )
 public final class RiscLogicalAnd extends RawOp implements Operand<TBool> {
   /**
