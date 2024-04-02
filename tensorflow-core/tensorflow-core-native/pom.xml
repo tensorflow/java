@@ -318,6 +318,7 @@
             <includePath>${native.source.directory}/org/tensorflow/internal/c_api/</includePath>
             <!-- additional include paths in case of a full native build -->
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/local_tsl/</includePath>
             <includePath>${project.basedir}/bazel-bin/external/org_tensorflow/</includePath>
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>

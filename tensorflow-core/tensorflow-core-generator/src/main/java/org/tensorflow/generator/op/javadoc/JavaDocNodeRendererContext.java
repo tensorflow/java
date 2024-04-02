@@ -9,6 +9,8 @@ import org.commonmark.renderer.html.UrlSanitizer;
 public interface JavaDocNodeRendererContext {
 
   /**
+   * Encode a URL into a String.
+   *
    * @param url to be encoded
    * @return an encoded URL (depending on the configuration)
    */
@@ -26,11 +28,15 @@ public interface JavaDocNodeRendererContext {
   Map<String, String> extendAttributes(Node node, String tagName, Map<String, String> attributes);
 
   /**
+   * Gets the HTML writer.
+   *
    * @return the HTML writer to use
    */
   JavaDocWriter getWriter();
 
   /**
+   * The HTML for a line break.
+   *
    * @return HTML that should be rendered for a soft line break
    */
   String getSoftbreak();
@@ -45,17 +51,23 @@ public interface JavaDocNodeRendererContext {
   void render(Node node);
 
   /**
+   * Should HTML be escaped?
+   *
    * @return whether HTML blocks and tags should be escaped or not
    */
   boolean shouldEscapeHtml();
 
   /**
+   * Should URLs be sanitized?
+   *
    * @return true if the {@link UrlSanitizer} should be used.
    * @since 0.14.0
    */
   boolean shouldSanitizeUrls();
 
   /**
+   * Gets the URL sanitizer.
+   *
    * @return Sanitizer to use for securing {@link Link} href and {@link Image} src if {@link
    *     #shouldSanitizeUrls()} is true.
    * @since 0.14.0

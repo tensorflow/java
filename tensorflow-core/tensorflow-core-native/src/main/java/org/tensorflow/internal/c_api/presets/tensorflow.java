@@ -36,9 +36,11 @@ import org.bytedeco.javacpp.tools.InfoMapper;
           value = {"linux", "macosx", "windows"},
           compiler = "cpp17",
           include = {
-            "tensorflow/tsl/platform/ctstring_internal.h",
-            "tensorflow/tsl/platform/ctstring.h",
-            "tensorflow/tsl/c/tsl_status.h",
+            // TSL headers are in different places in a bazel build and the downloaded whl
+            // The lower part is still the same, so multiple roots are set in the pom file.
+            "tsl/platform/ctstring_internal.h",
+            "tsl/platform/ctstring.h",
+            "tsl/c/tsl_status.h",
             "tensorflow/c/c_api_macros.h",
             "tensorflow/c/tf_datatype.h",
             "tensorflow/c/tf_status.h",
