@@ -11,7 +11,7 @@ import org.bytedeco.javacpp.annotation.*;
 public class tensorflow extends org.tensorflow.internal.c_api.presets.tensorflow {
     static { Loader.load(); }
 
-// Parsed from tensorflow/tsl/platform/ctstring_internal.h
+// Parsed from tsl/platform/ctstring_internal.h
 
 /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
@@ -165,7 +165,7 @@ public static native void TF_TString_Move(TF_TString dst, TF_TString src);
 // #endif  // TENSORFLOW_TSL_PLATFORM_CTSTRING_INTERNAL_H_
 
 
-// Parsed from tensorflow/tsl/platform/ctstring.h
+// Parsed from tsl/platform/ctstring.h
 
 /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
@@ -274,7 +274,7 @@ limitations under the License.
 // #endif  // TENSORFLOW_TSL_PLATFORM_CTSTRING_H_
 
 
-// Parsed from tensorflow/tsl/c/tsl_status.h
+// Parsed from tsl/c/tsl_status.h
 
 /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 

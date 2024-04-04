@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bytedeco.javacpp.BytePointer;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.tensorflow.internal.c_api.TF_ApiDefMap;
@@ -72,7 +73,7 @@ public final class OpGenerator {
 
   private static final String DEFAULT_OP_DEF_FILE = "org/tensorflow/ops.pbtxt";
 
-  private static final Scanner USER_PROMPT = new Scanner(System.in);
+  private static final Scanner USER_PROMPT = new Scanner(System.in, StandardCharsets.UTF_8);
 
   /**
    * Args should be {@code <outputDir> <opDefFile> [base_package]}.
@@ -195,7 +196,8 @@ public final class OpGenerator {
   private static OpList readOpList(String filename, InputStream protoInput) {
     try {
       if (filename.endsWith(".pbtxt")) {
-        return TextFormat.parse(new String(protoInput.readAllBytes()), OpList.class);
+        return TextFormat.parse(
+            new String(protoInput.readAllBytes(), StandardCharsets.UTF_8), OpList.class);
       }
       return OpList.parseFrom(protoInput);
 
@@ -286,9 +288,8 @@ public final class OpGenerator {
   }
 
   private void mergeApiDefs(TF_ApiDefMap apiDefMap, TF_Status status) {
-    try {
-      Files.walk(apiDefsPath)
-          .filter(p -> p.toString().endsWith(".pbtxt"))
+    try (Stream<Path> s = Files.walk(apiDefsPath)) {
+      s.filter(p -> p.toString().endsWith(".pbtxt"))
           .forEach(
               p -> {
                 try {
@@ -366,7 +367,7 @@ public final class OpGenerator {
     if (!apiDefFile.exists() && !apiDefFile.createNewFile()) {
       System.err.println("Cannot create API definition file \"" + apiDefFile.getPath() + "\"");
     }
-    try (var apiDefWriter = new FileWriter(apiDefFile)) {
+    try (var apiDefWriter = new FileWriter(apiDefFile, StandardCharsets.UTF_8)) {
       var apiDefs = ApiDefs.newBuilder();
       apiDefs.addOp(apiDef.build());
       apiDefWriter.write(TextFormat.printer().printToString(apiDefs.build()));
