@@ -49,13 +49,14 @@ jobs:
               https://oss.sonatype.org/service/local/staging/profiles/$STAGING_PROFILE_ID/start
           export STAGING_REPOSITORY_ID=`awk -F'[<>]' '/stagedRepositoryId/{print $3}' response.xml`
           echo "Staging repository created: $STAGING_REPOSITORY_ID"
+          echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Extract distribution repository URL
         id: repository
         run: |
           if [[ "${{ env.DEPLOY_RELEASE }}" = "true" ]]; then
-            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.repository.url}" -DstagingRepositoryId=$STAGING_REPOSITORY_ID`
+            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.repository.url}" -DstagingRepositoryId=${{ steps.staging.outputs.stagingRepositoryId }}`
           else
             export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.snapshotRepository.url}"`
           fi
