@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -50,6 +51,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = QuantizedMatMulWithBiasAndReluAndRequantize.OP_NAME,
     inputsClass = QuantizedMatMulWithBiasAndReluAndRequantize.Inputs.class
+)
+@Operator(
+    group = "linalg"
 )
 public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TNumber> extends RawOp {
   /**

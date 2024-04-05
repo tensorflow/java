@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "SparseMatrixOrderingAMD"
   endpoint {
     name: "linalg.sparse.SparseMatrixOrderingAMD"

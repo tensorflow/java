@@ -36,20 +36,29 @@ import org.tensorflow.op.image.DrawBoundingBoxes;
 import org.tensorflow.op.image.EncodeJpeg;
 import org.tensorflow.op.image.EncodeJpegVariableQuality;
 import org.tensorflow.op.image.EncodePng;
+import org.tensorflow.op.image.ExtractGlimpse;
 import org.tensorflow.op.image.ExtractImagePatches;
 import org.tensorflow.op.image.ExtractJpegShape;
+import org.tensorflow.op.image.GenerateBoundingBoxProposals;
 import org.tensorflow.op.image.HsvToRgb;
+import org.tensorflow.op.image.ImageProjectiveTransformV2;
+import org.tensorflow.op.image.ImageProjectiveTransformV3;
+import org.tensorflow.op.image.NearestNeighbors;
 import org.tensorflow.op.image.NonMaxSuppression;
 import org.tensorflow.op.image.NonMaxSuppressionWithOverlaps;
 import org.tensorflow.op.image.QuantizedResizeBilinear;
 import org.tensorflow.op.image.RandomCrop;
 import org.tensorflow.op.image.ResizeArea;
 import org.tensorflow.op.image.ResizeBicubic;
+import org.tensorflow.op.image.ResizeBicubicGrad;
 import org.tensorflow.op.image.ResizeBilinear;
+import org.tensorflow.op.image.ResizeBilinearGrad;
 import org.tensorflow.op.image.ResizeNearestNeighbor;
+import org.tensorflow.op.image.ResizeNearestNeighborGrad;
 import org.tensorflow.op.image.RgbToHsv;
 import org.tensorflow.op.image.SampleDistortedBoundingBox;
 import org.tensorflow.op.image.ScaleAndTranslate;
+import org.tensorflow.op.image.ScaleAndTranslateGrad;
 import org.tensorflow.op.image.StatelessSampleDistortedBoundingBox;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -555,6 +564,42 @@ public final class ImageOps {
   }
 
   /**
+   * Extracts a glimpse from the input tensor.
+   *  Returns a set of windows called glimpses extracted at location
+   *  {@code offsets} from the input tensor. If the windows only partially
+   *  overlaps the inputs, the non overlapping areas will be filled with
+   *  random noise.
+   *  <p>The result is a 4-D tensor of shape {@code [batch_size, glimpse_height, glimpse_width, channels]}. The channels and batch dimensions are the
+   *  same as that of the input tensor. The height and width of the output
+   *  windows are specified in the {@code size} parameter.
+   *  <p>The argument {@code normalized} and {@code centered} controls how the windows are built:
+   *  <ul>
+   *  <li>If the coordinates are normalized but not centered, 0.0 and 1.0
+   *  correspond to the minimum and maximum of each height and width
+   *  dimension.</li>
+   *  <li>If the coordinates are both normalized and centered, they range from
+   *  -1.0 to 1.0. The coordinates (-1.0, -1.0) correspond to the upper
+   *  left corner, the lower right corner is located at (1.0, 1.0) and the
+   *  center is at (0, 0).</li>
+   *  <li>If the coordinates are not normalized they are interpreted as
+   *  numbers of pixels.</li>
+   *  </ul>
+   *
+   * @param input A 4-D float tensor of shape {@code [batch_size, height, width, channels]}.
+   * @param sizeOutput A 1-D tensor of 2 elements containing the size of the glimpses
+   *  to extract.  The glimpse height must be specified first, following
+   *  by the glimpse width.
+   * @param offsets A 2-D integer tensor of shape {@code [batch_size, 2]} containing
+   *  the y, x locations of the center of each window.
+   * @param options carries optional attribute values
+   * @return a new instance of ExtractGlimpse
+   */
+  public ExtractGlimpse extractGlimpse(Operand<TFloat32> input, Operand<TInt32> sizeOutput,
+      Operand<TFloat32> offsets, ExtractGlimpse.Options... options) {
+    return ExtractGlimpse.create(scope, input, sizeOutput, offsets, options);
+  }
+
+  /**
    * Extract {@code patches} from {@code images} and put them in the &quot;depth&quot; output dimension.
    *
    * @param <T> data type for {@code patches} output
@@ -606,6 +651,40 @@ public final class ImageOps {
   }
 
   /**
+   * This op produces Region of Interests from given bounding boxes(bbox_deltas) encoded wrt anchors according to eq.2 in arXiv:1506.01497
+   *  <pre>
+   *    The op selects top `pre_nms_topn` scoring boxes, decodes them with respect to anchors,
+   *    applies non-maximal suppression on overlapping boxes with higher than
+   *    `nms_threshold` intersection-over-union (iou) value, discarding boxes where shorter
+   *    side is less than `min_size`.
+   *    Inputs:
+   *    `scores`: A 4D tensor of shape [Batch, Height, Width, Num Anchors] containing the scores per anchor at given position
+   *    `bbox_deltas`: is a tensor of shape [Batch, Height, Width, 4 x Num Anchors] boxes encoded to each anchor
+   *    `anchors`: A 1D tensor of shape [4 x Num Anchors], representing the anchors.
+   *    Outputs:
+   *    `rois`: output RoIs, a 3D tensor of shape [Batch, post_nms_topn, 4], padded by 0 if less than post_nms_topn candidates found.
+   *    `roi_probabilities`: probability scores of each roi in 'rois', a 2D tensor of shape [Batch,post_nms_topn], padded with 0 if needed, sorted by scores.
+   *  </pre>
+   *
+   * @param scores A 4-D float tensor of shape {@code [num_images, height, width, num_achors]} containing scores of the boxes for given anchors, can be unsorted.
+   * @param bboxDeltas A 4-D float tensor of shape {@code [num_images, height, width, 4 x num_anchors]}. encoding boxes with respec to each anchor.
+   *  Coordinates are given in the form [dy, dx, dh, dw].
+   * @param imageInfo A 2-D float tensor of shape {@code [num_images, 5]} containing image information Height, Width, Scale.
+   * @param anchors A 2-D float tensor of shape {@code [num_anchors, 4]} describing the anchor boxes. Boxes are formatted in the form [y1, x1, y2, x2].
+   * @param nmsThreshold A scalar float tensor for non-maximal-suppression threshold.
+   * @param preNmsTopn A scalar int tensor for the number of top scoring boxes to be used as input.
+   * @param minSize A scalar float tensor. Any box that has a smaller size than min_size will be discarded.
+   * @param options carries optional attribute values
+   * @return a new instance of GenerateBoundingBoxProposals
+   */
+  public GenerateBoundingBoxProposals generateBoundingBoxProposals(Operand<TFloat32> scores,
+      Operand<TFloat32> bboxDeltas, Operand<TFloat32> imageInfo, Operand<TFloat32> anchors,
+      Operand<TFloat32> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat32> minSize,
+      GenerateBoundingBoxProposals.Options... options) {
+    return GenerateBoundingBoxProposals.create(scope, scores, bboxDeltas, imageInfo, anchors, nmsThreshold, preNmsTopn, minSize, options);
+  }
+
+  /**
    * Convert one or more images from HSV to RGB.
    *  Outputs a tensor of the same shape as the {@code images} tensor, containing the RGB
    *  value of the pixels. The output is only well defined if the value in {@code images}
@@ -619,6 +698,75 @@ public final class ImageOps {
    */
   public <T extends TNumber> HsvToRgb<T> hsvToRgb(Operand<T> images) {
     return HsvToRgb.create(scope, images);
+  }
+
+  /**
+   * Applies the given transform to each of the images.
+   *  If one row of {@code transforms} is {@code [a0, a1, a2, b0, b1, b2, c0, c1]}, then it maps
+   *  the <em>output</em> point {@code (x, y)} to a transformed <em>input</em> point
+   *  {@code (x', y') = ((a0 x + a1 y + a2) / k, (b0 x + b1 y + b2) / k)}, where
+   *  {@code k = c0 x + c1 y + 1}. If the transformed point lays outside of the input
+   *  image, the output pixel is set to 0.
+   *
+   * @param <T> data type for {@code transformed_images} output
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param transforms 2-D Tensor, {@code [batch, 8]} or {@code [1, 8]} matrix, where each row corresponds to a 3 x 3
+   *  projective transformation matrix, with the last entry assumed to be 1. If there
+   *  is one row, the same transformation will be applied to all images.
+   * @param outputShape 1-D Tensor [new_height, new_width].
+   * @param interpolation Interpolation method, &quot;NEAREST&quot; or &quot;BILINEAR&quot;.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ImageProjectiveTransformV2} output and operands
+   * @return a new instance of ImageProjectiveTransformV2
+   */
+  public <T extends TNumber> ImageProjectiveTransformV2<T> imageProjectiveTransformV2(
+      Operand<T> images, Operand<TFloat32> transforms, Operand<TInt32> outputShape,
+      String interpolation, ImageProjectiveTransformV2.Options... options) {
+    return ImageProjectiveTransformV2.create(scope, images, transforms, outputShape, interpolation, options);
+  }
+
+  /**
+   * Applies the given transform to each of the images.
+   *  If one row of {@code transforms} is {@code [a0, a1, a2, b0, b1, b2, c0, c1]}, then it maps
+   *  the <em>output</em> point {@code (x, y)} to a transformed <em>input</em> point
+   *  {@code (x', y') = ((a0 x + a1 y + a2) / k, (b0 x + b1 y + b2) / k)}, where
+   *  {@code k = c0 x + c1 y + 1}. If the transformed point lays outside of the input
+   *  image, the output pixel is set to fill_value.
+   *
+   * @param <T> data type for {@code transformed_images} output
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param transforms 2-D Tensor, {@code [batch, 8]} or {@code [1, 8]} matrix, where each row corresponds to a 3 x 3
+   *  projective transformation matrix, with the last entry assumed to be 1. If there
+   *  is one row, the same transformation will be applied to all images.
+   * @param outputShape 1-D Tensor [new_height, new_width].
+   * @param fillValue float, the value to be filled when fill_mode is constant&quot;.
+   * @param interpolation Interpolation method, &quot;NEAREST&quot; or &quot;BILINEAR&quot;.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ImageProjectiveTransformV3} output and operands
+   * @return a new instance of ImageProjectiveTransformV3
+   */
+  public <T extends TNumber> ImageProjectiveTransformV3<T> imageProjectiveTransformV3(
+      Operand<T> images, Operand<TFloat32> transforms, Operand<TInt32> outputShape,
+      Operand<TFloat32> fillValue, String interpolation,
+      ImageProjectiveTransformV3.Options... options) {
+    return ImageProjectiveTransformV3.create(scope, images, transforms, outputShape, fillValue, interpolation, options);
+  }
+
+  /**
+   * Selects the k nearest centers for each point.
+   *  Rows of points are assumed to be input points. Rows of centers are assumed to be
+   *  the list of candidate centers. For each point, the k centers that have least L2
+   *  distance to it are computed.
+   *
+   * @param points Matrix of shape (n, d). Rows are assumed to be input points.
+   * @param centers Matrix of shape (m, d). Rows are assumed to be centers.
+   * @param k Number of nearest centers to return for each point. If k is larger than m, then
+   *  only m centers are returned.
+   * @return a new instance of NearestNeighbors
+   */
+  public NearestNeighbors nearestNeighbors(Operand<TFloat32> points, Operand<TFloat32> centers,
+      Operand<TInt64> k) {
+    return NearestNeighbors.create(scope, points, centers, k);
   }
 
   /**
@@ -781,6 +929,22 @@ public final class ImageOps {
   }
 
   /**
+   * Computes the gradient of bicubic interpolation.
+   *
+   * @param <T> data type for {@code output} output
+   * @param grads 4-D with shape {@code [batch, height, width, channels]}.
+   * @param originalImage 4-D with shape {@code [batch, orig_height, orig_width, channels]},
+   *  The image tensor that was resized.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResizeBicubicGrad} output and operands
+   * @return a new instance of ResizeBicubicGrad
+   */
+  public <T extends TNumber> ResizeBicubicGrad<T> resizeBicubicGrad(Operand<TFloat32> grads,
+      Operand<T> originalImage, ResizeBicubicGrad.Options... options) {
+    return ResizeBicubicGrad.create(scope, grads, originalImage, options);
+  }
+
+  /**
    * Resize {@code images} to {@code size} using bilinear interpolation.
    *  Input images can be of different types but output images are always float.
    *
@@ -793,6 +957,22 @@ public final class ImageOps {
   public ResizeBilinear resizeBilinear(Operand<? extends TNumber> images,
       Operand<TInt32> sizeOutput, ResizeBilinear.Options... options) {
     return ResizeBilinear.create(scope, images, sizeOutput, options);
+  }
+
+  /**
+   * Computes the gradient of bilinear interpolation.
+   *
+   * @param <T> data type for {@code output} output
+   * @param grads 4-D with shape {@code [batch, height, width, channels]}.
+   * @param originalImage 4-D with shape {@code [batch, orig_height, orig_width, channels]},
+   *  The image tensor that was resized.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResizeBilinearGrad} output and operands
+   * @return a new instance of ResizeBilinearGrad
+   */
+  public <T extends TNumber> ResizeBilinearGrad<T> resizeBilinearGrad(Operand<TFloat32> grads,
+      Operand<T> originalImage, ResizeBilinearGrad.Options... options) {
+    return ResizeBilinearGrad.create(scope, grads, originalImage, options);
   }
 
   /**
@@ -809,6 +989,22 @@ public final class ImageOps {
   public <T extends TNumber> ResizeNearestNeighbor<T> resizeNearestNeighbor(Operand<T> images,
       Operand<TInt32> sizeOutput, ResizeNearestNeighbor.Options... options) {
     return ResizeNearestNeighbor.create(scope, images, sizeOutput, options);
+  }
+
+  /**
+   * Computes the gradient of nearest neighbor interpolation.
+   *
+   * @param <T> data type for {@code output} output
+   * @param grads 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code orig_height, orig_width}. The
+   *  original input size.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResizeNearestNeighborGrad} output and operands
+   * @return a new instance of ResizeNearestNeighborGrad
+   */
+  public <T extends TNumber> ResizeNearestNeighborGrad<T> resizeNearestNeighborGrad(
+      Operand<T> grads, Operand<TInt32> sizeOutput, ResizeNearestNeighborGrad.Options... options) {
+    return ResizeNearestNeighborGrad.create(scope, grads, sizeOutput, options);
   }
 
   /**
@@ -912,6 +1108,24 @@ public final class ImageOps {
       Operand<TInt32> sizeOutput, Operand<TFloat32> scale, Operand<TFloat32> translation,
       ScaleAndTranslate.Options... options) {
     return ScaleAndTranslate.create(scope, images, sizeOutput, scale, translation, options);
+  }
+
+  /**
+   * The ScaleAndTranslateGrad operation
+   *
+   * @param <T> data type for {@code output} output
+   * @param grads The grads value
+   * @param originalImage The originalImage value
+   * @param scale The scale value
+   * @param translation The translation value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ScaleAndTranslateGrad} output and operands
+   * @return a new instance of ScaleAndTranslateGrad
+   */
+  public <T extends TNumber> ScaleAndTranslateGrad<T> scaleAndTranslateGrad(Operand<T> grads,
+      Operand<T> originalImage, Operand<TFloat32> scale, Operand<TFloat32> translation,
+      ScaleAndTranslateGrad.Options... options) {
+    return ScaleAndTranslateGrad.create(scope, grads, originalImage, scale, translation, options);
   }
 
   /**

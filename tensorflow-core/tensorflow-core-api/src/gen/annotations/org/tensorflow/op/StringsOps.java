@@ -24,6 +24,8 @@ import org.tensorflow.op.strings.Lower;
 import org.tensorflow.op.strings.ReduceJoin;
 import org.tensorflow.op.strings.RegexFullMatch;
 import org.tensorflow.op.strings.RegexReplace;
+import org.tensorflow.op.strings.StaticRegexFullMatch;
+import org.tensorflow.op.strings.StaticRegexReplace;
 import org.tensorflow.op.strings.StringFormat;
 import org.tensorflow.op.strings.StringLength;
 import org.tensorflow.op.strings.StringNGrams;
@@ -34,11 +36,16 @@ import org.tensorflow.op.strings.ToHashBucket;
 import org.tensorflow.op.strings.ToHashBucketFast;
 import org.tensorflow.op.strings.ToHashBucketStrong;
 import org.tensorflow.op.strings.ToNumber;
+import org.tensorflow.op.strings.UnicodeDecode;
+import org.tensorflow.op.strings.UnicodeDecodeWithOffsets;
+import org.tensorflow.op.strings.UnicodeEncode;
 import org.tensorflow.op.strings.UnicodeScript;
 import org.tensorflow.op.strings.UnicodeTranscode;
+import org.tensorflow.op.strings.UnsortedSegmentJoin;
 import org.tensorflow.op.strings.Upper;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
@@ -179,6 +186,37 @@ public final class StringsOps {
   public RegexReplace regexReplace(Operand<TString> input, Operand<TString> pattern,
       Operand<TString> rewrite, RegexReplace.Options... options) {
     return RegexReplace.create(scope, input, pattern, rewrite, options);
+  }
+
+  /**
+   * Check if the input matches the regex pattern.
+   *  The input is a string tensor of any shape. The pattern is the
+   *  regular expression to be matched with every element of the input tensor.
+   *  The boolean values (True or False) of the output tensor indicate
+   *  if the input matches the regex pattern provided.
+   *  <p>The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
+   *
+   * @param input A string tensor of the text to be processed.
+   * @param pattern The regular expression to match the input.
+   * @return a new instance of StaticRegexFullMatch
+   */
+  public StaticRegexFullMatch staticRegexFullMatch(Operand<TString> input, String pattern) {
+    return StaticRegexFullMatch.create(scope, input, pattern);
+  }
+
+  /**
+   * Replaces the match of pattern in input with rewrite.
+   *  It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
+   *
+   * @param input The text to be processed.
+   * @param pattern The regular expression to match the input.
+   * @param rewrite The rewrite to be applied to the matched expression.
+   * @param options carries optional attribute values
+   * @return a new instance of StaticRegexReplace
+   */
+  public StaticRegexReplace staticRegexReplace(Operand<TString> input, String pattern,
+      String rewrite, StaticRegexReplace.Options... options) {
+    return StaticRegexReplace.create(scope, input, pattern, rewrite, options);
   }
 
   /**
@@ -506,6 +544,164 @@ public final class StringsOps {
   }
 
   /**
+   * Decodes each string in {@code input} into a sequence of Unicode code points.
+   *  The character codepoints for all strings are returned using a single vector
+   *  {@code char_values}, with strings expanded to characters in row-major order.
+   *  <p>The {@code row_splits} tensor indicates where the codepoints for
+   *  each input string begin and end within the {@code char_values} tensor.
+   *  In particular, the values for the {@code i}th
+   *  string (in row-major order) are stored in the slice
+   *  {@code [row_splits[i]:row_splits[i+1]]}. Thus:
+   *  <ul>
+   *  <li>{@code char_values[row_splits[i]+j]} is the Unicode codepoint for the {@code j}th
+   *  character in the {@code i}th string (in row-major order).</li>
+   *  <li>{@code row_splits[i+1] - row_splits[i]} is the number of characters in the {@code i}th
+   *  string (in row-major order).</li>
+   *  </ul>
+   *
+   * @param <T> data type for {@code row_splits} output
+   * @param input The text to be decoded. Can have any shape. Note that the output is flattened
+   *  to a vector of char values.
+   * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
+   *  by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
+   * @param options carries optional attribute values
+   * @return a new instance of UnicodeDecode, with default output types
+   */
+  public UnicodeDecode<TInt64> unicodeDecode(Operand<TString> input, String inputEncoding,
+      UnicodeDecode.Options[] options) {
+    return UnicodeDecode.create(scope, input, inputEncoding, options);
+  }
+
+  /**
+   * Decodes each string in {@code input} into a sequence of Unicode code points.
+   *  The character codepoints for all strings are returned using a single vector
+   *  {@code char_values}, with strings expanded to characters in row-major order.
+   *  <p>The {@code row_splits} tensor indicates where the codepoints for
+   *  each input string begin and end within the {@code char_values} tensor.
+   *  In particular, the values for the {@code i}th
+   *  string (in row-major order) are stored in the slice
+   *  {@code [row_splits[i]:row_splits[i+1]]}. Thus:
+   *  <ul>
+   *  <li>{@code char_values[row_splits[i]+j]} is the Unicode codepoint for the {@code j}th
+   *  character in the {@code i}th string (in row-major order).</li>
+   *  <li>{@code row_splits[i+1] - row_splits[i]} is the number of characters in the {@code i}th
+   *  string (in row-major order).</li>
+   *  </ul>
+   *
+   * @param <T> data type for {@code row_splits} output
+   * @param input The text to be decoded. Can have any shape. Note that the output is flattened
+   *  to a vector of char values.
+   * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
+   *  by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
+   * @param Tsplits The value of the Tsplits attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code UnicodeDecode} output and operands
+   * @return a new instance of UnicodeDecode
+   */
+  public <T extends TNumber> UnicodeDecode<T> unicodeDecode(Operand<TString> input,
+      String inputEncoding, Class<T> Tsplits, UnicodeDecode.Options... options) {
+    return UnicodeDecode.create(scope, input, inputEncoding, Tsplits, options);
+  }
+
+  /**
+   * Decodes each string in {@code input} into a sequence of Unicode code points.
+   *  The character codepoints for all strings are returned using a single vector
+   *  {@code char_values}, with strings expanded to characters in row-major order.
+   *  Similarly, the character start byte offsets are returned using a single vector
+   *  {@code char_to_byte_starts}, with strings expanded in row-major order.
+   *  <p>The {@code row_splits} tensor indicates where the codepoints and start offsets for
+   *  each input string begin and end within the {@code char_values} and
+   *  {@code char_to_byte_starts} tensors.  In particular, the values for the {@code i}th
+   *  string (in row-major order) are stored in the slice
+   *  {@code [row_splits[i]:row_splits[i+1]]}. Thus:
+   *  <ul>
+   *  <li>{@code char_values[row_splits[i]+j]} is the Unicode codepoint for the {@code j}th
+   *  character in the {@code i}th string (in row-major order).</li>
+   *  <li>{@code char_to_bytes_starts[row_splits[i]+j]} is the start byte offset for the {@code j}th
+   *  character in the {@code i}th string (in row-major order).</li>
+   *  <li>{@code row_splits[i+1] - row_splits[i]} is the number of characters in the {@code i}th
+   *  string (in row-major order).</li>
+   *  </ul>
+   *
+   * @param <T> data type for {@code row_splits} output
+   * @param input The text to be decoded. Can have any shape. Note that the output is flattened
+   *  to a vector of char values.
+   * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
+   *  by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
+   * @param options carries optional attribute values
+   * @return a new instance of UnicodeDecodeWithOffsets, with default output types
+   */
+  public UnicodeDecodeWithOffsets<TInt64> unicodeDecodeWithOffsets(Operand<TString> input,
+      String inputEncoding, UnicodeDecodeWithOffsets.Options[] options) {
+    return UnicodeDecodeWithOffsets.create(scope, input, inputEncoding, options);
+  }
+
+  /**
+   * Decodes each string in {@code input} into a sequence of Unicode code points.
+   *  The character codepoints for all strings are returned using a single vector
+   *  {@code char_values}, with strings expanded to characters in row-major order.
+   *  Similarly, the character start byte offsets are returned using a single vector
+   *  {@code char_to_byte_starts}, with strings expanded in row-major order.
+   *  <p>The {@code row_splits} tensor indicates where the codepoints and start offsets for
+   *  each input string begin and end within the {@code char_values} and
+   *  {@code char_to_byte_starts} tensors.  In particular, the values for the {@code i}th
+   *  string (in row-major order) are stored in the slice
+   *  {@code [row_splits[i]:row_splits[i+1]]}. Thus:
+   *  <ul>
+   *  <li>{@code char_values[row_splits[i]+j]} is the Unicode codepoint for the {@code j}th
+   *  character in the {@code i}th string (in row-major order).</li>
+   *  <li>{@code char_to_bytes_starts[row_splits[i]+j]} is the start byte offset for the {@code j}th
+   *  character in the {@code i}th string (in row-major order).</li>
+   *  <li>{@code row_splits[i+1] - row_splits[i]} is the number of characters in the {@code i}th
+   *  string (in row-major order).</li>
+   *  </ul>
+   *
+   * @param <T> data type for {@code row_splits} output
+   * @param input The text to be decoded. Can have any shape. Note that the output is flattened
+   *  to a vector of char values.
+   * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
+   *  by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
+   * @param Tsplits The value of the Tsplits attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code UnicodeDecodeWithOffsets} output and operands
+   * @return a new instance of UnicodeDecodeWithOffsets
+   */
+  public <T extends TNumber> UnicodeDecodeWithOffsets<T> unicodeDecodeWithOffsets(
+      Operand<TString> input, String inputEncoding, Class<T> Tsplits,
+      UnicodeDecodeWithOffsets.Options... options) {
+    return UnicodeDecodeWithOffsets.create(scope, input, inputEncoding, Tsplits, options);
+  }
+
+  /**
+   * Encode a tensor of ints into unicode strings.
+   *  Returns a vector of strings, where {@code output[i]} is constructed by encoding the
+   *  Unicode codepoints in {@code input_values[input_splits[i]:input_splits[i+1]]}
+   *  using {@code output_encoding}.
+   *  <hr />
+   *  <p>Example:
+   *  <pre>
+   *  input_values = [72, 101, 108, 108, 111, 87, 111, 114, 108, 100]
+   *  input_splits = [0, 5, 10]
+   *  output_encoding = 'UTF-8'
+   *
+   *  output = ['Hello', 'World']
+   *  </pre>
+   *
+   * @param inputValues A 1D tensor containing the unicode codepoints that should be encoded.
+   * @param inputSplits A 1D tensor specifying how the unicode codepoints should be split into strings.
+   *  In particular, {@code output[i]} is constructed by encoding the codepoints in the
+   *  slice {@code input_values[input_splits[i]:input_splits[i+1]]}.
+   * @param outputEncoding Unicode encoding of the output strings. Valid encodings are: {@code "UTF-8", "UTF-16-BE", and "UTF-32-BE"}.
+   * @param options carries optional attribute values
+   * @return a new instance of UnicodeEncode
+   */
+  public UnicodeEncode unicodeEncode(Operand<TInt32> inputValues,
+      Operand<? extends TNumber> inputSplits, String outputEncoding,
+      UnicodeEncode.Options... options) {
+    return UnicodeEncode.create(scope, inputValues, inputSplits, outputEncoding, options);
+  }
+
+  /**
    * Determine the script codes of a given tensor of Unicode integer code points.
    *  This operation converts Unicode code points to script codes corresponding to
    *  each code point. Script codes correspond to International Components for
@@ -583,6 +779,21 @@ public final class StringsOps {
   public UnicodeTranscode unicodeTranscode(Operand<TString> input, String inputEncoding,
       String outputEncoding, UnicodeTranscode.Options... options) {
     return UnicodeTranscode.create(scope, input, inputEncoding, outputEncoding, options);
+  }
+
+  /**
+   * The UnsortedSegmentJoin operation
+   *
+   * @param inputs The inputs value
+   * @param segmentIds The segmentIds value
+   * @param numSegments The numSegments value
+   * @param options carries optional attribute values
+   * @return a new instance of UnsortedSegmentJoin
+   */
+  public UnsortedSegmentJoin unsortedSegmentJoin(Operand<TString> inputs,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments,
+      UnsortedSegmentJoin.Options... options) {
+    return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
   }
 
   /**

@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "RFFT2D"
   endpoint {
     name: "signal.Rfft2d"

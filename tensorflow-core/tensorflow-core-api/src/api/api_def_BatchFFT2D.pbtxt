@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "BatchFFT2D"
   endpoint {
     name: "signal.BatchFft2d"

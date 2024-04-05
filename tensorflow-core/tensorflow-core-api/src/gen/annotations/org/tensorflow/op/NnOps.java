@@ -22,10 +22,14 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.nn.AvgPool;
 import org.tensorflow.op.nn.AvgPool3d;
 import org.tensorflow.op.nn.AvgPool3dGrad;
+import org.tensorflow.op.nn.AvgPoolGrad;
 import org.tensorflow.op.nn.BatchNormWithGlobalNormalization;
 import org.tensorflow.op.nn.BatchNormWithGlobalNormalizationGrad;
 import org.tensorflow.op.nn.BiasAdd;
 import org.tensorflow.op.nn.BiasAddGrad;
+import org.tensorflow.op.nn.BlockLSTM;
+import org.tensorflow.op.nn.BlockLSTMGrad;
+import org.tensorflow.op.nn.CTCLossV2;
 import org.tensorflow.op.nn.ComputeAccidentalHits;
 import org.tensorflow.op.nn.Conv;
 import org.tensorflow.op.nn.Conv2d;
@@ -37,6 +41,8 @@ import org.tensorflow.op.nn.Conv3dBackpropInput;
 import org.tensorflow.op.nn.CtcBeamSearchDecoder;
 import org.tensorflow.op.nn.CtcGreedyDecoder;
 import org.tensorflow.op.nn.CtcLoss;
+import org.tensorflow.op.nn.CudnnRNN;
+import org.tensorflow.op.nn.CudnnRNNBackprop;
 import org.tensorflow.op.nn.CudnnRNNCanonicalToParams;
 import org.tensorflow.op.nn.CudnnRNNParamsToCanonical;
 import org.tensorflow.op.nn.CudnnRnnParamsSize;
@@ -50,18 +56,28 @@ import org.tensorflow.op.nn.Dilation2d;
 import org.tensorflow.op.nn.Dilation2dBackpropFilter;
 import org.tensorflow.op.nn.Dilation2dBackpropInput;
 import org.tensorflow.op.nn.Elu;
+import org.tensorflow.op.nn.EluGrad;
 import org.tensorflow.op.nn.FixedUnigramCandidateSampler;
 import org.tensorflow.op.nn.FractionalAvgPool;
+import org.tensorflow.op.nn.FractionalAvgPoolGrad;
 import org.tensorflow.op.nn.FractionalMaxPool;
+import org.tensorflow.op.nn.FractionalMaxPoolGrad;
 import org.tensorflow.op.nn.FusedBatchNorm;
 import org.tensorflow.op.nn.FusedBatchNormGrad;
 import org.tensorflow.op.nn.FusedPadConv2d;
 import org.tensorflow.op.nn.FusedResizeAndPadConv2d;
+import org.tensorflow.op.nn.GRUBlockCell;
+import org.tensorflow.op.nn.GRUBlockCellGrad;
 import org.tensorflow.op.nn.InTopK;
+import org.tensorflow.op.nn.InvGrad;
+import org.tensorflow.op.nn.IsotonicRegression;
 import org.tensorflow.op.nn.L2Loss;
+import org.tensorflow.op.nn.LSTMBlockCell;
+import org.tensorflow.op.nn.LSTMBlockCellGrad;
 import org.tensorflow.op.nn.LeakyRelu;
 import org.tensorflow.op.nn.LearnedUnigramCandidateSampler;
 import org.tensorflow.op.nn.LocalResponseNormalization;
+import org.tensorflow.op.nn.LocalResponseNormalizationGrad;
 import org.tensorflow.op.nn.LogSoftmax;
 import org.tensorflow.op.nn.MaxPool;
 import org.tensorflow.op.nn.MaxPool3d;
@@ -70,12 +86,28 @@ import org.tensorflow.op.nn.MaxPool3dGradGrad;
 import org.tensorflow.op.nn.MaxPoolGrad;
 import org.tensorflow.op.nn.MaxPoolGradGrad;
 import org.tensorflow.op.nn.MaxPoolGradGradWithArgmax;
+import org.tensorflow.op.nn.MaxPoolGradWithArgmax;
 import org.tensorflow.op.nn.MaxPoolWithArgmax;
 import org.tensorflow.op.nn.NthElement;
 import org.tensorflow.op.nn.QuantizedAvgPool;
 import org.tensorflow.op.nn.QuantizedBatchNormWithGlobalNormalization;
 import org.tensorflow.op.nn.QuantizedBiasAdd;
+import org.tensorflow.op.nn.QuantizedConv2DAndRelu;
+import org.tensorflow.op.nn.QuantizedConv2DAndReluAndRequantize;
+import org.tensorflow.op.nn.QuantizedConv2DAndRequantize;
+import org.tensorflow.op.nn.QuantizedConv2DPerChannel;
+import org.tensorflow.op.nn.QuantizedConv2DWithBias;
+import org.tensorflow.op.nn.QuantizedConv2DWithBiasAndRelu;
+import org.tensorflow.op.nn.QuantizedConv2DWithBiasAndReluAndRequantize;
+import org.tensorflow.op.nn.QuantizedConv2DWithBiasAndRequantize;
+import org.tensorflow.op.nn.QuantizedConv2DWithBiasSignedSumAndReluAndRequantize;
+import org.tensorflow.op.nn.QuantizedConv2DWithBiasSumAndRelu;
+import org.tensorflow.op.nn.QuantizedConv2DWithBiasSumAndReluAndRequantize;
 import org.tensorflow.op.nn.QuantizedConv2d;
+import org.tensorflow.op.nn.QuantizedDepthwiseConv2D;
+import org.tensorflow.op.nn.QuantizedDepthwiseConv2DWithBias;
+import org.tensorflow.op.nn.QuantizedDepthwiseConv2DWithBiasAndRelu;
+import org.tensorflow.op.nn.QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize;
 import org.tensorflow.op.nn.QuantizedInstanceNorm;
 import org.tensorflow.op.nn.QuantizedMaxPool;
 import org.tensorflow.op.nn.QuantizedRelu;
@@ -83,14 +115,20 @@ import org.tensorflow.op.nn.QuantizedRelu6;
 import org.tensorflow.op.nn.QuantizedReluX;
 import org.tensorflow.op.nn.Relu;
 import org.tensorflow.op.nn.Relu6;
+import org.tensorflow.op.nn.Relu6Grad;
+import org.tensorflow.op.nn.ReluGrad;
 import org.tensorflow.op.nn.Selu;
+import org.tensorflow.op.nn.SeluGrad;
 import org.tensorflow.op.nn.Softmax;
 import org.tensorflow.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.nn.Softsign;
+import org.tensorflow.op.nn.SoftsignGrad;
 import org.tensorflow.op.nn.SpaceToBatch;
 import org.tensorflow.op.nn.SpaceToDepth;
 import org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.nn.TopK;
+import org.tensorflow.op.nn.UniformQuantizedConvolution;
+import org.tensorflow.op.nn.UniformQuantizedConvolutionHybrid;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -171,6 +209,26 @@ public final class NnOps {
       Operand<T> grad, List<Long> ksize, List<Long> strides, String padding,
       AvgPool3dGrad.Options... options) {
     return AvgPool3dGrad.create(scope, origInputShape, grad, ksize, strides, padding, options);
+  }
+
+  /**
+   * Computes gradients of the average pooling function.
+   *
+   * @param <T> data type for {@code output} output
+   * @param origInputShape 1-D.  Shape of the original input to {@code avg_pool}.
+   * @param grad 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t.
+   *  the output of {@code avg_pool}.
+   * @param ksize The size of the sliding window for each dimension of the input.
+   * @param strides The stride of the sliding window for each dimension of the input.
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code AvgPoolGrad} output and operands
+   * @return a new instance of AvgPoolGrad
+   */
+  public <T extends TNumber> AvgPoolGrad<T> avgPoolGrad(Operand<TInt32> origInputShape,
+      Operand<T> grad, List<Long> ksize, List<Long> strides, String padding,
+      AvgPoolGrad.Options... options) {
+    return AvgPoolGrad.create(scope, origInputShape, grad, ksize, strides, padding, options);
   }
 
   /**
@@ -262,6 +320,106 @@ public final class NnOps {
   public <T extends TType> BiasAddGrad<T> biasAddGrad(Operand<T> outBackprop,
       BiasAddGrad.Options... options) {
     return BiasAddGrad.create(scope, outBackprop, options);
+  }
+
+  /**
+   * Computes the LSTM cell forward propagation for all the time steps.
+   *  This is equivalent to applying LSTMBlockCell in a loop, like so:
+   *  <pre>
+   *  for x1 in unpack(x):
+   *    i1, cs1, f1, o1, ci1, co1, h1 = LSTMBlock(
+   *      x1, cs_prev, h_prev, w, wci, wcf, wco, b)
+   *    cs_prev = cs1
+   *    h_prev = h1
+   *    i.append(i1)
+   *    cs.append(cs1)
+   *    f.append(f1)
+   *    o.append(o1)
+   *    ci.append(ci1)
+   *    co.append(co1)
+   *    h.append(h1)
+   *  return pack(i), pack(cs), pack(f), pack(o), pack(ci), pack(ch), pack(h)
+   *
+   *  Note that unlike LSTMBlockCell (and BlockLSTM) which uses ICFO gate layout,
+   *  this op uses IFCO. So in order for the following snippet to be equivalent
+   *  all gate-related outputs should be reordered.
+   *  </pre>
+   *
+   * @param <T> data type for {@code i} output
+   * @param seqLenMax Maximum time length actually used by this input. Outputs are padded
+   *  with zeros beyond this length.
+   * @param x The sequence input to the LSTM, shape (timelen, batch_size, num_inputs).
+   * @param csPrev Value of the initial cell state.
+   * @param hPrev Initial output of cell (to be used for peephole).
+   * @param w The weight matrix.
+   * @param wci The weight matrix for input gate peephole connection.
+   * @param wcf The weight matrix for forget gate peephole connection.
+   * @param wco The weight matrix for output gate peephole connection.
+   * @param b The bias vector.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BlockLSTMV2} output and operands
+   * @return a new instance of BlockLSTM
+   */
+  public <T extends TNumber> BlockLSTM<T> blockLSTM(Operand<TInt64> seqLenMax, Operand<T> x,
+      Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf,
+      Operand<T> wco, Operand<T> b, BlockLSTM.Options... options) {
+    return BlockLSTM.create(scope, seqLenMax, x, csPrev, hPrev, w, wci, wcf, wco, b, options);
+  }
+
+  /**
+   * Computes the LSTM cell backward propagation for the entire time sequence.
+   *  This implementation is to be used in conjunction of BlockLSTMV2.
+   *
+   * @param <T> data type for {@code x_grad} output
+   * @param seqLenMax Maximum time length actually used by this input. Outputs are padded
+   *  with zeros beyond this length.
+   * @param x The sequence input to the LSTM, shape (timelen, batch_size, num_inputs).
+   * @param csPrev Value of the initial cell state.
+   * @param hPrev Initial output of cell (to be used for peephole).
+   * @param w The weight matrix.
+   * @param wci The weight matrix for input gate peephole connection.
+   * @param wcf The weight matrix for forget gate peephole connection.
+   * @param wco The weight matrix for output gate peephole connection.
+   * @param b The bias vector.
+   * @param i The input gate over the whole time sequence.
+   * @param cs The cell state before the tanh over the whole time sequence.
+   * @param f The forget gate over the whole time sequence.
+   * @param o The output gate over the whole time sequence.
+   * @param ci The cell input over the whole time sequence.
+   * @param co The cell after the tanh over the whole time sequence.
+   * @param h The output h vector over the whole time sequence.
+   * @param csGrad The current gradient of cs.
+   * @param hGrad The gradient of h vector.
+   * @param usePeephole Whether to use peephole weights.
+   * @param <T> data type for {@code BlockLSTMGradV2} output and operands
+   * @return a new instance of BlockLSTMGrad
+   */
+  public <T extends TNumber> BlockLSTMGrad<T> blockLSTMGrad(Operand<TInt64> seqLenMax, Operand<T> x,
+      Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf,
+      Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o,
+      Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad,
+      Boolean usePeephole) {
+    return BlockLSTMGrad.create(scope, seqLenMax, x, csPrev, hPrev, w, wci, wcf, wco, b, i, cs, f, o, ci, co, h, csGrad, hGrad, usePeephole);
+  }
+
+  /**
+   * Calculates the CTC Loss (log probability) for each batch entry.  Also calculates
+   *  the gradient.  This class performs the softmax operation for you, so inputs
+   *  should be e.g. linear projections of outputs by an LSTM.
+   *
+   * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits. Default blank
+   *  label is 0 rather num_classes - 1.
+   * @param labelsIndices The indices of a {@code SparseTensor<int32, 2>}.
+   *  {@code labels_indices(i, :) == [b, t]} means {@code labels_values(i)} stores the id for
+   *  {@code (batch b, time t)}.
+   * @param labelsValues The values (labels) associated with the given batch and time.
+   * @param sequenceLength A vector containing sequence lengths (batch).
+   * @param options carries optional attribute values
+   * @return a new instance of CTCLossV2
+   */
+  public CTCLossV2 cTCLossV2(Operand<TFloat32> inputs, Operand<TInt64> labelsIndices,
+      Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, CTCLossV2.Options... options) {
+    return CTCLossV2.create(scope, inputs, labelsIndices, labelsValues, sequenceLength, options);
   }
 
   /**
@@ -531,6 +689,136 @@ public final class NnOps {
   public <T extends TNumber> CtcLoss<T> ctcLoss(Operand<T> inputs, Operand<TInt64> labelsIndices,
       Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, CtcLoss.Options... options) {
     return CtcLoss.create(scope, inputs, labelsIndices, labelsValues, sequenceLength, options);
+  }
+
+  /**
+   * A RNN backed by cuDNN.
+   *  Computes the RNN from the input and initial states, with respect to the params
+   *  buffer. Accepts one extra input &quot;sequence_lengths&quot; than CudnnRNN.
+   *  <p>rnn_mode: Indicates the type of the RNN model.
+   *  input_mode: Indicates whether there is a linear projection between the input and
+   *  the actual computation before the first layer. 'skip_input' is only allowed
+   *  when input_size == num_units; 'auto_select' implies 'skip_input' when
+   *  input_size == num_units; otherwise, it implies 'linear_input'.
+   *  direction: Indicates whether a bidirectional model will be used. Should be
+   *  &quot;unidirectional&quot; or &quot;bidirectional&quot;.
+   *  dropout: Dropout probability. When set to 0., dropout is disabled.
+   *  seed: The 1st part of a seed to initialize dropout.
+   *  seed2: The 2nd part of a seed to initialize dropout.
+   *  input: If time_major is true, this is a 3-D tensor with the shape of
+   *  [seq_length, batch_size, input_size]. If time_major is false, the shape is
+   *  [batch_size, seq_length, input_size].
+   *  input_h: If time_major is true, this is a 3-D tensor with the shape of
+   *  [num_layer * dir, batch_size, num_units]. If time_major is false, the shape
+   *  is [batch_size, num_layer * dir, num_units].
+   *  input_c: For LSTM, a 3-D tensor with the shape of
+   *  [num_layer * dir, batch, num_units]. For other models, it is ignored.
+   *  params: A 1-D tensor that contains the weights and biases in an opaque layout.
+   *  The size must be created through CudnnRNNParamsSize, and initialized
+   *  separately. Note that they might not be compatible across different
+   *  generations. So it is a good idea to save and restore
+   *  sequence_lengths: a vector of lengths of each input sequence.
+   *  output: If time_major is true, this is a 3-D tensor with the shape of
+   *  [seq_length, batch_size, dir * num_units]. If time_major is false, the
+   *  shape is [batch_size, seq_length, dir * num_units].
+   *  output_h: The same shape has input_h.
+   *  output_c: The same shape as input_c for LSTM. An empty tensor for other models.
+   *  is_training: Indicates whether this operation is used for inference or
+   *  training.
+   *  time_major: Indicates whether the input/output format is time major or batch
+   *  major.
+   *  reserve_space: An opaque tensor that can be used in backprop calculation. It
+   *  is only produced if is_training is true.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input value
+   * @param inputH The inputH value
+   * @param inputC The inputC value
+   * @param params The params value
+   * @param sequenceLengths The sequenceLengths value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CudnnRNNV3} output and operands
+   * @return a new instance of CudnnRNN
+   */
+  public <T extends TNumber> CudnnRNN<T> cudnnRNN(Operand<T> input, Operand<T> inputH,
+      Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths,
+      CudnnRNN.Options... options) {
+    return CudnnRNN.create(scope, input, inputH, inputC, params, sequenceLengths, options);
+  }
+
+  /**
+   * Backprop step of CudnnRNNV3.
+   *  Compute the backprop of both data and weights in a RNN. Takes an extra
+   *  &quot;sequence_lengths&quot; input than CudnnRNNBackprop.
+   *  <p>rnn_mode: Indicates the type of the RNN model.
+   *  input_mode: Indicates whether there is a linear projection between the input and
+   *  the actual computation before the first layer. 'skip_input' is only allowed
+   *  when input_size == num_units; 'auto_select' implies 'skip_input' when
+   *  input_size == num_units; otherwise, it implies 'linear_input'.
+   *  direction: Indicates whether a bidirectional model will be used. Should be
+   *  &quot;unidirectional&quot; or &quot;bidirectional&quot;.
+   *  dropout: Dropout probability. When set to 0., dropout is disabled.
+   *  seed: The 1st part of a seed to initialize dropout.
+   *  seed2: The 2nd part of a seed to initialize dropout.
+   *  input: If time_major is true, this is a 3-D tensor with the shape of
+   *  [seq_length, batch_size, input_size]. If time_major is false, the shape is
+   *  [batch_size, seq_length, input_size].
+   *  input_h: If time_major is true, this is a 3-D tensor with the shape of
+   *  [num_layer * dir, batch_size, num_units]. If time_major is false, the shape
+   *  is [batch_size, num_layer * dir, num_units].
+   *  input_c: For LSTM, a 3-D tensor with the shape of
+   *  [num_layer * dir, batch, num_units]. For other models, it is ignored.
+   *  params: A 1-D tensor that contains the weights and biases in an opaque layout.
+   *  The size must be created through CudnnRNNParamsSize, and initialized
+   *  separately. Note that they might not be compatible across different
+   *  generations. So it is a good idea to save and restore
+   *  sequence_lengths: a vector of lengths of each input sequence.
+   *  output: If time_major is true, this is a 3-D tensor with the shape of
+   *  [seq_length, batch_size, dir * num_units]. If time_major is false, the
+   *  shape is [batch_size, seq_length, dir * num_units].
+   *  output_h: The same shape has input_h.
+   *  output_c: The same shape as input_c for LSTM. An empty tensor for other models.
+   *  output_backprop: A 3-D tensor with the same shape as output in the forward pass.
+   *  output_h_backprop: A 3-D tensor with the same shape as output_h in the forward
+   *  pass.
+   *  output_c_backprop: A 3-D tensor with the same shape as output_c in the forward
+   *  pass.
+   *  time_major: Indicates whether the input/output format is time major or batch
+   *  major.
+   *  reserve_space: The same reserve_space produced in the forward operation.
+   *  input_backprop: The backprop to input in the forward pass. Has the same shape
+   *  as input.
+   *  input_h_backprop: The backprop to input_h in the forward pass. Has the same
+   *  shape as input_h.
+   *  input_c_backprop: The backprop to input_c in the forward pass. Has the same
+   *  shape as input_c.
+   *  params_backprop: The backprop to the params buffer in the forward pass. Has the
+   *  same shape as params.
+   *
+   * @param <T> data type for {@code input_backprop} output
+   * @param input The input value
+   * @param inputH The inputH value
+   * @param inputC The inputC value
+   * @param params The params value
+   * @param sequenceLengths The sequenceLengths value
+   * @param output The output value
+   * @param outputH The outputH value
+   * @param outputC The outputC value
+   * @param outputBackprop The outputBackprop value
+   * @param outputHBackprop The outputHBackprop value
+   * @param outputCBackprop The outputCBackprop value
+   * @param reserveSpace The reserveSpace value
+   * @param hostReserved The hostReserved value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CudnnRNNBackpropV3} output and operands
+   * @return a new instance of CudnnRNNBackprop
+   */
+  public <T extends TNumber> CudnnRNNBackprop<T> cudnnRNNBackprop(Operand<T> input,
+      Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths,
+      Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop,
+      Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace,
+      Operand<? extends TType> hostReserved, CudnnRNNBackprop.Options... options) {
+    return CudnnRNNBackprop.create(scope, input, inputH, inputC, params, sequenceLengths, output, outputH, outputC, outputBackprop, outputHBackprop, outputCBackprop, reserveSpace, hostReserved, options);
   }
 
   /**
@@ -1020,6 +1308,19 @@ public final class NnOps {
   }
 
   /**
+   * Computes gradients for the exponential linear (Elu) operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding Elu operation.
+   * @param outputs The outputs of the corresponding Elu operation.
+   * @param <T> data type for {@code EluGrad} output and operands
+   * @return a new instance of EluGrad
+   */
+  public <T extends TNumber> EluGrad<T> eluGrad(Operand<T> gradients, Operand<T> outputs) {
+    return EluGrad.create(scope, gradients, outputs);
+  }
+
+  /**
    * Generates labels for candidate sampling with a learned unigram distribution.
    *  A unigram sampler could use a fixed unigram distribution read from a
    *  file or passed in as an in-memory array instead of building up the distribution
@@ -1075,6 +1376,33 @@ public final class NnOps {
   }
 
   /**
+   * Computes gradient of the FractionalAvgPool function.
+   *  Unlike FractionalMaxPoolGrad, we don't need to find arg_max for
+   *  FractionalAvgPoolGrad, we just need to evenly back-propagate each element of
+   *  out_backprop to those indices that form the same pooling cell. Therefore, we
+   *  just need to know the shape of original input tensor, instead of the whole
+   *  tensor.
+   *
+   * @param <T> data type for {@code output} output
+   * @param origInputTensorShape Original input tensor shape for {@code fractional_avg_pool}
+   * @param outBackprop 4-D with shape {@code [batch, height, width, channels]}.  Gradients
+   *  w.r.t. the output of {@code fractional_avg_pool}.
+   * @param rowPoolingSequence row pooling sequence, form pooling region with
+   *  col_pooling_sequence.
+   * @param colPoolingSequence column pooling sequence, form pooling region with
+   *  row_pooling sequence.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code FractionalAvgPoolGrad} output and operands
+   * @return a new instance of FractionalAvgPoolGrad
+   */
+  public <T extends TNumber> FractionalAvgPoolGrad<T> fractionalAvgPoolGrad(
+      Operand<TInt64> origInputTensorShape, Operand<T> outBackprop,
+      Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence,
+      FractionalAvgPoolGrad.Options... options) {
+    return FractionalAvgPoolGrad.create(scope, origInputTensorShape, outBackprop, rowPoolingSequence, colPoolingSequence, options);
+  }
+
+  /**
    * Performs fractional max pooling on the input.
    *  Fractional max pooling is slightly different than regular max pooling.  In
    *  regular max pooling, you downsize an input set by taking the maximum value of
@@ -1118,6 +1446,28 @@ public final class NnOps {
   public <T extends TNumber> FractionalMaxPool<T> fractionalMaxPool(Operand<T> value,
       List<Float> poolingRatio, FractionalMaxPool.Options... options) {
     return FractionalMaxPool.create(scope, value, poolingRatio, options);
+  }
+
+  /**
+   * Computes gradient of the FractionalMaxPool function.
+   *
+   * @param <T> data type for {@code output} output
+   * @param origInput Original input for {@code fractional_max_pool}
+   * @param origOutput Original output for {@code fractional_max_pool}
+   * @param outBackprop 4-D with shape {@code [batch, height, width, channels]}.  Gradients
+   *  w.r.t. the output of {@code fractional_max_pool}.
+   * @param rowPoolingSequence row pooling sequence, form pooling region with
+   *  col_pooling_sequence.
+   * @param colPoolingSequence column pooling sequence, form pooling region with
+   *  row_pooling sequence.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code FractionalMaxPoolGrad} output and operands
+   * @return a new instance of FractionalMaxPoolGrad
+   */
+  public <T extends TNumber> FractionalMaxPoolGrad<T> fractionalMaxPoolGrad(Operand<T> origInput,
+      Operand<T> origOutput, Operand<T> outBackprop, Operand<TInt64> rowPoolingSequence,
+      Operand<TInt64> colPoolingSequence, FractionalMaxPoolGrad.Options... options) {
+    return FractionalMaxPoolGrad.create(scope, origInput, origOutput, outBackprop, rowPoolingSequence, colPoolingSequence, options);
   }
 
   /**
@@ -1247,6 +1597,158 @@ public final class NnOps {
   }
 
   /**
+   * Computes the GRU cell forward propagation for 1 time step.
+   *  Args
+   *  x: Input to the GRU cell.
+   *  h_prev: State input from the previous GRU cell.
+   *  w_ru: Weight matrix for the reset and update gate.
+   *  w_c: Weight matrix for the cell connection gate.
+   *  b_ru: Bias vector for the reset and update gate.
+   *  b_c: Bias vector for the cell connection gate.
+   *  <p>Returns
+   *  r: Output of the reset gate.
+   *  u: Output of the update gate.
+   *  c: Output of the cell connection gate.
+   *  h: Current state of the GRU cell.
+   *  <p>Note on notation of the variables:
+   *  <p>Concatenation of a and b is represented by a_b
+   *  Element-wise dot product of a and b is represented by ab
+   *  Element-wise dot product is represented by \circ
+   *  Matrix multiplication is represented by *
+   *  <p>Biases are initialized with :
+   *  {@code b_ru} - constant_initializer(1.0)
+   *  {@code b_c} - constant_initializer(0.0)
+   *  <p>This kernel op implements the following mathematical equations:
+   *  <pre>
+   *  x_h_prev = [x, h_prev]
+   *
+   *  [r_bar u_bar] = x_h_prev * w_ru + b_ru
+   *
+   *  r = sigmoid(r_bar)
+   *  u = sigmoid(u_bar)
+   *
+   *  h_prevr = h_prev \circ r
+   *
+   *  x_h_prevr = [x h_prevr]
+   *
+   *  c_bar = x_h_prevr * w_c + b_c
+   *  c = tanh(c_bar)
+   *
+   *  h = (1-u) \circ c + u \circ h_prev
+   *  </pre>
+   *
+   * @param <T> data type for {@code r} output
+   * @param x The x value
+   * @param hPrev The hPrev value
+   * @param wRu The wRu value
+   * @param wC The wC value
+   * @param bRu The bRu value
+   * @param bC The bC value
+   * @param <T> data type for {@code GRUBlockCell} output and operands
+   * @return a new instance of GRUBlockCell
+   */
+  public <T extends TNumber> GRUBlockCell<T> gRUBlockCell(Operand<T> x, Operand<T> hPrev,
+      Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC) {
+    return GRUBlockCell.create(scope, x, hPrev, wRu, wC, bRu, bC);
+  }
+
+  /**
+   * Computes the GRU cell back-propagation for 1 time step.
+   *  Args
+   *  x: Input to the GRU cell.
+   *  h_prev: State input from the previous GRU cell.
+   *  w_ru: Weight matrix for the reset and update gate.
+   *  w_c: Weight matrix for the cell connection gate.
+   *  b_ru: Bias vector for the reset and update gate.
+   *  b_c: Bias vector for the cell connection gate.
+   *  r: Output of the reset gate.
+   *  u: Output of the update gate.
+   *  c: Output of the cell connection gate.
+   *  d_h: Gradients of the h_new wrt to objective function.
+   *  <p>Returns
+   *  d_x: Gradients of the x wrt to objective function.
+   *  d_h_prev: Gradients of the h wrt to objective function.
+   *  d_c_bar Gradients of the c_bar wrt to objective function.
+   *  d_r_bar_u_bar Gradients of the r_bar &amp; u_bar wrt to objective function.
+   *  <p>This kernel op implements the following mathematical equations:
+   *  <p>Note on notation of the variables:
+   *  <p>Concatenation of a and b is represented by a_b
+   *  Element-wise dot product of a and b is represented by ab
+   *  Element-wise dot product is represented by \circ
+   *  Matrix multiplication is represented by *
+   *  <p>Additional notes for clarity:
+   *  <p>{@code w_ru} can be segmented into 4 different matrices.
+   *  <pre>
+   *  w_ru = [w_r_x w_u_x
+   *          w_r_h_prev w_u_h_prev]
+   *  </pre>
+   *  <p>Similarly, {@code w_c} can be segmented into 2 different matrices.
+   *  <pre>
+   *  w_c = [w_c_x w_c_h_prevr]
+   *  </pre>
+   *  <p>Same goes for biases.
+   *  <pre>
+   *  b_ru = [b_ru_x b_ru_h]
+   *  b_c = [b_c_x b_c_h]
+   *  </pre>
+   *  <p>Another note on notation:
+   *  <pre>
+   *  d_x = d_x_component_1 + d_x_component_2
+   *
+   *  where d_x_component_1 = d_r_bar * w_r_x^T + d_u_bar * w_r_x^T
+   *  and d_x_component_2 = d_c_bar * w_c_x^T
+   *
+   *  d_h_prev = d_h_prev_component_1 + d_h_prevr \circ r + d_h \circ u
+   *  where d_h_prev_componenet_1 = d_r_bar * w_r_h_prev^T + d_u_bar * w_r_h_prev^T
+   *  </pre>
+   *  <p>Mathematics behind the Gradients below:
+   *  <pre>
+   *  d_c_bar = d_h \circ (1-u) \circ (1-c \circ c)
+   *  d_u_bar = d_h \circ (h-c) \circ u \circ (1-u)
+   *
+   *  d_r_bar_u_bar = [d_r_bar d_u_bar]
+   *
+   *  [d_x_component_1 d_h_prev_component_1] = d_r_bar_u_bar * w_ru^T
+   *
+   *  [d_x_component_2 d_h_prevr] = d_c_bar * w_c^T
+   *
+   *  d_x = d_x_component_1 + d_x_component_2
+   *
+   *  d_h_prev = d_h_prev_component_1 + d_h_prevr \circ r + u
+   *  </pre>
+   *  <p>Below calculation is performed in the python wrapper for the Gradients
+   *  (not in the gradient kernel.)
+   *  <pre>
+   *  d_w_ru = x_h_prevr^T * d_c_bar
+   *
+   *  d_w_c = x_h_prev^T * d_r_bar_u_bar
+   *
+   *  d_b_ru = sum of d_r_bar_u_bar along axis = 0
+   *
+   *  d_b_c = sum of d_c_bar along axis = 0
+   *  </pre>
+   *
+   * @param <T> data type for {@code d_x} output
+   * @param x The x value
+   * @param hPrev The hPrev value
+   * @param wRu The wRu value
+   * @param wC The wC value
+   * @param bRu The bRu value
+   * @param bC The bC value
+   * @param r The r value
+   * @param u The u value
+   * @param c The c value
+   * @param dH The dH value
+   * @param <T> data type for {@code GRUBlockCellGrad} output and operands
+   * @return a new instance of GRUBlockCellGrad
+   */
+  public <T extends TNumber> GRUBlockCellGrad<T> gRUBlockCellGrad(Operand<T> x, Operand<T> hPrev,
+      Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r, Operand<T> u,
+      Operand<T> c, Operand<T> dH) {
+    return GRUBlockCellGrad.create(scope, x, hPrev, wRu, wC, bRu, bC, r, u, c, dH);
+  }
+
+  /**
    * Says whether the targets are in the top {@code K} predictions.
    *  This outputs a {@code batch_size} bool array, an entry {@code out[i]} is {@code true} if the
    *  prediction for the target class is among the top {@code k} predictions among
@@ -1272,6 +1774,46 @@ public final class NnOps {
   }
 
   /**
+   * Computes the gradient for the inverse of {@code x} wrt its input.
+   *  Specifically, {@code grad = -dy * y*y}, where {@code y = 1/x}, and {@code dy}
+   *  is the corresponding input gradient.
+   *
+   * @param <T> data type for {@code z} output
+   * @param y The y value
+   * @param dy The dy value
+   * @param <T> data type for {@code InvGrad} output and operands
+   * @return a new instance of InvGrad
+   */
+  public <T extends TType> InvGrad<T> invGrad(Operand<T> y, Operand<T> dy) {
+    return InvGrad.create(scope, y, dy);
+  }
+
+  /**
+   * Solves a batch of isotonic regression problems.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A (batch_size, dim)-tensor holding a batch of inputs.
+   * @return a new instance of IsotonicRegression, with default output types
+   */
+  public IsotonicRegression<TFloat32> isotonicRegression(Operand<? extends TNumber> input) {
+    return IsotonicRegression.create(scope, input);
+  }
+
+  /**
+   * Solves a batch of isotonic regression problems.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input A (batch_size, dim)-tensor holding a batch of inputs.
+   * @param outputDtype Dtype of output.
+   * @param <U> data type for {@code IsotonicRegression} output and operands
+   * @return a new instance of IsotonicRegression
+   */
+  public <U extends TNumber> IsotonicRegression<U> isotonicRegression(
+      Operand<? extends TNumber> input, Class<U> outputDtype) {
+    return IsotonicRegression.create(scope, input, outputDtype);
+  }
+
+  /**
    * L2 Loss.
    *  Computes half the L2 norm of a tensor without the {@code sqrt}:
    *  <pre>
@@ -1285,6 +1827,82 @@ public final class NnOps {
    */
   public <T extends TNumber> L2Loss<T> l2Loss(Operand<T> t) {
     return L2Loss.create(scope, t);
+  }
+
+  /**
+   * Computes the LSTM cell forward propagation for 1 time step.
+   *  This implementation uses 1 weight matrix and 1 bias vector, and there's an
+   *  optional peephole connection.
+   *  <p>This kernel op implements the following mathematical equations:
+   *  <pre>
+   *  xh = [x, h_prev]
+   *  [i, f, ci, o] = xh * w + b
+   *  f = f + forget_bias
+   *
+   *  if not use_peephole:
+   *    wci = wcf = wco = 0
+   *
+   *  i = sigmoid(cs_prev * wci + i)
+   *  f = sigmoid(cs_prev * wcf + f)
+   *  ci = tanh(ci)
+   *
+   *  cs = ci .* i + cs_prev .* f
+   *  cs = clip(cs, cell_clip)
+   *
+   *  o = sigmoid(cs * wco + o)
+   *  co = tanh(cs)
+   *  h = co .* o
+   *  </pre>
+   *
+   * @param <T> data type for {@code i} output
+   * @param x The input to the LSTM cell, shape (batch_size, num_inputs).
+   * @param csPrev Value of the cell state at previous time step.
+   * @param hPrev Output of the previous cell at previous time step.
+   * @param w The weight matrix.
+   * @param wci The weight matrix for input gate peephole connection.
+   * @param wcf The weight matrix for forget gate peephole connection.
+   * @param wco The weight matrix for output gate peephole connection.
+   * @param b The bias vector.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LSTMBlockCell} output and operands
+   * @return a new instance of LSTMBlockCell
+   */
+  public <T extends TNumber> LSTMBlockCell<T> lSTMBlockCell(Operand<T> x, Operand<T> csPrev,
+      Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b,
+      LSTMBlockCell.Options... options) {
+    return LSTMBlockCell.create(scope, x, csPrev, hPrev, w, wci, wcf, wco, b, options);
+  }
+
+  /**
+   * Computes the LSTM cell backward propagation for 1 timestep.
+   *  This implementation is to be used in conjunction of LSTMBlockCell.
+   *
+   * @param <T> data type for {@code cs_prev_grad} output
+   * @param x The input to the LSTM cell, shape (batch_size, num_inputs).
+   * @param csPrev The previous cell state.
+   * @param hPrev The previous h state.
+   * @param w The weight matrix.
+   * @param wci The weight matrix for input gate peephole connection.
+   * @param wcf The weight matrix for forget gate peephole connection.
+   * @param wco The weight matrix for output gate peephole connection.
+   * @param b The bias vector.
+   * @param i The input gate.
+   * @param cs The cell state before the tanh.
+   * @param f The forget gate.
+   * @param o The output gate.
+   * @param ci The cell input.
+   * @param co The cell after the tanh.
+   * @param csGrad The current gradient of cs.
+   * @param hGrad The gradient of h vector.
+   * @param usePeephole Whether the cell uses peephole connections.
+   * @param <T> data type for {@code LSTMBlockCellGrad} output and operands
+   * @return a new instance of LSTMBlockCellGrad
+   */
+  public <T extends TNumber> LSTMBlockCellGrad<T> lSTMBlockCellGrad(Operand<T> x, Operand<T> csPrev,
+      Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b,
+      Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co,
+      Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
+    return LSTMBlockCellGrad.create(scope, x, csPrev, hPrev, w, wci, wcf, wco, b, i, cs, f, o, ci, co, csGrad, hGrad, usePeephole);
   }
 
   /**
@@ -1351,6 +1969,23 @@ public final class NnOps {
   public <T extends TNumber> LocalResponseNormalization<T> localResponseNormalization(
       Operand<T> input, LocalResponseNormalization.Options... options) {
     return LocalResponseNormalization.create(scope, input, options);
+  }
+
+  /**
+   * Gradients for Local Response Normalization.
+   *
+   * @param <T> data type for {@code output} output
+   * @param inputGrads 4-D with shape {@code [batch, height, width, channels]}.
+   * @param inputImage 4-D with shape {@code [batch, height, width, channels]}.
+   * @param outputImage 4-D with shape {@code [batch, height, width, channels]}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LRNGrad} output and operands
+   * @return a new instance of LocalResponseNormalizationGrad
+   */
+  public <T extends TNumber> LocalResponseNormalizationGrad<T> localResponseNormalizationGrad(
+      Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage,
+      LocalResponseNormalizationGrad.Options... options) {
+    return LocalResponseNormalizationGrad.create(scope, inputGrads, inputImage, outputImage, options);
   }
 
   /**
@@ -1513,6 +2148,28 @@ public final class NnOps {
       Operand<T> input, Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize,
       List<Long> strides, String padding, MaxPoolGradGradWithArgmax.Options... options) {
     return MaxPoolGradGradWithArgmax.create(scope, input, grad, argmax, ksize, strides, padding, options);
+  }
+
+  /**
+   * Computes gradients of the maxpooling function.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The original input.
+   * @param grad 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t. the
+   *  output of {@code max_pool}.
+   * @param argmax The indices of the maximum values chosen for each output of {@code max_pool}.
+   * @param ksize The size of the window for each dimension of the input tensor.
+   * @param strides The stride of the sliding window for each dimension of the
+   *  input tensor.
+   * @param padding The type of padding algorithm to use.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MaxPoolGradWithArgmax} output and operands
+   * @return a new instance of MaxPoolGradWithArgmax
+   */
+  public <T extends TNumber> MaxPoolGradWithArgmax<T> maxPoolGradWithArgmax(Operand<T> input,
+      Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize, List<Long> strides,
+      String padding, MaxPoolGradWithArgmax.Options... options) {
+    return MaxPoolGradWithArgmax.create(scope, input, grad, argmax, ksize, strides, padding, options);
   }
 
   /**
@@ -1683,6 +2340,317 @@ public final class NnOps {
   }
 
   /**
+   * The QuantizedConv2DAndRelu operation
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DAndRelu} output and operands
+   * @return a new instance of QuantizedConv2DAndRelu
+   */
+  public <V extends TNumber> QuantizedConv2DAndRelu<V> quantizedConv2DAndRelu(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedConv2DAndRelu.Options... options) {
+    return QuantizedConv2DAndRelu.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DAndReluAndRequantize operation
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DAndReluAndRequantize} output and operands
+   * @return a new instance of QuantizedConv2DAndReluAndRequantize
+   */
+  public <V extends TNumber> QuantizedConv2DAndReluAndRequantize<V> quantizedConv2DAndReluAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<V> outType, List<Long> strides, String padding,
+      QuantizedConv2DAndReluAndRequantize.Options... options) {
+    return QuantizedConv2DAndReluAndRequantize.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DAndRequantize operation
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DAndRequantize} output and operands
+   * @return a new instance of QuantizedConv2DAndRequantize
+   */
+  public <V extends TNumber> QuantizedConv2DAndRequantize<V> quantizedConv2DAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<V> outType, List<Long> strides, String padding,
+      QuantizedConv2DAndRequantize.Options... options) {
+    return QuantizedConv2DAndRequantize.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, outType, strides, padding, options);
+  }
+
+  /**
+   * Computes QuantizedConv2D per channel.
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The original input tensor.
+   * @param filter The original filter tensor.
+   * @param minInput The minimum value of the input tensor
+   * @param maxInput The maximum value of the input tensor.
+   * @param minFilter The minimum value of the filter tensor.
+   * @param maxFilter The maximum value of the filter tensor.
+   * @param outType The quantized type of output tensor that needs to be converted.
+   * @param strides list of stride values.
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DPerChannel} output and operands
+   * @return a new instance of QuantizedConv2DPerChannel
+   */
+  public <V extends TNumber> QuantizedConv2DPerChannel<V> quantizedConv2DPerChannel(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedConv2DPerChannel.Options... options) {
+    return QuantizedConv2DPerChannel.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBias operation
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DWithBias} output and operands
+   * @return a new instance of QuantizedConv2DWithBias
+   */
+  public <V extends TNumber> QuantizedConv2DWithBias<V> quantizedConv2DWithBias(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter, Operand<TFloat32> bias,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedConv2DWithBias.Options... options) {
+    return QuantizedConv2DWithBias.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBiasAndRelu operation
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DWithBiasAndRelu} output and operands
+   * @return a new instance of QuantizedConv2DWithBiasAndRelu
+   */
+  public <V extends TNumber> QuantizedConv2DWithBiasAndRelu<V> quantizedConv2DWithBiasAndRelu(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter, Operand<TFloat32> bias,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedConv2DWithBiasAndRelu.Options... options) {
+    return QuantizedConv2DWithBiasAndRelu.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBiasAndReluAndRequantize operation
+   *
+   * @param <W> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedConv2DWithBiasAndReluAndRequantize} output and operands
+   * @return a new instance of QuantizedConv2DWithBiasAndReluAndRequantize
+   */
+  public <W extends TNumber> QuantizedConv2DWithBiasAndReluAndRequantize<W> quantizedConv2DWithBiasAndReluAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<? extends TNumber> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding,
+      QuantizedConv2DWithBiasAndReluAndRequantize.Options... options) {
+    return QuantizedConv2DWithBiasAndReluAndRequantize.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBiasAndRequantize operation
+   *
+   * @param <W> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedConv2DWithBiasAndRequantize} output and operands
+   * @return a new instance of QuantizedConv2DWithBiasAndRequantize
+   */
+  public <W extends TNumber> QuantizedConv2DWithBiasAndRequantize<W> quantizedConv2DWithBiasAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<? extends TNumber> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding,
+      QuantizedConv2DWithBiasAndRequantize.Options... options) {
+    return QuantizedConv2DWithBiasAndRequantize.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBiasSignedSumAndReluAndRequantize operation
+   *
+   * @param <X> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param summand The summand value
+   * @param minSummand The minSummand value
+   * @param maxSummand The maxSummand value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <X> data type for {@code QuantizedConv2DWithBiasSignedSumAndReluAndRequantize} output and operands
+   * @return a new instance of QuantizedConv2DWithBiasSignedSumAndReluAndRequantize
+   */
+  public <X extends TNumber> QuantizedConv2DWithBiasSignedSumAndReluAndRequantize<X> quantizedConv2DWithBiasSignedSumAndReluAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<? extends TNumber> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Operand<? extends TNumber> summand,
+      Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, Class<X> outType,
+      List<Long> strides, String padding,
+      QuantizedConv2DWithBiasSignedSumAndReluAndRequantize.Options... options) {
+    return QuantizedConv2DWithBiasSignedSumAndReluAndRequantize.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, summand, minSummand, maxSummand, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBiasSumAndRelu operation
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param summand The summand value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DWithBiasSumAndRelu} output and operands
+   * @return a new instance of QuantizedConv2DWithBiasSumAndRelu
+   */
+  public <V extends TNumber> QuantizedConv2DWithBiasSumAndRelu<V> quantizedConv2DWithBiasSumAndRelu(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter, Operand<TFloat32> bias,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Operand<TFloat32> summand, Class<V> outType, List<Long> strides,
+      String padding, QuantizedConv2DWithBiasSumAndRelu.Options... options) {
+    return QuantizedConv2DWithBiasSumAndRelu.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, summand, outType, strides, padding, options);
+  }
+
+  /**
+   * The QuantizedConv2DWithBiasSumAndReluAndRequantize operation
+   *
+   * @param <X> data type for {@code output} output
+   * @param input The input value
+   * @param filter The filter value
+   * @param bias The bias value
+   * @param minInput The minInput value
+   * @param maxInput The maxInput value
+   * @param minFilter The minFilter value
+   * @param maxFilter The maxFilter value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param summand The summand value
+   * @param minSummand The minSummand value
+   * @param maxSummand The maxSummand value
+   * @param outType The value of the outType attribute
+   * @param strides The value of the strides attribute
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <X> data type for {@code QuantizedConv2DWithBiasSumAndReluAndRequantize} output and operands
+   * @return a new instance of QuantizedConv2DWithBiasSumAndReluAndRequantize
+   */
+  public <X extends TNumber> QuantizedConv2DWithBiasSumAndReluAndRequantize<X> quantizedConv2DWithBiasSumAndReluAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<? extends TNumber> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Operand<? extends TNumber> summand,
+      Operand<TFloat32> minSummand, Operand<TFloat32> maxSummand, Class<X> outType,
+      List<Long> strides, String padding,
+      QuantizedConv2DWithBiasSumAndReluAndRequantize.Options... options) {
+    return QuantizedConv2DWithBiasSumAndReluAndRequantize.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, summand, minSummand, maxSummand, outType, strides, padding, options);
+  }
+
+  /**
    * Computes a 2D convolution given quantized 4D input and filter tensors.
    *  The inputs are quantized tensors where the lowest value represents the real
    *  number of the associated minimum, and the highest represents the maximum.
@@ -1709,6 +2677,112 @@ public final class NnOps {
       Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType,
       List<Long> strides, String padding, QuantizedConv2d.Options... options) {
     return QuantizedConv2d.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * Computes quantized depthwise Conv2D.
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The original input tensor.
+   * @param filter The original filter tensor.
+   * @param minInput The float value that the minimum quantized input value represents.
+   * @param maxInput The float value that the maximum quantized input value represents.
+   * @param minFilter The float value that the minimum quantized filter value represents.
+   * @param maxFilter The float value that the maximum quantized filter value represents.
+   * @param outType The type of the output.
+   * @param strides List of stride values.
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedDepthwiseConv2D} output and operands
+   * @return a new instance of QuantizedDepthwiseConv2D
+   */
+  public <V extends TNumber> QuantizedDepthwiseConv2D<V> quantizedDepthwiseConv2D(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedDepthwiseConv2D.Options... options) {
+    return QuantizedDepthwiseConv2D.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * Computes quantized depthwise Conv2D with Bias.
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The original input tensor.
+   * @param filter The original filter tensor.
+   * @param bias The original bias tensor.
+   * @param minInput The float value that the minimum quantized input value represents.
+   * @param maxInput The float value that the maximum quantized input value represents.
+   * @param minFilter The float value that the minimum quantized filter value represents.
+   * @param maxFilter The float value that the maximum quantized filter value represents.
+   * @param outType The type of the output.
+   * @param strides List of stride values.
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedDepthwiseConv2DWithBias} output and operands
+   * @return a new instance of QuantizedDepthwiseConv2DWithBias
+   */
+  public <V extends TNumber> QuantizedDepthwiseConv2DWithBias<V> quantizedDepthwiseConv2DWithBias(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter, Operand<TFloat32> bias,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedDepthwiseConv2DWithBias.Options... options) {
+    return QuantizedDepthwiseConv2DWithBias.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * Computes quantized depthwise Conv2D with Bias and Relu.
+   *
+   * @param <V> data type for {@code output} output
+   * @param input The original input tensor.
+   * @param filter The original filter tensor.
+   * @param bias The original bias tensor.
+   * @param minInput The float value that the minimum quantized input value represents.
+   * @param maxInput The float value that the maximum quantized input value represents.
+   * @param minFilter The float value that the minimum quantized filter value represents.
+   * @param maxFilter The float value that the maximum quantized filter value represents.
+   * @param outType The type of the output.
+   * @param strides List of stride values.
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedDepthwiseConv2DWithBiasAndRelu} output and operands
+   * @return a new instance of QuantizedDepthwiseConv2DWithBiasAndRelu
+   */
+  public <V extends TNumber> QuantizedDepthwiseConv2DWithBiasAndRelu<V> quantizedDepthwiseConv2DWithBiasAndRelu(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter, Operand<TFloat32> bias,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      QuantizedDepthwiseConv2DWithBiasAndRelu.Options... options) {
+    return QuantizedDepthwiseConv2DWithBiasAndRelu.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
+  }
+
+  /**
+   * Computes quantized depthwise Conv2D with Bias, Relu and Requantize.
+   *
+   * @param <W> data type for {@code output} output
+   * @param input The original input tensor.
+   * @param filter The original filter tensor.
+   * @param bias The original bias tensor.
+   * @param minInput The float value that the minimum quantized input value represents.
+   * @param maxInput The float value that the maximum quantized input value represents.
+   * @param minFilter The float value that the minimum quantized filter value represents.
+   * @param maxFilter The float value that the maximum quantized filter value represents.
+   * @param minFreezedOutput The minimum float value of the output tensor.
+   * @param maxFreezedOutput The maximum float value of the output tensor.
+   * @param outType The type of the output.
+   * @param strides List of stride values.
+   * @param padding The value of the padding attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize} output and operands
+   * @return a new instance of QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize
+   */
+  public <W extends TNumber> QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize<W> quantizedDepthwiseConv2DWithBiasAndReluAndRequantize(
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<? extends TNumber> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+      Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding,
+      QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize.Options... options) {
+    return QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize.create(scope, input, filter, bias, minInput, maxInput, minFilter, maxFilter, minFreezedOutput, maxFreezedOutput, outType, strides, padding, options);
   }
 
   /**
@@ -1833,6 +2907,34 @@ public final class NnOps {
   }
 
   /**
+   * Computes rectified linear 6 gradients for a Relu6 operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding Relu6 operation.
+   * @param features The features passed as input to the corresponding Relu6 operation, or
+   *  its output; using either one produces the same result.
+   * @param <T> data type for {@code Relu6Grad} output and operands
+   * @return a new instance of Relu6Grad
+   */
+  public <T extends TNumber> Relu6Grad<T> relu6Grad(Operand<T> gradients, Operand<T> features) {
+    return Relu6Grad.create(scope, gradients, features);
+  }
+
+  /**
+   * Computes rectified linear gradients for a Relu operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding Relu operation.
+   * @param features The features passed as input to the corresponding Relu operation, OR
+   *  the outputs of that operation (both work equivalently).
+   * @param <T> data type for {@code ReluGrad} output and operands
+   * @return a new instance of ReluGrad
+   */
+  public <T extends TNumber> ReluGrad<T> reluGrad(Operand<T> gradients, Operand<T> features) {
+    return ReluGrad.create(scope, gradients, features);
+  }
+
+  /**
    * Computes scaled exponential linear: {@code scale * alpha * (exp(features) - 1)}
    *  if &lt; 0, {@code scale * features} otherwise.
    *  <p>To be used together with
@@ -1847,6 +2949,19 @@ public final class NnOps {
    */
   public <T extends TNumber> Selu<T> selu(Operand<T> features) {
     return Selu.create(scope, features);
+  }
+
+  /**
+   * Computes gradients for the scaled exponential linear (Selu) operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding Selu operation.
+   * @param outputs The outputs of the corresponding Selu operation.
+   * @param <T> data type for {@code SeluGrad} output and operands
+   * @return a new instance of SeluGrad
+   */
+  public <T extends TNumber> SeluGrad<T> seluGrad(Operand<T> gradients, Operand<T> outputs) {
+    return SeluGrad.create(scope, gradients, outputs);
   }
 
   /**
@@ -1892,6 +3007,20 @@ public final class NnOps {
    */
   public <T extends TNumber> Softsign<T> softsign(Operand<T> features) {
     return Softsign.create(scope, features);
+  }
+
+  /**
+   * Computes softsign gradients for a softsign operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding softsign operation.
+   * @param features The features passed as input to the corresponding softsign operation.
+   * @param <T> data type for {@code SoftsignGrad} output and operands
+   * @return a new instance of SoftsignGrad
+   */
+  public <T extends TNumber> SoftsignGrad<T> softsignGrad(Operand<T> gradients,
+      Operand<T> features) {
+    return SoftsignGrad.create(scope, gradients, features);
   }
 
   /**
@@ -2137,6 +3266,121 @@ public final class NnOps {
   public <T extends TNumber, V extends TNumber> TopK<T, V> topK(Operand<T> input,
       Operand<? extends TNumber> k, Class<V> indexType, TopK.Options... options) {
     return TopK.create(scope, input, k, indexType, options);
+  }
+
+  /**
+   * Perform quantized convolution of quantized Tensor {@code lhs} and quantized Tensor {@code rhs}. to make quantized {@code output}.
+   *  Given quantized {@code lhs} and quantized {@code rhs}, performs quantized dot on {@code lhs} and {@code rhs} to make quantized {@code output}.
+   *  <p>{@code lhs} and {@code rhs} must be Tensors of same rank, and meet following shape conditions.
+   *  <ul>
+   *  <li>{@code lhs_feature} % {@code feature_group_count} == 0</li>
+   *  <li>{@code lhs_feature} % {@code rhs_input_feature} == 0</li>
+   *  <li>{@code lhs_feature} / {@code feature_group_count} == {@code rhs_input_feature}</li>
+   *  <li>{@code rhs_output_feature} % {@code feature_group_count} == 0</li>
+   *  <li>{@code lhs_batch} % {@code batch_group_count} == 0</li>
+   *  <li>{@code rhs_output_feature} % {@code batch_group_count} == 0</li>
+   *  </ul>
+   *  <p>{@code lhs} and {@code rhs} must be quantized Tensor, where data value is quantized using the formula:
+   *  <pre>
+   *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val)
+   *  </pre>
+   *  <p>{@code output} is also quantized, using the same formula.
+   *  If {@code rhs} is per-tensor quantized, {@code output} must be also per-tensor quantized.
+   *
+   * @param <U> data type for {@code output} output
+   * @param lhs Must be a quantized tensor, rank &gt;= 3.
+   * @param rhs Must be a quantized tensor, same rank as {@code lhs}.
+   * @param lhsScales The float value(s) used as scale factors when quantizing the original data that {@code lhs} represents.
+   *  Must be a scalar {@code Tensor} ({@code lhs} supports only per-tensor quantization).
+   * @param lhsZeroPoints The int32 value(s) used as zero points when quantizing original data that {@code lhs} represents.
+   *  Same shape condition as {@code lhs_scales}.
+   * @param rhsScales The float value(s) used as scale factors when quantizing the original data that {@code rhs} represents.
+   *  Must be a scalar {@code Tensor} for per-tensor quantization,
+   *  or 1D {@code Tensor} of size {@code rhs.dim_size(kernel_output_feature_dimension)}, for per-channel quantization.
+   * @param rhsZeroPoints The int32 value(s) used as zero points when quantizing original data that {@code rhs} represents.
+   *  Same shape condition as {@code rhs_scales}.
+   * @param outputScales The float value(s) to use as scale factors when quantizing original data that {@code output} represents.
+   *  Must be a scalar {@code Tensor} for per-tensor quantization,
+   *  or 1D {@code Tensor} of size {@code rhs.dim_size(kernel_output_feature_dimension)}
+   *  <ul>
+   *  <li>which is equal to {@code output.dim_size(output_feature_dimension)},
+   *  for per-channel quantization.
+   *  If {@code rhs} is per-tensor quantized, output must be also per-tensor quantized.
+   *  This means that if {@code rhs_scales} and {@code rhs_zero_points} are scalar {@code Tensor}s, {@code output_scales} and {@code output_zero_points} must be scalar {@code Tensor}s as well.</li>
+   *  </ul>
+   * @param outputZeroPoints The int32 value(s) used as zero points when quantizing original data that output represents.
+   *  Same shape condition as {@code output_scales}.
+   * @param Tout The type of {@code output} {@code Tensor}.
+   * @param padding string from: {@code "SAME"}, {@code "VALID"}, or {@code "EXPLICIT"}, indicating the type of padding algorithm to use.
+   * @param lhsQuantizationMinVal The min value of the quantized data stored in {@code lhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param lhsQuantizationMaxVal The max value of the quantized data stored in {@code lhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to 127.
+   * @param rhsQuantizationMinVal The min value of the quantized data stored in {@code rhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param rhsQuantizationMaxVal The max value of the quantized data stored in {@code rhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to 127.
+   * @param outputQuantizationMinVal The min value of the quantized data stored in {@code output}.
+   *  For example, if  {@code Tout} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param outputQuantizationMaxVal The max value of the quantized data stored in {@code output}.
+   *  For example, if {@code Tout} is {@code qint8}, this must be set to 127.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code UniformQuantizedConvolution} output and operands
+   * @param <T> data type for {@code UniformQuantizedConvolution} output and operands
+   * @return a new instance of UniformQuantizedConvolution
+   */
+  public <U extends TNumber, T extends TNumber> UniformQuantizedConvolution<U> uniformQuantizedConvolution(
+      Operand<T> lhs, Operand<T> rhs, Operand<TFloat32> lhsScales, Operand<TInt32> lhsZeroPoints,
+      Operand<TFloat32> rhsScales, Operand<TInt32> rhsZeroPoints, Operand<TFloat32> outputScales,
+      Operand<TInt32> outputZeroPoints, Class<U> Tout, String padding, Long lhsQuantizationMinVal,
+      Long lhsQuantizationMaxVal, Long rhsQuantizationMinVal, Long rhsQuantizationMaxVal,
+      Long outputQuantizationMinVal, Long outputQuantizationMaxVal,
+      UniformQuantizedConvolution.Options... options) {
+    return UniformQuantizedConvolution.create(scope, lhs, rhs, lhsScales, lhsZeroPoints, rhsScales, rhsZeroPoints, outputScales, outputZeroPoints, Tout, padding, lhsQuantizationMinVal, lhsQuantizationMaxVal, rhsQuantizationMinVal, rhsQuantizationMaxVal, outputQuantizationMinVal, outputQuantizationMaxVal, options);
+  }
+
+  /**
+   * Perform hybrid quantized convolution of float Tensor {@code lhs} and quantized Tensor {@code rhs}.
+   *  Given float {@code lhs} and quantized {@code rhs}, internally performs quantization on {@code lhs},
+   *  and then performs quantized convolution on quantized {@code lhs} and {@code rhs}.
+   *  <p>The internal quantization on {@code lhs} is a quantization to {@code Trhs}, dynamic range,
+   *  per-batch (per-axis along axis {@code dimension_numbers.input_batch_dimension}), asymmetric,
+   *  and not narrow range (the range is [Trhs_MIN, Trhs_MAX]).
+   *  <p>{@code lhs} and {@code rhs} must be Tensors of same rank, and meet following shape conditions.
+   *  <ul>
+   *  <li>lhs_feature % feature_group_count == 0</li>
+   *  <li>lhs_feature % rhs_input_feature == 0</li>
+   *  <li>lhs_feature / feature_group_count == rhs_input_feature</li>
+   *  <li>rhs_output_feature % feature_group_count == 0</li>
+   *  <li>lhs_batch % batch_group_count == 0</li>
+   *  <li>rhs_output_feature % batch_group_count == 0</li>
+   *  </ul>
+   *  <p>{@code rhs} must be quantized Tensor, where its data value is quantized using the formula:
+   *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
+   *
+   * @param <V> data type for {@code output} output
+   * @param lhs Must be a non-quantized Tensor of {@code Tlhs}, rank &gt;= 3.
+   * @param rhs Must be a quantized Tensor of {@code Trhs}, same rank as {@code lhs}.
+   * @param rhsScales The float value(s) used as scale factors when quantizing the original data that {@code rhs} represents.
+   *  Must be a scalar Tensor for per-tensor quantization,
+   *  or 1D Tensor of size {@code rhs.dim_size(kernel_output_feature_dimension)}, for per-channel quantization.
+   * @param rhsZeroPoints The int32 value(s) used as zero_point when quantizing original data that {@code rhs} represents.
+   *  Same shape condition as {@code rhs_scales}.
+   * @param Tout The type of output Tensor.
+   * @param padding string from: {@code "SAME"}, {@code "VALID"}, or {@code "EXPLICIT"}, indicating the type of padding algorithm to use.
+   * @param rhsQuantizationMinVal The min value of the quantized data stored in {@code rhs}.
+   *  For example, if {@code Trhs} is qint8, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param rhsQuantizationMaxVal The max value of the quantized data stored in {@code rhs}.
+   *  For example, if {@code Trhs} is qint8, this must be set to 127.
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code UniformQuantizedConvolutionHybrid} output and operands
+   * @return a new instance of UniformQuantizedConvolutionHybrid
+   */
+  public <V extends TNumber> UniformQuantizedConvolutionHybrid<V> uniformQuantizedConvolutionHybrid(
+      Operand<? extends TNumber> lhs, Operand<? extends TNumber> rhs, Operand<TFloat32> rhsScales,
+      Operand<TInt32> rhsZeroPoints, Class<V> Tout, String padding, Long rhsQuantizationMinVal,
+      Long rhsQuantizationMaxVal, UniformQuantizedConvolutionHybrid.Options... options) {
+    return UniformQuantizedConvolutionHybrid.create(scope, lhs, rhs, rhsScales, rhsZeroPoints, Tout, padding, rhsQuantizationMinVal, rhsQuantizationMaxVal, options);
   }
 
   /**

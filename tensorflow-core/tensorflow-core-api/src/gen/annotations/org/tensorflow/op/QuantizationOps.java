@@ -32,8 +32,15 @@ import org.tensorflow.op.quantization.QuantizeAndDequantizeV4;
 import org.tensorflow.op.quantization.QuantizeAndDequantizeV4Grad;
 import org.tensorflow.op.quantization.QuantizeDownAndShrinkRange;
 import org.tensorflow.op.quantization.QuantizedConcat;
+import org.tensorflow.op.quantization.QuantizedMatMulWithBiasAndDequantize;
+import org.tensorflow.op.quantization.QuantizedMatMulWithBiasAndRequantize;
 import org.tensorflow.op.quantization.RequantizationRange;
 import org.tensorflow.op.quantization.Requantize;
+import org.tensorflow.op.quantization.UniformDequantize;
+import org.tensorflow.op.quantization.UniformQuantize;
+import org.tensorflow.op.quantization.UniformQuantizedDot;
+import org.tensorflow.op.quantization.UniformQuantizedDotHybrid;
+import org.tensorflow.op.quantization.UniformRequantize;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -608,6 +615,60 @@ public final class QuantizationOps {
   }
 
   /**
+   * The QuantizedMatMulWithBiasAndDequantize operation
+   *
+   * @param <W> data type for {@code out} output
+   * @param a The a value
+   * @param b The b value
+   * @param bias The bias value
+   * @param minA The minA value
+   * @param maxA The maxA value
+   * @param minB The minB value
+   * @param maxB The maxB value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param Toutput The value of the Toutput attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedMatMulWithBiasAndDequantize} output and operands
+   * @return a new instance of QuantizedMatMulWithBiasAndDequantize
+   */
+  public <W extends TNumber> QuantizedMatMulWithBiasAndDequantize<W> quantizedMatMulWithBiasAndDequantize(
+      Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<? extends TNumber> bias,
+      Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
+      Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> Toutput,
+      QuantizedMatMulWithBiasAndDequantize.Options... options) {
+    return QuantizedMatMulWithBiasAndDequantize.create(scope, a, b, bias, minA, maxA, minB, maxB, minFreezedOutput, maxFreezedOutput, Toutput, options);
+  }
+
+  /**
+   * The QuantizedMatMulWithBiasAndRequantize operation
+   *
+   * @param <W> data type for {@code out} output
+   * @param a The a value
+   * @param b The b value
+   * @param bias The bias value
+   * @param minA The minA value
+   * @param maxA The maxA value
+   * @param minB The minB value
+   * @param maxB The maxB value
+   * @param minFreezedOutput The minFreezedOutput value
+   * @param maxFreezedOutput The maxFreezedOutput value
+   * @param Toutput The value of the Toutput attribute
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedMatMulWithBiasAndRequantize} output and operands
+   * @return a new instance of QuantizedMatMulWithBiasAndRequantize
+   */
+  public <W extends TNumber> QuantizedMatMulWithBiasAndRequantize<W> quantizedMatMulWithBiasAndRequantize(
+      Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<? extends TNumber> bias,
+      Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
+      Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> Toutput,
+      QuantizedMatMulWithBiasAndRequantize.Options... options) {
+    return QuantizedMatMulWithBiasAndRequantize.create(scope, a, b, bias, minA, maxA, minB, maxB, minFreezedOutput, maxFreezedOutput, Toutput, options);
+  }
+
+  /**
    * Computes a range that covers the actual values present in a quantized tensor.
    *  Given a quantized tensor described by {@code (input, input_min, input_max)}, outputs a
    *  range that covers the actual values present in that tensor. This op is typically
@@ -647,6 +708,203 @@ public final class QuantizationOps {
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin,
       Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     return Requantize.create(scope, input, inputMin, inputMax, requestedOutputMin, requestedOutputMax, outType);
+  }
+
+  /**
+   * Perform dequantization on the quantized Tensor {@code input}.
+   *  Given quantized {@code input} which was quantized using {@code scales} and {@code zero_points}, performs dequantization using the formula:
+   *  dequantized_data = (quantized_data - zero_point) * scale.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input Must be a Tensor of Tin.
+   * @param scales The float value(s) used as scale(s) when quantizing original data that input represents.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).
+   * @param zeroPoints The int32 value(s) used as zero_point(s) when quantizing original data that input represents.
+   *  Same shape condition as scales.
+   * @param Tout The type of output Tensor. A tf.DType from: tf.qint8, tf.qint32
+   * @param quantizationMinVal The quantization min value that was used when input was quantized.
+   *  The purpose of this attribute is typically (but not limited to) to indicate narrow range, where this is set to:
+   *  {@code (Tin lowest) + 1} if narrow range, and {@code (Tin lowest)} otherwise.
+   *  For example, if Tin is qint8, this is set to -127 if narrow range quantized or -128 if not.
+   * @param quantizationMaxVal The quantization max value that was used when input was quantized.
+   *  The purpose of this attribute is typically (but not limited to) indicate narrow range, where this is set to:
+   *  {@code (Tout max)} for both narrow range and not narrow range.
+   *  For example, if Tin is qint8, this is set to 127.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code UniformDequantize} output and operands
+   * @return a new instance of UniformDequantize
+   */
+  public <U extends TNumber> UniformDequantize<U> uniformDequantize(
+      Operand<? extends TNumber> input, Operand<TFloat32> scales, Operand<TInt32> zeroPoints,
+      Class<U> Tout, Long quantizationMinVal, Long quantizationMaxVal,
+      UniformDequantize.Options... options) {
+    return UniformDequantize.create(scope, input, scales, zeroPoints, Tout, quantizationMinVal, quantizationMaxVal, options);
+  }
+
+  /**
+   * Perform quantization on Tensor {@code input}.
+   *  Given {@code input}, {@code scales} and {@code zero_points}, performs quantization using the formula:
+   *  quantized_data = floor(input_data * (1.0f / scale) + 0.5f) + zero_point
+   *
+   * @param <U> data type for {@code output} output
+   * @param input Must be a Tensor of Tin.
+   * @param scales The float value(s) to use as scale(s) to quantize {@code input}.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).
+   * @param zeroPoints The int32 value(s) to use as zero_point(s) to quantize {@code input}.
+   *  Same shape condition as scales.
+   * @param Tout The type of output Tensor. A tf.DType from: tf.float32
+   * @param quantizationMinVal The quantization min value to quantize {@code input}.
+   *  The purpose of this attribute is typically (but not limited to) to indicate narrow range, where this is set to:
+   *  {@code (Tin lowest) + 1} if narrow range, and {@code (Tin lowest)} otherwise.
+   *  For example, if Tin is qint8, this is set to -127 if narrow range quantized or -128 if not.
+   * @param quantizationMaxVal The quantization max value to quantize {@code input}.
+   *  The purpose of this attribute is typically (but not limited to) indicate narrow range, where this is set to:
+   *  {@code (Tout max)} for both narrow range and not narrow range.
+   *  For example, if Tin is qint8, this is set to 127.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code UniformQuantize} output and operands
+   * @return a new instance of UniformQuantize
+   */
+  public <U extends TNumber> UniformQuantize<U> uniformQuantize(Operand<? extends TNumber> input,
+      Operand<TFloat32> scales, Operand<TInt32> zeroPoints, Class<U> Tout, Long quantizationMinVal,
+      Long quantizationMaxVal, UniformQuantize.Options... options) {
+    return UniformQuantize.create(scope, input, scales, zeroPoints, Tout, quantizationMinVal, quantizationMaxVal, options);
+  }
+
+  /**
+   * Perform quantized dot of quantized Tensor {@code lhs} and quantized Tensor {@code rhs} to make quantized {@code output}.
+   *  Given quantized {@code lhs} and quantized {@code rhs}, performs quantized dot on {@code lhs} and {@code rhs} to make quantized {@code output}.
+   *  {@code lhs} and {@code rhs} must be 2D Tensors and the lhs.dim_size(1) must match rhs.dim_size(0).
+   *  {@code lhs} and {@code rhs} must be quantized Tensor, where data value is quantized using the formula:
+   *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
+   *  {@code output} is also quantized, using the same formula.
+   *  If {@code rhs} is per-tensor quantized, {@code output} must be also per-tensor quantized.
+   *
+   * @param <U> data type for {@code output} output
+   * @param lhs Must be a 2D Tensor of Tin.
+   * @param rhs Must be a 2D Tensor of Tin.
+   * @param lhsScales The float value(s) used as scale when quantizing original data that lhs represents.
+   *  Must be a scalar Tensor (lhs supports only per-tensor quantization).
+   * @param lhsZeroPoints The int32 value(s) used as zero_point when quantizing original data that lhs represents.
+   *  Same shape condition as lhs_scales.
+   * @param rhsScales The float value(s) used as scale when quantizing original data that rhs represents.
+   *  Must be a scalar Tensor (per-tensor quantization) or 1D Tensor of size (rhs.dim_size(1),) (per-channel quantization).
+   * @param rhsZeroPoints The int32 value(s) used as zero_point when quantizing original data that rhs represents.
+   *  Same shape condition as rhs_scales.
+   * @param outputScales The float value(s) to use as scales when quantizing original data that output represents.
+   *  Must be a scalar Tensor (per-tensor quantization) or 1D Tensor of size (output.dim_size(1),) (per-channel quantization).
+   *  If rhs is per-tensor quantized, output must be also per-tensor quantized.
+   *  This means that if rhs_scales and rhs_zero_points are scalar Tensors, output_scales and output_zero_points must be scalar Tensors as well.
+   * @param outputZeroPoints The int32 value(s) used as zero_point when quantizing original data that output represents.
+   *  Same shape condition as rhs_scales.
+   * @param Tout The type of output Tensor.
+   * @param lhsQuantizationMinVal The min value of the quantized data stored in lhs.
+   *  For example, if Tin is qint8, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param lhsQuantizationMaxVal The max value of the quantized data stored in rhs.
+   *  For example, if Tin is qint8, this must be set to 127.
+   * @param rhsQuantizationMinVal The min value of the quantized data stored in rhs.
+   *  For example, if Trhs is qint8, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param rhsQuantizationMaxVal The max value of the quantized data stored in rhs.
+   *  For example, if Trhs is qint8, this must be set to 127.
+   * @param outputQuantizationMinVal The min value of the quantized data stored in output.
+   *  For example, if Tout is qint8, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param outputQuantizationMaxVal The max value of the quantized data stored in output.
+   *  For example, if Tout is qint8, this must be set to 127.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code UniformQuantizedDot} output and operands
+   * @param <T> data type for {@code UniformQuantizedDot} output and operands
+   * @return a new instance of UniformQuantizedDot
+   */
+  public <U extends TNumber, T extends TNumber> UniformQuantizedDot<U> uniformQuantizedDot(
+      Operand<T> lhs, Operand<T> rhs, Operand<TFloat32> lhsScales, Operand<TInt32> lhsZeroPoints,
+      Operand<TFloat32> rhsScales, Operand<TInt32> rhsZeroPoints, Operand<TFloat32> outputScales,
+      Operand<TInt32> outputZeroPoints, Class<U> Tout, Long lhsQuantizationMinVal,
+      Long lhsQuantizationMaxVal, Long rhsQuantizationMinVal, Long rhsQuantizationMaxVal,
+      Long outputQuantizationMinVal, Long outputQuantizationMaxVal,
+      UniformQuantizedDot.Options... options) {
+    return UniformQuantizedDot.create(scope, lhs, rhs, lhsScales, lhsZeroPoints, rhsScales, rhsZeroPoints, outputScales, outputZeroPoints, Tout, lhsQuantizationMinVal, lhsQuantizationMaxVal, rhsQuantizationMinVal, rhsQuantizationMaxVal, outputQuantizationMinVal, outputQuantizationMaxVal, options);
+  }
+
+  /**
+   * Perform hybrid quantized dot of float Tensor {@code lhs} and quantized Tensor {@code rhs}.
+   *  Given float {@code lhs} and quantized {@code rhs}, internally performs quantization on {@code lhs}, and then performs quantized dot on quantized lhs and {@code rhs}.
+   *  The internal quantization on {@code lhs} is a quantization to qint8, dynamic range, per-batch (per-axis along axis 0), asymmetric, and not narrow range (the range is [-128, 127]).
+   *  {@code lhs} and {@code rhs} must be 2D Tensors and the lhs.dim_size(1) must match rhs.dim_size(0).
+   *  {@code rhs} must be quantized Tensor, where its data value is quantized using the formula:
+   *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
+   *
+   * @param <V> data type for {@code output} output
+   * @param lhs Must be a 2D Tensor of Tlhs.
+   * @param rhs Must be a 2D Tensor of Trhs.
+   * @param rhsScales The float value(s) used as scale when quantizing original data that rhs represents.
+   *  Must be a scalar Tensor (per-tensor quantization) or 1D Tensor of size (rhs.dim_size(1),) (per-channel quantization).
+   * @param rhsZeroPoints The int32 value(s) used as zero_point when quantizing original data that rhs represents.
+   *  Same shape condition as rhs_scales.
+   * @param Tout The type of output Tensor.
+   * @param rhsQuantizationMinVal The min value of the quantized data stored in rhs.
+   *  For example, if Trhs is qint8, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param rhsQuantizationMaxVal The max value of the quantized data stored in rhs.
+   *  For example, if Trhs is qint8, this must be set to 127.
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code UniformQuantizedDotHybrid} output and operands
+   * @return a new instance of UniformQuantizedDotHybrid
+   */
+  public <V extends TNumber> UniformQuantizedDotHybrid<V> uniformQuantizedDotHybrid(
+      Operand<? extends TNumber> lhs, Operand<? extends TNumber> rhs, Operand<TFloat32> rhsScales,
+      Operand<TInt32> rhsZeroPoints, Class<V> Tout, Long rhsQuantizationMinVal,
+      Long rhsQuantizationMaxVal, UniformQuantizedDotHybrid.Options... options) {
+    return UniformQuantizedDotHybrid.create(scope, lhs, rhs, rhsScales, rhsZeroPoints, Tout, rhsQuantizationMinVal, rhsQuantizationMaxVal, options);
+  }
+
+  /**
+   * Given quantized tensor {@code input}, requantize it with new quantization parameters.
+   *  Given quantized tensor {@code input}, which was quantized using {input_scales, input_zero_points, input_quantization_axis, input_quantization_min_val, input_quantization_max_val},
+   *  requantize it to a tensor, which is quantized using {output_scales, output_zero_points, output_quantization_axis, output_quantization_min_val, output_quantization_max_val}.
+   *  The requantization is done by using the formula:
+   *  output_quantized_data = clip(
+   *  (input_quantized_data - input_zero_point) * (input_scale / output_scale) + output_zero_point,
+   *  output_quantization_min_val,
+   *  output_quantization_max_val)
+   *  <p>Per-tensor and per-axis quantization supported cases are followings:
+   *  <ul>
+   *  <li>per-tensor -&gt; per-tensor</li>
+   *  <li>per-tensor -&gt; per-axis</li>
+   *  <li>per-axis -&gt; per-axis where input_quantization_axis equals output_quantization_axis.
+   *  i.e. At least one among input_quantization_axis and output_quantization_axis must be -1, or two must be equal.</li>
+   *  </ul>
+   *
+   * @param <U> data type for {@code output} output
+   * @param input Must be a Tensor of Tin.
+   * @param inputScales The float value(s) used as scale(s) when quantizing original data that {@code input} represents.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).
+   * @param inputZeroPoints The int32 value(s) used as zero_point(s) when quantizing original data that {@code input} represents.
+   *  Same shape condition as scales.
+   * @param outputScales The float value(s) to use as new scale(s) to quantize original data that {@code input} represents.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).
+   * @param outputZeroPoints The int32 value(s) to use as new zero_point(s) to quantize original data that {@code input} represents.
+   *  Same shape condition as scales.
+   * @param Tout The type of output Tensor. A tf.DType from: tf.qint8, tf.qint32
+   * @param inputQuantizationMinVal The quantization min value that was used when quantizing original data that {@code input} represents.
+   *  The purpose of this attribute is typically (but not limited to) to indicate narrow range, where this is set to:
+   *  {@code (Tin lowest) + 1} if narrow range, and {@code (Tin lowest)} otherwise.
+   *  For example, if Tin is qint8, this is set to -127 if narrow range quantized or -128 if not.
+   * @param inputQuantizationMaxVal The quantization max value that was used when quantizing original data that {@code input} represents.
+   *  The purpose of this attribute is typically (but not limited to) indicate narrow range, where this is set to:
+   *  {@code (Tout max)} for both narrow range and not narrow range.
+   *  For example, if Tin is qint8, this is set to 127.
+   * @param outputQuantizationMinVal The new quantization min value to quantize original data that {@code input} represents.
+   * @param outputQuantizationMaxVal The new quantization max value to quantize original data that {@code input} represents.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code UniformRequantize} output and operands
+   * @return a new instance of UniformRequantize
+   */
+  public <U extends TNumber> UniformRequantize<U> uniformRequantize(
+      Operand<? extends TNumber> input, Operand<TFloat32> inputScales,
+      Operand<TInt32> inputZeroPoints, Operand<TFloat32> outputScales,
+      Operand<TInt32> outputZeroPoints, Class<U> Tout, Long inputQuantizationMinVal,
+      Long inputQuantizationMaxVal, Long outputQuantizationMinVal, Long outputQuantizationMaxVal,
+      UniformRequantize.Options... options) {
+    return UniformRequantize.create(scope, input, inputScales, inputZeroPoints, outputScales, outputZeroPoints, Tout, inputQuantizationMinVal, inputQuantizationMaxVal, outputQuantizationMinVal, outputQuantizationMaxVal, options);
   }
 
   /**

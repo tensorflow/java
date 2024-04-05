@@ -1,4 +1,5 @@
 op {
+  visibility: SKIP
   graph_op_name: "RiscCeil"
   endpoint {
     name: "risc.RiscCeil"

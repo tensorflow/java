@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "TensorArrayGatherV3"
   endpoint {
     name: "TensorArrayGather"

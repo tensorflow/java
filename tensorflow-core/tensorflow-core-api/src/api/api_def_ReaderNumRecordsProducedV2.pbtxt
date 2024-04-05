@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "ReaderNumRecordsProducedV2"
   endpoint {
     name: "io.ReaderNumRecordsProduced"

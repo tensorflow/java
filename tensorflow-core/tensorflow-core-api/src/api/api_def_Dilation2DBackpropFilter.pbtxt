@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "Dilation2DBackpropFilter"
   endpoint {
     name: "nn.Dilation2dBackpropFilter"

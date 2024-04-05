@@ -1,4 +1,5 @@
 op {
+  visibility: SKIP
   graph_op_name: "BoostedTreesCalculateBestFeatureSplitV2"
   endpoint {
     name: "estimator.BoostedTreesCalculateBestFeatureSplitV2"

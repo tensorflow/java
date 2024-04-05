@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Sets up TPUEmbedding in a distributed TPU system.
@@ -34,6 +35,9 @@ import org.tensorflow.op.annotation.OpMetadata;
 @OpMetadata(
     opType = ConfigureTPUEmbedding.OP_NAME,
     inputsClass = ConfigureTPUEmbedding.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class ConfigureTPUEmbedding extends RawOp {
   /**

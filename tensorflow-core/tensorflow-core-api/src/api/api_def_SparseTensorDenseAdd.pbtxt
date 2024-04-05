@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "SparseTensorDenseAdd"
   endpoint {
     name: "sparse.SparseTensorDenseAdd"

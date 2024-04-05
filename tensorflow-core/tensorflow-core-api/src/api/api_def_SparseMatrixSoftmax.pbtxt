@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "SparseMatrixSoftmax"
   endpoint {
     name: "linalg.sparse.SparseMatrixSoftmax"

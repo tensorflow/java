@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TString;
 
@@ -43,6 +44,9 @@ import org.tensorflow.types.TString;
 @OpMetadata(
     opType = StaticRegexFullMatch.OP_NAME,
     inputsClass = StaticRegexFullMatch.Inputs.class
+)
+@Operator(
+    group = "strings"
 )
 public final class StaticRegexFullMatch extends RawOp implements Operand<TBool> {
   /**

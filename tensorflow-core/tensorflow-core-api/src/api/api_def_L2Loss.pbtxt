@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "L2Loss"
   endpoint {
     name: "nn.L2Loss"

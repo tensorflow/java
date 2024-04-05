@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "LookupTableExportV2"
   endpoint {
     name: "LookupTableExport"

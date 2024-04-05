@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "QuantizedConv2DAndReluAndRequantize"
   endpoint {
     name: "nn.QuantizedConv2DAndReluAndRequantize"

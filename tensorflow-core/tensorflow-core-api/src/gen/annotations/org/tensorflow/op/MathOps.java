@@ -34,6 +34,10 @@ import org.tensorflow.op.math.Asinh;
 import org.tensorflow.op.math.Atan;
 import org.tensorflow.op.math.Atan2;
 import org.tensorflow.op.math.Atanh;
+import org.tensorflow.op.math.BesselI0;
+import org.tensorflow.op.math.BesselI0e;
+import org.tensorflow.op.math.BesselI1;
+import org.tensorflow.op.math.BesselI1e;
 import org.tensorflow.op.math.Betainc;
 import org.tensorflow.op.math.Bincount;
 import org.tensorflow.op.math.Ceil;
@@ -43,6 +47,7 @@ import org.tensorflow.op.math.Cos;
 import org.tensorflow.op.math.Cosh;
 import org.tensorflow.op.math.Cumprod;
 import org.tensorflow.op.math.Cumsum;
+import org.tensorflow.op.math.CumulativeLogsumexp;
 import org.tensorflow.op.math.DenseBincount;
 import org.tensorflow.op.math.Digamma;
 import org.tensorflow.op.math.Div;
@@ -59,6 +64,7 @@ import org.tensorflow.op.math.FloorMod;
 import org.tensorflow.op.math.Greater;
 import org.tensorflow.op.math.GreaterEqual;
 import org.tensorflow.op.math.Igamma;
+import org.tensorflow.op.math.IgammaGradA;
 import org.tensorflow.op.math.Igammac;
 import org.tensorflow.op.math.Imag;
 import org.tensorflow.op.math.InvertPermutation;
@@ -91,27 +97,37 @@ import org.tensorflow.op.math.QuantizedMul;
 import org.tensorflow.op.math.Real;
 import org.tensorflow.op.math.RealDiv;
 import org.tensorflow.op.math.Reciprocal;
+import org.tensorflow.op.math.ReciprocalGrad;
+import org.tensorflow.op.math.RequantizationRangePerChannel;
+import org.tensorflow.op.math.RequantizePerChannel;
 import org.tensorflow.op.math.Rint;
 import org.tensorflow.op.math.Round;
 import org.tensorflow.op.math.Rsqrt;
+import org.tensorflow.op.math.RsqrtGrad;
 import org.tensorflow.op.math.SegmentMax;
 import org.tensorflow.op.math.SegmentMean;
 import org.tensorflow.op.math.SegmentMin;
 import org.tensorflow.op.math.SegmentProd;
 import org.tensorflow.op.math.SegmentSum;
 import org.tensorflow.op.math.Sigmoid;
+import org.tensorflow.op.math.SigmoidGrad;
 import org.tensorflow.op.math.Sign;
 import org.tensorflow.op.math.Sin;
 import org.tensorflow.op.math.Sinh;
+import org.tensorflow.op.math.SobolSample;
 import org.tensorflow.op.math.Softplus;
+import org.tensorflow.op.math.SoftplusGrad;
 import org.tensorflow.op.math.Sqrt;
+import org.tensorflow.op.math.SqrtGrad;
 import org.tensorflow.op.math.Square;
 import org.tensorflow.op.math.SquaredDifference;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.op.math.Tan;
 import org.tensorflow.op.math.Tanh;
+import org.tensorflow.op.math.TanhGrad;
 import org.tensorflow.op.math.TruncateDiv;
 import org.tensorflow.op.math.TruncateMod;
+import org.tensorflow.op.math.UniformQuantizedAdd;
 import org.tensorflow.op.math.UnsortedSegmentMax;
 import org.tensorflow.op.math.UnsortedSegmentMin;
 import org.tensorflow.op.math.UnsortedSegmentProd;
@@ -134,6 +150,8 @@ import org.tensorflow.types.family.TType;
  * @see {@link Ops}
  */
 public final class MathOps {
+  public final MathSpecialOps special;
+
   private final Scope scope;
 
   private final Ops ops;
@@ -141,6 +159,7 @@ public final class MathOps {
   MathOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+    special = new MathSpecialOps(ops);
   }
 
   /**
@@ -529,6 +548,54 @@ public final class MathOps {
   }
 
   /**
+   * The BesselI0 operation
+   *
+   * @param <T> data type for {@code y} output
+   * @param x The x value
+   * @param <T> data type for {@code BesselI0} output and operands
+   * @return a new instance of BesselI0
+   */
+  public <T extends TNumber> BesselI0<T> besselI0(Operand<T> x) {
+    return BesselI0.create(scope, x);
+  }
+
+  /**
+   * The BesselI0e operation
+   *
+   * @param <T> data type for {@code y} output
+   * @param x The x value
+   * @param <T> data type for {@code BesselI0e} output and operands
+   * @return a new instance of BesselI0e
+   */
+  public <T extends TNumber> BesselI0e<T> besselI0e(Operand<T> x) {
+    return BesselI0e.create(scope, x);
+  }
+
+  /**
+   * The BesselI1 operation
+   *
+   * @param <T> data type for {@code y} output
+   * @param x The x value
+   * @param <T> data type for {@code BesselI1} output and operands
+   * @return a new instance of BesselI1
+   */
+  public <T extends TNumber> BesselI1<T> besselI1(Operand<T> x) {
+    return BesselI1.create(scope, x);
+  }
+
+  /**
+   * The BesselI1e operation
+   *
+   * @param <T> data type for {@code y} output
+   * @param x The x value
+   * @param <T> data type for {@code BesselI1e} output and operands
+   * @return a new instance of BesselI1e
+   */
+  public <T extends TNumber> BesselI1e<T> besselI1e(Operand<T> x) {
+    return BesselI1e.create(scope, x);
+  }
+
+  /**
    * Compute the regularized incomplete beta integral \(I_x(a, b)\).
    *  The regularized incomplete beta integral is defined as:
    *  <p>\(I_x(a, b) = \frac{B(x; a, b)}{B(a, b)}\)
@@ -770,6 +837,38 @@ public final class MathOps {
   public <T extends TType> Cumsum<T> cumsum(Operand<T> x, Operand<? extends TNumber> axis,
       Cumsum.Options... options) {
     return Cumsum.create(scope, x, axis, options);
+  }
+
+  /**
+   * Compute the cumulative product of the tensor {@code x} along {@code axis}.
+   *  By default, this op performs an inclusive cumulative log-sum-exp,
+   *  which means that the first
+   *  element of the input is identical to the first element of the output:
+   *  <pre>
+   *  tf.math.cumulative_logsumexp([a, b, c])  # =&gt; [a, log(exp(a) + exp(b)), log(exp(a) + exp(b) + exp(c))]
+   *  </pre>
+   *  <p>By setting the {@code exclusive} kwarg to {@code True}, an exclusive cumulative log-sum-exp is
+   *  performed instead:
+   *  <pre>
+   *  tf.cumulative_logsumexp([a, b, c], exclusive=True)  # =&gt; [-inf, a, log(exp(a) * exp(b))]
+   *  </pre>
+   *  <p>Note that the neutral element of the log-sum-exp operation is {@code -inf},
+   *  however, for performance reasons, the minimal value representable by the
+   *  floating point type is used instead.
+   *  <p>By setting the {@code reverse} kwarg to {@code True}, the cumulative log-sum-exp is performed in the
+   *  opposite direction.
+   *
+   * @param <T> data type for {@code out} output
+   * @param x A {@code Tensor}. Must be one of the following types: {@code float16}, {@code float32}, {@code float64}.
+   * @param axis A {@code Tensor} of type {@code int32} (default: 0). Must be in the range
+   *  {@code [-rank(x), rank(x))}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CumulativeLogsumexp} output and operands
+   * @return a new instance of CumulativeLogsumexp
+   */
+  public <T extends TNumber> CumulativeLogsumexp<T> cumulativeLogsumexp(Operand<T> x,
+      Operand<? extends TNumber> axis, CumulativeLogsumexp.Options... options) {
+    return CumulativeLogsumexp.create(scope, x, axis, options);
   }
 
   /**
@@ -1077,6 +1176,19 @@ public final class MathOps {
    */
   public <T extends TNumber> Igamma<T> igamma(Operand<T> a, Operand<T> x) {
     return Igamma.create(scope, a, x);
+  }
+
+  /**
+   * Computes the gradient of {@code igamma(a, x)} wrt {@code a}.
+   *
+   * @param <T> data type for {@code z} output
+   * @param a The a value
+   * @param x The x value
+   * @param <T> data type for {@code IgammaGradA} output and operands
+   * @return a new instance of IgammaGradA
+   */
+  public <T extends TNumber> IgammaGradA<T> igammaGradA(Operand<T> a, Operand<T> x) {
+    return IgammaGradA.create(scope, a, x);
   }
 
   /**
@@ -1677,6 +1789,57 @@ public final class MathOps {
   }
 
   /**
+   * Computes the gradient for the inverse of {@code x} wrt its input.
+   *  Specifically, {@code grad = -dy * y*y}, where {@code y = 1/x}, and {@code dy}
+   *  is the corresponding input gradient.
+   *
+   * @param <T> data type for {@code z} output
+   * @param y The y value
+   * @param dy The dy value
+   * @param <T> data type for {@code ReciprocalGrad} output and operands
+   * @return a new instance of ReciprocalGrad
+   */
+  public <T extends TType> ReciprocalGrad<T> reciprocalGrad(Operand<T> y, Operand<T> dy) {
+    return ReciprocalGrad.create(scope, y, dy);
+  }
+
+  /**
+   * Computes requantization range per channel.
+   *
+   * @param input The original input tensor.
+   * @param inputMin The minimum value of the input tensor
+   * @param inputMax The maximum value of the input tensor.
+   * @param clipValueMax The maximum value of the output that needs to be clipped.
+   *  Example: set this to 6 for Relu6.
+   * @return a new instance of RequantizationRangePerChannel
+   */
+  public RequantizationRangePerChannel requantizationRangePerChannel(
+      Operand<? extends TNumber> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
+      Float clipValueMax) {
+    return RequantizationRangePerChannel.create(scope, input, inputMin, inputMax, clipValueMax);
+  }
+
+  /**
+   * Requantizes input with min and max values known per channel.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input The original input tensor.
+   * @param inputMin The minimum value of the input tensor
+   * @param inputMax The maximum value of the input tensor.
+   * @param requestedOutputMin The minimum value of the output tensor requested.
+   * @param requestedOutputMax The maximum value of the output tensor requested.
+   * @param outType The quantized type of output tensor that needs to be converted.
+   * @param <U> data type for {@code RequantizePerChannel} output and operands
+   * @return a new instance of RequantizePerChannel
+   */
+  public <U extends TNumber> RequantizePerChannel<U> requantizePerChannel(
+      Operand<? extends TNumber> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
+      Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax,
+      Class<U> outType) {
+    return RequantizePerChannel.create(scope, input, inputMin, inputMax, requestedOutputMin, requestedOutputMax, outType);
+  }
+
+  /**
    * Returns element-wise integer closest to x.
    *  If the result is midway between two representable values,
    *  the even representable is chosen.
@@ -1721,6 +1884,21 @@ public final class MathOps {
    */
   public <T extends TType> Rsqrt<T> rsqrt(Operand<T> x) {
     return Rsqrt.create(scope, x);
+  }
+
+  /**
+   * Computes the gradient for the rsqrt of {@code x} wrt its input.
+   *  Specifically, {@code grad = dy * -0.5 * y^3}, where {@code y = rsqrt(x)}, and {@code dy}
+   *  is the corresponding input gradient.
+   *
+   * @param <T> data type for {@code z} output
+   * @param y The y value
+   * @param dy The dy value
+   * @param <T> data type for {@code RsqrtGrad} output and operands
+   * @return a new instance of RsqrtGrad
+   */
+  public <T extends TType> RsqrtGrad<T> rsqrtGrad(Operand<T> y, Operand<T> dy) {
+    return RsqrtGrad.create(scope, y, dy);
   }
 
   /**
@@ -1973,6 +2151,21 @@ public final class MathOps {
   }
 
   /**
+   * Computes the gradient of the sigmoid of {@code x} wrt its input.
+   *  Specifically, {@code grad = dy * y * (1 - y)}, where {@code y = sigmoid(x)}, and
+   *  {@code dy} is the corresponding input gradient.
+   *
+   * @param <T> data type for {@code z} output
+   * @param y The y value
+   * @param dy The dy value
+   * @param <T> data type for {@code SigmoidGrad} output and operands
+   * @return a new instance of SigmoidGrad
+   */
+  public <T extends TType> SigmoidGrad<T> sigmoidGrad(Operand<T> y, Operand<T> dy) {
+    return SigmoidGrad.create(scope, y, dy);
+  }
+
+  /**
    * Returns an element-wise indication of the sign of a number.
    *  {@code y = sign(x) = -1} if {@code x < 0}; 0 if {@code x == 0}; 1 if {@code x > 0}.
    *  <p>For complex numbers, {@code y = sign(x) = x / |x|} if {@code x != 0}, otherwise {@code y = 0}.
@@ -2034,6 +2227,44 @@ public final class MathOps {
   }
 
   /**
+   * Generates points from the Sobol sequence.
+   *  Creates a Sobol sequence with {@code num_results} samples. Each sample has dimension
+   *  {@code dim}. Skips the first {@code skip} samples.
+   *
+   * @param <T> data type for {@code samples} output
+   * @param dim Positive scalar {@code Tensor} representing each sample's dimension.
+   * @param numResults Positive scalar {@code Tensor} of dtype int32. The number of Sobol points to return
+   *  in the output.
+   * @param skip Positive scalar {@code Tensor} of dtype int32. The number of initial points of the
+   *  Sobol sequence to skip.
+   * @return a new instance of SobolSample, with default output types
+   */
+  public SobolSample<TFloat32> sobolSample(Operand<TInt32> dim, Operand<TInt32> numResults,
+      Operand<TInt32> skip) {
+    return SobolSample.create(scope, dim, numResults, skip);
+  }
+
+  /**
+   * Generates points from the Sobol sequence.
+   *  Creates a Sobol sequence with {@code num_results} samples. Each sample has dimension
+   *  {@code dim}. Skips the first {@code skip} samples.
+   *
+   * @param <T> data type for {@code samples} output
+   * @param dim Positive scalar {@code Tensor} representing each sample's dimension.
+   * @param numResults Positive scalar {@code Tensor} of dtype int32. The number of Sobol points to return
+   *  in the output.
+   * @param skip Positive scalar {@code Tensor} of dtype int32. The number of initial points of the
+   *  Sobol sequence to skip.
+   * @param dtype The type of the sample. One of: {@code float32} or {@code float64}.
+   * @param <T> data type for {@code SobolSample} output and operands
+   * @return a new instance of SobolSample
+   */
+  public <T extends TNumber> SobolSample<T> sobolSample(Operand<TInt32> dim,
+      Operand<TInt32> numResults, Operand<TInt32> skip, Class<T> dtype) {
+    return SobolSample.create(scope, dim, numResults, skip, dtype);
+  }
+
+  /**
    * The Softplus operation
    *
    * @param <T> data type for {@code activations} output
@@ -2043,6 +2274,20 @@ public final class MathOps {
    */
   public <T extends TNumber> Softplus<T> softplus(Operand<T> features) {
     return Softplus.create(scope, features);
+  }
+
+  /**
+   * Computes softplus gradients for a softplus operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding softplus operation.
+   * @param features The features passed as input to the corresponding softplus operation.
+   * @param <T> data type for {@code SoftplusGrad} output and operands
+   * @return a new instance of SoftplusGrad
+   */
+  public <T extends TNumber> SoftplusGrad<T> softplusGrad(Operand<T> gradients,
+      Operand<T> features) {
+    return SoftplusGrad.create(scope, gradients, features);
   }
 
   /**
@@ -2056,6 +2301,21 @@ public final class MathOps {
    */
   public <T extends TType> Sqrt<T> sqrt(Operand<T> x) {
     return Sqrt.create(scope, x);
+  }
+
+  /**
+   * Computes the gradient for the sqrt of {@code x} wrt its input.
+   *  Specifically, {@code grad = dy * 0.5 / y}, where {@code y = sqrt(x)}, and {@code dy}
+   *  is the corresponding input gradient.
+   *
+   * @param <T> data type for {@code z} output
+   * @param y The y value
+   * @param dy The dy value
+   * @param <T> data type for {@code SqrtGrad} output and operands
+   * @return a new instance of SqrtGrad
+   */
+  public <T extends TType> SqrtGrad<T> sqrtGrad(Operand<T> y, Operand<T> dy) {
+    return SqrtGrad.create(scope, y, dy);
   }
 
   /**
@@ -2148,6 +2408,21 @@ public final class MathOps {
   }
 
   /**
+   * Computes the gradient for the tanh of {@code x} wrt its input.
+   *  Specifically, {@code grad = dy * (1 - y*y)}, where {@code y = tanh(x)}, and {@code dy}
+   *  is the corresponding input gradient.
+   *
+   * @param <T> data type for {@code z} output
+   * @param y The y value
+   * @param dy The dy value
+   * @param <T> data type for {@code TanhGrad} output and operands
+   * @return a new instance of TanhGrad
+   */
+  public <T extends TType> TanhGrad<T> tanhGrad(Operand<T> y, Operand<T> dy) {
+    return TanhGrad.create(scope, y, dy);
+  }
+
+  /**
    * Returns x / y element-wise, rounded towards zero.
    *  Truncation designates that negative numbers will round fractional quantities
    *  toward zero. I.e. -7 / 5 = -1. This matches C semantics but it is different
@@ -2180,6 +2455,61 @@ public final class MathOps {
    */
   public <T extends TNumber> TruncateMod<T> truncateMod(Operand<T> x, Operand<T> y) {
     return TruncateMod.create(scope, x, y);
+  }
+
+  /**
+   * Perform quantized add of quantized Tensor {@code lhs} and quantized Tensor {@code rhs} to make quantized {@code output}.
+   *  Given quantized {@code lhs} and quantized {@code rhs}, performs quantized add on {@code lhs} and {@code rhs} to make quantized {@code output}.
+   *  <p>{@code math.UniformQuantizedAdd} follows Numpy broadcasting rules.
+   *  The two input array shapes are compared element-wise.
+   *  Starting with the trailing dimensions, the two dimensions either have to be equal or one of them needs to be 1.
+   *  <p>{@code lhs} and {@code rhs} must be quantized Tensor, where data value is quantized using the formula:
+   *  <pre>
+   *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val)
+   *  </pre>
+   *  <p>{@code output} is also quantized, using the same formula.
+   *  <p>If {@code lhs} and {@code output} is both per-axis quantized, the quantization axis must match.
+   *  Also, if {@code rhs} and {@code output} is both per-axis quantized, the quantization axis must match.
+   *  <em>Match</em> means the axis must match when adding, regarding the broadcasting.
+   *  i.e. For both operands {@code lhs} and {@code rhs},
+   *  if {@code operand.quantization_axis} &gt;= 0 and {@code output.quantization_axis} &gt;= 0,
+   *  {@code operand.dims} - {@code operand.quantization_axis} must be equal to {@code output.dims} - {@code output.quantization_axis}.
+   *
+   * @param <T> data type for {@code output} output
+   * @param lhs Must be a quantized tensor.
+   * @param rhs Must be a quantized tensor.
+   * @param lhsScales The float value(s) used as scale factors when quantizing the original data that {@code lhs} represents.
+   * @param lhsZeroPoints The int32 value(s) used as zero points when quantizing original data that {@code lhs} represents.
+   *  Must have same shape with {@code lhs_scales}.
+   * @param rhsScales The float value(s) used as scale factors when quantizing the original data that {@code rhs} represents.
+   * @param rhsZeroPoints The int32 value(s) used as zero points when quantizing original data that {@code rhs} represents.
+   *  Must have same shape with {@code rhs_scales}.
+   * @param outputScales The float value(s) to use as scale factors when quantizing original data that {@code output} represents.
+   * @param outputZeroPoints The int32 value(s) used as zero points when quantizing original data that output represents.
+   *  Must have same shape with {@code output_scales}.
+   * @param lhsQuantizationMinVal The min value of the quantized data stored in {@code lhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param lhsQuantizationMaxVal The max value of the quantized data stored in {@code lhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to 127.
+   * @param rhsQuantizationMinVal The min value of the quantized data stored in {@code rhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param rhsQuantizationMaxVal The max value of the quantized data stored in {@code rhs}.
+   *  For example, if {@code Tin} is {@code qint8}, this must be set to 127.
+   * @param outputQuantizationMinVal The min value of the quantized data stored in {@code output}.
+   *  For example, if  {@code Tout} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
+   * @param outputQuantizationMaxVal The max value of the quantized data stored in {@code output}.
+   *  For example, if {@code Tout} is {@code qint8}, this must be set to 127.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code UniformQuantizedAdd} output and operands
+   * @return a new instance of UniformQuantizedAdd
+   */
+  public <T extends TNumber> UniformQuantizedAdd<T> uniformQuantizedAdd(Operand<T> lhs,
+      Operand<T> rhs, Operand<TFloat32> lhsScales, Operand<TInt32> lhsZeroPoints,
+      Operand<TFloat32> rhsScales, Operand<TInt32> rhsZeroPoints, Operand<TFloat32> outputScales,
+      Operand<TInt32> outputZeroPoints, Long lhsQuantizationMinVal, Long lhsQuantizationMaxVal,
+      Long rhsQuantizationMinVal, Long rhsQuantizationMaxVal, Long outputQuantizationMinVal,
+      Long outputQuantizationMaxVal, UniformQuantizedAdd.Options... options) {
+    return UniformQuantizedAdd.create(scope, lhs, rhs, lhsScales, lhsZeroPoints, rhsScales, rhsZeroPoints, outputScales, outputZeroPoints, lhsQuantizationMinVal, lhsQuantizationMaxVal, rhsQuantizationMinVal, rhsQuantizationMaxVal, outputQuantizationMinVal, outputQuantizationMaxVal, options);
   }
 
   /**

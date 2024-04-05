@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.dtypes.AsString;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.dtypes.Complex;
+import org.tensorflow.op.dtypes.ToBool;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -105,6 +106,31 @@ public final class DtypesOps {
   public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,
       Class<U> Tout) {
     return Complex.create(scope, real, imag, Tout);
+  }
+
+  /**
+   * Converts a tensor to a scalar predicate.
+   *  Converts a tensor to a scalar predicate with the following rules:
+   *  <ul>
+   *  <li>
+   *  <p>For 0D tensors, truthiness is determined by comparing against a &quot;zero&quot;
+   *  value. For numerical types it is the obvious zero. For strings it is the
+   *  empty string.
+   *  </li>
+   *  <li>
+   *  <p>For &gt;0D tensors, truthiness is determined by looking at the number of
+   *  elements. If has zero elements, then the result is false. Otherwise the
+   *  result is true.
+   *  </li>
+   *  </ul>
+   *  <p>This matches the behavior of If and While for determining if a tensor counts
+   *  as true/false for a branch condition.
+   *
+   * @param input The input value
+   * @return a new instance of ToBool
+   */
+  public ToBool toBool(Operand<? extends TType> input) {
+    return ToBool.create(scope, input);
   }
 
   /**

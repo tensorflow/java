@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "Xlogy"
   endpoint {
     name: "math.Xlogy"

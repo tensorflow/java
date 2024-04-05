@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 
 /**
@@ -37,6 +38,9 @@ import org.tensorflow.proto.DataType;
 @OpMetadata(
     opType = OutfeedEnqueueTuple.OP_NAME,
     inputsClass = OutfeedEnqueueTuple.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class OutfeedEnqueueTuple extends RawOp {
   /**

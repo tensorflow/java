@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize"
   endpoint {
     name: "nn.QuantizedDepthwiseConv2DWithBiasAndReluAndRequantize"

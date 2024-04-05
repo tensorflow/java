@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "ParseSequenceExampleV2"
   endpoint {
     name: "io.ParseSequenceExample"

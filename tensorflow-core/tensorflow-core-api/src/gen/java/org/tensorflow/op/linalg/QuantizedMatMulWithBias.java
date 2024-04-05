@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
@@ -48,6 +49,9 @@ import org.tensorflow.types.family.TNumber;
 @OpMetadata(
     opType = QuantizedMatMulWithBias.OP_NAME,
     inputsClass = QuantizedMatMulWithBias.Inputs.class
+)
+@Operator(
+    group = "linalg"
 )
 public final class QuantizedMatMulWithBias<W extends TNumber> extends RawOp {
   /**

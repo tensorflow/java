@@ -30,6 +30,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -43,6 +44,7 @@ import org.tensorflow.types.TInt32;
     opType = DeviceIndex.OP_NAME,
     inputsClass = DeviceIndex.Inputs.class
 )
+@Operator
 public final class DeviceIndex extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine

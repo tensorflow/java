@@ -27,6 +27,7 @@ import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -45,6 +46,10 @@ import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.op.core.Abort;
 import org.tensorflow.op.core.All;
+import org.tensorflow.op.core.AnonymousHashTable;
+import org.tensorflow.op.core.AnonymousMutableDenseHashTable;
+import org.tensorflow.op.core.AnonymousMutableHashTable;
+import org.tensorflow.op.core.AnonymousMutableHashTableOfTensors;
 import org.tensorflow.op.core.Any;
 import org.tensorflow.op.core.ApproxTopK;
 import org.tensorflow.op.core.AssertThat;
@@ -68,11 +73,15 @@ import org.tensorflow.op.core.Bitcast;
 import org.tensorflow.op.core.BooleanMask;
 import org.tensorflow.op.core.BooleanMaskUpdate;
 import org.tensorflow.op.core.BroadcastDynamicShape;
+import org.tensorflow.op.core.BroadcastGradientArgs;
 import org.tensorflow.op.core.BroadcastTo;
 import org.tensorflow.op.core.Bucketize;
 import org.tensorflow.op.core.Case;
 import org.tensorflow.op.core.ClipByValue;
+import org.tensorflow.op.core.CompositeTensorVariantFromComponents;
+import org.tensorflow.op.core.CompositeTensorVariantToComponents;
 import org.tensorflow.op.core.Concat;
+import org.tensorflow.op.core.ConcatOffset;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
@@ -84,6 +93,8 @@ import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
 import org.tensorflow.op.core.DestroyResourceOp;
 import org.tensorflow.op.core.DestroyTemporaryVariable;
+import org.tensorflow.op.core.DeviceIndex;
+import org.tensorflow.op.core.DummyMemoryCache;
 import org.tensorflow.op.core.DynamicPartition;
 import org.tensorflow.op.core.DynamicStitch;
 import org.tensorflow.op.core.EditDistance;
@@ -92,14 +103,20 @@ import org.tensorflow.op.core.EmptyTensorList;
 import org.tensorflow.op.core.EmptyTensorMap;
 import org.tensorflow.op.core.EncodeProto;
 import org.tensorflow.op.core.EnsureShape;
+import org.tensorflow.op.core.Enter;
+import org.tensorflow.op.core.Exit;
 import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
+import org.tensorflow.op.core.FakeParam;
+import org.tensorflow.op.core.FileSystemSetConfiguration;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
 import org.tensorflow.op.core.For;
 import org.tensorflow.op.core.Function;
 import org.tensorflow.op.core.Gather;
 import org.tensorflow.op.core.GatherNd;
+import org.tensorflow.op.core.GetElementAtIndex;
+import org.tensorflow.op.core.GetOptions;
 import org.tensorflow.op.core.GetSessionHandle;
 import org.tensorflow.op.core.GetSessionTensor;
 import org.tensorflow.op.core.Gradients;
@@ -107,6 +124,7 @@ import org.tensorflow.op.core.GuaranteeConst;
 import org.tensorflow.op.core.HashTable;
 import org.tensorflow.op.core.Helpers;
 import org.tensorflow.op.core.HistogramFixedWidth;
+import org.tensorflow.op.core.HostConst;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.If;
@@ -118,14 +136,18 @@ import org.tensorflow.op.core.InplaceSub;
 import org.tensorflow.op.core.InplaceUpdate;
 import org.tensorflow.op.core.IsVariableInitialized;
 import org.tensorflow.op.core.KthOrderStatistic;
+import org.tensorflow.op.core.LinSpace;
 import org.tensorflow.op.core.LookupTableExport;
 import org.tensorflow.op.core.LookupTableFind;
 import org.tensorflow.op.core.LookupTableImport;
 import org.tensorflow.op.core.LookupTableInsert;
+import org.tensorflow.op.core.LookupTableRemove;
 import org.tensorflow.op.core.LookupTableSize;
 import org.tensorflow.op.core.LoopCond;
+import org.tensorflow.op.core.LowerBound;
 import org.tensorflow.op.core.MakeUnique;
 import org.tensorflow.op.core.MapClear;
+import org.tensorflow.op.core.MapDefun;
 import org.tensorflow.op.core.MapIncompleteSize;
 import org.tensorflow.op.core.MapPeek;
 import org.tensorflow.op.core.MapSize;
@@ -136,12 +158,16 @@ import org.tensorflow.op.core.Max;
 import org.tensorflow.op.core.Merge;
 import org.tensorflow.op.core.Min;
 import org.tensorflow.op.core.MirrorPad;
+import org.tensorflow.op.core.MirrorPadGrad;
 import org.tensorflow.op.core.MlirPassthroughOp;
 import org.tensorflow.op.core.MutableDenseHashTable;
 import org.tensorflow.op.core.MutableHashTable;
 import org.tensorflow.op.core.MutableHashTableOfTensors;
 import org.tensorflow.op.core.Mutex;
 import org.tensorflow.op.core.MutexLock;
+import org.tensorflow.op.core.NcclAllReduce;
+import org.tensorflow.op.core.NcclBroadcast;
+import org.tensorflow.op.core.NcclReduce;
 import org.tensorflow.op.core.NextIteration;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.OneHot;
@@ -167,12 +193,17 @@ import org.tensorflow.op.core.RandomIndexShuffle;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.ReadVariableOp;
+import org.tensorflow.op.core.Recv;
 import org.tensorflow.op.core.ReduceAll;
 import org.tensorflow.op.core.ReduceAny;
 import org.tensorflow.op.core.ReduceMax;
 import org.tensorflow.op.core.ReduceMin;
 import org.tensorflow.op.core.ReduceProd;
 import org.tensorflow.op.core.ReduceSum;
+import org.tensorflow.op.core.RefEnter;
+import org.tensorflow.op.core.RefExit;
+import org.tensorflow.op.core.RefIdentity;
+import org.tensorflow.op.core.RefMerge;
 import org.tensorflow.op.core.RefNextIteration;
 import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
@@ -206,12 +237,15 @@ import org.tensorflow.op.core.ScatterMin;
 import org.tensorflow.op.core.ScatterMul;
 import org.tensorflow.op.core.ScatterNd;
 import org.tensorflow.op.core.ScatterNdAdd;
+import org.tensorflow.op.core.ScatterNdMax;
+import org.tensorflow.op.core.ScatterNdMin;
 import org.tensorflow.op.core.ScatterNdNonAliasingAdd;
 import org.tensorflow.op.core.ScatterNdSub;
 import org.tensorflow.op.core.ScatterNdUpdate;
 import org.tensorflow.op.core.ScatterSub;
 import org.tensorflow.op.core.ScatterUpdate;
 import org.tensorflow.op.core.Select;
+import org.tensorflow.op.core.Send;
 import org.tensorflow.op.core.SetDiff1d;
 import org.tensorflow.op.core.SetSize;
 import org.tensorflow.op.core.ShapeN;
@@ -224,6 +258,10 @@ import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
 import org.tensorflow.op.core.Stack;
+import org.tensorflow.op.core.StackClose;
+import org.tensorflow.op.core.StackCreate;
+import org.tensorflow.op.core.StackPop;
+import org.tensorflow.op.core.StackPush;
 import org.tensorflow.op.core.Stage;
 import org.tensorflow.op.core.StageClear;
 import org.tensorflow.op.core.StagePeek;
@@ -232,8 +270,10 @@ import org.tensorflow.op.core.StatefulCase;
 import org.tensorflow.op.core.StatefulIf;
 import org.tensorflow.op.core.StatefulPartitionedCall;
 import org.tensorflow.op.core.StatefulWhile;
+import org.tensorflow.op.core.StatelessCase;
 import org.tensorflow.op.core.StatelessIf;
 import org.tensorflow.op.core.StatelessWhile;
+import org.tensorflow.op.core.StochasticCastToInt;
 import org.tensorflow.op.core.StopGradient;
 import org.tensorflow.op.core.StridedSlice;
 import org.tensorflow.op.core.StridedSliceAssign;
@@ -241,6 +281,7 @@ import org.tensorflow.op.core.StridedSliceGrad;
 import org.tensorflow.op.core.StridedSliceHelper;
 import org.tensorflow.op.core.Sum;
 import org.tensorflow.op.core.SwitchCond;
+import org.tensorflow.op.core.SyncDevice;
 import org.tensorflow.op.core.TemporaryVariable;
 import org.tensorflow.op.core.TensorArray;
 import org.tensorflow.op.core.TensorArrayClose;
@@ -290,11 +331,13 @@ import org.tensorflow.op.core.TopKUnique;
 import org.tensorflow.op.core.TopKWithUnique;
 import org.tensorflow.op.core.Unbatch;
 import org.tensorflow.op.core.UnbatchGrad;
+import org.tensorflow.op.core.UniformQuantizedClipByValue;
 import org.tensorflow.op.core.Unique;
 import org.tensorflow.op.core.UniqueWithCounts;
 import org.tensorflow.op.core.UnravelIndex;
 import org.tensorflow.op.core.Unstack;
 import org.tensorflow.op.core.Unstage;
+import org.tensorflow.op.core.UpperBound;
 import org.tensorflow.op.core.VarHandleOp;
 import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
@@ -348,37 +391,25 @@ import org.tensorflow.types.family.TType;
 public final class Ops {
   public final NnOps nn;
 
-  public final SummaryOps summary;
-
-  public final ImageOps image;
-
-  public final RaggedOps ragged;
+  public final ClusterOps cluster;
 
   public final DataOps data;
 
-  public final ShapeOps shape;
-
-  public final IoOps io;
-
-  public final DtypesOps dtypes;
-
-  public final XlaOps xla;
-
-  public final LinalgOps linalg;
+  public final MathOps math;
 
   public final RandomOps random;
 
   public final StringsOps strings;
 
-  public final SparseOps sparse;
-
-  public final TpuOps tpu;
-
   public final BitwiseOps bitwise;
 
-  public final MathOps math;
+  public final DebuggingOps debugging;
+
+  public final CollectiveOps collective;
 
   public final AudioOps audio;
+
+  public final DistributeOps distribute;
 
   public final SignalOps signal;
 
@@ -386,30 +417,54 @@ public final class Ops {
 
   public final QuantizationOps quantization;
 
+  public final SummaryOps summary;
+
+  public final ImageOps image;
+
+  public final RaggedOps ragged;
+
+  public final ShapeOps shape;
+
+  public final IoOps io;
+
+  public final DtypesOps dtypes;
+
+  public final LinalgOps linalg;
+
+  public final XlaOps xla;
+
+  public final SparseOps sparse;
+
+  public final TpuOps tpu;
+
   private final Scope scope;
 
   Ops(Scope scope) {
     this.scope = scope;
     nn = new NnOps(this);
-    summary = new SummaryOps(this);
-    image = new ImageOps(this);
-    ragged = new RaggedOps(this);
+    cluster = new ClusterOps(this);
     data = new DataOps(this);
-    shape = new ShapeOps(this);
-    io = new IoOps(this);
-    dtypes = new DtypesOps(this);
-    xla = new XlaOps(this);
-    linalg = new LinalgOps(this);
+    math = new MathOps(this);
     random = new RandomOps(this);
     strings = new StringsOps(this);
-    sparse = new SparseOps(this);
-    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
-    math = new MathOps(this);
+    debugging = new DebuggingOps(this);
+    collective = new CollectiveOps(this);
     audio = new AudioOps(this);
+    distribute = new DistributeOps(this);
     signal = new SignalOps(this);
     train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    summary = new SummaryOps(this);
+    image = new ImageOps(this);
+    ragged = new RaggedOps(this);
+    shape = new ShapeOps(this);
+    io = new IoOps(this);
+    dtypes = new DtypesOps(this);
+    linalg = new LinalgOps(this);
+    xla = new XlaOps(this);
+    sparse = new SparseOps(this);
+    tpu = new TpuOps(this);
   }
 
   /**
@@ -440,6 +495,105 @@ public final class Ops {
    */
   public All all(Operand<TBool> input, Operand<? extends TNumber> axis, All.Options... options) {
     return All.create(scope, input, axis, options);
+  }
+
+  /**
+   * Creates a uninitialized anonymous hash table.
+   *  This op creates a new anonymous hash table (as a resource) everytime
+   *  it is executed, with the specified dtype of its keys and values,
+   *  returning the resource handle.  Before using the table you will have
+   *  to initialize it.  After initialization the table will be
+   *  immutable. The table is anonymous in the sense that it can only be
+   *  accessed by the returned resource handle (e.g. it cannot be looked up
+   *  by a name in a resource manager). The table will be automatically
+   *  deleted when all resource handles pointing to it are gone.
+   *
+   * @param keyDtype Type of the table keys.
+   * @param valueDtype Type of the table values.
+   * @param <T> data type for {@code AnonymousHashTable} output and operands
+   * @param <U> data type for {@code AnonymousHashTable} output and operands
+   * @return a new instance of AnonymousHashTable
+   */
+  public <T extends TType, U extends TType> AnonymousHashTable anonymousHashTable(Class<T> keyDtype,
+      Class<U> valueDtype) {
+    return AnonymousHashTable.create(scope, keyDtype, valueDtype);
+  }
+
+  /**
+   * Creates an empty anonymous mutable hash table that uses tensors as the backing store.
+   *  This op creates a new anonymous mutable hash table (as a resource) everytime
+   *  it is executed, with the specified dtype of its keys and values,
+   *  returning the resource handle. Each value must be a scalar.
+   *  Data can be inserted into the table using
+   *  the insert operations. It does not support the initialization operation.
+   *  <p>It uses &quot;open addressing&quot; with quadratic reprobing to resolve
+   *  collisions.
+   *  <p>The table is anonymous in the sense that it can only be
+   *  accessed by the returned resource handle (e.g. it cannot be looked up
+   *  by a name in a resource manager). The table will be automatically
+   *  deleted when all resource handles pointing to it are gone.
+   *
+   * @param emptyKey The key used to represent empty key buckets internally. Must not
+   *  be used in insert or lookup operations.
+   * @param deletedKey The deletedKey value
+   * @param valueDtype Type of the table values.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code AnonymousMutableDenseHashTable} output and operands
+   * @param <U> data type for {@code AnonymousMutableDenseHashTable} output and operands
+   * @return a new instance of AnonymousMutableDenseHashTable
+   */
+  public <T extends TType, U extends TType> AnonymousMutableDenseHashTable anonymousMutableDenseHashTable(
+      Operand<T> emptyKey, Operand<T> deletedKey, Class<U> valueDtype,
+      AnonymousMutableDenseHashTable.Options... options) {
+    return AnonymousMutableDenseHashTable.create(scope, emptyKey, deletedKey, valueDtype, options);
+  }
+
+  /**
+   * Creates an empty anonymous mutable hash table.
+   *  This op creates a new anonymous mutable hash table (as a resource) everytime
+   *  it is executed, with the specified dtype of its keys and values,
+   *  returning the resource handle. Each value must be a scalar.
+   *  Data can be inserted into the table using
+   *  the insert operations. It does not support the initialization operation.
+   *  The table is anonymous in the sense that it can only be
+   *  accessed by the returned resource handle (e.g. it cannot be looked up
+   *  by a name in a resource manager). The table will be automatically
+   *  deleted when all resource handles pointing to it are gone.
+   *
+   * @param keyDtype Type of the table keys.
+   * @param valueDtype Type of the table values.
+   * @param <T> data type for {@code AnonymousMutableHashTable} output and operands
+   * @param <U> data type for {@code AnonymousMutableHashTable} output and operands
+   * @return a new instance of AnonymousMutableHashTable
+   */
+  public <T extends TType, U extends TType> AnonymousMutableHashTable anonymousMutableHashTable(
+      Class<T> keyDtype, Class<U> valueDtype) {
+    return AnonymousMutableHashTable.create(scope, keyDtype, valueDtype);
+  }
+
+  /**
+   * Creates an empty anonymous mutable hash table of vector values.
+   *  This op creates a new anonymous mutable hash table (as a resource) everytime
+   *  it is executed, with the specified dtype of its keys and values,
+   *  returning the resource handle. Each value must be a vector.
+   *  Data can be inserted into the table using
+   *  the insert operations. It does not support the initialization operation.
+   *  The table is anonymous in the sense that it can only be
+   *  accessed by the returned resource handle (e.g. it cannot be looked up
+   *  by a name in a resource manager). The table will be automatically
+   *  deleted when all resource handles pointing to it are gone.
+   *
+   * @param keyDtype Type of the table keys.
+   * @param valueDtype Type of the table values.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code AnonymousMutableHashTableOfTensors} output and operands
+   * @param <U> data type for {@code AnonymousMutableHashTableOfTensors} output and operands
+   * @return a new instance of AnonymousMutableHashTableOfTensors
+   */
+  public <T extends TType, U extends TType> AnonymousMutableHashTableOfTensors anonymousMutableHashTableOfTensors(
+      Class<T> keyDtype, Class<U> valueDtype,
+      AnonymousMutableHashTableOfTensors.Options... options) {
+    return AnonymousMutableHashTableOfTensors.create(scope, keyDtype, valueDtype, options);
   }
 
   /**
@@ -477,6 +631,26 @@ public final class Ops {
   }
 
   /**
+   * Creates a constant of {@code long} elements.
+   *
+   * @param data An array containing the values to put into the new constant.
+   * @return a long constant
+   */
+  public Constant<TInt64> array(long... data) {
+    return Constant.arrayOf(scope, data);
+  }
+
+  /**
+   * Creates a constant of {@code float} elements.
+   *
+   * @param data An array containing the values to put into the new constant.
+   * @return a float constant
+   */
+  public Constant<TFloat32> array(float... data) {
+    return Constant.arrayOf(scope, data);
+  }
+
+  /**
    * Creates a constant of {@code String} elements, using the default UTF-8 charset.
    *
    * @param data An array containing the values to put into the new constant.
@@ -507,16 +681,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a constant of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new constant.
-   * @return a long constant
-   */
-  public Constant<TInt64> array(long... data) {
-    return Constant.arrayOf(scope, data);
-  }
-
-  /**
    * Creates a constant of {@code byte} elements.
    *
    * @param data An array containing the values to put into the new constant.
@@ -533,16 +697,6 @@ public final class Ops {
    * @return a boolean constant
    */
   public Constant<TBool> array(boolean... data) {
-    return Constant.arrayOf(scope, data);
-  }
-
-  /**
-   * Creates a constant of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new constant.
-   * @return a float constant
-   */
-  public Constant<TFloat32> array(float... data) {
     return Constant.arrayOf(scope, data);
   }
 
@@ -1150,6 +1304,21 @@ public final class Ops {
   }
 
   /**
+   * Return the reduction indices for computing gradients of s0 op s1 with broadcast.
+   *  This is typically used by gradient computations for a broadcasting operation.
+   *
+   * @param <T> data type for {@code r0} output
+   * @param s0 The s0 value
+   * @param s1 The s1 value
+   * @param <T> data type for {@code BroadcastGradientArgs} output and operands
+   * @return a new instance of BroadcastGradientArgs
+   */
+  public <T extends TNumber> BroadcastGradientArgs<T> broadcastGradientArgs(Operand<T> s0,
+      Operand<T> s1) {
+    return BroadcastGradientArgs.create(scope, s0, s1);
+  }
+
+  /**
    * Broadcast an array for a compatible shape.
    *  Broadcasting is the process of making arrays to have compatible shapes
    *  for arithmetic operations. Two shapes are compatible if for each
@@ -1304,6 +1473,39 @@ public final class Ops {
   }
 
   /**
+   * Encodes an {@code ExtensionType} value into a {@code variant} scalar Tensor.
+   *  Returns a scalar variant tensor containing a single {@code CompositeTensorVariant}
+   *  with the specified Tensor components and TypeSpec.
+   *
+   * @param components The component tensors for the extension type value.
+   * @param metadata String serialization for the TypeSpec.  (Note: the encoding for the TypeSpec
+   *  may change in future versions of TensorFlow.)
+   * @return a new instance of CompositeTensorVariantFromComponents
+   */
+  public CompositeTensorVariantFromComponents compositeTensorVariantFromComponents(
+      Iterable<Operand<?>> components, String metadata) {
+    return CompositeTensorVariantFromComponents.create(scope, components, metadata);
+  }
+
+  /**
+   * Decodes a {@code variant} scalar Tensor into an {@code ExtensionType} value.
+   *  Returns the Tensor components encoded in a {@code CompositeTensorVariant}.
+   *  <p>Raises an error if {@code type_spec_proto} doesn't match the TypeSpec
+   *  in {@code encoded}.
+   *
+   * @param encoded A scalar {@code variant} Tensor containing an encoded ExtensionType value.
+   * @param metadata String serialization for the TypeSpec.  Must be compatible with the
+   *  {@code TypeSpec} contained in {@code encoded}.  (Note: the encoding for the TypeSpec
+   *  may change in future versions of TensorFlow.)
+   * @param Tcomponents Expected dtypes for components.
+   * @return a new instance of CompositeTensorVariantToComponents
+   */
+  public CompositeTensorVariantToComponents compositeTensorVariantToComponents(
+      Operand<? extends TType> encoded, String metadata, List<Class<? extends TType>> Tcomponents) {
+    return CompositeTensorVariantToComponents.create(scope, encoded, metadata, Tcomponents);
+  }
+
+  /**
    * Concatenates tensors along one dimension.
    *
    * @param <T> data type for {@code output} output
@@ -1317,6 +1519,34 @@ public final class Ops {
   public <T extends TType> Concat<T> concat(Iterable<Operand<T>> values,
       Operand<? extends TNumber> axis) {
     return Concat.create(scope, values, axis);
+  }
+
+  /**
+   * Computes offsets of concat inputs within its output.
+   *  For example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>x = [2, 2, 7]
+   *  y = [2, 3, 7]
+   *  z = [2, 9, 7]
+   *  offsets = concat_offset(1, [x, y, z])
+   *  [list(off.numpy()) for off in offsets]
+   *  [[0, 0, 0], [0, 2, 0], [0, 5, 0]]
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
+   *  <p>This is typically used by gradient computations for a concat operation.
+   *
+   * @param <T> data type for {@code offset} output
+   * @param concatDim The dimension along which to concatenate.
+   * @param shape The {@code N} int32 or int64 vectors representing shape of tensors being concatenated.
+   * @param <T> data type for {@code ConcatOffset} output and operands
+   * @return a new instance of ConcatOffset
+   */
+  public <T extends TNumber> ConcatOffset<T> concatOffset(Operand<TInt32> concatDim,
+      Iterable<Operand<T>> shape) {
+    return ConcatOffset.create(scope, concatDim, shape);
   }
 
   /**
@@ -1352,17 +1582,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array,
-   *  using the default UTF-8 encoding.
-   *
-   * @param data an n-dimensional array of {@code String} elements.
-   * @return a string constant
-   */
-  public Constant<TString> constant(NdArray<String> data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
    * Creates a rank-4 constant of {@code int} elements.
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1381,17 +1600,6 @@ public final class Ops {
    */
   public Constant<TUint8> constant(byte data) {
     return Constant.scalarOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a long constant
-   */
-  public Constant<TInt64> constant(long[][] data) {
-    return Constant.tensorOf(scope, data);
   }
 
   /**
@@ -1428,28 +1636,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a rank-3 constant of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a float constant
-   */
-  public Constant<TFloat32> constant(float[][][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-5 constant of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a float constant
-   */
-  public Constant<TFloat32> constant(float[][][][][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
    * Creates a rank-5 constant of {@code long} elements.
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1472,17 +1658,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a rank-2 constant of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a float constant
-   */
-  public Constant<TFloat32> constant(float[][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
    * Creates a rank-2 constant of {@code boolean} elements.
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1491,46 +1666,6 @@ public final class Ops {
    */
   public Constant<TBool> constant(boolean[][] data) {
     return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a constant containing a single {@code double} element.
-   *
-   * @param data The value to put into the new constant.
-   * @return a double constant
-   */
-  public Constant<TFloat64> constant(double data) {
-    return Constant.scalarOf(scope, data);
-  }
-
-  /**
-   * Creates a constant containing a single {@code boolean} element.
-   *
-   * @param data The value to put into the new constant.
-   * @return a boolean constant
-   */
-  public Constant<TBool> constant(boolean data) {
-    return Constant.scalarOf(scope, data);
-  }
-
-  /**
-   * Creates a constant containing a single {@code long} element.
-   *
-   * @param data The value to put into the new constant.
-   * @return a long constant
-   */
-  public Constant<TInt64> constant(long data) {
-    return Constant.scalarOf(scope, data);
-  }
-
-  /**
-   * Creates a {@code String} constant using the default, UTF-8 encoding.
-   *
-   * @param data The string to put into the new constant.
-   * @return a string constant
-   */
-  public Constant<TString> constant(String data) {
-    return Constant.scalarOf(scope, data);
   }
 
   /**
@@ -1565,17 +1700,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a rank-1 constant of {@code float} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a float constant
-   */
-  public Constant<TFloat32> constant(float[] data) {
-    return Constant.vectorOf(scope, data);
-  }
-
-  /**
    * Creates a rank-3 constant of {@code long} elements.
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1587,17 +1711,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a rank-3 constant of {@code boolean} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a boolean constant
-   */
-  public Constant<TBool> constant(boolean[][][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
    * Creates a rank-1 constant of {@code byte} elements.
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1605,38 +1718,6 @@ public final class Ops {
    * @return a byte constant
    */
   public Constant<TUint8> constant(byte[] data) {
-    return Constant.vectorOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code int} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return an integer constant
-   */
-  public Constant<TInt32> constant(int[][][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a constant of {@code int} elements that is a copy of a given n-dimensional array.
-   *
-   * @param data an n-dimensional array of {@code int} elements.
-   * @return an integer constant
-   */
-  public Constant<TInt32> constant(IntNdArray data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-1 constant of {@code long} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a long constant
-   */
-  public Constant<TInt64> constant(long[] data) {
     return Constant.vectorOf(scope, data);
   }
 
@@ -1681,6 +1762,198 @@ public final class Ops {
    */
   public Constant<TBool> constant(boolean[][][][][] data) {
     return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a constant containing a single {@code float} element.
+   *
+   * @param data The value to put into the new constant.
+   * @return a float constant
+   */
+  public Constant<TFloat32> constant(float data) {
+    return Constant.scalarOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-2 constant of {@code byte} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a byte constant
+   */
+  public Constant<TUint8> constant(byte[][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-2 constant of {@code double} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a double constant
+   */
+  public Constant<TFloat64> constant(double[][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-3 constant of {@code byte} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a byte constant
+   */
+  public Constant<TUint8> constant(byte[][][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array,
+   *  using the default UTF-8 encoding.
+   *
+   * @param data an n-dimensional array of {@code String} elements.
+   * @return a string constant
+   */
+  public Constant<TString> constant(NdArray<String> data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-2 constant of {@code long} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a long constant
+   */
+  public Constant<TInt64> constant(long[][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-3 constant of {@code float} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a float constant
+   */
+  public Constant<TFloat32> constant(float[][][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-5 constant of {@code float} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a float constant
+   */
+  public Constant<TFloat32> constant(float[][][][][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-2 constant of {@code float} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a float constant
+   */
+  public Constant<TFloat32> constant(float[][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a constant containing a single {@code double} element.
+   *
+   * @param data The value to put into the new constant.
+   * @return a double constant
+   */
+  public Constant<TFloat64> constant(double data) {
+    return Constant.scalarOf(scope, data);
+  }
+
+  /**
+   * Creates a constant containing a single {@code boolean} element.
+   *
+   * @param data The value to put into the new constant.
+   * @return a boolean constant
+   */
+  public Constant<TBool> constant(boolean data) {
+    return Constant.scalarOf(scope, data);
+  }
+
+  /**
+   * Creates a constant containing a single {@code long} element.
+   *
+   * @param data The value to put into the new constant.
+   * @return a long constant
+   */
+  public Constant<TInt64> constant(long data) {
+    return Constant.scalarOf(scope, data);
+  }
+
+  /**
+   * Creates a {@code String} constant using the default, UTF-8 encoding.
+   *
+   * @param data The string to put into the new constant.
+   * @return a string constant
+   */
+  public Constant<TString> constant(String data) {
+    return Constant.scalarOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-1 constant of {@code float} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a float constant
+   */
+  public Constant<TFloat32> constant(float[] data) {
+    return Constant.vectorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-3 constant of {@code boolean} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a boolean constant
+   */
+  public Constant<TBool> constant(boolean[][][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-3 constant of {@code int} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return an integer constant
+   */
+  public Constant<TInt32> constant(int[][][] data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a constant of {@code int} elements that is a copy of a given n-dimensional array.
+   *
+   * @param data an n-dimensional array of {@code int} elements.
+   * @return an integer constant
+   */
+  public Constant<TInt32> constant(IntNdArray data) {
+    return Constant.tensorOf(scope, data);
+  }
+
+  /**
+   * Creates a rank-1 constant of {@code long} elements.
+   *
+   * @param data An array containing the values to put into the new constant. The dimensions of the
+   *      new constant will match those of the array.
+   * @return a long constant
+   */
+  public Constant<TInt64> constant(long[] data) {
+    return Constant.vectorOf(scope, data);
   }
 
   /**
@@ -1749,16 +2022,6 @@ public final class Ops {
   }
 
   /**
-   * Creates a constant containing a single {@code float} element.
-   *
-   * @param data The value to put into the new constant.
-   * @return a float constant
-   */
-  public Constant<TFloat32> constant(float data) {
-    return Constant.scalarOf(scope, data);
-  }
-
-  /**
    * Creates a rank-4 constant of {@code byte} elements.
    *
    * @param data An array containing the values to put into the new constant. The dimensions of the
@@ -1809,39 +2072,6 @@ public final class Ops {
    * @return a long constant
    */
   public Constant<TInt64> constant(long[][][][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code byte} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a byte constant
-   */
-  public Constant<TUint8> constant(byte[][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-2 constant of {@code double} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a double constant
-   */
-  public Constant<TFloat64> constant(double[][] data) {
-    return Constant.tensorOf(scope, data);
-  }
-
-  /**
-   * Creates a rank-3 constant of {@code byte} elements.
-   *
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *      new constant will match those of the array.
-   * @return a byte constant
-   */
-  public Constant<TUint8> constant(byte[][][] data) {
     return Constant.tensorOf(scope, data);
   }
 
@@ -1952,18 +2182,6 @@ public final class Ops {
   }
 
   /**
-   * Create a {@link TInt64} constant with data from the given buffer.
-   *
-   * @param shape the tensor shape.
-   * @param data a buffer containing the tensor data.
-   * @return a long constant
-   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-   */
-  public Constant<TInt64> constant(Shape shape, LongDataBuffer data) {
-    return Constant.tensorOf(scope, shape, data);
-  }
-
-  /**
    * Create a {@link TFloat64} constant with data from the given buffer.
    *
    * @param shape the tensor shape.
@@ -1972,6 +2190,18 @@ public final class Ops {
    * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
    */
   public Constant<TFloat64> constant(Shape shape, DoubleDataBuffer data) {
+    return Constant.tensorOf(scope, shape, data);
+  }
+
+  /**
+   * Create a {@link TInt64} constant with data from the given buffer.
+   *
+   * @param shape the tensor shape.
+   * @param data a buffer containing the tensor data.
+   * @return a long constant
+   * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+   */
+  public Constant<TInt64> constant(Shape shape, LongDataBuffer data) {
     return Constant.tensorOf(scope, shape, data);
   }
 
@@ -2265,6 +2495,29 @@ public final class Ops {
   }
 
   /**
+   * Return the index of device the op runs.
+   *  Given a list of device names, this operation returns the index of the device
+   *  this op runs. The length of the list is returned in two cases:
+   *  (1) Device does not exist in the given device list.
+   *  (2) It is in XLA compilation.
+   *
+   * @param deviceNames The value of the deviceNames attribute
+   * @return a new instance of DeviceIndex
+   */
+  public DeviceIndex deviceIndex(List<String> deviceNames) {
+    return DeviceIndex.create(scope, deviceNames);
+  }
+
+  /**
+   * The DummyMemoryCache operation
+   *
+   * @return a new instance of DummyMemoryCache
+   */
+  public DummyMemoryCache dummyMemoryCache() {
+    return DummyMemoryCache.create(scope);
+  }
+
+  /**
    * Partitions {@code data} into {@code num_partitions} tensors using indices from {@code partitions}.
    *  For each index tuple {@code js} of size {@code partitions.ndim}, the slice {@code data[js, ...]}
    *  becomes part of {@code outputs[partitions[js]]}.  The slices with {@code partitions[js] = i}
@@ -2536,6 +2789,39 @@ public final class Ops {
   }
 
   /**
+   * Creates or finds a child frame, and makes {@code data} available to the child frame.
+   *  This op is used together with {@code Exit} to create loops in the graph.
+   *  The unique {@code frame_name} is used by the {@code Executor} to identify frames. If
+   *  {@code is_constant} is true, {@code output} is a constant in the child frame; otherwise
+   *  it may be changed in the child frame. At most {@code parallel_iterations} iterations
+   *  are run in parallel in the child frame.
+   *
+   * @param <T> data type for {@code output} output
+   * @param data The tensor to be made available to the child frame.
+   * @param frameName The name of the child frame.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Enter} output and operands
+   * @return a new instance of Enter
+   */
+  public <T extends TType> Enter<T> enter(Operand<T> data, String frameName,
+      Enter.Options... options) {
+    return Enter.create(scope, data, frameName, options);
+  }
+
+  /**
+   * Exits the current frame to its parent frame.
+   *  Exit makes its input {@code data} available to the parent frame.
+   *
+   * @param <T> data type for {@code output} output
+   * @param data The tensor to be made available to the parent frame.
+   * @param <T> data type for {@code Exit} output and operands
+   * @return a new instance of Exit
+   */
+  public <T extends TType> Exit<T> exit(Operand<T> data) {
+    return Exit.create(scope, data);
+  }
+
+  /**
    * Inserts a dimension of 1 into a tensor's shape.
    *  Given a tensor {@code input}, this operation inserts a dimension of 1 at the
    *  dimension index {@code axis} of {@code input}'s shape. The dimension index {@code axis} starts at
@@ -2594,6 +2880,38 @@ public final class Ops {
   public <T extends TNumber> ExtractVolumePatches<T> extractVolumePatches(Operand<T> input,
       List<Long> ksizes, List<Long> strides, String padding) {
     return ExtractVolumePatches.create(scope, input, ksizes, strides, padding);
+  }
+
+  /**
+   * This op is used as a placeholder in If branch functions. It doesn't provide a
+   *  valid output when run, so must either be removed (e.g. replaced with a
+   *  function input) or guaranteed not to be used (e.g. if mirroring an
+   *  intermediate output needed for the gradient computation of the other branch).
+   *
+   * @param <T> data type for {@code output} output
+   * @param dtype The type of the output.
+   * @param shape <pre>
+   *  The purported shape of the output. This is only used for shape inference;
+   *  the output will not necessarily have this shape. Can be a partial shape.
+   *  </pre>
+   * @param <T> data type for {@code FakeParam} output and operands
+   * @return a new instance of FakeParam
+   */
+  public <T extends TType> FakeParam<T> fakeParam(Class<T> dtype, Shape shape) {
+    return FakeParam.create(scope, dtype, shape);
+  }
+
+  /**
+   * Set configuration of the file system.
+   *
+   * @param scheme File system scheme.
+   * @param key The name of the configuration option.
+   * @param value The value of the configuration option.
+   * @return a new instance of FileSystemSetConfiguration
+   */
+  public FileSystemSetConfiguration fileSystemSetConfiguration(Operand<TString> scheme,
+      Operand<TString> key, Operand<TString> value) {
+    return FileSystemSetConfiguration.create(scope, scheme, key, value);
   }
 
   /**
@@ -2831,6 +3149,30 @@ public final class Ops {
   }
 
   /**
+   * Gets the element at the specified index in a dataset.
+   *
+   * @param dataset The dataset value
+   * @param index The index value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of GetElementAtIndex
+   */
+  public GetElementAtIndex getElementAtIndex(Operand<? extends TType> dataset,
+      Operand<TInt64> index, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return GetElementAtIndex.create(scope, dataset, index, outputTypes, outputShapes);
+  }
+
+  /**
+   * Returns the {@code tf.data.Options} attached to {@code input_dataset}.
+   *
+   * @param inputDataset A variant tensor representing the input dataset.
+   * @return a new instance of GetOptions
+   */
+  public GetOptions getOptions(Operand<? extends TType> inputDataset) {
+    return GetOptions.create(scope, inputDataset);
+  }
+
+  /**
    * Store the input tensor in the state of the current session.
    *
    * @param value The tensor to be stored.
@@ -2997,6 +3339,19 @@ public final class Ops {
   public <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> histogramFixedWidth(
       Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, Class<U> dtype) {
     return HistogramFixedWidth.create(scope, values, valueRange, nbins, dtype);
+  }
+
+  /**
+   * Returns a constant tensor on the host. Only for writing C++ tests.
+   *
+   * @param <T> data type for {@code output} output
+   * @param value Attr {@code value} is the tensor to return.
+   * @param dtype The value of the dtype attribute
+   * @param <T> data type for {@code HostConst} output and operands
+   * @return a new instance of HostConst
+   */
+  public <T extends TType> HostConst<T> hostConst(Tensor value, Class<T> dtype) {
+    return HostConst.create(scope, value, dtype);
   }
 
   /**
@@ -3214,6 +3569,28 @@ public final class Ops {
   }
 
   /**
+   * Generates values in an interval.
+   *  A sequence of {@code num} evenly-spaced values are generated beginning at {@code start}.
+   *  If {@code num > 1}, the values in the sequence increase by
+   *  {@code (stop - start) / (num - 1)}, so that the last one is exactly {@code stop}.
+   *  <p>For example:
+   *  <pre>
+   *  tf.linspace(10.0, 12.0, 3, name=&quot;linspace&quot;) =&gt; [ 10.0  11.0  12.0]
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param start 0-D tensor. First entry in the range.
+   * @param stop 0-D tensor. Last entry in the range.
+   * @param num 0-D tensor. Number of values to generate.
+   * @param <T> data type for {@code LinSpace} output and operands
+   * @return a new instance of LinSpace
+   */
+  public <T extends TNumber> LinSpace<T> linSpace(Operand<T> start, Operand<T> stop,
+      Operand<? extends TNumber> num) {
+    return LinSpace.create(scope, start, stop, num);
+  }
+
+  /**
    * Outputs all keys and values in the table.
    *
    * @param <T> data type for {@code keys} output
@@ -3280,6 +3657,20 @@ public final class Ops {
   }
 
   /**
+   * Removes keys and its associated values from a table.
+   *  The tensor {@code keys} must of the same type as the keys of the table. Keys not
+   *  already in the table are silently ignored.
+   *
+   * @param tableHandle Handle to the table.
+   * @param keys Any shape.  Keys of the elements to remove.
+   * @return a new instance of LookupTableRemove
+   */
+  public LookupTableRemove lookupTableRemove(Operand<? extends TType> tableHandle,
+      Operand<? extends TType> keys) {
+    return LookupTableRemove.create(scope, tableHandle, keys);
+  }
+
+  /**
    * Computes the number of elements in the given table.
    *
    * @param tableHandle Handle to the table.
@@ -3299,6 +3690,64 @@ public final class Ops {
    */
   public LoopCond loopCond(Operand<TBool> input) {
     return LoopCond.create(scope, input);
+  }
+
+  /**
+   * Applies lower_bound(sorted_search_values, values) along each row.
+   *  Each set of rows with the same index in (sorted_inputs, values) is treated
+   *  independently.  The resulting row is the equivalent of calling
+   *  {@code np.searchsorted(sorted_inputs, values, side='left')}.
+   *  <p>The result is not a global index to the entire
+   *  {@code Tensor}, but rather just the index in the last dimension.
+   *  <p>A 2-D example:
+   *  sorted_sequence = [[0, 3, 9, 9, 10],
+   *  [1, 2, 3, 4, 5]]
+   *  values = [[2, 4, 9],
+   *  [0, 2, 6]]
+   *  <p>result = LowerBound(sorted_sequence, values)
+   *  <p>result == [[1, 2, 2],
+   *  [0, 1, 5]]
+   *
+   * @param <U> data type for {@code output} output
+   * @param sortedInputs 2-D Tensor where each row is ordered.
+   * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
+   *  the values that will be searched for in {@code sorted_search_values}.
+   * @param <T> data type for {@code LowerBound} output and operands
+   * @return a new instance of LowerBound, with default output types
+   */
+  public <T extends TType> LowerBound<TInt32> lowerBound(Operand<T> sortedInputs,
+      Operand<T> values) {
+    return LowerBound.create(scope, sortedInputs, values);
+  }
+
+  /**
+   * Applies lower_bound(sorted_search_values, values) along each row.
+   *  Each set of rows with the same index in (sorted_inputs, values) is treated
+   *  independently.  The resulting row is the equivalent of calling
+   *  {@code np.searchsorted(sorted_inputs, values, side='left')}.
+   *  <p>The result is not a global index to the entire
+   *  {@code Tensor}, but rather just the index in the last dimension.
+   *  <p>A 2-D example:
+   *  sorted_sequence = [[0, 3, 9, 9, 10],
+   *  [1, 2, 3, 4, 5]]
+   *  values = [[2, 4, 9],
+   *  [0, 2, 6]]
+   *  <p>result = LowerBound(sorted_sequence, values)
+   *  <p>result == [[1, 2, 2],
+   *  [0, 1, 5]]
+   *
+   * @param <U> data type for {@code output} output
+   * @param sortedInputs 2-D Tensor where each row is ordered.
+   * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
+   *  the values that will be searched for in {@code sorted_search_values}.
+   * @param outType The value of the outType attribute
+   * @param <U> data type for {@code LowerBound} output and operands
+   * @param <T> data type for {@code LowerBound} output and operands
+   * @return a new instance of LowerBound
+   */
+  public <U extends TNumber, T extends TType> LowerBound<U> lowerBound(Operand<T> sortedInputs,
+      Operand<T> values, Class<U> outType) {
+    return LowerBound.create(scope, sortedInputs, values, outType);
   }
 
   /**
@@ -3324,6 +3773,38 @@ public final class Ops {
    */
   public MapClear mapClear(List<Class<? extends TType>> dtypes, MapClear.Options... options) {
     return MapClear.create(scope, dtypes, options);
+  }
+
+  /**
+   * Maps a function on the list of tensors unpacked from arguments on dimension 0.
+   *  The function given by {@code f} is assumed to be stateless, and is executed
+   *  concurrently on all the slices; up to batch_size (i.e. the size of the 0th
+   *  dimension of each argument) functions will be scheduled at once.
+   *  <p>The {@code max_intra_op_parallelism} attr, which defaults to 1, can be used to
+   *  limit the intra op parallelism. To limit inter-op parallelism, a user can
+   *  set a private threadpool on the dataset using {@code tf.data.Options}'s
+   *  {@code ThreadingOptions}.
+   *  <p>Note that this op is not exposed to users directly, but is invoked in tf.data
+   *  rewrites.
+   *
+   * @param arguments <pre>
+   *  A list of tensors whose types are `Targuments`, corresponding to the inputs
+   *  the function should be mapped over.
+   *  </pre>
+   * @param capturedInputs <pre>
+   *  A list of tensors whose types are `Tcaptured`, corresponding to the captured
+   *  inputs of the defun.
+   *  </pre>
+   * @param outputTypes A list of types.
+   * @param outputShapes A list of shapes.
+   * @param f The value of the f attribute
+   * @param options carries optional attribute values
+   * @return a new instance of MapDefun
+   */
+  public MapDefun mapDefun(Iterable<Operand<?>> arguments, Iterable<Operand<?>> capturedInputs,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, ConcreteFunction f,
+      MapDefun.Options... options) {
+    return MapDefun.create(scope, arguments, capturedInputs, outputTypes, outputShapes, f, options);
   }
 
   /**
@@ -3511,6 +3992,36 @@ public final class Ops {
   }
 
   /**
+   * Gradient op for {@code MirrorPad} op. This op folds a mirror-padded tensor.
+   *  This operation folds the padded areas of {@code input} by {@code MirrorPad} according to the
+   *  {@code paddings} you specify. {@code paddings} must be the same as {@code paddings} argument
+   *  given to the corresponding {@code MirrorPad} op.
+   *  <p>The folded size of each dimension D of the output is:
+   *  <p>{@code input.dim_size(D) - paddings(D, 0) - paddings(D, 1)}
+   *  <p>For example:
+   *  <pre>
+   *  # 't' is [[1, 2, 3], [4, 5, 6], [7, 8, 9]].
+   *  # 'paddings' is [[0, 1]], [0, 1]].
+   *  # 'mode' is SYMMETRIC.
+   *  # rank of 't' is 2.
+   *  pad(t, paddings) ==&gt; [[ 1,  5]
+   *                        [11, 28]]
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input tensor to be folded.
+   * @param paddings A two-column matrix specifying the padding sizes. The number of
+   *  rows must be the same as the rank of {@code input}.
+   * @param mode The mode used in the {@code MirrorPad} op.
+   * @param <T> data type for {@code MirrorPadGrad} output and operands
+   * @return a new instance of MirrorPadGrad
+   */
+  public <T extends TType> MirrorPadGrad<T> mirrorPadGrad(Operand<T> input,
+      Operand<? extends TNumber> paddings, String mode) {
+    return MirrorPadGrad.create(scope, input, paddings, mode);
+  }
+
+  /**
    * Wraps an arbitrary MLIR computation expressed as a module with a main() function.
    *  This operation does not have an associated kernel and is not intended to be
    *  executed in a regular TensorFlow session. Instead it is intended to be used for
@@ -3661,6 +4172,77 @@ public final class Ops {
    */
   public MutexLock mutexLock(Operand<? extends TType> mutex) {
     return MutexLock.create(scope, mutex);
+  }
+
+  /**
+   * Outputs a tensor containing the reduction across all input tensors.
+   *  Outputs a tensor containing the reduction across all input tensors passed to ops
+   *  within the same `shared_name.
+   *  <p>The graph should be constructed so if one op runs with shared_name value {@code c},
+   *  then {@code num_devices} ops will run with shared_name value {@code c}.  Failure to do so
+   *  will cause the graph execution to fail to complete.
+   *  <p>input: the input to the reduction
+   *  data: the value of the reduction across all {@code num_devices} devices.
+   *  reduction: the reduction operation to perform.
+   *  num_devices: The number of devices participating in this reduction.
+   *  shared_name: Identifier that shared between ops of the same reduction.
+   *
+   * @param <T> data type for {@code data} output
+   * @deprecated use {@link org.tensorflow.op.distribute.NcclAllReduce} instead
+   * @param input The input value
+   * @param reduction The value of the reduction attribute
+   * @param numDevices The value of the numDevices attribute
+   * @param sharedName The value of the sharedName attribute
+   * @param <T> data type for {@code NcclAllReduce} output and operands
+   * @return a new instance of NcclAllReduce
+   */
+  @Deprecated
+  public <T extends TNumber> NcclAllReduce<T> ncclAllReduce(Operand<T> input, String reduction,
+      Long numDevices, String sharedName) {
+    return NcclAllReduce.create(scope, input, reduction, numDevices, sharedName);
+  }
+
+  /**
+   * Sends {@code input} to all devices that are connected to the output.
+   *  Sends {@code input} to all devices that are connected to the output.
+   *  <p>The graph should be constructed so that all ops connected to the output have a
+   *  valid device assignment, and the op itself is assigned one of these devices.
+   *  <p>input: The input to the broadcast.
+   *  output: The same as input.
+   *  shape: The shape of the input tensor.
+   *
+   * @param <T> data type for {@code output} output
+   * @deprecated use {@link org.tensorflow.op.distribute.NcclBroadcast} instead
+   * @param input The input value
+   * @param shape The value of the shape attribute
+   * @param <T> data type for {@code NcclBroadcast} output and operands
+   * @return a new instance of NcclBroadcast
+   */
+  @Deprecated
+  public <T extends TNumber> NcclBroadcast<T> ncclBroadcast(Operand<T> input, Shape shape) {
+    return NcclBroadcast.create(scope, input, shape);
+  }
+
+  /**
+   * Reduces {@code input} from {@code num_devices} using {@code reduction} to a single device.
+   *  Reduces {@code input} from {@code num_devices} using {@code reduction} to a single device.
+   *  <p>The graph should be constructed so that all inputs have a valid device
+   *  assignment, and the op itself is assigned one of these devices.
+   *  <p>input: The input to the reduction.
+   *  data: the value of the reduction across all {@code num_devices} devices.
+   *  reduction: the reduction operation to perform.
+   *
+   * @param <T> data type for {@code data} output
+   * @deprecated use {@link org.tensorflow.op.distribute.NcclReduce} instead
+   * @param input The input value
+   * @param reduction The value of the reduction attribute
+   * @param <T> data type for {@code NcclReduce} output and operands
+   * @return a new instance of NcclReduce
+   */
+  @Deprecated
+  public <T extends TNumber> NcclReduce<T> ncclReduce(Iterable<Operand<T>> input,
+      String reduction) {
+    return NcclReduce.create(scope, input, reduction);
   }
 
   /**
@@ -4215,6 +4797,24 @@ public final class Ops {
   }
 
   /**
+   * Receives the named tensor from send_device on recv_device.
+   *
+   * @param <T> data type for {@code tensor} output
+   * @param tensorType The value of the tensorType attribute
+   * @param tensorName The name of the tensor to receive.
+   * @param sendDevice The name of the device sending the tensor.
+   * @param sendDeviceIncarnation The current incarnation of send_device.
+   * @param recvDevice The name of the device receiving the tensor.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Recv} output and operands
+   * @return a new instance of Recv
+   */
+  public <T extends TType> Recv<T> recv(Class<T> tensorType, String tensorName, String sendDevice,
+      Long sendDeviceIncarnation, String recvDevice, Recv.Options... options) {
+    return Recv.create(scope, tensorType, tensorName, sendDevice, sendDeviceIncarnation, recvDevice, options);
+  }
+
+  /**
    * Computes the &quot;logical and&quot; of elements across dimensions of a tensor.
    *  Reduces {@code input} along the dimensions given in {@code axis}. Unless
    *  {@code keep_dims} is true, the rank of the tensor is reduced by 1 for each entry in
@@ -4328,6 +4928,66 @@ public final class Ops {
   public <T extends TType> ReduceSum<T> reduceSum(Operand<T> input, Operand<? extends TNumber> axis,
       ReduceSum.Options... options) {
     return ReduceSum.create(scope, input, axis, options);
+  }
+
+  /**
+   * Creates or finds a child frame, and makes {@code data} available to the child frame.
+   *  The unique {@code frame_name} is used by the {@code Executor} to identify frames. If
+   *  {@code is_constant} is true, {@code output} is a constant in the child frame; otherwise
+   *  it may be changed in the child frame. At most {@code parallel_iterations} iterations
+   *  are run in parallel in the child frame.
+   *
+   * @param <T> data type for {@code output} output
+   * @param data The tensor to be made available to the child frame.
+   * @param frameName The name of the child frame.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code RefEnter} output and operands
+   * @return a new instance of RefEnter
+   */
+  public <T extends TType> RefEnter<T> refEnter(Operand<T> data, String frameName,
+      RefEnter.Options... options) {
+    return RefEnter.create(scope, data, frameName, options);
+  }
+
+  /**
+   * Exits the current frame to its parent frame.
+   *  Exit makes its input {@code data} available to the parent frame.
+   *
+   * @param <T> data type for {@code output} output
+   * @param data The tensor to be made available to the parent frame.
+   * @param <T> data type for {@code RefExit} output and operands
+   * @return a new instance of RefExit
+   */
+  public <T extends TType> RefExit<T> refExit(Operand<T> data) {
+    return RefExit.create(scope, data);
+  }
+
+  /**
+   * Return the same ref tensor as the input ref tensor.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input The input value
+   * @param <T> data type for {@code RefIdentity} output and operands
+   * @return a new instance of RefIdentity
+   */
+  public <T extends TType> RefIdentity<T> refIdentity(Operand<T> input) {
+    return RefIdentity.create(scope, input);
+  }
+
+  /**
+   * Forwards the value of an available tensor from {@code inputs} to {@code output}.
+   *  {@code Merge} waits for at least one of the tensors in {@code inputs} to become available.
+   *  It is usually combined with {@code Switch} to implement branching.
+   *  <p>{@code Merge} forwards the first tensor for become available to {@code output}, and sets
+   *  {@code value_index} to its index in {@code inputs}.
+   *
+   * @param <T> data type for {@code output} output
+   * @param inputs The input tensors, exactly one of which will become available.
+   * @param <T> data type for {@code RefMerge} output and operands
+   * @return a new instance of RefMerge
+   */
+  public <T extends TType> RefMerge<T> refMerge(Iterable<Operand<T>> inputs) {
+    return RefMerge.create(scope, inputs);
   }
 
   /**
@@ -5391,6 +6051,42 @@ public final class Ops {
   }
 
   /**
+   * Computes element-wise maximum.
+   *
+   * @param <T> data type for {@code output_ref} output
+   * @param ref A mutable Tensor. Should be from a Variable node.
+   * @param indices A Tensor. Must be one of the following types: int32, int64.
+   *  A tensor of indices into ref.
+   * @param updates A Tensor. Must have the same type as ref. A tensor of updated values
+   *  to add to ref.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ScatterNdMax} output and operands
+   * @return a new instance of ScatterNdMax
+   */
+  public <T extends TType> ScatterNdMax<T> scatterNdMax(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterNdMax.Options... options) {
+    return ScatterNdMax.create(scope, ref, indices, updates, options);
+  }
+
+  /**
+   * Computes element-wise minimum.
+   *
+   * @param <T> data type for {@code output_ref} output
+   * @param ref A mutable Tensor. Should be from a Variable node.
+   * @param indices A Tensor. Must be one of the following types: int32, int64.
+   *  A tensor of indices into ref.
+   * @param updates A Tensor. Must have the same type as ref. A tensor of updated values
+   *  to add to ref.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ScatterNdMin} output and operands
+   * @return a new instance of ScatterNdMin
+   */
+  public <T extends TType> ScatterNdMin<T> scatterNdMin(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterNdMin.Options... options) {
+    return ScatterNdMin.create(scope, ref, indices, updates, options);
+  }
+
+  /**
    * Applies sparse addition to {@code input} using individual values or slices
    *  from {@code updates} according to indices {@code indices}.  The updates are non-aliasing:
    *  {@code input} is only modified in-place if no other operations will use it.
@@ -5606,6 +6302,22 @@ public final class Ops {
    */
   public <T extends TType> Select<T> select(Operand<TBool> condition, Operand<T> t, Operand<T> e) {
     return Select.create(scope, condition, t, e);
+  }
+
+  /**
+   * Sends the named tensor from send_device to recv_device.
+   *
+   * @param tensor The tensor to send.
+   * @param tensorName The name of the tensor to send.
+   * @param sendDevice The name of the device sending the tensor.
+   * @param sendDeviceIncarnation The current incarnation of send_device.
+   * @param recvDevice The name of the device receiving the tensor.
+   * @param options carries optional attribute values
+   * @return a new instance of Send
+   */
+  public Send send(Operand<? extends TType> tensor, String tensorName, String sendDevice,
+      Long sendDeviceIncarnation, String recvDevice, Send.Options... options) {
+    return Send.create(scope, tensor, tensorName, sendDevice, sendDeviceIncarnation, recvDevice, options);
   }
 
   /**
@@ -6048,6 +6760,60 @@ public final class Ops {
   }
 
   /**
+   * Delete the stack from its resource container.
+   *
+   * @param handle The handle to a stack.
+   * @return a new instance of StackClose
+   */
+  public StackClose stackClose(Operand<? extends TType> handle) {
+    return StackClose.create(scope, handle);
+  }
+
+  /**
+   * A stack that produces elements in first-in last-out order.
+   *
+   * @param maxSize The maximum size of the stack if non-negative. If negative, the stack
+   *  size is unlimited.
+   * @param elemType The type of the elements on the stack.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code StackV2} output and operands
+   * @return a new instance of StackCreate
+   */
+  public <T extends TType> StackCreate stackCreate(Operand<TInt32> maxSize, Class<T> elemType,
+      StackCreate.Options... options) {
+    return StackCreate.create(scope, maxSize, elemType, options);
+  }
+
+  /**
+   * Pop the element at the top of the stack.
+   *
+   * @param <T> data type for {@code elem} output
+   * @param handle The handle to a stack.
+   * @param elemType The type of the elem that is popped.
+   * @param <T> data type for {@code StackPopV2} output and operands
+   * @return a new instance of StackPop
+   */
+  public <T extends TType> StackPop<T> stackPop(Operand<? extends TType> handle,
+      Class<T> elemType) {
+    return StackPop.create(scope, handle, elemType);
+  }
+
+  /**
+   * Push an element onto the stack.
+   *
+   * @param <T> data type for {@code output} output
+   * @param handle The handle to a stack.
+   * @param elem The tensor to be pushed onto the stack.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code StackPushV2} output and operands
+   * @return a new instance of StackPush
+   */
+  public <T extends TType> StackPush<T> stackPush(Operand<? extends TType> handle, Operand<T> elem,
+      StackPush.Options... options) {
+    return StackPush.create(scope, handle, elem, options);
+  }
+
+  /**
    * Stage values similar to a lightweight Enqueue.
    *  The basic functionality of this Op is similar to a queue with many
    *  fewer capabilities and options.  This Op is optimized for performance.
@@ -6213,6 +6979,44 @@ public final class Ops {
   }
 
   /**
+   * An n-way switch statement which calls a single branch function.
+   *  <pre>
+   *  An n-way switch statement, implementing the following:
+   *  ```
+   *  switch (branch_index) {
+   *    case 0:
+   *      output = branches[0](input);
+   *      break;
+   *    case 1:
+   *      output = branches[1](input);
+   *      break;
+   *    ...
+   *    case [[nbranches-1]]:
+   *    default:
+   *      output = branches[nbranches-1](input);
+   *      break;
+   *  }
+   *  ```
+   *
+   *  This should only be used when the none of branches has stateful ops.
+   *  </pre>
+   *
+   * @param branchIndex The branch selector, an int32 Tensor.
+   * @param input A list of input tensors passed to the branch function.
+   * @param Tout A list of output types.
+   * @param branches <pre>
+   *    A list of functions each of which takes 'inputs' and returns a list of
+   *    tensors, whose types are the same as what every other branch returns.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatelessCase
+   */
+  public StatelessCase statelessCase(Operand<TInt32> branchIndex, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, List<ConcreteFunction> branches, Case.Options... options) {
+    return StatelessCase.create(scope, branchIndex, input, Tout, branches, options);
+  }
+
+  /**
    * output = cond ? then_branch(input) : else_branch(input)
    *
    * @param cond <pre>
@@ -6272,6 +7076,26 @@ public final class Ops {
   public StatelessWhile statelessWhile(Iterable<Operand<?>> input, ConcreteFunction cond,
       ConcreteFunction body, While.Options... options) {
     return StatelessWhile.create(scope, input, cond, body, options);
+  }
+
+  /**
+   * Stochastically cast a given tensor from floats to ints.
+   *  The values are cast with a deterministic pseudo-random tensor from a uniform distribution generated from user given key, counter, algorithm. Values will saturate if out of the specified integer type range, and will become zero if inputs are NaN.
+   *  <p>The outputs are a deterministic function of {@code input}, {@code key}, {@code counter}, {@code alg}.
+   *
+   * @param <U> data type for {@code output} output
+   * @param input The operand to stochastically cast to int.
+   * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
+   * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
+   * @param alg The RNG algorithm (shape int32[]).
+   * @param Tout The type of the output.
+   * @param <U> data type for {@code StochasticCastToInt} output and operands
+   * @return a new instance of StochasticCastToInt
+   */
+  public <U extends TNumber> StochasticCastToInt<U> stochasticCastToInt(
+      Operand<? extends TNumber> input, Operand<? extends TType> key,
+      Operand<? extends TType> counter, Operand<TInt32> alg, Class<U> Tout) {
+    return StochasticCastToInt.create(scope, input, key, counter, alg, Tout);
   }
 
   /**
@@ -6622,6 +7446,17 @@ public final class Ops {
    */
   public <T extends TType> SwitchCond<T> switchCond(Operand<T> data, Operand<TBool> pred) {
     return SwitchCond.create(scope, data, pred);
+  }
+
+  /**
+   * Synchronizes the device this op is run on.
+   *  Only GPU ops are asynchrous in TensorFlow, and so this only has an effect when
+   *  run on GPUs. On GPUs, this op synchronizes the GPU's compute stream.
+   *
+   * @return a new instance of SyncDevice
+   */
+  public SyncDevice syncDevice() {
+    return SyncDevice.create(scope);
   }
 
   /**
@@ -7733,6 +8568,35 @@ public final class Ops {
   }
 
   /**
+   * Perform clip by value on the quantized Tensor {@code operand}.
+   *  Given quantized {@code operand} which was quantized using {@code scales} and {@code zero_points}, performs clip by value using {@code min} and {@code max} values.
+   *  If quantization_axis is -1 (per-tensor quantized), the entire operand is clipped using scalar min, max.
+   *  Otherwise (per-channel quantized), the clipping is also done per-channel.
+   *
+   * @param <T> data type for {@code output} output
+   * @param operand Must be a Tensor of T.
+   * @param min The min value(s) to clip operand. Must be a Tensor of T.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (operand.dim_size(quantization_axis),) (per-axis quantization).
+   * @param max The min value(s) to clip operand. Must be a Tensor of T.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (operand.dim_size(quantization_axis),) (per-axis quantization).
+   * @param scales The float value(s) used as scale(s) when quantizing {@code operand}, {@code min} and {@code max}.
+   *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (operand.dim_size(quantization_axis),) (per-axis quantization).
+   * @param zeroPoints The int32 value(s) used as zero_point(s) when quantizing {@code operand}, {@code min} and {@code max}.
+   *  Same shape condition as scales.
+   * @param quantizationMinVal The quantization min value that was used when operand was quantized.
+   * @param quantizationMaxVal The quantization max value that was used when operand was quantized.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code UniformQuantizedClipByValue} output and operands
+   * @return a new instance of UniformQuantizedClipByValue
+   */
+  public <T extends TNumber> UniformQuantizedClipByValue<T> uniformQuantizedClipByValue(
+      Operand<T> operand, Operand<T> min, Operand<T> max, Operand<TFloat32> scales,
+      Operand<TInt32> zeroPoints, Long quantizationMinVal, Long quantizationMaxVal,
+      UniformQuantizedClipByValue.Options... options) {
+    return UniformQuantizedClipByValue.create(scope, operand, min, max, scales, zeroPoints, quantizationMinVal, quantizationMaxVal, options);
+  }
+
+  /**
    * Finds unique elements along an axis of a tensor.
    *  This operation either returns a tensor {@code y} containing unique elements
    *  along the {@code axis} of a tensor. The returned unique elements is sorted
@@ -8018,6 +8882,64 @@ public final class Ops {
    */
   public Unstage unstage(List<Class<? extends TType>> dtypes, Unstage.Options... options) {
     return Unstage.create(scope, dtypes, options);
+  }
+
+  /**
+   * Applies upper_bound(sorted_search_values, values) along each row.
+   *  Each set of rows with the same index in (sorted_inputs, values) is treated
+   *  independently.  The resulting row is the equivalent of calling
+   *  {@code np.searchsorted(sorted_inputs, values, side='right')}.
+   *  <p>The result is not a global index to the entire
+   *  {@code Tensor}, but rather just the index in the last dimension.
+   *  <p>A 2-D example:
+   *  sorted_sequence = [[0, 3, 9, 9, 10],
+   *  [1, 2, 3, 4, 5]]
+   *  values = [[2, 4, 9],
+   *  [0, 2, 6]]
+   *  <p>result = UpperBound(sorted_sequence, values)
+   *  <p>result == [[1, 2, 4],
+   *  [0, 2, 5]]
+   *
+   * @param <U> data type for {@code output} output
+   * @param sortedInputs 2-D Tensor where each row is ordered.
+   * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
+   *  the values that will be searched for in {@code sorted_search_values}.
+   * @param <T> data type for {@code UpperBound} output and operands
+   * @return a new instance of UpperBound, with default output types
+   */
+  public <T extends TType> UpperBound<TInt32> upperBound(Operand<T> sortedInputs,
+      Operand<T> values) {
+    return UpperBound.create(scope, sortedInputs, values);
+  }
+
+  /**
+   * Applies upper_bound(sorted_search_values, values) along each row.
+   *  Each set of rows with the same index in (sorted_inputs, values) is treated
+   *  independently.  The resulting row is the equivalent of calling
+   *  {@code np.searchsorted(sorted_inputs, values, side='right')}.
+   *  <p>The result is not a global index to the entire
+   *  {@code Tensor}, but rather just the index in the last dimension.
+   *  <p>A 2-D example:
+   *  sorted_sequence = [[0, 3, 9, 9, 10],
+   *  [1, 2, 3, 4, 5]]
+   *  values = [[2, 4, 9],
+   *  [0, 2, 6]]
+   *  <p>result = UpperBound(sorted_sequence, values)
+   *  <p>result == [[1, 2, 4],
+   *  [0, 2, 5]]
+   *
+   * @param <U> data type for {@code output} output
+   * @param sortedInputs 2-D Tensor where each row is ordered.
+   * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
+   *  the values that will be searched for in {@code sorted_search_values}.
+   * @param outType The value of the outType attribute
+   * @param <U> data type for {@code UpperBound} output and operands
+   * @param <T> data type for {@code UpperBound} output and operands
+   * @return a new instance of UpperBound
+   */
+  public <U extends TNumber, T extends TType> UpperBound<U> upperBound(Operand<T> sortedInputs,
+      Operand<T> values, Class<U> outType) {
+    return UpperBound.create(scope, sortedInputs, values, outType);
   }
 
   /**

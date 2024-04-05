@@ -31,6 +31,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
@@ -45,6 +46,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = OutfeedDequeueV2.OP_NAME,
     inputsClass = OutfeedDequeueV2.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class OutfeedDequeueV2<T extends TType> extends RawOp implements Operand<T> {
   /**

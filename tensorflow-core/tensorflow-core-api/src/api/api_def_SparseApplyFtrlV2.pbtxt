@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "SparseApplyFtrlV2"
   endpoint {
     name: "train.SparseApplyFtrl"

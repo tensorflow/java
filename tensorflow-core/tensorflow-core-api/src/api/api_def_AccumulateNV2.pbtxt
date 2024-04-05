@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "AccumulateNV2"
   endpoint {
     name: "math.AccumulateN"

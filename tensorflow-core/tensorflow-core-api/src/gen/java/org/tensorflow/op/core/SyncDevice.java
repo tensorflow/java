@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Synchronizes the device this op is run on.
@@ -37,6 +38,7 @@ import org.tensorflow.op.annotation.OpMetadata;
     opType = SyncDevice.OP_NAME,
     inputsClass = SyncDevice.Inputs.class
 )
+@Operator
 public final class SyncDevice extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine

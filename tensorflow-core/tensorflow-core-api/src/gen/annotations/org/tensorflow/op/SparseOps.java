@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.sparse.AddManySparseToTensorsMap;
 import org.tensorflow.op.sparse.AddSparseToTensorsMap;
+import org.tensorflow.op.sparse.DenseCountSparseOutput;
 import org.tensorflow.op.sparse.DenseToDenseSetOperation;
 import org.tensorflow.op.sparse.DenseToSparseSetOperation;
 import org.tensorflow.op.sparse.DeserializeSparse;
@@ -31,6 +32,7 @@ import org.tensorflow.op.sparse.SparseAddGrad;
 import org.tensorflow.op.sparse.SparseBincount;
 import org.tensorflow.op.sparse.SparseConcat;
 import org.tensorflow.op.sparse.SparseConditionalAccumulator;
+import org.tensorflow.op.sparse.SparseCountSparseOutput;
 import org.tensorflow.op.sparse.SparseCross;
 import org.tensorflow.op.sparse.SparseCrossHashed;
 import org.tensorflow.op.sparse.SparseDenseCwiseAdd;
@@ -147,6 +149,25 @@ public final class SparseOps {
       Operand<? extends TType> sparseValues, Operand<TInt64> sparseShape,
       AddSparseToTensorsMap.Options... options) {
     return AddSparseToTensorsMap.create(scope, sparseIndices, sparseValues, sparseShape, options);
+  }
+
+  /**
+   * Performs sparse-output bin counting for a tf.tensor input.
+   *  Counts the number of times each value occurs in the input.
+   *
+   * @param <U> data type for {@code output_values} output
+   * @param values Tensor containing data to count.
+   * @param weights A Tensor of the same shape as indices containing per-index weight values. May
+   *  also be the empty tensor if no weights are used.
+   * @param binaryOutput Whether to output the number of occurrences of each value or 1.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code DenseCountSparseOutput} output and operands
+   * @return a new instance of DenseCountSparseOutput
+   */
+  public <U extends TNumber> DenseCountSparseOutput<U> denseCountSparseOutput(
+      Operand<? extends TNumber> values, Operand<U> weights, Boolean binaryOutput,
+      DenseCountSparseOutput.Options... options) {
+    return DenseCountSparseOutput.create(scope, values, weights, binaryOutput, options);
   }
 
   /**
@@ -463,6 +484,27 @@ public final class SparseOps {
   public <T extends TType> SparseConditionalAccumulator sparseConditionalAccumulator(Class<T> dtype,
       Shape shape, SparseConditionalAccumulator.Options... options) {
     return SparseConditionalAccumulator.create(scope, dtype, shape, options);
+  }
+
+  /**
+   * Performs sparse-output bin counting for a sparse tensor input.
+   *  Counts the number of times each value occurs in the input.
+   *
+   * @param <U> data type for {@code output_values} output
+   * @param indices Tensor containing the indices of the sparse tensor to count.
+   * @param values Tensor containing values of the sparse tensor to count.
+   * @param denseShape Tensor containing the dense shape of the sparse tensor to count.
+   * @param weights A Tensor of the same shape as indices containing per-index weight values.
+   *  May also be the empty tensor if no weights are used.
+   * @param binaryOutput Whether to output the number of occurrences of each value or 1.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code SparseCountSparseOutput} output and operands
+   * @return a new instance of SparseCountSparseOutput
+   */
+  public <U extends TNumber> SparseCountSparseOutput<U> sparseCountSparseOutput(
+      Operand<TInt64> indices, Operand<? extends TNumber> values, Operand<TInt64> denseShape,
+      Operand<U> weights, Boolean binaryOutput, SparseCountSparseOutput.Options... options) {
+    return SparseCountSparseOutput.create(scope, indices, values, denseShape, weights, binaryOutput, options);
   }
 
   /**

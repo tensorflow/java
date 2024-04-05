@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
@@ -40,6 +41,9 @@ import org.tensorflow.types.TString;
 @OpMetadata(
     opType = CompilationResult.OP_NAME,
     inputsClass = CompilationResult.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class CompilationResult extends RawOp implements Operand<TString> {
   /**

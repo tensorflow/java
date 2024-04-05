@@ -21,8 +21,15 @@ import java.util.List;
 import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.xla.AssignVariableConcatND;
+import org.tensorflow.op.xla.ConcatND;
+import org.tensorflow.op.xla.ReadVariableSplitND;
+import org.tensorflow.op.xla.SplitND;
 import org.tensorflow.op.xla.XlaHostCompute;
 import org.tensorflow.op.xla.XlaRecvFromHost;
+import org.tensorflow.op.xla.XlaRecvTPUEmbeddingActivations;
+import org.tensorflow.op.xla.XlaRecvTPUEmbeddingDeduplicationData;
+import org.tensorflow.op.xla.XlaSendTPUEmbeddingGradients;
 import org.tensorflow.op.xla.XlaSendToHost;
 import org.tensorflow.op.xla.XlaSparseCoreAdagrad;
 import org.tensorflow.op.xla.XlaSparseCoreAdagradMomentum;
@@ -53,6 +60,215 @@ public final class XlaOps {
   XlaOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+  }
+
+  /**
+   * Concats input tensor across all dimensions.
+   *  An op which merges slices the input tensor based on the given num_splits
+   *  attribute, strips paddings optionally, and writes the merged tensor without
+   *  paddings to the resource variable.
+   *  <p>This op may be generated via the TPU bridge.
+   *  <p>For example, with {@code input} tensor:
+   *  <pre>
+   *  [[0, 1],
+   *   [4, 5]]
+   *  [[2, 3],
+   *   [6, 7]]
+   *  [[8, 9],
+   *   [12, 13]]
+   *  [[10, 11],
+   *   [14, 15]]
+   *  </pre>
+   *  <p>{@code num_splits}:
+   *  <pre>
+   *  [2, 2]
+   *  </pre>
+   *  <p>and {@code paddings}:
+   *  <pre>
+   *  [1, 1]
+   *  </pre>
+   *  <p>the expected {@code outputs} is:
+   *  <pre>
+   *  [[0, 1, 2],
+   *   [4, 5, 6],
+   *   [8, 9, 10]]
+   *  </pre>
+   *
+   * @param resource Resource variable for concatenated input tensors across all dimensions.
+   *  }
+   *  in_arg {
+   *  name: &quot;inputs&quot;
+   *  description: &lt;&lt;END
+   *  Input tensor slices in row-major order to merge across all dimensions. All
+   *  inputs must have the same shape.
+   *  }
+   *  out_arg {
+   *  name: &quot;output&quot;
+   *  description: &lt;&lt;END
+   *  Output tensor formed from merging input slices based on num_concats defined.
+   * @param inputs The inputs value
+   * @param numConcats Number of ways to merge per dimension.
+   * @param options carries optional attribute values
+   * @return a new instance of AssignVariableConcatND
+   */
+  public AssignVariableConcatND assignVariableConcatND(Operand<? extends TType> resource,
+      Iterable<Operand<? extends TType>> inputs, List<Long> numConcats,
+      AssignVariableConcatND.Options... options) {
+    return AssignVariableConcatND.create(scope, resource, inputs, numConcats, options);
+  }
+
+  /**
+   * Concats input tensor across all dimensions.
+   *  An op which merges slices the input tensor based on the given num_splits
+   *  attribute, strips paddings optionally, and returns the merged tensor without
+   *  paddings.
+   *  <p>This op may be generated via the TPU bridge.
+   *  <p>For example, with {@code input} tensor:
+   *  <pre>
+   *  [[0, 1],
+   *   [4, 5]]
+   *  [[2, 3],
+   *   [6, 7]]
+   *  [[8, 9],
+   *   [12, 13]]
+   *  [[10, 11],
+   *   [14, 15]]
+   *  </pre>
+   *  <p>{@code num_splits}:
+   *  <pre>
+   *  [2, 2]
+   *  </pre>
+   *  <p>and {@code paddings}:
+   *  <pre>
+   *  [1, 1]
+   *  </pre>
+   *  <p>the expected {@code outputs} is:
+   *  <pre>
+   *  [[0, 1, 2],
+   *   [4, 5, 6],
+   *   [8, 9, 10]]
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param inputs Input tensor slices in row-major order to merge across all dimensions. All
+   *  inputs must have the same shape.
+   *  }
+   *  out_arg {
+   *  name: &quot;output&quot;
+   *  description: &lt;&lt;END
+   *  Output tensor formed from merging input slices based on num_concats defined.
+   * @param numConcats Number of ways to merge per dimension.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code XlaConcatND} output and operands
+   * @return a new instance of ConcatND
+   */
+  public <T extends TType> ConcatND<T> concatND(Iterable<Operand<T>> inputs, List<Long> numConcats,
+      ConcatND.Options... options) {
+    return ConcatND.create(scope, inputs, numConcats, options);
+  }
+
+  /**
+   * Splits resource variable input tensor across all dimensions.
+   *  An op which splits the resource variable input tensor based on the given
+   *  num_splits attribute, pads slices optionally, and returned the slices. Slices
+   *  are returned in row-major order.
+   *  <p>This op may be generated via the TPU bridge.
+   *  <p>For example, with {@code input} tensor:
+   *  <pre>
+   *  [[0, 1, 2],
+   *   [3, 4, 5],
+   *   [6, 7, 8]]
+   *  </pre>
+   *  <p>{@code num_splits}:
+   *  <pre>
+   *  [2, 2]
+   *  </pre>
+   *  <p>and {@code paddings}:
+   *  <pre>
+   *  [1, 1]
+   *  </pre>
+   *  <p>the expected {@code outputs} is:
+   *  <pre>
+   *  [[0, 1],
+   *   [3, 4]]
+   *  [[2, 0],
+   *   [5, 0]]
+   *  [[6, 7],
+   *   [0, 0]]
+   *  [[8, 0],
+   *   [0, 0]]
+   *  </pre>
+   *
+   * @param <T> data type for {@code outputs} output
+   * @param resource Resource variable of input tensor to split across all dimensions.
+   *  }
+   *  out_arg {
+   *  name: &quot;outputs&quot;
+   *  description: &lt;&lt;END
+   *  Output slices based on input and num_splits defined, in row-major order.
+   * @param T The value of the T attribute
+   * @param N The value of the N attribute
+   * @param numSplits Number of ways to split per dimension. Shape dimensions must be evenly
+   *  divisible.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ReadVariableXlaSplitND} output and operands
+   * @return a new instance of ReadVariableSplitND
+   */
+  public <T extends TType> ReadVariableSplitND<T> readVariableSplitND(
+      Operand<? extends TType> resource, Class<T> T, Long N, List<Long> numSplits,
+      ReadVariableSplitND.Options... options) {
+    return ReadVariableSplitND.create(scope, resource, T, N, numSplits, options);
+  }
+
+  /**
+   * Splits input tensor across all dimensions.
+   *  An op which slices the input tensor based on the given num_splits attribute,
+   *  pads slices optionally, and returned the slices. Slices are returned in
+   *  row-major order.
+   *  <p>This op may be generated via the TPU bridge.
+   *  <p>For example, with {@code input} tensor:
+   *  <pre>
+   *  [[0, 1, 2],
+   *   [3, 4, 5],
+   *   [6, 7, 8]]
+   *  </pre>
+   *  <p>{@code num_splits}:
+   *  <pre>
+   *  [2, 2]
+   *  </pre>
+   *  <p>and {@code paddings}:
+   *  <pre>
+   *  [1, 1]
+   *  </pre>
+   *  <p>the expected {@code outputs} is:
+   *  <pre>
+   *  [[0, 1],
+   *   [3, 4]]
+   *  [[2, 0],
+   *   [5, 0]]
+   *  [[6, 7],
+   *   [0, 0]]
+   *  [[8, 0],
+   *   [0, 0]]
+   *  </pre>
+   *
+   * @param <T> data type for {@code outputs} output
+   * @param input Input tensor to split across all dimensions.
+   *  }
+   *  out_arg {
+   *  name: &quot;outputs&quot;
+   *  description: &lt;&lt;END
+   *  Output slices based on input and num_splits defined, in row-major order.
+   * @param N The value of the N attribute
+   * @param numSplits Number of ways to split per dimension. Shape dimensions must be evenly
+   *  divisible.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code XlaSplitND} output and operands
+   * @return a new instance of SplitND
+   */
+  public <T extends TType> SplitND<T> splitND(Operand<T> input, Long N, List<Long> numSplits,
+      SplitND.Options... options) {
+    return SplitND.create(scope, input, N, numSplits, options);
   }
 
   /**
@@ -92,6 +308,76 @@ public final class XlaOps {
   public <T extends TType> XlaRecvFromHost<T> xlaRecvFromHost(Class<T> Toutput, Shape shape,
       String key) {
     return XlaRecvFromHost.create(scope, Toutput, shape, key);
+  }
+
+  /**
+   * An op that receives embedding activations on the TPU.
+   *  The TPU system performs the embedding lookups and aggregations. The results of
+   *  these aggregations are visible to the Tensorflow Graph as the outputs of a
+   *  XlaRecvTPUEmbeddingActivations Op. This op returns a list containing one
+   *  Tensor of activations per table specified in the model.
+   *
+   * @param deduplicationData A Tensor with type=DT_VARIANT containing the deduplication
+   *  data. The tensor is an XLA nested tuple containing N elements (where N is
+   *  the ratio of the number of embedding to tensor cores per TPU chip). Each
+   *  element of the nested tuple is a tuple of rank 1 tensors. Each tensor either
+   *  contains indices (DT_UINT32) for embedding lookup on the TensorCore or
+   *  weights (DT_FLOAT) to apply to the output of the embedding lookup operation.
+   * @param numTables The number of output activation tensors. If feature descriptor is
+   *  present in the tpu embedding config, it is equal to the number of features
+   *  otherwise equal to number of embedding tables in the model.
+   * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @return a new instance of XlaRecvTPUEmbeddingActivations
+   */
+  public XlaRecvTPUEmbeddingActivations xlaRecvTPUEmbeddingActivations(
+      Operand<? extends TType> deduplicationData, Long numTables, String config) {
+    return XlaRecvTPUEmbeddingActivations.create(scope, deduplicationData, numTables, config);
+  }
+
+  /**
+   * Receives deduplication data (indices and weights) from the embedding core.
+   *  The deduplication data is a Tensor with type=DT_VARIANT. The tensor itself is an
+   *  XLA nested tuple containing N elements (where N is the ratio of the number of
+   *  embedding to tensor cores per TPU chip). Each element of the nested tuple is a
+   *  tuple of rank 1 tensors. Each tensor either contains indices (DT_UINT32) for
+   *  embedding lookup on the TensorCore or weights (DT_FLOAT) to apply to the output
+   *  of the embedding lookup operation.
+   *
+   * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @return a new instance of XlaRecvTPUEmbeddingDeduplicationData
+   */
+  public XlaRecvTPUEmbeddingDeduplicationData xlaRecvTPUEmbeddingDeduplicationData(String config) {
+    return XlaRecvTPUEmbeddingDeduplicationData.create(scope, config);
+  }
+
+  /**
+   * An op that performs gradient updates of embedding tables.
+   *  The gradients argument is a TensorList having the same length and shapes as the
+   *  return value of XlaRecvTPUEmbeddingActivations, but contains gradients of the
+   *  model's loss with respect to the embedding activations. The embedding tables are
+   *  updated from these gradients via the optimizer specified in the
+   *  TPUEmbeddingConfiguration proto given to tpu.initialize_system.
+   *
+   * @param gradients A TensorList of gradients with which to update embedding tables.
+   * @param learningRates A TensorList of learning rates used for updating the embedding
+   *  tables via the optimizer. The length of the TensorList must be equal to the
+   *  number of dynamic learning rate tags specified in the
+   *  TPUEmbeddingConfiguration proto.
+   * @param deduplicationData A Tensor with type=DT_VARIANT containing the deduplication
+   *  data. The tensor is an XLA nested tuple containing N elements (where N is
+   *  the ratio of the number of embedding to tensor cores per TPU chip). Each
+   *  element of the nested tuple is a tuple of rank 1 tensors. Each tensor either
+   *  contains indices (DT_UINT32) for embedding lookup on the TensorCore or
+   *  weights (DT_FLOAT) to apply to the output of the embedding lookup operation.
+   * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSendTPUEmbeddingGradients
+   */
+  public XlaSendTPUEmbeddingGradients xlaSendTPUEmbeddingGradients(
+      Iterable<Operand<TFloat32>> gradients, Iterable<Operand<TFloat32>> learningRates,
+      Operand<? extends TType> deduplicationData, String config,
+      XlaSendTPUEmbeddingGradients.Options... options) {
+    return XlaSendTPUEmbeddingGradients.create(scope, gradients, learningRates, deduplicationData, config, options);
   }
 
   /**

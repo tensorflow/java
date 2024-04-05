@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
@@ -51,6 +52,9 @@ import org.tensorflow.types.TInt32;
 @OpMetadata(
     opType = GenerateBoundingBoxProposals.OP_NAME,
     inputsClass = GenerateBoundingBoxProposals.Inputs.class
+)
+@Operator(
+    group = "image"
 )
 public final class GenerateBoundingBoxProposals extends RawOp {
   /**

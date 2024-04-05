@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "FusedBatchNormV3"
   endpoint {
     name: "nn.FusedBatchNorm"

@@ -28,6 +28,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -36,6 +37,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = DeleteSeedGenerator.OP_NAME,
     inputsClass = DeleteSeedGenerator.Inputs.class
+)
+@Operator(
+    group = "random"
 )
 public final class DeleteSeedGenerator extends RawOp {
   /**

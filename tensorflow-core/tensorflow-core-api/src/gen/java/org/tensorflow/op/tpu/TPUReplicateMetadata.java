@@ -28,6 +28,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Metadata indicating how the TPU computation should be replicated.
@@ -40,6 +41,9 @@ import org.tensorflow.op.annotation.OpMetadata;
     inputsClass = TPUReplicateMetadata.Inputs.class
 )
 @Deprecated
+@Operator(
+    group = "tpu"
+)
 public final class TPUReplicateMetadata extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine

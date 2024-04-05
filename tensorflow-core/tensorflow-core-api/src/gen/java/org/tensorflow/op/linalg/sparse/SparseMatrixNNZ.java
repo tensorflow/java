@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
@@ -38,6 +39,9 @@ import org.tensorflow.types.family.TType;
 @OpMetadata(
     opType = SparseMatrixNNZ.OP_NAME,
     inputsClass = SparseMatrixNNZ.Inputs.class
+)
+@Operator(
+    group = "linalg.sparse"
 )
 public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
   /**

@@ -27,6 +27,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Shuts down a running distributed TPU system.
@@ -35,6 +36,9 @@ import org.tensorflow.op.annotation.OpMetadata;
 @OpMetadata(
     opType = ShutdownDistributedTPU.OP_NAME,
     inputsClass = ShutdownDistributedTPU.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class ShutdownDistributedTPU extends RawOp {
   /**

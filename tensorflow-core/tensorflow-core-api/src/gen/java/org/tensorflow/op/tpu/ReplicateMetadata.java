@@ -28,6 +28,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 
 /**
  * Metadata indicating how the TPU computation should be replicated.
@@ -36,6 +37,9 @@ import org.tensorflow.op.annotation.OpMetadata;
 @OpMetadata(
     opType = ReplicateMetadata.OP_NAME,
     inputsClass = ReplicateMetadata.Inputs.class
+)
+@Operator(
+    group = "tpu"
 )
 public final class ReplicateMetadata extends RawOp {
   /**

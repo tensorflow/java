@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "BesselK1e"
   endpoint {
     name: "math.special.BesselK1e"

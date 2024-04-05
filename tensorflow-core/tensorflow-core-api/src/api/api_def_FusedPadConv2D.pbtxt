@@ -1,4 +1,5 @@
 op {
+  visibility: VISIBLE
   graph_op_name: "FusedPadConv2D"
   endpoint {
     name: "nn.FusedPadConv2d"

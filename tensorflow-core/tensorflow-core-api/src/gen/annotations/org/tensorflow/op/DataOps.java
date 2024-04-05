@@ -22,9 +22,11 @@ import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.data.AnonymousIterator;
+import org.tensorflow.op.data.AnonymousMemoryCache;
 import org.tensorflow.op.data.AnonymousMultiDeviceIterator;
 import org.tensorflow.op.data.AssertCardinalityDataset;
 import org.tensorflow.op.data.AssertNextDataset;
+import org.tensorflow.op.data.AssertPrevDataset;
 import org.tensorflow.op.data.AutoShardDataset;
 import org.tensorflow.op.data.BatchDataset;
 import org.tensorflow.op.data.BytesProducedStatsDataset;
@@ -32,6 +34,7 @@ import org.tensorflow.op.data.CSVDataset;
 import org.tensorflow.op.data.CacheDataset;
 import org.tensorflow.op.data.ChooseFastestBranchDataset;
 import org.tensorflow.op.data.ChooseFastestDataset;
+import org.tensorflow.op.data.CompressElement;
 import org.tensorflow.op.data.ConcatenateDataset;
 import org.tensorflow.op.data.DataServiceDataset;
 import org.tensorflow.op.data.DatasetCardinality;
@@ -41,9 +44,12 @@ import org.tensorflow.op.data.DatasetToGraph;
 import org.tensorflow.op.data.DatasetToSingleElement;
 import org.tensorflow.op.data.DatasetToTfRecord;
 import org.tensorflow.op.data.DeleteIterator;
+import org.tensorflow.op.data.DeleteMemoryCache;
+import org.tensorflow.op.data.DeleteMultiDeviceIterator;
 import org.tensorflow.op.data.DenseToSparseBatchDataset;
 import org.tensorflow.op.data.DeserializeIterator;
 import org.tensorflow.op.data.DirectedInterleaveDataset;
+import org.tensorflow.op.data.DummyIterationCounter;
 import org.tensorflow.op.data.FilterByLastComponentDataset;
 import org.tensorflow.op.data.FilterDataset;
 import org.tensorflow.op.data.FinalizeDataset;
@@ -56,13 +62,17 @@ import org.tensorflow.op.data.IgnoreErrorsDataset;
 import org.tensorflow.op.data.InitializeTableFromDataset;
 import org.tensorflow.op.data.InterleaveDataset;
 import org.tensorflow.op.data.Iterator;
+import org.tensorflow.op.data.IteratorFromStringHandle;
+import org.tensorflow.op.data.IteratorGetDevice;
 import org.tensorflow.op.data.IteratorGetNext;
 import org.tensorflow.op.data.IteratorGetNextAsOptional;
 import org.tensorflow.op.data.IteratorGetNextSync;
 import org.tensorflow.op.data.IteratorToStringHandle;
 import org.tensorflow.op.data.LMDBDataset;
 import org.tensorflow.op.data.LatencyStatsDataset;
+import org.tensorflow.op.data.LeakyReluGrad;
 import org.tensorflow.op.data.LegacyParallelInterleaveDataset;
+import org.tensorflow.op.data.ListDataset;
 import org.tensorflow.op.data.ListSnapshotChunksDataset;
 import org.tensorflow.op.data.LoadDataset;
 import org.tensorflow.op.data.MakeIterator;
@@ -71,6 +81,11 @@ import org.tensorflow.op.data.MapDataset;
 import org.tensorflow.op.data.MatchingFilesDataset;
 import org.tensorflow.op.data.MaxIntraOpParallelismDataset;
 import org.tensorflow.op.data.ModelDataset;
+import org.tensorflow.op.data.MultiDeviceIterator;
+import org.tensorflow.op.data.MultiDeviceIteratorFromStringHandle;
+import org.tensorflow.op.data.MultiDeviceIteratorGetNextFromShard;
+import org.tensorflow.op.data.MultiDeviceIteratorInit;
+import org.tensorflow.op.data.MultiDeviceIteratorToStringHandle;
 import org.tensorflow.op.data.NonSerializableDataset;
 import org.tensorflow.op.data.OneShotIterator;
 import org.tensorflow.op.data.OptimizeDataset;
@@ -81,6 +96,7 @@ import org.tensorflow.op.data.OptionalNone;
 import org.tensorflow.op.data.OptionsDataset;
 import org.tensorflow.op.data.PaddedBatchDataset;
 import org.tensorflow.op.data.ParallelBatchDataset;
+import org.tensorflow.op.data.ParallelFilterDataset;
 import org.tensorflow.op.data.ParallelInterleaveDataset;
 import org.tensorflow.op.data.ParallelMapDataset;
 import org.tensorflow.op.data.ParseExampleDataset;
@@ -92,6 +108,7 @@ import org.tensorflow.op.data.RebatchDatasetV2;
 import org.tensorflow.op.data.ReduceDataset;
 import org.tensorflow.op.data.RegisterDataset;
 import org.tensorflow.op.data.RepeatDataset;
+import org.tensorflow.op.data.RewriteDataset;
 import org.tensorflow.op.data.SamplingDataset;
 import org.tensorflow.op.data.SaveDataset;
 import org.tensorflow.op.data.ScanDataset;
@@ -103,9 +120,14 @@ import org.tensorflow.op.data.ShuffleDataset;
 import org.tensorflow.op.data.SkipDataset;
 import org.tensorflow.op.data.SleepDataset;
 import org.tensorflow.op.data.SlidingWindowDataset;
+import org.tensorflow.op.data.SnapshotChunkDataset;
 import org.tensorflow.op.data.SnapshotDataset;
+import org.tensorflow.op.data.SnapshotDatasetReader;
+import org.tensorflow.op.data.SnapshotNestedDatasetReader;
 import org.tensorflow.op.data.SparseTensorSliceDataset;
 import org.tensorflow.op.data.SqlDataset;
+import org.tensorflow.op.data.StatsAggregatorHandle;
+import org.tensorflow.op.data.StatsAggregatorSetSummaryWriter;
 import org.tensorflow.op.data.TakeDataset;
 import org.tensorflow.op.data.TakeWhileDataset;
 import org.tensorflow.op.data.TensorDataset;
@@ -113,14 +135,18 @@ import org.tensorflow.op.data.TensorSliceDataset;
 import org.tensorflow.op.data.TextLineDataset;
 import org.tensorflow.op.data.TfRecordDataset;
 import org.tensorflow.op.data.ThreadPoolDataset;
+import org.tensorflow.op.data.ThreadPoolHandle;
 import org.tensorflow.op.data.UnbatchDataset;
+import org.tensorflow.op.data.UncompressElement;
 import org.tensorflow.op.data.UniqueDataset;
 import org.tensorflow.op.data.UnwrapDatasetVariant;
 import org.tensorflow.op.data.WindowDataset;
+import org.tensorflow.op.data.WindowOp;
 import org.tensorflow.op.data.WrapDatasetVariant;
 import org.tensorflow.op.data.ZipDataset;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
@@ -132,6 +158,8 @@ import org.tensorflow.types.family.TType;
  * @see {@link Ops}
  */
 public final class DataOps {
+  public final DataExperimentalOps experimental;
+
   private final Scope scope;
 
   private final Ops ops;
@@ -139,6 +167,7 @@ public final class DataOps {
   DataOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+    experimental = new DataExperimentalOps(ops);
   }
 
   /**
@@ -151,6 +180,15 @@ public final class DataOps {
   public AnonymousIterator anonymousIterator(List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     return AnonymousIterator.create(scope, outputTypes, outputShapes);
+  }
+
+  /**
+   * The AnonymousMemoryCache operation
+   *
+   * @return a new instance of AnonymousMemoryCache
+   */
+  public AnonymousMemoryCache anonymousMemoryCache() {
+    return AnonymousMemoryCache.create(scope);
   }
 
   /**
@@ -203,6 +241,30 @@ public final class DataOps {
       Operand<TString> transformations, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
     return AssertNextDataset.create(scope, inputDataset, transformations, outputTypes, outputShapes);
+  }
+
+  /**
+   * A transformation that asserts which transformations happened previously.
+   *  This transformation checks the names and, optionally, the attribute name-value
+   *  pairs in the {@code transformations} argument against those of the transformations
+   *  that preceded this transformation.  If there is a mismatch, the transformation
+   *  raises an exception.
+   *  <p>The check occurs when iterating over the contents of the dataset, which
+   *  means that the check happens <em>after</em> any static optimizations are applied
+   *  to the dataset graph.
+   *
+   * @param inputDataset A variant tensor representing the input dataset.
+   *  {@code data.AssertPrevDataset} passes through the outputs of its input dataset.
+   * @param transformations A {@code tf.string} vector {@code tf.Tensor} identifying the transformations, with optional
+   *  attribute name-value pairs, that are expected to have happened previously.
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of AssertPrevDataset
+   */
+  public AssertPrevDataset assertPrevDataset(Operand<? extends TType> inputDataset,
+      Operand<TString> transformations, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    return AssertPrevDataset.create(scope, inputDataset, transformations, outputTypes, outputShapes);
   }
 
   /**
@@ -334,6 +396,16 @@ public final class DataOps {
   public ChooseFastestDataset chooseFastestDataset(Iterable<Operand<? extends TType>> inputDatasets,
       Long numExperiments, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return ChooseFastestDataset.create(scope, inputDatasets, numExperiments, outputTypes, outputShapes);
+  }
+
+  /**
+   * Compresses a dataset element.
+   *
+   * @param components The components value
+   * @return a new instance of CompressElement
+   */
+  public CompressElement compressElement(Iterable<Operand<?>> components) {
+    return CompressElement.create(scope, components);
   }
 
   /**
@@ -469,6 +541,32 @@ public final class DataOps {
   }
 
   /**
+   * The DeleteMemoryCache operation
+   *
+   * @param handle The handle value
+   * @param deleter The deleter value
+   * @return a new instance of DeleteMemoryCache
+   */
+  public DeleteMemoryCache deleteMemoryCache(Operand<? extends TType> handle,
+      Operand<? extends TType> deleter) {
+    return DeleteMemoryCache.create(scope, handle, deleter);
+  }
+
+  /**
+   * A container for an iterator resource.
+   *
+   * @param multiDeviceIterator A handle to the multi device iterator to delete.
+   * @param iterators A list of iterator handles (unused). This is added so that automatic control dependencies get added during function tracing that ensure this op runs after all the dependent iterators are deleted.
+   * @param deleter A variant deleter.
+   * @return a new instance of DeleteMultiDeviceIterator
+   */
+  public DeleteMultiDeviceIterator deleteMultiDeviceIterator(
+      Operand<? extends TType> multiDeviceIterator, Iterable<Operand<? extends TType>> iterators,
+      Operand<? extends TType> deleter) {
+    return DeleteMultiDeviceIterator.create(scope, multiDeviceIterator, iterators, deleter);
+  }
+
+  /**
    * Creates a dataset that batches input elements into a SparseTensor.
    *
    * @param inputDataset A handle to an input dataset. Must have a single component.
@@ -518,6 +616,15 @@ public final class DataOps {
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       DirectedInterleaveDataset.Options... options) {
     return DirectedInterleaveDataset.create(scope, selectorInputDataset, dataInputDatasets, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * The DummyIterationCounter operation
+   *
+   * @return a new instance of DummyIterationCounter
+   */
+  public DummyIterationCounter dummyIterationCounter() {
+    return DummyIterationCounter.create(scope);
   }
 
   /**
@@ -766,6 +873,29 @@ public final class DataOps {
   }
 
   /**
+   * The IteratorFromStringHandleV2 operation
+   *
+   * @param stringHandle The stringHandle value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param options carries optional attribute values
+   * @return a new instance of IteratorFromStringHandle
+   */
+  public IteratorFromStringHandle iteratorFromStringHandle(Operand<TString> stringHandle,
+      List<Class<? extends TType>> outputTypes, IteratorFromStringHandle.Options... options) {
+    return IteratorFromStringHandle.create(scope, stringHandle, outputTypes, options);
+  }
+
+  /**
+   * Returns the name of the device on which {@code resource} has been placed.
+   *
+   * @param resource The resource value
+   * @return a new instance of IteratorGetDevice
+   */
+  public IteratorGetDevice iteratorGetDevice(Operand<? extends TType> resource) {
+    return IteratorGetDevice.create(scope, resource);
+  }
+
+  /**
    * Gets the next output from the given iterator .
    *
    * @param iterator The iterator value
@@ -855,6 +985,22 @@ public final class DataOps {
   }
 
   /**
+   * Computes rectified linear gradients for a LeakyRelu operation.
+   *
+   * @param <T> data type for {@code backprops} output
+   * @param gradients The backpropagated gradients to the corresponding LeakyRelu operation.
+   * @param features The features passed as input to the corresponding LeakyRelu operation,
+   *  OR the outputs of that operation (both work equivalently).
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LeakyReluGrad} output and operands
+   * @return a new instance of LeakyReluGrad
+   */
+  public <T extends TNumber> LeakyReluGrad<T> leakyReluGrad(Operand<T> gradients,
+      Operand<T> features, LeakyReluGrad.Options... options) {
+    return LeakyReluGrad.create(scope, gradients, features, options);
+  }
+
+  /**
    * Creates a dataset that applies {@code f} to the outputs of {@code input_dataset}.
    *  The resulting dataset is similar to the {@code InterleaveDataset}, with the exception
    *  that if retrieving the next value from a dataset would cause the requester to
@@ -884,6 +1030,21 @@ public final class DataOps {
       ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       LegacyParallelInterleaveDataset.Options... options) {
     return LegacyParallelInterleaveDataset.create(scope, inputDataset, otherArguments, cycleLength, blockLength, bufferOutputElements, prefetchInputElements, f, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * Creates a dataset that emits each of {@code tensors} once.
+   *
+   * @param tensors The tensors value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
+   * @return a new instance of ListDataset
+   */
+  public ListDataset listDataset(Iterable<Operand<?>> tensors,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      ListDataset.Options... options) {
+    return ListDataset.create(scope, tensors, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1019,6 +1180,78 @@ public final class DataOps {
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       ModelDataset.Options... options) {
     return ModelDataset.create(scope, inputDataset, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * Creates a MultiDeviceIterator resource.
+   *
+   * @param devices A list of devices the iterator works across.
+   * @param sharedName If non-empty, this resource will be shared under the given name
+   *  across multiple sessions.
+   * @param container If non-empty, this resource is placed in the given container.
+   *  Otherwise, a default container is used.
+   * @param outputTypes The type list for the return values.
+   * @param outputShapes The list of shapes being produced.
+   * @return a new instance of MultiDeviceIterator
+   */
+  public MultiDeviceIterator multiDeviceIterator(List<String> devices, String sharedName,
+      String container, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return MultiDeviceIterator.create(scope, devices, sharedName, container, outputTypes, outputShapes);
+  }
+
+  /**
+   * Generates a MultiDeviceIterator resource from its provided string handle.
+   *
+   * @param stringHandle String representing the resource.
+   * @param outputTypes The type list for the return values.
+   * @param options carries optional attribute values
+   * @return a new instance of MultiDeviceIteratorFromStringHandle
+   */
+  public MultiDeviceIteratorFromStringHandle multiDeviceIteratorFromStringHandle(
+      Operand<TString> stringHandle, List<Class<? extends TType>> outputTypes,
+      MultiDeviceIteratorFromStringHandle.Options... options) {
+    return MultiDeviceIteratorFromStringHandle.create(scope, stringHandle, outputTypes, options);
+  }
+
+  /**
+   * Gets next element for the provided shard number.
+   *
+   * @param multiDeviceIterator A MultiDeviceIterator resource.
+   * @param shardNum Integer representing which shard to fetch data for.
+   * @param incarnationId Which incarnation of the MultiDeviceIterator is running.
+   * @param outputTypes The type list for the return values.
+   * @param outputShapes The list of shapes being produced.
+   * @return a new instance of MultiDeviceIteratorGetNextFromShard
+   */
+  public MultiDeviceIteratorGetNextFromShard multiDeviceIteratorGetNextFromShard(
+      Operand<? extends TType> multiDeviceIterator, Operand<TInt32> shardNum,
+      Operand<TInt64> incarnationId, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    return MultiDeviceIteratorGetNextFromShard.create(scope, multiDeviceIterator, shardNum, incarnationId, outputTypes, outputShapes);
+  }
+
+  /**
+   * Initializes the multi device iterator with the given dataset.
+   *
+   * @param dataset Dataset to be iterated upon.
+   * @param multiDeviceIterator A MultiDeviceIteratorResource.
+   * @param maxBufferSize The maximum size of the host side per device buffer to keep.
+   * @return a new instance of MultiDeviceIteratorInit
+   */
+  public MultiDeviceIteratorInit multiDeviceIteratorInit(Operand<? extends TType> dataset,
+      Operand<? extends TType> multiDeviceIterator, Operand<TInt64> maxBufferSize) {
+    return MultiDeviceIteratorInit.create(scope, dataset, multiDeviceIterator, maxBufferSize);
+  }
+
+  /**
+   * Produces a string handle for the given MultiDeviceIterator.
+   *
+   * @param multiDeviceIterator A MultiDeviceIterator resource.
+   * @return a new instance of MultiDeviceIteratorToStringHandle
+   */
+  public MultiDeviceIteratorToStringHandle multiDeviceIteratorToStringHandle(
+      Operand<? extends TType> multiDeviceIterator) {
+    return MultiDeviceIteratorToStringHandle.create(scope, multiDeviceIterator);
   }
 
   /**
@@ -1186,6 +1419,35 @@ public final class DataOps {
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       ParallelBatchDataset.Options... options) {
     return ParallelBatchDataset.create(scope, inputDataset, batchSize, numParallelCalls, dropRemainder, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * Creates a dataset containing elements of {@code input_dataset} matching {@code predicate}.
+   *  The {@code predicate} function must return a scalar boolean and accept the
+   *  following arguments:
+   *  <ul>
+   *  <li>One tensor for each component of an element of {@code input_dataset}.</li>
+   *  <li>One tensor for each value in {@code other_arguments}.</li>
+   *  </ul>
+   *  <p>Unlike a &quot;FilterDataset&quot;, which applies {@code predicate} sequentially, this dataset
+   *  invokes up to {@code num_parallel_calls} copies of {@code predicate} in parallel.
+   *
+   * @param inputDataset The inputDataset value
+   * @param otherArguments A list of tensors, typically values that were captured when
+   *  building a closure for {@code predicate}.
+   * @param numParallelCalls The number of concurrent invocations of {@code predicate} that process
+   *  elements from {@code input_dataset} in parallel.
+   * @param predicate A function returning a scalar boolean.
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
+   * @return a new instance of ParallelFilterDataset
+   */
+  public ParallelFilterDataset parallelFilterDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> otherArguments, Operand<TInt64> numParallelCalls,
+      ConcreteFunction predicate, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, ParallelFilterDataset.Options... options) {
+    return ParallelFilterDataset.create(scope, inputDataset, otherArguments, numParallelCalls, predicate, outputTypes, outputShapes, options);
   }
 
   /**
@@ -1446,6 +1708,21 @@ public final class DataOps {
   }
 
   /**
+   * The RewriteDataset operation
+   *
+   * @param inputDataset The inputDataset value
+   * @param rewriteName The rewriteName value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of RewriteDataset
+   */
+  public RewriteDataset rewriteDataset(Operand<? extends TType> inputDataset,
+      Operand<TString> rewriteName, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    return RewriteDataset.create(scope, inputDataset, rewriteName, outputTypes, outputShapes);
+  }
+
+  /**
    * Creates a dataset that takes a Bernoulli sample of the contents of another dataset.
    *  There is no transformation in the {@code tf.data} Python API for creating this dataset.
    *  Instead, it is created as a result of the {@code filter_with_random_uniform_fusion}
@@ -1650,6 +1927,21 @@ public final class DataOps {
   }
 
   /**
+   * The SnapshotChunkDataset operation
+   *
+   * @param chunkFile The chunkFile value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
+   * @return a new instance of SnapshotChunkDataset
+   */
+  public SnapshotChunkDataset snapshotChunkDataset(Operand<TString> chunkFile,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      SnapshotChunkDataset.Options... options) {
+    return SnapshotChunkDataset.create(scope, chunkFile, outputTypes, outputShapes, options);
+  }
+
+  /**
    * Creates a dataset that will write to / read from a snapshot.
    *  This dataset attempts to determine whether a valid snapshot exists at the
    *  {@code snapshot_path}, and reads from the snapshot in lieu of using {@code input_dataset}.
@@ -1673,6 +1965,37 @@ public final class DataOps {
       List<Shape> outputShapes, ConcreteFunction readerFunc, ConcreteFunction shardFunc,
       SnapshotDataset.Options... options) {
     return SnapshotDataset.create(scope, inputDataset, path, readerFuncOtherArgs, shardFuncOtherArgs, outputTypes, outputShapes, readerFunc, shardFunc, options);
+  }
+
+  /**
+   * The SnapshotDatasetReader operation
+   *
+   * @param shardDir The shardDir value
+   * @param startIndex The startIndex value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param version The value of the version attribute
+   * @param options carries optional attribute values
+   * @return a new instance of SnapshotDatasetReader
+   */
+  public SnapshotDatasetReader snapshotDatasetReader(Operand<TString> shardDir,
+      Operand<TInt64> startIndex, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, Long version, SnapshotDatasetReader.Options... options) {
+    return SnapshotDatasetReader.create(scope, shardDir, startIndex, outputTypes, outputShapes, version, options);
+  }
+
+  /**
+   * The SnapshotNestedDatasetReader operation
+   *
+   * @param inputs The inputs value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of SnapshotNestedDatasetReader
+   */
+  public SnapshotNestedDatasetReader snapshotNestedDatasetReader(
+      Iterable<Operand<? extends TType>> inputs, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    return SnapshotNestedDatasetReader.create(scope, inputs, outputTypes, outputShapes);
   }
 
   /**
@@ -1701,6 +2024,28 @@ public final class DataOps {
   public SqlDataset sqlDataset(Operand<TString> driverName, Operand<TString> dataSourceName,
       Operand<TString> query, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     return SqlDataset.create(scope, driverName, dataSourceName, query, outputTypes, outputShapes);
+  }
+
+  /**
+   * The StatsAggregatorHandleV2 operation
+   *
+   * @param options carries optional attribute values
+   * @return a new instance of StatsAggregatorHandle
+   */
+  public StatsAggregatorHandle statsAggregatorHandle(StatsAggregatorHandle.Options... options) {
+    return StatsAggregatorHandle.create(scope, options);
+  }
+
+  /**
+   * Set a summary_writer_interface to record statistics using given stats_aggregator.
+   *
+   * @param statsAggregator The statsAggregator value
+   * @param summary The summary value
+   * @return a new instance of StatsAggregatorSetSummaryWriter
+   */
+  public StatsAggregatorSetSummaryWriter statsAggregatorSetSummaryWriter(
+      Operand<? extends TType> statsAggregator, Operand<? extends TType> summary) {
+    return StatsAggregatorSetSummaryWriter.create(scope, statsAggregator, summary);
   }
 
   /**
@@ -1825,6 +2170,21 @@ public final class DataOps {
   }
 
   /**
+   * Creates a dataset that uses a custom thread pool to compute {@code input_dataset}.
+   *
+   * @param numThreads The number of threads in the thread pool.
+   * @param displayName A human-readable name for the threads that may be visible in some
+   *  visualizations.
+   *  threadpool.
+   * @param options carries optional attribute values
+   * @return a new instance of ThreadPoolHandle
+   */
+  public ThreadPoolHandle threadPoolHandle(Long numThreads, String displayName,
+      ThreadPoolHandle.Options... options) {
+    return ThreadPoolHandle.create(scope, numThreads, displayName, options);
+  }
+
+  /**
    * A dataset that splits the elements of its input into multiple elements.
    *
    * @param inputDataset The inputDataset value
@@ -1837,6 +2197,19 @@ public final class DataOps {
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       UnbatchDataset.Options... options) {
     return UnbatchDataset.create(scope, inputDataset, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * Uncompresses a compressed dataset element.
+   *
+   * @param compressed The compressed value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of UncompressElement
+   */
+  public UncompressElement uncompressElement(Operand<? extends TType> compressed,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return UncompressElement.create(scope, compressed, outputTypes, outputShapes);
   }
 
   /**
@@ -1923,6 +2296,19 @@ public final class DataOps {
       Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, WindowDataset.Options... options) {
     return WindowDataset.create(scope, inputDataset, sizeOutput, shift, stride, dropRemainder, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * The WindowOp operation
+   *
+   * @param inputs The inputs value
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @return a new instance of WindowOp
+   */
+  public WindowOp windowOp(Iterable<Operand<?>> inputs, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    return WindowOp.create(scope, inputs, outputTypes, outputShapes);
   }
 
   /**

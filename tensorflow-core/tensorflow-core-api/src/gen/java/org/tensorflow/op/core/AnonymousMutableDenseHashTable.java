@@ -31,6 +31,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.family.TType;
 
@@ -52,6 +53,7 @@ import org.tensorflow.types.family.TType;
     opType = AnonymousMutableDenseHashTable.OP_NAME,
     inputsClass = AnonymousMutableDenseHashTable.Inputs.class
 )
+@Operator
 public final class AnonymousMutableDenseHashTable extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
