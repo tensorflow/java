@@ -3,6 +3,56 @@
 TensorFlow Java is still in an alpha stage, therefore is subject to contain breaking changes between the different releases. This guide explain in detail
 how to migrate your code from a previous version to a new one that includes some changes that are not backward compatible.
 
+## Migrating to 1.0.0
+
+TensorFlow-Java 1.0.0 requires Java 11 or later.
+
+### Native Artifact Renaming
+
+The native artifacts, that used to be distributed as `tensorflow-core-api`, are now distributed under `tensorflow-core-native`. If you still add
+`tensorflow-core-platform` in your project, that won't affect you. But if you were adding dependencies to specific native runtimes, you need to update
+them to reflect the new artifact name.
+
+For example,
+```xml
+<dependency>
+    <groupId>org.tensorflow</groupId>
+    <artifactId>tensorflow-core-api</artifactId>
+    <version>0.5.0</version>
+</dependency>
+<dependency>
+    <groupId>org.tensorflow</groupId>
+    <artifactId>tensorflow-core-api</artifactId>
+    <version>0.5.0</version>
+    <classifier>linux-x86_64</classifier>
+</dependency>
+```
+will now be
+```xml
+<dependency>
+    <groupId>org.tensorflow</groupId>
+    <artifactId>tensorflow-core-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>org.tensorflow</groupId>
+    <artifactId>tensorflow-core-native</artifactId>
+    <version>1.0.0</version>
+    <classifier>linux-x86_64</classifier>
+</dependency>
+```
+### Session Run Result
+
+In versions before 0.4.0 `Session.Runner.run` and `TensorFunction.call` returned a `List<Tensor>`. In newer versions
+they return a `Result` class which is `AutoCloseable` to make management of the tensor lifetime simpler. To migrate
+users should wrap the `run` invocation in a try-with-resources statement rather than closing the output tensors
+individually.
+
+### Proto Definitions Moved
+
+Some proto definitions under `org.tensorflow.proto` have been moved to a different location under the same package. You will need to reimport these
+proto bindings to match the new location. Your IDE should easily be able to do this for you.
+
 ## Migrating to 0.3.0
 
 ### Non-parameterized Typed Tensors
