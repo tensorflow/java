@@ -399,8 +399,6 @@ public final class Ops {
 
   public final RandomOps random;
 
-  public final EstimatorOps estimator;
-
   public final StringsOps strings;
 
   public final BitwiseOps bitwise;
@@ -435,8 +433,6 @@ public final class Ops {
 
   public final XlaOps xla;
 
-  public final RiscOps risc;
-
   public final SparseOps sparse;
 
   public final TpuOps tpu;
@@ -450,7 +446,6 @@ public final class Ops {
     data = new DataOps(this);
     math = new MathOps(this);
     random = new RandomOps(this);
-    estimator = new EstimatorOps(this);
     strings = new StringsOps(this);
     bitwise = new BitwiseOps(this);
     debugging = new DebuggingOps(this);
@@ -468,7 +463,6 @@ public final class Ops {
     dtypes = new DtypesOps(this);
     linalg = new LinalgOps(this);
     xla = new XlaOps(this);
-    risc = new RiscOps(this);
     sparse = new SparseOps(this);
     tpu = new TpuOps(this);
   }

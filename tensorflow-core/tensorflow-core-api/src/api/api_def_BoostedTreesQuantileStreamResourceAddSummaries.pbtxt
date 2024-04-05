@@ -1,5 +1,5 @@
 op {
-  visibility: VISIBLE
+  visibility: SKIP
   graph_op_name: "BoostedTreesQuantileStreamResourceAddSummaries"
   endpoint {
     name: "estimator.BoostedTreesQuantileStreamResourceAddSummaries"

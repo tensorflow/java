@@ -34,7 +34,6 @@ module tensorflow {
   exports org.tensorflow.op.data.experimental;
   exports org.tensorflow.op.debugging;
   exports org.tensorflow.op.dtypes;
-  exports org.tensorflow.op.estimator;
   exports org.tensorflow.op.image;
   exports org.tensorflow.op.io;
   exports org.tensorflow.op.linalg;
@@ -45,7 +44,6 @@ module tensorflow {
   exports org.tensorflow.op.quantization;
   exports org.tensorflow.op.ragged;
   exports org.tensorflow.op.random;
-  exports org.tensorflow.op.risc;
   exports org.tensorflow.op.signal;
   exports org.tensorflow.op.sparse;
   exports org.tensorflow.op.strings;
