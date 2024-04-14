@@ -707,7 +707,7 @@ public final class Session implements AutoCloseable {
     return graph;
   }
 
-  private final Graph graph;
+  public final Graph graph;
   private final Graph.Reference graphRef;
 
   private final Object nativeHandleLock = new Object();
