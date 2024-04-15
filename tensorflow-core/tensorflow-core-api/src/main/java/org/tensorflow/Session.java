@@ -703,11 +703,11 @@ public final class Session implements AutoCloseable {
     markAllInitializersAsRan();
   }
 
-  Graph graph() {
+  public Graph graph() {
     return graph;
   }
 
-  public final Graph graph;
+  private final Graph graph;
   private final Graph.Reference graphRef;
 
   private final Object nativeHandleLock = new Object();
