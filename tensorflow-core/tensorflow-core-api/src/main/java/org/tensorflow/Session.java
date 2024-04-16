@@ -703,7 +703,7 @@ public final class Session implements AutoCloseable {
     markAllInitializersAsRan();
   }
 
-  Graph graph() {
+  public Graph graph() {
     return graph;
   }
 
