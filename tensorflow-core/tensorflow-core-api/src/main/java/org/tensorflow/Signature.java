@@ -158,11 +158,15 @@ public class Signature {
       return new Signature(key, signatureBuilder.build());
     }
 
-    private static TensorInfo toTensorInfo(Output<?> operand) {
+    static TensorInfo toTensorInfo(Output<?> operand) {
       Shape shape = operand.shape();
       TensorShapeProto.Builder tensorShapeBuilder = TensorShapeProto.newBuilder();
-      for (int i = 0; i < shape.numDimensions(); ++i) {
-        tensorShapeBuilder.addDim(Dim.newBuilder().setSize(shape.size(i)));
+      if (shape.isUnknown()) {
+        tensorShapeBuilder.setUnknownRank(true);
+      } else {
+        for (int i = 0; i < shape.numDimensions(); ++i) {
+          tensorShapeBuilder.addDim(Dim.newBuilder().setSize(shape.get(i)));
+        }
       }
       return TensorInfo.newBuilder()
           .setDtype(operand.dataType())
