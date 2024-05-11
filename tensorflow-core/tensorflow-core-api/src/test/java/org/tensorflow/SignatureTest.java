@@ -22,7 +22,6 @@ import org.tensorflow.Signature.TensorDescription;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Placeholder;
-import org.tensorflow.op.math.Sign;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
 
@@ -100,7 +99,8 @@ public class SignatureTest {
   public void createTensorInfoFromOperandWithPartiallyUnknownShape() {
     try (Graph g = new Graph()) {
       var tf = Ops.create(g);
-      var placeholder = tf.placeholder(TInt32.class, Placeholder.shape(Shape.of(Shape.UNKNOWN_SIZE, 10)));
+      var shape = Shape.of(Shape.UNKNOWN_SIZE, 10);
+      var placeholder = tf.placeholder(TInt32.class, Placeholder.shape(shape));
       var tensorInfo = Signature.Builder.toTensorInfo(placeholder.asOutput());
       assertFalse(tensorInfo.getTensorShape().getUnknownRank());
       assertEquals(2, tensorInfo.getTensorShape().getDimCount());
