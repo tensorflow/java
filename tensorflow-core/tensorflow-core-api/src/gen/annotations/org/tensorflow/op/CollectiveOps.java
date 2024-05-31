@@ -34,7 +34,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code collective} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class CollectiveOps {
   private final Scope scope;
