@@ -17,6 +17,7 @@ limitations under the License.
 package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
@@ -64,6 +65,41 @@ public class BooleanMaskTest {
         assertEquals(5, result.getInt(0, 3));
         assertEquals(6, result.getInt(0, 4));
       }
+    }
+  }
+
+  @Test
+  public void testBooleanMaskWithPartiallyUnknownShape() {
+    try (Graph g = new Graph();
+        Session sess = new Session(g)) {
+      Scope scope = new OpScope(g);
+
+      Operand<TInt32> input = Constant.arrayOf(scope, 1, 2, 3, 4);
+      Placeholder<TBool> inputMask =
+          Placeholder.create(scope, TBool.class, Placeholder.shape(Shape.of(Shape.UNKNOWN_SIZE)));
+
+      Operand<TInt32> output = BooleanMask.create(scope, input, inputMask);
+
+      try (TBool mask = TBool.vectorOf(true, false, false, true);
+          TInt32 result = (TInt32) sess.runner().feed(inputMask, mask).fetch(output).run().get(0)) {
+        // expected shape from Python tensorflow
+        assertEquals(Shape.of(2), result.shape());
+        assertEquals(1, result.getInt(0));
+        assertEquals(4, result.getInt(1));
+      }
+    }
+  }
+
+  @Test
+  public void testBooleanMaskWithUnknownShape() {
+    try (Graph g = new Graph()) {
+      Scope scope = new OpScope(g);
+
+      Operand<TInt32> input = Constant.arrayOf(scope, 1, 2, 3, 4);
+      Placeholder<TBool> inputMask = Placeholder.create(scope, TBool.class);
+
+      assertThrows(
+          IllegalArgumentException.class, () -> BooleanMask.create(scope, input, inputMask));
     }
   }
 }
