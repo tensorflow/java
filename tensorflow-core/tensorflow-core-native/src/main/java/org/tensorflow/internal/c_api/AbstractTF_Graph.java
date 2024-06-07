@@ -44,7 +44,7 @@ public abstract class AbstractTF_Graph extends Pointer {
   /**
    * Calls TF_NewGraph(), and registers a deallocator.
    *
-   * <p>Note {@link org.tensorflow.Graph} will call TF_DeleteGraph on close, so do not use this
+   * <p>Note {@code org.tensorflow.Graph} will call TF_DeleteGraph on close, so do not use this
    * method when constructing a reference for use inside a {@code Graph} object.
    *
    * @return TF_Graph created. Do not call TF_DeleteGraph() on it.

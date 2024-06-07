@@ -56,7 +56,7 @@ public abstract class AbstractTF_Buffer extends Pointer {
     return b;
   }
 
-  /** Returns {@code newBufferFromString(new BytePointer(proto.toByteArray())), or null if proto is null or empty. */
+  /** Returns {@code newBufferFromString(new BytePointer(proto.toByteArray()))}, or null if proto is null or empty. */
   public static TF_Buffer newBufferFromString(Message proto) {
     if (proto == null) {
       return null;
