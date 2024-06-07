@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2019-2024 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ public interface TString extends NdArray<String>, TType {
    * <p>The data will be copied from the provided buffer to the tensor after it is allocated. The
    * strings are encoded into bytes using the charset passed in parameter.
    *
-   * <p>If charset is different than default UTF-8, then it must also be provided explicitly when
+   * <p>If charset is different from the default UTF-8, then it must also be provided explicitly when
    * reading data from the tensor, using {@link #using(Charset)}:
    *
    * <pre>{@code
@@ -193,10 +193,10 @@ public interface TString extends NdArray<String>, TType {
   }
 
   /**
-   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense
+   * Create a sparse tensor from {@code indices}, {@code values} and {@code denseShape} dense
    * tensors, with an empty string as the default value.
    *
-   * <p>The returned instance also implements the {@link SparseTensor SparseTensor<TString>}
+   * <p>The returned instance also implements the {@link SparseTensor}
    * interface, allowing a user to access directly the dense tensors when needed.
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the

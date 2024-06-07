@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+ *  Copyright 2019-2024 The TensorFlow Authors. All Rights Reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -111,10 +111,10 @@ public interface TBool extends BooleanNdArray, TType {
   }
 
   /**
-   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense
+   * Create a sparse tensor from {@code indices}, {@code values} and {@code denseShape} dense
    * tensors, with a default value of {@code false}.
    *
-   * <p>The returned instance also implements the {@link SparseTensor SparseTensor<TBool>}
+   * <p>The returned instance also implements the {@link SparseTensor}
    * interface, allowing a user to access directly the dense tensors when needed.
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the

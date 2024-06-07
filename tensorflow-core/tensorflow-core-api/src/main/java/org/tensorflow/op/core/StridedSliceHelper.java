@@ -1,4 +1,4 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2020-2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -210,9 +210,9 @@ public abstract class StridedSliceHelper {
    * @param scope current scope
    * @param ref the tensor to assign to.
    * @param value the value to assign.
-   * @param indices The indices to slice. See {@link Indices}.
+   * @param indices The indices to slice. See {@link org.tensorflow.ndarray.index.Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
+   * @see org.tensorflow.op.Ops#stridedSlice(org.tensorflow.Operand, org.tensorflow.ndarray.index.Index...)
    */
   @Endpoint(name = "stridedSliceAssign")
   public static <T extends TType> StridedSliceAssign<T> stridedSliceAssign(

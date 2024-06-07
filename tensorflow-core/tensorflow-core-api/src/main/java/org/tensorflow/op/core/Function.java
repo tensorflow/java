@@ -1,4 +1,4 @@
-/* Copyright 2020-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2020-2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,6 +26,11 @@ import org.tensorflow.op.annotation.Operator;
 /** Ops for calling {@link ConcreteFunction}. */
 @Operator(name = "call")
 public abstract class Function {
+
+  /**
+   * Constructor.
+   */
+  public Function() {}
 
   /**
    * Calls the function in an execution environment, adding its graph as a function if it isn't

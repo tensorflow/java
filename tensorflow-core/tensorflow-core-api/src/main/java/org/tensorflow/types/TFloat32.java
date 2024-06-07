@@ -105,10 +105,10 @@ public interface TFloat32 extends FloatNdArray, TFloating {
   }
 
   /**
-   * Create a sparse tensors from {@code indices}, {@code values} and {@code denseShape} dense
+   * Create a sparse tensor from {@code indices}, {@code values} and {@code denseShape} dense
    * tensors, with a default value of zero.
    *
-   * <p>The returned instance also implements the {@link SparseTensor SparseTensor<TFloat32>}
+   * <p>The returned instance also implements the {@link SparseTensor}
    * interface, allowing a user to access directly the dense tensors when needed.
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
