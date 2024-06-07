@@ -165,8 +165,8 @@ public final class Qr<T extends TType> extends RawOp {
     public final Operand<T> input;
 
     /**
-     * If true, compute full-sized `q` and `r`. If false
-     * (the default), compute only the leading `P` columns of `q`.
+     * If true, compute full-sized {@code q} and {@code r}. If false
+     * (the default), compute only the leading {@code P} columns of {@code q}.
      */
     public final boolean fullMatrices;
 

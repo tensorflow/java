@@ -421,7 +421,7 @@ public final class StatelessSampleDistortedBoundingBox<T extends TNumber> extend
 
     /**
      * Number of attempts at generating a cropped region of the image
-     * of the specified constraints. After `max_attempts` failures, return the entire
+     * of the specified constraints. After {@code max_attempts} failures, return the entire
      * image.
      */
     public final long maxAttempts;

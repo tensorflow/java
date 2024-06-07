@@ -178,7 +178,7 @@ public final class SparseConcat<T extends TType> extends RawOp {
 
     /**
      * Dimension to concatenate along. Must be in range [-rank, rank),
-     * where rank is the number of dimensions in each input `SparseTensor`.
+     * where rank is the number of dimensions in each input {@code SparseTensor}.
      */
     public final long concatDim;
 

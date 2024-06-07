@@ -205,7 +205,7 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
     public final DataType T;
 
     /**
-     * If `True`, updating of the var, m, and v tensors will be protected
+     * If {@code True}, updating of the var, m, and v tensors will be protected
      * by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */

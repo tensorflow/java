@@ -145,7 +145,7 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
     public final Operand<TInt32> skip;
 
     /**
-     * The type of the sample. One of: `float32` or `float64`.
+     * The type of the sample. One of: {@code float32} or {@code float64}.
      */
     public final DataType dtype;
 

@@ -146,7 +146,7 @@ public final class Upper extends RawOp implements Operand<TString> {
     public final Operand<TString> input;
 
     /**
-     * Character encoding of `input`. Allowed values are '' and 'utf-8'.
+     * Character encoding of {@code input}. Allowed values are '' and 'utf-8'.
      * Value '' is interpreted as ASCII.
      */
     public final String encoding;

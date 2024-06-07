@@ -144,7 +144,7 @@ public final class DecodeCompressed extends RawOp implements Operand<TString> {
 
     /**
      * A scalar containing either (i) the empty string (no
-     * compression), (ii) "ZLIB", or (iii) "GZIP".
+     * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
      */
     public final String compressionType;
 

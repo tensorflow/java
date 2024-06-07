@@ -221,7 +221,7 @@ public final class OrderedMapStage extends RawOp {
     public final Iterable<Operand<?>> values;
 
     /**
-     * Maximum number of elements in the Staging Area. If > 0, inserts
+     * Maximum number of elements in the Staging Area. If &gt; 0, inserts
      * on the container will block when the capacity is reached.
      */
     public final long capacity;

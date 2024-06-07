@@ -291,59 +291,53 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
 
     /**
      * Tensor debug mode: the mode in which the input tensor is summarized
-     *   by the op. See the TensorDebugMode enum in
-     *   tensorflow/core/protobuf/debug_event.proto for details.
-     *
-     * Supported values:
-     *   2 (CURT_HEALTH): Output a float32/64 tensor of shape [2]. The 1st
-     *   element is the tensor_id, if provided, and -1 otherwise. The 2nd
-     *   element is a bit which is set to 1 if the input tensor has an
-     *   infinity or nan value, or zero otherwise.
-     *
-     *   3 (CONCISE_HEALTH): Output a float32/64 tensor of shape [5]. The 1st
-     *   element is the tensor_id, if provided, and -1 otherwise. The
-     *   remaining four slots are the total number of elements, -infs,
-     *   +infs, and nans in the input tensor respectively.
-     *
-     *   4 (FULL_HEALTH): Output a float32/64 tensor of shape [11]. The 1st
-     *   element is the tensor_id, if provided, and -1 otherwise. The 2nd
-     *   element is the device_id, if provided, and -1 otherwise. The 3rd
-     *   element holds the datatype value of the input tensor as according
-     *   to the enumerated type in tensorflow/core/framework/types.proto.
-     *   The remaining elements hold the total number of elements, -infs,
-     *   +infs, nans, negative finite numbers, zeros, and positive finite
-     *   numbers in the input tensor respectively.
-     *
-     *   5 (SHAPE): Output a float32/64 tensor of shape [10]. The 1st
-     *   element is the tensor_id, if provided, and -1 otherwise. The 2nd
-     *   element holds the datatype value of the input tensor as according
-     *   to the enumerated type in tensorflow/core/framework/types.proto.
-     *   The 3rd element holds the rank of the tensor. The 4th element holds
-     *   the number of elements within the tensor. Finally the remaining 6
-     *   elements hold the shape of the tensor. If the rank of the tensor
-     *   is lower than 6, the shape is right padded with zeros. If the rank
-     *   is greater than 6, the head of the shape is truncated.
-     *
-     *   6 (FULL_NUMERICS): Output a float32/64 tensor of shape [22]. The 1st
-     *   element is the tensor_id, if provided, and -1 otherwise. The 2nd
-     *   element is the device_id, if provided, and -1 otherwise. The 3rd
-     *   element holds the datatype value of the input tensor as according
-     *   to the enumerated type in tensorflow/core/framework/types.proto.
-     *   The 4th element holds the rank of the tensor. The 5th to 11th
-     *   elements hold the shape of the tensor. If the rank of the tensor
-     *   is lower than 6, the shape is right padded with zeros. If the rank
-     *   is greater than 6, the head of the shape is truncated. The 12th to
-     *   18th elements hold the number of elements, -infs, +infs, nans,
-     *   denormal floats, negative finite numbers, zeros, and positive
-     *   finite numbers in the input tensor respectively. The final four
-     *   elements hold the min value, max value, mean, and variance of the
-     *   input tensor.
-     *
-     *   8 (REDUCE_INF_NAN_THREE_SLOTS): Output a float32/64 tensor of shape
-     *   [3]. The 1st element is -inf if any elements of the input tensor
-     *   is -inf, or zero otherwise. The 2nd element is +inf if any elements
-     *   of the input tensor is +inf, or zero otherwise.  The 3rd element is
-     *   nan if any element of the input tensor is nan, or zero otherwise.
+     * by the op. See the TensorDebugMode enum in
+     * tensorflow/core/protobuf/debug_event.proto for details.
+     * <p>Supported values:
+     * 2 (CURT_HEALTH): Output a float32/64 tensor of shape [2]. The 1st
+     * element is the tensor_id, if provided, and -1 otherwise. The 2nd
+     * element is a bit which is set to 1 if the input tensor has an
+     * infinity or nan value, or zero otherwise.
+     * <p>3 (CONCISE_HEALTH): Output a float32/64 tensor of shape [5]. The 1st
+     * element is the tensor_id, if provided, and -1 otherwise. The
+     * remaining four slots are the total number of elements, -infs,
+     * +infs, and nans in the input tensor respectively.
+     * <p>4 (FULL_HEALTH): Output a float32/64 tensor of shape [11]. The 1st
+     * element is the tensor_id, if provided, and -1 otherwise. The 2nd
+     * element is the device_id, if provided, and -1 otherwise. The 3rd
+     * element holds the datatype value of the input tensor as according
+     * to the enumerated type in tensorflow/core/framework/types.proto.
+     * The remaining elements hold the total number of elements, -infs,
+     * +infs, nans, negative finite numbers, zeros, and positive finite
+     * numbers in the input tensor respectively.
+     * <p>5 (SHAPE): Output a float32/64 tensor of shape [10]. The 1st
+     * element is the tensor_id, if provided, and -1 otherwise. The 2nd
+     * element holds the datatype value of the input tensor as according
+     * to the enumerated type in tensorflow/core/framework/types.proto.
+     * The 3rd element holds the rank of the tensor. The 4th element holds
+     * the number of elements within the tensor. Finally the remaining 6
+     * elements hold the shape of the tensor. If the rank of the tensor
+     * is lower than 6, the shape is right padded with zeros. If the rank
+     * is greater than 6, the head of the shape is truncated.
+     * <p>6 (FULL_NUMERICS): Output a float32/64 tensor of shape [22]. The 1st
+     * element is the tensor_id, if provided, and -1 otherwise. The 2nd
+     * element is the device_id, if provided, and -1 otherwise. The 3rd
+     * element holds the datatype value of the input tensor as according
+     * to the enumerated type in tensorflow/core/framework/types.proto.
+     * The 4th element holds the rank of the tensor. The 5th to 11th
+     * elements hold the shape of the tensor. If the rank of the tensor
+     * is lower than 6, the shape is right padded with zeros. If the rank
+     * is greater than 6, the head of the shape is truncated. The 12th to
+     * 18th elements hold the number of elements, -infs, +infs, nans,
+     * denormal floats, negative finite numbers, zeros, and positive
+     * finite numbers in the input tensor respectively. The final four
+     * elements hold the min value, max value, mean, and variance of the
+     * input tensor.
+     * <p>8 (REDUCE_INF_NAN_THREE_SLOTS): Output a float32/64 tensor of shape
+     * [3]. The 1st element is -inf if any elements of the input tensor
+     * is -inf, or zero otherwise. The 2nd element is +inf if any elements
+     * of the input tensor is +inf, or zero otherwise.  The 3rd element is
+     * nan if any element of the input tensor is nan, or zero otherwise.
      */
     public final long tensorDebugMode;
 

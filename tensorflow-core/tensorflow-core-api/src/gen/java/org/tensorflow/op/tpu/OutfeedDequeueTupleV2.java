@@ -122,12 +122,12 @@ public final class OutfeedDequeueTupleV2 extends RawOp implements Iterable<Opera
     public final Operand<TInt32> deviceOrdinal;
 
     /**
-     * The element types of each element in `outputs`.
+     * The element types of each element in {@code outputs}.
      */
     public final DataType[] dtypes;
 
     /**
-     * The shapes of each tensor in `outputs`.
+     * The shapes of each tensor in {@code outputs}.
      */
     public final Shape[] shapes;
 

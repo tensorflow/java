@@ -677,132 +677,131 @@ public final class UniformQuantizedConvolution<U extends TNumber> extends RawOp 
     public final Operand<TInt32> outputZeroPoints;
 
     /**
-     * The type of `lhs` and `rhs` input `Tensor`.
+     * The type of {@code lhs} and {@code rhs} input {@code Tensor}.
      */
     public final DataType Tin;
 
     /**
-     * The type of `output` `Tensor`.
+     * The type of {@code output} {@code Tensor}.
      */
     public final DataType Tout;
 
     /**
-     * The stride of the sliding window for each spatial dimension of `lhs`.
+     * The stride of the sliding window for each spatial dimension of {@code lhs}.
      * Must be an empty list (default) or a list of size (number of spatial dimensions).
      * If an empty list is provided, the stride for each spatial dimension is set to 1.
      */
     public final long[] windowStrides;
 
     /**
-     * string from: `"SAME"`, `"VALID"`, or `"EXPLICIT"`, indicating the type of padding algorithm to use.
+     * string from: {@code "SAME"}, {@code "VALID"}, or {@code "EXPLICIT"}, indicating the type of padding algorithm to use.
      */
     public final String padding;
 
     /**
-     * If `padding` is `"EXPLICIT"`, must be set as a list indicating
-     * the explicit paddings at the start and end of each `lhs` spatial dimension.
+     * If {@code padding} is {@code "EXPLICIT"}, must be set as a list indicating
+     * the explicit paddings at the start and end of each {@code lhs} spatial dimension.
      * Otherwise, this must be empty.
-     *
-     * (If used,) Must be a list of size `2 * (number of lhs spatial dimensions)`,
-     * where `(explicit_padding[2 * i], explicit_padding[2 * i + 1])` indicates
-     * `(start_padding, end_padding)` of `spatial_dimensions[i]`.
+     * <p>(If used,) Must be a list of size {@code 2 * (number of lhs spatial dimensions)},
+     * where {@code (explicit_padding[2 * i], explicit_padding[2 * i + 1])} indicates
+     * {@code (start_padding, end_padding)} of {@code spatial_dimensions[i]}.
      */
     public final long[] explicitPadding;
 
     /**
-     * The dilation factor to apply in each spatial dimension of `lhs`.
-     * Must be an empty list (default) or a list of size (number of `lhs` spatial dimensions).
-     * If empty list, the dilation for each `lhs` spatial dimension is set to 1.
+     * The dilation factor to apply in each spatial dimension of {@code lhs}.
+     * Must be an empty list (default) or a list of size (number of {@code lhs} spatial dimensions).
+     * If empty list, the dilation for each {@code lhs} spatial dimension is set to 1.
      */
     public final long[] lhsDilation;
 
     /**
-     * The dilation factor to apply in each spatial dimension of `rhs`.
-     * Must be an empty list (default) or a list of size (number of `rhs` spatial dimensions).
-     * If empty list, the dilation for each `rhs` spatial dimension is set to 1.
+     * The dilation factor to apply in each spatial dimension of {@code rhs}.
+     * Must be an empty list (default) or a list of size (number of {@code rhs} spatial dimensions).
+     * If empty list, the dilation for each {@code rhs} spatial dimension is set to 1.
      */
     public final long[] rhsDilation;
 
     /**
      * The number of batch groups. Used for grouped filters.
-     * Must be a divisor of `output_feature`.
+     * Must be a divisor of {@code output_feature}.
      */
     public final long batchGroupCount;
 
     /**
      * The number of feature groups. Used for grouped convolutions.
-     * Must be a divisor of both `lhs_feature` and `output_feature`.
+     * Must be a divisor of both {@code lhs_feature} and {@code output_feature}.
      */
     public final long featureGroupCount;
 
     /**
      * Structure of dimension information for the convolution op.
-     * Must be an empty string (default) or a serialized string of `tensorflow.UniformQuantizedConvolutionDimensionNumbersAttr` proto.
-     * If empty string, the default is `("NCHW", "OIHW", "NCHW")` (for a 2D convolution).
+     * Must be an empty string (default) or a serialized string of {@code tensorflow.UniformQuantizedConvolutionDimensionNumbersAttr} proto.
+     * If empty string, the default is {@code ("NCHW", "OIHW", "NCHW")} (for a 2D convolution).
      */
     public final String dimensionNumbers;
 
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `lhs`, only per-tensor quantization is supported.
+     * For the {@code lhs}, only per-tensor quantization is supported.
      * Thus, this must be set to -1.
      * Other values will raise error at OpKernel construction.
      */
     public final long lhsQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `lhs`.
-     * For example, if `Tin` is `qint8`, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code lhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long lhsQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `lhs`.
-     * For example, if `Tin` is `qint8`, this must be set to 127.
+     * The max value of the quantized data stored in {@code lhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to 127.
      */
     public final long lhsQuantizationMaxVal;
 
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `rhs`, only per-tensor quantization
-     * or per-channel quantization along `kernel_output_feature_dimension` is supported.
-     * Thus, this must be set to -1 or `dimension_numbers.kernel_output_feature_dimension`.
+     * For the {@code rhs}, only per-tensor quantization
+     * or per-channel quantization along {@code kernel_output_feature_dimension} is supported.
+     * Thus, this must be set to -1 or {@code dimension_numbers.kernel_output_feature_dimension}.
      * Other values will raise error at OpKernel construction.
      */
     public final long rhsQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `rhs`.
-     * For example, if `Tin` is `qint8`, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code rhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long rhsQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `rhs`.
-     * For example, if `Tin` is `qint8`, this must be set to 127.
+     * The max value of the quantized data stored in {@code rhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to 127.
      */
     public final long rhsQuantizationMaxVal;
 
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `output`, only per-tensor quantization or per-channel quantization along `output_feature_dimension` is supported.
-     * Thus, this must be set to -1 or `dimension_numbers.output_feature_dimension`.
+     * For the {@code output}, only per-tensor quantization or per-channel quantization along {@code output_feature_dimension} is supported.
+     * Thus, this must be set to -1 or {@code dimension_numbers.output_feature_dimension}.
      * Other values will raise error at OpKernel construction.
      */
     public final long outputQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `output`.
-     * For example, if  `Tout` is `qint8`, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code output}.
+     * For example, if  {@code Tout} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long outputQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `output`.
-     * For example, if `Tout` is `qint8`, this must be set to 127.
+     * The max value of the quantized data stored in {@code output}.
+     * For example, if {@code Tout} is {@code qint8}, this must be set to 127.
      */
     public final long outputQuantizationMaxVal;
 

@@ -184,7 +184,7 @@ public final class StringSplit extends RawOp {
     public final Operand<TString> sep;
 
     /**
-     * An `int`. If `maxsplit > 0`, limit of the split of the result.
+     * An {@code int}. If {@code maxsplit > 0}, limit of the split of the result.
      */
     public final long maxsplit;
 

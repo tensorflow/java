@@ -130,23 +130,23 @@ public final class ExtractImagePatches<T extends TType> extends RawOp implements
     public final Operand<T> images;
 
     /**
-     * The size of the sliding window for each dimension of `images`.
+     * The size of the sliding window for each dimension of {@code images}.
      */
     public final long[] ksizes;
 
     /**
      * How far the centers of two consecutive patches are in
-     * the images. Must be: `[1, stride_rows, stride_cols, 1]`.
+     * the images. Must be: {@code [1, stride_rows, stride_cols, 1]}.
      */
     public final long[] strides;
 
     /**
-     * Must be: `[1, rate_rows, rate_cols, 1]`. This is the
+     * Must be: {@code [1, rate_rows, rate_cols, 1]}. This is the
      * input stride, specifying how far two consecutive patch samples are in the
      * input. Equivalent to extracting patches with
-     * `patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)`, followed by
-     * subsampling them spatially by a factor of `rates`. This is equivalent to
-     * `rate` in dilated (a.k.a. Atrous) convolutions.
+     * {@code patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)}, followed by
+     * subsampling them spatially by a factor of {@code rates}. This is equivalent to
+     * {@code rate} in dilated (a.k.a. Atrous) convolutions.
      */
     public final long[] rates;
 

@@ -544,12 +544,12 @@ public final class UniformQuantizedConvolutionHybrid<V extends TNumber> extends 
     public final Operand<TInt32> rhsZeroPoints;
 
     /**
-     * The type of `lhs` input Tensor.
+     * The type of {@code lhs} input Tensor.
      */
     public final DataType Tlhs;
 
     /**
-     * The type of `rhs` (quantized) input Tensor.
+     * The type of {@code rhs} (quantized) input Tensor.
      */
     public final DataType Trhs;
 
@@ -559,37 +559,36 @@ public final class UniformQuantizedConvolutionHybrid<V extends TNumber> extends 
     public final DataType Tout;
 
     /**
-     * The stride of the sliding window for each spatial dimension of `lhs`.
+     * The stride of the sliding window for each spatial dimension of {@code lhs}.
      * Must be an empty list (default) or a list of size (number of spatial dimensions).
      * If an empty list is provided, the stride for each spatial dimension is set to 1.
      */
     public final long[] windowStrides;
 
     /**
-     * string from: `"SAME"`, `"VALID"`, or `"EXPLICIT"`, indicating the type of padding algorithm to use.
+     * string from: {@code "SAME"}, {@code "VALID"}, or {@code "EXPLICIT"}, indicating the type of padding algorithm to use.
      */
     public final String padding;
 
     /**
-     * If `padding` Attr is `"EXPLICIT"`, must be set as a list indicating
+     * If {@code padding} Attr is {@code "EXPLICIT"}, must be set as a list indicating
      * the explicit paddings at the start and end of each lhs spatial dimension.
      * Otherwise, this Attr is must be empty.
-     *
-     * (If used,) Must be a list of size 2 * (number of lhs spatial dimensions),
+     * <p>(If used,) Must be a list of size 2 * (number of lhs spatial dimensions),
      * where (explicit_padding[2 * i], explicit_padding[2 * i + 1]) indicates
      * spatial_dimensions[i] (start_padding, end_padding).
      */
     public final long[] explicitPadding;
 
     /**
-     * The dilation factor to apply in each spatial dimension of `lhs`.
+     * The dilation factor to apply in each spatial dimension of {@code lhs}.
      * Must be an empty list (default) or a list of size (number of lhs spatial dimensions).
      * If empty list, the dilation for each lhs spatial dimension is set to 1.
      */
     public final long[] lhsDilation;
 
     /**
-     * The dilation factor to apply in each spatial dimension of `rhs`.
+     * The dilation factor to apply in each spatial dimension of {@code rhs}.
      * Must be an empty list (default) or a list of size (number of rhs spatial dimensions).
      * If empty list, the dilation for each rhs spatial dimension is set to 1.
      */
@@ -610,29 +609,29 @@ public final class UniformQuantizedConvolutionHybrid<V extends TNumber> extends 
     /**
      * Structure of dimension information for the convolution op.
      * Must be an empty string (default) or a serialized string of tensorflow.UniformQuantizedConvolutionDimensionNumbersAttr proto.
-     * If empty string, the default is `("NCHW", "OIHW", "NCHW")` (for a 2D convolution).
+     * If empty string, the default is {@code ("NCHW", "OIHW", "NCHW")} (for a 2D convolution).
      */
     public final String dimensionNumbers;
 
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `rhs`, only per-tensor quantization
+     * For the {@code rhs}, only per-tensor quantization
      * or per-channel quantization along kernel_output_feature_dimension is supported.
-     * Thus, this attribute must be set to -1 or `dimension_numbers.kernel_output_feature_dimension`.
+     * Thus, this attribute must be set to -1 or {@code dimension_numbers.kernel_output_feature_dimension}.
      * Other values will raise error at OpKernel construction.
      */
     public final long rhsQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `rhs`.
-     * For example, if `Trhs` is qint8, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code rhs}.
+     * For example, if {@code Trhs} is qint8, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long rhsQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `rhs`.
-     * For example, if `Trhs` is qint8, this must be set to 127.
+     * The max value of the quantized data stored in {@code rhs}.
+     * For example, if {@code Trhs} is qint8, this must be set to 127.
      */
     public final long rhsQuantizationMaxVal;
 

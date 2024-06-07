@@ -268,7 +268,7 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
 
     /**
      * A list of string keys in the examples features.
-     * The results for these keys will be returned as `SparseTensor` objects.
+     * The results for these keys will be returned as {@code SparseTensor} objects.
      */
     public final String[] sparseKeys;
 
@@ -279,23 +279,23 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
     public final String[] denseKeys;
 
     /**
-     * A list of `DTypes` of the same length as `sparse_keys`.
-     * Only `tf.float32` (`FloatList`), `tf.int64` (`Int64List`),
-     * and `tf.string` (`BytesList`) are supported.
+     * A list of {@code DTypes} of the same length as {@code sparse_keys}.
+     * Only {@code tf.float32} ({@code FloatList}), {@code tf.int64} ({@code Int64List}),
+     * and {@code tf.string} ({@code BytesList}) are supported.
      */
     public final DataType[] sparseTypes;
 
     /**
-     * A list of DTypes of the same length as `dense_keys`.
-     * Only `tf.float32` (`FloatList`), `tf.int64` (`Int64List`),
-     * and `tf.string` (`BytesList`) are supported.
+     * A list of DTypes of the same length as {@code dense_keys}.
+     * Only {@code tf.float32} ({@code FloatList}), {@code tf.int64} ({@code Int64List}),
+     * and {@code tf.string} ({@code BytesList}) are supported.
      */
     public final DataType[] Tdense;
 
     /**
-     * List of tuples with the same length as `dense_keys`.
-     * The shape of the data for each dense feature referenced by `dense_keys`.
-     * Required for any input tensors identified by `dense_keys`.  Must be
+     * List of tuples with the same length as {@code dense_keys}.
+     * The shape of the data for each dense feature referenced by {@code dense_keys}.
+     * Required for any input tensors identified by {@code dense_keys}.  Must be
      * either fully defined, or may contain an unknown first dimension.
      * An unknown first dimension means the feature is treated as having
      * a variable number of blocks, and the output shape along this dimension
@@ -319,8 +319,8 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
      * A string indicating the op-level determinism to use. Deterministic controls
      * whether the dataset is allowed to return elements out of order if the next
      * element to be returned isn't available, but a later element is. Options are
-     * "true", "false", and "default". "default" indicates that determinism should be
-     * decided by the `experimental_deterministic` parameter of `tf.data.Options`.
+     * &quot;true&quot;, &quot;false&quot;, and &quot;default&quot;. &quot;default&quot; indicates that determinism should be
+     * decided by the {@code experimental_deterministic} parameter of {@code tf.data.Options}.
      */
     public final String deterministic;
 

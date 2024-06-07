@@ -215,7 +215,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
     public final Operand<? extends TNumber> rate;
 
     /**
-     * If either `seed` or `seed2` are set to be non-zero, the random number
+     * If either {@code seed} or {@code seed2} are set to be non-zero, the random number
      * generator is seeded by the given seed.  Otherwise, it is seeded by a
      * random seed.
      */
