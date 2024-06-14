@@ -330,6 +330,18 @@
       </activation>
     </profile>
     <profile>
+      <id>linux-arm64</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>aarch64</arch>
+        </os>
+        <property>
+          <name>!javacpp.platform.extension</name>
+        </property>
+      </activation>
+    </profile>
+    <profile>
       <id>macosx</id>
       <activation>
         <os><name>mac os x</name></os>
