@@ -20,6 +20,9 @@ case ${PLATFORM:-} in
     WHEEL_URL='https://files.pythonhosted.org/packages/e0/36/6278e4e7e69a90c00e0f82944d8f2713dd85a69d1add455d9e50446837ab/tensorflow_intel-2.16.1-cp311-cp311-win_amd64.whl'
     CLIB_URL='https://storage.googleapis.com/tensorflow/versions/2.16.1/libtensorflow-cpu-windows-x86_64.zip'
     ;;
+  'linux-arm64')
+    WHEEL_URL='https://files.pythonhosted.org/packages/41/ab/e5386c722548df2043c1eaadc431ea3ba0ee42a66b3af7f8013bbbacecd3/tensorflow-2.16.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl'
+    ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"
     exit 1;
