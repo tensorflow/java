@@ -37,6 +37,9 @@ if [[ -n "$WHEEL_URL" ]]; then
     curl -L $WHEEL_URL --output 'tensorflow.whl'
   fi
   yes | unzip -q -u 'tensorflow.whl' # use 'yes' because for some reasons -u does not work on Windows
+  if [[ "$PLATFORM" == "linux-arm64" ]]; then
+    cp $DOWNLOAD_FOLDER/tensorflow.libs/*  $DOWNLOAD_FOLDER/tensorflow/
+  fi
 fi
 
 if [[ -n "$CLIB_URL" ]]; then
@@ -51,6 +54,9 @@ cd tensorflow
 if [[ "$PLATFORM" =~ "linux" ]]; then
   ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
   ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
+  if [[ "$PLATFORM" == "linux-arm64" ]]; then
+    ln -fs libomp-*.so.5 libomp.so
+  fi
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
