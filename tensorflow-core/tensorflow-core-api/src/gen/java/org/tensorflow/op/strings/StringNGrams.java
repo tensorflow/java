@@ -144,7 +144,7 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
     public final Operand<T> dataSplits;
 
     /**
-     * The string to append between elements of the token. Use "" for no separator.
+     * The string to append between elements of the token. Use &quot;&quot; for no separator.
      */
     public final String separator;
 
@@ -168,7 +168,7 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
     /**
      * The number of padding elements to add to each side of each
      * sequence. Note that padding will never be greater than 'ngram_widths'-1
-     * regardless of this value. If `pad_width=-1`, then add `max(ngram_widths)-1`
+     * regardless of this value. If {@code pad_width=-1}, then add {@code max(ngram_widths)-1}
      * elements.
      */
     public final long padWidth;

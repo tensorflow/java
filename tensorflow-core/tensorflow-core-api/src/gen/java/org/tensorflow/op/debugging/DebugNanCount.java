@@ -269,17 +269,17 @@ public final class DebugNanCount extends RawOp implements Operand<TInt64> {
 
     /**
      * List of URLs to debug targets, e.g.,
-     *   file:///foo/tfdbg_dump, grpc:://localhost:11011.
+     * file:///foo/tfdbg_dump, grpc:://localhost:11011.
      */
     public final String[] debugUrls;
 
     /**
-     *  Whether this op will be gated. If any of the debug_urls of this
-     *   debug node is of the grpc:// scheme, when the value of this attribute is set
-     *   to True, the data will not actually be sent via the grpc stream unless this
-     *   debug op has been enabled at the debug_url. If all of the debug_urls of this
-     *   debug node are of the grpc:// scheme and the debug op is enabled at none of
-     *   them, the output will be an empty Tensor.
+     * Whether this op will be gated. If any of the debug_urls of this
+     * debug node is of the grpc:// scheme, when the value of this attribute is set
+     * to True, the data will not actually be sent via the grpc stream unless this
+     * debug op has been enabled at the debug_url. If all of the debug_urls of this
+     * debug node are of the grpc:// scheme and the debug op is enabled at none of
+     * them, the output will be an empty Tensor.
      */
     public final boolean gatedGrpc;
 

@@ -244,7 +244,7 @@ public final class CTCLossV2 extends RawOp {
     public final boolean preprocessCollapseRepeated;
 
     /**
-     * Scalar.  If set to false, *during* CTC calculation
+     * Scalar.  If set to false, <em>during</em> CTC calculation
      * repeated non-blank labels will not be merged and are interpreted as
      * individual labels.  This is a simplified version of CTC.
      */

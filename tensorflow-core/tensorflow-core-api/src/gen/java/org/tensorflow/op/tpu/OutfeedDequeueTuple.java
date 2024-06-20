@@ -152,18 +152,18 @@ public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand
   )
   public static class Inputs extends RawOpInputs<OutfeedDequeueTuple> {
     /**
-     * The element types of each element in `outputs`.
+     * The element types of each element in {@code outputs}.
      */
     public final DataType[] dtypes;
 
     /**
-     * The shapes of each tensor in `outputs`.
+     * The shapes of each tensor in {@code outputs}.
      */
     public final Shape[] shapes;
 
     /**
      * The TPU device to use. This should be -1 when the Op
-     * is running on a TPU device, and >= 0 when the Op is running on the CPU
+     * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
      * device.
      */
     public final long deviceOrdinal;

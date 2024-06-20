@@ -249,12 +249,12 @@ public final class QuantizedMatMul<V extends TNumber> extends RawOp {
     public final DataType Toutput;
 
     /**
-     * If true, `a` is transposed before multiplication.
+     * If true, {@code a} is transposed before multiplication.
      */
     public final boolean transposeA;
 
     /**
-     * If true, `b` is transposed before multiplication.
+     * If true, {@code b} is transposed before multiplication.
      */
     public final boolean transposeB;
 

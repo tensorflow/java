@@ -150,7 +150,7 @@ public final class StackPush<T extends TType> extends RawOp implements Operand<T
     public final DataType T;
 
     /**
-     * Swap `elem` to CPU. Default to false.
+     * Swap {@code elem} to CPU. Default to false.
      */
     public final boolean swapMemory;
 

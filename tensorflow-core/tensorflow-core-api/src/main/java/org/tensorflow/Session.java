@@ -222,7 +222,7 @@ public final class Session implements AutoCloseable {
      *
      * @param operation Is either the string name of the operation, in which case this method is a
      *     shorthand for {@code feed(operation, 0)}, or it is a string of the form
-     *     <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     *     {@code operation_name:output_index}, in which case this method acts like {@code
      *     feed(operation_name, output_index)}. These colon-separated names are commonly used in the
      *     {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.
@@ -284,7 +284,7 @@ public final class Session implements AutoCloseable {
      *
      * @param operation Is either the string name of the operation, in which case this method is a
      *     shorthand for {@code fetch(operation, 0)}, or it is a string of the form
-     *     <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     *     {@code operation_name:output_index}, in which case this method acts like {@code
      *     fetch(operation_name, output_index)}. These colon-separated names are commonly used in
      *     the {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.
@@ -403,7 +403,7 @@ public final class Session implements AutoCloseable {
      * Tensors}.
      *
      * @param operation Is either the string name of the operation or it is a string of the form
-     *     <tt>operation_name:output_index</tt>, where <tt>output_index</tt> will simply be ignored.
+     *     {@code operation_name:output_index}, where {@code output_index} will simply be ignored.
      * @return this session runner
      * @throws IllegalArgumentException if no operation exists with the provided name
      */
@@ -467,16 +467,7 @@ public final class Session implements AutoCloseable {
      * Execute the graph fragments necessary to compute all requested fetches.
      *
      * <p><b>WARNING:</b> The caller assumes ownership of all returned {@link Tensor Tensors}, i.e.,
-     * the caller must call {@link Tensor#close} on all elements of the returned list to free up
-     * resources.
-     *
-     * <p>TODO(ashankar): Reconsider the return type here. Two things in particular: (a) Make it
-     * easier for the caller to cleanup (perhaps returning something like AutoCloseableList in
-     * SessionTest.java), and (b) Evaluate whether the return value should be a list, or maybe a
-     * {@code Map<Output, Tensor>}?
-     *
-     * <p>TODO(andrewmyers): It would also be good if whatever is returned here made it easier to
-     * extract output tensors in a type-safe way.
+     * the caller must call {@link Result#close} to free up resources.
      *
      * @return list of resulting tensors fetched by this session runner
      */

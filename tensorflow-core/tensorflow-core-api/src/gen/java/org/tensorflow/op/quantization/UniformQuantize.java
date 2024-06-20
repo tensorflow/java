@@ -194,17 +194,17 @@ public final class UniformQuantize<U extends TNumber> extends RawOp implements O
     public final long quantizationAxis;
 
     /**
-     * The quantization min value to quantize `input`.
+     * The quantization min value to quantize {@code input}.
      * The purpose of this attribute is typically (but not limited to) to indicate narrow range, where this is set to:
-     * `(Tin lowest) + 1` if narrow range, and `(Tin lowest)` otherwise.
+     * {@code (Tin lowest) + 1} if narrow range, and {@code (Tin lowest)} otherwise.
      * For example, if Tin is qint8, this is set to -127 if narrow range quantized or -128 if not.
      */
     public final long quantizationMinVal;
 
     /**
-     * The quantization max value to quantize `input`.
+     * The quantization max value to quantize {@code input}.
      * The purpose of this attribute is typically (but not limited to) indicate narrow range, where this is set to:
-     * `(Tout max)` for both narrow range and not narrow range.
+     * {@code (Tout max)} for both narrow range and not narrow range.
      * For example, if Tin is qint8, this is set to 127.
      */
     public final long quantizationMaxVal;

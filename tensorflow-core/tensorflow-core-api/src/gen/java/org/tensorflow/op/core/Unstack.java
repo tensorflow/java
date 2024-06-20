@@ -163,7 +163,7 @@ public final class Unstack<T extends TType> extends RawOp implements Iterable<Op
 
     /**
      * Dimension along which to unpack.  Negative values wrap around, so the
-     * valid range is `[-R, R)`.
+     * valid range is {@code [-R, R)}.
      */
     public final long axis;
 

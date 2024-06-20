@@ -134,7 +134,7 @@ public final class RaggedTensorToVariant extends RawOp implements Operand<TType>
     public final DataType Tsplits;
 
     /**
-     * A `bool` denoting whether the input is a batched `RaggedTensor`.
+     * A {@code bool} denoting whether the input is a batched {@code RaggedTensor}.
      */
     public final boolean batchedInput;
 

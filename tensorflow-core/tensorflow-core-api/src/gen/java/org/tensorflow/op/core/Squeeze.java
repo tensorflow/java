@@ -194,7 +194,7 @@ public final class Squeeze<T extends TType> extends RawOp implements Operand<T> 
     /**
      * If specified, only squeezes the dimensions listed. The dimension
      * index starts at 0. It is an error to squeeze a dimension that is not 1. Must
-     * be in the range `[-rank(input), rank(input))`.
+     * be in the range {@code [-rank(input), rank(input))}.
      */
     public final long[] axis;
 

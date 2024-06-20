@@ -52,7 +52,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * An API for building {@code strings} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class StringsOps {
   private final Scope scope;

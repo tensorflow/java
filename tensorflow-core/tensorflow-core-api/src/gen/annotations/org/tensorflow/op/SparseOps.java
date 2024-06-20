@@ -77,7 +77,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code sparse} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class SparseOps {
   private final Scope scope;

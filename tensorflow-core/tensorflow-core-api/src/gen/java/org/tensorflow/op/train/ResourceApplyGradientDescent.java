@@ -140,7 +140,7 @@ public final class ResourceApplyGradientDescent extends RawOp {
     public final DataType T;
 
     /**
-     * If `True`, the subtraction will be protected by a lock;
+     * If {@code True}, the subtraction will be protected by a lock;
      * otherwise the behavior is undefined, but may exhibit less contention.
      */
     public final boolean useLocking;

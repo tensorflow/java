@@ -188,10 +188,10 @@ public final class MaxPoolGrad<T extends TNumber> extends RawOp implements Opera
 
     /**
      * Specify the data format of the input and output data. With the
-     * default format "NHWC", the data is stored in the order of:
-     *     [batch, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCHW", the data storage order of:
-     *     [batch, in_channels, in_height, in_width].
+     * default format &quot;NHWC&quot;, the data is stored in the order of:
+     * [batch, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+     * [batch, in_channels, in_height, in_width].
      */
     public final String dataFormat;
 

@@ -287,19 +287,19 @@ public final class QuantizedInstanceNorm<T extends TNumber> extends RawOp {
     public final DataType T;
 
     /**
-     * If True, `given_y_min` and `given_y_min`
-     * and `given_y_max` are used as the output range. Otherwise,
+     * If True, {@code given_y_min} and {@code given_y_min}
+     * and {@code given_y_max} are used as the output range. Otherwise,
      * the implementation computes the output range.
      */
     public final boolean outputRangeGiven;
 
     /**
-     * Output in `y_min` if `output_range_given` is True.
+     * Output in {@code y_min} if {@code output_range_given} is True.
      */
     public final float givenYMin;
 
     /**
-     * Output in `y_max` if `output_range_given` is True.
+     * Output in {@code y_max} if {@code output_range_given} is True.
      */
     public final float givenYMax;
 
@@ -309,7 +309,7 @@ public final class QuantizedInstanceNorm<T extends TNumber> extends RawOp {
     public final float varianceEpsilon;
 
     /**
-     * Minimum value of `y_max - y_min`
+     * Minimum value of {@code y_max - y_min}
      */
     public final float minSeparation;
 

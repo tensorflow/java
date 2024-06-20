@@ -29,7 +29,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * An API for building {@code bitwise} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class BitwiseOps {
   private final Scope scope;

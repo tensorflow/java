@@ -136,7 +136,7 @@ public final class EnqueueTPUEmbeddingIntegerBatch extends RawOp {
     public final Operand<TString> modeOverride;
 
     /**
-     * The TPU device to use. Should be >= 0 and less than the number
+     * The TPU device to use. Should be &gt;= 0 and less than the number
      * of TPU cores in the task on which the node is placed.
      */
     public final long deviceOrdinal;

@@ -245,12 +245,12 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
     public final Iterable<Operand<?>> inputs;
 
     /**
-     * The element types of each element in `inputs`.
+     * The element types of each element in {@code inputs}.
      */
     public final DataType[] Tinputs;
 
     /**
-     * The element types of each element in `outputs`.
+     * The element types of each element in {@code outputs}.
      */
     public final DataType[] Toutputs;
 
@@ -261,7 +261,7 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
     public final String[] ancestors;
 
     /**
-     * If shape_inference_graph is empty, a list of the shapes of `outputs`.
+     * If shape_inference_graph is empty, a list of the shapes of {@code outputs}.
      */
     public final Shape[] shapes;
 

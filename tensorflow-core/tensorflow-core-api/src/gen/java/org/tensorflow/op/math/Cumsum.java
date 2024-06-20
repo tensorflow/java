@@ -200,12 +200,12 @@ public final class Cumsum<T extends TType> extends RawOp implements Operand<T> {
     public final Operand<? extends TNumber> axis;
 
     /**
-     * If `True`, perform exclusive cumsum.
+     * If {@code True}, perform exclusive cumsum.
      */
     public final boolean exclusive;
 
     /**
-     * A `bool` (default: False).
+     * A {@code bool} (default: False).
      */
     public final boolean reverse;
 

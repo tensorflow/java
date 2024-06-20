@@ -332,9 +332,9 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
 
     /**
      * string specifying a hint about the algorithm used for
-     * decompression.  Defaults to "" which maps to a system-specific
-     * default.  Currently valid values are ["INTEGER_FAST",
-     * "INTEGER_ACCURATE"].  The hint may be ignored (e.g., the internal
+     * decompression.  Defaults to &quot;&quot; which maps to a system-specific
+     * default.  Currently valid values are [&quot;INTEGER_FAST&quot;,
+     * &quot;INTEGER_ACCURATE&quot;].  The hint may be ignored (e.g., the internal
      * jpeg library changes to a version that does not have that specific
      * option.)
      */

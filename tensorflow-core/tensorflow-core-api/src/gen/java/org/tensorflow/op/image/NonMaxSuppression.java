@@ -242,8 +242,8 @@ public final class NonMaxSuppression<T extends TNumber> extends RawOp {
     public final DataType T;
 
     /**
-     * If true, the output `selected_indices` is padded to be of length
-     * `max_output_size`. Defaults to false.
+     * If true, the output {@code selected_indices} is padded to be of length
+     * {@code max_output_size}. Defaults to false.
      */
     public final boolean padToMaxOutputSize;
 

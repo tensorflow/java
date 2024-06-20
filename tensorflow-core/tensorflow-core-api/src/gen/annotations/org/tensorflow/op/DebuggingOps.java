@@ -24,7 +24,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * An API for building {@code debugging} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class DebuggingOps {
   private final Scope scope;

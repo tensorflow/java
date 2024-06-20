@@ -50,7 +50,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code xla} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class XlaOps {
   private final Scope scope;

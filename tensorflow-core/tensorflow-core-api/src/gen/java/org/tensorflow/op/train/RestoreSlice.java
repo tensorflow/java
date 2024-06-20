@@ -178,7 +178,7 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
 
     /**
      * Index of file to open first if multiple files match
-     * `file_pattern`. See the documentation for `Restore`.
+     * {@code file_pattern}. See the documentation for {@code Restore}.
      */
     public final long preferredShard;
 

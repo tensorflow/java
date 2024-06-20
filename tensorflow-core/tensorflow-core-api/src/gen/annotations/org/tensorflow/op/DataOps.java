@@ -155,7 +155,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code data} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class DataOps {
   public final DataExperimentalOps experimental;

@@ -153,7 +153,7 @@ public final class OptionsDataset extends RawOp implements Operand<TType> {
     public final Operand<? extends TType> inputDataset;
 
     /**
-     * A `tf.string` scalar `tf.Tensor` of serialized `tf.data.Options` protocol buffer.
+     * A {@code tf.string} scalar {@code tf.Tensor} of serialized {@code tf.data.Options} protocol buffer.
      */
     public final String serializedOptions;
 

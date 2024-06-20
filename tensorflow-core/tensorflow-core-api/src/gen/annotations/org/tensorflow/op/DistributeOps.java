@@ -27,7 +27,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * An API for building {@code distribute} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class DistributeOps {
   private final Scope scope;

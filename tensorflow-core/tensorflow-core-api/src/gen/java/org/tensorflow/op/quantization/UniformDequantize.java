@@ -196,7 +196,7 @@ public final class UniformDequantize<U extends TNumber> extends RawOp implements
     /**
      * The quantization min value that was used when input was quantized.
      * The purpose of this attribute is typically (but not limited to) to indicate narrow range, where this is set to:
-     * `(Tin lowest) + 1` if narrow range, and `(Tin lowest)` otherwise.
+     * {@code (Tin lowest) + 1} if narrow range, and {@code (Tin lowest)} otherwise.
      * For example, if Tin is qint8, this is set to -127 if narrow range quantized or -128 if not.
      */
     public final long quantizationMinVal;
@@ -204,7 +204,7 @@ public final class UniformDequantize<U extends TNumber> extends RawOp implements
     /**
      * The quantization max value that was used when input was quantized.
      * The purpose of this attribute is typically (but not limited to) indicate narrow range, where this is set to:
-     * `(Tout max)` for both narrow range and not narrow range.
+     * {@code (Tout max)} for both narrow range and not narrow range.
      * For example, if Tin is qint8, this is set to 127.
      */
     public final long quantizationMaxVal;

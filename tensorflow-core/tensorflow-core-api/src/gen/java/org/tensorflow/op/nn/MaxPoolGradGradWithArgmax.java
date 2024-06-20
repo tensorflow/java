@@ -189,7 +189,7 @@ public final class MaxPoolGradGradWithArgmax<T extends TNumber> extends RawOp im
     public final String padding;
 
     /**
-     * Whether to include batch dimension in flattened index of `argmax`.
+     * Whether to include batch dimension in flattened index of {@code argmax}.
      */
     public final boolean includeBatchInIndex;
 

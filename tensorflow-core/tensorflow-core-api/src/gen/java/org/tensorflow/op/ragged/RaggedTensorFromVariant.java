@@ -163,8 +163,8 @@ public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> e
     public final Operand<? extends TType> encodedRagged;
 
     /**
-     * The ragged rank of each encoded `RaggedTensor` component in the input. If set to
-     * -1, this is inferred as `output_ragged_rank` - `rank(encoded_ragged)`
+     * The ragged rank of each encoded {@code RaggedTensor} component in the input. If set to
+     * -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
      */
     public final long inputRaggedRank;
 

@@ -164,8 +164,8 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
     public final DataType outType;
 
     /**
-     * Whether the input `input_bytes` is in little-endian order. Ignored for
-     * `out_type` values that are stored in a single byte, like `uint8`
+     * Whether the input {@code input_bytes} is in little-endian order. Ignored for
+     * {@code out_type} values that are stored in a single byte, like {@code uint8}
      */
     public final boolean littleEndian;
 

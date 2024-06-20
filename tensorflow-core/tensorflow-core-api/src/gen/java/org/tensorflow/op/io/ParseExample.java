@@ -286,7 +286,7 @@ public final class ParseExample extends RawOp {
     public final DataType[] Tdense;
 
     /**
-     * A list of `num_sparse` types; the data types of data in each Feature
+     * A list of {@code num_sparse} types; the data types of data in each Feature
      * given in sparse_keys.
      * Currently the ParseExample supports DT_FLOAT (FloatList),
      * DT_INT64 (Int64List), and DT_STRING (BytesList).
@@ -294,23 +294,23 @@ public final class ParseExample extends RawOp {
     public final DataType[] sparseTypes;
 
     /**
-     * A list of `num_ragged` types; the data types of data in each Feature
-     * given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+     * A list of {@code num_ragged} types; the data types of data in each Feature
+     * given in ragged_keys (where {@code num_ragged = sparse_keys.size()}).
      * Currently the ParseExample supports DT_FLOAT (FloatList),
      * DT_INT64 (Int64List), and DT_STRING (BytesList).
      */
     public final DataType[] raggedValueTypes;
 
     /**
-     * A list of `num_ragged` types; the data types of row_splits in each Feature
-     * given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+     * A list of {@code num_ragged} types; the data types of row_splits in each Feature
+     * given in ragged_keys (where {@code num_ragged = sparse_keys.size()}).
      * May be DT_INT32 or DT_INT64.
      */
     public final DataType[] raggedSplitTypes;
 
     /**
-     * A list of `num_dense` shapes; the shapes of data in each Feature
-     * given in dense_keys (where `num_dense = dense_keys.size()`).
+     * A list of {@code num_dense} shapes; the shapes of data in each Feature
+     * given in dense_keys (where {@code num_dense = dense_keys.size()}).
      * The number of elements in the Feature corresponding to dense_key[j]
      * must always equal dense_shapes[j].NumEntries().
      * If dense_shapes[j] == (D0, D1, ..., DN) then the shape of output

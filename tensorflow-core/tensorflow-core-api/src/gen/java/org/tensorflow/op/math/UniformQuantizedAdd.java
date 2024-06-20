@@ -314,69 +314,69 @@ public final class UniformQuantizedAdd<T extends TNumber> extends RawOp implemen
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `lhs`, only per-tensor quantization is supported.
+     * For the {@code lhs}, only per-tensor quantization is supported.
      * Thus, this must be set to -1.
      * Other values will raise error at OpKernel construction.
      */
     public final long lhsQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `lhs`.
-     * For example, if `Tin` is `qint8`, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code lhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long lhsQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `lhs`.
-     * For example, if `Tin` is `qint8`, this must be set to 127.
+     * The max value of the quantized data stored in {@code lhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to 127.
      */
     public final long lhsQuantizationMaxVal;
 
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `rhs`, only per-tensor quantization
-     * or per-channel quantization along `kernel_output_feature_dimension` is supported.
-     * Thus, this must be set to -1 or `dimension_numbers.kernel_output_feature_dimension`.
+     * For the {@code rhs}, only per-tensor quantization
+     * or per-channel quantization along {@code kernel_output_feature_dimension} is supported.
+     * Thus, this must be set to -1 or {@code dimension_numbers.kernel_output_feature_dimension}.
      * Other values will raise error at OpKernel construction.
      */
     public final long rhsQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `rhs`.
-     * For example, if `Tin` is `qint8`, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code rhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long rhsQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `rhs`.
-     * For example, if `Tin` is `qint8`, this must be set to 127.
+     * The max value of the quantized data stored in {@code rhs}.
+     * For example, if {@code Tin} is {@code qint8}, this must be set to 127.
      */
     public final long rhsQuantizationMaxVal;
 
     /**
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization.
-     * For the `output`, only per-tensor quantization or per-channel quantization along `output_feature_dimension` is supported.
-     * Thus, this must be set to -1 or `dimension_numbers.output_feature_dimension`.
+     * For the {@code output}, only per-tensor quantization or per-channel quantization along {@code output_feature_dimension} is supported.
+     * Thus, this must be set to -1 or {@code dimension_numbers.output_feature_dimension}.
      * Other values will raise error at OpKernel construction.
      */
     public final long outputQuantizationAxis;
 
     /**
-     * The min value of the quantized data stored in `output`.
-     * For example, if  `Tout` is `qint8`, this must be set to -127 if narrow range quantized or -128 if not.
+     * The min value of the quantized data stored in {@code output}.
+     * For example, if  {@code Tout} is {@code qint8}, this must be set to -127 if narrow range quantized or -128 if not.
      */
     public final long outputQuantizationMinVal;
 
     /**
-     * The max value of the quantized data stored in `output`.
-     * For example, if `Tout` is `qint8`, this must be set to 127.
+     * The max value of the quantized data stored in {@code output}.
+     * For example, if {@code Tout} is {@code qint8}, this must be set to 127.
      */
     public final long outputQuantizationMaxVal;
 
     /**
-     * The type of `lhs`, `rhs`, and `output`.
+     * The type of {@code lhs}, {@code rhs}, and {@code output}.
      */
     public final DataType T;
 

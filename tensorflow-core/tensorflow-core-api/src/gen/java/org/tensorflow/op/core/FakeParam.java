@@ -110,8 +110,10 @@ public final class FakeParam<T extends TType> extends RawOp implements Operand<T
     public final DataType dtype;
 
     /**
-     *     The purported shape of the output. This is only used for shape inference;
-     *     the output will not necessarily have this shape. Can be a partial shape.
+     * <pre>
+     * The purported shape of the output. This is only used for shape inference;
+     * the output will not necessarily have this shape. Can be a partial shape.
+     * </pre>
      */
     public final Shape shape;
 

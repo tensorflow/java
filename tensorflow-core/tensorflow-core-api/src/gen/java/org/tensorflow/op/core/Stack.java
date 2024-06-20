@@ -162,7 +162,7 @@ public final class Stack<T extends TType> extends RawOp implements Operand<T> {
 
     /**
      * Dimension along which to pack.  Negative values wrap around, so the
-     * valid range is `[-(R+1), R+1)`.
+     * valid range is {@code [-(R+1), R+1)}.
      */
     public final long axis;
 

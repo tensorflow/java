@@ -26,7 +26,7 @@ import org.tensorflow.types.TInt64;
 /**
  * An API for building {@code cluster} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class ClusterOps {
   private final Scope scope;

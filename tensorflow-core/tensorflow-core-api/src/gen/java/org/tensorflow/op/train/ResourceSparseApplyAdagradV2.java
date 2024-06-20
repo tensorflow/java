@@ -199,7 +199,7 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
     public final DataType Tindices;
 
     /**
-     * If `True`, updating of the var and accum tensors will be protected
+     * If {@code True}, updating of the var and accum tensors will be protected
      * by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */

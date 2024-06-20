@@ -326,8 +326,8 @@ public final class FractionalMaxPool<T extends TNumber> extends RawOp {
     public final Operand<T> value;
 
     /**
-     * Pooling ratio for each dimension of `value`, currently only
-     * supports row and col dimension and should be >= 1.0. For example, a valid
+     * Pooling ratio for each dimension of {@code value}, currently only
+     * supports row and col dimension and should be &gt;= 1.0. For example, a valid
      * pooling ratio looks like [1.0, 1.44, 1.73, 1.0]. The first and last elements
      * must be 1.0 because we don't allow pooling on batch and channels
      * dimensions. 1.44 and 1.73 are pooling ratio on height and width dimensions
@@ -337,8 +337,8 @@ public final class FractionalMaxPool<T extends TNumber> extends RawOp {
 
     /**
      * When set to True, generates the pooling sequence in a
-     * pseudorandom fashion, otherwise, in a random fashion. Check paper [Benjamin
-     * Graham, Fractional Max-Pooling](http://arxiv.org/abs/1412.6071) for
+     * pseudorandom fashion, otherwise, in a random fashion. Check paper  <a href="http://arxiv.org/abs/1412.6071">Benjamin
+     * Graham, Fractional Max-Pooling</a>  for
      * difference between pseudorandom and random.
      */
     public final boolean pseudoRandom;
@@ -346,12 +346,9 @@ public final class FractionalMaxPool<T extends TNumber> extends RawOp {
     /**
      * When set to True, it means when pooling, the values at the boundary
      * of adjacent pooling cells are used by both cells. For example:
-     *
-     * `index  0  1  2  3  4`
-     *
-     * `value  20 5  16 3  7`
-     *
-     * If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
+     * <p>{@code index  0  1  2  3  4}
+     * <p>{@code value  20 5  16 3  7}
+     * <p>If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
      * The result would be [20, 16] for fractional max pooling.
      */
     public final boolean overlapping;

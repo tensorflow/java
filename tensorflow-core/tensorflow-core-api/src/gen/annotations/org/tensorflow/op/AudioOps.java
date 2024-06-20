@@ -29,7 +29,7 @@ import org.tensorflow.types.TString;
 /**
  * An API for building {@code audio} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class AudioOps {
   private final Scope scope;

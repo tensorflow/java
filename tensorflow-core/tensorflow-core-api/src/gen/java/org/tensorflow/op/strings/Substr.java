@@ -233,10 +233,10 @@ public final class Substr extends RawOp implements Operand<TString> {
     public final DataType T;
 
     /**
-     * The unit that is used to create the substring.  One of: `"BYTE"` (for
-     * defining position and length by bytes) or `"UTF8_CHAR"` (for the UTF-8
-     * encoded Unicode code points).  The default is `"BYTE"`. Results are undefined if
-     * `unit=UTF8_CHAR` and the `input` strings do not contain structurally valid
+     * The unit that is used to create the substring.  One of: {@code "BYTE"} (for
+     * defining position and length by bytes) or {@code "UTF8_CHAR"} (for the UTF-8
+     * encoded Unicode code points).  The default is {@code "BYTE"}. Results are undefined if
+     * {@code unit=UTF8_CHAR} and the {@code input} strings do not contain structurally valid
      * UTF-8.
      */
     public final String unit;

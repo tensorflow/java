@@ -291,17 +291,17 @@ public final class ApproxTopK<T extends TNumber> extends RawOp {
 
     /**
      * When set to a positive value, it overrides the size determined by
-     * `input[reduction_dim]` for evaluating the recall. This option is useful when
-     * the given `input` is only a subset of the overall computation in SPMD or
+     * {@code input[reduction_dim]} for evaluating the recall. This option is useful when
+     * the given {@code input} is only a subset of the overall computation in SPMD or
      * distributed pipelines, where the true input size cannot be deferred by the
-     * `input` shape.
+     * {@code input} shape.
      */
     public final long reductionInputSizeOverride;
 
     /**
      * When true, aggregates approximate results to top-k. When false, returns the
      * approximate results. The number of the approximate results is implementation
-     * defined and is greater equals to the specified `k`.
+     * defined and is greater equals to the specified {@code k}.
      */
     public final boolean aggregateToTopk;
 

@@ -165,7 +165,7 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
     public final Operand<? extends TType> serializedSparse;
 
     /**
-     * The `dtype` of the serialized `SparseTensor` objects.
+     * The {@code dtype} of the serialized {@code SparseTensor} objects.
      */
     public final DataType dtype;
 

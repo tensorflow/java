@@ -222,8 +222,7 @@ public final class EditDistance extends RawOp implements Operand<TFloat32> {
 
     /**
      * boolean (if true, edit distances are normalized by length of truth).
-     *
-     * The output is:
+     * <p>The output is:
      */
     public final boolean normalize;
 

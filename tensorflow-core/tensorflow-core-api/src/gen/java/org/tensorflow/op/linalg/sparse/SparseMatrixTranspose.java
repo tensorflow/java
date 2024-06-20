@@ -145,7 +145,7 @@ public final class SparseMatrixTranspose extends RawOp implements Operand<TType>
     public final Operand<? extends TType> input;
 
     /**
-     * Indicates whether `input` should be conjugated.
+     * Indicates whether {@code input} should be conjugated.
      */
     public final boolean conjugate;
 

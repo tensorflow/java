@@ -185,18 +185,18 @@ public final class PrelinearizeTuple extends RawOp implements Operand<TType> {
     public final Iterable<Operand<?>> inputs;
 
     /**
-     * The element types of each element in `inputs`.
+     * The element types of each element in {@code inputs}.
      */
     public final DataType[] dtypes;
 
     /**
-     * The shapes of each tensor in `inputs`.
+     * The shapes of each tensor in {@code inputs}.
      */
     public final Shape[] shapes;
 
     /**
      * A vector holding the requested layout in minor-to-major sequence for all the
-     * tuple shapes in the order the shapes appear in the "shapes" input. The layout
+     * tuple shapes in the order the shapes appear in the &quot;shapes&quot; input. The layout
      * elements for a sub-shape can be set to -1 in which case the corresponding layout
      * will be computed by the infeed operation.
      */

@@ -204,14 +204,14 @@ public final class ResourceSparseApplyKerasMomentum extends RawOp {
     public final DataType Tindices;
 
     /**
-     * If `True`, updating of the var and accum tensors will be protected
+     * If {@code True}, updating of the var and accum tensors will be protected
      * by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */
     public final boolean useLocking;
 
     /**
-     * If `True`, the tensor passed to compute grad will be
+     * If {@code True}, the tensor passed to compute grad will be
      * var + momentum * accum, so in the end, the var you get is actually
      * var + momentum * accum.
      */

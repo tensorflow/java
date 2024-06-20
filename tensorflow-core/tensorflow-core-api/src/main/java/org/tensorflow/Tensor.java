@@ -100,7 +100,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    *
    * <p>The amount of memory to allocate is derived from the datatype and the shape of the tensor.
    * Tensor data is initialized by calling the {@code dataInitializer}, which receives in argument
-   * the value returned by {@link #data()} on the allocated tensor. For example:
+   * the value returned by {@code data()} on the allocated tensor. For example:
    *
    * <pre>{@code
    * FloatNdArray data = ...

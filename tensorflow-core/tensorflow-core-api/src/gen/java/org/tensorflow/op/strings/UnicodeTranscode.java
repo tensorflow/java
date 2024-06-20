@@ -258,13 +258,13 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
 
     /**
      * Text encoding of the input strings. This is any of the encodings supported
-     * by ICU ucnv algorithmic converters. Examples: `"UTF-16", "US ASCII", "UTF-8"`.
+     * by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
      */
     public final String inputEncoding;
 
     /**
      * The unicode encoding to use in the output. Must be one of
-     * `"UTF-8", "UTF-16-BE", "UTF-32-BE"`. Multi-byte encodings will be big-endian.
+     * {@code "UTF-8", "UTF-16-BE", "UTF-32-BE"}. Multi-byte encodings will be big-endian.
      */
     public final String outputEncoding;
 
@@ -273,7 +273,7 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
      * The value of 'strict' will cause the operation to produce a InvalidArgument
      * error on any invalid input formatting. A value of 'replace' (the default) will
      * cause the operation to replace any invalid formatting in the input with the
-     * `replacement_char` codepoint. A value of 'ignore' will cause the operation to
+     * {@code replacement_char} codepoint. A value of 'ignore' will cause the operation to
      * skip any invalid formatting in the input and produce no corresponding output
      * character.
      */
@@ -281,11 +281,10 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
 
     /**
      * The replacement character codepoint to be used in place of any invalid
-     * formatting in the input when `errors='replace'`. Any valid unicode codepoint may
+     * formatting in the input when {@code errors='replace'}. Any valid unicode codepoint may
      * be used. The default value is the default unicode replacement character is
      * 0xFFFD or U+65533.)
-     *
-     * Note that for UTF-8, passing a replacement character expressible in 1 byte, such
+     * <p>Note that for UTF-8, passing a replacement character expressible in 1 byte, such
      * as ' ', will preserve string alignment to the source since invalid bytes will be
      * replaced with a 1-byte replacement. For UTF-16-BE and UTF-16-LE, any 1 or 2 byte
      * replacement character will preserve byte alignment to the source.
@@ -294,7 +293,7 @@ public final class UnicodeTranscode extends RawOp implements Operand<TString> {
 
     /**
      * Whether to replace the C0 control characters (00-1F) with the
-     * `replacement_char`. Default is false.
+     * {@code replacement_char}. Default is false.
      */
     public final boolean replaceControlCharacters;
 

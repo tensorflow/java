@@ -220,7 +220,7 @@ public final class ApplyCenteredRmsProp<T extends TType> extends RawOp implement
     public final DataType T;
 
     /**
-     * If `True`, updating of the var, mg, ms, and mom tensors is
+     * If {@code True}, updating of the var, mg, ms, and mom tensors is
      * protected by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */

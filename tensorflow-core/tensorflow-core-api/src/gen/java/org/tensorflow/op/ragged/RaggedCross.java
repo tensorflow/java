@@ -169,8 +169,8 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
     public final Iterable<Operand<?>> denseInputs;
 
     /**
-     * String specifying the tensor type for each input.  The `i`th character in
-     * this string specifies the type of the `i`th input, and is one of: 'R' (ragged),
+     * String specifying the tensor type for each input.  The {@code i}th character in
+     * this string specifies the type of the {@code i}th input, and is one of: 'R' (ragged),
      * 'D' (dense), or 'S' (sparse).  This attr is used to ensure that the crossed
      * values are combined in the order of the inputs from the call to tf.ragged.cross.
      */

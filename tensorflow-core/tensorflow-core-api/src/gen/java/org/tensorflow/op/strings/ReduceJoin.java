@@ -196,7 +196,7 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
     public final Operand<TInt32> reductionIndices;
 
     /**
-     * If `True`, retain reduced dimensions with length `1`.
+     * If {@code True}, retain reduced dimensions with length {@code 1}.
      */
     public final boolean keepDims;
 

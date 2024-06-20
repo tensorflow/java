@@ -162,7 +162,7 @@ public final class Eig<U extends TType> extends RawOp {
     public final Operand<? extends TType> input;
 
     /**
-     * If `True` then eigenvectors will be computed and returned in `v`.
+     * If {@code True} then eigenvectors will be computed and returned in {@code v}.
      * Otherwise, only the eigenvalues will be computed.
      */
     public final boolean computeV;

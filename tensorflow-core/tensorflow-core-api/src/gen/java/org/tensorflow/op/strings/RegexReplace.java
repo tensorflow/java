@@ -158,9 +158,9 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
     public final Operand<TString> rewrite;
 
     /**
-     * If True, the replacement is global (that is, all matches of the `pattern` regular
-     * expression in each input string are rewritten), otherwise the `rewrite`
-     * substitution is only made for the first `pattern` match.
+     * If True, the replacement is global (that is, all matches of the {@code pattern} regular
+     * expression in each input string are rewritten), otherwise the {@code rewrite}
+     * substitution is only made for the first {@code pattern} match.
      */
     public final boolean replaceGlobal;
 

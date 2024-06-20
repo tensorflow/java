@@ -49,7 +49,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code quantization} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class QuantizationOps {
   private final Scope scope;

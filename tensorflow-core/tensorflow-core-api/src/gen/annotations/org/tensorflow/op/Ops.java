@@ -9159,7 +9159,7 @@ public final class Ops {
   /**
    * Returns an API that builds operations with the provided name prefix.
    *
-   * @see {@link Scope#withSubScope(String)}
+   * @see Scope#withSubScope(String)
    */
   public Ops withSubScope(String childScopeName) {
     return new Ops(scope.withSubScope(childScopeName));
@@ -9181,7 +9181,7 @@ public final class Ops {
   /**
    * Returns an API that uses the provided name for an op.
    *
-   * @see {@link Scope#withName(String)}
+   * @see Scope#withName(String)
    */
   public Ops withName(String opName) {
     return new Ops(scope.withName(opName));
@@ -9190,7 +9190,7 @@ public final class Ops {
   /**
    * Returns an API that places the created operations on the device(s) matching the provided spec.
    *
-   * @see {@link Scope#withDevice(DeviceSpec)}
+   * @see Scope#withDevice(DeviceSpec)
    */
   public Ops withDevice(DeviceSpec deviceSpec) {
     return new Ops(scope.withDevice(deviceSpec));
@@ -9199,7 +9199,7 @@ public final class Ops {
   /**
    * Returns an API that adds operations to the graph with the provided control dependencies.
    *
-   * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
+   * @see Scope#withControlDependencies(Iterable)
    */
   public Ops withControlDependencies(Iterable<Op> controls) {
     return new Ops(scope.withControlDependencies(controls));
@@ -9208,7 +9208,7 @@ public final class Ops {
   /**
    * Returns an API that adds operations to the graph with the provided control dependencies.
    *
-   * @see {@link Scope#withControlDependencies(Iterable<Op<?>>)}
+   * @see Scope#withControlDependencies(Iterable)
    */
   public Ops withControlDependencies(Op... controls) {
     return withControlDependencies(Arrays.asList(controls));
@@ -9217,7 +9217,7 @@ public final class Ops {
   /**
    * Returns an API that adds operations to the graph with the provided control dependencies.
    *
-   * @see {@link Scope#withControlDependencyOps(Iterable<Operation>)}
+   * @see Scope#withControlDependencyOps(Iterable)
    */
   public Ops withControlDependencyOps(Iterable<Operation> controls) {
     return new Ops(scope.withControlDependencyOps(controls));
@@ -9226,7 +9226,7 @@ public final class Ops {
   /**
    * Returns an API that adds operations to the graph with the provided control dependencies.
    *
-   * @see {@link Scope#withControlDependencyOps(Iterable<Operation>)}
+   * @see Scope#withControlDependencyOps(Iterable)
    */
   public Ops withControlDependencyOps(Operation... controls) {
     return withControlDependencyOps(Arrays.asList(controls));

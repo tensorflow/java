@@ -139,13 +139,13 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
 
     /**
      * 1-D of length 4. The stride of the sliding window for each dimension of
-     * the input tensor. Must be: `[1, stride_height, stride_width, 1]`.
+     * the input tensor. Must be: {@code [1, stride_height, stride_width, 1]}.
      */
     public final long[] strides;
 
     /**
      * 1-D of length 4. The input stride for atrous morphological dilation.
-     * Must be: `[1, rate_height, rate_width, 1]`.
+     * Must be: {@code [1, rate_height, rate_width, 1]}.
      */
     public final long[] rates;
 

@@ -239,7 +239,7 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
 
     /**
      * A string specifying the sampling method for resizing. It can be either
-     * `"bilinear"` or `"nearest"` and default to `"bilinear"`. Currently two sampling
+     * {@code "bilinear"} or {@code "nearest"} and default to {@code "bilinear"}. Currently two sampling
      * methods are supported: Bilinear and Nearest Neighbor.
      */
     public final String method;

@@ -338,7 +338,7 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
     public final float exponentialAvgFactor;
 
     /**
-     * The data format for x and y. Either "NHWC" (default) or "NCHW".
+     * The data format for x and y. Either &quot;NHWC&quot; (default) or &quot;NCHW&quot;.
      */
     public final String dataFormat;
 

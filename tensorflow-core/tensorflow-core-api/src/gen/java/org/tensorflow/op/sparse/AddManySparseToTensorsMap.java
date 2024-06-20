@@ -208,12 +208,12 @@ public final class AddManySparseToTensorsMap extends RawOp implements Operand<TI
     public final DataType T;
 
     /**
-     * The container name for the `SparseTensorsMap` created by this op.
+     * The container name for the {@code SparseTensorsMap} created by this op.
      */
     public final String container;
 
     /**
-     * The shared name for the `SparseTensorsMap` created by this op.
+     * The shared name for the {@code SparseTensorsMap} created by this op.
      * If blank, the new Operation's unique name is used.
      */
     public final String sharedName;

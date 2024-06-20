@@ -285,9 +285,9 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
     public final boolean uniformNoise;
 
     /**
-     * indicates if the noise should `uniform`, `gaussian`, or
-     * `zero`. The default is `uniform` which means the noise type
-     * will be decided by `uniform_noise`.
+     * indicates if the noise should {@code uniform}, {@code gaussian}, or
+     * {@code zero}. The default is {@code uniform} which means the noise type
+     * will be decided by {@code uniform_noise}.
      */
     public final String noise;
 

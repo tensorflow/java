@@ -263,12 +263,12 @@ public final class BatchMatMul<V extends TType> extends RawOp implements Operand
     public final DataType Tout;
 
     /**
-     * If `True`, adjoint the slices of `x`. Defaults to `False`.
+     * If {@code True}, adjoint the slices of {@code x}. Defaults to {@code False}.
      */
     public final boolean adjX;
 
     /**
-     * If `True`, adjoint the slices of `y`. Defaults to `False`.
+     * If {@code True}, adjoint the slices of {@code y}. Defaults to {@code False}.
      */
     public final boolean adjY;
 

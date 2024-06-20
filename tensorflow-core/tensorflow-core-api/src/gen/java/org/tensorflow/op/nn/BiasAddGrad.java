@@ -161,12 +161,12 @@ public final class BiasAddGrad<T extends TType> extends RawOp implements Operand
 
     /**
      * Specify the data format of the input and output data. With the
-     * default format "NHWC", the bias tensor will be added to the last dimension
+     * default format &quot;NHWC&quot;, the bias tensor will be added to the last dimension
      * of the value tensor.
-     * Alternatively, the format could be "NCHW", the data storage order of:
-     *     [batch, in_channels, in_height, in_width].
-     * The tensor will be added to "in_channels", the third-to-the-last
-     *     dimension.
+     * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+     * [batch, in_channels, in_height, in_width].
+     * The tensor will be added to &quot;in_channels&quot;, the third-to-the-last
+     * dimension.
      */
     public final String dataFormat;
 

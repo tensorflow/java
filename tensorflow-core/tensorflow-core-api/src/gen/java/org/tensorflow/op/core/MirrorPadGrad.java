@@ -135,7 +135,7 @@ public final class MirrorPadGrad<T extends TType> extends RawOp implements Opera
     public final DataType Tpaddings;
 
     /**
-     * The mode used in the `MirrorPad` op.
+     * The mode used in the {@code MirrorPad} op.
      */
     public final String mode;
 

@@ -132,7 +132,7 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
     public final Operand<TString> stringTensor;
 
     /**
-     * The numeric type to interpret each string in `string_tensor` as.
+     * The numeric type to interpret each string in {@code string_tensor} as.
      */
     public final DataType outType;
 

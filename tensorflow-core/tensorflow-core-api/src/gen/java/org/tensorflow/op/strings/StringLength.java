@@ -157,10 +157,10 @@ public final class StringLength extends RawOp implements Operand<TInt32> {
     public final Operand<TString> input;
 
     /**
-     * The unit that is counted to compute string length.  One of: `"BYTE"` (for
-     * the number of bytes in each string) or `"UTF8_CHAR"` (for the number of UTF-8
+     * The unit that is counted to compute string length.  One of: {@code "BYTE"} (for
+     * the number of bytes in each string) or {@code "UTF8_CHAR"} (for the number of UTF-8
      * encoded Unicode code points in each string).  Results are undefined
-     * if `unit=UTF8_CHAR` and the `input` strings do not contain structurally
+     * if {@code unit=UTF8_CHAR} and the {@code input} strings do not contain structurally
      * valid UTF-8.
      */
     public final String unit;

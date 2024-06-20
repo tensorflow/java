@@ -283,9 +283,9 @@ public final class QuantizedConv2d<V extends TNumber> extends RawOp {
 
     /**
      * 1-D tensor of length 4.  The dilation factor for each dimension of
-     * `input`. If set to k > 1, there will be k-1 skipped cells between each
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
      * filter element on that dimension. The dimension order is determined by the
-     * value of `data_format`, see above for details. Dilations in the batch and
+     * value of {@code data_format}, see above for details. Dilations in the batch and
      * depth dimensions must be 1.
      */
     public final long[] dilations;

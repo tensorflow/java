@@ -422,40 +422,40 @@ public final class StridedSlice<T extends TType> extends RawOp implements Operan
     /**
      * a bitmask where a bit i being 1 means to ignore the begin
      * value and instead use the largest interval possible. At runtime
-     * begin[i] will be replaced with `[0, n-1)` if `stride[i] > 0` or
-     * `[-1, n-1]` if `stride[i] < 0`
+     * begin[i] will be replaced with {@code [0, n-1)} if {@code stride[i] > 0} or
+     * {@code [-1, n-1]} if {@code stride[i] < 0}
      */
     public final long beginMask;
 
     /**
-     * analogous to `begin_mask`
+     * analogous to {@code begin_mask}
      */
     public final long endMask;
 
     /**
-     * a bitmask where bit `i` being 1 means the `i`th
+     * a bitmask where bit {@code i} being 1 means the {@code i}th
      * position is actually an ellipsis. One bit at most can be 1.
-     * If `ellipsis_mask == 0`, then an implicit ellipsis mask of `1 << (m+1)`
-     * is provided. This means that `foo[3:5] == foo[3:5, ...]`. An ellipsis
+     * If {@code ellipsis_mask == 0}, then an implicit ellipsis mask of {@code 1 << (m+1)}
+     * is provided. This means that {@code foo[3:5] == foo[3:5, ...]}. An ellipsis
      * implicitly creates as many range specifications as necessary to fully
      * specify the sliced range for every dimension. For example for a 4-dimensional
-     * tensor `foo` the slice `foo[2, ..., 5:8]` implies `foo[2, :, :, 5:8]`.
+     * tensor {@code foo} the slice {@code foo[2, ..., 5:8]} implies {@code foo[2, :, :, 5:8]}.
      */
     public final long ellipsisMask;
 
     /**
-     * a bitmask where bit `i` being 1 means the `i`th
+     * a bitmask where bit {@code i} being 1 means the {@code i}th
      * specification creates a new shape 1 dimension. For example
-     * `foo[:4, tf.newaxis, :2]` would produce a shape `(4, 1, 2)` tensor.
+     * {@code foo[:4, tf.newaxis, :2]} would produce a shape {@code (4, 1, 2)} tensor.
      */
     public final long newAxisMask;
 
     /**
-     * a bitmask where bit `i` implies that the `i`th
+     * a bitmask where bit {@code i} implies that the {@code i}th
      * specification should shrink the dimensionality. begin and end
      * must imply a slice of size 1 in the dimension. For example in
-     * python one might do `foo[:, 3, :]` which would result in
-     * `shrink_axis_mask` being 2.
+     * python one might do {@code foo[:, 3, :]} which would result in
+     * {@code shrink_axis_mask} being 2.
      */
     public final long shrinkAxisMask;
 

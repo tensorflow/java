@@ -209,15 +209,15 @@ public final class Svd<T extends TType> extends RawOp {
 
     /**
      * If true, left and right singular vectors will be
-     * computed and returned in `u` and `v`, respectively.
-     * If false, `u` and `v` are not set and should never referenced.
+     * computed and returned in {@code u} and {@code v}, respectively.
+     * If false, {@code u} and {@code v} are not set and should never referenced.
      */
     public final boolean computeUv;
 
     /**
-     * If true, compute full-sized `u` and `v`. If false
-     * (the default), compute only the leading `P` singular vectors.
-     * Ignored if `compute_uv` is `False`.
+     * If true, compute full-sized {@code u} and {@code v}. If false
+     * (the default), compute only the leading {@code P} singular vectors.
+     * Ignored if {@code compute_uv} is {@code False}.
      */
     public final boolean fullMatrices;
 

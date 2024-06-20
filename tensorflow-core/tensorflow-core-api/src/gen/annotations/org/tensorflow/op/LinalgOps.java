@@ -80,7 +80,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code linalg} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class LinalgOps {
   public final LinalgSparseOps sparse;

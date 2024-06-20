@@ -155,7 +155,7 @@ public final class Solve<T extends TType> extends RawOp implements Operand<T> {
     public final Operand<T> rhs;
 
     /**
-     * Boolean indicating whether to solve with `matrix` or its (block-wise)
+     * Boolean indicating whether to solve with {@code matrix} or its (block-wise)
      * adjoint.
      */
     public final boolean adjoint;

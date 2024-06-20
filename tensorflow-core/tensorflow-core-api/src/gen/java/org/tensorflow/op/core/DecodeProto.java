@@ -298,13 +298,13 @@ public final class DecodeProto extends RawOp {
     public final DataType[] outputTypes;
 
     /**
-     * Either the special value `local://` or a path to a file containing
-     * a serialized `FileDescriptorSet`.
+     * Either the special value {@code local://} or a path to a file containing
+     * a serialized {@code FileDescriptorSet}.
      */
     public final String descriptorSource;
 
     /**
-     * Either `binary` or `text`.
+     * Either {@code binary} or {@code text}.
      */
     public final String messageFormat;
 

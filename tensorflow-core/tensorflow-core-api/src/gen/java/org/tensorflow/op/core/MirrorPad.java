@@ -146,11 +146,11 @@ public final class MirrorPad<T extends TType> extends RawOp implements Operand<T
     public final DataType Tpaddings;
 
     /**
-     * Either `REFLECT` or `SYMMETRIC`. In reflect mode the padded regions
+     * Either {@code REFLECT} or {@code SYMMETRIC}. In reflect mode the padded regions
      * do not include the borders, while in symmetric mode the padded regions
-     * do include the borders. For example, if `input` is `[1, 2, 3]` and `paddings`
-     * is `[0, 2]`, then the output is `[1, 2, 3, 2, 1]` in reflect mode, and
-     * it is `[1, 2, 3, 3, 2]` in symmetric mode.
+     * do include the borders. For example, if {@code input} is {@code [1, 2, 3]} and {@code paddings}
+     * is {@code [0, 2]}, then the output is {@code [1, 2, 3, 2, 1]} in reflect mode, and
+     * it is {@code [1, 2, 3, 3, 2]} in symmetric mode.
      */
     public final String mode;
 

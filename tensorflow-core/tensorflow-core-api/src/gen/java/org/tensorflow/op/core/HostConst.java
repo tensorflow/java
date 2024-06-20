@@ -97,7 +97,7 @@ public final class HostConst<T extends TType> extends RawOp implements Operand<T
   )
   public static class Inputs extends RawOpInputs<HostConst<?>> {
     /**
-     * Attr `value` is the tensor to return.
+     * Attr {@code value} is the tensor to return.
      */
     public final Tensor value;
 

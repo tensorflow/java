@@ -272,7 +272,7 @@ public final class AsString extends RawOp implements Operand<TString> {
 
     /**
      * The post-decimal precision to use for floating point numbers.
-     * Only used if precision > -1.
+     * Only used if precision &gt; -1.
      */
     public final long precision;
 
@@ -290,12 +290,12 @@ public final class AsString extends RawOp implements Operand<TString> {
     /**
      * Pad pre-decimal numbers to this width.
      * Applies to both floating point and integer numbers.
-     * Only used if width > -1.
+     * Only used if width &gt; -1.
      */
     public final long width;
 
     /**
-     * The value to pad if width > -1.  If empty, pads with spaces.
+     * The value to pad if width &gt; -1.  If empty, pads with spaces.
      * Another typical value is '0'.  String cannot be longer than 1 character.
      */
     public final String fill;

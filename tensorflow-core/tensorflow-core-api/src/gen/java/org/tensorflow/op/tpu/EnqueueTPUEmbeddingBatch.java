@@ -215,7 +215,7 @@ public final class EnqueueTPUEmbeddingBatch extends RawOp {
 
     /**
      * The TPU device to use. This should be -1 when the Op
-     * is running on a TPU device, and >= 0 when the Op is running on the CPU
+     * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
      * device.
      */
     public final long deviceOrdinal;

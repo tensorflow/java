@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * An API for building {@code math.special} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class MathSpecialOps {
   private final Scope scope;

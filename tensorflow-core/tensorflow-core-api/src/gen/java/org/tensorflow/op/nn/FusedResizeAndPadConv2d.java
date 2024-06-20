@@ -210,7 +210,7 @@ public final class FusedResizeAndPadConv2d<T extends TNumber> extends RawOp impl
 
     /**
      * 1-D of length 4.  The stride of the sliding window for each dimension
-     * of `input`. Must be in the same order as the dimension specified with format.
+     * of {@code input}. Must be in the same order as the dimension specified with format.
      */
     public final long[] strides;
 

@@ -1008,7 +1008,7 @@ final class ClassGenerator {
         attrNames.add(CodeBlock.of("$S", attr.getName()).toString());
         inputsBuilder.addField(
             FieldSpec.builder(javaType, name, Modifier.PUBLIC, Modifier.FINAL)
-                .addJavadoc("$L", description)
+                .addJavadoc("$L", parseDocumentation(description))
                 .build());
         fieldInits.addStatement(
             "$L = op.attributes().getAttr$L($S)",

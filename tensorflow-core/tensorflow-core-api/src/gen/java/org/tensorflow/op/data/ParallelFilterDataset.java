@@ -219,8 +219,8 @@ public final class ParallelFilterDataset extends RawOp implements Operand<TType>
      * A string indicating the op-level determinism to use. Deterministic controls
      * whether the interleave is allowed to return elements out of order if the next
      * element to be returned isn't available, but a later element is. Options are
-     * "true", "false", and "default". "default" indicates that determinism should be
-     * decided by the `experimental_deterministic` parameter of `tf.data.Options`.
+     * &quot;true&quot;, &quot;false&quot;, and &quot;default&quot;. &quot;default&quot; indicates that determinism should be
+     * decided by the {@code experimental_deterministic} parameter of {@code tf.data.Options}.
      */
     public final String deterministic;
 

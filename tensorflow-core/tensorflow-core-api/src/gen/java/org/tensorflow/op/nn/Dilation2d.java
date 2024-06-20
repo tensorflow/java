@@ -152,13 +152,13 @@ public final class Dilation2d<T extends TNumber> extends RawOp implements Operan
 
     /**
      * The stride of the sliding window for each dimension of the input
-     * tensor. Must be: `[1, stride_height, stride_width, 1]`.
+     * tensor. Must be: {@code [1, stride_height, stride_width, 1]}.
      */
     public final long[] strides;
 
     /**
      * The input stride for atrous morphological dilation. Must be:
-     * `[1, rate_height, rate_width, 1]`.
+     * {@code [1, rate_height, rate_width, 1]}.
      */
     public final long[] rates;
 

@@ -193,7 +193,7 @@ public final class TopK<T extends TNumber, V extends TNumber> extends RawOp {
     public final Operand<? extends TNumber> k;
 
     /**
-     * If true the resulting `k` elements will be sorted by the values in
+     * If true the resulting {@code k} elements will be sorted by the values in
      * descending order.
      */
     public final boolean sorted;

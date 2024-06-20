@@ -209,11 +209,13 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
 
     /**
      * The types of the row partition tensors. At present, these can be:
-     * * "ROW_SPLITS": the row_splits tensor from the ragged tensor.
-     * * "VALUE_ROWIDS": the value_rowids tensor from the ragged tensor.
-     * * "FIRST_DIM_SIZE": if value_rowids is used for the first dimension, then it
-     *   is preceeded by "FIRST_DIM_SIZE".
-     * The tensors are in the order of the dimensions.
+     * <ul>
+     * <li>&quot;ROW_SPLITS&quot;: the row_splits tensor from the ragged tensor.</li>
+     * <li>&quot;VALUE_ROWIDS&quot;: the value_rowids tensor from the ragged tensor.</li>
+     * <li>&quot;FIRST_DIM_SIZE&quot;: if value_rowids is used for the first dimension, then it
+     * is preceeded by &quot;FIRST_DIM_SIZE&quot;.
+     * The tensors are in the order of the dimensions.</li>
+     * </ul>
      */
     public final String[] rowPartitionTypes;
 

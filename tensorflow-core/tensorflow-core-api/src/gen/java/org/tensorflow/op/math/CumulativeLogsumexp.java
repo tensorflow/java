@@ -191,12 +191,12 @@ public final class CumulativeLogsumexp<T extends TNumber> extends RawOp implemen
     public final Operand<? extends TNumber> axis;
 
     /**
-     * If `True`, perform exclusive cumulative log-sum-exp.
+     * If {@code True}, perform exclusive cumulative log-sum-exp.
      */
     public final boolean exclusive;
 
     /**
-     * A `bool` (default: False).
+     * A {@code bool} (default: False).
      */
     public final boolean reverse;
 

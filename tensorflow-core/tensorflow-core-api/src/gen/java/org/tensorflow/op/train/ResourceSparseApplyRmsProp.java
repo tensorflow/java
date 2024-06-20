@@ -200,7 +200,7 @@ public final class ResourceSparseApplyRmsProp extends RawOp {
     public final DataType Tindices;
 
     /**
-     * If `True`, updating of the var, ms, and mom tensors is protected
+     * If {@code True}, updating of the var, ms, and mom tensors is protected
      * by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */

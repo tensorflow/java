@@ -278,10 +278,10 @@ public final class CombinedNonMaxSuppression extends RawOp {
 
     /**
      * If false, the output nmsed boxes, scores and classes
-     * are padded/clipped to `max_total_size`. If true, the
+     * are padded/clipped to {@code max_total_size}. If true, the
      * output nmsed boxes, scores and classes are padded to be of length
-     * `max_size_per_class`*`num_classes`, unless it exceeds `max_total_size` in
-     * which case it is clipped to `max_total_size`. Defaults to false.
+     * {@code max_size_per_class}*{@code num_classes}, unless it exceeds {@code max_total_size} in
+     * which case it is clipped to {@code max_total_size}. Defaults to false.
      */
     public final boolean padPerClass;
 

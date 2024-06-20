@@ -165,12 +165,12 @@ public final class AvgPool<T extends TNumber> extends RawOp implements Operand<T
     public final Operand<T> value;
 
     /**
-     * The size of the sliding window for each dimension of `value`.
+     * The size of the sliding window for each dimension of {@code value}.
      */
     public final long[] ksize;
 
     /**
-     * The stride of the sliding window for each dimension of `value`.
+     * The stride of the sliding window for each dimension of {@code value}.
      */
     public final long[] strides;
 
@@ -181,10 +181,10 @@ public final class AvgPool<T extends TNumber> extends RawOp implements Operand<T
 
     /**
      * Specify the data format of the input and output data. With the
-     * default format "NHWC", the data is stored in the order of:
-     *     [batch, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCHW", the data storage order of:
-     *     [batch, in_channels, in_height, in_width].
+     * default format &quot;NHWC&quot;, the data is stored in the order of:
+     * [batch, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+     * [batch, in_channels, in_height, in_width].
      */
     public final String dataFormat;
 
