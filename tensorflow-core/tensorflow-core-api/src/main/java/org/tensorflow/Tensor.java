@@ -207,8 +207,8 @@ public interface Tensor extends Shaped, AutoCloseable {
   /**
    * Check if this tensor is sparse or not.
    *
-   * <p>When this method returns {@code true}, the tensor could be cast to a {@link SparseTensor} to access its
-   * <i>indices</i>, <i>values</i> and <i>denseShape</i> tensors.
+   * <p>When this method returns {@code true}, the tensor could be cast to a {@link SparseTensor} to
+   * access its <i>indices</i>, <i>values</i> and <i>denseShape</i> tensors.
    *
    * @return true if this tensor is a sparse tensor.
    */

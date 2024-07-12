@@ -131,8 +131,8 @@ public interface TString extends NdArray<String>, TType {
    * <p>The data will be copied from the provided buffer to the tensor after it is allocated. The
    * strings are encoded into bytes using the charset passed in parameter.
    *
-   * <p>If charset is different from the default UTF-8, then it must also be provided explicitly when
-   * reading data from the tensor, using {@link #using(Charset)}:
+   * <p>If charset is different from the default UTF-8, then it must also be provided explicitly
+   * when reading data from the tensor, using {@link #using(Charset)}:
    *
    * <pre>{@code
    * // Given `originalStrings` an initialized buffer of strings
@@ -196,8 +196,8 @@ public interface TString extends NdArray<String>, TType {
    * Create a sparse tensor from {@code indices}, {@code values} and {@code denseShape} dense
    * tensors, with an empty string as the default value.
    *
-   * <p>The returned instance also implements the {@link SparseTensor}
-   * interface, allowing a user to access directly the dense tensors when needed.
+   * <p>The returned instance also implements the {@link SparseTensor} interface, allowing a user to
+   * access directly the dense tensors when needed.
    *
    * @param indices A 2-D tensor of shape {@code [N, ndims]}, that specifies the indices of the
    *     elements in the sparse tensor that contain non-default values (elements are zero-indexed).

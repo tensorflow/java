@@ -221,8 +221,8 @@ public final class Session implements AutoCloseable {
      * Avoid evaluating {@code operation} and substitute {@code t} for the value it produces.
      *
      * @param operation Is either the string name of the operation, in which case this method is a
-     *     shorthand for {@code feed(operation, 0)}, or it is a string of the form
-     *     {@code operation_name:output_index}, in which case this method acts like {@code
+     *     shorthand for {@code feed(operation, 0)}, or it is a string of the form {@code
+     *     operation_name:output_index}, in which case this method acts like {@code
      *     feed(operation_name, output_index)}. These colon-separated names are commonly used in the
      *     {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.
@@ -283,8 +283,8 @@ public final class Session implements AutoCloseable {
      * <p>If the output is a resource variable, will fetch the value.
      *
      * @param operation Is either the string name of the operation, in which case this method is a
-     *     shorthand for {@code fetch(operation, 0)}, or it is a string of the form
-     *     {@code operation_name:output_index}, in which case this method acts like {@code
+     *     shorthand for {@code fetch(operation, 0)}, or it is a string of the form {@code
+     *     operation_name:output_index}, in which case this method acts like {@code
      *     fetch(operation_name, output_index)}. These colon-separated names are commonly used in
      *     the {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.

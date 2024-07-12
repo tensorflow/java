@@ -250,9 +250,8 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Add multiple signatures to the model. Wraps {@link #withSignature(Signature)}
      *
-     * <p><b>Either {@link #withSession(Session)} or {@link #withFunction(SessionFunction)} must
-     * be called before this method</b>, and the session set there will be used for these
-     * signatures.
+     * <p><b>Either {@link #withSession(Session)} or {@link #withFunction(SessionFunction)} must be
+     * called before this method</b>, and the session set there will be used for these signatures.
      *
      * @throws IllegalStateException if no session has been set
      * @return this

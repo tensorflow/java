@@ -459,8 +459,7 @@ public final class OperatorProcessor extends AbstractProcessor {
         TypeSpec.classBuilder(spec.className)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc(
-                "An API for building {@code $L} operations as {@link $T Op}s\n\n"
-                    + "@see $T\n",
+                "An API for building {@code $L} operations as {@link $T Op}s\n\n" + "@see $T\n",
                 spec.groupName,
                 Names.Op,
                 Names.Ops)

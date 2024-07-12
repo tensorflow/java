@@ -137,16 +137,17 @@ public abstract class StridedSliceHelper {
    * equal to `n`, but this need not be the case. Each range specification entry can be one of the
    * following:
    *
-   * <p>- An ellipsis (...) using {@link org.tensorflow.ndarray.index.Indices#ellipsis()}. Ellipses are used to imply zero or
-   * more dimensions of full-dimension selection. For example, {@code stridedSlice(foo,
-   * Indices.ellipsis()} is the identity slice.
+   * <p>- An ellipsis (...) using {@link org.tensorflow.ndarray.index.Indices#ellipsis()}. Ellipses
+   * are used to imply zero or more dimensions of full-dimension selection. For example, {@code
+   * stridedSlice(foo, Indices.ellipsis()} is the identity slice.
    *
-   * <p>- A new axis using {@link org.tensorflow.ndarray.index.Indices#newAxis()}. This is used to insert a new shape=1
-   * dimension. For example, `{@code stridedSlice(foo, Indices.newAxis())} where {@code foo} is
-   * shape {@code (3, 4)} produces a {@code (1, 3, 4)} tensor.
+   * <p>- A new axis using {@link org.tensorflow.ndarray.index.Indices#newAxis()}. This is used to
+   * insert a new shape=1 dimension. For example, `{@code stridedSlice(foo, Indices.newAxis())}
+   * where {@code foo} is shape {@code (3, 4)} produces a {@code (1, 3, 4)} tensor.
    *
-   * <p>- A range {@code begin:end:stride} using {@link org.tensorflow.ndarray.index.Indices#slice(Long, Long, long)}
-   * Index.slice()} or {@link org.tensorflow.ndarray.index.Indices#all()}. This is used to specify how much to choose from a
+   * <p>- A range {@code begin:end:stride} using {@link
+   * org.tensorflow.ndarray.index.Indices#slice(Long, Long, long)} Index.slice()} or {@link
+   * org.tensorflow.ndarray.index.Indices#all()}. This is used to specify how much to choose from a
    * given dimension. {@code stride} can be any integer but 0. {@code begin} is an integer which
    * represents the index of the first value to select while {@code end} represents the index of the
    * last value to select (exclusive). Begin and end can be null, in which case the index begins or
@@ -163,10 +164,11 @@ public abstract class StridedSliceHelper {
    * elements). For example {@code foo = [1,2,3,4]; stridedSlice(foo, Indices.slice(-2, null, -1)}
    * is {@code [4,3]}.
    *
-   * <p>- A single index using {@link org.tensorflow.ndarray.index.Indices#at(long)}. This is used to keep only elements that
-   * have a given index. For example ({@code stridedSlice(foo, Indices.at(2))} on a shape {@code
-   * (5,6)} tensor produces a shape {@code (6,)} tensor. The dimension can be kept with size one
-   * using {@link org.tensorflow.ndarray.index.Indices#at(long, boolean)}.
+   * <p>- A single index using {@link org.tensorflow.ndarray.index.Indices#at(long)}. This is used
+   * to keep only elements that have a given index. For example ({@code stridedSlice(foo,
+   * Indices.at(2))} on a shape {@code (5,6)} tensor produces a shape {@code (6,)} tensor. The
+   * dimension can be kept with size one using {@link org.tensorflow.ndarray.index.Indices#at(long,
+   * boolean)}.
    *
    * <p>These semantics generally follow NumPy's indexing semantics, which can be found here: <a
    * href="https://numpy.org/doc/stable/reference/arrays.indexing.html">https://numpy.org/doc/stable/reference/arrays.indexing.html</a>
@@ -212,7 +214,8 @@ public abstract class StridedSliceHelper {
    * @param value the value to assign.
    * @param indices The indices to slice. See {@link org.tensorflow.ndarray.index.Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(org.tensorflow.Operand, org.tensorflow.ndarray.index.Index...)
+   * @see org.tensorflow.op.Ops#stridedSlice(org.tensorflow.Operand,
+   *     org.tensorflow.ndarray.index.Index...)
    */
   @Endpoint(name = "stridedSliceAssign")
   public static <T extends TType> StridedSliceAssign<T> stridedSliceAssign(

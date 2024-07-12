@@ -27,9 +27,7 @@ import org.tensorflow.op.annotation.Operator;
 @Operator(name = "call")
 public abstract class Function {
 
-  /**
-   * Constructor.
-   */
+  /** Constructor. */
   public Function() {}
 
   /**
