@@ -113,7 +113,7 @@ public final class CompositeTensorVariantToComponents extends RawOp implements I
 
     /**
      * String serialization for the TypeSpec.  Must be compatible with the
-     * `TypeSpec` contained in `encoded`.  (Note: the encoding for the TypeSpec
+     * {@code TypeSpec} contained in {@code encoded}.  (Note: the encoding for the TypeSpec
      * may change in future versions of TensorFlow.)
      */
     public final String metadata;

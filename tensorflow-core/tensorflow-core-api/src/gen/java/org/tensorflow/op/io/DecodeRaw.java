@@ -155,9 +155,9 @@ public final class DecodeRaw<T extends TType> extends RawOp implements Operand<T
     public final DataType outType;
 
     /**
-     * Whether the input `bytes` are in little-endian order.
-     * Ignored for `out_type` values that are stored in a single byte like
-     * `uint8`.
+     * Whether the input {@code bytes} are in little-endian order.
+     * Ignored for {@code out_type} values that are stored in a single byte like
+     * {@code uint8}.
      */
     public final boolean littleEndian;
 

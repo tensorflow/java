@@ -1,4 +1,4 @@
-/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2024 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
      *
      * @param config a config protocol buffer
      * @see <a
-     *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto">config.proto</a></a>
+     *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto">config.proto</a>
      */
     public Options config(ConfigProto config) {
       this.config = config;

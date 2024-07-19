@@ -459,8 +459,7 @@ public final class OperatorProcessor extends AbstractProcessor {
         TypeSpec.classBuilder(spec.className)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .addJavadoc(
-                "An API for building {@code $L} operations as {@link $T Op}s\n\n"
-                    + "@see {@link $T}\n",
+                "An API for building {@code $L} operations as {@link $T Op}s\n\n" + "@see $T\n",
                 spec.groupName,
                 Names.Op,
                 Names.Ops)
@@ -546,7 +545,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return new $T(scope.withSubScope(childScopeName))", Names.Ops)
             .addJavadoc(
                 "Returns an API that builds operations with the provided name prefix.\n"
-                    + "\n@see {@link $T#withSubScope(String)}\n",
+                    + "\n@see $T#withSubScope(String)\n",
                 Names.Scope)
             .build());
 
@@ -572,7 +571,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return new Ops(scope.withName(opName))")
             .addJavadoc(
                 "Returns an API that uses the provided name for an op.\n\n"
-                    + "@see {@link $T#withName(String)}\n",
+                    + "@see $T#withName(String)\n",
                 Names.Scope)
             .build());
 
@@ -584,7 +583,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return new Ops(scope.withDevice(deviceSpec))")
             .addJavadoc(
                 "Returns an API that places the created operations on the device(s) matching the provided spec.\n\n"
-                    + "@see {@link $T#withDevice(DeviceSpec)}\n",
+                    + "@see $T#withDevice(DeviceSpec)\n",
                 Names.Scope)
             .build());
 
@@ -596,7 +595,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return new Ops(scope.withControlDependencies(controls))")
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
-                    + "@see {@link $T#withControlDependencies(Iterable<Op<?>>)}\n",
+                    + "@see $T#withControlDependencies(Iterable)\n",
                 Names.Scope)
             .build());
 
@@ -609,7 +608,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return withControlDependencies($T.asList(controls))", Names.Arrays)
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
-                    + "@see {@link $T#withControlDependencies(Iterable<Op<?>>)}\n",
+                    + "@see $T#withControlDependencies(Iterable)\n",
                 Names.Scope)
             .build());
 
@@ -621,7 +620,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return new Ops(scope.withControlDependencyOps(controls))")
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
-                    + "@see {@link $T#withControlDependencyOps(Iterable<Operation>)}\n",
+                    + "@see $T#withControlDependencyOps(Iterable)\n",
                 Names.Scope)
             .build());
 
@@ -634,7 +633,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addStatement("return withControlDependencyOps($T.asList(controls))", Names.Arrays)
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
-                    + "@see {@link $T#withControlDependencyOps(Iterable<Operation>)}\n",
+                    + "@see $T#withControlDependencyOps(Iterable)\n",
                 Names.Scope)
             .build());
 

@@ -283,12 +283,12 @@ public final class QuantizedMatMulWithBiasAndRelu<V extends TNumber> extends Raw
     public final DataType Toutput;
 
     /**
-     * If true, `a` is transposed before multiplication.
+     * If true, {@code a} is transposed before multiplication.
      */
     public final boolean transposeA;
 
     /**
-     * If true, `b` is transposed before multiplication.
+     * If true, {@code b} is transposed before multiplication.
      */
     public final boolean transposeB;
 

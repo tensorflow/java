@@ -49,8 +49,7 @@ public abstract class TensorMapper<T extends TType> {
    *     space.
    * @param tensorScope scope to extend to keep a reference on the sub-tensors composing this sparse
    *     tensor
-   * @return an instance of {@code T}, that could also be casted to a {@link SparseTensor
-   *     SparseTensor<T>}
+   * @return an instance of {@code T}.
    */
   protected abstract SparseTensor<T> mapSparse(
       TInt64 indices, T values, TInt64 denseShape, PointerScope tensorScope);

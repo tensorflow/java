@@ -425,8 +425,8 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends RawOp {
     public final DataType T;
 
     /**
-     * If either `seed` or `seed2` are set to non-zero, the random number
-     * generator is seeded by the given `seed`.  Otherwise, it is seeded by a random
+     * If either {@code seed} or {@code seed2} are set to non-zero, the random number
+     * generator is seeded by the given {@code seed}.  Otherwise, it is seeded by a random
      * seed.
      */
     public final long seed;
@@ -450,7 +450,7 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends RawOp {
 
     /**
      * Number of attempts at generating a cropped region of the image
-     * of the specified constraints. After `max_attempts` failures, return the entire
+     * of the specified constraints. After {@code max_attempts} failures, return the entire
      * image.
      */
     public final long maxAttempts;

@@ -353,8 +353,8 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
 
     /**
      * 1-D tensor of length 4.  The stride of the sliding window for each
-     * dimension of `input`. The dimension order is determined by the value of
-     * `data_format`, see below for details.
+     * dimension of {@code input}. The dimension order is determined by the value of
+     * {@code data_format}, see below for details.
      */
     public final long[] strides;
 
@@ -369,27 +369,27 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
     public final String padding;
 
     /**
-     * If `padding` is `"EXPLICIT"`, the list of explicit padding amounts. For the ith
+     * If {@code padding} is {@code "EXPLICIT"}, the list of explicit padding amounts. For the ith
      * dimension, the amount of padding inserted before and after the dimension is
-     * `explicit_paddings[2 * i]` and `explicit_paddings[2 * i + 1]`, respectively. If
-     * `padding` is not `"EXPLICIT"`, `explicit_paddings` must be empty.
+     * {@code explicit_paddings[2 * i]} and {@code explicit_paddings[2 * i + 1]}, respectively. If
+     * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
      */
     public final long[] explicitPaddings;
 
     /**
      * Specify the data format of the input and output data. With the
-     * default format "NHWC", the data is stored in the order of:
-     *     [batch, height, width, channels].
-     * Alternatively, the format could be "NCHW", the data storage order of:
-     *     [batch, channels, height, width].
+     * default format &quot;NHWC&quot;, the data is stored in the order of:
+     * [batch, height, width, channels].
+     * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+     * [batch, channels, height, width].
      */
     public final String dataFormat;
 
     /**
      * 1-D tensor of length 4.  The dilation factor for each dimension of
-     * `input`. If set to k > 1, there will be k-1 skipped cells between each
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
      * filter element on that dimension. The dimension order is determined by the
-     * value of `data_format`, see above for details. Dilations in the batch and
+     * value of {@code data_format}, see above for details. Dilations in the batch and
      * depth dimensions must be 1.
      */
     public final long[] dilations;

@@ -28,7 +28,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code dtypes} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class DtypesOps {
   private final Scope scope;

@@ -204,7 +204,7 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
     public final Operand<TInt32> sequenceLength;
 
     /**
-     * A scalar >= 0 (beam search beam width).
+     * A scalar &gt;= 0 (beam search beam width).
      */
     public final long beamWidth;
 

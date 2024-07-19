@@ -427,7 +427,7 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
   public void visit(HtmlInline htmlInline) {
     String text = htmlInline.getLiteral();
     // handle non- JavaDoc html, e.g. <bytes>
-    String tag = text.replace("\\", "");
+    String tag = text.replace("/", "");
     if (!allowedHtml5Tags.contains(tag.toLowerCase())) {
       text = text.replace("<", "&lt;").replace(">", "&gt;");
       writer.raw(text);

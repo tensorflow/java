@@ -193,18 +193,18 @@ public final class InfeedEnqueueTuple extends RawOp {
     public final Iterable<Operand<?>> inputs;
 
     /**
-     * The element types of each element in `inputs`.
+     * The element types of each element in {@code inputs}.
      */
     public final DataType[] dtypes;
 
     /**
-     * The shapes of each tensor in `inputs`.
+     * The shapes of each tensor in {@code inputs}.
      */
     public final Shape[] shapes;
 
     /**
      * A vector holding the requested layout in minor-to-major sequence for
-     * all the tuple shapes, in the order the shapes appear in the "shapes" input.
+     * all the tuple shapes, in the order the shapes appear in the &quot;shapes&quot; input.
      * The layout elements for a sub-shape can be set to -1, in which case the
      * corresponding layout will be computed by the infeed operation.
      */
@@ -212,7 +212,7 @@ public final class InfeedEnqueueTuple extends RawOp {
 
     /**
      * The TPU device to use. This should be -1 when the Op
-     * is running on a TPU device, and >= 0 when the Op is running on the CPU
+     * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
      * device.
      */
     public final long deviceOrdinal;

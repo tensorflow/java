@@ -159,7 +159,7 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
     public final Operand<T> input;
 
     /**
-     * If `True` then eigenvectors will be computed and returned in `v`.
+     * If {@code True} then eigenvectors will be computed and returned in {@code v}.
      * Otherwise, only the eigenvalues will be computed.
      */
     public final boolean computeV;

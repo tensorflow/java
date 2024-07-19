@@ -303,32 +303,32 @@ public final class SparseMatrixMatMul<T extends TType> extends RawOp implements 
     public final DataType T;
 
     /**
-     * Indicates whether `a` should be transposed.
+     * Indicates whether {@code a} should be transposed.
      */
     public final boolean transposeA;
 
     /**
-     * Indicates whether `b` should be transposed.
+     * Indicates whether {@code b} should be transposed.
      */
     public final boolean transposeB;
 
     /**
-     * Indicates whether `a` should be conjugate-transposed.
+     * Indicates whether {@code a} should be conjugate-transposed.
      */
     public final boolean adjointA;
 
     /**
-     * Indicates whether `b` should be conjugate-transposed.
+     * Indicates whether {@code b} should be conjugate-transposed.
      */
     public final boolean adjointB;
 
     /**
-     * Transposes the product of `a` and `b`.
+     * Transposes the product of {@code a} and {@code b}.
      */
     public final boolean transposeOutput;
 
     /**
-     * Conjugates the product of `a` and `b`.
+     * Conjugates the product of {@code a} and {@code b}.
      */
     public final boolean conjugateOutput;
 

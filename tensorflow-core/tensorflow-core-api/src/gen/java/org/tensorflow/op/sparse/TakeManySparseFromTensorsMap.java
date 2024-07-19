@@ -236,20 +236,20 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
     public final Operand<TInt64> sparseHandles;
 
     /**
-     * The `dtype` of the `SparseTensor` objects stored in the
-     * `SparseTensorsMap`.
+     * The {@code dtype} of the {@code SparseTensor} objects stored in the
+     * {@code SparseTensorsMap}.
      */
     public final DataType dtype;
 
     /**
-     * The container name for the `SparseTensorsMap` read by this op.
+     * The container name for the {@code SparseTensorsMap} read by this op.
      */
     public final String container;
 
     /**
-     * The shared name for the `SparseTensorsMap` read by this op.
-     * It should not be blank; rather the `shared_name` or unique Operation name
-     * of the Op that created the original `SparseTensorsMap` should be used.
+     * The shared name for the {@code SparseTensorsMap} read by this op.
+     * It should not be blank; rather the {@code shared_name} or unique Operation name
+     * of the Op that created the original {@code SparseTensorsMap} should be used.
      */
     public final String sharedName;
 

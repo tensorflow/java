@@ -205,7 +205,7 @@ public final class ParseSingleExample extends RawOp {
     public final Iterable<Operand<?>> denseDefaults;
 
     /**
-     * A list of `num_sparse` strings.
+     * A list of {@code num_sparse} strings.
      * The keys expected in the Examples' features associated with sparse values.
      */
     public final String[] sparseKeys;
@@ -217,7 +217,7 @@ public final class ParseSingleExample extends RawOp {
     public final String[] denseKeys;
 
     /**
-     * A list of `num_sparse` types; the data types of data in each
+     * A list of {@code num_sparse} types; the data types of data in each
      * Feature given in sparse_keys.
      * Currently the ParseSingleExample op supports DT_FLOAT (FloatList),
      * DT_INT64 (Int64List), and DT_STRING (BytesList).
@@ -226,7 +226,7 @@ public final class ParseSingleExample extends RawOp {
 
     /**
      * The data types of data in each Feature given in dense_keys.
-     * The length of this list must match the length of `dense_keys`.
+     * The length of this list must match the length of {@code dense_keys}.
      * Currently the ParseSingleExample op supports DT_FLOAT (FloatList),
      * DT_INT64 (Int64List), and DT_STRING (BytesList).
      */
@@ -234,7 +234,7 @@ public final class ParseSingleExample extends RawOp {
 
     /**
      * The shapes of data in each Feature given in dense_keys.
-     * The length of this list must match the length of `dense_keys`.  The
+     * The length of this list must match the length of {@code dense_keys}.  The
      * number of elements in the Feature corresponding to dense_key[j] must
      * always equal dense_shapes[j].NumEntries().  If dense_shapes[j] ==
      * (D0, D1, ..., DN) then the shape of output Tensor dense_values[j]

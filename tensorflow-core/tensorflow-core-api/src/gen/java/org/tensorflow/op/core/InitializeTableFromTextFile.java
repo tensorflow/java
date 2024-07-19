@@ -192,13 +192,13 @@ public final class InitializeTableFromTextFile extends RawOp {
     public final Operand<TString> filename;
 
     /**
-     * Column index in a line to get the table `key` values from.
+     * Column index in a line to get the table {@code key} values from.
      */
     public final long keyIndex;
 
     /**
      * Column index that represents information of a line to get the table
-     * `value` values from.
+     * {@code value} values from.
      */
     public final long valueIndex;
 
