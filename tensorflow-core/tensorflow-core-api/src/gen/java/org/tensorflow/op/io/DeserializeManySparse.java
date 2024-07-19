@@ -166,7 +166,7 @@ public final class DeserializeManySparse<T extends TType> extends RawOp {
     public final Operand<TString> serializedSparse;
 
     /**
-     * The `dtype` of the serialized `SparseTensor` objects.
+     * The {@code dtype} of the serialized {@code SparseTensor} objects.
      */
     public final DataType dtype;
 

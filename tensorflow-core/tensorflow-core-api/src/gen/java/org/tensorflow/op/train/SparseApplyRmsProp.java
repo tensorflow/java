@@ -220,7 +220,7 @@ public final class SparseApplyRmsProp<T extends TType> extends RawOp implements 
     public final DataType Tindices;
 
     /**
-     * If `True`, updating of the var, ms, and mom tensors is protected
+     * If {@code True}, updating of the var, ms, and mom tensors is protected
      * by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */

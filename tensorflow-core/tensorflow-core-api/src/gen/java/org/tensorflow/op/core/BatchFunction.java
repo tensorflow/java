@@ -588,7 +588,7 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
 
     /**
      * input with a large size (i.e., larger than the largest value of
-     * `allowed_batch_sizes`) will be splitted into multiple batches with batch size.
+     * {@code allowed_batch_sizes}) will be splitted into multiple batches with batch size.
      */
     public final boolean enableLargeBatchSplitting;
 

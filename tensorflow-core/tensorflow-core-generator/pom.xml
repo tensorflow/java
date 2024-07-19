@@ -44,7 +44,7 @@
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>javapoet</artifactId>
-      <version>1.12.1</version>
+      <version>1.13.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.protobuf</groupId>
@@ -61,6 +61,16 @@
       <groupId>org.commonmark</groupId>
       <artifactId>commonmark</artifactId>
       <version>0.17.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

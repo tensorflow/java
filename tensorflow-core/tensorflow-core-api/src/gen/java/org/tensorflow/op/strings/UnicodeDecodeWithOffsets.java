@@ -280,7 +280,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
 
     /**
      * Text encoding of the input strings. This is any of the encodings supported
-     * by ICU ucnv algorithmic converters. Examples: `"UTF-16", "US ASCII", "UTF-8"`.
+     * by ICU ucnv algorithmic converters. Examples: {@code "UTF-16", "US ASCII", "UTF-8"}.
      */
     public final String inputEncoding;
 
@@ -289,7 +289,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
      * The value of 'strict' will cause the operation to produce a InvalidArgument
      * error on any invalid input formatting. A value of 'replace' (the default) will
      * cause the operation to replace any invalid formatting in the input with the
-     * `replacement_char` codepoint. A value of 'ignore' will cause the operation to
+     * {@code replacement_char} codepoint. A value of 'ignore' will cause the operation to
      * skip any invalid formatting in the input and produce no corresponding output
      * character.
      */
@@ -297,7 +297,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
 
     /**
      * The replacement character codepoint to be used in place of any invalid
-     * formatting in the input when `errors='replace'`. Any valid unicode codepoint may
+     * formatting in the input when {@code errors='replace'}. Any valid unicode codepoint may
      * be used. The default value is the default unicode replacement character is
      * 0xFFFD or U+65533.)
      */
@@ -305,7 +305,7 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
 
     /**
      * Whether to replace the C0 control characters (00-1F) with the
-     * `replacement_char`. Default is false.
+     * {@code replacement_char}. Default is false.
      */
     public final boolean replaceControlCharacters;
 

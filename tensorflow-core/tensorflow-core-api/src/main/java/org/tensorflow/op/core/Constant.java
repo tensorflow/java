@@ -1329,11 +1329,7 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
 
   /**
    * Create a constant by making an immutable copy of {@code tensor}. {@code tensor} may be closed
-   * afterwards without issue.
-   *
-   * <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
-   * other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope,
-   * FloatNdArray)}}.
+   * afterward without issue.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param tensor a Tensor holding the constant value

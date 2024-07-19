@@ -316,7 +316,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
 
     /**
      * The data format for y_backprop, x, x_backprop.
-     * Either "NHWC" (default) or "NCHW".
+     * Either &quot;NHWC&quot; (default) or &quot;NCHW&quot;.
      */
     public final String dataFormat;
 

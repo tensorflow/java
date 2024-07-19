@@ -299,22 +299,22 @@ public final class SparseMatrixSparseMatMul extends RawOp implements Operand<TTy
     public final DataType type;
 
     /**
-     * Indicates whether `a` should be transposed.
+     * Indicates whether {@code a} should be transposed.
      */
     public final boolean transposeA;
 
     /**
-     * Indicates whether `b` should be transposed.
+     * Indicates whether {@code b} should be transposed.
      */
     public final boolean transposeB;
 
     /**
-     * Indicates whether `a` should be conjugate-transposed.
+     * Indicates whether {@code a} should be conjugate-transposed.
      */
     public final boolean adjointA;
 
     /**
-     * Indicates whether `b` should be conjugate-transposed.
+     * Indicates whether {@code b} should be conjugate-transposed.
      */
     public final boolean adjointB;
 

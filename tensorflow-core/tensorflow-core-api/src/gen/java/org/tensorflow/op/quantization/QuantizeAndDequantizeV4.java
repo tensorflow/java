@@ -317,7 +317,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
 
     /**
      * Whether the quantization is signed or unsigned. (actually this parameter should
-     * have been called <b>`signed_output`</b>)
+     * have been called <b>{@code signed_output}&lt;/b&gt;)
      */
     public final boolean signedInput;
 
@@ -327,7 +327,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
     public final long numBits;
 
     /**
-     * Whether the range is given or should be determined from the `input` tensor.
+     * Whether the range is given or should be determined from the {@code input} tensor.
      */
     public final boolean rangeGiven;
 
@@ -340,10 +340,11 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
      * The 'round_mode' attribute controls which rounding tie-breaking algorithm is
      * used when rounding float values to their quantized equivalents. The following
      * rounding modes are currently supported:
-     *
-     * *   HALF_TO_EVEN: this is the default round_mode.
-     * *   HALF_UP: round towards positive. In this mode 7.5 rounds up to 8 and -7.5
-     *     rounds up to -7.
+     * <ul>
+     * <li>HALF_TO_EVEN: this is the default round_mode.</li>
+     * <li>HALF_UP: round towards positive. In this mode 7.5 rounds up to 8 and -7.5
+     * rounds up to -7.</li>
+     * </ul>
      */
     public final String roundMode;
 

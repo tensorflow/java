@@ -195,7 +195,7 @@ public final class ApplyPowerSign<T extends TType> extends RawOp implements Oper
     public final DataType T;
 
     /**
-     * If `True`, updating of the var and m tensors is
+     * If {@code True}, updating of the var and m tensors is
      * protected by a lock; otherwise the behavior is undefined, but may exhibit less
      * contention.
      */

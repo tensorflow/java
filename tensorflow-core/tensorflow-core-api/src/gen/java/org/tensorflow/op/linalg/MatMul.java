@@ -231,12 +231,12 @@ public final class MatMul<T extends TType> extends RawOp implements Operand<T> {
     public final Operand<T> b;
 
     /**
-     * If true, "a" is transposed before multiplication.
+     * If true, &quot;a&quot; is transposed before multiplication.
      */
     public final boolean transposeA;
 
     /**
-     * If true, "b" is transposed before multiplication.
+     * If true, &quot;b&quot; is transposed before multiplication.
      */
     public final boolean transposeB;
 

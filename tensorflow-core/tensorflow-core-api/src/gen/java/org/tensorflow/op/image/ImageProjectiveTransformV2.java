@@ -174,12 +174,12 @@ public final class ImageProjectiveTransformV2<T extends TNumber> extends RawOp i
     public final DataType dtype;
 
     /**
-     * Interpolation method, "NEAREST" or "BILINEAR".
+     * Interpolation method, &quot;NEAREST&quot; or &quot;BILINEAR&quot;.
      */
     public final String interpolation;
 
     /**
-     * Fill mode, "REFLECT", "WRAP", or "CONSTANT".
+     * Fill mode, &quot;REFLECT&quot;, &quot;WRAP&quot;, or &quot;CONSTANT&quot;.
      */
     public final String fillMode;
 

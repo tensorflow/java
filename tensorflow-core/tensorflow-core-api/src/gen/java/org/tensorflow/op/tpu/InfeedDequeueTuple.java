@@ -107,12 +107,12 @@ public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<
   )
   public static class Inputs extends RawOpInputs<InfeedDequeueTuple> {
     /**
-     * The element types of each element in `outputs`.
+     * The element types of each element in {@code outputs}.
      */
     public final DataType[] dtypes;
 
     /**
-     * The shapes of each tensor in `outputs`.
+     * The shapes of each tensor in {@code outputs}.
      */
     public final Shape[] shapes;
 

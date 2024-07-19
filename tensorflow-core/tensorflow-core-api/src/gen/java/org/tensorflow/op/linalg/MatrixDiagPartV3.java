@@ -270,12 +270,12 @@ public final class MatrixDiagPartV3<T extends TType> extends RawOp implements Op
     public final DataType T;
 
     /**
-     * Some diagonals are shorter than `max_diag_len` and need to be padded. `align` is
+     * Some diagonals are shorter than {@code max_diag_len} and need to be padded. {@code align} is
      * a string specifying how superdiagonals and subdiagonals should be aligned,
-     * respectively. There are four possible alignments: "RIGHT_LEFT" (default),
-     * "LEFT_RIGHT", "LEFT_LEFT", and "RIGHT_RIGHT". "RIGHT_LEFT" aligns superdiagonals
+     * respectively. There are four possible alignments: &quot;RIGHT_LEFT&quot; (default),
+     * &quot;LEFT_RIGHT&quot;, &quot;LEFT_LEFT&quot;, and &quot;RIGHT_RIGHT&quot;. &quot;RIGHT_LEFT&quot; aligns superdiagonals
      * to the right (left-pads the row) and subdiagonals to the left (right-pads the
-     * row). It is the packing format LAPACK uses. cuSPARSE uses "LEFT_RIGHT", which is
+     * row). It is the packing format LAPACK uses. cuSPARSE uses &quot;LEFT_RIGHT&quot;, which is
      * the opposite alignment.
      */
     public final String align;

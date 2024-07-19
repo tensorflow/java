@@ -200,12 +200,12 @@ public final class Cumprod<T extends TType> extends RawOp implements Operand<T> 
     public final Operand<? extends TNumber> axis;
 
     /**
-     * If `True`, perform exclusive cumprod.
+     * If {@code True}, perform exclusive cumprod.
      */
     public final boolean exclusive;
 
     /**
-     * A `bool` (default: False).
+     * A {@code bool} (default: False).
      */
     public final boolean reverse;
 

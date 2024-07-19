@@ -166,7 +166,7 @@ public final class RandomIndexShuffle<T extends TNumber> extends RawOp implement
     public final DataType dtype;
 
     /**
-     * The type of `seed`.
+     * The type of {@code seed}.
      */
     public final DataType Tseed;
 
