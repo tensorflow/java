@@ -41,6 +41,14 @@ will now be
     <classifier>linux-x86_64</classifier>
 </dependency>
 ```
+### Java Module Renaming
+
+The Java Module (jigsaw) names has been updated to drop the leading `org.`, as follow:
+- `tensorflow-core-api` : `tensorflow` (was `org.tensorflow` before)
+- `tensorflow-core-generator` : `tensorflow.generator` (was `org.tensorflow-generator` before)
+- `tensorflow-core-native` : `tensorflow.nativelib`
+- `tensorflow-framework` :  `tensorflow.framework` (was `org.tensorflow.framework` before)
+
 ### Session Run Result
 
 In versions before 0.4.0 `Session.Runner.run` and `TensorFunction.call` returned a `List<Tensor>`. In newer versions
