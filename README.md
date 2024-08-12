@@ -27,6 +27,7 @@ The following describes the layout of the repository and its different artifacts
   * Primary API for building and training neural networks with TensorFlow
   * Intended audience: neural network developers
   * For more information: [tensorflow-framework/README.md](tensorflow-framework/README.md)
+  * If you were directed here from https://github.com/dhruvrajan/tensorflow-keras-java, please see [here](https://github.com/tensorflow/java/issues/217)
 
 *Note: The NdArray Library module has now its own [repository](https://github.com/tensorflow/java-ndarray) and has been moved out of TensorFlow Java.*
 
