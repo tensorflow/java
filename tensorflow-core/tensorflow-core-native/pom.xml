@@ -669,6 +669,7 @@
               <minmemory>256m</minmemory>
               <maxmemory>2048m</maxmemory>
               <links>
+                <link>https://protobuf.dev/reference/java/api-docs</link>
                 <link>http://bytedeco.org/javacpp/apidocs</link>
               </links>
             </configuration>

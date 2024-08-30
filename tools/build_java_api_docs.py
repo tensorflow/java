@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Generate TensorFlow Lite Java reference docs for TensorFlow.org."""
+"""Generate TensorFlow Java reference docs for TensorFlow.org."""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -21,6 +21,7 @@ from __future__ import print_function
 import pathlib
 import shutil
 import tempfile
+from git import Repo
 
 from absl import app
 from absl import flags
@@ -48,6 +49,18 @@ flags.DEFINE_bool(
 TOOLS_DIR = pathlib.Path(__file__).resolve().parent
 REPO_ROOT = TOOLS_DIR.parent
 
+
+def checkout_ndarray():
+  repo_url = 'https://github.com/tensorflow/java-ndarray'
+  local_repo_path = REPO_ROOT/'ndarray'
+  if not pathlib.Path(local_repo_path).exists():
+    local_repo = Repo.clone_from(repo_url, local_repo_path)
+  else:
+    local_repo = Repo(local_repo_path)
+  local_repo.remotes['origin'].fetch()
+  local_repo.git.checkout('v1.0.0')
+
+
 def overlay(from_root, to_root):
   for from_path in pathlib.Path(from_root).rglob('*'):
     relpath = from_path.relative_to(from_root)
@@ -58,24 +71,27 @@ def overlay(from_root, to_root):
     else:
       to_path.mkdir(exist_ok=True)
 
+
 def main(unused_argv):
+  checkout_ndarray()
   merged_source = pathlib.Path(tempfile.mkdtemp())
   (merged_source / 'java/org').mkdir(parents=True)
 
-  shutil.copytree(REPO_ROOT/'tensorflow-core/tensorflow-core-api/src/main/java/org/tensorflow/',
-                  merged_source/'java/org/tensorflow')
-  overlay(REPO_ROOT/'tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow',
-            merged_source/'java/org/tensorflow')
-  shutil.copytree(REPO_ROOT/'tensorflow-framework/src/main/java/org/tensorflow/framework',
-                  merged_source/'java/org/tensorflow/framework')
-  shutil.copytree(REPO_ROOT/'ndarray/src/main/java/org/tensorflow/ndarray',
-                  merged_source/'java/org/tensorflow/ndarray')
+  shutil.copytree(REPO_ROOT/'tensorflow-core/tensorflow-core-api/src/main/java/org/tensorflow/', merged_source/'java/org/tensorflow')
+  overlay(REPO_ROOT/'tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow', merged_source/'java/org/tensorflow')
+  shutil.copytree(REPO_ROOT/'tensorflow-core/tensorflow-core-native/src/gen/java/org/tensorflow/proto', merged_source/'java/org/tensorflow/proto')
+  shutil.copytree(REPO_ROOT/'tensorflow-core/tensorflow-core-native/src/main/java/org/tensorflow/exceptions', merged_source/'java/org/tensorflow/exceptions')
+  shutil.copytree(REPO_ROOT/'tensorflow-core/tensorflow-core-native/src/gen/java/org/tensorflow/internal/c_api', merged_source/'java/org/tensorflow/internal/c_api')
+  shutil.copytree(REPO_ROOT/'tensorflow-framework/src/main/java/org/tensorflow/framework', merged_source/'java/org/tensorflow/framework')
+  shutil.copytree(REPO_ROOT/'ndarray/ndarray/src/main/java/org/tensorflow/ndarray', merged_source/'java/org/tensorflow/ndarray')
 
   gen_java.gen_java_docs(
       package='org.tensorflow',
       source_path=merged_source / 'java',
       output_dir=pathlib.Path(FLAGS.output_dir),
-      site_path=pathlib.Path(FLAGS.site_path))
+      site_path=pathlib.Path(FLAGS.site_path),
+      script_path=pathlib.Path(REPO_ROOT/'tools/run-javadoc-for-tf.sh'), # FIXME use default one??
+  )
 
 
 if __name__ == '__main__':
