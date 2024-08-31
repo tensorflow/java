@@ -29,6 +29,7 @@ from absl import flags
 from tensorflow_docs.api_generator import gen_java
 
 FLAGS = flags.FLAGS
+NDARRAY_VERSION = 'v1.0.0'
 
 # These flags are required by infrastructure, not all of them are used.
 flags.DEFINE_string('output_dir', '/tmp/java_api/',
@@ -58,7 +59,7 @@ def checkout_ndarray():
   else:
     local_repo = Repo(local_repo_path)
   local_repo.remotes['origin'].fetch()
-  local_repo.git.checkout('v1.0.0')
+  local_repo.git.checkout(NDARRAY_VERSION)
 
 
 def overlay(from_root, to_root):
@@ -90,7 +91,8 @@ def main(unused_argv):
       source_path=merged_source / 'java',
       output_dir=pathlib.Path(FLAGS.output_dir),
       site_path=pathlib.Path(FLAGS.site_path),
-      script_path=pathlib.Path(REPO_ROOT/'tools/run-javadoc-for-tf.sh'), # FIXME use default one??
+      # Uncomment for local testing:
+      # script_path=pathlib.Path(REPO_ROOT/'tools/run-javadoc-for-tf-local.sh'),
   )
 
 
