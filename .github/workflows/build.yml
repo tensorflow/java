@@ -132,7 +132,7 @@ jobs:
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   macosx-x86_64:
-    runs-on: macos-11
+    runs-on: macos-12
     needs: prepare
     strategy:
       matrix:
