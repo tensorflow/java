@@ -175,10 +175,10 @@
                       <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.windows-x86_64}.jar</file>
                       <classifier>${javacpp.platform.windows-x86_64}</classifier>
                     </artifact>
-                    <artifact>
+                    <!--artifact>
                       <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.linux-arm64}.jar</file>
                       <classifier>${javacpp.platform.linux-arm64}</classifier>
-                    </artifact>
+                    </artifact-->
                   </artifacts>
                 </configuration>
               </execution>
