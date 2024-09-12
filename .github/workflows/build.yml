@@ -72,7 +72,12 @@ jobs:
       - name: Install environment
         run: |
           sudo apt update
-          sudo apt install -y curl wget unzip tar git gcc g++ maven default-jdk
+          sudo apt install -y curl wget unzip tar git gcc g++
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'          
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
