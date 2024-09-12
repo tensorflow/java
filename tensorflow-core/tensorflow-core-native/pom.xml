@@ -131,12 +131,12 @@
                       <version>${project.version}</version>
                       <classifier>${javacpp.platform.windows-x86_64}</classifier>
                     </artifactItem>
-                    <!--artifactItem>
+                    <artifactItem>
                       <groupId>${project.groupId}</groupId>
                       <artifactId>${project.artifactId}</artifactId>
                       <version>${project.version}</version>
                       <classifier>${javacpp.platform.linux-arm64}</classifier>
-                    </artifactItem-->
+                    </artifactItem>
                   </artifactItems>
                 </configuration>
               </execution>
@@ -175,10 +175,10 @@
                       <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.windows-x86_64}.jar</file>
                       <classifier>${javacpp.platform.windows-x86_64}</classifier>
                     </artifact>
-                    <!--artifact>
+                    <artifact>
                       <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.linux-arm64}.jar</file>
                       <classifier>${javacpp.platform.linux-arm64}</classifier>
-                    </artifact-->
+                    </artifact>
                   </artifacts>
                 </configuration>
               </execution>
