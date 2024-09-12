@@ -76,8 +76,9 @@ jobs:
       - name: Configure Java
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
-          java-version: '17'          
+          distribution: 'zulu'
+          java-version: '17'
+          architecture: 'aarch64'
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
