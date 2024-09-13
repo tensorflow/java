@@ -79,7 +79,7 @@ To upgrade the version of TensorFlow that is embedded within TensorFlow Java, pl
 ### Upgrading TensorFlow Native Library
 
 1. Download locally the archive of the tensorflow release at https://github.com/tensorflow/tensorflow/archive/refs/tags/vX.X.X.tar.gz
-2. Compute the SHA sum using the shell command `sha256sum <tensorflow-x.x.x.tar.gz>`
+2. Compute the SHA sum using the shell command `shasum -a 256 <tensorflow-x.x.x.tar.gz>`
 3. Update `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule in Bazel [workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-native/WORKSPACE#L19)
 4. Extract the archive in a temporary folder
 5. Copy the content of `tensorflow-x.x.x/.bazelrc` file to `tensorflow-core/tensorflow-core-native/tensorflow.bazelrc` under TensorFlow Java source tree
