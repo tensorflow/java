@@ -55,7 +55,7 @@ if [[ "$PLATFORM" =~ "linux" ]]; then
   ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
   ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
   if [[ "$PLATFORM" == "linux-arm64" ]]; then
-    ln -fs libomp-e9212f90.so.5 libomp.so
+    ln -fs libomp-e9212f90.so.5 libomp-e9212f90.so
   fi
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
