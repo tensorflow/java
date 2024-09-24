@@ -34,7 +34,7 @@ fi
 # To get a shell to poke around the maven artifacts with.
 if [[ -z "${CMD}" ]]
 then
-  CMD="mvn clean deploy -B -e --settings ./settings.xml -Pdeploying -Preleasing -DstagingRepositoryId=${STAGING_SEQ}"
+  CMD="mvn clean deploy -B -e --settings ./settings.xml -Pdeploying -Preleasing -DstagingRepositoryId=orgtensorflow-${STAGING_SEQ}"
 fi
 
 export GPG_TTY=$(tty)
