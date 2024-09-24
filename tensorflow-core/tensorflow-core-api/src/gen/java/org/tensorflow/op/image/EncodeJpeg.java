@@ -387,8 +387,8 @@ public final class EncodeJpeg extends RawOp implements Operand<TString> {
     public final boolean chromaDownsampling;
 
     /**
-     * Unit used to specify `x_density` and `y_density`:
-     * pixels per inch (`'in'`) or centimeter (`'cm'`).
+     * Unit used to specify {@code x_density} and {@code y_density}:
+     * pixels per inch ({@code 'in'}) or centimeter ({@code 'cm'}).
      */
     public final String densityUnit;
 

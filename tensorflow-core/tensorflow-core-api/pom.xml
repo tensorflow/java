@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.tensorflow</groupId>
     <artifactId>tensorflow-core</artifactId>
-    <version>1.0.0-rc.1</version>
+    <version>1.0.0-rc.2</version>
   </parent>
   <artifactId>tensorflow-core-api</artifactId>
   <packaging>jar</packaging>
@@ -15,7 +15,7 @@
   <description>Platform-dependent native code and pure-Java code for the TensorFlow machine intelligence library.</description>
 
   <properties>
-    <ndarray.version>1.0.0-rc.1</ndarray.version>
+    <ndarray.version>1.0.0</ndarray.version>
     <truth.version>1.1.5</truth.version>
     <test.download.skip>false</test.download.skip>
     <test.download.folder>${project.build.directory}/tf-text-download/</test.download.folder>
@@ -230,6 +230,12 @@
               <goal>jar</goal>
             </goals>
             <configuration>
+              <additionalJOptions>
+                <additionalJOption>-Xmaxerrs</additionalJOption>
+                <additionalJOption>65536</additionalJOption>
+                <additionalJOption>-Xmaxwarns</additionalJOption>
+                <additionalJOption>65536</additionalJOption>
+              </additionalJOptions>
               <failOnError>false</failOnError>
               <minmemory>256m</minmemory>
               <maxmemory>2048m</maxmemory>

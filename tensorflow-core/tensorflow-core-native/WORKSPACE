@@ -18,10 +18,10 @@ http_archive(
         "find tensorflow third_party/xla/third_party/tsl -name \\*.proto | xargs sed -i.bak 's/^package tensorflow\\([^;]*\\).*$/package tensorflow\\1;\\noption java_package = \"org.tensorflow.proto\\1\";/'",
     ],
     urls = [
-       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.16.1.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.16.2.tar.gz",
     ],
-    sha256 = "c729e56efc945c6df08efe5c9f5b8b89329c7c91b8f40ad2bb3e13900bd4876d",
-    strip_prefix = "tensorflow-2.16.1"
+    sha256 = "023849bf253080cb1e4f09386f5eb900492da2288274086ed6cfecd6d99da9eb",
+    strip_prefix = "tensorflow-2.16.2"
 )
 
 ##### Copy content of tensorflow/WORKSPACE here (make sure to change references of default package "//" to "@org_tensorflow//")

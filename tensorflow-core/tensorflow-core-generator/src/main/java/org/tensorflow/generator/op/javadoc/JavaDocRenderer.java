@@ -65,13 +65,7 @@ public class JavaDocRenderer implements Renderer {
     this.nodeRendererFactories = new ArrayList<>(builder.nodeRendererFactories.size() + 1);
     this.nodeRendererFactories.addAll(builder.nodeRendererFactories);
     // Add as last. This means clients can override the rendering of core nodes if they want.
-    this.nodeRendererFactories.add(
-        new JavaDocNodeRendererFactory() {
-          @Override
-          public NodeRenderer create(JavaDocNodeRendererContext context) {
-            return new CoreJavaDocNodeRenderer(context);
-          }
-        });
+    this.nodeRendererFactories.add(CoreJavaDocNodeRenderer::new);
   }
 
   /**

@@ -373,8 +373,8 @@ public final class Conv<T extends TNumber> extends RawOp implements Operand<T> {
     public final DataType T;
 
     /**
-     * 1-D tensor of length `N+2`. The stride of the sliding window for each
-     * dimension of `input`. Must have `strides[0] = strides[N+1] = 1`.
+     * 1-D tensor of length {@code N+2}. The stride of the sliding window for each
+     * dimension of {@code input}. Must have {@code strides[0] = strides[N+1] = 1}.
      */
     public final long[] strides;
 
@@ -384,24 +384,24 @@ public final class Conv<T extends TNumber> extends RawOp implements Operand<T> {
     public final String padding;
 
     /**
-     * If `padding` is `"EXPLICIT"`, the list of explicit padding amounts. For the ith
+     * If {@code padding} is {@code "EXPLICIT"}, the list of explicit padding amounts. For the ith
      * dimension, the amount of padding inserted before and after the dimension is
-     * `explicit_paddings[2 * i]` and `explicit_paddings[2 * i + 1]`, respectively. If
-     * `padding` is not `"EXPLICIT"`, `explicit_paddings` must be empty.
+     * {@code explicit_paddings[2 * i]} and {@code explicit_paddings[2 * i + 1]}, respectively. If
+     * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
      */
     public final long[] explicitPaddings;
 
     /**
-     * Used to set the data format. By default `CHANNELS_FIRST`, uses 
-     * `NHWC (2D) / NDHWC (3D)` or if `CHANNELS_LAST`, uses `NCHW (2D) / NCDHW (3D)`.
+     * Used to set the data format. By default {@code CHANNELS_FIRST}, uses
+     * {@code NHWC (2D) / NDHWC (3D)} or if {@code CHANNELS_LAST}, uses {@code NCHW (2D) / NCDHW (3D)}.
      */
     public final String dataFormat;
 
     /**
-     * 1-D tensor of length `N+2`. The dilation factor for each dimension of
-     * `input`. If set to `k > 1`, there will be `k-1` skipped cells between each
+     * 1-D tensor of length {@code N+2}. The dilation factor for each dimension of
+     * {@code input}. If set to {@code k > 1}, there will be {@code k-1} skipped cells between each
      * filter element on that dimension. The dimension order is determined by the
-     * value of `channels_last_format`, see above for details. Dilations in the batch
+     * value of {@code channels_last_format}, see above for details. Dilations in the batch
      * and depth dimensions must be 1.
      */
     public final long[] dilations;
@@ -415,7 +415,7 @@ public final class Conv<T extends TNumber> extends RawOp implements Operand<T> {
     /**
      * A positive integer specifying the number of groups in which the input is split
      * along the channel axis. Each group is convolved separately with
-     * `filters / groups` filters. The output is the concatenation of all the groups
+     * {@code filters / groups} filters. The output is the concatenation of all the groups
      * results along the channel axis. Input channels and filters must both be
      * divisible by groups.
      */

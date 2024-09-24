@@ -225,18 +225,17 @@ public final class TriangularSolve<T extends TType> extends RawOp implements Ope
     public final Operand<T> rhs;
 
     /**
-     * Boolean indicating whether the innermost matrices in `matrix` are
+     * Boolean indicating whether the innermost matrices in {@code matrix} are
      * lower or upper triangular.
      */
     public final boolean lower;
 
     /**
-     * Boolean indicating whether to solve with `matrix` or its (block-wise)
-     *          adjoint.
-     *
-     * @compatibility(numpy)
+     * Boolean indicating whether to solve with {@code matrix} or its (block-wise)
+     * adjoint.
+     * <p>{@literal @}compatibility(numpy)<br>
      * Equivalent to scipy.linalg.solve_triangular
-     * @end_compatibility
+     * <br>{@literal @}end_compatibility
      */
     public final boolean adjoint;
 

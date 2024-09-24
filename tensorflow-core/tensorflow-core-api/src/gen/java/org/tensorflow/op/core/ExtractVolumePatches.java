@@ -123,13 +123,13 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
     public final Operand<T> input;
 
     /**
-     * The size of the sliding window for each dimension of `input`.
+     * The size of the sliding window for each dimension of {@code input}.
      */
     public final long[] ksizes;
 
     /**
      * 1-D of length 5. How far the centers of two consecutive patches are in
-     * `input`. Must be: `[1, stride_planes, stride_rows, stride_cols, 1]`.
+     * {@code input}. Must be: {@code [1, stride_planes, stride_rows, stride_cols, 1]}.
      */
     public final long[] strides;
 
@@ -140,13 +140,11 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
 
     /**
      * The type of padding algorithm to use.
-     *
-     * The size-related attributes are specified as follows:
-     *
-     * ```python
+     * <p>The size-related attributes are specified as follows:
+     * <pre>
      * ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
      * strides = [1, stride_planes, strides_rows, strides_cols, 1]
-     * ```
+     * </pre>
      */
     public final String padding;
 

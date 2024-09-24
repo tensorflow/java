@@ -221,9 +221,9 @@ public final class CopyHost<T extends TType> extends RawOp implements Operand<T>
     /**
      * A list of debug op spec (op, url, gated_grpc) for attached debug
      * ops. Each element of the list has the format
-     * <debug_op>;<grpc_url>;<gated_grpc>, wherein gated_grpc is boolean represented
-     * as 0/1. E.g., "DebugIdentity;grpc://foo:3333;1",
-     * "DebugIdentity;file:///tmp/tfdbg_1;0".
+     * &lt;debug_op&gt;;&lt;grpc_url&gt;;&lt;gated_grpc&gt;, wherein gated_grpc is boolean represented
+     * as 0/1. E.g., &quot;DebugIdentity;grpc://foo:3333;1&quot;,
+     * &quot;DebugIdentity;file:///tmp/tfdbg_1;0&quot;.
      */
     public final String[] debugOpsSpec;
 

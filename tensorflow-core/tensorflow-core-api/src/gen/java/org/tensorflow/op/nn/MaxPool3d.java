@@ -166,13 +166,13 @@ public final class MaxPool3d<T extends TNumber> extends RawOp implements Operand
 
     /**
      * 1-D tensor of length 5. The size of the window for each dimension of
-     * the input tensor. Must have `ksize[0] = ksize[4] = 1`.
+     * the input tensor. Must have {@code ksize[0] = ksize[4] = 1}.
      */
     public final long[] ksize;
 
     /**
      * 1-D tensor of length 5. The stride of the sliding window for each
-     * dimension of `input`. Must have `strides[0] = strides[4] = 1`.
+     * dimension of {@code input}. Must have {@code strides[0] = strides[4] = 1}.
      */
     public final long[] strides;
 
@@ -183,10 +183,10 @@ public final class MaxPool3d<T extends TNumber> extends RawOp implements Operand
 
     /**
      * The data format of the input and output data. With the
-     * default format "NDHWC", the data is stored in the order of:
-     *     [batch, in_depth, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCDHW", the data storage order is:
-     *     [batch, in_channels, in_depth, in_height, in_width].
+     * default format &quot;NDHWC&quot;, the data is stored in the order of:
+     * [batch, in_depth, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+     * [batch, in_channels, in_depth, in_height, in_width].
      */
     public final String dataFormat;
 

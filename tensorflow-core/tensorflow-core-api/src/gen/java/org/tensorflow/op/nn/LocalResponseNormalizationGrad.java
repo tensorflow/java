@@ -237,7 +237,7 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Raw
     public final long depthRadius;
 
     /**
-     * An offset (usually > 0 to avoid dividing by 0).
+     * An offset (usually &gt; 0 to avoid dividing by 0).
      */
     public final float bias;
 

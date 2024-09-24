@@ -144,8 +144,8 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
     public final DataType T;
 
     /**
-     * The `dtype` to use for serialization; the supported types are `string`
-     * (default) and `variant`.
+     * The {@code dtype} to use for serialization; the supported types are {@code string}
+     * (default) and {@code variant}.
      */
     public final DataType outType;
 

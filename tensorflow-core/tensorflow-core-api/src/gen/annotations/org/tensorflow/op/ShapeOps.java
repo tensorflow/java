@@ -28,7 +28,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code shape} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class ShapeOps {
   private final Scope scope;

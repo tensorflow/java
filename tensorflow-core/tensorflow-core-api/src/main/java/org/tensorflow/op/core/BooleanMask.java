@@ -78,7 +78,7 @@ public abstract class BooleanMask {
     if (maskShape.numDimensions() == 0) {
       throw new IllegalArgumentException("Mask cannot be a scalar.");
     }
-    if (maskShape.hasUnknownDimension()) {
+    if (maskShape.isUnknown()) {
       throw new IllegalArgumentException("Mask cannot have unknown number of dimensions");
     }
 

@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
 /**
  * An API for building {@code ragged} operations as {@link Op Op}s
  *
- * @see {@link Ops}
+ * @see Ops
  */
 public final class RaggedOps {
   private final Scope scope;

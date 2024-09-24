@@ -116,7 +116,7 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
     public final DataType T;
 
     /**
-     * Shape of elements of `inputs`.
+     * Shape of elements of {@code inputs}.
      */
     public final Shape shape;
 

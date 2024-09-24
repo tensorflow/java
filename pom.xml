@@ -7,7 +7,7 @@
 
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-java</artifactId>
-  <version>1.0.0-rc.1</version>
+  <version>1.0.0-rc.2</version>
   <packaging>pom</packaging>
 
   <name>TensorFlow Java Parent</name>
@@ -26,7 +26,7 @@
 
   <scm>
     <url>https://github.com/tensorflow/java.git</url>
-    <connection>git@github.com:tensorflow/java.git</connection>
+    <connection>scm:git@github.com:tensorflow/java.git</connection>
     <developerConnection>scm:git:https://github.com/tensorflow/java.git</developerConnection>
   </scm>
 
@@ -326,6 +326,18 @@
         <property>
           <name>javacpp.platform.extension</name>
           <value>-gpu</value>
+        </property>
+      </activation>
+    </profile>
+    <profile>
+      <id>linux-arm64</id>
+      <activation>
+        <os>
+          <name>linux</name>
+          <arch>aarch64</arch>
+        </os>
+        <property>
+          <name>!javacpp.platform.extension</name>
         </property>
       </activation>
     </profile>

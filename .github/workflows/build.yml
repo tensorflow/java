@@ -62,6 +62,34 @@ jobs:
           fi
           echo "Repository URL: $REPOSITORY_URL"
           echo "::set-output name=repositoryUrl::$REPOSITORY_URL"
+  linux-arm64:
+    runs-on: ubuntu-2204-arm64-2c
+    needs: prepare
+    strategy:
+      matrix:
+        ext: [""]
+    steps:
+      - name: Install environment
+        run: |
+          sudo apt update
+          sudo apt install -y curl wget unzip tar git gcc g++
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          architecture: 'aarch64'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          gcc --version
+          mvn -version
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Deploy native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   linux-x86_64:
     runs-on: ubuntu-20.04
     needs: prepare
@@ -110,7 +138,7 @@ jobs:
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   macosx-x86_64:
-    runs-on: macos-11
+    runs-on: macos-12
     needs: prepare
     strategy:
       matrix:
@@ -178,10 +206,9 @@ jobs:
         run: |
           call mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
           if ERRORLEVEL 1 exit /b
-
   deploy:
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
-    needs: [linux-x86_64, macosx-x86_64, windows-x86_64, macosx-arm64]
+    needs: [linux-x86_64, macosx-x86_64, windows-x86_64, macosx-arm64, linux-arm64]
     runs-on: ubuntu-20.04
     steps:
       - name: Configure Java

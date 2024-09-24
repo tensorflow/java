@@ -253,40 +253,40 @@ public final class UniformRequantize<U extends TNumber> extends RawOp implements
     public final DataType Tout;
 
     /**
-     * The quantization axis that was used when quantizing original data that `input` represents.
+     * The quantization axis that was used when quantizing original data that {@code input} represents.
      * Indicates the dimension index of the tensor where per-axis quantization is applied for the slices along that dimension.
      * If set to -1 (default), this indicates per-tensor quantization. Otherwise, it must be set within range [0, input.dims()).
      */
     public final long inputQuantizationAxis;
 
     /**
-     * The quantization min value that was used when quantizing original data that `input` represents.
+     * The quantization min value that was used when quantizing original data that {@code input} represents.
      * The purpose of this attribute is typically (but not limited to) to indicate narrow range, where this is set to:
-     * `(Tin lowest) + 1` if narrow range, and `(Tin lowest)` otherwise.
+     * {@code (Tin lowest) + 1} if narrow range, and {@code (Tin lowest)} otherwise.
      * For example, if Tin is qint8, this is set to -127 if narrow range quantized or -128 if not.
      */
     public final long inputQuantizationMinVal;
 
     /**
-     * The quantization max value that was used when quantizing original data that `input` represents.
+     * The quantization max value that was used when quantizing original data that {@code input} represents.
      * The purpose of this attribute is typically (but not limited to) indicate narrow range, where this is set to:
-     * `(Tout max)` for both narrow range and not narrow range.
+     * {@code (Tout max)} for both narrow range and not narrow range.
      * For example, if Tin is qint8, this is set to 127.
      */
     public final long inputQuantizationMaxVal;
 
     /**
-     * The new quantization axis to use to quantize original data that `input` represents.
+     * The new quantization axis to use to quantize original data that {@code input} represents.
      */
     public final long outputQuantizationAxis;
 
     /**
-     * The new quantization min value to quantize original data that `input` represents.
+     * The new quantization min value to quantize original data that {@code input} represents.
      */
     public final long outputQuantizationMinVal;
 
     /**
-     * The new quantization max value to quantize original data that `input` represents.
+     * The new quantization max value to quantize original data that {@code input} represents.
      */
     public final long outputQuantizationMaxVal;
 
