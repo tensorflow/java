@@ -297,10 +297,6 @@ final class ClassGenerator {
         if (seenGenerics.add(typeVar.name)) {
           typeParams.add(typeVar);
           builder.addTypeVariable(typeVar);
-          // FIXME: check if we need to add this or if it's redundant now with other type
-          // generations.
-          // builder.addJavadoc("\n@param <$L> data type for {@code $L} output\n", typeVar.name,
-          // output.getName());
         }
       }
     }
