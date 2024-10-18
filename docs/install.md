@@ -13,12 +13,14 @@ Caution: The TensorFlow Java API is *not* covered by the TensorFlow
 
 ## Requirements
 
-TensorFlow Java runs on Java 8 and above, and supports out-of-the-box the
+TensorFlow Java runs on Java 11 and above, and supports out-of-the-box the
 following platforms:
 
-*   Ubuntu 16.04 or higher; 64-bit, x86
-*   macOS 10.12.6 (Sierra) or higher; 64-bit, x86
-*   Windows 7 or higher; 64-bit, x86
+*   Ubuntu 20.04 or higher; 64-bit, x86
+*   Ubuntu 22.04 or higher; 64-bit, arm
+*   macOS 12 or higher; 64-bit, x86
+*   macOS 14 or higher; 64-bit, arm
+*   Windows 10 or higher; 64-bit, x86
 
 *Note: To use TensorFlow on Android, see
 [TensorFlow Lite](https://tensorflow.org/lite)*
@@ -41,8 +43,7 @@ TensorFlow Java to your project. The easiest one is to add a dependency on the
 Core API and the native dependencies it requires to run on all supported
 platforms.
 
-You can also select the `tensorflow-core-platform-gpu` extension instead, which
-supports CUDA® on Linux and Windows platforms.
+To include CUDA® support for Linux x86, select the `tensorflow-core-native:linux-x86_64-gpu` artifact.
 
 In addition, a separate dependency on the `tensorflow-framework` library can be
 added to benefit from a rich set of utilities for TensorFlow-based machine
@@ -118,7 +119,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0-rc.1'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0-rc.2'
 }
 ```
 
