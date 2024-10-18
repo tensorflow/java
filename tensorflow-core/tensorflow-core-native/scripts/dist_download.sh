@@ -14,7 +14,7 @@ case ${PLATFORM:-} in
     WHEEL_URL='https://files.pythonhosted.org/packages/6d/69/9999c2d9e8a3b08dfcfc7e9259a05fb1da5f700936091d2eb4a7985c2776/tensorflow-2.16.2-cp311-cp311-macosx_10_15_x86_64.whl'
     ;;
   'macosx-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/9d/72/6f09443493b9df2fd8a9585c9af4d9453762906a8e5735a8a5efa6e3d1e3/tensorflow-2.16.2-cp311-cp311-macosx_12_0_arm64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/20/91/4358b8f5c83ff0dff679fdcdde0f7d6020dd47ef0c00d3e815ec3ceae426/tensorflow-2.18.0rc2-cp312-cp312-macosx_12_0_arm64.whl'
     ;;
   'windows-x86_64')
     WHEEL_URL='https://files.pythonhosted.org/packages/46/87/c3e4e9fe7c630f38a6984afdd1d4ed531ef9c74dc66b86f46f6bdd89d608/tensorflow_intel-2.16.2-cp311-cp311-win_amd64.whl'

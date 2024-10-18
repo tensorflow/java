@@ -10,6 +10,9 @@ case ${PLATFORM:-} in
   'macosx-x86_64')
     TEXT_WHEEL_URL='https://files.pythonhosted.org/packages/6d/69/9999c2d9e8a3b08dfcfc7e9259a05fb1da5f700936091d2eb4a7985c2776/tensorflow-2.16.2-cp311-cp311-macosx_10_15_x86_64.whl'
     ;;
+  'macosx-arm64')
+    TEXT_WHEEL_URL='https://files.pythonhosted.org/packages/e7/0d/20b259aadf5f98bad45d55dcd3a7e2690058bb4bc1188dd9e36ab9bdd2ec/tensorflow_text-2.18.0rc0-cp310-cp310-macosx_11_0_arm64.whl'
+    ;;
   *)
     echo "TensorFlow Text distribution for ${PLATFORM} is not supported for download"
     exit 0;
