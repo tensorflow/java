@@ -15,8 +15,7 @@ For dependencies, we can use anything compliant with [this list](https://opensou
 
 ## Building
 
-To build all the artifacts locally, simply invoke the command `mvn install` at the root of this repository (or the Maven command of your choice). It is also
-possible to build artifacts with support for CUDA® by adding the `-Djavacpp.platform.extension=-gpu` argument to the Maven command.
+To build all the artifacts locally, simply invoke the command `mvn install` at the root of this repository (or the Maven command of your choice).
 
 ### JDK 16+
 
@@ -35,7 +34,7 @@ This can be done in `.mvn/jvm.config` or `MAVEN_OPTS`.
 ### Native Builds
 
 By default, the build will attempt to download the existing TensorFlow binaries from the web for the platform it is running on (so you need to have an active internet connection).
-If such binaries are not available for your platform, you will need to build the TensorFlow runtime library from sources, by appending the `-Dnative.build` argument to your Maven
+If such binaries are not available for your platform, you will need to build the TensorFlow runtime library from sources, by appending the `-Pnative-build` argument to your Maven
 command. This requires a valid environment for building TensorFlow, including the [bazel](https://bazel.build/) build tool and a few Python dependencies
 (please read [TensorFlow documentation](https://www.tensorflow.org/install/source) for more details). Note that building from sources can take multiple hours on a regular laptop.
 

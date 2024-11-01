@@ -115,7 +115,7 @@ Only one dependency can be added per platform, meaning that you cannot add nativ
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
 required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
 
-- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `macosx-arm64`, `macosx-x86_64` and `windows-x86_64`
+- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-x86_64-arm64`, `macosx-arm64`, `macosx-x86_64` and `windows-x86_64`
 
 For example, to run TensorFlow Java on any CPU platform for which a binary is being distributed by this project, you can 
 simply add this dependency to your application:
