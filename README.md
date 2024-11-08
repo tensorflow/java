@@ -69,12 +69,12 @@ systems with no GPU support, you should add the following dependencies:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
 ```
@@ -85,24 +85,24 @@ native dependencies as follows:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>linux-x86_64-gpu</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>macosx-arm64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>windows-x86_64</classifier>
 </dependency>
 ```
@@ -123,7 +123,7 @@ simply add this dependency to your application:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -153,7 +153,7 @@ to add Sonatype OSS repository in your pom.xml, like the following
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -175,7 +175,8 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 | 0.5.0                   | 2.10.1             | 11 |
 | 1.0.0-rc.1              | 2.16.1             | 11 |
 | 1.0.0-rc.2              | 2.16.2             | 11 |
-| 1.0.0-SNAPSHOT          | 2.16.2             | 11 |
+| 1.0.0                   | 2.16.2             | 11 |
+| 1.1.0-SNAPSHOT          | 2.16.2             | 11 |
 
 ## How to Contribute?
 
