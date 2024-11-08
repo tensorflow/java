@@ -72,7 +72,7 @@
         <bazel.generate.skip>false</bazel.generate.skip>
         <javacpp.clean.skip>false</javacpp.clean.skip>
         <javacpp.generate.skip>false</javacpp.generate.skip>
-        <dist.download.skip>true</dist.download.skip>
+        <dist.download.skip>false</dist.download.skip> <!-- FIXME Normally we shouldn't download the wheel when doing a full native builds, but the absl headers are missing if we don't... -->
       </properties>
     </profile>
 
