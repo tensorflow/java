@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * %replicated_output:2 = &quot;tf.TPUReplicatedOutput&quot;(%computation)
  * </pre>
  * <p>The above computation has a replicated output of two replicas.
- *
- * @param <T> data type for {@code outputs} output
  */
 @OpMetadata(
     opType = ReplicatedOutput.OP_NAME,

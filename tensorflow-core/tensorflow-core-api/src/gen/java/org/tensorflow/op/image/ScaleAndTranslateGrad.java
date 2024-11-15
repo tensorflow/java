@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The ScaleAndTranslateGrad operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ScaleAndTranslateGrad.OP_NAME,

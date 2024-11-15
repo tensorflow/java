@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * This op accepts a ragged tensor with 1 ragged dimension containing only
  * strings and outputs a ragged tensor with 1 ragged dimension containing ngrams
  * of that string, joined along the innermost axis.
- *
- * @param <T> data type for {@code ngrams_splits} output
  */
 @OpMetadata(
     opType = StringNGrams.OP_NAME,

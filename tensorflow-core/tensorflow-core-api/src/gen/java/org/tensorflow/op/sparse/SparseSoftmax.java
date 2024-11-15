@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TNumber;
  * (3) Renormalizes the remaining elements.
  * <p>Hence, the {@code SparseTensor} result has exactly the same non-zero indices and
  * shape.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseSoftmax.OP_NAME,

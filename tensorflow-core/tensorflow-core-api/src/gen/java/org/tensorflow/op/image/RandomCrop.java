@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>This Op picks a random location in {@code image} and crops a {@code height} by {@code width}
  * rectangle from that location.  The random location is picked so the cropped
  * area will fit inside the original image.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomCrop.OP_NAME,

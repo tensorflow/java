@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * Outputs random values from a uniform distribution.
  * The generated values follow a uniform distribution in the range {@code [0, 1)}. The
  * lower bound 0 is included in the range, while the upper bound 1 is excluded.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatefulUniform.OP_NAME,

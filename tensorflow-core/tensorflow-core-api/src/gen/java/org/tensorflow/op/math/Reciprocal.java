@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Computes the reciprocal of x element-wise.
  * I.e., \(y = 1 / x\).
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Reciprocal.OP_NAME,

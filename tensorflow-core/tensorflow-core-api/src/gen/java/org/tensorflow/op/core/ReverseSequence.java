@@ -84,8 +84,6 @@ import org.tensorflow.types.family.TType;
  * output[3:, :, 2, :, ...] = input[3:, :, 2, :, ...]
  * output[2:, :, 3, :, ...] = input[2:, :, 3, :, ...]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ReverseSequence.OP_NAME,

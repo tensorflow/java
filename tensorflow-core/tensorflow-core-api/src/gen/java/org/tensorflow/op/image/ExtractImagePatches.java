@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Extract {@code patches} from {@code images} and put them in the &quot;depth&quot; output dimension.
- *
- * @param <T> data type for {@code patches} output
  */
 @OpMetadata(
     opType = ExtractImagePatches.OP_NAME,

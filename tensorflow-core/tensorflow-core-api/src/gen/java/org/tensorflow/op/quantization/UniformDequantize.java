@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * Perform dequantization on the quantized Tensor {@code input}.
  * Given quantized {@code input} which was quantized using {@code scales} and {@code zero_points}, performs dequantization using the formula:
  * dequantized_data = (quantized_data - zero_point) * scale.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformDequantize.OP_NAME,

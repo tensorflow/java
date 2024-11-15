@@ -155,7 +155,6 @@ public final class SparseOps {
    * Performs sparse-output bin counting for a tf.tensor input.
    *  Counts the number of times each value occurs in the input.
    *
-   * @param <U> data type for {@code output_values} output
    * @param values Tensor containing data to count.
    * @param weights A Tensor of the same shape as indices containing per-index weight values. May
    *  also be the empty tensor if no weights are used.
@@ -179,7 +178,6 @@ public final class SparseOps {
    *  dimension contains the result of {@code set_operation} applied to the corresponding
    *  {@code [0...n-1]} dimension of {@code set}.
    *
-   * @param <T> data type for {@code result_values} output
    * @param set1 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set2}.
    *  Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
    * @param set2 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set1}.
@@ -209,7 +207,6 @@ public final class SparseOps {
    *  dimension contains the result of {@code set_operation} applied to the corresponding
    *  {@code [0...n-1]} dimension of {@code set}.
    *
-   * @param <T> data type for {@code result_values} output
    * @param set1 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set2}.
    *  Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
    * @param set2Indices 2D {@code Tensor}, indices of a {@code SparseTensor}. Must be in row-major
@@ -272,7 +269,6 @@ public final class SparseOps {
    *  shape = [2 50]
    *  </pre>
    *
-   * @param <U> data type for {@code sparse_values} output
    * @param serializedSparse The serialized {@code SparseTensor} objects. The last dimension
    *  must have 3 columns.
    * @param dtype The {@code dtype} of the serialized {@code SparseTensor} objects.
@@ -317,7 +313,6 @@ public final class SparseOps {
    *  the recorded global_step in the accumulator by 1, and resets the
    *  aggregate to 0.
    *
-   * @param <T> data type for {@code values} output
    * @param handle The handle to a SparseConditionalAccumulator.
    * @param numRequired Number of gradients required before we return an aggregate.
    * @param dtype The data type of accumulated gradients. Needs to correspond to the type
@@ -344,7 +339,6 @@ public final class SparseOps {
    *  only for a positive value.
    *  <p>In the following shapes, {@code nnz} is the count after taking {@code thresh} into account.
    *
-   * @param <T> data type for {@code sum_values} output
    * @param aIndices 2-D.  The {@code indices} of the first {@code SparseTensor}, size {@code [nnz, ndims]} Matrix.
    * @param aValues 1-D.  The {@code values} of the first {@code SparseTensor}, size {@code [nnz]} Vector.
    * @param aShape 1-D.  The {@code shape} of the first {@code SparseTensor}, size {@code [ndims]} Vector.
@@ -369,7 +363,6 @@ public final class SparseOps {
    *  non-empty values of the sum, and outputs the gradients w.r.t. the non-empty
    *  values of A and B.
    *
-   * @param <T> data type for {@code a_val_grad} output
    * @param backpropValGrad 1-D with shape {@code [nnz(sum)]}.  The gradient with respect to
    *  the non-empty values of the sum.
    * @param aIndices 2-D.  The {@code indices} of the {@code SparseTensor} A, size {@code [nnz(A), ndims]}.
@@ -393,7 +386,6 @@ public final class SparseOps {
    *  {@code i}.
    *  <p>Values in {@code arr} outside of the range [0, size) are ignored.
    *
-   * @param <U> data type for {@code output} output
    * @param indices 2D int64 {@code Tensor}.
    * @param values 1D int {@code Tensor}.
    * @param denseShape 1D int64 {@code Tensor}.
@@ -452,7 +444,6 @@ public final class SparseOps {
    *  [b c  ]        [       ]   [b c          ]
    *  </pre>
    *
-   * @param <T> data type for {@code output_values} output
    * @param indices 2-D.  Indices of each input {@code SparseTensor}.
    * @param values 1-D.  Non-empty values of each {@code SparseTensor}.
    * @param shapes 1-D.  Shapes of each {@code SparseTensor}.
@@ -490,7 +481,6 @@ public final class SparseOps {
    * Performs sparse-output bin counting for a sparse tensor input.
    *  Counts the number of times each value occurs in the input.
    *
-   * @param <U> data type for {@code output_values} output
    * @param indices Tensor containing the indices of the sparse tensor to count.
    * @param values Tensor containing values of the sparse tensor to count.
    * @param denseShape Tensor containing the dense shape of the sparse tensor to count.
@@ -624,7 +614,6 @@ public final class SparseOps {
    *  indices and shape, but possibly with different non-zero values.  The output of
    *  this Op is the resultant non-zero values.
    *
-   * @param <T> data type for {@code output} output
    * @param spIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param spValues 1-D.  {@code N} non-empty values corresponding to {@code sp_indices}.
@@ -643,7 +632,6 @@ public final class SparseOps {
    *  <em>Limitation</em>: this Op only broadcasts the dense side to the sparse side, but not
    *  the other direction.
    *
-   * @param <T> data type for {@code output} output
    * @param spIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param spValues 1-D.  {@code N} non-empty values corresponding to {@code sp_indices}.
@@ -665,7 +653,6 @@ public final class SparseOps {
    *  <p><em>Limitation</em>: this Op only broadcasts the dense side to the sparse side, but not
    *  the other direction.
    *
-   * @param <T> data type for {@code output} output
    * @param spIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param spValues 1-D.  {@code N} non-empty values corresponding to {@code sp_indices}.
@@ -716,7 +703,6 @@ public final class SparseOps {
    *  reverse_index_map[j] = out_j s.t. indices[j, :] == output_indices[out_j, :]
    *  </pre>
    *
-   * @param <T> data type for {@code output_values} output
    * @param indices 2-D. the indices of the sparse tensor.
    * @param values 1-D. the values of the sparse tensor.
    * @param denseShape 1-D. the shape of the sparse tensor.
@@ -741,7 +727,6 @@ public final class SparseOps {
    *  d_default_value = sum_{k : 0 .. N_full - 1} (
    *  grad_values[k] * 1{k not in reverse_index_map})
    *
-   * @param <T> data type for {@code d_values} output
    * @param reverseIndexMap 1-D.  The reverse index map from SparseFillEmptyRows.
    * @param gradValues 1-D.  The gradients from backprop.
    * @param <T> data type for {@code SparseFillEmptyRowsGrad} output and operands
@@ -786,7 +771,6 @@ public final class SparseOps {
    *  with a single element is returned.  Additionally, the axes can be negative,
    *  which are interpreted according to the indexing rules in Python.
    *
-   * @param <T> data type for {@code output} output
    * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
@@ -815,7 +799,6 @@ public final class SparseOps {
    *  with a single element is returned.  Additionally, the axes can be negative,
    *  which are interpreted according to the indexing rules in Python.
    *
-   * @param <T> data type for {@code output_values} output
    * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
@@ -844,7 +827,6 @@ public final class SparseOps {
    *  with a single element is returned.  Additionally, the axes can be negative,
    *  which are interpreted according to the indexing rules in Python.
    *
-   * @param <T> data type for {@code output} output
    * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
@@ -873,7 +855,6 @@ public final class SparseOps {
    *  with a single element is returned.  Additionally, the axes can be negative,
    *  which are interpreted according to the indexing rules in Python.
    *
-   * @param <T> data type for {@code output_values} output
    * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
@@ -898,7 +879,6 @@ public final class SparseOps {
    *  <p>If the tensor has rank {@code R} and {@code N} non-empty values, {@code input_indices} has
    *  shape {@code [N, R]}, input_values has length {@code N}, and input_shape has length {@code R}.
    *
-   * @param <T> data type for {@code output_values} output
    * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, possibly not in canonical ordering.
    * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
@@ -943,7 +923,6 @@ public final class SparseOps {
    *  <p>Like {@code SegmentMean}, but {@code segment_ids} can have rank less than {@code data}'s first
    *  dimension, selecting a subset of dimension 0, specified by {@code indices}.
    *
-   * @param <T> data type for {@code output} output
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
@@ -963,8 +942,6 @@ public final class SparseOps {
    *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
    *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
    *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code sorted_unique_indices} output
    * @param grad gradient propagated to the SparseSegmentMean op.
    * @param indices indices passed to the corresponding SparseSegmentMean op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentMean op.
@@ -987,7 +964,6 @@ public final class SparseOps {
    *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
    *  for an explanation of segments.
    *
-   * @param <T> data type for {@code output} output
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
@@ -1007,7 +983,6 @@ public final class SparseOps {
    *  N is the size of the segment being reduced.
    *  <p>See {@code tf.sparse.segment_sum} for usage examples.
    *
-   * @param <T> data type for {@code output} output
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
@@ -1027,8 +1002,6 @@ public final class SparseOps {
    *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
    *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
    *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code sorted_unique_indices} output
    * @param grad gradient propagated to the SparseSegmentSqrtN op.
    * @param indices indices passed to the corresponding SparseSegmentSqrtN op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentSqrtN op.
@@ -1052,7 +1025,6 @@ public final class SparseOps {
    *   <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
    *  for an explanation of segments.
    *
-   * @param <T> data type for {@code output} output
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
@@ -1097,7 +1069,6 @@ public final class SparseOps {
    *  tf.segment_sum(c, tf.constant([0, 0, 1]))
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
@@ -1117,8 +1088,6 @@ public final class SparseOps {
    *  value is the number of unique indexes in &quot;indices&quot;. Also returns vector
    *  &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
    *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code sorted_unique_indices} output
    * @param grad gradient propagated to the SparseSegmentSum op.
    * @param indices indices passed to the corresponding SparseSegmentSum op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
@@ -1160,7 +1129,6 @@ public final class SparseOps {
    *  #     [ 0  0  0  0]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param data The data value
    * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
@@ -1194,7 +1162,6 @@ public final class SparseOps {
    *  [      ]
    *  </pre>
    *
-   * @param <T> data type for {@code output_values} output
    * @param indices 2-D tensor represents the indices of the sparse tensor.
    * @param values 1-D tensor represents the values of the sparse tensor.
    * @param shape 1-D. tensor represents the shape of the sparse tensor.
@@ -1216,7 +1183,6 @@ public final class SparseOps {
    *  the sliced {@code SparseTensor}, and outputs the gradients w.r.t.
    *  the non-empty values of input {@code SparseTensor}.
    *
-   * @param <T> data type for {@code val_grad} output
    * @param backpropValGrad 1-D. The gradient with respect to
    *  the non-empty values of the sliced {@code SparseTensor}.
    * @param inputIndices 2-D.  The {@code indices} of the input {@code SparseTensor}.
@@ -1245,7 +1211,6 @@ public final class SparseOps {
    *  <p>Hence, the {@code SparseTensor} result has exactly the same non-zero indices and
    *  shape.
    *
-   * @param <T> data type for {@code output} output
    * @param spIndices 2-D.  {@code NNZ x R} matrix with the indices of non-empty values in a
    *  SparseTensor, in canonical ordering.
    * @param spValues 1-D.  {@code NNZ} non-empty values corresponding to {@code sp_indices}.
@@ -1262,7 +1227,6 @@ public final class SparseOps {
    * Returns the element-wise max of two SparseTensors.
    *  Assumes the two SparseTensors have the same shape, i.e., no broadcasting.
    *
-   * @param <T> data type for {@code output_values} output
    * @param aIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, in the canonical lexicographic ordering.
    * @param aValues 1-D.  {@code N} non-empty values corresponding to {@code a_indices}.
@@ -1283,7 +1247,6 @@ public final class SparseOps {
    * Returns the element-wise min of two SparseTensors.
    *  Assumes the two SparseTensors have the same shape, i.e., no broadcasting.
    *
-   * @param <T> data type for {@code output_values} output
    * @param aIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    *  SparseTensor, in the canonical lexicographic ordering.
    * @param aValues 1-D.  {@code N} non-empty values corresponding to {@code a_indices}.
@@ -1321,7 +1284,6 @@ public final class SparseOps {
    *  [      ]
    *  </pre>
    *
-   * @param <T> data type for {@code output_values} output
    * @param splitDim 0-D.  The dimension along which to split.  Must be in the range
    *  {@code [0, rank(shape))}.
    * @param indices 2-D tensor represents the indices of the sparse tensor.
@@ -1342,7 +1304,6 @@ public final class SparseOps {
    * Adds up a {@code SparseTensor} and a dense {@code Tensor}, producing a dense {@code Tensor}.
    *  This Op does not require {@code a_indices} be sorted in standard lexicographic order.
    *
-   * @param <U> data type for {@code output} output
    * @param aIndices 2-D.  The {@code indices} of the {@code SparseTensor}, with shape {@code [nnz, ndims]}.
    * @param aValues 1-D.  The {@code values} of the {@code SparseTensor}, with shape {@code [nnz]}.
    * @param aShape 1-D.  The {@code shape} of the {@code SparseTensor}, with shape {@code [ndims]}.
@@ -1367,7 +1328,6 @@ public final class SparseOps {
    *  A should be sorted in order of increasing dimension 1 (i.e., &quot;column major&quot;
    *  order instead of &quot;row major&quot; order).
    *
-   * @param <U> data type for {@code product} output
    * @param aIndices 2-D.  The {@code indices} of the {@code SparseTensor}, size {@code [nnz, 2]} Matrix.
    * @param aValues 1-D.  The {@code values} of the {@code SparseTensor}, size {@code [nnz]} Vector.
    * @param aShape 1-D.  The {@code shape} of the {@code SparseTensor}, size {@code [2]} Vector.
@@ -1401,7 +1361,6 @@ public final class SparseOps {
    *  contain any repeats. If {@code validate_indices} is true, these properties
    *  are checked during execution.
    *
-   * @param <U> data type for {@code dense} output
    * @param sparseIndices 0-D, 1-D, or 2-D.  {@code sparse_indices[i]} contains the complete
    *  index where {@code sparse_values[i]} will be placed.
    * @param outputShape 1-D.  Shape of the dense output tensor.
@@ -1441,7 +1400,6 @@ public final class SparseOps {
    *  dimension contains the result of {@code set_operation} applied to the corresponding
    *  {@code [0...n-1]} dimension of {@code set}.
    *
-   * @param <T> data type for {@code result_values} output
    * @param set1Indices 2D {@code Tensor}, indices of a {@code SparseTensor}. Must be in row-major
    *  order.
    * @param set1Values 1D {@code Tensor}, values of a {@code SparseTensor}. Must be in row-major
@@ -1511,7 +1469,6 @@ public final class SparseOps {
    *      shape = [2 50]
    *  </pre>
    *
-   * @param <T> data type for {@code sparse_values} output
    * @param sparseHandles 1-D, The {@code N} serialized {@code SparseTensor} objects.
    *  Shape: {@code [N]}.
    * @param dtype The {@code dtype} of the {@code SparseTensor} objects stored in the

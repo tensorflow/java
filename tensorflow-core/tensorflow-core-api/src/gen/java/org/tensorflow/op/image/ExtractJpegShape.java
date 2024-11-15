@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Extract the shape information of a JPEG-encoded image.
  * This op only parses the image header, so it is much faster than DecodeJpeg.
- *
- * @param <T> data type for {@code image_shape} output
  */
 @OpMetadata(
     opType = ExtractJpegShape.OP_NAME,

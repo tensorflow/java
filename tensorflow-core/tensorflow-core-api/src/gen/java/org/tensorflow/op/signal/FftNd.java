@@ -44,8 +44,6 @@ import org.tensorflow.types.family.TType;
  * is not given, the default shape(input) is used.
  * <p>Axes mean the dimensions to perform the transform on. Default is to perform on
  * all axes.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FftNd.OP_NAME,

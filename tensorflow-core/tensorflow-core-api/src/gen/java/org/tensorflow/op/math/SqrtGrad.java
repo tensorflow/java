@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Computes the gradient for the sqrt of {@code x} wrt its input.
  * Specifically, {@code grad = dy * 0.5 / y}, where {@code y = sqrt(x)}, and {@code dy}
  * is the corresponding input gradient.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = SqrtGrad.OP_NAME,

@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * Quantizes then dequantizes a tensor.
  * This is almost identical to QuantizeAndDequantizeV2, except that num_bits is a
  * tensor, so its value can change during training.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizeAndDequantizeV3.OP_NAME,

@@ -49,7 +49,6 @@ public final class CollectiveOps {
   /**
    * Mutually exchanges multiple tensors of identical type and shape.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param communicator The communicator value
    * @param groupAssignment The groupAssignment value
@@ -79,7 +78,6 @@ public final class CollectiveOps {
   /**
    * Receives a tensor value broadcast from another device.
    *
-   * @param <U> data type for {@code data} output
    * @param groupSize The groupSize value
    * @param groupKey The groupKey value
    * @param instanceKey The instanceKey value
@@ -98,7 +96,6 @@ public final class CollectiveOps {
   /**
    * Broadcasts a tensor value to one or more other devices.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param groupSize The groupSize value
    * @param groupKey The groupKey value
@@ -119,7 +116,6 @@ public final class CollectiveOps {
    *  collective ops. In this case, keys that are unique at runtime
    *  (e.g. {@code instance_key}) should be used to distinguish collective groups.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param groupSize The groupSize value
    * @param groupKey The groupKey value
@@ -157,7 +153,6 @@ public final class CollectiveOps {
    *  source_target_pairs={@code [[0,1],[1,2],[2,3],[3,0]]} gets the outputs:
    *  {@code [D, A, B, C]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input The local input to be permuted. Currently only supports float and
    *  bfloat16.
    * @param sourceTargetPairs A tensor with shape [num_pairs, 2].
@@ -172,7 +167,6 @@ public final class CollectiveOps {
   /**
    * Mutually reduces multiple tensors of identical type and shape.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param communicator The communicator value
    * @param groupAssignment The groupAssignment value
@@ -193,7 +187,6 @@ public final class CollectiveOps {
    *  collective ops. In this case, keys that are unique at runtime
    *  (e.g. {@code instance_key}) should be used to distinguish collective groups.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param groupSize The groupSize value
    * @param groupKey The groupKey value

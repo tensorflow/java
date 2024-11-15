@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of average pooling function.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = AvgPool3dGrad.OP_NAME,

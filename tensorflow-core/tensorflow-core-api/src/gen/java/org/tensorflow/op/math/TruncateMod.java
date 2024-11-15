@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * the result here is consistent with a truncating divide. E.g. {@code truncate(x / y) * y + truncate_mod(x, y) = x}.
  * <p><em>NOTE</em>: {@code math.TruncateMod} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = TruncateMod.OP_NAME,

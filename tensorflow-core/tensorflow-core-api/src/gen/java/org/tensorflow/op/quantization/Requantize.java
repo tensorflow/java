@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * interpretation of the {@code input} data. For example, if {@code input_min} is -1.0f and
  * {@code input_max} is 1.0f, and we are dealing with {@code quint16} quantized data, then a 0
  * value in the 16-bit data should be interpreted as -1.0f, and a 65535 means 1.0f.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Requantize.OP_NAME,

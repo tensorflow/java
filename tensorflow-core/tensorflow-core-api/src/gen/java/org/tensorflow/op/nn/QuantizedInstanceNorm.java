@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Quantized Instance normalization.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = QuantizedInstanceNorm.OP_NAME,

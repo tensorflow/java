@@ -85,8 +85,6 @@ import org.tensorflow.types.family.TType;
  * <li>Adversarial training, where no backprop should happen through the adversarial
  * example generation process.</li>
  * </ul>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = StopGradient.OP_NAME,

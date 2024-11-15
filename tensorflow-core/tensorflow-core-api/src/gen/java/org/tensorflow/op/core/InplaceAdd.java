@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * <pre>
  * Computes y = x; y[i, :] += v; return y.
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = InplaceAdd.OP_NAME,

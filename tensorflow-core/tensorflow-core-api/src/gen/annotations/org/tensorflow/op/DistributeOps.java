@@ -52,7 +52,6 @@ public final class DistributeOps {
    *  num_devices: The number of devices participating in this reduction.
    *  shared_name: Identifier that shared between ops of the same reduction.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param reduction The value of the reduction attribute
    * @param numDevices The value of the numDevices attribute
@@ -74,7 +73,6 @@ public final class DistributeOps {
    *  output: The same as input.
    *  shape: The shape of the input tensor.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param shape The value of the shape attribute
    * @param <T> data type for {@code NcclBroadcast} output and operands
@@ -93,7 +91,6 @@ public final class DistributeOps {
    *  data: the value of the reduction across all {@code num_devices} devices.
    *  reduction: the reduction operation to perform.
    *
-   * @param <T> data type for {@code data} output
    * @param input The input value
    * @param reduction The value of the reduction attribute
    * @param <T> data type for {@code NcclReduce} output and operands

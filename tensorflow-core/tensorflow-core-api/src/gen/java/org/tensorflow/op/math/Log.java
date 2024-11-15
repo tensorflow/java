@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant([0, 0.5, 1, 5])
  * tf.math.log(x) ==&gt; [-inf, -0.6931472,  0. ,  1.609438]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Log.OP_NAME,

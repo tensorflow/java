@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * input_handle: the input map
  * key: the key to be looked up
  * value: the value found from the given key
- *
- * @param <U> data type for {@code value} output
  */
 @OpMetadata(
     opType = TensorMapLookup.OP_NAME,

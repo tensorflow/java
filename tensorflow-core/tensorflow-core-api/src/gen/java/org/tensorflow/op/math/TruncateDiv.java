@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * Python Semantics.
  * <p><em>NOTE</em>: {@code math.TruncateDiv} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = TruncateDiv.OP_NAME,

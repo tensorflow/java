@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TNumber;
  * reduction: the reduction operation to perform.
  * num_devices: The number of devices participating in this reduction.
  * shared_name: Identifier that shared between ops of the same reduction.
- *
- * @param <T> data type for {@code data} output
  */
 @OpMetadata(
     opType = NcclAllReduce.OP_NAME,

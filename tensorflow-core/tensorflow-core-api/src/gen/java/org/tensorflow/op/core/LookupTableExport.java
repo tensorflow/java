@@ -36,10 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Outputs all keys and values in the table.
- *
- * @param <T> data type for {@code keys} output
- *
- * @param <U> data type for {@code values} output
  */
 @OpMetadata(
     opType = LookupTableExport.OP_NAME,

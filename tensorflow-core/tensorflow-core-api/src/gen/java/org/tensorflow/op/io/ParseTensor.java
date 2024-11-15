@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ParseTensor.OP_NAME,

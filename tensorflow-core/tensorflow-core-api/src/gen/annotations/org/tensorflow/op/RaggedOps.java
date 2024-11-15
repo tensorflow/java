@@ -60,7 +60,6 @@ public final class RaggedOps {
    *  {@code i}.
    *  <p>Values in {@code arr} outside of the range [0, size) are ignored.
    *
-   * @param <U> data type for {@code output} output
    * @param splits 1D int64 {@code Tensor}.
    * @param values 2D int {@code Tensor}.
    * @param sizeOutput non-negative int scalar {@code Tensor}.
@@ -82,7 +81,6 @@ public final class RaggedOps {
    * Performs sparse-output bin counting for a ragged tensor input.
    *  Counts the number of times each value occurs in the input.
    *
-   * @param <U> data type for {@code output_values} output
    * @param splits Tensor containing the row splits of the ragged tensor to count.
    * @param values Tensor containing values of the sparse tensor to count.
    * @param weights A Tensor of the same shape as indices containing per-index weight values.
@@ -102,8 +100,6 @@ public final class RaggedOps {
    * Generates a feature cross from a list of tensors, and returns it as a
    *  RaggedTensor.  See {@code tf.ragged.cross} for more details.
    *
-   * @param <T> data type for {@code output_values} output
-   * @param <U> data type for {@code output_row_splits} output
    * @param raggedValues The values tensor for each RaggedTensor input.
    * @param raggedRowSplits The row_splits tensor for each RaggedTensor input.
    * @param sparseIndices The indices tensor for each SparseTensor input.
@@ -135,7 +131,6 @@ public final class RaggedOps {
   /**
    * The RaggedFillEmptyRows operation
    *
-   * @param <T> data type for {@code output_values} output
    * @param valueRowids The valueRowids value
    * @param values The values value
    * @param nrows The nrows value
@@ -151,7 +146,6 @@ public final class RaggedOps {
   /**
    * The RaggedFillEmptyRowsGrad operation
    *
-   * @param <T> data type for {@code d_values} output
    * @param reverseIndexMap The reverseIndexMap value
    * @param gradValues The gradValues value
    * @param <T> data type for {@code RaggedFillEmptyRowsGrad} output and operands
@@ -183,8 +177,6 @@ public final class RaggedOps {
    *  <p>(Note: This c++ op is used to implement the higher-level python
    *  {@code tf.ragged.gather} op, which also supports ragged indices.)
    *
-   * @param <T> data type for {@code output_nested_splits} output
-   * @param <U> data type for {@code output_dense_values} output
    * @param paramsNestedSplits The {@code nested_row_splits} tensors that define the row-partitioning for the
    *  {@code params} RaggedTensor input.
    * @param paramsDenseValues The {@code flat_values} for the {@code params} RaggedTensor. There was a terminology change
@@ -221,8 +213,6 @@ public final class RaggedOps {
    *  The vector inputs must all have the same size.  Scalar inputs are broadcast
    *  to match the size of the vector inputs.
    *
-   * @param <U> data type for {@code rt_nested_splits} output
-   * @param <T> data type for {@code rt_dense_values} output
    * @param starts The starts of each range.
    * @param limits The limits of each range.
    * @param deltas The deltas of each range.
@@ -250,8 +240,6 @@ public final class RaggedOps {
    *  The vector inputs must all have the same size.  Scalar inputs are broadcast
    *  to match the size of the vector inputs.
    *
-   * @param <U> data type for {@code rt_nested_splits} output
-   * @param <T> data type for {@code rt_dense_values} output
    * @param starts The starts of each range.
    * @param limits The limits of each range.
    * @param deltas The deltas of each range.
@@ -279,8 +267,6 @@ public final class RaggedOps {
    *  inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}. See
    *  {@code RaggedTensorToVariant} for the corresponding encoding logic.
    *
-   * @param <T> data type for {@code output_nested_splits} output
-   * @param <U> data type for {@code output_dense_values} output
    * @param encodedRagged A {@code variant} Tensor containing encoded {@code RaggedTensor}s.
    * @param inputRaggedRank The ragged rank of each encoded {@code RaggedTensor} component in the input. If set to
    *  -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
@@ -310,8 +296,6 @@ public final class RaggedOps {
    *  inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}. See
    *  {@code RaggedTensorToVariant} for the corresponding encoding logic.
    *
-   * @param <T> data type for {@code output_nested_splits} output
-   * @param <U> data type for {@code output_dense_values} output
    * @param encodedRagged A {@code variant} Tensor containing encoded {@code RaggedTensor}s.
    * @param inputRaggedRank The ragged rank of each encoded {@code RaggedTensor} component in the input. If set to
    *  -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
@@ -335,7 +319,6 @@ public final class RaggedOps {
    *  output=SparseTensor(indices=sparse_indices, values=sparse_values,
    *  dense_shape=sparse_dense_shape)
    *
-   * @param <U> data type for {@code sparse_values} output
    * @param rtNestedSplits The {@code row_splits} for the {@code RaggedTensor}.
    * @param rtDenseValues The {@code flat_values} for the {@code RaggedTensor}.
    * @param <U> data type for {@code RaggedTensorToSparse} output and operands
@@ -365,7 +348,6 @@ public final class RaggedOps {
    *  is preceded by &quot;FIRST_DIM_SIZE&quot;.</li>
    *  </ul>
    *
-   * @param <U> data type for {@code result} output
    * @param shape The desired shape of the output tensor. If left unspecified (empty),
    *  the minimal shape required to contain all the elements in the ragged tensor
    *  (the natural shape) will be used. If some dimensions are left unspecified, then
@@ -438,7 +420,6 @@ public final class RaggedOps {
    *  the outer row-splits and the shape of the dense-values that were provided as
    *  inputs to the RaggedTensorToVariant op.
    *
-   * @param <U> data type for {@code dense_values_grad} output
    * @param encodedRaggedGrad A {@code variant} Tensor containing encoded {@code RaggedTensor} gradients.
    * @param rowSplits Outermost row-splits that were used as input to the RaggedTensorToVariant op.
    * @param denseValuesShape Shape of the dense_values that was used as an input to the

@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * s, u, v = svd(a)
  * s, _, _ = svd(a, compute_uv=False)
  * </pre>
- *
- * @param <T> data type for {@code s} output
  */
 @OpMetadata(
     opType = Svd.OP_NAME,

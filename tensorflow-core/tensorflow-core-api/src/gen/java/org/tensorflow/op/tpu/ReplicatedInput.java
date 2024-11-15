@@ -46,8 +46,6 @@ import org.tensorflow.types.family.TType;
  * %computation = &quot;tf.Computation&quot;(%replicated_input)
  * </pre>
  * <p>The above computation has a replicated input of two replicas.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ReplicatedInput.OP_NAME,

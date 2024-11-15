@@ -63,8 +63,6 @@ import org.tensorflow.types.family.TType;
  * [1, 13, 3, 14, 14, 6, 7, 20]
  * </pre>
  * <p>See {@code tf.scatter_nd} for more details about how to make updates to slices.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ScatterNdNonAliasingAdd.OP_NAME,

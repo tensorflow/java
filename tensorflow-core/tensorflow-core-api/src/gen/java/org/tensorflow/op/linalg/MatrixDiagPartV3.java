@@ -126,8 +126,6 @@ import org.tensorflow.types.family.TType;
  *         [4, 3, 8]]]
  *
  * </pre>
- *
- * @param <T> data type for {@code diagonal} output
  */
 @OpMetadata(
     opType = MatrixDiagPartV3.OP_NAME,

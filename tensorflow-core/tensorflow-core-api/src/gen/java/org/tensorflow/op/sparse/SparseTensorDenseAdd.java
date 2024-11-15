@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Adds up a {@code SparseTensor} and a dense {@code Tensor}, producing a dense {@code Tensor}.
  * This Op does not require {@code a_indices} be sorted in standard lexicographic order.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseTensorDenseAdd.OP_NAME,

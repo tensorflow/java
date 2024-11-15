@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * 'begin'.
  * <p><em>Requirements</em>:
  * 0 &lt;= begin[i] &lt;= begin[i] + size[i] &lt;= Di  for i in [0, n)
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Slice.OP_NAME,

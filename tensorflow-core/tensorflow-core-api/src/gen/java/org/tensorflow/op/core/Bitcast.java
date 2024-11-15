@@ -96,8 +96,6 @@ import org.tensorflow.types.family.TType;
  * endian orderings will give different results. A copy from input buffer to output
  * buffer is made on BE machines when types are of different sizes in order to get
  * the same casting results as on LE machines.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Bitcast.OP_NAME,

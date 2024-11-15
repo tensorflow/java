@@ -49,8 +49,6 @@ import org.tensorflow.types.family.TType;
  *
  * tf.diag_part(input) ==&gt; [1, 2, 3, 4]
  * </pre>
- *
- * @param <T> data type for {@code diagonal} output
  */
 @OpMetadata(
     opType = TensorDiagPart.OP_NAME,

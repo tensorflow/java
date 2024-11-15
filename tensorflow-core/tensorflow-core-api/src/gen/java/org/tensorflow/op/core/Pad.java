@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TType;
  *                       [0, 0, 2, 2, 0, 0]
  *                       [0, 0, 0, 0, 0, 0]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Pad.OP_NAME,

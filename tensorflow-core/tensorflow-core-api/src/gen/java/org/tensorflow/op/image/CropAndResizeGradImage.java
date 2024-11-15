@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of the crop_and_resize op wrt the input image tensor.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CropAndResizeGradImage.OP_NAME,

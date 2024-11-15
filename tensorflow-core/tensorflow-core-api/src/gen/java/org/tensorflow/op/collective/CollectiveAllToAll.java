@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Mutually exchanges multiple tensors of identical type and shape.
- *
- * @param <T> data type for {@code data} output
  */
 @OpMetadata(
     opType = CollectiveAllToAll.OP_NAME,

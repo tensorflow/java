@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TType;
  * <pre>
  * tf.cumsum([a, b, c], exclusive=True, reverse=True)  # =&gt; [b + c, c, 0]
  * </pre>
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = Cumsum.OP_NAME,

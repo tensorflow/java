@@ -109,8 +109,6 @@ import org.tensorflow.types.family.TType;
  *       [ [11], [12], [15],  [16]]]]
  *
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DepthToSpace.OP_NAME,

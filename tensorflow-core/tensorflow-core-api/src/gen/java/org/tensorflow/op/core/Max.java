@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code keep_dims} is true, the rank of the tensor is reduced by 1 for each entry in
  * {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
  * retained with length 1.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Max.OP_NAME,

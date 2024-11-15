@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>{@literal @}compatibility(cpp)<br>
  * Equivalent to C++ std::nextafter function.
  * <br>{@literal @}end_compatibility
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = NextAfter.OP_NAME,

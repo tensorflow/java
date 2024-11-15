@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Update '*var' as FOBOS algorithm with fixed learning rate.
  * prox_v = var - alpha * delta
  * var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyProximalGradientDescent.OP_NAME,

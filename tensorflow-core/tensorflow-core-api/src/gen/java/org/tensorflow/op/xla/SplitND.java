@@ -66,8 +66,6 @@ import org.tensorflow.types.family.TType;
  * [[8, 0],
  *  [0, 0]]
  * </pre>
- *
- * @param <T> data type for {@code outputs} output
  */
 @OpMetadata(
     opType = SplitND.OP_NAME,

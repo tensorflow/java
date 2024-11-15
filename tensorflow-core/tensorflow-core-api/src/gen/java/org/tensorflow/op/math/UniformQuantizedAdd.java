@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TNumber;
  * i.e. For both operands {@code lhs} and {@code rhs},
  * if {@code operand.quantization_axis} &gt;= 0 and {@code output.quantization_axis} &gt;= 0,
  * {@code operand.dims} - {@code operand.quantization_axis} must be equal to {@code output.dims} - {@code output.quantization_axis}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformQuantizedAdd.OP_NAME,

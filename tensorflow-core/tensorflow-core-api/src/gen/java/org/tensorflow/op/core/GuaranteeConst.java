@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * <p>Only accepts value typed tensors as inputs and rejects resource variable handles
  * as input.
  * <p>Returns the input tensor without modification.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = GuaranteeConst.OP_NAME,

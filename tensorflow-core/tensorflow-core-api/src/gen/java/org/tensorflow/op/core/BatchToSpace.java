@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * this op outputs a copy of the input tensor where values from the {@code batch}
  * dimension are moved in spatial blocks to the {@code height} and {@code width} dimensions,
  * followed by cropping along the {@code height} and {@code width} dimensions.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchToSpace.OP_NAME,

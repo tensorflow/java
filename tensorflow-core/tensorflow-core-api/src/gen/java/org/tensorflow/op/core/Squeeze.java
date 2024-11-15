@@ -50,8 +50,6 @@ import org.tensorflow.types.family.TType;
  * # 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
  * shape(squeeze(t, [2, 4])) ==&gt; [1, 2, 3, 1]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Squeeze.OP_NAME,

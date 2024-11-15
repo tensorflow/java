@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * (n0 + n1 + ... + n(T-1) x d0 x d1 x ...)
  * </pre>
  * <p>All elements must have the same shape (excepting the first dimension).
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = TensorArrayConcat.OP_NAME,

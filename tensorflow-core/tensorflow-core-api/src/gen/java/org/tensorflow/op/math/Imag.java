@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * # tensor 'input' is [-2.25 + 4.75j, 3.25 + 5.75j]
  * tf.imag(input) ==&gt; [4.75, 5.75]
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Imag.OP_NAME,

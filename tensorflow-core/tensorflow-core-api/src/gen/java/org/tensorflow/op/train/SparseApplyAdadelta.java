@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * var: Should be from a Variable().
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = SparseApplyAdadelta.OP_NAME,

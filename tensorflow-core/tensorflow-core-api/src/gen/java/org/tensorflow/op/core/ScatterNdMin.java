@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes element-wise minimum.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterNdMin.OP_NAME,

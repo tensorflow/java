@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Gradients for Local Response Normalization.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = LocalResponseNormalizationGrad.OP_NAME,

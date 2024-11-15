@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
  * The generated values follow a uniform distribution in the range {@code [minval, maxval)}.
  * <p>The outputs are a deterministic function of {@code shape}, {@code seed}, {@code minval}, and {@code maxval}.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomUniformInt.OP_NAME,

@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>The input image is considered in the RGB colorspace. Conceptually, the RGB
  * colors are first mapped into HSV. A scale is then applied all the saturation
  * values, and then remapped back to RGB colorspace.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = AdjustSaturation.OP_NAME,

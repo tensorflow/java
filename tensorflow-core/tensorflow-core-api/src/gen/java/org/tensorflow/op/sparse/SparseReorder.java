@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * <p>Reordering does not affect the shape of the SparseTensor.
  * <p>If the tensor has rank {@code R} and {@code N} non-empty values, {@code input_indices} has
  * shape {@code [N, R]}, input_values has length {@code N}, and input_shape has length {@code R}.
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseReorder.OP_NAME,

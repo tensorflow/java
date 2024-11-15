@@ -72,8 +72,6 @@ import org.tensorflow.types.family.TType;
  * The newly-created tensor takes the full memory of the broadcasted
  * shape. (In a graph context, {@code broadcast_to} might be fused to
  * subsequent operation and then be optimized away, however.)
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BroadcastTo.OP_NAME,

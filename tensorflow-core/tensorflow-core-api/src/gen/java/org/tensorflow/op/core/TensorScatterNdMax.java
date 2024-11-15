@@ -50,8 +50,6 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * </blockquote>
  * <p>Refer to {@code tf.tensor_scatter_nd_update} for more details.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TensorScatterNdMax.OP_NAME,

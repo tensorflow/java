@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Push an element onto the stack.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = StackPush.OP_NAME,

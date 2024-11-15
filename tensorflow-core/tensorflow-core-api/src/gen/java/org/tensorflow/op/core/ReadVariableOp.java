@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * writes on which this operation depends directly or indirectly, and to not be
  * influenced by any of the writes which depend directly or indirectly on this
  * operation.
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = ReadVariableOp.OP_NAME,

@@ -66,8 +66,6 @@ import org.tensorflow.types.family.TType;
  *  [4, 5, 6],
  *  [8, 9, 10]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ConcatND.OP_NAME,

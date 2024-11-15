@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * See {@code tf.sparse.segment_sum} for usage examples.
  * <p>Like {@code SegmentMean}, but {@code segment_ids} can have rank less than {@code data}'s first
  * dimension, selecting a subset of dimension 0, specified by {@code indices}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseSegmentMean.OP_NAME,

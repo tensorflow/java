@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The SelectV2 operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Select.OP_NAME,

@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * <p>The random integers are slightly biased unless {@code maxval - minval} is an exact
  * power of two.  The bias is small for values of {@code maxval - minval} significantly
  * smaller than the range of the output (either {@code 2^32} or {@code 2^64}).
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatefulUniformInt.OP_NAME,

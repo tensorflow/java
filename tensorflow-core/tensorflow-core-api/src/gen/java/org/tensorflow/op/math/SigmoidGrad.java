@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Computes the gradient of the sigmoid of {@code x} wrt its input.
  * Specifically, {@code grad = dy * y * (1 - y)}, where {@code y = sigmoid(x)}, and
  * {@code dy} is the corresponding input gradient.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = SigmoidGrad.OP_NAME,

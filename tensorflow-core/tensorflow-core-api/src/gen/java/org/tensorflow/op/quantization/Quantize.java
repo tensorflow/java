@@ -128,8 +128,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>Ensures the minimum quantization range is at least this value.
  * The legacy default value for this is 0.01, but it is strongly suggested to
  * set it to 0 for new uses.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Quantize.OP_NAME,

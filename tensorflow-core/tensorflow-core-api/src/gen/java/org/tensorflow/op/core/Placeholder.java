@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * N.B. This operation will fail with an error if it is executed. It is
  * intended as a way to represent a value that will always be fed, and to
  * provide attrs that enable the fed value to be checked at runtime.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Placeholder.OP_NAME,

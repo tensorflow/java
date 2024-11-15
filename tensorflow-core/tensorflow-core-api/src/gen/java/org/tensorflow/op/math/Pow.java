@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * # tensor 'y' is [[8, 16], [2, 3]]
  * tf.pow(x, y) ==&gt; [[256, 65536], [9, 27]]
  * </pre>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Pow.OP_NAME,

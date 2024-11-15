@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Retrieves a single tensor from the computation outfeed.
  * This operation will block indefinitely until data is available.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = OutfeedDequeue.OP_NAME,

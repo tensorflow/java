@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * {@code is_stateless} means each op does not need control dependencies to other
  * collective ops. In this case, keys that are unique at runtime
  * (e.g. {@code instance_key}) should be used to distinguish collective groups.
- *
- * @param <T> data type for {@code data} output
  */
 @OpMetadata(
     opType = CollectiveGather.OP_NAME,

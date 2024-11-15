@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code lhs} and {@code rhs} must be 2D Tensors and the lhs.dim_size(1) must match rhs.dim_size(0).
  * {@code rhs} must be quantized Tensor, where its data value is quantized using the formula:
  * quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformQuantizedDotHybrid.OP_NAME,

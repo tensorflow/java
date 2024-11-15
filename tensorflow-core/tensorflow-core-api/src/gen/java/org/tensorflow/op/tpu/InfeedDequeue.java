@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op for a value that will be fed into the computation.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = InfeedDequeue.OP_NAME,

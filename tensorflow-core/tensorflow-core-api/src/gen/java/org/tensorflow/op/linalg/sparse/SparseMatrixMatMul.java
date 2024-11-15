@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TType;
  *   C = conjugate(transpose(A . B)) = conjugate(transpose(B)) .
  *                                     conjugate(transpose(A))
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseMatrixMatMul.OP_NAME,

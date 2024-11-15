@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * # c = 0
  * # here a[0] = 1 which is the smallest element of a across axis 0
  * </pre>
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = ArgMin.OP_NAME,

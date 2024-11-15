@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  *                        [0, 0, 3, 0]
  *                        [0, 0, 0, 4]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TensorDiag.OP_NAME,

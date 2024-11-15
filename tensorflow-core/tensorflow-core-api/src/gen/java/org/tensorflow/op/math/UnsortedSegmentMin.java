@@ -64,8 +64,6 @@ import org.tensorflow.types.family.TNumber;
  * result in safe but unspecified behavior, which may include ignoring
  * out-of-bound indices or outputting a tensor with a 0 stored in the first
  * dimension of its shape if {@code num_segments} is 0.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = UnsortedSegmentMin.OP_NAME,

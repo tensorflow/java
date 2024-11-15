@@ -49,8 +49,6 @@ import org.tensorflow.types.family.TType;
  * <p>$$ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad$$
  * $$mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
  * $$var &lt;- var - mom$$
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = SparseApplyCenteredRmsProp.OP_NAME,

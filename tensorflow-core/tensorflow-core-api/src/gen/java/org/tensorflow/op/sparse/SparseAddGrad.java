@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * as {@code SparseTensor} objects.  This op takes in the upstream gradient w.r.t.
  * non-empty values of the sum, and outputs the gradients w.r.t. the non-empty
  * values of A and B.
- *
- * @param <T> data type for {@code a_val_grad} output
  */
 @OpMetadata(
     opType = SparseAddGrad.OP_NAME,

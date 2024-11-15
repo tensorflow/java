@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * input=ragged.from_nested_row_splits(rt_dense_values, rt_nested_splits)
  * output=SparseTensor(indices=sparse_indices, values=sparse_values,
  * dense_shape=sparse_dense_shape)
- *
- * @param <U> data type for {@code sparse_values} output
  */
 @OpMetadata(
     opType = RaggedTensorToSparse.OP_NAME,

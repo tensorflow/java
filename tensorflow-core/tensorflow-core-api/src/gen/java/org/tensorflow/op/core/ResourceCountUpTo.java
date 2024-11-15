@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Increments variable pointed to by 'resource' until it reaches 'limit'.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ResourceCountUpTo.OP_NAME,

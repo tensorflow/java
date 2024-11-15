@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes Psi, the derivative of Lgamma (the log of the absolute value of
  * {@code Gamma(x)}), element-wise.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Digamma.OP_NAME,

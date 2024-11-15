@@ -90,8 +90,6 @@ import org.tensorflow.types.family.TType;
  * # shape `[]` reshapes to a scalar
  * reshape(t, []) ==&gt; 7
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Reshape.OP_NAME,

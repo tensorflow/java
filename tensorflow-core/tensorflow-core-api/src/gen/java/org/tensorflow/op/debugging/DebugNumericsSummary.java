@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * Computes a numeric summary of the input tensor. The shape of the output
  * depends on the tensor_debug_mode attribute.
  * This op is used internally by TensorFlow Debugger (tfdbg) v2.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = DebugNumericsSummary.OP_NAME,

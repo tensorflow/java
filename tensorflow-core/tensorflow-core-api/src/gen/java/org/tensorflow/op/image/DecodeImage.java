@@ -53,8 +53,6 @@ import org.tensorflow.types.family.TNumber;
  * unoccupied areas (in the first frame) with zeros (black). For frames after the
  * first frame that does not occupy the entire canvas, it uses the previous
  * frame to fill the unoccupied areas.
- *
- * @param <T> data type for {@code image} output
  */
 @OpMetadata(
     opType = DecodeImage.OP_NAME,

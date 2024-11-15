@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
  * The generated values are uniform integers covering the whole range of {@code dtype}.
  * <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomUniformFullInt.OP_NAME,

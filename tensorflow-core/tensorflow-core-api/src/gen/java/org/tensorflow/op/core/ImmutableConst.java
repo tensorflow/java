@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Returns immutable tensor from memory region.
  * The current implementation memmaps the tensor from a file.
- *
- * @param <T> data type for {@code tensor} output
  */
 @OpMetadata(
     opType = ImmutableConst.OP_NAME,

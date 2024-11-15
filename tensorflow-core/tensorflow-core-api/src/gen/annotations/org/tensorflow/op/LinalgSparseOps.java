@@ -59,7 +59,6 @@ public final class LinalgSparseOps {
    *  This op is meant only for debugging / testing, and its interface is not expected
    *  to be stable.
    *
-   * @param <T> data type for {@code values} output
    * @param csrSparseMatrix A batched CSRSparseMatrix.
    * @param index The index in {@code csr_sparse_matrix}'s batch.
    * @param type The value of the type attribute
@@ -74,7 +73,6 @@ public final class LinalgSparseOps {
   /**
    * Convert a (possibly batched) CSRSparseMatrix to dense.
    *
-   * @param <T> data type for {@code dense_output} output
    * @param sparseInput A batched CSRSparseMatrix.
    * @param type The value of the type attribute
    * @param <T> data type for {@code CSRSparseMatrixToDense} output and operands
@@ -88,7 +86,6 @@ public final class LinalgSparseOps {
   /**
    * Converts a (possibly batched) CSRSparesMatrix to a SparseTensor.
    *
-   * @param <T> data type for {@code values} output
    * @param sparseMatrix A (possibly batched) CSRSparseMatrix.
    * @param type The value of the type attribute
    * @param <T> data type for {@code CSRSparseMatrixToSparseTensor} output and operands
@@ -152,7 +149,6 @@ public final class LinalgSparseOps {
    *                                      conjugate(transpose(A))
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param a A CSRSparseMatrix.
    * @param b A dense tensor.
    * @param options carries optional attribute values

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  * $$softmax[i, j] = exp(logits[i, j]) / sum_j(exp(logits[i, j]))$$
  * </pre>
- *
- * @param <T> data type for {@code softmax} output
  */
 @OpMetadata(
     opType = Softmax.OP_NAME,

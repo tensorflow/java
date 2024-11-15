@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The Softplus operation
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = Softplus.OP_NAME,

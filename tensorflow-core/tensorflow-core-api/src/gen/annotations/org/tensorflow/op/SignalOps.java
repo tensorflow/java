@@ -125,7 +125,6 @@ public final class SignalOps {
    *  Computes the 1-dimensional discrete Fourier transform over the inner-most
    *  dimension of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param <T> data type for {@code FFT} output and operands
    * @return a new instance of Fft
@@ -139,7 +138,6 @@ public final class SignalOps {
    *  Computes the 2-dimensional discrete Fourier transform over the inner-most
    *  2 dimensions of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param <T> data type for {@code FFT2D} output and operands
    * @return a new instance of Fft2d
@@ -153,7 +151,6 @@ public final class SignalOps {
    *  Computes the 3-dimensional discrete Fourier transform over the inner-most 3
    *  dimensions of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param <T> data type for {@code FFT3D} output and operands
    * @return a new instance of Fft3d
@@ -173,7 +170,6 @@ public final class SignalOps {
    *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
    *  all axes.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
@@ -190,7 +186,6 @@ public final class SignalOps {
    *  Computes the inverse 1-dimensional discrete Fourier transform over the
    *  inner-most dimension of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param <T> data type for {@code IFFT} output and operands
    * @return a new instance of Ifft
@@ -204,7 +199,6 @@ public final class SignalOps {
    *  Computes the inverse 2-dimensional discrete Fourier transform over the
    *  inner-most 2 dimensions of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param <T> data type for {@code IFFT2D} output and operands
    * @return a new instance of Ifft2d
@@ -218,7 +212,6 @@ public final class SignalOps {
    *  Computes the inverse 3-dimensional discrete Fourier transform over the
    *  inner-most 3 dimensions of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param <T> data type for {@code IFFT3D} output and operands
    * @return a new instance of Ifft3d
@@ -238,7 +231,6 @@ public final class SignalOps {
    *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
    *  all axes.
    *
-   * @param <T> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
@@ -264,7 +256,6 @@ public final class SignalOps {
    *  than the corresponding dimension of {@code input}, the dimension is cropped. If it is
    *  larger, the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
    * @return a new instance of Irfft, with default output types
@@ -287,7 +278,6 @@ public final class SignalOps {
    *  than the corresponding dimension of {@code input}, the dimension is cropped. If it is
    *  larger, the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
    * @param Treal The value of the Treal attribute
@@ -314,7 +304,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @return a new instance of Irfft2d, with default output types
@@ -338,7 +327,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @param Treal The value of the Treal attribute
@@ -365,7 +353,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
    * @return a new instance of Irfft3d, with default output types
@@ -389,7 +376,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
    * @param Treal The value of the Treal attribute
@@ -413,7 +399,6 @@ public final class SignalOps {
    *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
    *  all axes.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
@@ -436,7 +421,6 @@ public final class SignalOps {
    *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
    *  all axes.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
@@ -460,7 +444,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
    * @param Tcomplex The value of the Tcomplex attribute
@@ -484,7 +467,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @param Tcomplex The value of the Tcomplex attribute
@@ -508,7 +490,6 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param <U> data type for {@code output} output
    * @param input A float32 tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
    * @param Tcomplex The value of the Tcomplex attribute
@@ -532,7 +513,6 @@ public final class SignalOps {
    *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
    *  all axes.
    *
-   * @param <U> data type for {@code output} output
    * @param input A complex tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.

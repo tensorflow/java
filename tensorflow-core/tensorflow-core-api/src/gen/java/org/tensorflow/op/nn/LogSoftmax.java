@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  * logsoftmax[i, j] = logits[i, j] - log(sum(exp(logits[i])))
  * </pre>
- *
- * @param <T> data type for {@code logsoftmax} output
  */
 @OpMetadata(
     opType = LogSoftmax.OP_NAME,

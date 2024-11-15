@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The Erfinv operation
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = erfinv.OP_NAME,

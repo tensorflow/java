@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Returns the max of x and y (i.e. x &gt; y ? x : y) element-wise.
  * <em>NOTE</em>: {@code math.Maximum} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Maximum.OP_NAME,

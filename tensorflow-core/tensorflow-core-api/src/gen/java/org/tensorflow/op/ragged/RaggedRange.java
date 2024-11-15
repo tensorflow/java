@@ -50,10 +50,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>The input tensors {@code starts}, {@code limits}, and {@code deltas} may be scalars or vectors.
  * The vector inputs must all have the same size.  Scalar inputs are broadcast
  * to match the size of the vector inputs.
- *
- * @param <U> data type for {@code rt_nested_splits} output
- *
- * @param <T> data type for {@code rt_dense_values} output
  */
 @OpMetadata(
     opType = RaggedRange.OP_NAME,

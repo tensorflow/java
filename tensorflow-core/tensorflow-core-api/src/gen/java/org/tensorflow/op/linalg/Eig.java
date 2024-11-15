@@ -46,8 +46,6 @@ import org.tensorflow.types.family.TType;
  * e, v = eig(a)
  * e = eig(a, compute_v=False)
  * </pre>
- *
- * @param <U> data type for {@code e} output
  */
 @OpMetadata(
     opType = Eig.OP_NAME,

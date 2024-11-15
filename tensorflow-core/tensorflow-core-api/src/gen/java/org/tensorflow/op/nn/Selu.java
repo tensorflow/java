@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code initializer = tf.variance_scaling_initializer(factor=1.0, mode='FAN_IN')}.
  * For correct dropout, use {@code tf.contrib.nn.alpha_dropout}.
  * <p>See  <a href="https://arxiv.org/abs/1706.02515">Self-Normalizing Neural Networks</a>
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = Selu.OP_NAME,

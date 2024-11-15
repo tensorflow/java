@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes Quantized Rectified Linear: {@code max(features, 0)}
- *
- * @param <U> data type for {@code activations} output
  */
 @OpMetadata(
     opType = QuantizedRelu.OP_NAME,

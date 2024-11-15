@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  * values.shape = input.shape[:-1]
  * </pre>
- *
- * @param <T> data type for {@code values} output
  */
 @OpMetadata(
     opType = NthElement.OP_NAME,

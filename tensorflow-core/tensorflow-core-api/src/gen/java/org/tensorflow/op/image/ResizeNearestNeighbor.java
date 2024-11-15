@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Resize {@code images} to {@code size} using nearest neighbor interpolation.
- *
- * @param <T> data type for {@code resized_images} output
  */
 @OpMetadata(
     opType = ResizeNearestNeighbor.OP_NAME,

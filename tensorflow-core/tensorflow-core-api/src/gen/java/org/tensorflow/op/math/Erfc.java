@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the complementary error function of {@code x} element-wise.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Erfc.OP_NAME,

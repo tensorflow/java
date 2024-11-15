@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * <p>If a matrix is not invertible there is no guarantee what the op does. It
  * may detect the condition and raise an exception or it may simply return a
  * garbage result.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Inv.OP_NAME,

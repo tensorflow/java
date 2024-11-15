@@ -49,7 +49,6 @@ public final class RandomExperimentalOps {
    *  </pre>
    *  <p>The outputs are a deterministic function of {@code value}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <T> data type for {@code output} output
    * @param value The tensor to be shuffled.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.

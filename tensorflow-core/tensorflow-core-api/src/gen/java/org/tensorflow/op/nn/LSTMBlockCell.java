@@ -57,8 +57,6 @@ import org.tensorflow.types.family.TNumber;
  * co = tanh(cs)
  * h = co .* o
  * </pre>
- *
- * @param <T> data type for {@code i} output
  */
 @OpMetadata(
     opType = LSTMBlockCell.OP_NAME,

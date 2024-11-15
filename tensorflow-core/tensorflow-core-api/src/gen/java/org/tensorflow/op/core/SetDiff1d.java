@@ -54,10 +54,6 @@ import org.tensorflow.types.family.TType;
  * out ==&gt; [2, 4, 6]
  * idx ==&gt; [1, 3, 5]
  * </pre>
- *
- * @param <T> data type for {@code out} output
- *
- * @param <U> data type for {@code idx} output
  */
 @OpMetadata(
     opType = SetDiff1d.OP_NAME,

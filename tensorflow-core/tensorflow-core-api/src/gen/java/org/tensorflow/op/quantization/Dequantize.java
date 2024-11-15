@@ -80,8 +80,6 @@ import org.tensorflow.types.family.TNumber;
  *                                          : std::max(min_range / min_expected_T,
  *                                                     max_range / max_expected_T);
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Dequantize.OP_NAME,

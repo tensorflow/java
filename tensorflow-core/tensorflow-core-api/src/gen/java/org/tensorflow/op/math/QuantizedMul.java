@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns x * y element-wise, working on quantized buffers.
- *
- * @param <V> data type for {@code z} output
  */
 @OpMetadata(
     opType = QuantizedMul.OP_NAME,

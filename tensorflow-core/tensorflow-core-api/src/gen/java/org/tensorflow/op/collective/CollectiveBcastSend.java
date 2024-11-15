@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Broadcasts a tensor value to one or more other devices.
- *
- * @param <T> data type for {@code data} output
  */
 @OpMetadata(
     opType = CollectiveBcastSend.OP_NAME,

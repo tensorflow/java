@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The BatchSvd operation
- *
- * @param <T> data type for {@code s} output
  */
 @OpMetadata(
     opType = BatchSvd.OP_NAME,

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The ResourceGatherNd operation
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = ResourceGatherNd.OP_NAME,

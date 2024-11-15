@@ -158,7 +158,6 @@ public final class TpuOps {
    *  <p>replica 0's output: {@code [[A], [C]]}
    *  replica 1's output: {@code [[B], [D]]}
    *
-   * @param <T> data type for {@code output} output
    * @param input The local input to the sum.
    * @param groupAssignment An int32 tensor with shape
    *  [num_groups, num_replicas_per_group]. {@code group_assignment[i]} represents the
@@ -365,7 +364,6 @@ public final class TpuOps {
    *  and {@code B, D, F, H} as group 1. Thus we get the outputs:
    *  {@code [A+C+E+G, B+D+F+H, A+C+E+G, B+D+F+H, A+C+E+G, B+D+F+H, A+C+E+G, B+D+F+H]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input The local input to the sum.
    * @param groupAssignment An int32 tensor with shape
    *  [num_groups, num_replicas_per_group]. {@code group_assignment[i]} represents the
@@ -801,7 +799,6 @@ public final class TpuOps {
   /**
    * A placeholder op for a value that will be fed into the computation.
    *
-   * @param <T> data type for {@code output} output
    * @param dtype The type of elements in the tensor.
    * @param shape The shape of the tensor.
    * @param <T> data type for {@code InfeedDequeue} output and operands
@@ -1252,7 +1249,6 @@ public final class TpuOps {
    * Retrieves a single tensor from the computation outfeed.
    *  This operation will block indefinitely until data is available.
    *
-   * @param <T> data type for {@code output} output
    * @param dtype The type of elements in the tensor.
    * @param shape The shape of the tensor.
    * @param options carries optional attribute values
@@ -1302,7 +1298,6 @@ public final class TpuOps {
    *  tensor allowing dynamic outfeed.
    *  This operation will block indefinitely until data is available.
    *
-   * @param <T> data type for {@code output} output
    * @param deviceOrdinal An int scalar tensor, representing the TPU device to use. This should be -1 when
    *  the Op is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
    *  device.
@@ -1355,7 +1350,6 @@ public final class TpuOps {
   /**
    * An op that groups a list of partitioned inputs together. Supports ND sharding.
    *
-   * @param <T> data type for {@code output} output
    * @param inputs A list of partitioned inputs which must have the same shape.
    * @param partitionDims A list of integers describing how each dimension is partitioned. Emptiness
    *  indicates the inputs are replicated.
@@ -1372,7 +1366,6 @@ public final class TpuOps {
    * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
    *  outputs outside the XLA computation. Supports ND sharding.
    *
-   * @param <T> data type for {@code output} output
    * @param inputs A tensor which represents the full shape of partitioned tensors.
    * @param numSplits The value of the numSplits attribute
    * @param partitionDims A list of integers describing how each dimension is partitioned. Emptiness
@@ -1454,7 +1447,6 @@ public final class TpuOps {
    *  </pre>
    *  <p>The above computation has a replicated input of two replicas.
    *
-   * @param <T> data type for {@code output} output
    * @param inputs The inputs value
    * @param options carries optional attribute values
    * @param <T> data type for {@code TPUReplicatedInput} output and operands
@@ -1476,7 +1468,6 @@ public final class TpuOps {
    *  </pre>
    *  <p>The above computation has a replicated output of two replicas.
    *
-   * @param <T> data type for {@code outputs} output
    * @param input The input value
    * @param numReplicas The value of the numReplicas attribute
    * @param <T> data type for {@code TPUReplicatedOutput} output and operands
@@ -1784,8 +1775,6 @@ public final class TpuOps {
    *  values. This op is to split these values into two groups for two types, and
    *  construct each group as one tensor to return.
    *
-   * @param <T> data type for {@code integer_tensor} output
-   * @param <U> data type for {@code float_tensor} output
    * @param input An XLA tuple including integer and float elements as deduplication data tuple.
    * @param integerType integer_tensor type. Allowed types: int32, int64, uint32, uint64.
    * @param floatType float_tensor type. Allowed types: half, bfloat16, float.
@@ -1913,7 +1902,6 @@ public final class TpuOps {
    *  </pre>
    *  <p>The above computation has a replicated input of two replicas.
    *
-   * @param <T> data type for {@code output} output
    * @deprecated use {@link org.tensorflow.op.tpu.ReplicatedInput} instead
    * @param inputs The inputs value
    * @param options carries optional attribute values
@@ -1937,7 +1925,6 @@ public final class TpuOps {
    *  </pre>
    *  <p>The above computation has a replicated output of two replicas.
    *
-   * @param <T> data type for {@code outputs} output
    * @deprecated use {@link org.tensorflow.op.tpu.ReplicatedOutput} instead
    * @param input The input value
    * @param numReplicas The value of the numReplicas attribute

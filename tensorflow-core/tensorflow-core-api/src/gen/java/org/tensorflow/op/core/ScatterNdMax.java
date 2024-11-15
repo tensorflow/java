@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes element-wise maximum.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterNdMax.OP_NAME,

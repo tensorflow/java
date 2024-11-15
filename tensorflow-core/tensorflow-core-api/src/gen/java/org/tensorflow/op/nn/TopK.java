@@ -46,10 +46,6 @@ import org.tensorflow.types.family.TNumber;
  * values.shape = indices.shape = input.shape[:-1] + [k]
  * </pre>
  * <p>If two elements are equal, the lower-index element appears first.
- *
- * @param <T> data type for {@code values} output
- *
- * @param <V> data type for {@code indices} output
  */
 @OpMetadata(
     opType = TopK.OP_NAME,

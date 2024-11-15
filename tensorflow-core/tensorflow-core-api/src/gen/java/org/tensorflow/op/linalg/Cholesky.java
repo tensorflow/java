@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * <p><strong>Note</strong>: The gradient computation on GPU is faster for large matrices but
  * not for large batch dimensions when the submatrices are small. In this
  * case it might be faster to use the CPU.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Cholesky.OP_NAME,

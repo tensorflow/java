@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Extract {@code patches} from {@code input} and put them in the {@code "depth"} output dimension. 3D extension of {@code extract_image_patches}.
- *
- * @param <T> data type for {@code patches} output
  */
 @OpMetadata(
     opType = ExtractVolumePatches.OP_NAME,

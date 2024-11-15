@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * out_backprop to those indices that form the same pooling cell. Therefore, we
  * just need to know the shape of original input tensor, instead of the whole
  * tensor.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FractionalAvgPoolGrad.OP_NAME,

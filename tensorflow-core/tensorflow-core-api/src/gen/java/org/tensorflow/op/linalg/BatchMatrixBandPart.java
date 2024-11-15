@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The BatchMatrixBandPart operation
- *
- * @param <T> data type for {@code band} output
  */
 @OpMetadata(
     opType = BatchMatrixBandPart.OP_NAME,

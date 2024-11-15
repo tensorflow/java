@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op that passes through {@code input} when its output is not fed.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = PlaceholderWithDefault.OP_NAME,

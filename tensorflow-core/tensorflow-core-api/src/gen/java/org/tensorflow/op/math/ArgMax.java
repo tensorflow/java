@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * # c = 4
  * # here a[4] = 166.32 which is the largest element of a across axis 0
  * </pre>
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = ArgMax.OP_NAME,

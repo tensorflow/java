@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TNumber;
  *   res = bitwise_ops.bitwise_or(lhs, rhs)
  *   tf.assert_equal(tf.cast(res,  tf.float32), exp)  # TRUE
  * </pre>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = BitwiseOr.OP_NAME,

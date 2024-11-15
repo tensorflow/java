@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>\(\psi^{(a)}(x) = \frac{d^a}{dx^a} \psi(x)\)
  * <p>where \(\psi(x)\) is the digamma function.
  * The polygamma function is defined only for non-negative integer orders \a\.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Polygamma.OP_NAME,

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
  * The generated values follow a uniform distribution in the range {@code [minval, maxval)}.
  * <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter}, {@code alg}, {@code minval} and {@code maxval}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomUniformIntV2.OP_NAME,

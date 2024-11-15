@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TNumber;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = Relu.OP_NAME,

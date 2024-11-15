@@ -54,8 +54,6 @@ import org.tensorflow.types.family.TType;
  * <li>&quot;FIRST_DIM_SIZE&quot;: if value_rowids is used for the first dimension, then it
  * is preceded by &quot;FIRST_DIM_SIZE&quot;.</li>
  * </ul>
- *
- * @param <U> data type for {@code result} output
  */
 @OpMetadata(
     opType = RaggedTensorToTensor.OP_NAME,

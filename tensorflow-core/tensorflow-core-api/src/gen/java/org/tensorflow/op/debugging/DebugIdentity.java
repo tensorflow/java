@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Provides an identity mapping of the non-Ref type input tensor for debugging.
  * Provides an identity mapping of the non-Ref type input tensor for debugging.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DebugIdentity.OP_NAME,

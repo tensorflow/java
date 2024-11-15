@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * output: The same as input.
  * shape: The shape of the input tensor.
  *
- * @param <T> data type for {@code output} output
- *
  * @deprecated use {@link org.tensorflow.op.distribute.NcclBroadcast} instead
  */
 @OpMetadata(

@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
  * v_t &lt;- max(beta2 * v_{t-1}, abs(g))
  * variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyAdaMax.OP_NAME,

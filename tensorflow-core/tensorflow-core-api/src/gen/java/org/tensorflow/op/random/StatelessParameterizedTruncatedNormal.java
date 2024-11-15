@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The StatelessParameterizedTruncatedNormal operation
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessParameterizedTruncatedNormal.OP_NAME,

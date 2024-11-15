@@ -155,7 +155,6 @@ public final class NnOps {
    *  Each entry in {@code output} is the mean of the corresponding size {@code ksize}
    *  window in {@code value}.
    *
-   * @param <T> data type for {@code output} output
    * @param value 4-D with shape {@code [batch, height, width, channels]}.
    * @param ksize The size of the sliding window for each dimension of {@code value}.
    * @param strides The stride of the sliding window for each dimension of {@code value}.
@@ -174,7 +173,6 @@ public final class NnOps {
    *  Each entry in {@code output} is the mean of the corresponding size {@code ksize} window in
    *  {@code value}.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape {@code [batch, depth, rows, cols, channels]} tensor to pool over.
    * @param ksize 1-D tensor of length 5. The size of the window for each dimension of
    *  the input tensor. Must have {@code ksize[0] = ksize[4] = 1}.
@@ -193,7 +191,6 @@ public final class NnOps {
   /**
    * Computes gradients of average pooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param origInputShape The original input dimensions.
    * @param grad Output backprop of shape {@code [batch, depth, rows, cols, channels]}.
    * @param ksize 1-D tensor of length 5. The size of the window for each dimension of
@@ -214,7 +211,6 @@ public final class NnOps {
   /**
    * Computes gradients of the average pooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param origInputShape 1-D.  Shape of the original input to {@code avg_pool}.
    * @param grad 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t.
    *  the output of {@code avg_pool}.
@@ -235,7 +231,6 @@ public final class NnOps {
    * Batch normalization.
    *  This op is deprecated. Prefer {@code tf.nn.batch_normalization}.
    *
-   * @param <T> data type for {@code result} output
    * @param t A 4D input Tensor.
    * @param m A 1D mean Tensor with size matching the last dimension of t.
    *  This is the first output from tf.nn.moments,
@@ -264,7 +259,6 @@ public final class NnOps {
    * Gradients for batch normalization.
    *  This op is deprecated. See {@code tf.nn.batch_normalization}.
    *
-   * @param <T> data type for {@code dx} output
    * @param t A 4D input Tensor.
    * @param m A 1D mean Tensor with size matching the last dimension of t.
    *  This is the first output from tf.nn.moments,
@@ -293,7 +287,6 @@ public final class NnOps {
    *  This is a special case of {@code tf.add} where {@code bias} is restricted to be 1-D.
    *  Broadcasting is supported, so {@code value} may have any number of dimensions.
    *
-   * @param <T> data type for {@code output} output
    * @param value Any number of dimensions.
    * @param bias 1-D with size the last dimension of {@code value}.
    * @param options carries optional attribute values
@@ -311,7 +304,6 @@ public final class NnOps {
    *  For NHWC data format, the feature dimension is the last. For NCHW data format,
    *  the feature dimension is the third-to-last.
    *
-   * @param <T> data type for {@code output} output
    * @param outBackprop Any number of dimensions.
    * @param options carries optional attribute values
    * @param <T> data type for {@code BiasAddGrad} output and operands
@@ -345,7 +337,6 @@ public final class NnOps {
    *  all gate-related outputs should be reordered.
    *  </pre>
    *
-   * @param <T> data type for {@code i} output
    * @param seqLenMax Maximum time length actually used by this input. Outputs are padded
    *  with zeros beyond this length.
    * @param x The sequence input to the LSTM, shape (timelen, batch_size, num_inputs).
@@ -370,7 +361,6 @@ public final class NnOps {
    * Computes the LSTM cell backward propagation for the entire time sequence.
    *  This implementation is to be used in conjunction of BlockLSTMV2.
    *
-   * @param <T> data type for {@code x_grad} output
    * @param seqLenMax Maximum time length actually used by this input. Outputs are padded
    *  with zeros beyond this length.
    * @param x The sequence input to the LSTM, shape (timelen, batch_size, num_inputs).
@@ -445,7 +435,6 @@ public final class NnOps {
    *  General function for computing a N-D convolution. It is required that
    *  {@code 1 <= N <= 3}.
    *
-   * @param <T> data type for {@code output} output
    * @param input Tensor of type T and shape {@code batch_shape + spatial_shape + [in_channels]} in the
    *  case that {@code channels_last_format = true} or shape
    *  {@code batch_shape + [in_channels] + spatial_shape} if {@code channels_last_format = false}.
@@ -490,7 +479,6 @@ public final class NnOps {
    *  <p>Must have {@code strides[0] = strides[3] = 1}.  For the most common case of the same
    *  horizontal and vertices strides, {@code strides = [1, stride, stride, 1]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input A 4-D tensor. The dimension order is interpreted according to the value
    *  of {@code data_format}, see below for details.
    * @param filter A 4-D tensor of shape
@@ -511,7 +499,6 @@ public final class NnOps {
   /**
    * Computes the gradients of convolution with respect to the filter.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
    * @param filterSizes An integer vector representing the tensor shape of {@code filter},
    *  where {@code filter} is a 4-D
@@ -535,7 +522,6 @@ public final class NnOps {
   /**
    * Computes the gradients of convolution with respect to the input.
    *
-   * @param <T> data type for {@code output} output
    * @param inputSizes An integer vector representing the shape of {@code input},
    *  where {@code input} is a 4-D {@code [batch, height, width, channels]} tensor.
    * @param filter 4-D with shape
@@ -563,7 +549,6 @@ public final class NnOps {
    *  is also known as a sliding dot product or sliding inner-product.
    *  <p>Our Conv3D implements a form of cross-correlation.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape {@code [batch, in_depth, in_height, in_width, in_channels]}.
    * @param filter Shape {@code [filter_depth, filter_height, filter_width, in_channels, out_channels]}. {@code in_channels} must match between {@code input} and {@code filter}.
    * @param strides 1-D tensor of length 5. The stride of the sliding window for each
@@ -581,7 +566,6 @@ public final class NnOps {
   /**
    * Computes the gradients of 3-D convolution with respect to the filter.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape {@code [batch, depth, rows, cols, in_channels]}.
    * @param filterSizes An integer vector representing the tensor shape of {@code filter},
    *  where {@code filter} is a 5-D
@@ -604,7 +588,6 @@ public final class NnOps {
   /**
    * Computes the gradients of 3-D convolution with respect to the input.
    *
-   * @param <U> data type for {@code output} output
    * @param inputSizes An integer vector representing the tensor shape of {@code input},
    *  where {@code input} is a 5-D
    *  {@code [batch, depth, rows, cols, in_channels]} tensor.
@@ -632,7 +615,6 @@ public final class NnOps {
    *  &quot;A B&quot; is returned if merge_repeated = True but &quot;A B B B B&quot; is
    *  returned if merge_repeated = False.
    *
-   * @param <T> data type for {@code log_probability} output
    * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.
    * @param sequenceLength A vector containing sequence lengths, size {@code (batch)}.
    * @param beamWidth A scalar &gt;= 0 (beam search beam width).
@@ -658,7 +640,6 @@ public final class NnOps {
    *  time and batch corresponds to the blank, index {@code (num_classes - 1)}, no new
    *  element is emitted.
    *
-   * @param <T> data type for {@code log_probability} output
    * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.
    * @param sequenceLength A vector containing sequence lengths, size {@code (batch_size)}.
    * @param options carries optional attribute values
@@ -675,7 +656,6 @@ public final class NnOps {
    *  the gradient.  This class performs the softmax operation for you, so inputs
    *  should be e.g. linear projections of outputs by an LSTM.
    *
-   * @param <T> data type for {@code loss} output
    * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.
    * @param labelsIndices The indices of a {@code SparseTensor<int32, 2>}.
    *  {@code labels_indices(i, :) == [b, t]} means {@code labels_values(i)} stores the id for
@@ -730,7 +710,6 @@ public final class NnOps {
    *  reserve_space: An opaque tensor that can be used in backprop calculation. It
    *  is only produced if is_training is true.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param inputH The inputH value
    * @param inputC The inputC value
@@ -795,7 +774,6 @@ public final class NnOps {
    *  params_backprop: The backprop to the params buffer in the forward pass. Has the
    *  same shape as params.
    *
-   * @param <T> data type for {@code input_backprop} output
    * @param input The input value
    * @param inputH The inputH value
    * @param inputC The inputC value
@@ -852,7 +830,6 @@ public final class NnOps {
    *  num_proj: The output dimensionality for the projection matrices. If None or 0,
    *  no projection is performed.
    *
-   * @param <T> data type for {@code params} output
    * @param numLayers The numLayers value
    * @param numUnits The numUnits value
    * @param inputSize The inputSize value
@@ -900,7 +877,6 @@ public final class NnOps {
    *  num_proj: The output dimensionality for the projection matrices. If None or 0,
    *  no projection is performed.
    *
-   * @param <T> data type for {@code weights} output
    * @param numLayers The numLayers value
    * @param numUnits The numUnits value
    * @param inputSize The inputSize value
@@ -941,7 +917,6 @@ public final class NnOps {
    *  CudnnRNNParamsBiases to save and restore them in a way that is compatible
    *  across different runs.
    *
-   * @param <T> data type for {@code params_size} output
    * @param numLayers The numLayers value
    * @param numUnits The numUnits value
    * @param inputSize The inputSize value
@@ -962,7 +937,6 @@ public final class NnOps {
    * Returns the dimension index in the destination data format given the one in
    *  the source data format.
    *
-   * @param <T> data type for {@code y} output
    * @param x A Tensor with each element as a dimension index in source data format.
    *  Must be in the range [-4, 4).
    * @param options carries optional attribute values
@@ -1006,7 +980,6 @@ public final class NnOps {
    *  [1, 2]
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
    * @param x Tensor of rank 1 or 2 in source data format.
    * @param options carries optional attribute values
    * @param <T> data type for {@code DataFormatVecPermute} output and operands
@@ -1094,7 +1067,6 @@ public final class NnOps {
    *
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param blockSize The size of the spatial block, same as in Space2Depth.
    * @param options carries optional attribute values
@@ -1125,7 +1097,6 @@ public final class NnOps {
    *  <p>Must have {@code strides[0] = strides[3] = 1}.  For the most common case of the same
    *  horizontal and vertices strides, {@code strides = [1, stride, stride, 1]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
@@ -1144,7 +1115,6 @@ public final class NnOps {
   /**
    * Computes the gradients of depthwise convolution with respect to the filter.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape based on {@code data_format}.  For example, if
    *  {@code data_format} is 'NHWC' then {@code input} is a 4-D {@code [batch, in_height, in_width, in_channels]} tensor.
    * @param filterSizes An integer vector representing the tensor shape of {@code filter},
@@ -1170,7 +1140,6 @@ public final class NnOps {
   /**
    * Computes the gradients of depthwise convolution with respect to the input.
    *
-   * @param <T> data type for {@code output} output
    * @param inputSizes An integer vector representing the shape of {@code input}, based
    *  on {@code data_format}.  For example, if {@code data_format} is 'NHWC' then
    *  {@code input} is a 4-D {@code [batch, height, width, channels]} tensor.
@@ -1217,7 +1186,6 @@ public final class NnOps {
    *  <p>Note on duality: The dilation of {@code input} by the {@code filter} is equal to the
    *  negation of the erosion of {@code -input} by the reflected {@code filter}.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, depth]}.
    * @param filter 3-D with shape {@code [filter_height, filter_width, depth]}.
    * @param strides The stride of the sliding window for each dimension of the input
@@ -1236,7 +1204,6 @@ public final class NnOps {
   /**
    * Computes the gradient of morphological 2-D dilation with respect to the filter.
    *
-   * @param <T> data type for {@code filter_backprop} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, depth]}.
    * @param filter 3-D with shape {@code [filter_height, filter_width, depth]}.
    * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, depth]}.
@@ -1257,7 +1224,6 @@ public final class NnOps {
   /**
    * Computes the gradient of morphological 2-D dilation with respect to the input.
    *
-   * @param <T> data type for {@code in_backprop} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, depth]}.
    * @param filter 3-D with shape {@code [filter_height, filter_width, depth]}.
    * @param outBackprop 4-D with shape {@code [batch, out_height, out_width, depth]}.
@@ -1298,7 +1264,6 @@ public final class NnOps {
    *  <p>See  <a href="http://arxiv.org/abs/1511.07289">Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
    *  </a>
    *
-   * @param <T> data type for {@code activations} output
    * @param features The features value
    * @param <T> data type for {@code Elu} output and operands
    * @return a new instance of Elu
@@ -1310,7 +1275,6 @@ public final class NnOps {
   /**
    * Computes gradients for the exponential linear (Elu) operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding Elu operation.
    * @param outputs The outputs of the corresponding Elu operation.
    * @param <T> data type for {@code EluGrad} output and operands
@@ -1358,7 +1322,6 @@ public final class NnOps {
    *  generated, a mean operation is performed instead of a max operation in each
    *  pooling region.
    *
-   * @param <T> data type for {@code output} output
    * @param value 4-D with shape {@code [batch, height, width, channels]}.
    * @param poolingRatio Pooling ratio for each dimension of {@code value}, currently only
    *  supports row and col dimension and should be &gt;= 1.0. For example, a valid
@@ -1383,7 +1346,6 @@ public final class NnOps {
    *  just need to know the shape of original input tensor, instead of the whole
    *  tensor.
    *
-   * @param <T> data type for {@code output} output
    * @param origInputTensorShape Original input tensor shape for {@code fractional_avg_pool}
    * @param outBackprop 4-D with shape {@code [batch, height, width, channels]}.  Gradients
    *  w.r.t. the output of {@code fractional_avg_pool}.
@@ -1431,7 +1393,6 @@ public final class NnOps {
    *  <p>For more details on fractional max pooling, see this paper:
    *   <a href="http://arxiv.org/abs/1412.6071">Benjamin Graham, Fractional Max-Pooling</a>
    *
-   * @param <T> data type for {@code output} output
    * @param value 4-D with shape {@code [batch, height, width, channels]}.
    * @param poolingRatio Pooling ratio for each dimension of {@code value}, currently only
    *  supports row and col dimension and should be &gt;= 1.0. For example, a valid
@@ -1451,7 +1412,6 @@ public final class NnOps {
   /**
    * Computes gradient of the FractionalMaxPool function.
    *
-   * @param <T> data type for {@code output} output
    * @param origInput Original input for {@code fractional_max_pool}
    * @param origOutput Original output for {@code fractional_max_pool}
    * @param outBackprop 4-D with shape {@code [batch, height, width, channels]}.  Gradients
@@ -1475,8 +1435,6 @@ public final class NnOps {
    *  Note that the size of 4D Tensors are defined by either &quot;NHWC&quot; or &quot;NCHW&quot;.
    *  The size of 1D Tensors matches the dimension C of the 4D Tensors.
    *
-   * @param <T> data type for {@code y} output
-   * @param <U> data type for {@code batch_mean} output
    * @param x A 4D Tensor for input data.
    * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
    * @param offset A 1D Tensor for offset, to shift to the normalized x.
@@ -1500,8 +1458,6 @@ public final class NnOps {
    *  Note that the size of 4D Tensors are defined by either &quot;NHWC&quot; or &quot;NCHW&quot;.
    *  The size of 1D Tensors matches the dimension C of the 4D Tensors.
    *
-   * @param <T> data type for {@code x_backprop} output
-   * @param <U> data type for {@code scale_backprop} output
    * @param yBackprop A 4D Tensor for the gradient with respect to y.
    * @param x A 4D Tensor for input data.
    * @param scale A 1D Tensor for scaling factor, to scale the normalized x.
@@ -1542,7 +1498,6 @@ public final class NnOps {
    *  will block if multiple versions are being run in parallel. This is because this
    *  operator is primarily an optimization to minimize memory usage.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
    * @param paddings A two-column matrix specifying the padding sizes. The number of
    *  rows must be the same as the rank of {@code input}.
@@ -1574,7 +1529,6 @@ public final class NnOps {
    *  will block if multiple versions are being run in parallel. This is because this
    *  operator is primarily an optimization to minimize memory usage.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
    * @param sizeOutput A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
@@ -1637,7 +1591,6 @@ public final class NnOps {
    *  h = (1-u) \circ c + u \circ h_prev
    *  </pre>
    *
-   * @param <T> data type for {@code r} output
    * @param x The x value
    * @param hPrev The hPrev value
    * @param wRu The wRu value
@@ -1728,7 +1681,6 @@ public final class NnOps {
    *  d_b_c = sum of d_c_bar along axis = 0
    *  </pre>
    *
-   * @param <T> data type for {@code d_x} output
    * @param x The x value
    * @param hPrev The hPrev value
    * @param wRu The wRu value
@@ -1778,7 +1730,6 @@ public final class NnOps {
    *  Specifically, {@code grad = -dy * y*y}, where {@code y = 1/x}, and {@code dy}
    *  is the corresponding input gradient.
    *
-   * @param <T> data type for {@code z} output
    * @param y The y value
    * @param dy The dy value
    * @param <T> data type for {@code InvGrad} output and operands
@@ -1791,7 +1742,6 @@ public final class NnOps {
   /**
    * Solves a batch of isotonic regression problems.
    *
-   * @param <U> data type for {@code output} output
    * @param input A (batch_size, dim)-tensor holding a batch of inputs.
    * @return a new instance of IsotonicRegression, with default output types
    */
@@ -1802,7 +1752,6 @@ public final class NnOps {
   /**
    * Solves a batch of isotonic regression problems.
    *
-   * @param <U> data type for {@code output} output
    * @param input A (batch_size, dim)-tensor holding a batch of inputs.
    * @param outputDtype Dtype of output.
    * @param <U> data type for {@code IsotonicRegression} output and operands
@@ -1820,7 +1769,6 @@ public final class NnOps {
    *  output = sum(t ** 2) / 2
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param t Typically 2-D, but may have any dimensions.
    * @param <T> data type for {@code L2Loss} output and operands
    * @return a new instance of L2Loss
@@ -1854,7 +1802,6 @@ public final class NnOps {
    *  h = co .* o
    *  </pre>
    *
-   * @param <T> data type for {@code i} output
    * @param x The input to the LSTM cell, shape (batch_size, num_inputs).
    * @param csPrev Value of the cell state at previous time step.
    * @param hPrev Output of the previous cell at previous time step.
@@ -1877,7 +1824,6 @@ public final class NnOps {
    * Computes the LSTM cell backward propagation for 1 timestep.
    *  This implementation is to be used in conjunction of LSTMBlockCell.
    *
-   * @param <T> data type for {@code cs_prev_grad} output
    * @param x The input to the LSTM cell, shape (batch_size, num_inputs).
    * @param csPrev The previous cell state.
    * @param hPrev The previous h state.
@@ -1908,7 +1854,6 @@ public final class NnOps {
   /**
    * Computes rectified linear: {@code max(features, features * alpha)}.
    *
-   * @param <T> data type for {@code activations} output
    * @param features The features value
    * @param options carries optional attribute values
    * @param <T> data type for {@code LeakyRelu} output and operands
@@ -1960,7 +1905,6 @@ public final class NnOps {
    *  <p>For details, see  <a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks">Krizhevsky et al., ImageNet classification with deep
    *  convolutional neural networks (NIPS 2012)</a> .
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D.
    * @param options carries optional attribute values
    * @param <T> data type for {@code LRN} output and operands
@@ -1974,7 +1918,6 @@ public final class NnOps {
   /**
    * Gradients for Local Response Normalization.
    *
-   * @param <T> data type for {@code output} output
    * @param inputGrads 4-D with shape {@code [batch, height, width, channels]}.
    * @param inputImage 4-D with shape {@code [batch, height, width, channels]}.
    * @param outputImage 4-D with shape {@code [batch, height, width, channels]}.
@@ -1995,7 +1938,6 @@ public final class NnOps {
    *  logsoftmax[i, j] = logits[i, j] - log(sum(exp(logits[i])))
    *  </pre>
    *
-   * @param <T> data type for {@code logsoftmax} output
    * @param logits 2-D with shape {@code [batch_size, num_classes]}.
    * @param <T> data type for {@code LogSoftmax} output and operands
    * @return a new instance of LogSoftmax
@@ -2007,7 +1949,6 @@ public final class NnOps {
   /**
    * Performs max pooling on the input.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D input to pool over.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
@@ -2025,7 +1966,6 @@ public final class NnOps {
   /**
    * Performs 3D max pooling on the input.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape {@code [batch, depth, rows, cols, channels]} tensor to pool over.
    * @param ksize 1-D tensor of length 5. The size of the window for each dimension of
    *  the input tensor. Must have {@code ksize[0] = ksize[4] = 1}.
@@ -2044,7 +1984,6 @@ public final class NnOps {
   /**
    * Computes gradients of 3D max pooling function.
    *
-   * @param <U> data type for {@code output} output
    * @param origInput The original input tensor.
    * @param origOutput The original output tensor.
    * @param grad Output backprop of shape {@code [batch, depth, rows, cols, channels]}.
@@ -2067,7 +2006,6 @@ public final class NnOps {
   /**
    * Computes second-order gradients of the maxpooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param origInput The original input tensor.
    * @param origOutput The original output tensor.
    * @param grad Output backprop of shape {@code [batch, depth, rows, cols, channels]}.
@@ -2089,7 +2027,6 @@ public final class NnOps {
   /**
    * Computes gradients of the maxpooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param origInput The original input tensor.
    * @param origOutput The original output tensor.
    * @param grad 4-D.  Gradients w.r.t. the output of {@code max_pool}.
@@ -2110,7 +2047,6 @@ public final class NnOps {
   /**
    * Computes second-order gradients of the maxpooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param origInput The original input tensor.
    * @param origOutput The original output tensor.
    * @param grad 4-D.  Gradients of gradients w.r.t. the input of {@code max_pool}.
@@ -2131,7 +2067,6 @@ public final class NnOps {
   /**
    * Computes second-order gradients of the maxpooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param input The original input.
    * @param grad 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t. the
    *  input of {@code max_pool}.
@@ -2153,7 +2088,6 @@ public final class NnOps {
   /**
    * Computes gradients of the maxpooling function.
    *
-   * @param <T> data type for {@code output} output
    * @param input The original input.
    * @param grad 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t. the
    *  output of {@code max_pool}.
@@ -2183,8 +2117,6 @@ public final class NnOps {
    *  (either negative or too large).  This is a bug, but fixing it is difficult to do
    *  in a safe backwards compatible way, especially due to flattening.
    *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code argmax} output
    * @param input 4-D with shape {@code [batch, height, width, channels]}.  Input to pool over.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
@@ -2210,8 +2142,6 @@ public final class NnOps {
    *  (either negative or too large).  This is a bug, but fixing it is difficult to do
    *  in a safe backwards compatible way, especially due to flattening.
    *
-   * @param <T> data type for {@code output} output
-   * @param <U> data type for {@code argmax} output
    * @param input 4-D with shape {@code [batch, height, width, channels]}.  Input to pool over.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
@@ -2239,7 +2169,6 @@ public final class NnOps {
    *  values.shape = input.shape[:-1]
    *  </pre>
    *
-   * @param <T> data type for {@code values} output
    * @param input 1-D or higher with last dimension at least {@code n+1}.
    * @param n 0-D. Position of sorted vector to select along the last dimension (along
    *  each row for matrices). Valid range of n is {@code [0, input.shape[:-1])}
@@ -2255,7 +2184,6 @@ public final class NnOps {
   /**
    * Produces the average pool of the input tensor for quantized types.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, height, width, channels]}.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
@@ -2278,7 +2206,6 @@ public final class NnOps {
    *  This op is deprecated and will be removed in the future. Prefer
    *  {@code tf.nn.batch_normalization}.
    *
-   * @param <U> data type for {@code result} output
    * @param t A 4D input Tensor.
    * @param tMin The value represented by the lowest quantized input.
    * @param tMax The value represented by the highest quantized input.
@@ -2322,7 +2249,6 @@ public final class NnOps {
    * Adds Tensor 'bias' to Tensor 'input' for Quantized types.
    *  Broadcasts the values of bias on dimensions 0..N-2 of 'input'.
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param bias A 1D bias Tensor with size matching the last dimension of 'input'.
    * @param minInput The float value that the lowest quantized input value represents.
@@ -2342,7 +2268,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DAndRelu operation
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param minInput The minInput value
@@ -2367,7 +2292,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DAndReluAndRequantize operation
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param minInput The minInput value
@@ -2395,7 +2319,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DAndRequantize operation
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param minInput The minInput value
@@ -2423,7 +2346,6 @@ public final class NnOps {
   /**
    * Computes QuantizedConv2D per channel.
    *
-   * @param <V> data type for {@code output} output
    * @param input The original input tensor.
    * @param filter The original filter tensor.
    * @param minInput The minimum value of the input tensor
@@ -2448,7 +2370,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBias operation
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2474,7 +2395,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBiasAndRelu operation
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2500,7 +2420,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBiasAndReluAndRequantize operation
    *
-   * @param <W> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2529,7 +2448,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBiasAndRequantize operation
    *
-   * @param <W> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2558,7 +2476,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBiasSignedSumAndReluAndRequantize operation
    *
-   * @param <X> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2592,7 +2509,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBiasSumAndRelu operation
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2619,7 +2535,6 @@ public final class NnOps {
   /**
    * The QuantizedConv2DWithBiasSumAndReluAndRequantize operation
    *
-   * @param <X> data type for {@code output} output
    * @param input The input value
    * @param filter The filter value
    * @param bias The bias value
@@ -2657,7 +2572,6 @@ public final class NnOps {
    *  This means that you can only interpret the quantized output in the same way, by
    *  taking the returned minimum and maximum values into account.
    *
-   * @param <V> data type for {@code output} output
    * @param input The input value
    * @param filter filter's input_depth dimension must match input's depth dimensions.
    * @param minInput The float value that the lowest quantized input value represents.
@@ -2682,7 +2596,6 @@ public final class NnOps {
   /**
    * Computes quantized depthwise Conv2D.
    *
-   * @param <V> data type for {@code output} output
    * @param input The original input tensor.
    * @param filter The original filter tensor.
    * @param minInput The float value that the minimum quantized input value represents.
@@ -2707,7 +2620,6 @@ public final class NnOps {
   /**
    * Computes quantized depthwise Conv2D with Bias.
    *
-   * @param <V> data type for {@code output} output
    * @param input The original input tensor.
    * @param filter The original filter tensor.
    * @param bias The original bias tensor.
@@ -2733,7 +2645,6 @@ public final class NnOps {
   /**
    * Computes quantized depthwise Conv2D with Bias and Relu.
    *
-   * @param <V> data type for {@code output} output
    * @param input The original input tensor.
    * @param filter The original filter tensor.
    * @param bias The original bias tensor.
@@ -2759,7 +2670,6 @@ public final class NnOps {
   /**
    * Computes quantized depthwise Conv2D with Bias, Relu and Requantize.
    *
-   * @param <W> data type for {@code output} output
    * @param input The original input tensor.
    * @param filter The original filter tensor.
    * @param bias The original bias tensor.
@@ -2788,7 +2698,6 @@ public final class NnOps {
   /**
    * Quantized Instance normalization.
    *
-   * @param <T> data type for {@code y} output
    * @param x A 4D input Tensor.
    * @param xMin The value represented by the lowest quantized input.
    * @param xMax The value represented by the highest quantized input.
@@ -2804,7 +2713,6 @@ public final class NnOps {
   /**
    * Produces the max pool of the input tensor for quantized types.
    *
-   * @param <T> data type for {@code output} output
    * @param input The 4D (batch x rows x cols x depth) Tensor to MaxReduce over.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
@@ -2825,7 +2733,6 @@ public final class NnOps {
   /**
    * Computes Quantized Rectified Linear: {@code max(features, 0)}
    *
-   * @param <U> data type for {@code activations} output
    * @param features The features value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
@@ -2841,7 +2748,6 @@ public final class NnOps {
   /**
    * Computes Quantized Rectified Linear 6: {@code min(max(features, 0), 6)}
    *
-   * @param <U> data type for {@code activations} output
    * @param features The features value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
@@ -2857,7 +2763,6 @@ public final class NnOps {
   /**
    * Computes Quantized Rectified Linear X: {@code min(max(features, 0), max_value)}
    *
-   * @param <U> data type for {@code activations} output
    * @param features The features value
    * @param maxValue The maxValue value
    * @param minFeatures The float value that the lowest quantized value represents.
@@ -2885,7 +2790,6 @@ public final class NnOps {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param <T> data type for {@code activations} output
    * @param features The features value
    * @param <T> data type for {@code Relu} output and operands
    * @return a new instance of Relu
@@ -2897,7 +2801,6 @@ public final class NnOps {
   /**
    * Computes rectified linear 6: {@code min(max(features, 0), 6)}.
    *
-   * @param <T> data type for {@code activations} output
    * @param features The features value
    * @param <T> data type for {@code Relu6} output and operands
    * @return a new instance of Relu6
@@ -2909,7 +2812,6 @@ public final class NnOps {
   /**
    * Computes rectified linear 6 gradients for a Relu6 operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding Relu6 operation.
    * @param features The features passed as input to the corresponding Relu6 operation, or
    *  its output; using either one produces the same result.
@@ -2923,7 +2825,6 @@ public final class NnOps {
   /**
    * Computes rectified linear gradients for a Relu operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding Relu operation.
    * @param features The features passed as input to the corresponding Relu operation, OR
    *  the outputs of that operation (both work equivalently).
@@ -2942,7 +2843,6 @@ public final class NnOps {
    *  For correct dropout, use {@code tf.contrib.nn.alpha_dropout}.
    *  <p>See  <a href="https://arxiv.org/abs/1706.02515">Self-Normalizing Neural Networks</a>
    *
-   * @param <T> data type for {@code activations} output
    * @param features The features value
    * @param <T> data type for {@code Selu} output and operands
    * @return a new instance of Selu
@@ -2954,7 +2854,6 @@ public final class NnOps {
   /**
    * Computes gradients for the scaled exponential linear (Selu) operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding Selu operation.
    * @param outputs The outputs of the corresponding Selu operation.
    * @param <T> data type for {@code SeluGrad} output and operands
@@ -2971,7 +2870,6 @@ public final class NnOps {
    *  $$softmax[i, j] = exp(logits[i, j]) / sum_j(exp(logits[i, j]))$$
    *  </pre>
    *
-   * @param <T> data type for {@code softmax} output
    * @param logits 2-D with shape {@code [batch_size, num_classes]}.
    * @param <T> data type for {@code Softmax} output and operands
    * @return a new instance of Softmax
@@ -2984,7 +2882,6 @@ public final class NnOps {
    * Computes softmax cross entropy cost and gradients to backpropagate.
    *  Inputs are the logits, not probabilities.
    *
-   * @param <T> data type for {@code loss} output
    * @param features batch_size x num_classes matrix
    * @param labels batch_size x num_classes matrix
    *  The caller must ensure that each batch of labels represents a valid
@@ -3000,7 +2897,6 @@ public final class NnOps {
   /**
    * Computes softsign: {@code features / (abs(features) + 1)}.
    *
-   * @param <T> data type for {@code activations} output
    * @param features The features value
    * @param <T> data type for {@code Softsign} output and operands
    * @return a new instance of Softsign
@@ -3012,7 +2908,6 @@ public final class NnOps {
   /**
    * Computes softsign gradients for a softsign operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding softsign operation.
    * @param features The features passed as input to the corresponding softsign operation.
    * @param <T> data type for {@code SoftsignGrad} output and operands
@@ -3090,7 +2985,6 @@ public final class NnOps {
    *  <p>Among others, this operation is useful for reducing atrous convolution into
    *  regular convolution.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D with shape {@code [batch, height, width, depth]}.
    * @param paddings 2-D tensor of non-negative integers with shape {@code [2, 2]}. It specifies
    *  the padding of the input with zeros across the spatial dimensions as follows:
@@ -3182,7 +3076,6 @@ public final class NnOps {
    *         [13, 14, 15, 16]]]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param blockSize The size of the spatial block.
    * @param options carries optional attribute values
@@ -3202,7 +3095,6 @@ public final class NnOps {
    *  given row.
    *  <p>Inputs are the logits, not probabilities.
    *
-   * @param <T> data type for {@code loss} output
    * @param features batch_size x num_classes matrix
    * @param labels batch_size vector with values in [0, num_classes).
    *  This is the label for the given minibatch entry.
@@ -3226,8 +3118,6 @@ public final class NnOps {
    *  </pre>
    *  <p>If two elements are equal, the lower-index element appears first.
    *
-   * @param <T> data type for {@code values} output
-   * @param <V> data type for {@code indices} output
    * @param input 1-D or higher with last dimension at least {@code k}.
    * @param k 0-D.  Number of top elements to look for along the last dimension (along each
    *  row for matrices).
@@ -3252,8 +3142,6 @@ public final class NnOps {
    *  </pre>
    *  <p>If two elements are equal, the lower-index element appears first.
    *
-   * @param <T> data type for {@code values} output
-   * @param <V> data type for {@code indices} output
    * @param input 1-D or higher with last dimension at least {@code k}.
    * @param k 0-D.  Number of top elements to look for along the last dimension (along each
    *  row for matrices).
@@ -3287,7 +3175,6 @@ public final class NnOps {
    *  <p>{@code output} is also quantized, using the same formula.
    *  If {@code rhs} is per-tensor quantized, {@code output} must be also per-tensor quantized.
    *
-   * @param <U> data type for {@code output} output
    * @param lhs Must be a quantized tensor, rank &gt;= 3.
    * @param rhs Must be a quantized tensor, same rank as {@code lhs}.
    * @param lhsScales The float value(s) used as scale factors when quantizing the original data that {@code lhs} represents.
@@ -3358,7 +3245,6 @@ public final class NnOps {
    *  <p>{@code rhs} must be quantized Tensor, where its data value is quantized using the formula:
    *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
    *
-   * @param <V> data type for {@code output} output
    * @param lhs Must be a non-quantized Tensor of {@code Tlhs}, rank &gt;= 3.
    * @param rhs Must be a quantized Tensor of {@code Trhs}, same rank as {@code lhs}.
    * @param rhsScales The float value(s) used as scale factors when quantizing the original data that {@code rhs} represents.

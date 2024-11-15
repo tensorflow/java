@@ -108,8 +108,6 @@ import org.tensorflow.types.family.TNumber;
  *
  * d_b_c = sum of d_c_bar along axis = 0
  * </pre>
- *
- * @param <T> data type for {@code d_x} output
  */
 @OpMetadata(
     opType = GRUBlockCellGrad.OP_NAME,
