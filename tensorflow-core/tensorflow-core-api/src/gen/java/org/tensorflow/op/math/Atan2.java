@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TNumber;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Atan2.OP_NAME,

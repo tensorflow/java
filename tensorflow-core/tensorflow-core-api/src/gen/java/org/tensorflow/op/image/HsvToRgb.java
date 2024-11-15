@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * value of the pixels. The output is only well defined if the value in {@code images}
  * are in {@code [0,1]}.
  * <p>See {@code rgb_to_hsv} for a description of the HSV encoding.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = HsvToRgb.OP_NAME,

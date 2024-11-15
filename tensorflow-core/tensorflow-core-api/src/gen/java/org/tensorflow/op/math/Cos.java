@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant([-float(&quot;inf&quot;), -9, -0.5, 1, 1.2, 200, 10000, float(&quot;inf&quot;)])
  * tf.math.cos(x) ==&gt; [nan -0.91113025 0.87758255 0.5403023 0.36235774 0.48718765 -0.95215535 nan]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Cos.OP_NAME,

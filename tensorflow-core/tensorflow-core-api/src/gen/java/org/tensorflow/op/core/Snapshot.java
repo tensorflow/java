@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a copy of the input tensor.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Snapshot.OP_NAME,

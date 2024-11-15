@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * This op uses the algorithm by Marsaglia et al. to acquire samples via
  * transformation-rejection from pairs of uniform and normal random variables.
  * See http://dl.acm.org/citation.cfm?id=358414
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomGamma.OP_NAME,

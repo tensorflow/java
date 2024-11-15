@@ -55,8 +55,6 @@ import org.tensorflow.types.family.TNumber;
  * </ul>
  * <p>{@code rhs} must be quantized Tensor, where its data value is quantized using the formula:
  * quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformQuantizedConvolutionHybrid.OP_NAME,

@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * <p>input_handle: the input list
  * tensor: the gathered result
  * num_elements: optional. If not -1, the number of elements in the list.
- *
- * @param <T> data type for {@code tensor} output
  */
 @OpMetadata(
     opType = TensorListStack.OP_NAME,

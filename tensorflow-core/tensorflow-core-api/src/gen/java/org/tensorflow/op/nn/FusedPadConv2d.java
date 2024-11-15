@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TNumber;
  * Internally this op uses a single per-graph scratch buffer, which means that it
  * will block if multiple versions are being run in parallel. This is because this
  * operator is primarily an optimization to minimize memory usage.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FusedPadConv2d.OP_NAME,

@@ -61,8 +61,6 @@ import org.tensorflow.types.family.TNumber;
  * # Which is equivalent to:
  * tf.segment_sum(c, tf.constant([0, 0, 1]))
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseSegmentSum.OP_NAME,

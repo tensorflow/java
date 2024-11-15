@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Quantizes then dequantizes a tensor.
  * This is almost identical to QuantizeAndDequantizeV2, except that it returns a
  * gradient of 1 for inputs that are within the quantization range, or 0 otherwise.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizeAndDequantizeV4.OP_NAME,
@@ -114,7 +112,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
    * Sets the signedInput option.
    *
    * @param signedInput Whether the quantization is signed or unsigned. (actually this parameter should
-   * have been called <b>{@code signed_output}&lt;/b&gt;)
+   * have been called <b>{@code signed_output}</b>)
    * @return this Options instance.
    */
   public static Options signedInput(Boolean signedInput) {
@@ -218,7 +216,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
      * Sets the signedInput option.
      *
      * @param signedInput Whether the quantization is signed or unsigned. (actually this parameter should
-     * have been called <b>{@code signed_output}&lt;/b&gt;)
+     * have been called <b>{@code signed_output}</b>)
      * @return this Options instance.
      */
     public Options signedInput(Boolean signedInput) {
@@ -317,7 +315,7 @@ public final class QuantizeAndDequantizeV4<T extends TNumber> extends RawOp impl
 
     /**
      * Whether the quantization is signed or unsigned. (actually this parameter should
-     * have been called <b>{@code signed_output}&lt;/b&gt;)
+     * have been called <b>{@code signed_output}</b>)
      */
     public final boolean signedInput;
 

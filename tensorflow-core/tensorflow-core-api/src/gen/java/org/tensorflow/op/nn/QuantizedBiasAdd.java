@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Adds Tensor 'bias' to Tensor 'input' for Quantized types.
  * Broadcasts the values of bias on dimensions 0..N-2 of 'input'.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedBiasAdd.OP_NAME,

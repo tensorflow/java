@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Resize quantized {@code images} to {@code size} using quantized bilinear interpolation.
  * Input images and output images must be quantized types.
- *
- * @param <T> data type for {@code resized_images} output
  */
 @OpMetadata(
     opType = QuantizedResizeBilinear.OP_NAME,

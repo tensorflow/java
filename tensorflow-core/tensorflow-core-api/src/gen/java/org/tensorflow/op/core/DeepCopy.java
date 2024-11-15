@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Makes a copy of {@code x}.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = DeepCopy.OP_NAME,

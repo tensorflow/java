@@ -65,8 +65,6 @@ import org.tensorflow.types.family.TType;
  * indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
  * </pre>
  * <p>For usage examples see the python  tf.tensor_scatter_nd_update {@link org.tensorflow.op.Ops#tensorScatterNdUpdate}  function
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TensorScatterNdUpdate.OP_NAME,

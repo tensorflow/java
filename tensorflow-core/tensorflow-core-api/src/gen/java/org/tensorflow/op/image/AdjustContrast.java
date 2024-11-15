@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>For each channel, the Op first computes the mean of the image pixels in the
  * channel and then adjusts each component of each pixel to
  * {@code (x - mean) * contrast_factor + mean}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = AdjustContrast.OP_NAME,

@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * input_handle: the list
  * index: the position in the list from which an element will be retrieved
  * item: the element at that position
- *
- * @param <T> data type for {@code item} output
  */
 @OpMetadata(
     opType = TensorListGetItem.OP_NAME,

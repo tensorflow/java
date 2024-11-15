@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TNumber;
  * of color channels.
  * <p>This op also supports decoding JPEGs and non-animated GIFs since the interface
  * is the same, though it is cleaner to use {@code tf.io.decode_image}.
- *
- * @param <T> data type for {@code image} output
  */
 @OpMetadata(
     opType = DecodePng.OP_NAME,

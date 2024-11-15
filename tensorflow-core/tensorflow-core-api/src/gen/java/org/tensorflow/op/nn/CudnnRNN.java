@@ -73,8 +73,6 @@ import org.tensorflow.types.family.TType;
  * major.
  * reserve_space: An opaque tensor that can be used in backprop calculation. It
  * is only produced if is_training is true.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CudnnRNN.OP_NAME,

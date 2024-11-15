@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TNumber;
  * <li>{@code row_splits[i+1] - row_splits[i]} is the number of characters in the {@code i}th
  * string (in row-major order).</li>
  * </ul>
- *
- * @param <T> data type for {@code row_splits} output
  */
 @OpMetadata(
     opType = UnicodeDecode.OP_NAME,

@@ -62,8 +62,6 @@ import org.tensorflow.types.family.TType;
  * <p>See {@code tf.scatter_nd} for more details about how to make updates to
  * slices.
  * <p>See also {@code tf.scatter_update} and {@code tf.batch_scatter_update}.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterNdUpdate.OP_NAME,

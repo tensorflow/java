@@ -61,7 +61,6 @@ public final class BitwiseOps {
    *    tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
    *  </pre>
    *
-   * @param <T> data type for {@code z} output
    * @param x The x value
    * @param y The y value
    * @param <T> data type for {@code BitwiseAnd} output and operands
@@ -91,7 +90,6 @@ public final class BitwiseOps {
    *    tf.assert_equal(tf.cast(res,  tf.float32), exp)  # TRUE
    *  </pre>
    *
-   * @param <T> data type for {@code z} output
    * @param x The x value
    * @param y The y value
    * @param <T> data type for {@code BitwiseOr} output and operands
@@ -121,7 +119,6 @@ public final class BitwiseOps {
    *    tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
    *  </pre>
    *
-   * @param <T> data type for {@code z} output
    * @param x The x value
    * @param y The y value
    * @param <T> data type for {@code BitwiseXor} output and operands
@@ -172,7 +169,6 @@ public final class BitwiseOps {
    *      tf.assert_equal(tf.cast(inverted, tf.float32), tf.cast(expected, tf.float32))
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code Invert} output and operands
    * @return a new instance of Invert
@@ -212,7 +208,6 @@ public final class BitwiseOps {
    *  # &lt;tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)&gt;
    *  </pre>
    *
-   * @param <T> data type for {@code z} output
    * @param x The x value
    * @param y The y value
    * @param <T> data type for {@code LeftShift} output and operands
@@ -255,7 +250,6 @@ public final class BitwiseOps {
    *  # &lt;tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)&gt;
    *  </pre>
    *
-   * @param <T> data type for {@code z} output
    * @param x The x value
    * @param y The y value
    * @param <T> data type for {@code RightShift} output and operands

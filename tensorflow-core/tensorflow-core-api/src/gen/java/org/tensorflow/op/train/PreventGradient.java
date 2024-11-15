@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * because no gradient must ever be registered for this function.  This
  * op exists to prevent subtle bugs from silently returning unimplemented
  * gradients in some corner cases.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = PreventGradient.OP_NAME,

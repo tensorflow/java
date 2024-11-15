@@ -56,10 +56,6 @@ import org.tensorflow.types.family.TType;
  * </ul>
  * <p>(Note: This c++ op is used to implement the higher-level python
  * {@code tf.ragged.gather} op, which also supports ragged indices.)
- *
- * @param <T> data type for {@code output_nested_splits} output
- *
- * @param <U> data type for {@code output_dense_values} output
  */
 @OpMetadata(
     opType = RaggedGather.OP_NAME,

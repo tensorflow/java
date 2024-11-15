@@ -77,8 +77,6 @@ import org.tensorflow.types.family.TType;
  *     values = [1, 2, 3, 4, 5]
  *     shape = [2 50]
  * </pre>
- *
- * @param <T> data type for {@code sparse_values} output
  */
 @OpMetadata(
     opType = TakeManySparseFromTensorsMap.OP_NAME,

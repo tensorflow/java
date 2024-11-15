@@ -49,8 +49,6 @@ import org.tensorflow.types.family.TType;
  * shared_name: Instances of UnbatchGrad with the same container and shared_name
  * are assumed to possibly belong to the same batch. If left empty, the op name
  * will be used as the shared name.
- *
- * @param <T> data type for {@code batched_grad} output
  */
 @OpMetadata(
     opType = UnbatchGrad.OP_NAME,

@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * Component-wise divides a SparseTensor by a dense Tensor.
  * <em>Limitation</em>: this Op only broadcasts the dense side to the sparse side, but not
  * the other direction.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseDenseCwiseDiv.OP_NAME,

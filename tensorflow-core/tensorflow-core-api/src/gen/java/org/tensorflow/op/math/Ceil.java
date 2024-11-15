@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise smallest integer not less than x.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Ceil.OP_NAME,

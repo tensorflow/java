@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs max pooling on the input.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MaxPool.OP_NAME,

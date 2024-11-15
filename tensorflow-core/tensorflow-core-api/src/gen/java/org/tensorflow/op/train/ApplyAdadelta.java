@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * update = (update_accum + epsilon).sqrt() * (accum + epsilon()).rsqrt() * grad;
  * update_accum = rho() * update_accum + (1 - rho()) * update.square();
  * var -= update;
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyAdadelta.OP_NAME,

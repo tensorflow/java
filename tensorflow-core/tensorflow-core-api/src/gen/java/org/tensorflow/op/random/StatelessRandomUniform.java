@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * The generated values follow a uniform distribution in the range {@code [0, 1)}. The
  * lower bound 0 is included in the range, while the upper bound 1 is excluded.
  * <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomUniform.OP_NAME,

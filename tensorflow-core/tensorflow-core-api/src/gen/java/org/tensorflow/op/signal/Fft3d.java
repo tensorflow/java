@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * 3D fast Fourier transform.
  * Computes the 3-dimensional discrete Fourier transform over the inner-most 3
  * dimensions of {@code input}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Fft3d.OP_NAME,

@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant([-float(&quot;inf&quot;), -2, -0.5, 1, 1.2, 200, 10000, float(&quot;inf&quot;)])
  * tf.math.asinh(x) ==&gt; [-inf -1.4436355 -0.4812118 0.8813736 1.0159732 5.991471 9.903487 inf]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Asinh.OP_NAME,

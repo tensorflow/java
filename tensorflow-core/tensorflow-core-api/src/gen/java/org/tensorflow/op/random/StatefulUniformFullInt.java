@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Outputs random integers from a uniform distribution.
  * The generated values are uniform integers covering the whole range of {@code dtype}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatefulUniformFullInt.OP_NAME,

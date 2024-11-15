@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * Outputs deterministic pseudorandom random numbers from a binomial distribution.
  * Outputs random values from a binomial distribution.
  * <p>The outputs are a deterministic function of {@code shape}, {@code seed}, {@code counts}, and {@code probs}.
- *
- * @param <W> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomBinomial.OP_NAME,

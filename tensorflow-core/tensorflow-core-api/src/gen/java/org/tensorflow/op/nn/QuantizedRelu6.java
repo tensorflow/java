@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes Quantized Rectified Linear 6: {@code min(max(features, 0), 6)}
- *
- * @param <U> data type for {@code activations} output
  */
 @OpMetadata(
     opType = QuantizedRelu6.OP_NAME,

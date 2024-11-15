@@ -64,8 +64,6 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  * [1, 2]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = DataFormatVecPermute.OP_NAME,

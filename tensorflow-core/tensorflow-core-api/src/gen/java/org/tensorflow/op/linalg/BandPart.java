@@ -65,8 +65,6 @@ import org.tensorflow.types.family.TType;
  *  tf.linalg.band_part(input, -1, 0) ==&gt; Lower triangular part.
  *  tf.linalg.band_part(input, 0, 0) ==&gt; Diagonal.
  * </pre>
- *
- * @param <T> data type for {@code band} output
  */
 @OpMetadata(
     opType = BandPart.OP_NAME,

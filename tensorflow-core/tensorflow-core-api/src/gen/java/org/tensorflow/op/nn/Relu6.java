@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear 6: {@code min(max(features, 0), 6)}.
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = Relu6.OP_NAME,

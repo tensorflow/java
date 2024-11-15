@@ -50,8 +50,6 @@ import org.tensorflow.types.family.TType;
  * pad(t, paddings) ==&gt; [[ 1,  5]
  *                       [11, 28]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MirrorPadGrad.OP_NAME,

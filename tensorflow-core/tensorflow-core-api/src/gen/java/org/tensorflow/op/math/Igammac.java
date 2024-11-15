@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>is the upper incomplete Gamma function.
  * <p>Note, above {@code P(a, x)} ({@code Igamma}) is the lower regularized complete
  * Gamma function.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Igammac.OP_NAME,

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  * output = sum(t ** 2) / 2
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = L2Loss.OP_NAME,

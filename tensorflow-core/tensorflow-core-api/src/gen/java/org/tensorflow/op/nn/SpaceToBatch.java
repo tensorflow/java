@@ -100,8 +100,6 @@ import org.tensorflow.types.family.TType;
  * </pre>
  * <p>Among others, this operation is useful for reducing atrous convolution into
  * regular convolution.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SpaceToBatch.OP_NAME,

@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Computes square root of x element-wise.
  * I.e., \(y = \sqrt{x} = x^{1/2}\).
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Sqrt.OP_NAME,

@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * the input.  The spatial dimensions of this intermediate result are then
  * optionally cropped according to {@code crops} to produce the output.  This is the
  * reverse of SpaceToBatch.  See below for a precise description.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchToSpaceNd.OP_NAME,

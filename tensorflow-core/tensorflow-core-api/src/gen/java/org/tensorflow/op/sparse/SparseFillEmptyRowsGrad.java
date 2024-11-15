@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * <p>d_values[j] = grad_values[reverse_index_map[j]]
  * d_default_value = sum_{k : 0 .. N_full - 1} (
  * grad_values[k] * 1{k not in reverse_index_map})
- *
- * @param <T> data type for {@code d_values} output
  */
 @OpMetadata(
     opType = SparseFillEmptyRowsGrad.OP_NAME,

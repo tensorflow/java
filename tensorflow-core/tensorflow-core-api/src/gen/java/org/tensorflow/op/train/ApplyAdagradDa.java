@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the proximal adagrad scheme.
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyAdagradDa.OP_NAME,

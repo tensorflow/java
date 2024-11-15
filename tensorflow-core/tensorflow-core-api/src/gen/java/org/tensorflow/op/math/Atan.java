@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  *
  * tf.math.atan(y) # [1.047, 0.785] = x
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Atan.OP_NAME,

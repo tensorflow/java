@@ -54,8 +54,6 @@ import org.tensorflow.types.family.TType;
  * # 't' is [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
  * roll(t, shift=[2, -3], axis=[1, 1]) ==&gt; [[1, 2, 3, 4, 0], [6, 7, 8, 9, 5]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Roll.OP_NAME,

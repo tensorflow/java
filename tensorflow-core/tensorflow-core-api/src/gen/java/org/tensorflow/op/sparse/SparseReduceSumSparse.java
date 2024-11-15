@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * <p>If {@code reduction_axes} has no entries, all dimensions are reduced, and a tensor
  * with a single element is returned.  Additionally, the axes can be negative,
  * which are interpreted according to the indexing rules in Python.
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseReduceSumSparse.OP_NAME,

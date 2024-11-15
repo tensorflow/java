@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The BatchMatrixDiagPart operation
- *
- * @param <T> data type for {@code diagonal} output
  */
 @OpMetadata(
     opType = BatchMatrixDiagPart.OP_NAME,

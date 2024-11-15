@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Increments 'ref' until it reaches 'limit'.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CountUpTo.OP_NAME,

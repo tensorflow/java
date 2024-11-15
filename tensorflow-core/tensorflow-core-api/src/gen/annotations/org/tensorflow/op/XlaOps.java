@@ -149,7 +149,6 @@ public final class XlaOps {
    *   [8, 9, 10]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param inputs Input tensor slices in row-major order to merge across all dimensions. All
    *  inputs must have the same shape.
    *  }
@@ -199,7 +198,6 @@ public final class XlaOps {
    *   [0, 0]]
    *  </pre>
    *
-   * @param <T> data type for {@code outputs} output
    * @param resource Resource variable of input tensor to split across all dimensions.
    *  }
    *  out_arg {
@@ -252,7 +250,6 @@ public final class XlaOps {
    *   [0, 0]]
    *  </pre>
    *
-   * @param <T> data type for {@code outputs} output
    * @param input Input tensor to split across all dimensions.
    *  }
    *  out_arg {
@@ -298,7 +295,6 @@ public final class XlaOps {
    *  shape: shape for output.
    *  key: A unique identifier for this region used to match up host transfers.
    *
-   * @param <T> data type for {@code output} output
    * @param Toutput The value of the Toutput attribute
    * @param shape The value of the shape attribute
    * @param key The value of the key attribute

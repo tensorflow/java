@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * contents of the dense tensor (even if it's +/-INF and that INF*0 == NaN).
  * <p><em>Limitation</em>: this Op only broadcasts the dense side to the sparse side, but not
  * the other direction.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseDenseCwiseMul.OP_NAME,

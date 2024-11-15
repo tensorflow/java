@@ -46,8 +46,6 @@ import org.tensorflow.types.family.TType;
  * and each tensor in {@code output} will have shape {@code (A, C, D)}.
  * Etc.
  * <p>This is the opposite of {@code pack}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Unstack.OP_NAME,

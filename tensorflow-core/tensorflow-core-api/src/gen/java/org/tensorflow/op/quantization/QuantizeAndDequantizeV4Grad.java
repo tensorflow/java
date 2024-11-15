@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Returns the gradient of {@code QuantizeAndDequantizeV4}.
  * Returns a gradient of 1 for inputs that are within the quantization range,
  * or 0 otherwise.
- *
- * @param <T> data type for {@code input_backprop} output
  */
 @OpMetadata(
     opType = QuantizeAndDequantizeV4Grad.OP_NAME,

@@ -44,8 +44,6 @@ import org.tensorflow.types.family.TNumber;
  * non-zero). Then do broadcast add operation with bias values on the matrix
  * multiplication result. The bias size must match inner dimension of {@code b}. Then do
  * relu activation to get non-negative result.
- *
- * @param <V> data type for {@code out} output
  */
 @OpMetadata(
     opType = QuantizedMatMulWithBiasAndRelu.OP_NAME,

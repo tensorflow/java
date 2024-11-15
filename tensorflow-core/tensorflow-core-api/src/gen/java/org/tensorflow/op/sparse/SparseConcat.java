@@ -74,8 +74,6 @@ import org.tensorflow.types.family.TType;
  * [    a] concat [  d e  ] = [    a   d e  ]
  * [b c  ]        [       ]   [b c          ]
  * </pre>
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseConcat.OP_NAME,

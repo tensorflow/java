@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * shape as {@code t} with its values clipped to {@code clip_value_min} and {@code clip_value_max}.
  * Any values less than {@code clip_value_min} are set to {@code clip_value_min}. Any values
  * greater than {@code clip_value_max} are set to {@code clip_value_max}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ClipByValue.OP_NAME,

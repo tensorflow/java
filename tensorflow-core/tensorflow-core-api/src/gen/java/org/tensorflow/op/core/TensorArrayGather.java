@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Gather specific elements from the TensorArray into output {@code value}.
  * All elements selected by {@code indices} must have the same shape.
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = TensorArrayGather.OP_NAME,

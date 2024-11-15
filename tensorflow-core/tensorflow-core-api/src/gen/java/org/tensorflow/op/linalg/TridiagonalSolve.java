@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * pivoting, depending on {@code partial_pivoting} attribute. On GPU, Nvidia's cuSPARSE
  * library is used: https://docs.nvidia.com/cuda/cusparse/index.html#gtsv
  * Partial pivoting is not yet supported by XLA backends.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TridiagonalSolve.OP_NAME,

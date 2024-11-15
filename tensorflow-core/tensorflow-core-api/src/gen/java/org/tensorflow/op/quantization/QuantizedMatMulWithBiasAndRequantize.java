@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The QuantizedMatMulWithBiasAndRequantize operation
- *
- * @param <W> data type for {@code out} output
  */
 @OpMetadata(
     opType = QuantizedMatMulWithBiasAndRequantize.OP_NAME,

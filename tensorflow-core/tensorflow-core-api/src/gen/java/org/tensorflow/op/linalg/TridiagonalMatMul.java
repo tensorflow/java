@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Calculate product with tridiagonal matrix.
  * Calculates product of two matrices, where left matrix is a tridiagonal matrix.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TridiagonalMatMul.OP_NAME,

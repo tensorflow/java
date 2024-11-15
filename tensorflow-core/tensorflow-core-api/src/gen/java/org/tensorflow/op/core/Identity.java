@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Return a tensor with the same shape and contents as the input tensor or value.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Identity.OP_NAME,

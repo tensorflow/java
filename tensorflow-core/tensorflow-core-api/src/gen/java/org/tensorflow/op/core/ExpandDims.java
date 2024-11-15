@@ -59,8 +59,6 @@ import org.tensorflow.types.family.TType;
  * <p>{@code -1-input.dims() <= dim <= input.dims()}
  * <p>This operation is related to {@code squeeze()}, which removes dimensions of
  * size 1.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ExpandDims.OP_NAME,

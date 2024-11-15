@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Update 'ref' by adding 'value' to it.
  * This operation outputs &quot;ref&quot; after the update is done.
  * This makes it easier to chain operations that need to use the reset value.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = AssignAdd.OP_NAME,

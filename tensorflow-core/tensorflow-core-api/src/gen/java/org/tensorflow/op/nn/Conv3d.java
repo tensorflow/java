@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * two waveforms as a function of a time-lag applied to one of them. This
  * is also known as a sliding dot product or sliding inner-product.
  * <p>Our Conv3D implements a form of cross-correlation.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Conv3d.OP_NAME,

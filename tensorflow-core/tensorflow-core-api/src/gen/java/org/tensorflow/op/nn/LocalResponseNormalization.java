@@ -46,8 +46,6 @@ import org.tensorflow.types.family.TNumber;
  * </pre>
  * <p>For details, see  <a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks">Krizhevsky et al., ImageNet classification with deep
  * convolutional neural networks (NIPS 2012)</a> .
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = LocalResponseNormalization.OP_NAME,

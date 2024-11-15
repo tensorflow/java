@@ -58,8 +58,6 @@ import org.tensorflow.types.family.TNumber;
  * of other overlapping boxes instead of directly causing them to be pruned.
  * To enable this Soft-NMS mode, set the {@code soft_nms_sigma} parameter to be
  * larger than 0.
- *
- * @param <T> data type for {@code selected_scores} output
  */
 @OpMetadata(
     opType = NonMaxSuppression.OP_NAME,

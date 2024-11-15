@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The BesselI1e operation
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = BesselI1e.OP_NAME,

@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TType;
  * <p><em>NOTE</em>: {@code train.BatchMatMul} supports broadcasting in the batch dimensions. More
  * about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchMatMul.OP_NAME,

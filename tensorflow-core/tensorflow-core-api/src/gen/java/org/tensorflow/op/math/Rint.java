@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * rint(0.5000001) ==&gt; 1.0
  * rint([-1.7, -1.5, -0.2, 0.2, 1.5, 1.7, 2.0]) ==&gt; [-2., -2., -0., 0., 2., 2., 2.]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Rint.OP_NAME,

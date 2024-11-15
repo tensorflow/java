@@ -55,8 +55,6 @@ import org.tensorflow.types.family.TNumber;
  * </pre>
  * <p>{@code output} is also quantized, using the same formula.
  * If {@code rhs} is per-tensor quantized, {@code output} must be also per-tensor quantized.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformQuantizedConvolution.OP_NAME,

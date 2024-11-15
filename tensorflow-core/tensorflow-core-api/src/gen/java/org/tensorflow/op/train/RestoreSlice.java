@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * larger tensor and the slice that the restored tensor covers.
  * <p>The {@code shape_and_slice} input has the same format as the
  * elements of the {@code shapes_and_slices} input of the {@code SaveSlices} op.
- *
- * @param <T> data type for {@code tensor} output
  */
 @OpMetadata(
     opType = RestoreSlice.OP_NAME,

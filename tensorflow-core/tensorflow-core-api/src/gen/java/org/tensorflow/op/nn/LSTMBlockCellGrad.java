@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes the LSTM cell backward propagation for 1 timestep.
  * This implementation is to be used in conjunction of LSTMBlockCell.
- *
- * @param <T> data type for {@code cs_prev_grad} output
  */
 @OpMetadata(
     opType = LSTMBlockCellGrad.OP_NAME,

@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The QuantizedConv2DAndReluAndRequantize operation
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedConv2DAndReluAndRequantize.OP_NAME,

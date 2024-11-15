@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The TensorScatterMin operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TensorScatterNdMin.OP_NAME,

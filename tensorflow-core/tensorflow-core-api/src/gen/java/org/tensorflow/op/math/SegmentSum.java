@@ -44,9 +44,6 @@ import org.tensorflow.types.family.TType;
  * that {@code segment_ids[j] == i}.
  * <p>If the sum is empty for a given segment ID {@code i}, {@code output[i] = 0}.
  * <p>Note that this op is currently only supported with jit_compile=True.
- * </div>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SegmentSum.OP_NAME,

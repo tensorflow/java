@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Concatenates tensors along one dimension.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Concat.OP_NAME,

@@ -54,8 +54,6 @@ import org.tensorflow.types.family.TType;
  * has rank {@code n} and the same 1st {@code n-1} dimensions as {@code set1} and {@code set2}. The {@code nth}
  * dimension contains the result of {@code set_operation} applied to the corresponding
  * {@code [0...n-1]} dimension of {@code set}.
- *
- * @param <T> data type for {@code result_values} output
  */
 @OpMetadata(
     opType = SparseToSparseSetOperation.OP_NAME,

@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Gradients for batch normalization.
  * This op is deprecated. See {@code tf.nn.batch_normalization}.
- *
- * @param <T> data type for {@code dx} output
  */
 @OpMetadata(
     opType = BatchNormWithGlobalNormalizationGrad.OP_NAME,

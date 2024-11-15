@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TType;
  * <p>Duplicate entries are handled correctly: if multiple {@code indices} reference
  * the same location, their contributions divide.
  * <p>Requires {@code updates.shape = indices.shape + ref.shape[1:]} or {@code updates.shape = []}.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterDiv.OP_NAME,

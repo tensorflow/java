@@ -125,8 +125,6 @@ import org.tensorflow.types.family.TType;
  *     output = [['b0', 'b1'], ['d0', 'c1']]
  * </pre>
  * <p>See also {@code tf.gather} and {@code tf.batch_gather}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = GatherNd.OP_NAME,

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Compute the Hurwitz zeta function \(\zeta(x, q)\).
  * The Hurwitz zeta function is defined as:
  * <p>\(\zeta(x, q) = \sum_{n=0}^{\infty} (q + n)^{-x}\)
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Zeta.OP_NAME,

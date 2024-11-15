@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * data: the value of the reduction across all {@code num_devices} devices.
  * reduction: the reduction operation to perform.
  *
- * @param <T> data type for {@code data} output
- *
  * @deprecated use {@link org.tensorflow.op.distribute.NcclReduce} instead
  */
 @OpMetadata(

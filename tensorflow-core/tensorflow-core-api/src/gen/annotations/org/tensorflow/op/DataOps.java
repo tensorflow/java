@@ -987,7 +987,6 @@ public final class DataOps {
   /**
    * Computes rectified linear gradients for a LeakyRelu operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding LeakyRelu operation.
    * @param features The features passed as input to the corresponding LeakyRelu operation,
    *  OR the outputs of that operation (both work equivalently).

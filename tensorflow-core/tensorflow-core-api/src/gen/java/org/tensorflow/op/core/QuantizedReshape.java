@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reshapes a quantized tensor as per the Reshape op.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedReshape.OP_NAME,

@@ -53,8 +53,6 @@ import org.tensorflow.types.family.TNumber;
  * </blockquote>
  * </blockquote>
  * <p>This is typically used by gradient computations for a concat operation.
- *
- * @param <T> data type for {@code offset} output
  */
 @OpMetadata(
     opType = ConcatOffset.OP_NAME,

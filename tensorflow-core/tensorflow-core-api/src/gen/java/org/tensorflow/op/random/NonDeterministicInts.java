@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Non-deterministically generates some integers.
  * This op may use some OS-provided source of non-determinism (e.g. an RNG), so each execution will give different results.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = NonDeterministicInts.OP_NAME,

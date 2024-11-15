@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * q, r = qr(a)
  * q_full, r_full = qr(a, full_matrices=True)
  * </pre>
- *
- * @param <T> data type for {@code q} output
  */
 @OpMetadata(
     opType = Qr.OP_NAME,

@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' by subtracting 'alpha' * 'delta' from it.
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyGradientDescent.OP_NAME,

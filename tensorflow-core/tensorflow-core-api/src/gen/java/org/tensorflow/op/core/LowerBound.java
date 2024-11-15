@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TType;
  * <p>result = LowerBound(sorted_sequence, values)
  * <p>result == [[1, 2, 2],
  * [0, 1, 5]]
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = LowerBound.OP_NAME,

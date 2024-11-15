@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Concatenates quantized tensors along one dimension.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedConcat.OP_NAME,

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The TensorArrayPack operation
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = TensorArrayPack.OP_NAME,

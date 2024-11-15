@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of bicubic interpolation.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ResizeBicubicGrad.OP_NAME,

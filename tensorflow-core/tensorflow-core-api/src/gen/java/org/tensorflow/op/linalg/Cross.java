@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code a} and {@code b} must be the same shape; they can either be simple 3-element vectors,
  * or any shape where the innermost dimension is 3. In the latter case, each pair
  * of corresponding 3-element vectors is cross-multiplied independently.
- *
- * @param <T> data type for {@code product} output
  */
 @OpMetadata(
     opType = Cross.OP_NAME,

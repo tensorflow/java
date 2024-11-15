@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code a} (after being transposed if {@code transpose_a} is non-zero) must match the
  * outer dimension of {@code b} (after being transposed if {@code transposed_b} is
  * non-zero).
- *
- * @param <V> data type for {@code out} output
  */
 @OpMetadata(
     opType = QuantizedMatMul.OP_NAME,

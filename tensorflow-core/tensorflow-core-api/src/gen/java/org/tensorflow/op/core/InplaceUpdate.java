@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * Computes {@code x[i, :] = v; return x}.
  * <p>Originally this function is mutative however for compilation we make this
  * operation create / operate on a copy of {@code x}.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = InplaceUpdate.OP_NAME,

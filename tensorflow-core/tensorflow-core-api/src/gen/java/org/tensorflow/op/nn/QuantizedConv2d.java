@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * number of the associated minimum, and the highest represents the maximum.
  * This means that you can only interpret the quantized output in the same way, by
  * taking the returned minimum and maximum values into account.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedConv2d.OP_NAME,

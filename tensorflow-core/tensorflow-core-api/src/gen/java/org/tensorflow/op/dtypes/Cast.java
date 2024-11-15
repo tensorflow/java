@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Cast x of type SrcT to y of DstT.
- *
- * @param <U> data type for {@code y} output
  */
 @OpMetadata(
     opType = Cast.OP_NAME,

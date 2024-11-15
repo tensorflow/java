@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TType;
  * <p>{@literal @}compatibility(numpy)<br>
  * Equivalent to np.angle.
  * <br>{@literal @}end_compatibility
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Angle.OP_NAME,

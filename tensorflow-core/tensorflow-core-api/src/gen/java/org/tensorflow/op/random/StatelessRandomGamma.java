@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * Outputs deterministic pseudorandom random numbers from a gamma distribution.
  * Outputs random values from a gamma distribution.
  * <p>The outputs are a deterministic function of the inputs.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomGamma.OP_NAME,

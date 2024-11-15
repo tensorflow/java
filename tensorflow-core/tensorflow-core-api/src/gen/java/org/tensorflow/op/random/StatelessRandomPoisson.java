@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * Outputs deterministic pseudorandom random numbers from a Poisson distribution.
  * Outputs random values from a Poisson distribution.
  * <p>The outputs are a deterministic function of {@code shape}, {@code seed}, and {@code lam}.
- *
- * @param <W> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomPoisson.OP_NAME,

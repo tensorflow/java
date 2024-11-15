@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * x = [9, 7, 10]
  * tf.math.add_n(x) ==&gt; 26
  * </pre>
- *
- * @param <T> data type for {@code sum} output
  */
 @OpMetadata(
     opType = AddN.OP_NAME,

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Requantizes input with min and max values known per channel.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = RequantizePerChannel.OP_NAME,

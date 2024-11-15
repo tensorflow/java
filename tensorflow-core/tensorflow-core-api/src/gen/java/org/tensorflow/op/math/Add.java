@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
  * <p>Given two input tensors, the {@code tf.add} operation computes the sum for every element in the tensor.
  * <p>Both input and output have a range {@code (-inf, inf)}.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Add.OP_NAME,

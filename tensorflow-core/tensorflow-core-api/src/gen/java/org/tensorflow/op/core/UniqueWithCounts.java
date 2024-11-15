@@ -78,10 +78,6 @@ import org.tensorflow.types.family.TType;
  * idx ==&gt; [0, 1, 1]
  * count ==&gt; [1, 2]
  * </pre>
- *
- * @param <T> data type for {@code y} output
- *
- * @param <V> data type for {@code idx} output
  */
 @OpMetadata(
     opType = UniqueWithCounts.OP_NAME,

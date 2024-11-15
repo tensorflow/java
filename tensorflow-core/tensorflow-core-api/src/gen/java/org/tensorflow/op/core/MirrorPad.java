@@ -57,8 +57,6 @@ import org.tensorflow.types.family.TType;
  *                       [5, 4, 4, 5, 6, 6, 5]
  *                       [5, 4, 4, 5, 6, 6, 5]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MirrorPad.OP_NAME,

@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients for the exponential linear (Elu) operation.
- *
- * @param <T> data type for {@code backprops} output
  */
 @OpMetadata(
     opType = EluGrad.OP_NAME,

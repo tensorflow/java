@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Produces the average pool of the input tensor for quantized types.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedAvgPool.OP_NAME,

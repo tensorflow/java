@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * that are not a number (NaN) or infinity (Inf). Otherwise, returns the input
  * tensor. Unlike CheckNumerics (V1), CheckNumericsV2 distinguishes -Inf and +Inf
  * in the errors it throws.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CheckNumerics.OP_NAME,

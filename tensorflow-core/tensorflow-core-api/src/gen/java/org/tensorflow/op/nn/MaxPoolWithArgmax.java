@@ -46,10 +46,6 @@ import org.tensorflow.types.family.TNumber;
  * even if padding is involved and the mathematically correct answer is outside
  * (either negative or too large).  This is a bug, but fixing it is difficult to do
  * in a safe backwards compatible way, especially due to flattening.
- *
- * @param <T> data type for {@code output} output
- *
- * @param <U> data type for {@code argmax} output
  */
 @OpMetadata(
     opType = MaxPoolWithArgmax.OP_NAME,

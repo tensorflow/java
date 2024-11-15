@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TNumber;
  * random variables.
  * See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
  * Programming, Volume 2. Addison Wesley
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomPoisson.OP_NAME,

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Computes the gradient for the tanh of {@code x} wrt its input.
  * Specifically, {@code grad = dy * (1 - y*y)}, where {@code y = tanh(x)}, and {@code dy}
  * is the corresponding input gradient.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = TanhGrad.OP_NAME,

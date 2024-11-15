@@ -49,8 +49,6 @@ import org.tensorflow.types.family.TType;
  * split_count=2
  * <p>replica 0's output: {@code [[A], [C]]}
  * replica 1's output: {@code [[B], [D]]}
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = AllToAll.OP_NAME,

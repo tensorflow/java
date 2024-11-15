@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * Since {@code Tile} takes an input and repeats the input {@code multiples} times
  * along each dimension, {@code train.TileGrad} takes in {@code multiples} and aggregates
  * each repeated tile of {@code input} into {@code output}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TileGrad.OP_NAME,

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * Outputs deterministic pseudorandom values from a normal distribution.
  * The generated values will have mean 0 and standard deviation 1.
  * <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomNormal.OP_NAME,

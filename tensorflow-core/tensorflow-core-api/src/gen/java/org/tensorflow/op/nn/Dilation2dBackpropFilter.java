@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of morphological 2-D dilation with respect to the filter.
- *
- * @param <T> data type for {@code filter_backprop} output
  */
 @OpMetadata(
     opType = Dilation2dBackpropFilter.OP_NAME,

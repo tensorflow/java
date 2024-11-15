@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>input: The input to the reduction.
  * data: the value of the reduction across all {@code num_devices} devices.
  * reduction: the reduction operation to perform.
- *
- * @param <T> data type for {@code data} output
  */
 @OpMetadata(
     opType = NcclReduce.OP_NAME,

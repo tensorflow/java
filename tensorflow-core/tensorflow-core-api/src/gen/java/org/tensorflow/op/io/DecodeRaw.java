@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DecodeRaw.OP_NAME,

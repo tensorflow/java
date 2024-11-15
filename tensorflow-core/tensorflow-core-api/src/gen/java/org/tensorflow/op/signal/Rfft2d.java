@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * <p>Along each axis {@code signal.Rfft2d} is computed on, if {@code fft_length} is smaller than the
  * corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
  * the dimension is padded with zeros.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Rfft2d.OP_NAME,

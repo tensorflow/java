@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Receives a tensor value broadcast from another device.
- *
- * @param <U> data type for {@code data} output
  */
 @OpMetadata(
     opType = CollectiveBcastRecv.OP_NAME,

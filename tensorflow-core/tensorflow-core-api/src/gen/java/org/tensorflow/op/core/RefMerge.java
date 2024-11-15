@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * It is usually combined with {@code Switch} to implement branching.
  * <p>{@code Merge} forwards the first tensor for become available to {@code output}, and sets
  * {@code value_index} to its index in {@code inputs}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RefMerge.OP_NAME,

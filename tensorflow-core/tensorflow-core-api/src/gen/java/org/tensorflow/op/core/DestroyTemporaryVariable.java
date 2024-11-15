@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * This is typically achieved by chaining the ref through each assign op, or by
  * using control dependencies.
  * <p>Outputs the final value of the tensor pointed to by 'ref'.
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = DestroyTemporaryVariable.OP_NAME,

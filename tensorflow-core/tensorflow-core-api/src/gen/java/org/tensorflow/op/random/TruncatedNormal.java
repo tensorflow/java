@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * The generated values follow a normal distribution with mean 0 and standard
  * deviation 1, except that values whose magnitude is more than 2 standard
  * deviations from the mean are dropped and re-picked.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = TruncatedNormal.OP_NAME,

@@ -65,8 +65,6 @@ import org.tensorflow.types.family.TNumber;
  * seed2: the 2nd part of a seed to initialize dropout.
  * num_proj: The output dimensionality for the projection matrices. If None or 0,
  * no projection is performed.
- *
- * @param <T> data type for {@code weights} output
  */
 @OpMetadata(
     opType = CudnnRNNParamsToCanonical.OP_NAME,

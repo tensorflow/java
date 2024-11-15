@@ -96,8 +96,6 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * <p>Note: on CPU, if an out of bound index is found, an error is returned.
  * On GPU, if an out of bound index is found, the index is ignored.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TensorScatterNdAdd.OP_NAME,

@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
  * Inputs are the logits, not probabilities.
- *
- * @param <T> data type for {@code loss} output
  */
 @OpMetadata(
     opType = SoftmaxCrossEntropyWithLogits.OP_NAME,

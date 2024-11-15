@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * <p>The input is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
  * form square matrices. The output is a tensor of the same shape as the input
  * containing the matrix square root for all input submatrices {@code [..., :, :]}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Sqrtm.OP_NAME,

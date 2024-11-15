@@ -70,8 +70,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code use_image_if_no_bounding_boxes = true} will assume there is a single implicit
  * bounding box covering the whole image. If {@code use_image_if_no_bounding_boxes} is
  * false and no bounding boxes are supplied, an error is raised.
- *
- * @param <T> data type for {@code begin} output
  */
 @OpMetadata(
     opType = SampleDistortedBoundingBox.OP_NAME,

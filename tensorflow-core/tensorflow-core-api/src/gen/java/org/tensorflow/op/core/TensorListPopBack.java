@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * tensor: the withdrawn last element of the list
  * element_dtype: the type of elements in the list
  * element_shape: the shape of the output tensor
- *
- * @param <T> data type for {@code tensor} output
  */
 @OpMetadata(
     opType = TensorListPopBack.OP_NAME,

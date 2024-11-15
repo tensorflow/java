@@ -133,8 +133,6 @@ import org.tensorflow.types.family.TType;
  * <p><em>Requirements</em>:
  * {@code 0 != strides[i] for i in [0, m)}
  * {@code ellipsis_mask must be a power of two (only one ellipsis)}
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = StridedSlice.OP_NAME,

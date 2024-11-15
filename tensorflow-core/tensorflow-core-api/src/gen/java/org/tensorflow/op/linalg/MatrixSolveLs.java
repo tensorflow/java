@@ -66,8 +66,6 @@ import org.tensorflow.types.family.TType;
  * least-squares solution, even when \(A\) is rank deficient. This path is
  * typically 6-7 times slower than the fast path. If {@code fast} is {@code False} then
  * {@code l2_regularizer} is ignored.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MatrixSolveLs.OP_NAME,

@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant([-2, -0.5, 1, 1.2, 200, 10000, float(&quot;inf&quot;)])
  * tf.math.acosh(x) ==&gt; [nan nan 0. 0.62236255 5.9914584 9.903487 inf]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Acosh.OP_NAME,

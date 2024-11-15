@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Rounds the values of a tensor to the nearest integer, element-wise.
  * Rounds half to even.  Also known as bankers rounding. If you want to round
  * according to the current system rounding mode use std::cint.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Round.OP_NAME,

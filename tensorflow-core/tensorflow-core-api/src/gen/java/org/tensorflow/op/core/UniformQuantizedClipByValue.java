@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * Given quantized {@code operand} which was quantized using {@code scales} and {@code zero_points}, performs clip by value using {@code min} and {@code max} values.
  * If quantization_axis is -1 (per-tensor quantized), the entire operand is clipped using scalar min, max.
  * Otherwise (per-channel quantized), the clipping is also done per-channel.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformQuantizedClipByValue.OP_NAME,
