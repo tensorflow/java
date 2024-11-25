@@ -53,7 +53,7 @@ The Java Module (jigsaw) names has been updated to drop the leading `org.`, as f
 
 Previous versions of TF Java were building a `tensorflow-core-platform-gpu` artifact upon which application could depend
 on to include any TensorFlow native library that GPU support enabled. Since TensorFlow has removed its support of GPU
-on all platforms other that Linux, we removed our platform JAR in favour of simply adding a dependency on the
+on all platforms other than Linux, we removed our platform JAR in favour of simply adding a dependency on the
 `linux-x86_64-gpu` native artifact. 
 ```xml
 <dependency>
@@ -64,7 +64,7 @@ on all platforms other that Linux, we removed our platform JAR in favour of simp
 </dependency>
 ```
 Please note that including this dependency won't work if your application also depends on `tensorflow-core-platform`. If
-you need to support more platforms that Linux, you should include the other `tensorflow-core-native` dependencies 
+you need to support more platforms than Linux, you should include the other `tensorflow-core-native` dependencies 
 separately (see the [README](README.md) file).
 
 ### Session Run Result
