@@ -45,6 +45,12 @@ then
   cp -f ~/.m2/settings.xml .
 fi
 
+docker build \
+  -f tools/Dockerfile.release \
+  -t tensorflow-java:latest \
+  --platform linux/amd64 \
+  .
+
 docker run \
   -e GPG_TTY="${GPG_TTY}" \
   -v ${PWD}:/tensorflow-java \
@@ -52,7 +58,7 @@ docker run \
   -w /tensorflow-java \
   -it \
   --platform linux/amd64 \
-  maven:3.8.6-jdk-11  \
+  tensorflow-java:latest \
   ${CMD}
 
 echo
