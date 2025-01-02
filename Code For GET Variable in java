@@ -1,0 +1,39 @@
+# Code For GET Variable in java
+
+
+import org.tensorflow.Graph;
+import org.tensorflow.Session;
+import org.tensorflow.TensorFlow;
+import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.core.VariableScope;
+
+public class TensorFlowExample {
+    public static void main(String[] args) {
+        try (Graph graph = new Graph()) {
+            // Create a variable scope
+            VariableScope variableScope = VariableScope.variableScope("Qifficulty");
+
+            // Define variables within the scope
+            Variable<TFloat32> questionDifficultyWeights = variableScope.variable("weights", 
+                Shape.create(q.getShape().size(), 1), 
+                Float.class, 
+                Variable.Options.initializer(tf.initializers.glorotUniform(seed = 0)));
+            
+            Variable<TFloat32> questionDifficultyBiases = variableScope.variable("biases", 
+                Shape.create(1), 
+                Float.class, 
+                Variable.Options.initializer(tf.initializers.zeros()));
+            
+            // Perform matrix multiplication and add biases
+            Output<TFloat32> questionDifficulty = tf.tanh(
+                tf.matmul(q, questionDifficultyWeights.asOutput()) + questionDifficultyBiases.asOutput());
+            
+            // Create a session and run the graph
+            try (Session session = new Session(graph)) {
+                // Run the graph
+                Output<TFloat32> result = session.runner().fetch(questionDifficulty).run().get(0);
+                System.out.println("Question Difficulty: " + result);
+            }
+        }
+    }
+}
