@@ -1,4 +1,4 @@
-# TensorFlow for Java
+# TensorFlow for Java.
 
 ## Welcome to the Java world of TensorFlow!
 
@@ -8,7 +8,7 @@ and developers working in this domain. Java and other JVM languages, such as Sca
 frequently used in small-to-large enterprises all over the world, which makes TensorFlow a strategic 
 choice for adopting machine learning at a large scale.
 
-## This Repository
+## This Repository.
 
 In the early days, the Java language bindings for TensorFlow were hosted in the [main repository](https://github.com/tensorflow/tensorflow)
 and released only when a new version of the core library was ready to be distributed, which happens only
@@ -21,7 +21,7 @@ The following describes the layout of the repository and its different artifacts
 * `tensorflow-core`
   * All artifacts that build up the core language bindings of TensorFlow for Java
   * Intended audience: projects that provide their own APIs or frameworks on top of 
-    TensorFlow and just want a thin layer to access the TensorFlow native library from the JVM
+    TensorFlow and just want a thin layer to access the TensorFlow native library from the JVM.
     
 * `tensorflow-framework`
   * Primary API for building and training neural networks with TensorFlow
@@ -30,23 +30,23 @@ The following describes the layout of the repository and its different artifacts
 
 *Note: The NdArray Library module has now its own [repository](https://github.com/tensorflow/java-ndarray) and has been moved out of TensorFlow Java.*
 
-## Communication
+## Communication.
 
 This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily contact the group
 by posting to the [TensorFlow Forum](https://discuss.tensorflow.org), adding the `sig_jvm` tag, or by writing to us on
 the [sig-jvm Gitter channel](https://gitter.im/tensorflow/sig-jvm). You can also simply send pull requests 
 and raise issues to this repository.
 
-## Building Sources
+## Building Sources.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md#building).
 
-## Using Maven Artifacts
+## Using Maven Artifacts.
 
 There are two options for adding TensorFlow Java as a dependency to your Maven project: with individual dependencies 
 for each targeted platforms or with a single dependency that target them all.
 
-### Individual dependencies
+### Individual dependencies.
 
 With this option, you must first add a dependency to `tensorflow-core-api` and then one or multiple
 dependencies to `tensorflow-core-native` with a classifier targeting a specific platform. This option is preferred as 
