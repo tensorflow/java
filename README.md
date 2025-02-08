@@ -110,6 +110,10 @@ native dependencies as follows:
 Only one dependency can be added per platform, meaning that you cannot add native dependencies to both `linux-x86_64` and 
 `linux-x86_64-gpu` within the same project.
 
+To use an NVIDIA GPU, you need to install the NVIDIA device driver, CUDA Toolkit, and cuDNN.
+For Ubuntu 24.04, you can install them with the following command:
+```sudo apt-get install -y nvidia-driver-550 nvidia-cuda-toolkit nvidia-cudnn```
+
 ### Single dependency
 
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
