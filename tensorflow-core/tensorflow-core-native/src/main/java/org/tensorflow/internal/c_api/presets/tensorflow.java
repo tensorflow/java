@@ -51,6 +51,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_tstring.h",
             "tensorflow/c/eager/c_api.h",
             "tensorflow/c/eager/c_api_experimental.h",
+            "tensorflow/c/c_api_experimental.h",
 
             // Following are C API extensions maintained within TF Java, see src/main/native.
             // Binding directly the C++ API with JavaCPP turned out to be too precarious between
