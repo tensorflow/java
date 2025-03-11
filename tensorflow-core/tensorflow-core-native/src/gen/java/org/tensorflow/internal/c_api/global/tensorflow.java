@@ -4759,6 +4759,401 @@ public static native void TFE_InitializeLocalOnlyContext(TFE_Context ctx,
 // #endif  // TENSORFLOW_C_EAGER_C_API_EXPERIMENTAL_H_
 
 
+// Parsed from tensorflow/c/c_api_experimental.h
+
+/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_C_C_API_EXPERIMENTAL_H_
+// #define TENSORFLOW_C_C_API_EXPERIMENTAL_H_
+
+// #include <stddef.h>
+// #include <stdint.h>
+
+// #include "tensorflow/c/c_api.h"
+// #include "tensorflow/c/c_api_macros.h"
+// #include "tensorflow/c/eager/c_api.h"
+
+// --------------------------------------------------------------------------
+// Experimental C API for TensorFlow.
+//
+// The API here is subject to changes in the future.
+// --------------------------------------------------------------------------
+
+// #ifdef __cplusplus
+// #endif
+
+// When `enable` is true, set
+// tensorflow.ConfigProto.OptimizerOptions.global_jit_level to ON_1, and also
+// set XLA flag values to prepare for XLA compilation. Otherwise set
+// global_jit_level to OFF.
+//
+// This and the next API are syntax sugar over TF_SetConfig(), and is used by
+// clients that cannot read/write the tensorflow.ConfigProto proto.
+// TODO: Migrate to TF_CreateConfig() below.
+public static native void TF_EnableXLACompilation(TF_SessionOptions options,
+                                                   @Cast("unsigned char") byte enable);
+
+// Set XLA's internal BuildXlaOpsPassFlags.tf_xla_enable_lazy_compilation to the
+// value of 'enabled'. Also returns the original value of that flag.
+//
+// Use in tests to allow XLA to fallback to TF classic. This has global effect.
+public static native @Cast("unsigned char") byte TF_SetXlaEnableLazyCompilation(
+    @Cast("unsigned char") byte enable);
+public static native @Cast("unsigned char") byte TF_SetTfXlaCpuGlobalJit(@Cast("unsigned char") byte enable);
+
+// Sets XLA's auto jit mode according to the specified string, which is parsed
+// as if passed in XLA_FLAGS. This has global effect.
+public static native void TF_SetXlaAutoJitMode(@Cast("const char*") BytePointer mode);
+public static native void TF_SetXlaAutoJitMode(String mode);
+
+// Returns whether the single GPU or general XLA auto jit optimizations are
+// enabled through MarkForCompilationPassFlags.
+public static native @Cast("unsigned char") byte TF_GetXlaAutoJitEnabled();
+
+// Sets XLA's minimum cluster size. This has global effect.
+public static native void TF_SetXlaMinClusterSize(int size);
+
+// Gets/Sets TF/XLA flag for whether(true) or not(false) to disable constant
+// folding. This is for testing to ensure that XLA is being tested rather than
+// Tensorflow's CPU implementation through constant folding.
+public static native @Cast("unsigned char") byte TF_GetXlaConstantFoldingDisabled();
+public static native void TF_SetXlaConstantFoldingDisabled(
+    @Cast("unsigned char") byte should_enable);
+
+// Create a serialized tensorflow.ConfigProto proto, where:
+//
+// a) ConfigProto.optimizer_options.global_jit_level is set to ON_1 if
+// `enable_xla_compilation` is non-zero, and OFF otherwise.
+// b) ConfigProto.gpu_options.allow_growth is set to `gpu_memory_allow_growth`.
+// c) ConfigProto.device_count is set to `num_cpu_devices`.
+public static native TF_Buffer TF_CreateConfig(
+    @Cast("unsigned char") byte enable_xla_compilation, @Cast("unsigned char") byte gpu_memory_allow_growth,
+    @Cast("unsigned int") int num_cpu_devices);
+
+// Create a serialized tensorflow.RunOptions proto, where RunOptions.trace_level
+// is set to FULL_TRACE if `enable_full_trace` is non-zero, and NO_TRACE
+// otherwise.
+public static native TF_Buffer TF_CreateRunOptions(
+    @Cast("unsigned char") byte enable_full_trace);
+
+// Returns the graph content in a human-readable format, with length set in
+// `len`. The format is subject to change in the future.
+// The returned string is heap-allocated, and caller should call free() on it.
+public static native @Cast("const char*") BytePointer TF_GraphDebugString(TF_Graph graph,
+                                                      @Cast("size_t*") SizeTPointer len);
+
+// Returns the function content in a human-readable format, with length set in
+// `len`. The format is subject to change in the future.
+// The returned string is heap-allocated, and caller should call free() on it.
+//
+// Do not return const char*, because some foreign language binding
+// (e.g. swift) cannot then call free() on the returned pointer.
+public static native @Cast("char*") BytePointer TF_FunctionDebugString(TF_Function func,
+                                                   @Cast("size_t*") SizeTPointer len);
+
+// On success, dequeues a tensor from a TF-managed FifoQueue given by
+// `tensor_id`, associated with `session`. There must be a graph node named
+// "fifo_queue_dequeue_<tensor_id>", to be executed by this API call.
+
+// Caller must call TF_DeleteTensor() over the returned tensor. If the queue is
+// empty, this call is blocked.
+//
+// Tensors are enqueued via the corresponding TF enqueue op.
+// TODO(hongm): Add support for `timeout_ms`.
+public static native TF_Tensor TF_DequeueNamedTensor(TF_Session session,
+                                                       int tensor_id,
+                                                       TF_Status status);
+
+// On success, enqueues `tensor` into a TF-managed FifoQueue given by
+// `tensor_id`, associated with `session`. There must be a graph node named
+// "fifo_queue_enqueue_<tensor_id>", to be executed by this API call. It reads
+// from a placeholder node "arg_tensor_enqueue_<tensor_id>".
+//
+// `tensor` is still owned by the caller. This call will be blocked if the queue
+// has reached its capacity, and will be unblocked when the queued tensors again
+// drop below the capacity due to dequeuing.
+//
+// Tensors are dequeued via the corresponding TF dequeue op.
+// TODO(hongm): Add support for `timeout_ms`.
+public static native void TF_EnqueueNamedTensor(TF_Session session,
+                                                 int tensor_id,
+                                                 TF_Tensor tensor,
+                                                 TF_Status status);
+// Create a serialized tensorflow.ServerDef proto.
+public static native TF_Buffer TFE_GetServerDef(@Cast("const char*") BytePointer text_proto, TF_Status status);
+public static native TF_Buffer TFE_GetServerDef(String text_proto, TF_Status status);
+
+public static native void TF_MakeInternalErrorStatus(TF_Status status,
+                                                      @Cast("const char*") BytePointer errMsg);
+public static native void TF_MakeInternalErrorStatus(TF_Status status,
+                                                      String errMsg);
+// Targeting ../TF_CheckpointReader.java
+
+
+public static native TF_CheckpointReader TF_NewCheckpointReader(
+    @Cast("const char*") BytePointer filename, TF_Status status);
+public static native TF_CheckpointReader TF_NewCheckpointReader(
+    String filename, TF_Status status);
+public static native void TF_DeleteCheckpointReader(
+    TF_CheckpointReader reader);
+public static native int TF_CheckpointReaderHasTensor(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name);
+public static native int TF_CheckpointReaderHasTensor(
+    TF_CheckpointReader reader, String name);
+// Get the variable name at the given index
+public static native @Cast("const char*") BytePointer TF_CheckpointReaderGetVariable(
+    TF_CheckpointReader reader, int index);
+// Get the number of variable in the checkpoint
+public static native int TF_CheckpointReaderSize(TF_CheckpointReader reader);
+// Get the DataType of a variable
+public static native @Cast("TF_DataType") int TF_CheckpointReaderGetVariableDataType(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name);
+public static native @Cast("TF_DataType") int TF_CheckpointReaderGetVariableDataType(
+    TF_CheckpointReader reader, String name);
+// Read the shape of a variable and write to `dims`
+public static native void TF_CheckpointReaderGetVariableShape(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name, @Cast("int64_t*") LongPointer dims, int num_dims,
+    TF_Status status);
+public static native void TF_CheckpointReaderGetVariableShape(
+    TF_CheckpointReader reader, String name, @Cast("int64_t*") LongBuffer dims, int num_dims,
+    TF_Status status);
+public static native void TF_CheckpointReaderGetVariableShape(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name, @Cast("int64_t*") long[] dims, int num_dims,
+    TF_Status status);
+public static native void TF_CheckpointReaderGetVariableShape(
+    TF_CheckpointReader reader, String name, @Cast("int64_t*") LongPointer dims, int num_dims,
+    TF_Status status);
+public static native void TF_CheckpointReaderGetVariableShape(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name, @Cast("int64_t*") LongBuffer dims, int num_dims,
+    TF_Status status);
+public static native void TF_CheckpointReaderGetVariableShape(
+    TF_CheckpointReader reader, String name, @Cast("int64_t*") long[] dims, int num_dims,
+    TF_Status status);
+// Get the number of dimension of a variable
+public static native int TF_CheckpointReaderGetVariableNumDims(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name);
+public static native int TF_CheckpointReaderGetVariableNumDims(
+    TF_CheckpointReader reader, String name);
+// Load the weight of a variable
+public static native TF_Tensor TF_CheckpointReaderGetTensor(
+    TF_CheckpointReader reader, @Cast("const char*") BytePointer name, TF_Status status);
+public static native TF_Tensor TF_CheckpointReaderGetTensor(
+    TF_CheckpointReader reader, String name, TF_Status status);
+// Targeting ../TF_AttrBuilder.java
+
+
+public static native TF_AttrBuilder TF_NewAttrBuilder(@Cast("const char*") BytePointer op_name);
+public static native TF_AttrBuilder TF_NewAttrBuilder(String op_name);
+public static native void TF_DeleteAttrBuilder(TF_AttrBuilder builder);
+public static native void TF_AttrBuilderSetType(TF_AttrBuilder builder,
+                                                 @Cast("const char*") BytePointer attr_name,
+                                                 @Cast("TF_DataType") int value);
+public static native void TF_AttrBuilderSetType(TF_AttrBuilder builder,
+                                                 String attr_name,
+                                                 @Cast("TF_DataType") int value);
+public static native void TF_AttrBuilderSetTypeList(TF_AttrBuilder builder,
+                                                     @Cast("const char*") BytePointer attr_name,
+                                                     @Cast("const TF_DataType*") IntPointer values,
+                                                     int num_values);
+public static native void TF_AttrBuilderSetTypeList(TF_AttrBuilder builder,
+                                                     String attr_name,
+                                                     @Cast("const TF_DataType*") IntBuffer values,
+                                                     int num_values);
+public static native void TF_AttrBuilderSetTypeList(TF_AttrBuilder builder,
+                                                     @Cast("const char*") BytePointer attr_name,
+                                                     @Cast("const TF_DataType*") int[] values,
+                                                     int num_values);
+public static native void TF_AttrBuilderSetTypeList(TF_AttrBuilder builder,
+                                                     String attr_name,
+                                                     @Cast("const TF_DataType*") IntPointer values,
+                                                     int num_values);
+public static native void TF_AttrBuilderSetTypeList(TF_AttrBuilder builder,
+                                                     @Cast("const char*") BytePointer attr_name,
+                                                     @Cast("const TF_DataType*") IntBuffer values,
+                                                     int num_values);
+public static native void TF_AttrBuilderSetTypeList(TF_AttrBuilder builder,
+                                                     String attr_name,
+                                                     @Cast("const TF_DataType*") int[] values,
+                                                     int num_values);
+
+// Checks the tensorflow::NodeDef built via the methods above to see if it can
+// run on device_type.
+public static native void TF_AttrBuilderCheckCanRunOnDevice(
+    TF_AttrBuilder builder, @Cast("const char*") BytePointer device_type, TF_Status status);
+public static native void TF_AttrBuilderCheckCanRunOnDevice(
+    TF_AttrBuilder builder, String device_type, TF_Status status);
+
+// For argument number input_index, fetch the corresponding number_attr that
+// needs to be updated with the argument length of the input list.
+// Returns nullptr if there is any problem like op_name is not found, or the
+// argument does not support this attribute type.
+public static native @Cast("const char*") BytePointer TF_GetNumberAttrForOpListInput(
+    @Cast("const char*") BytePointer op_name, int input_index, TF_Status status);
+public static native String TF_GetNumberAttrForOpListInput(
+    String op_name, int input_index, TF_Status status);
+
+// Returns 1 if the op is stateful, 0 otherwise. The return value is undefined
+// if the status is not ok.
+public static native int TF_OpIsStateful(@Cast("const char*") BytePointer op_type,
+                                          TF_Status status);
+public static native int TF_OpIsStateful(String op_type,
+                                          TF_Status status);
+
+// Platform specific initialization routine. Very few platforms actually require
+// this to be called.
+public static native void TF_InitMain(@Cast("const char*") BytePointer usage, IntPointer argc, @Cast("char***") @ByPtrPtr PointerPointer argv);
+public static native void TF_InitMain(String usage, IntBuffer argc, @Cast("char***") @ByPtrPtr PointerPointer argv);
+public static native void TF_InitMain(@Cast("const char*") BytePointer usage, int[] argc, @Cast("char***") @ByPtrPtr PointerPointer argv);
+public static native void TF_InitMain(String usage, IntPointer argc, @Cast("char***") @ByPtrPtr PointerPointer argv);
+public static native void TF_InitMain(@Cast("const char*") BytePointer usage, IntBuffer argc, @Cast("char***") @ByPtrPtr PointerPointer argv);
+public static native void TF_InitMain(String usage, int[] argc, @Cast("char***") @ByPtrPtr PointerPointer argv);
+
+// Platform-specific implementation to return an unused port. (This should used
+// in tests only.)
+public static native int TF_PickUnusedPortOrDie();
+
+// Fast path method that makes constructing a single scalar tensor require less
+// overhead and copies.
+public static native TFE_TensorHandle TFE_NewTensorHandleFromScalar(
+    @Cast("TF_DataType") int data_type, Pointer data, @Cast("size_t") long len, TF_Status status);
+
+// Specify the server_def that enables collective ops.
+// This is different to the above function in that it doesn't create remote
+// contexts, and remotely executing ops is not possible. It just enables
+// communication for collective ops.
+public static native void TFE_EnableCollectiveOps(TFE_Context ctx,
+                                                   @Const Pointer proto,
+                                                   @Cast("size_t") long proto_len,
+                                                   TF_Status status);
+
+// Aborts all ongoing collectives with the specified status. After abortion,
+// subsequent collectives will error with this status immediately. To reset the
+// collectives, create a new EagerContext.
+//
+// This is intended to be used when a peer failure is detected.
+public static native void TFE_AbortCollectiveOps(TFE_Context ctx,
+                                                  TF_Status status);
+
+// Checks the health of collective ops peers. Explicit health check is needed in
+// multi worker collective ops to detect failures in the cluster.  If a peer is
+// down, collective ops may hang.
+public static native void TFE_CollectiveOpsCheckPeerHealth(
+    TFE_Context ctx, @Cast("const char*") BytePointer task, @Cast("int64_t") long timeout_in_ms,
+    TF_Status status);
+public static native void TFE_CollectiveOpsCheckPeerHealth(
+    TFE_Context ctx, String task, @Cast("int64_t") long timeout_in_ms,
+    TF_Status status);
+// Targeting ../TF_ShapeAndType.java
+
+
+// Targeting ../TF_ShapeAndTypeList.java
+
+
+
+// API for manipulating TF_ShapeAndTypeList objects.
+//
+public static native TF_ShapeAndTypeList TF_NewShapeAndTypeList(
+    int num_shapes);
+public static native void TF_ShapeAndTypeListSetShape(
+    TF_ShapeAndTypeList shape_list, int index, @Cast("const int64_t*") LongPointer dims,
+    int num_dims);
+public static native void TF_ShapeAndTypeListSetShape(
+    TF_ShapeAndTypeList shape_list, int index, @Cast("const int64_t*") LongBuffer dims,
+    int num_dims);
+public static native void TF_ShapeAndTypeListSetShape(
+    TF_ShapeAndTypeList shape_list, int index, @Cast("const int64_t*") long[] dims,
+    int num_dims);
+public static native void TF_ShapeAndTypeListSetUnknownShape(
+    TF_ShapeAndTypeList shape_list, int index);
+public static native void TF_ShapeAndTypeListSetDtype(
+    TF_ShapeAndTypeList shape_list, int index, @Cast("TF_DataType") int dtype);
+public static native void TF_DeleteShapeAndTypeList(
+    TF_ShapeAndTypeList shape_list);
+public static native void TF_DeleteShapeAndTypeListArray(
+    @Cast("TF_ShapeAndTypeList**") PointerPointer shape_list_array, int num_items);
+public static native void TF_DeleteShapeAndTypeListArray(
+    @ByPtrPtr TF_ShapeAndTypeList shape_list_array, int num_items);
+
+// Infer shapes for the given `op`. The arguments mimic the arguments of the
+// `shape_inference::InferenceContext` constructor. Note the following:
+//   - The inputs of the `op` are not used for shape inference. So, it is
+//     OK to not have the inputs properly set in `op`. See `input_tensors`
+//     if you want shape inference to consider the input tensors of the
+//     op for shape inference.
+//   - The types need not be set in `input_shapes` as it is not used.
+//   - The number of `input_tensors` should be the same as the number of items
+//     in `input_shapes`.
+//
+// The results are returned in `output_shapes` and
+// `output_resource_shapes_and_types`. The caller is responsible for freeing the
+// memory in these buffers by calling `TF_DeleteShapeAndTypeList`.
+public static native void TFE_InferShapes(
+    TFE_Op op, TF_ShapeAndTypeList input_shapes, @Cast("TF_Tensor**") PointerPointer input_tensors,
+    TF_ShapeAndTypeList input_tensor_as_shapes,
+    @Cast("TF_ShapeAndTypeList**") PointerPointer input_resource_shapes_and_types,
+    @Cast("TF_ShapeAndTypeList**") PointerPointer output_shapes,
+    @Cast("TF_ShapeAndTypeList***") @ByPtrPtr PointerPointer output_resource_shapes_and_types, TF_Status status);
+public static native void TFE_InferShapes(
+    TFE_Op op, TF_ShapeAndTypeList input_shapes, @ByPtrPtr TF_Tensor input_tensors,
+    TF_ShapeAndTypeList input_tensor_as_shapes,
+    @ByPtrPtr TF_ShapeAndTypeList input_resource_shapes_and_types,
+    @ByPtrPtr TF_ShapeAndTypeList output_shapes,
+    @Cast("TF_ShapeAndTypeList***") @ByPtrPtr PointerPointer output_resource_shapes_and_types, TF_Status status);
+
+public static native void TF_ImportGraphDefOptionsSetValidateColocationConstraints(
+    TF_ImportGraphDefOptions opts, @Cast("unsigned char") byte enable);
+
+// Load the library specified by library_filename and register the pluggable
+// device and related kernels present in that library. This function is not
+// supported on embedded on mobile and embedded platforms and will fail if
+// called.
+//
+// Pass "library_filename" to a platform-specific mechanism for dynamically
+// loading a library. The rules for determining the exact location of the
+// library are platform-specific and are not documented here.
+//
+// On success, returns the newly created library handle and places OK in status.
+// The caller owns the library handle.
+//
+// On failure, returns nullptr and places an error status in status.
+public static native TF_Library TF_LoadPluggableDeviceLibrary(
+    @Cast("const char*") BytePointer library_filename, TF_Status status);
+public static native TF_Library TF_LoadPluggableDeviceLibrary(
+    String library_filename, TF_Status status);
+
+// Frees the memory associated with the library handle.
+// Does NOT unload the library.
+public static native void TF_DeletePluggableDeviceLibraryHandle(
+    TF_Library lib_handle);
+
+// Removes `func_name` from `g`. If `func_name` is not in `g`, an error will be
+// returned.
+public static native void TF_GraphRemoveFunction(TF_Graph g,
+                                                  @Cast("const char*") BytePointer func_name,
+                                                  TF_Status status);
+public static native void TF_GraphRemoveFunction(TF_Graph g,
+                                                  String func_name,
+                                                  TF_Status status);
+
+// #ifdef __cplusplus /* end extern "C" */
+// #endif
+
+// #endif  // TENSORFLOW_C_C_API_EXPERIMENTAL_H_
+
+
 // Parsed from tfj_graph.h
 
 /* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
