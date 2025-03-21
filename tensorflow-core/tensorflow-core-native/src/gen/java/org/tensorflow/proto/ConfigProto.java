@@ -356,6 +356,17 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
+     * If true, use ifrt as the backend for TFRT. This is only used when
+     * `use_tfrt` is true.
+     * </pre>
+     *
+     * <code>bool tfrt_use_ifrt = 32;</code>
+     * @return The tfrtUseIfrt.
+     */
+    boolean getTfrtUseIfrt();
+
+    /**
+     * <pre>
      * Port for the Pathways server. Ignored if enable_multi_host=false.
      * </pre>
      *
@@ -1101,6 +1112,22 @@ private static final long serialVersionUID = 0L;
       return enableMultiHost_;
     }
 
+    public static final int TFRT_USE_IFRT_FIELD_NUMBER = 32;
+    private boolean tfrtUseIfrt_;
+    /**
+     * <pre>
+     * If true, use ifrt as the backend for TFRT. This is only used when
+     * `use_tfrt` is true.
+     * </pre>
+     *
+     * <code>bool tfrt_use_ifrt = 32;</code>
+     * @return The tfrtUseIfrt.
+     */
+    @java.lang.Override
+    public boolean getTfrtUseIfrt() {
+      return tfrtUseIfrt_;
+    }
+
     public static final int BACKEND_SERVER_PORT_FIELD_NUMBER = 28;
     private int backendServerPort_;
     /**
@@ -1369,6 +1396,9 @@ private static final long serialVersionUID = 0L;
       if (streamMergeThreshold_ != 0) {
         output.writeInt32(31, streamMergeThreshold_);
       }
+      if (tfrtUseIfrt_ != false) {
+        output.writeBool(32, tfrtUseIfrt_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1484,6 +1514,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(31, streamMergeThreshold_);
       }
+      if (tfrtUseIfrt_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(32, tfrtUseIfrt_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1537,6 +1571,8 @@ private static final long serialVersionUID = 0L;
           != other.getUseTfrt()) return false;
       if (getEnableMultiHost()
           != other.getEnableMultiHost()) return false;
+      if (getTfrtUseIfrt()
+          != other.getTfrtUseIfrt()) return false;
       if (getBackendServerPort()
           != other.getBackendServerPort()) return false;
       if (getTargetTpu()
@@ -1620,6 +1656,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + ENABLE_MULTI_HOST_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getEnableMultiHost());
+      hash = (37 * hash) + TFRT_USE_IFRT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getTfrtUseIfrt());
       hash = (37 * hash) + BACKEND_SERVER_PORT_FIELD_NUMBER;
       hash = (53 * hash) + getBackendServerPort();
       hash = (37 * hash) + TARGET_TPU_FIELD_NUMBER;
@@ -1820,6 +1859,8 @@ private static final long serialVersionUID = 0L;
 
         enableMultiHost_ = false;
 
+        tfrtUseIfrt_ = false;
+
         backendServerPort_ = 0;
 
         targetTpu_ = false;
@@ -1890,6 +1931,7 @@ private static final long serialVersionUID = 0L;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
         result.useTfrt_ = useTfrt_;
         result.enableMultiHost_ = enableMultiHost_;
+        result.tfrtUseIfrt_ = tfrtUseIfrt_;
         result.backendServerPort_ = backendServerPort_;
         result.targetTpu_ = targetTpu_;
         result.targetGpu_ = targetGpu_;
@@ -2006,6 +2048,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getEnableMultiHost() != false) {
           setEnableMultiHost(other.getEnableMultiHost());
+        }
+        if (other.getTfrtUseIfrt() != false) {
+          setTfrtUseIfrt(other.getTfrtUseIfrt());
         }
         if (other.getBackendServerPort() != 0) {
           setBackendServerPort(other.getBackendServerPort());
@@ -2199,6 +2244,11 @@ private static final long serialVersionUID = 0L;
 
                 break;
               } // case 248
+              case 256: {
+                tfrtUseIfrt_ = input.readBool();
+
+                break;
+              } // case 256
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -3423,6 +3473,52 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
+      private boolean tfrtUseIfrt_ ;
+      /**
+       * <pre>
+       * If true, use ifrt as the backend for TFRT. This is only used when
+       * `use_tfrt` is true.
+       * </pre>
+       *
+       * <code>bool tfrt_use_ifrt = 32;</code>
+       * @return The tfrtUseIfrt.
+       */
+      @java.lang.Override
+      public boolean getTfrtUseIfrt() {
+        return tfrtUseIfrt_;
+      }
+      /**
+       * <pre>
+       * If true, use ifrt as the backend for TFRT. This is only used when
+       * `use_tfrt` is true.
+       * </pre>
+       *
+       * <code>bool tfrt_use_ifrt = 32;</code>
+       * @param value The tfrtUseIfrt to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTfrtUseIfrt(boolean value) {
+        
+        tfrtUseIfrt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If true, use ifrt as the backend for TFRT. This is only used when
+       * `use_tfrt` is true.
+       * </pre>
+       *
+       * <code>bool tfrt_use_ifrt = 32;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTfrtUseIfrt() {
+        
+        tfrtUseIfrt_ = false;
+        onChanged();
+        return this;
+      }
+
       private int backendServerPort_ ;
       /**
        * <pre>
@@ -4461,6 +4557,44 @@ private static final long serialVersionUID = 0L;
     return getGpuOptions();
   }
 
+  public static final int PLUGGABLE_DEVICE_OPTIONS_FIELD_NUMBER = 18;
+  private org.tensorflow.proto.GPUOptions pluggableDeviceOptions_;
+  /**
+   * <pre>
+   * Options that apply to pluggable devices.
+   * </pre>
+   *
+   * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+   * @return Whether the pluggableDeviceOptions field is set.
+   */
+  @java.lang.Override
+  public boolean hasPluggableDeviceOptions() {
+    return pluggableDeviceOptions_ != null;
+  }
+  /**
+   * <pre>
+   * Options that apply to pluggable devices.
+   * </pre>
+   *
+   * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+   * @return The pluggableDeviceOptions.
+   */
+  @java.lang.Override
+  public org.tensorflow.proto.GPUOptions getPluggableDeviceOptions() {
+    return pluggableDeviceOptions_ == null ? org.tensorflow.proto.GPUOptions.getDefaultInstance() : pluggableDeviceOptions_;
+  }
+  /**
+   * <pre>
+   * Options that apply to pluggable devices.
+   * </pre>
+   *
+   * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+   */
+  @java.lang.Override
+  public org.tensorflow.proto.GPUOptionsOrBuilder getPluggableDeviceOptionsOrBuilder() {
+    return getPluggableDeviceOptions();
+  }
+
   public static final int ALLOW_SOFT_PLACEMENT_FIELD_NUMBER = 7;
   private boolean allowSoftPlacement_;
   /**
@@ -4757,6 +4891,9 @@ private static final long serialVersionUID = 0L;
     if (shareClusterDevicesInSession_ != false) {
       output.writeBool(17, shareClusterDevicesInSession_);
     }
+    if (pluggableDeviceOptions_ != null) {
+      output.writeMessage(18, getPluggableDeviceOptions());
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -4844,6 +4981,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(17, shareClusterDevicesInSession_);
     }
+    if (pluggableDeviceOptions_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(18, getPluggableDeviceOptions());
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -4877,6 +5018,11 @@ private static final long serialVersionUID = 0L;
     if (hasGpuOptions()) {
       if (!getGpuOptions()
           .equals(other.getGpuOptions())) return false;
+    }
+    if (hasPluggableDeviceOptions() != other.hasPluggableDeviceOptions()) return false;
+    if (hasPluggableDeviceOptions()) {
+      if (!getPluggableDeviceOptions()
+          .equals(other.getPluggableDeviceOptions())) return false;
     }
     if (getAllowSoftPlacement()
         != other.getAllowSoftPlacement()) return false;
@@ -4943,6 +5089,10 @@ private static final long serialVersionUID = 0L;
     if (hasGpuOptions()) {
       hash = (37 * hash) + GPU_OPTIONS_FIELD_NUMBER;
       hash = (53 * hash) + getGpuOptions().hashCode();
+    }
+    if (hasPluggableDeviceOptions()) {
+      hash = (37 * hash) + PLUGGABLE_DEVICE_OPTIONS_FIELD_NUMBER;
+      hash = (53 * hash) + getPluggableDeviceOptions().hashCode();
     }
     hash = (37 * hash) + ALLOW_SOFT_PLACEMENT_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
@@ -5154,6 +5304,12 @@ private static final long serialVersionUID = 0L;
         gpuOptions_ = null;
         gpuOptionsBuilder_ = null;
       }
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        pluggableDeviceOptions_ = null;
+      } else {
+        pluggableDeviceOptions_ = null;
+        pluggableDeviceOptionsBuilder_ = null;
+      }
       allowSoftPlacement_ = false;
 
       logDevicePlacement_ = false;
@@ -5239,6 +5395,11 @@ private static final long serialVersionUID = 0L;
         result.gpuOptions_ = gpuOptions_;
       } else {
         result.gpuOptions_ = gpuOptionsBuilder_.build();
+      }
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        result.pluggableDeviceOptions_ = pluggableDeviceOptions_;
+      } else {
+        result.pluggableDeviceOptions_ = pluggableDeviceOptionsBuilder_.build();
       }
       result.allowSoftPlacement_ = allowSoftPlacement_;
       result.logDevicePlacement_ = logDevicePlacement_;
@@ -5365,6 +5526,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasGpuOptions()) {
         mergeGpuOptions(other.getGpuOptions());
+      }
+      if (other.hasPluggableDeviceOptions()) {
+        mergePluggableDeviceOptions(other.getPluggableDeviceOptions());
       }
       if (other.getAllowSoftPlacement() != false) {
         setAllowSoftPlacement(other.getAllowSoftPlacement());
@@ -5526,6 +5690,13 @@ private static final long serialVersionUID = 0L;
 
               break;
             } // case 136
+            case 146: {
+              input.readMessage(
+                  getPluggableDeviceOptionsFieldBuilder().getBuilder(),
+                  extensionRegistry);
+
+              break;
+            } // case 146
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -6884,6 +7055,161 @@ private static final long serialVersionUID = 0L;
         gpuOptions_ = null;
       }
       return gpuOptionsBuilder_;
+    }
+
+    private org.tensorflow.proto.GPUOptions pluggableDeviceOptions_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.GPUOptions, org.tensorflow.proto.GPUOptions.Builder, org.tensorflow.proto.GPUOptionsOrBuilder> pluggableDeviceOptionsBuilder_;
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     * @return Whether the pluggableDeviceOptions field is set.
+     */
+    public boolean hasPluggableDeviceOptions() {
+      return pluggableDeviceOptionsBuilder_ != null || pluggableDeviceOptions_ != null;
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     * @return The pluggableDeviceOptions.
+     */
+    public org.tensorflow.proto.GPUOptions getPluggableDeviceOptions() {
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        return pluggableDeviceOptions_ == null ? org.tensorflow.proto.GPUOptions.getDefaultInstance() : pluggableDeviceOptions_;
+      } else {
+        return pluggableDeviceOptionsBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    public Builder setPluggableDeviceOptions(org.tensorflow.proto.GPUOptions value) {
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        pluggableDeviceOptions_ = value;
+        onChanged();
+      } else {
+        pluggableDeviceOptionsBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    public Builder setPluggableDeviceOptions(
+        org.tensorflow.proto.GPUOptions.Builder builderForValue) {
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        pluggableDeviceOptions_ = builderForValue.build();
+        onChanged();
+      } else {
+        pluggableDeviceOptionsBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    public Builder mergePluggableDeviceOptions(org.tensorflow.proto.GPUOptions value) {
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        if (pluggableDeviceOptions_ != null) {
+          pluggableDeviceOptions_ =
+            org.tensorflow.proto.GPUOptions.newBuilder(pluggableDeviceOptions_).mergeFrom(value).buildPartial();
+        } else {
+          pluggableDeviceOptions_ = value;
+        }
+        onChanged();
+      } else {
+        pluggableDeviceOptionsBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    public Builder clearPluggableDeviceOptions() {
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        pluggableDeviceOptions_ = null;
+        onChanged();
+      } else {
+        pluggableDeviceOptions_ = null;
+        pluggableDeviceOptionsBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    public org.tensorflow.proto.GPUOptions.Builder getPluggableDeviceOptionsBuilder() {
+      
+      onChanged();
+      return getPluggableDeviceOptionsFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    public org.tensorflow.proto.GPUOptionsOrBuilder getPluggableDeviceOptionsOrBuilder() {
+      if (pluggableDeviceOptionsBuilder_ != null) {
+        return pluggableDeviceOptionsBuilder_.getMessageOrBuilder();
+      } else {
+        return pluggableDeviceOptions_ == null ?
+            org.tensorflow.proto.GPUOptions.getDefaultInstance() : pluggableDeviceOptions_;
+      }
+    }
+    /**
+     * <pre>
+     * Options that apply to pluggable devices.
+     * </pre>
+     *
+     * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.GPUOptions, org.tensorflow.proto.GPUOptions.Builder, org.tensorflow.proto.GPUOptionsOrBuilder> 
+        getPluggableDeviceOptionsFieldBuilder() {
+      if (pluggableDeviceOptionsBuilder_ == null) {
+        pluggableDeviceOptionsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.GPUOptions, org.tensorflow.proto.GPUOptions.Builder, org.tensorflow.proto.GPUOptionsOrBuilder>(
+                getPluggableDeviceOptions(),
+                getParentForChildren(),
+                isClean());
+        pluggableDeviceOptions_ = null;
+      }
+      return pluggableDeviceOptionsBuilder_;
     }
 
     private boolean allowSoftPlacement_ ;

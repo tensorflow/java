@@ -7,58 +7,6 @@ package org.tensorflow.proto;
  * <pre>
  * SignatureDef defines the signature of a computation supported by a TensorFlow
  * graph.
- * For example, a model with two loss computations, sharing a single input,
- * might have the following signature_def map, in a MetaGraphDef message.
- * Note that across the two SignatureDefs "loss_A" and "loss_B", the input key,
- * output key, and method_name are identical, and will be used by system(s) that
- * implement or rely upon this particular loss method. The output tensor names
- * differ, demonstrating how different outputs can exist for the same method.
- * signature_def {
- *   key: "loss_A"
- *   value {
- *     inputs {
- *       key: "input"
- *       value {
- *         name: "input:0"
- *         dtype: DT_STRING
- *         tensor_shape: ...
- *       }
- *     }
- *     outputs {
- *       key: "loss_output"
- *       value {
- *         name: "loss_output_A:0"
- *         dtype: DT_FLOAT
- *         tensor_shape: ...
- *       }
- *     }
- *     method_name: "some/package/compute_loss"
- *   }
- *   ...
- * }
- * signature_def {
- *   key: "loss_B"
- *   value {
- *     inputs {
- *       key: "input"
- *       value {
- *         name: "input:0"
- *         dtype: DT_STRING
- *         tensor_shape: ...
- *       }
- *     }
- *     outputs {
- *       key: "loss_output"
- *       value {
- *         name: "loss_output_B:0"
- *         dtype: DT_FLOAT
- *         tensor_shape: ...
- *       }
- *     }
- *     method_name: "some/package/compute_loss"
- *   }
- *   ...
- * }
  * </pre>
  *
  * Protobuf type {@code tensorflow.SignatureDef}
@@ -315,13 +263,12 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object methodName_;
   /**
    * <pre>
-   * Extensible method_name information enabling third-party users to mark a
-   * SignatureDef as supporting a particular method. This enables producers and
-   * consumers of SignatureDefs, e.g. a model definition library and a serving
-   * library to have a clear hand-off regarding the semantics of a computation.
-   * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-   * method_name. This is commonly used to support multi-headed computation,
-   * where a single graph computation may return multiple results.
+   * Deprecated: TensorFlow 2 always sets this to a fixed value;
+   * open-source TF Serving stopped checking by default since release 2.4.
+   * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+   * supporting a particular method. Multiple SignatureDefs in a single
+   * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+   * computation).
    * </pre>
    *
    * <code>string method_name = 3;</code>
@@ -342,13 +289,12 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Extensible method_name information enabling third-party users to mark a
-   * SignatureDef as supporting a particular method. This enables producers and
-   * consumers of SignatureDefs, e.g. a model definition library and a serving
-   * library to have a clear hand-off regarding the semantics of a computation.
-   * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-   * method_name. This is commonly used to support multi-headed computation,
-   * where a single graph computation may return multiple results.
+   * Deprecated: TensorFlow 2 always sets this to a fixed value;
+   * open-source TF Serving stopped checking by default since release 2.4.
+   * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+   * supporting a particular method. Multiple SignatureDefs in a single
+   * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+   * computation).
    * </pre>
    *
    * <code>string method_name = 3;</code>
@@ -690,58 +636,6 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * SignatureDef defines the signature of a computation supported by a TensorFlow
    * graph.
-   * For example, a model with two loss computations, sharing a single input,
-   * might have the following signature_def map, in a MetaGraphDef message.
-   * Note that across the two SignatureDefs "loss_A" and "loss_B", the input key,
-   * output key, and method_name are identical, and will be used by system(s) that
-   * implement or rely upon this particular loss method. The output tensor names
-   * differ, demonstrating how different outputs can exist for the same method.
-   * signature_def {
-   *   key: "loss_A"
-   *   value {
-   *     inputs {
-   *       key: "input"
-   *       value {
-   *         name: "input:0"
-   *         dtype: DT_STRING
-   *         tensor_shape: ...
-   *       }
-   *     }
-   *     outputs {
-   *       key: "loss_output"
-   *       value {
-   *         name: "loss_output_A:0"
-   *         dtype: DT_FLOAT
-   *         tensor_shape: ...
-   *       }
-   *     }
-   *     method_name: "some/package/compute_loss"
-   *   }
-   *   ...
-   * }
-   * signature_def {
-   *   key: "loss_B"
-   *   value {
-   *     inputs {
-   *       key: "input"
-   *       value {
-   *         name: "input:0"
-   *         dtype: DT_STRING
-   *         tensor_shape: ...
-   *       }
-   *     }
-   *     outputs {
-   *       key: "loss_output"
-   *       value {
-   *         name: "loss_output_B:0"
-   *         dtype: DT_FLOAT
-   *         tensor_shape: ...
-   *       }
-   *     }
-   *     method_name: "some/package/compute_loss"
-   *   }
-   *   ...
-   * }
    * </pre>
    *
    * Protobuf type {@code tensorflow.SignatureDef}
@@ -1296,13 +1190,12 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object methodName_ = "";
     /**
      * <pre>
-     * Extensible method_name information enabling third-party users to mark a
-     * SignatureDef as supporting a particular method. This enables producers and
-     * consumers of SignatureDefs, e.g. a model definition library and a serving
-     * library to have a clear hand-off regarding the semantics of a computation.
-     * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-     * method_name. This is commonly used to support multi-headed computation,
-     * where a single graph computation may return multiple results.
+     * Deprecated: TensorFlow 2 always sets this to a fixed value;
+     * open-source TF Serving stopped checking by default since release 2.4.
+     * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+     * supporting a particular method. Multiple SignatureDefs in a single
+     * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+     * computation).
      * </pre>
      *
      * <code>string method_name = 3;</code>
@@ -1322,13 +1215,12 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Extensible method_name information enabling third-party users to mark a
-     * SignatureDef as supporting a particular method. This enables producers and
-     * consumers of SignatureDefs, e.g. a model definition library and a serving
-     * library to have a clear hand-off regarding the semantics of a computation.
-     * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-     * method_name. This is commonly used to support multi-headed computation,
-     * where a single graph computation may return multiple results.
+     * Deprecated: TensorFlow 2 always sets this to a fixed value;
+     * open-source TF Serving stopped checking by default since release 2.4.
+     * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+     * supporting a particular method. Multiple SignatureDefs in a single
+     * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+     * computation).
      * </pre>
      *
      * <code>string method_name = 3;</code>
@@ -1349,13 +1241,12 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Extensible method_name information enabling third-party users to mark a
-     * SignatureDef as supporting a particular method. This enables producers and
-     * consumers of SignatureDefs, e.g. a model definition library and a serving
-     * library to have a clear hand-off regarding the semantics of a computation.
-     * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-     * method_name. This is commonly used to support multi-headed computation,
-     * where a single graph computation may return multiple results.
+     * Deprecated: TensorFlow 2 always sets this to a fixed value;
+     * open-source TF Serving stopped checking by default since release 2.4.
+     * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+     * supporting a particular method. Multiple SignatureDefs in a single
+     * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+     * computation).
      * </pre>
      *
      * <code>string method_name = 3;</code>
@@ -1374,13 +1265,12 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Extensible method_name information enabling third-party users to mark a
-     * SignatureDef as supporting a particular method. This enables producers and
-     * consumers of SignatureDefs, e.g. a model definition library and a serving
-     * library to have a clear hand-off regarding the semantics of a computation.
-     * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-     * method_name. This is commonly used to support multi-headed computation,
-     * where a single graph computation may return multiple results.
+     * Deprecated: TensorFlow 2 always sets this to a fixed value;
+     * open-source TF Serving stopped checking by default since release 2.4.
+     * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+     * supporting a particular method. Multiple SignatureDefs in a single
+     * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+     * computation).
      * </pre>
      *
      * <code>string method_name = 3;</code>
@@ -1394,13 +1284,12 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Extensible method_name information enabling third-party users to mark a
-     * SignatureDef as supporting a particular method. This enables producers and
-     * consumers of SignatureDefs, e.g. a model definition library and a serving
-     * library to have a clear hand-off regarding the semantics of a computation.
-     * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-     * method_name. This is commonly used to support multi-headed computation,
-     * where a single graph computation may return multiple results.
+     * Deprecated: TensorFlow 2 always sets this to a fixed value;
+     * open-source TF Serving stopped checking by default since release 2.4.
+     * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+     * supporting a particular method. Multiple SignatureDefs in a single
+     * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+     * computation).
      * </pre>
      *
      * <code>string method_name = 3;</code>

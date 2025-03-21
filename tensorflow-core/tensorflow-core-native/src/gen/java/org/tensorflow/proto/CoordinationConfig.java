@@ -853,6 +853,17 @@ public final class CoordinationConfig {
      * @return The forceDisable.
      */
     boolean getForceDisable();
+
+    /**
+     * <pre>
+     * Use long polling to get error from coordination service as the error
+     * propagation mechanism.
+     * </pre>
+     *
+     * <code>bool poll_for_error_from_service_at_startup = 13;</code>
+     * @return The pollForErrorFromServiceAtStartup.
+     */
+    boolean getPollForErrorFromServiceAtStartup();
   }
   /**
    * <pre>
@@ -1223,6 +1234,22 @@ public final class CoordinationConfig {
       return forceDisable_;
     }
 
+    public static final int POLL_FOR_ERROR_FROM_SERVICE_AT_STARTUP_FIELD_NUMBER = 13;
+    private boolean pollForErrorFromServiceAtStartup_;
+    /**
+     * <pre>
+     * Use long polling to get error from coordination service as the error
+     * propagation mechanism.
+     * </pre>
+     *
+     * <code>bool poll_for_error_from_service_at_startup = 13;</code>
+     * @return The pollForErrorFromServiceAtStartup.
+     */
+    @java.lang.Override
+    public boolean getPollForErrorFromServiceAtStartup() {
+      return pollForErrorFromServiceAtStartup_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1269,6 +1296,9 @@ public final class CoordinationConfig {
       }
       if (forceDisable_ != false) {
         output.writeBool(12, forceDisable_);
+      }
+      if (pollForErrorFromServiceAtStartup_ != false) {
+        output.writeBool(13, pollForErrorFromServiceAtStartup_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1325,6 +1355,10 @@ public final class CoordinationConfig {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(12, forceDisable_);
       }
+      if (pollForErrorFromServiceAtStartup_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(13, pollForErrorFromServiceAtStartup_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1362,6 +1396,8 @@ public final class CoordinationConfig {
           != other.getAllowNewIncarnationToReconnect()) return false;
       if (getForceDisable()
           != other.getForceDisable()) return false;
+      if (getPollForErrorFromServiceAtStartup()
+          != other.getPollForErrorFromServiceAtStartup()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -1406,6 +1442,9 @@ public final class CoordinationConfig {
       hash = (37 * hash) + FORCE_DISABLE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getForceDisable());
+      hash = (37 * hash) + POLL_FOR_ERROR_FROM_SERVICE_AT_STARTUP_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getPollForErrorFromServiceAtStartup());
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1566,6 +1605,8 @@ public final class CoordinationConfig {
 
         forceDisable_ = false;
 
+        pollForErrorFromServiceAtStartup_ = false;
+
         return this;
       }
 
@@ -1616,6 +1657,7 @@ public final class CoordinationConfig {
         result.recoverableJobs_ = recoverableJobs_;
         result.allowNewIncarnationToReconnect_ = allowNewIncarnationToReconnect_;
         result.forceDisable_ = forceDisable_;
+        result.pollForErrorFromServiceAtStartup_ = pollForErrorFromServiceAtStartup_;
         onBuilt();
         return result;
       }
@@ -1729,6 +1771,9 @@ public final class CoordinationConfig {
         if (other.getForceDisable() != false) {
           setForceDisable(other.getForceDisable());
         }
+        if (other.getPollForErrorFromServiceAtStartup() != false) {
+          setPollForErrorFromServiceAtStartup(other.getPollForErrorFromServiceAtStartup());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -1819,6 +1864,11 @@ public final class CoordinationConfig {
 
                 break;
               } // case 96
+              case 104: {
+                pollForErrorFromServiceAtStartup_ = input.readBool();
+
+                break;
+              } // case 104
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -2798,6 +2848,52 @@ public final class CoordinationConfig {
         onChanged();
         return this;
       }
+
+      private boolean pollForErrorFromServiceAtStartup_ ;
+      /**
+       * <pre>
+       * Use long polling to get error from coordination service as the error
+       * propagation mechanism.
+       * </pre>
+       *
+       * <code>bool poll_for_error_from_service_at_startup = 13;</code>
+       * @return The pollForErrorFromServiceAtStartup.
+       */
+      @java.lang.Override
+      public boolean getPollForErrorFromServiceAtStartup() {
+        return pollForErrorFromServiceAtStartup_;
+      }
+      /**
+       * <pre>
+       * Use long polling to get error from coordination service as the error
+       * propagation mechanism.
+       * </pre>
+       *
+       * <code>bool poll_for_error_from_service_at_startup = 13;</code>
+       * @param value The pollForErrorFromServiceAtStartup to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPollForErrorFromServiceAtStartup(boolean value) {
+        
+        pollForErrorFromServiceAtStartup_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Use long polling to get error from coordination service as the error
+       * propagation mechanism.
+       * </pre>
+       *
+       * <code>bool poll_for_error_from_service_at_startup = 13;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPollForErrorFromServiceAtStartup() {
+        
+        pollForErrorFromServiceAtStartup_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2883,7 +2979,7 @@ public final class CoordinationConfig {
     java.lang.String[] descriptorData = {
       "\n&tsl/protobuf/coordination_config.proto" +
       "\022\ntensorflow\"1\n\016CoordinatedJob\022\014\n\004name\030\001" +
-      " \001(\t\022\021\n\tnum_tasks\030\002 \001(\005\"\240\003\n\031Coordination" +
+      " \001(\t\022\021\n\tnum_tasks\030\002 \001(\005\"\320\003\n\031Coordination" +
       "ServiceConfig\022\024\n\014service_type\030\001 \001(\t\022\026\n\016s" +
       "ervice_leader\030\002 \001(\t\022\033\n\023enable_health_che" +
       "ck\030\003 \001(\010\022&\n\036cluster_register_timeout_in_" +
@@ -2893,11 +2989,12 @@ public final class CoordinationConfig {
       "timeout_in_ms\030\007 \001(\003\022*\n\"agent_destruction" +
       "_without_shutdown\030\010 \001(\010\022\030\n\020recoverable_j" +
       "obs\030\t \003(\t\022*\n\"allow_new_incarnation_to_re" +
-      "connect\030\013 \001(\010\022\025\n\rforce_disable\030\014 \001(\010J\004\010\006" +
-      "\020\007Bm\n\024org.tensorflow.protoZUgithub.com/t" +
-      "ensorflow/tensorflow/tensorflow/go/core/" +
-      "protobuf/for_core_protos_go_protob\006proto" +
-      "3"
+      "connect\030\013 \001(\010\022\025\n\rforce_disable\030\014 \001(\010\022.\n&" +
+      "poll_for_error_from_service_at_startup\030\r" +
+      " \001(\010J\004\010\006\020\007Bm\n\024org.tensorflow.protoZUgith" +
+      "ub.com/tensorflow/tensorflow/tensorflow/" +
+      "go/core/protobuf/for_core_protos_go_prot" +
+      "ob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2914,7 +3011,7 @@ public final class CoordinationConfig {
     internal_static_tensorflow_CoordinationServiceConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_CoordinationServiceConfig_descriptor,
-        new java.lang.String[] { "ServiceType", "ServiceLeader", "EnableHealthCheck", "ClusterRegisterTimeoutInMs", "HeartbeatTimeoutInMs", "CoordinatedJobList", "ShutdownBarrierTimeoutInMs", "AgentDestructionWithoutShutdown", "RecoverableJobs", "AllowNewIncarnationToReconnect", "ForceDisable", });
+        new java.lang.String[] { "ServiceType", "ServiceLeader", "EnableHealthCheck", "ClusterRegisterTimeoutInMs", "HeartbeatTimeoutInMs", "CoordinatedJobList", "ShutdownBarrierTimeoutInMs", "AgentDestructionWithoutShutdown", "RecoverableJobs", "AllowNewIncarnationToReconnect", "ForceDisable", "PollForErrorFromServiceAtStartup", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

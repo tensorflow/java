@@ -59,27 +59,47 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return The enum numeric value on the wire for dtype.
      */
     int getDtypeValue();
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return The dtype.
      */
     org.tensorflow.proto.DataType getDtype();
 
     /**
+     * <pre>
+     * Shape of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.TensorShapeProto shape = 2;</code>
      * @return Whether the shape field is set.
      */
     boolean hasShape();
     /**
+     * <pre>
+     * Shape of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.TensorShapeProto shape = 2;</code>
      * @return The shape.
      */
     org.tensorflow.proto.TensorShapeProto getShape();
     /**
+     * <pre>
+     * Shape of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.TensorShapeProto shape = 2;</code>
      */
     org.tensorflow.proto.TensorShapeProtoOrBuilder getShapeOrBuilder();
@@ -132,6 +152,10 @@ private static final long serialVersionUID = 0L;
     public static final int DTYPE_FIELD_NUMBER = 1;
     private int dtype_;
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return The enum numeric value on the wire for dtype.
      */
@@ -139,6 +163,10 @@ private static final long serialVersionUID = 0L;
       return dtype_;
     }
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return The dtype.
      */
@@ -151,6 +179,10 @@ private static final long serialVersionUID = 0L;
     public static final int SHAPE_FIELD_NUMBER = 2;
     private org.tensorflow.proto.TensorShapeProto shape_;
     /**
+     * <pre>
+     * Shape of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.TensorShapeProto shape = 2;</code>
      * @return Whether the shape field is set.
      */
@@ -159,6 +191,10 @@ private static final long serialVersionUID = 0L;
       return shape_ != null;
     }
     /**
+     * <pre>
+     * Shape of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.TensorShapeProto shape = 2;</code>
      * @return The shape.
      */
@@ -167,6 +203,10 @@ private static final long serialVersionUID = 0L;
       return shape_ == null ? org.tensorflow.proto.TensorShapeProto.getDefaultInstance() : shape_;
     }
     /**
+     * <pre>
+     * Shape of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.TensorShapeProto shape = 2;</code>
      */
     @java.lang.Override
@@ -531,6 +571,10 @@ private static final long serialVersionUID = 0L;
 
       private int dtype_ = 0;
       /**
+       * <pre>
+       * Data type of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.DataType dtype = 1;</code>
        * @return The enum numeric value on the wire for dtype.
        */
@@ -538,6 +582,10 @@ private static final long serialVersionUID = 0L;
         return dtype_;
       }
       /**
+       * <pre>
+       * Data type of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.DataType dtype = 1;</code>
        * @param value The enum numeric value on the wire for dtype to set.
        * @return This builder for chaining.
@@ -549,6 +597,10 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       * <pre>
+       * Data type of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.DataType dtype = 1;</code>
        * @return The dtype.
        */
@@ -559,6 +611,10 @@ private static final long serialVersionUID = 0L;
         return result == null ? org.tensorflow.proto.DataType.UNRECOGNIZED : result;
       }
       /**
+       * <pre>
+       * Data type of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.DataType dtype = 1;</code>
        * @param value The dtype to set.
        * @return This builder for chaining.
@@ -573,6 +629,10 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       * <pre>
+       * Data type of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.DataType dtype = 1;</code>
        * @return This builder for chaining.
        */
@@ -587,6 +647,10 @@ private static final long serialVersionUID = 0L;
       private com.google.protobuf.SingleFieldBuilderV3<
           org.tensorflow.proto.TensorShapeProto, org.tensorflow.proto.TensorShapeProto.Builder, org.tensorflow.proto.TensorShapeProtoOrBuilder> shapeBuilder_;
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        * @return Whether the shape field is set.
        */
@@ -594,6 +658,10 @@ private static final long serialVersionUID = 0L;
         return shapeBuilder_ != null || shape_ != null;
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        * @return The shape.
        */
@@ -605,6 +673,10 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       public Builder setShape(org.tensorflow.proto.TensorShapeProto value) {
@@ -621,6 +693,10 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       public Builder setShape(
@@ -635,6 +711,10 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       public Builder mergeShape(org.tensorflow.proto.TensorShapeProto value) {
@@ -653,6 +733,10 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       public Builder clearShape() {
@@ -667,6 +751,10 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       public org.tensorflow.proto.TensorShapeProto.Builder getShapeBuilder() {
@@ -675,6 +763,10 @@ private static final long serialVersionUID = 0L;
         return getShapeFieldBuilder().getBuilder();
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       public org.tensorflow.proto.TensorShapeProtoOrBuilder getShapeOrBuilder() {
@@ -686,6 +778,10 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
+       * <pre>
+       * Shape of the tensor.
+       * </pre>
+       *
        * <code>.tensorflow.TensorShapeProto shape = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<

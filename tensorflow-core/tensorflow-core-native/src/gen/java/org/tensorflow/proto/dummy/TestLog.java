@@ -24,16 +24,16 @@ public final class TestLog {
   static {
     java.lang.String[] descriptorData = {
       "\n#tensorflow/core/util/test_log.proto\022\020t" +
-      "ensorflow.dummy\032\033tsl/protobuf/test_log.p" +
-      "rotoB\034\n\032org.tensorflow.proto.dummyP\000b\006pr" +
-      "oto3"
+      "ensorflow.dummy\032\037xla/tsl/protobuf/test_l" +
+      "og.protoB\034\n\032org.tensorflow.proto.dummyP\000" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          org.tensorflow.proto.TestLogProtos.getDescriptor(),
+          org.tensorflow.util.testlog.TestLogProtos.getDescriptor(),
         });
-    org.tensorflow.proto.TestLogProtos.getDescriptor();
+    org.tensorflow.util.testlog.TestLogProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

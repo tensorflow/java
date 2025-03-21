@@ -2261,7 +2261,11 @@ public final class ServiceConfig {
 
     /**
      * <pre>
-     * The protocol for the worker to use when transferring data to clients.
+     * If set, the name of an alternative data transfer protocol for which the
+     * worker starts an additional server ("data transfer server"); the trainer
+     * can then get data from this server. If not set, no such server is started,
+     * and the trainer can only get data from the regular worker server over
+     * `protocol`.
      * </pre>
      *
      * <code>string data_transfer_protocol = 7;</code>
@@ -2270,7 +2274,11 @@ public final class ServiceConfig {
     java.lang.String getDataTransferProtocol();
     /**
      * <pre>
-     * The protocol for the worker to use when transferring data to clients.
+     * If set, the name of an alternative data transfer protocol for which the
+     * worker starts an additional server ("data transfer server"); the trainer
+     * can then get data from this server. If not set, no such server is started,
+     * and the trainer can only get data from the regular worker server over
+     * `protocol`.
      * </pre>
      *
      * <code>string data_transfer_protocol = 7;</code>
@@ -2281,9 +2289,21 @@ public final class ServiceConfig {
 
     /**
      * <pre>
-     * The data transfer address of the worker server. The substring "%port%", if
-     * specified, will be replaced with the worker's bound port. This is useful
-     * when the port is set to `0`.
+     * If `data_transfer_protocol` is set, the port to which the data transfer
+     * server binds. If set to `0`, the server binds to any available port.
+     * </pre>
+     *
+     * <code>int64 data_transfer_port = 13;</code>
+     * @return The dataTransferPort.
+     */
+    long getDataTransferPort();
+
+    /**
+     * <pre>
+     * If `data_transfer_protocol` is set, the address of the data transfer
+     * server. The substring "%dts_port%" can be used to represent -- and is
+     * replaced with -- the bound port of the data transfer server; this is useful
+     * when `data_transfer_port` is set to `0`.
      * </pre>
      *
      * <code>string data_transfer_address = 8;</code>
@@ -2292,9 +2312,10 @@ public final class ServiceConfig {
     java.lang.String getDataTransferAddress();
     /**
      * <pre>
-     * The data transfer address of the worker server. The substring "%port%", if
-     * specified, will be replaced with the worker's bound port. This is useful
-     * when the port is set to `0`.
+     * If `data_transfer_protocol` is set, the address of the data transfer
+     * server. The substring "%dts_port%" can be used to represent -- and is
+     * replaced with -- the bound port of the data transfer server; this is useful
+     * when `data_transfer_port` is set to `0`.
      * </pre>
      *
      * <code>string data_transfer_address = 8;</code>
@@ -2340,7 +2361,7 @@ public final class ServiceConfig {
   /**
    * <pre>
    * Configuration for a tf.data service WorkerServer.
-   * Next id: 13
+   * Next id: 14
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.experimental.WorkerConfig}
@@ -2646,7 +2667,11 @@ public final class ServiceConfig {
     private volatile java.lang.Object dataTransferProtocol_;
     /**
      * <pre>
-     * The protocol for the worker to use when transferring data to clients.
+     * If set, the name of an alternative data transfer protocol for which the
+     * worker starts an additional server ("data transfer server"); the trainer
+     * can then get data from this server. If not set, no such server is started,
+     * and the trainer can only get data from the regular worker server over
+     * `protocol`.
      * </pre>
      *
      * <code>string data_transfer_protocol = 7;</code>
@@ -2667,7 +2692,11 @@ public final class ServiceConfig {
     }
     /**
      * <pre>
-     * The protocol for the worker to use when transferring data to clients.
+     * If set, the name of an alternative data transfer protocol for which the
+     * worker starts an additional server ("data transfer server"); the trainer
+     * can then get data from this server. If not set, no such server is started,
+     * and the trainer can only get data from the regular worker server over
+     * `protocol`.
      * </pre>
      *
      * <code>string data_transfer_protocol = 7;</code>
@@ -2688,13 +2717,30 @@ public final class ServiceConfig {
       }
     }
 
+    public static final int DATA_TRANSFER_PORT_FIELD_NUMBER = 13;
+    private long dataTransferPort_;
+    /**
+     * <pre>
+     * If `data_transfer_protocol` is set, the port to which the data transfer
+     * server binds. If set to `0`, the server binds to any available port.
+     * </pre>
+     *
+     * <code>int64 data_transfer_port = 13;</code>
+     * @return The dataTransferPort.
+     */
+    @java.lang.Override
+    public long getDataTransferPort() {
+      return dataTransferPort_;
+    }
+
     public static final int DATA_TRANSFER_ADDRESS_FIELD_NUMBER = 8;
     private volatile java.lang.Object dataTransferAddress_;
     /**
      * <pre>
-     * The data transfer address of the worker server. The substring "%port%", if
-     * specified, will be replaced with the worker's bound port. This is useful
-     * when the port is set to `0`.
+     * If `data_transfer_protocol` is set, the address of the data transfer
+     * server. The substring "%dts_port%" can be used to represent -- and is
+     * replaced with -- the bound port of the data transfer server; this is useful
+     * when `data_transfer_port` is set to `0`.
      * </pre>
      *
      * <code>string data_transfer_address = 8;</code>
@@ -2715,9 +2761,10 @@ public final class ServiceConfig {
     }
     /**
      * <pre>
-     * The data transfer address of the worker server. The substring "%port%", if
-     * specified, will be replaced with the worker's bound port. This is useful
-     * when the port is set to `0`.
+     * If `data_transfer_protocol` is set, the address of the data transfer
+     * server. The substring "%dts_port%" can be used to represent -- and is
+     * replaced with -- the bound port of the data transfer server; this is useful
+     * when `data_transfer_port` is set to `0`.
      * </pre>
      *
      * <code>string data_transfer_address = 8;</code>
@@ -2837,6 +2884,9 @@ public final class ServiceConfig {
       if (snapshotMaxChunkSizeBytes_ != 0L) {
         output.writeInt64(12, snapshotMaxChunkSizeBytes_);
       }
+      if (dataTransferPort_ != 0L) {
+        output.writeInt64(13, dataTransferPort_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -2893,6 +2943,10 @@ public final class ServiceConfig {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(12, snapshotMaxChunkSizeBytes_);
       }
+      if (dataTransferPort_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(13, dataTransferPort_);
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2924,6 +2978,8 @@ public final class ServiceConfig {
           != other.getDispatcherTimeoutMs()) return false;
       if (!getDataTransferProtocol()
           .equals(other.getDataTransferProtocol())) return false;
+      if (getDataTransferPort()
+          != other.getDataTransferPort()) return false;
       if (!getDataTransferAddress()
           .equals(other.getDataTransferAddress())) return false;
       if (getCrossTrainerCacheSizeBytes()
@@ -2964,6 +3020,9 @@ public final class ServiceConfig {
           getDispatcherTimeoutMs());
       hash = (37 * hash) + DATA_TRANSFER_PROTOCOL_FIELD_NUMBER;
       hash = (53 * hash) + getDataTransferProtocol().hashCode();
+      hash = (37 * hash) + DATA_TRANSFER_PORT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getDataTransferPort());
       hash = (37 * hash) + DATA_TRANSFER_ADDRESS_FIELD_NUMBER;
       hash = (53 * hash) + getDataTransferAddress().hashCode();
       hash = (37 * hash) + CROSS_TRAINER_CACHE_SIZE_BYTES_FIELD_NUMBER;
@@ -3073,7 +3132,7 @@ public final class ServiceConfig {
     /**
      * <pre>
      * Configuration for a tf.data service WorkerServer.
-     * Next id: 13
+     * Next id: 14
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.experimental.WorkerConfig}
@@ -3124,6 +3183,8 @@ public final class ServiceConfig {
 
         dataTransferProtocol_ = "";
 
+        dataTransferPort_ = 0L;
+
         dataTransferAddress_ = "";
 
         crossTrainerCacheSizeBytes_ = 0L;
@@ -3171,6 +3232,7 @@ public final class ServiceConfig {
         result.heartbeatIntervalMs_ = heartbeatIntervalMs_;
         result.dispatcherTimeoutMs_ = dispatcherTimeoutMs_;
         result.dataTransferProtocol_ = dataTransferProtocol_;
+        result.dataTransferPort_ = dataTransferPort_;
         result.dataTransferAddress_ = dataTransferAddress_;
         result.crossTrainerCacheSizeBytes_ = crossTrainerCacheSizeBytes_;
         result.snapshotMaxChunkSizeBytes_ = snapshotMaxChunkSizeBytes_;
@@ -3257,6 +3319,9 @@ public final class ServiceConfig {
         if (!other.getDataTransferProtocol().isEmpty()) {
           dataTransferProtocol_ = other.dataTransferProtocol_;
           onChanged();
+        }
+        if (other.getDataTransferPort() != 0L) {
+          setDataTransferPort(other.getDataTransferPort());
         }
         if (!other.getDataTransferAddress().isEmpty()) {
           dataTransferAddress_ = other.dataTransferAddress_;
@@ -3358,6 +3423,11 @@ public final class ServiceConfig {
 
                 break;
               } // case 96
+              case 104: {
+                dataTransferPort_ = input.readInt64();
+
+                break;
+              } // case 104
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -3990,7 +4060,11 @@ public final class ServiceConfig {
       private java.lang.Object dataTransferProtocol_ = "";
       /**
        * <pre>
-       * The protocol for the worker to use when transferring data to clients.
+       * If set, the name of an alternative data transfer protocol for which the
+       * worker starts an additional server ("data transfer server"); the trainer
+       * can then get data from this server. If not set, no such server is started,
+       * and the trainer can only get data from the regular worker server over
+       * `protocol`.
        * </pre>
        *
        * <code>string data_transfer_protocol = 7;</code>
@@ -4010,7 +4084,11 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The protocol for the worker to use when transferring data to clients.
+       * If set, the name of an alternative data transfer protocol for which the
+       * worker starts an additional server ("data transfer server"); the trainer
+       * can then get data from this server. If not set, no such server is started,
+       * and the trainer can only get data from the regular worker server over
+       * `protocol`.
        * </pre>
        *
        * <code>string data_transfer_protocol = 7;</code>
@@ -4031,7 +4109,11 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The protocol for the worker to use when transferring data to clients.
+       * If set, the name of an alternative data transfer protocol for which the
+       * worker starts an additional server ("data transfer server"); the trainer
+       * can then get data from this server. If not set, no such server is started,
+       * and the trainer can only get data from the regular worker server over
+       * `protocol`.
        * </pre>
        *
        * <code>string data_transfer_protocol = 7;</code>
@@ -4050,7 +4132,11 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The protocol for the worker to use when transferring data to clients.
+       * If set, the name of an alternative data transfer protocol for which the
+       * worker starts an additional server ("data transfer server"); the trainer
+       * can then get data from this server. If not set, no such server is started,
+       * and the trainer can only get data from the regular worker server over
+       * `protocol`.
        * </pre>
        *
        * <code>string data_transfer_protocol = 7;</code>
@@ -4064,7 +4150,11 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The protocol for the worker to use when transferring data to clients.
+       * If set, the name of an alternative data transfer protocol for which the
+       * worker starts an additional server ("data transfer server"); the trainer
+       * can then get data from this server. If not set, no such server is started,
+       * and the trainer can only get data from the regular worker server over
+       * `protocol`.
        * </pre>
        *
        * <code>string data_transfer_protocol = 7;</code>
@@ -4083,12 +4173,59 @@ public final class ServiceConfig {
         return this;
       }
 
+      private long dataTransferPort_ ;
+      /**
+       * <pre>
+       * If `data_transfer_protocol` is set, the port to which the data transfer
+       * server binds. If set to `0`, the server binds to any available port.
+       * </pre>
+       *
+       * <code>int64 data_transfer_port = 13;</code>
+       * @return The dataTransferPort.
+       */
+      @java.lang.Override
+      public long getDataTransferPort() {
+        return dataTransferPort_;
+      }
+      /**
+       * <pre>
+       * If `data_transfer_protocol` is set, the port to which the data transfer
+       * server binds. If set to `0`, the server binds to any available port.
+       * </pre>
+       *
+       * <code>int64 data_transfer_port = 13;</code>
+       * @param value The dataTransferPort to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDataTransferPort(long value) {
+        
+        dataTransferPort_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If `data_transfer_protocol` is set, the port to which the data transfer
+       * server binds. If set to `0`, the server binds to any available port.
+       * </pre>
+       *
+       * <code>int64 data_transfer_port = 13;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDataTransferPort() {
+        
+        dataTransferPort_ = 0L;
+        onChanged();
+        return this;
+      }
+
       private java.lang.Object dataTransferAddress_ = "";
       /**
        * <pre>
-       * The data transfer address of the worker server. The substring "%port%", if
-       * specified, will be replaced with the worker's bound port. This is useful
-       * when the port is set to `0`.
+       * If `data_transfer_protocol` is set, the address of the data transfer
+       * server. The substring "%dts_port%" can be used to represent -- and is
+       * replaced with -- the bound port of the data transfer server; this is useful
+       * when `data_transfer_port` is set to `0`.
        * </pre>
        *
        * <code>string data_transfer_address = 8;</code>
@@ -4108,9 +4245,10 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The data transfer address of the worker server. The substring "%port%", if
-       * specified, will be replaced with the worker's bound port. This is useful
-       * when the port is set to `0`.
+       * If `data_transfer_protocol` is set, the address of the data transfer
+       * server. The substring "%dts_port%" can be used to represent -- and is
+       * replaced with -- the bound port of the data transfer server; this is useful
+       * when `data_transfer_port` is set to `0`.
        * </pre>
        *
        * <code>string data_transfer_address = 8;</code>
@@ -4131,9 +4269,10 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The data transfer address of the worker server. The substring "%port%", if
-       * specified, will be replaced with the worker's bound port. This is useful
-       * when the port is set to `0`.
+       * If `data_transfer_protocol` is set, the address of the data transfer
+       * server. The substring "%dts_port%" can be used to represent -- and is
+       * replaced with -- the bound port of the data transfer server; this is useful
+       * when `data_transfer_port` is set to `0`.
        * </pre>
        *
        * <code>string data_transfer_address = 8;</code>
@@ -4152,9 +4291,10 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The data transfer address of the worker server. The substring "%port%", if
-       * specified, will be replaced with the worker's bound port. This is useful
-       * when the port is set to `0`.
+       * If `data_transfer_protocol` is set, the address of the data transfer
+       * server. The substring "%dts_port%" can be used to represent -- and is
+       * replaced with -- the bound port of the data transfer server; this is useful
+       * when `data_transfer_port` is set to `0`.
        * </pre>
        *
        * <code>string data_transfer_address = 8;</code>
@@ -4168,9 +4308,10 @@ public final class ServiceConfig {
       }
       /**
        * <pre>
-       * The data transfer address of the worker server. The substring "%port%", if
-       * specified, will be replaced with the worker's bound port. This is useful
-       * when the port is set to `0`.
+       * If `data_transfer_protocol` is set, the address of the data transfer
+       * server. The substring "%dts_port%" can be used to represent -- and is
+       * replaced with -- the bound port of the data transfer server; this is useful
+       * when `data_transfer_port` is set to `0`.
        * </pre>
        *
        * <code>string data_transfer_address = 8;</code>
@@ -4424,19 +4565,20 @@ public final class ServiceConfig {
       "s\030\006 \001(\003\022 \n\030gc_dynamic_sharding_jobs\030\013 \001(" +
       "\010\022\031\n\021client_timeout_ms\030\010 \001(\003\022\031\n\021worker_t" +
       "imeout_ms\030\n \001(\003\022\'\n\037worker_max_concurrent" +
-      "_snapshots\030\014 \001(\003\"\345\002\n\014WorkerConfig\022\014\n\004por" +
+      "_snapshots\030\014 \001(\003\"\201\003\n\014WorkerConfig\022\014\n\004por" +
       "t\030\001 \001(\003\022\020\n\010protocol\030\002 \001(\t\022\032\n\022dispatcher_" +
       "address\030\003 \001(\t\022\026\n\016worker_address\030\004 \001(\t\022\023\n" +
       "\013worker_tags\030\n \003(\t\022\035\n\025heartbeat_interval" +
       "_ms\030\005 \001(\003\022\035\n\025dispatcher_timeout_ms\030\006 \001(\003" +
-      "\022\036\n\026data_transfer_protocol\030\007 \001(\t\022\035\n\025data" +
-      "_transfer_address\030\010 \001(\t\022&\n\036cross_trainer" +
-      "_cache_size_bytes\030\013 \001(\003\022%\n\035snapshot_max_" +
-      "chunk_size_bytes\030\014 \001(\003\022 \n\030shutdown_quiet" +
-      "_period_ms\030\t \001(\003B\177\n&org.tensorflow.proto" +
-      ".data.experimentalZUgithub.com/tensorflo" +
-      "w/tensorflow/tensorflow/go/core/protobuf" +
-      "/for_core_protos_go_protob\006proto3"
+      "\022\036\n\026data_transfer_protocol\030\007 \001(\t\022\032\n\022data" +
+      "_transfer_port\030\r \001(\003\022\035\n\025data_transfer_ad" +
+      "dress\030\010 \001(\t\022&\n\036cross_trainer_cache_size_" +
+      "bytes\030\013 \001(\003\022%\n\035snapshot_max_chunk_size_b" +
+      "ytes\030\014 \001(\003\022 \n\030shutdown_quiet_period_ms\030\t" +
+      " \001(\003B\177\n&org.tensorflow.proto.data.experi" +
+      "mentalZUgithub.com/tensorflow/tensorflow" +
+      "/tensorflow/go/core/protobuf/for_core_pr" +
+      "otos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4454,7 +4596,7 @@ public final class ServiceConfig {
     internal_static_tensorflow_data_experimental_WorkerConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_WorkerConfig_descriptor,
-        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "WorkerTags", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "CrossTrainerCacheSizeBytes", "SnapshotMaxChunkSizeBytes", "ShutdownQuietPeriodMs", });
+        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "WorkerTags", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferPort", "DataTransferAddress", "CrossTrainerCacheSizeBytes", "SnapshotMaxChunkSizeBytes", "ShutdownQuietPeriodMs", });
     org.tensorflow.proto.data.DataService.getDescriptor();
   }
 

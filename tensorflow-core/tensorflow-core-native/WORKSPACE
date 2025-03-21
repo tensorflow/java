@@ -18,13 +18,15 @@ http_archive(
         "find tensorflow third_party/xla/third_party/tsl -name \\*.proto | xargs sed -i.bak 's/^package tensorflow\\([^;]*\\).*$/package tensorflow\\1;\\noption java_package = \"org.tensorflow.proto\\1\";/'",
     ],
     urls = [
-       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.18.0-rc2.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.18.0.tar.gz",
     ],
-    sha256 = "ed371d42f69b9029175b0a70667c4c65d02a269887353520d5cfca5ce8eb7855",
-    strip_prefix = "tensorflow-2.18.0-rc2"
+    sha256 = "d7876f4bb0235cac60eb6316392a7c48676729860da1ab659fb440379ad5186d",
+    strip_prefix = "tensorflow-2.18.0"
 )
 
 ##### Copy content of tensorflow/WORKSPACE here (make sure to change references of default package "//" to "@org_tensorflow//")
+
+# buildifier: disable=load-on-top
 
 # We must initialize hermetic python first.
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

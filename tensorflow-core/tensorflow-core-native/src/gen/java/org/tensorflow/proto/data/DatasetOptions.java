@@ -381,6 +381,17 @@ public final class DatasetOptions {
      */
     org.tensorflow.proto.data.model.Model.AutotuneAlgorithm getAutotuneAlgorithm();
 
+    /**
+     * <code>int64 initial_parallelism = 5;</code>
+     * @return Whether the initialParallelism field is set.
+     */
+    boolean hasInitialParallelism();
+    /**
+     * <code>int64 initial_parallelism = 5;</code>
+     * @return The initialParallelism.
+     */
+    long getInitialParallelism();
+
     public org.tensorflow.proto.data.DatasetOptions.AutotuneOptions.OptionalEnabledCase getOptionalEnabledCase();
 
     public org.tensorflow.proto.data.DatasetOptions.AutotuneOptions.OptionalCpuBudgetCase getOptionalCpuBudgetCase();
@@ -388,10 +399,12 @@ public final class DatasetOptions {
     public org.tensorflow.proto.data.DatasetOptions.AutotuneOptions.OptionalRamBudgetCase getOptionalRamBudgetCase();
 
     public org.tensorflow.proto.data.DatasetOptions.AutotuneOptions.OptionalAutotuneAlgorithmCase getOptionalAutotuneAlgorithmCase();
+
+    public org.tensorflow.proto.data.DatasetOptions.AutotuneOptions.OptionalInitialParallelismCase getOptionalInitialParallelismCase();
   }
   /**
    * <pre>
-   * next: 5
+   * next: 6
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.AutotuneOptions}
@@ -589,6 +602,45 @@ public final class DatasetOptions {
           optionalAutotuneAlgorithmCase_);
     }
 
+    private int optionalInitialParallelismCase_ = 0;
+    private java.lang.Object optionalInitialParallelism_;
+    public enum OptionalInitialParallelismCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      INITIAL_PARALLELISM(5),
+      OPTIONALINITIALPARALLELISM_NOT_SET(0);
+      private final int value;
+      private OptionalInitialParallelismCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static OptionalInitialParallelismCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static OptionalInitialParallelismCase forNumber(int value) {
+        switch (value) {
+          case 5: return INITIAL_PARALLELISM;
+          case 0: return OPTIONALINITIALPARALLELISM_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public OptionalInitialParallelismCase
+    getOptionalInitialParallelismCase() {
+      return OptionalInitialParallelismCase.forNumber(
+          optionalInitialParallelismCase_);
+    }
+
     public static final int ENABLED_FIELD_NUMBER = 1;
     /**
      * <code>bool enabled = 1;</code>
@@ -684,6 +736,27 @@ public final class DatasetOptions {
       return org.tensorflow.proto.data.model.Model.AutotuneAlgorithm.DEFAULT;
     }
 
+    public static final int INITIAL_PARALLELISM_FIELD_NUMBER = 5;
+    /**
+     * <code>int64 initial_parallelism = 5;</code>
+     * @return Whether the initialParallelism field is set.
+     */
+    @java.lang.Override
+    public boolean hasInitialParallelism() {
+      return optionalInitialParallelismCase_ == 5;
+    }
+    /**
+     * <code>int64 initial_parallelism = 5;</code>
+     * @return The initialParallelism.
+     */
+    @java.lang.Override
+    public long getInitialParallelism() {
+      if (optionalInitialParallelismCase_ == 5) {
+        return (java.lang.Long) optionalInitialParallelism_;
+      }
+      return 0L;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -713,6 +786,10 @@ public final class DatasetOptions {
       if (optionalAutotuneAlgorithmCase_ == 4) {
         output.writeEnum(4, ((java.lang.Integer) optionalAutotuneAlgorithm_));
       }
+      if (optionalInitialParallelismCase_ == 5) {
+        output.writeInt64(
+            5, (long)((java.lang.Long) optionalInitialParallelism_));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -740,6 +817,11 @@ public final class DatasetOptions {
       if (optionalAutotuneAlgorithmCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, ((java.lang.Integer) optionalAutotuneAlgorithm_));
+      }
+      if (optionalInitialParallelismCase_ == 5) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(
+              5, (long)((java.lang.Long) optionalInitialParallelism_));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -792,6 +874,15 @@ public final class DatasetOptions {
         case 0:
         default:
       }
+      if (!getOptionalInitialParallelismCase().equals(other.getOptionalInitialParallelismCase())) return false;
+      switch (optionalInitialParallelismCase_) {
+        case 5:
+          if (getInitialParallelism()
+              != other.getInitialParallelism()) return false;
+          break;
+        case 0:
+        default:
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -833,6 +924,15 @@ public final class DatasetOptions {
         case 4:
           hash = (37 * hash) + AUTOTUNE_ALGORITHM_FIELD_NUMBER;
           hash = (53 * hash) + getAutotuneAlgorithmValue();
+          break;
+        case 0:
+        default:
+      }
+      switch (optionalInitialParallelismCase_) {
+        case 5:
+          hash = (37 * hash) + INITIAL_PARALLELISM_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+              getInitialParallelism());
           break;
         case 0:
         default:
@@ -934,7 +1034,7 @@ public final class DatasetOptions {
     }
     /**
      * <pre>
-     * next: 5
+     * next: 6
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.AutotuneOptions}
@@ -977,6 +1077,8 @@ public final class DatasetOptions {
         optionalRamBudget_ = null;
         optionalAutotuneAlgorithmCase_ = 0;
         optionalAutotuneAlgorithm_ = null;
+        optionalInitialParallelismCase_ = 0;
+        optionalInitialParallelism_ = null;
         return this;
       }
 
@@ -1015,10 +1117,14 @@ public final class DatasetOptions {
         if (optionalAutotuneAlgorithmCase_ == 4) {
           result.optionalAutotuneAlgorithm_ = optionalAutotuneAlgorithm_;
         }
+        if (optionalInitialParallelismCase_ == 5) {
+          result.optionalInitialParallelism_ = optionalInitialParallelism_;
+        }
         result.optionalEnabledCase_ = optionalEnabledCase_;
         result.optionalCpuBudgetCase_ = optionalCpuBudgetCase_;
         result.optionalRamBudgetCase_ = optionalRamBudgetCase_;
         result.optionalAutotuneAlgorithmCase_ = optionalAutotuneAlgorithmCase_;
+        result.optionalInitialParallelismCase_ = optionalInitialParallelismCase_;
         onBuilt();
         return result;
       }
@@ -1103,6 +1209,15 @@ public final class DatasetOptions {
             break;
           }
         }
+        switch (other.getOptionalInitialParallelismCase()) {
+          case INITIAL_PARALLELISM: {
+            setInitialParallelism(other.getInitialParallelism());
+            break;
+          }
+          case OPTIONALINITIALPARALLELISM_NOT_SET: {
+            break;
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -1150,6 +1265,11 @@ public final class DatasetOptions {
                 optionalAutotuneAlgorithm_ = rawValue;
                 break;
               } // case 32
+              case 40: {
+                optionalInitialParallelism_ = input.readInt64();
+                optionalInitialParallelismCase_ = 5;
+                break;
+              } // case 40
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -1221,6 +1341,21 @@ public final class DatasetOptions {
       public Builder clearOptionalAutotuneAlgorithm() {
         optionalAutotuneAlgorithmCase_ = 0;
         optionalAutotuneAlgorithm_ = null;
+        onChanged();
+        return this;
+      }
+
+      private int optionalInitialParallelismCase_ = 0;
+      private java.lang.Object optionalInitialParallelism_;
+      public OptionalInitialParallelismCase
+          getOptionalInitialParallelismCase() {
+        return OptionalInitialParallelismCase.forNumber(
+            optionalInitialParallelismCase_);
+      }
+
+      public Builder clearOptionalInitialParallelism() {
+        optionalInitialParallelismCase_ = 0;
+        optionalInitialParallelism_ = null;
         onChanged();
         return this;
       }
@@ -1415,6 +1550,47 @@ public final class DatasetOptions {
         if (optionalAutotuneAlgorithmCase_ == 4) {
           optionalAutotuneAlgorithmCase_ = 0;
           optionalAutotuneAlgorithm_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>int64 initial_parallelism = 5;</code>
+       * @return Whether the initialParallelism field is set.
+       */
+      public boolean hasInitialParallelism() {
+        return optionalInitialParallelismCase_ == 5;
+      }
+      /**
+       * <code>int64 initial_parallelism = 5;</code>
+       * @return The initialParallelism.
+       */
+      public long getInitialParallelism() {
+        if (optionalInitialParallelismCase_ == 5) {
+          return (java.lang.Long) optionalInitialParallelism_;
+        }
+        return 0L;
+      }
+      /**
+       * <code>int64 initial_parallelism = 5;</code>
+       * @param value The initialParallelism to set.
+       * @return This builder for chaining.
+       */
+      public Builder setInitialParallelism(long value) {
+        optionalInitialParallelismCase_ = 5;
+        optionalInitialParallelism_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 initial_parallelism = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearInitialParallelism() {
+        if (optionalInitialParallelismCase_ == 5) {
+          optionalInitialParallelismCase_ = 0;
+          optionalInitialParallelism_ = null;
           onChanged();
         }
         return this;
@@ -5349,6 +5525,590 @@ public final class DatasetOptions {
 
   }
 
+  public interface ServiceOptionsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tensorflow.data.ServiceOptions)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>bool pinned = 1;</code>
+     * @return Whether the pinned field is set.
+     */
+    boolean hasPinned();
+    /**
+     * <code>bool pinned = 1;</code>
+     * @return The pinned.
+     */
+    boolean getPinned();
+
+    public org.tensorflow.proto.data.DatasetOptions.ServiceOptions.OptionalPinnedCase getOptionalPinnedCase();
+  }
+  /**
+   * <pre>
+   * next: 2
+   * </pre>
+   *
+   * Protobuf type {@code tensorflow.data.ServiceOptions}
+   */
+  public static final class ServiceOptions extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tensorflow.data.ServiceOptions)
+      ServiceOptionsOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ServiceOptions.newBuilder() to construct.
+    private ServiceOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ServiceOptions() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ServiceOptions();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.tensorflow.proto.data.DatasetOptions.internal_static_tensorflow_data_ServiceOptions_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.tensorflow.proto.data.DatasetOptions.internal_static_tensorflow_data_ServiceOptions_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.tensorflow.proto.data.DatasetOptions.ServiceOptions.class, org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder.class);
+    }
+
+    private int optionalPinnedCase_ = 0;
+    private java.lang.Object optionalPinned_;
+    public enum OptionalPinnedCase
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      PINNED(1),
+      OPTIONALPINNED_NOT_SET(0);
+      private final int value;
+      private OptionalPinnedCase(int value) {
+        this.value = value;
+      }
+      /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static OptionalPinnedCase valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static OptionalPinnedCase forNumber(int value) {
+        switch (value) {
+          case 1: return PINNED;
+          case 0: return OPTIONALPINNED_NOT_SET;
+          default: return null;
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public OptionalPinnedCase
+    getOptionalPinnedCase() {
+      return OptionalPinnedCase.forNumber(
+          optionalPinnedCase_);
+    }
+
+    public static final int PINNED_FIELD_NUMBER = 1;
+    /**
+     * <code>bool pinned = 1;</code>
+     * @return Whether the pinned field is set.
+     */
+    @java.lang.Override
+    public boolean hasPinned() {
+      return optionalPinnedCase_ == 1;
+    }
+    /**
+     * <code>bool pinned = 1;</code>
+     * @return The pinned.
+     */
+    @java.lang.Override
+    public boolean getPinned() {
+      if (optionalPinnedCase_ == 1) {
+        return (java.lang.Boolean) optionalPinned_;
+      }
+      return false;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (optionalPinnedCase_ == 1) {
+        output.writeBool(
+            1, (boolean)((java.lang.Boolean) optionalPinned_));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (optionalPinnedCase_ == 1) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              1, (boolean)((java.lang.Boolean) optionalPinned_));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.tensorflow.proto.data.DatasetOptions.ServiceOptions)) {
+        return super.equals(obj);
+      }
+      org.tensorflow.proto.data.DatasetOptions.ServiceOptions other = (org.tensorflow.proto.data.DatasetOptions.ServiceOptions) obj;
+
+      if (!getOptionalPinnedCase().equals(other.getOptionalPinnedCase())) return false;
+      switch (optionalPinnedCase_) {
+        case 1:
+          if (getPinned()
+              != other.getPinned()) return false;
+          break;
+        case 0:
+        default:
+      }
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      switch (optionalPinnedCase_) {
+        case 1:
+          hash = (37 * hash) + PINNED_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getPinned());
+          break;
+        case 0:
+        default:
+      }
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(org.tensorflow.proto.data.DatasetOptions.ServiceOptions prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * next: 2
+     * </pre>
+     *
+     * Protobuf type {@code tensorflow.data.ServiceOptions}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tensorflow.data.ServiceOptions)
+        org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.tensorflow.proto.data.DatasetOptions.internal_static_tensorflow_data_ServiceOptions_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.tensorflow.proto.data.DatasetOptions.internal_static_tensorflow_data_ServiceOptions_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.tensorflow.proto.data.DatasetOptions.ServiceOptions.class, org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder.class);
+      }
+
+      // Construct using org.tensorflow.proto.data.DatasetOptions.ServiceOptions.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        optionalPinnedCase_ = 0;
+        optionalPinned_ = null;
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.tensorflow.proto.data.DatasetOptions.internal_static_tensorflow_data_ServiceOptions_descriptor;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.data.DatasetOptions.ServiceOptions getDefaultInstanceForType() {
+        return org.tensorflow.proto.data.DatasetOptions.ServiceOptions.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.data.DatasetOptions.ServiceOptions build() {
+        org.tensorflow.proto.data.DatasetOptions.ServiceOptions result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.data.DatasetOptions.ServiceOptions buildPartial() {
+        org.tensorflow.proto.data.DatasetOptions.ServiceOptions result = new org.tensorflow.proto.data.DatasetOptions.ServiceOptions(this);
+        if (optionalPinnedCase_ == 1) {
+          result.optionalPinned_ = optionalPinned_;
+        }
+        result.optionalPinnedCase_ = optionalPinnedCase_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.tensorflow.proto.data.DatasetOptions.ServiceOptions) {
+          return mergeFrom((org.tensorflow.proto.data.DatasetOptions.ServiceOptions)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.tensorflow.proto.data.DatasetOptions.ServiceOptions other) {
+        if (other == org.tensorflow.proto.data.DatasetOptions.ServiceOptions.getDefaultInstance()) return this;
+        switch (other.getOptionalPinnedCase()) {
+          case PINNED: {
+            setPinned(other.getPinned());
+            break;
+          }
+          case OPTIONALPINNED_NOT_SET: {
+            break;
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+                optionalPinned_ = input.readBool();
+                optionalPinnedCase_ = 1;
+                break;
+              } // case 8
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+      private int optionalPinnedCase_ = 0;
+      private java.lang.Object optionalPinned_;
+      public OptionalPinnedCase
+          getOptionalPinnedCase() {
+        return OptionalPinnedCase.forNumber(
+            optionalPinnedCase_);
+      }
+
+      public Builder clearOptionalPinned() {
+        optionalPinnedCase_ = 0;
+        optionalPinned_ = null;
+        onChanged();
+        return this;
+      }
+
+
+      /**
+       * <code>bool pinned = 1;</code>
+       * @return Whether the pinned field is set.
+       */
+      public boolean hasPinned() {
+        return optionalPinnedCase_ == 1;
+      }
+      /**
+       * <code>bool pinned = 1;</code>
+       * @return The pinned.
+       */
+      public boolean getPinned() {
+        if (optionalPinnedCase_ == 1) {
+          return (java.lang.Boolean) optionalPinned_;
+        }
+        return false;
+      }
+      /**
+       * <code>bool pinned = 1;</code>
+       * @param value The pinned to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPinned(boolean value) {
+        optionalPinnedCase_ = 1;
+        optionalPinned_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool pinned = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPinned() {
+        if (optionalPinnedCase_ == 1) {
+          optionalPinnedCase_ = 0;
+          optionalPinned_ = null;
+          onChanged();
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tensorflow.data.ServiceOptions)
+    }
+
+    // @@protoc_insertion_point(class_scope:tensorflow.data.ServiceOptions)
+    private static final org.tensorflow.proto.data.DatasetOptions.ServiceOptions DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new org.tensorflow.proto.data.DatasetOptions.ServiceOptions();
+    }
+
+    public static org.tensorflow.proto.data.DatasetOptions.ServiceOptions getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ServiceOptions>
+        PARSER = new com.google.protobuf.AbstractParser<ServiceOptions>() {
+      @java.lang.Override
+      public ServiceOptions parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<ServiceOptions> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ServiceOptions> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.tensorflow.proto.data.DatasetOptions.ServiceOptions getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ThreadingOptionsOrBuilder extends
       // @@protoc_insertion_point(interface_extends:tensorflow.data.ThreadingOptions)
       com.google.protobuf.MessageOrBuilder {
@@ -6262,6 +7022,33 @@ public final class DatasetOptions {
     org.tensorflow.proto.data.DatasetOptions.OptimizationOptionsOrBuilder getOptimizationOptionsOrBuilder();
 
     /**
+     * <pre>
+     * The tf.data service options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+     * @return Whether the serviceOptions field is set.
+     */
+    boolean hasServiceOptions();
+    /**
+     * <pre>
+     * The tf.data service options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+     * @return The serviceOptions.
+     */
+    org.tensorflow.proto.data.DatasetOptions.ServiceOptions getServiceOptions();
+    /**
+     * <pre>
+     * The tf.data service options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+     */
+    org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder getServiceOptionsOrBuilder();
+
+    /**
      * <code>bool slack = 4;</code>
      * @return Whether the slack field is set.
      */
@@ -6353,7 +7140,7 @@ public final class DatasetOptions {
    * <pre>
    * Message stored with Dataset objects to control how datasets are processed and
    * optimized.
-   * next: 12
+   * next: 13
    * </pre>
    *
    * Protobuf type {@code tensorflow.data.Options}
@@ -6868,6 +7655,44 @@ public final class DatasetOptions {
       return getOptimizationOptions();
     }
 
+    public static final int SERVICE_OPTIONS_FIELD_NUMBER = 12;
+    private org.tensorflow.proto.data.DatasetOptions.ServiceOptions serviceOptions_;
+    /**
+     * <pre>
+     * The tf.data service options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+     * @return Whether the serviceOptions field is set.
+     */
+    @java.lang.Override
+    public boolean hasServiceOptions() {
+      return serviceOptions_ != null;
+    }
+    /**
+     * <pre>
+     * The tf.data service options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+     * @return The serviceOptions.
+     */
+    @java.lang.Override
+    public org.tensorflow.proto.data.DatasetOptions.ServiceOptions getServiceOptions() {
+      return serviceOptions_ == null ? org.tensorflow.proto.data.DatasetOptions.ServiceOptions.getDefaultInstance() : serviceOptions_;
+    }
+    /**
+     * <pre>
+     * The tf.data service options associated with the dataset.
+     * </pre>
+     *
+     * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+     */
+    @java.lang.Override
+    public org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder getServiceOptionsOrBuilder() {
+      return getServiceOptions();
+    }
+
     public static final int SLACK_FIELD_NUMBER = 4;
     /**
      * <code>bool slack = 4;</code>
@@ -7052,6 +7877,9 @@ public final class DatasetOptions {
       for (int i = 0; i < frameworkType_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 11, frameworkType_.getRaw(i));
       }
+      if (serviceOptions_ != null) {
+        output.writeMessage(12, getServiceOptions());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -7112,6 +7940,10 @@ public final class DatasetOptions {
         size += dataSize;
         size += 1 * getFrameworkTypeList().size();
       }
+      if (serviceOptions_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(12, getServiceOptions());
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -7143,6 +7975,11 @@ public final class DatasetOptions {
       if (hasOptimizationOptions()) {
         if (!getOptimizationOptions()
             .equals(other.getOptimizationOptions())) return false;
+      }
+      if (hasServiceOptions() != other.hasServiceOptions()) return false;
+      if (hasServiceOptions()) {
+        if (!getServiceOptions()
+            .equals(other.getServiceOptions())) return false;
       }
       if (hasThreadingOptions() != other.hasThreadingOptions()) return false;
       if (hasThreadingOptions()) {
@@ -7229,6 +8066,10 @@ public final class DatasetOptions {
       if (hasOptimizationOptions()) {
         hash = (37 * hash) + OPTIMIZATION_OPTIONS_FIELD_NUMBER;
         hash = (53 * hash) + getOptimizationOptions().hashCode();
+      }
+      if (hasServiceOptions()) {
+        hash = (37 * hash) + SERVICE_OPTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getServiceOptions().hashCode();
       }
       if (hasThreadingOptions()) {
         hash = (37 * hash) + THREADING_OPTIONS_FIELD_NUMBER;
@@ -7385,7 +8226,7 @@ public final class DatasetOptions {
      * <pre>
      * Message stored with Dataset objects to control how datasets are processed and
      * optimized.
-     * next: 12
+     * next: 13
      * </pre>
      *
      * Protobuf type {@code tensorflow.data.Options}
@@ -7439,6 +8280,12 @@ public final class DatasetOptions {
         } else {
           optimizationOptions_ = null;
           optimizationOptionsBuilder_ = null;
+        }
+        if (serviceOptionsBuilder_ == null) {
+          serviceOptions_ = null;
+        } else {
+          serviceOptions_ = null;
+          serviceOptionsBuilder_ = null;
         }
         if (threadingOptionsBuilder_ == null) {
           threadingOptions_ = null;
@@ -7510,6 +8357,11 @@ public final class DatasetOptions {
           result.optimizationOptions_ = optimizationOptions_;
         } else {
           result.optimizationOptions_ = optimizationOptionsBuilder_.build();
+        }
+        if (serviceOptionsBuilder_ == null) {
+          result.serviceOptions_ = serviceOptions_;
+        } else {
+          result.serviceOptions_ = serviceOptionsBuilder_.build();
         }
         if (optionalSlackCase_ == 4) {
           result.optionalSlack_ = optionalSlack_;
@@ -7600,6 +8452,9 @@ public final class DatasetOptions {
         }
         if (other.hasOptimizationOptions()) {
           mergeOptimizationOptions(other.getOptimizationOptions());
+        }
+        if (other.hasServiceOptions()) {
+          mergeServiceOptions(other.getServiceOptions());
         }
         if (other.hasThreadingOptions()) {
           mergeThreadingOptions(other.getThreadingOptions());
@@ -7752,6 +8607,13 @@ public final class DatasetOptions {
                 frameworkType_.add(s);
                 break;
               } // case 90
+              case 98: {
+                input.readMessage(
+                    getServiceOptionsFieldBuilder().getBuilder(),
+                    extensionRegistry);
+
+                break;
+              } // case 98
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -8608,6 +9470,161 @@ public final class DatasetOptions {
         return optimizationOptionsBuilder_;
       }
 
+      private org.tensorflow.proto.data.DatasetOptions.ServiceOptions serviceOptions_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.data.DatasetOptions.ServiceOptions, org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder, org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder> serviceOptionsBuilder_;
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       * @return Whether the serviceOptions field is set.
+       */
+      public boolean hasServiceOptions() {
+        return serviceOptionsBuilder_ != null || serviceOptions_ != null;
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       * @return The serviceOptions.
+       */
+      public org.tensorflow.proto.data.DatasetOptions.ServiceOptions getServiceOptions() {
+        if (serviceOptionsBuilder_ == null) {
+          return serviceOptions_ == null ? org.tensorflow.proto.data.DatasetOptions.ServiceOptions.getDefaultInstance() : serviceOptions_;
+        } else {
+          return serviceOptionsBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      public Builder setServiceOptions(org.tensorflow.proto.data.DatasetOptions.ServiceOptions value) {
+        if (serviceOptionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          serviceOptions_ = value;
+          onChanged();
+        } else {
+          serviceOptionsBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      public Builder setServiceOptions(
+          org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder builderForValue) {
+        if (serviceOptionsBuilder_ == null) {
+          serviceOptions_ = builderForValue.build();
+          onChanged();
+        } else {
+          serviceOptionsBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      public Builder mergeServiceOptions(org.tensorflow.proto.data.DatasetOptions.ServiceOptions value) {
+        if (serviceOptionsBuilder_ == null) {
+          if (serviceOptions_ != null) {
+            serviceOptions_ =
+              org.tensorflow.proto.data.DatasetOptions.ServiceOptions.newBuilder(serviceOptions_).mergeFrom(value).buildPartial();
+          } else {
+            serviceOptions_ = value;
+          }
+          onChanged();
+        } else {
+          serviceOptionsBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      public Builder clearServiceOptions() {
+        if (serviceOptionsBuilder_ == null) {
+          serviceOptions_ = null;
+          onChanged();
+        } else {
+          serviceOptions_ = null;
+          serviceOptionsBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      public org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder getServiceOptionsBuilder() {
+        
+        onChanged();
+        return getServiceOptionsFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      public org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder getServiceOptionsOrBuilder() {
+        if (serviceOptionsBuilder_ != null) {
+          return serviceOptionsBuilder_.getMessageOrBuilder();
+        } else {
+          return serviceOptions_ == null ?
+              org.tensorflow.proto.data.DatasetOptions.ServiceOptions.getDefaultInstance() : serviceOptions_;
+        }
+      }
+      /**
+       * <pre>
+       * The tf.data service options associated with the dataset.
+       * </pre>
+       *
+       * <code>.tensorflow.data.ServiceOptions service_options = 12;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.data.DatasetOptions.ServiceOptions, org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder, org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder> 
+          getServiceOptionsFieldBuilder() {
+        if (serviceOptionsBuilder_ == null) {
+          serviceOptionsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.tensorflow.proto.data.DatasetOptions.ServiceOptions, org.tensorflow.proto.data.DatasetOptions.ServiceOptions.Builder, org.tensorflow.proto.data.DatasetOptions.ServiceOptionsOrBuilder>(
+                  getServiceOptions(),
+                  getParentForChildren(),
+                  isClean());
+          serviceOptions_ = null;
+        }
+        return serviceOptionsBuilder_;
+      }
+
       /**
        * <code>bool slack = 4;</code>
        * @return Whether the slack field is set.
@@ -9041,6 +10058,11 @@ public final class DatasetOptions {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tensorflow_data_OptimizationOptions_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tensorflow_data_ServiceOptions_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tensorflow_data_ServiceOptions_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tensorflow_data_ThreadingOptions_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9061,70 +10083,74 @@ public final class DatasetOptions {
     java.lang.String[] descriptorData = {
       "\n/tensorflow/core/framework/dataset_opti" +
       "ons.proto\022\017tensorflow.data\032%tensorflow/c" +
-      "ore/framework/model.proto\"\371\001\n\017AutotuneOp" +
+      "ore/framework/model.proto\"\270\002\n\017AutotuneOp" +
       "tions\022\021\n\007enabled\030\001 \001(\010H\000\022\024\n\ncpu_budget\030\002" +
       " \001(\005H\001\022\024\n\nram_budget\030\003 \001(\003H\002\022F\n\022autotune" +
       "_algorithm\030\004 \001(\0162(.tensorflow.data.model" +
-      ".AutotuneAlgorithmH\003B\022\n\020optional_enabled" +
-      "B\025\n\023optional_cpu_budgetB\025\n\023optional_ram_" +
-      "budgetB\035\n\033optional_autotune_algorithm\"\321\001" +
-      "\n\022CardinalityOptions\022G\n\rcompute_level\030\001 " +
-      "\001(\01620.tensorflow.data.CardinalityOptions" +
-      ".ComputeLevel\"r\n\014ComputeLevel\022#\n\037CARDINA" +
-      "LITY_COMPUTE_UNSPECIFIED\020\000\022\033\n\027CARDINALIT" +
-      "Y_COMPUTE_LOW\020\001\022 \n\034CARDINALITY_COMPUTE_M" +
-      "ODERATE\020\002\"\177\n\021DistributeOptions\022;\n\021auto_s" +
-      "hard_policy\030\001 \001(\0162 .tensorflow.data.Auto" +
-      "ShardPolicy\022\025\n\013num_devices\030\002 \001(\005H\000B\026\n\024op" +
-      "tional_num_devices\"\271\006\n\023OptimizationOptio" +
-      "ns\022%\n\033apply_default_optimizations\030\001 \001(\010H" +
-      "\000\022\027\n\rfilter_fusion\030\006 \001(\010H\001\022\036\n\024map_and_ba" +
-      "tch_fusion\030\t \001(\010H\002\022\037\n\025map_and_filter_fus" +
-      "ion\030\n \001(\010H\003\022\024\n\nmap_fusion\030\013 \001(\010H\004\022\035\n\023map" +
-      "_parallelization\030\014 \001(\010H\005\022\032\n\020noop_elimina" +
-      "tion\030\016 \001(\010H\006\022\030\n\016parallel_batch\030\017 \001(\010H\007\022#" +
-      "\n\031shuffle_and_repeat_fusion\030\021 \001(\010H\010\022 \n\026f" +
-      "ilter_parallelization\030\022 \001(\010H\t\022\031\n\017inject_" +
-      "prefetch\030\023 \001(\010H\n\022!\n\027seq_interleave_prefe" +
-      "tch\030\025 \001(\010H\013B&\n$optional_apply_default_op" +
-      "timizationsB\030\n\026optional_filter_fusionB\037\n" +
-      "\035optional_map_and_batch_fusionB \n\036option" +
-      "al_map_and_filter_fusionB\025\n\023optional_map" +
-      "_fusionB\036\n\034optional_map_parallelizationB" +
-      "\033\n\031optional_noop_eliminationB\031\n\027optional" +
-      "_parallel_batchB$\n\"optional_shuffle_and_" +
-      "repeat_fusionB!\n\037optional_filter_paralle" +
-      "lizationB\032\n\030optional_inject_prefetchB\"\n " +
-      "optional_seq_interleave_prefetchJ\004\010\002\020\003J\004" +
-      "\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J\004\010\007\020\010J\004\010\010\020\tJ\004\010\r\020\016J\004\010\020\020\021" +
-      "J\004\010\024\020\025\"\242\001\n\020ThreadingOptions\022\"\n\030max_intra" +
-      "_op_parallelism\030\001 \001(\005H\000\022!\n\027private_threa" +
-      "dpool_size\030\002 \001(\005H\001B#\n!optional_max_intra" +
-      "_op_parallelismB\"\n optional_private_thre" +
-      "adpool_size\"\373\004\n\007Options\022\026\n\014dataset_name\030" +
-      "\n \001(\tH\000\022\026\n\016framework_type\030\013 \003(\t\022\027\n\rdeter" +
-      "ministic\030\001 \001(\010H\001\022:\n\020autotune_options\030\007 \001" +
-      "(\0132 .tensorflow.data.AutotuneOptions\022>\n\022" +
-      "distribute_options\030\002 \001(\0132\".tensorflow.da" +
-      "ta.DistributeOptions\022B\n\024optimization_opt" +
-      "ions\030\003 \001(\0132$.tensorflow.data.Optimizatio" +
-      "nOptions\022\017\n\005slack\030\004 \001(\010H\002\022<\n\021threading_o" +
-      "ptions\030\005 \001(\0132!.tensorflow.data.Threading" +
-      "Options\022E\n\025external_state_policy\030\006 \001(\0162$" +
-      ".tensorflow.data.ExternalStatePolicyH\003\022\035" +
-      "\n\023symbolic_checkpoint\030\010 \001(\010H\004\022\024\n\nwarm_st" +
-      "art\030\t \001(\010H\005B\027\n\025optional_dataset_nameB\030\n\026" +
-      "optional_deterministicB\020\n\016optional_slack" +
-      "B \n\036optional_external_state_policyB\036\n\034op" +
-      "tional_symbolic_checkpointB\025\n\023optional_w" +
-      "arm_start*K\n\017AutoShardPolicy\022\010\n\004AUTO\020\000\022\010" +
-      "\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HINT\020\003\022\020\n\003OFF\020\377\377\377\377" +
-      "\377\377\377\377\377\001*J\n\023ExternalStatePolicy\022\017\n\013POLICY_" +
-      "WARN\020\000\022\021\n\rPOLICY_IGNORE\020\001\022\017\n\013POLICY_FAIL" +
-      "\020\002Bs\n\031org.tensorflow.proto.dataZVgithub." +
-      "com/tensorflow/tensorflow/tensorflow/go/" +
-      "core/framework/dataset_options_go_protob" +
-      "\006proto3"
+      ".AutotuneAlgorithmH\003\022\035\n\023initial_parallel" +
+      "ism\030\005 \001(\003H\004B\022\n\020optional_enabledB\025\n\023optio" +
+      "nal_cpu_budgetB\025\n\023optional_ram_budgetB\035\n" +
+      "\033optional_autotune_algorithmB\036\n\034optional" +
+      "_initial_parallelism\"\321\001\n\022CardinalityOpti" +
+      "ons\022G\n\rcompute_level\030\001 \001(\01620.tensorflow." +
+      "data.CardinalityOptions.ComputeLevel\"r\n\014" +
+      "ComputeLevel\022#\n\037CARDINALITY_COMPUTE_UNSP" +
+      "ECIFIED\020\000\022\033\n\027CARDINALITY_COMPUTE_LOW\020\001\022 " +
+      "\n\034CARDINALITY_COMPUTE_MODERATE\020\002\"\177\n\021Dist" +
+      "ributeOptions\022;\n\021auto_shard_policy\030\001 \001(\016" +
+      "2 .tensorflow.data.AutoShardPolicy\022\025\n\013nu" +
+      "m_devices\030\002 \001(\005H\000B\026\n\024optional_num_device" +
+      "s\"\271\006\n\023OptimizationOptions\022%\n\033apply_defau" +
+      "lt_optimizations\030\001 \001(\010H\000\022\027\n\rfilter_fusio" +
+      "n\030\006 \001(\010H\001\022\036\n\024map_and_batch_fusion\030\t \001(\010H" +
+      "\002\022\037\n\025map_and_filter_fusion\030\n \001(\010H\003\022\024\n\nma" +
+      "p_fusion\030\013 \001(\010H\004\022\035\n\023map_parallelization\030" +
+      "\014 \001(\010H\005\022\032\n\020noop_elimination\030\016 \001(\010H\006\022\030\n\016p" +
+      "arallel_batch\030\017 \001(\010H\007\022#\n\031shuffle_and_rep" +
+      "eat_fusion\030\021 \001(\010H\010\022 \n\026filter_paralleliza" +
+      "tion\030\022 \001(\010H\t\022\031\n\017inject_prefetch\030\023 \001(\010H\n\022" +
+      "!\n\027seq_interleave_prefetch\030\025 \001(\010H\013B&\n$op" +
+      "tional_apply_default_optimizationsB\030\n\026op" +
+      "tional_filter_fusionB\037\n\035optional_map_and" +
+      "_batch_fusionB \n\036optional_map_and_filter" +
+      "_fusionB\025\n\023optional_map_fusionB\036\n\034option" +
+      "al_map_parallelizationB\033\n\031optional_noop_" +
+      "eliminationB\031\n\027optional_parallel_batchB$" +
+      "\n\"optional_shuffle_and_repeat_fusionB!\n\037" +
+      "optional_filter_parallelizationB\032\n\030optio" +
+      "nal_inject_prefetchB\"\n optional_seq_inte" +
+      "rleave_prefetchJ\004\010\002\020\003J\004\010\003\020\004J\004\010\004\020\005J\004\010\005\020\006J" +
+      "\004\010\007\020\010J\004\010\010\020\tJ\004\010\r\020\016J\004\010\020\020\021J\004\010\024\020\025\"5\n\016Service" +
+      "Options\022\020\n\006pinned\030\001 \001(\010H\000B\021\n\017optional_pi" +
+      "nned\"\242\001\n\020ThreadingOptions\022\"\n\030max_intra_o" +
+      "p_parallelism\030\001 \001(\005H\000\022!\n\027private_threadp" +
+      "ool_size\030\002 \001(\005H\001B#\n!optional_max_intra_o" +
+      "p_parallelismB\"\n optional_private_thread" +
+      "pool_size\"\265\005\n\007Options\022\026\n\014dataset_name\030\n " +
+      "\001(\tH\000\022\026\n\016framework_type\030\013 \003(\t\022\027\n\rdetermi" +
+      "nistic\030\001 \001(\010H\001\022:\n\020autotune_options\030\007 \001(\013" +
+      "2 .tensorflow.data.AutotuneOptions\022>\n\022di" +
+      "stribute_options\030\002 \001(\0132\".tensorflow.data" +
+      ".DistributeOptions\022B\n\024optimization_optio" +
+      "ns\030\003 \001(\0132$.tensorflow.data.OptimizationO" +
+      "ptions\0228\n\017service_options\030\014 \001(\0132\037.tensor" +
+      "flow.data.ServiceOptions\022\017\n\005slack\030\004 \001(\010H" +
+      "\002\022<\n\021threading_options\030\005 \001(\0132!.tensorflo" +
+      "w.data.ThreadingOptions\022E\n\025external_stat" +
+      "e_policy\030\006 \001(\0162$.tensorflow.data.Externa" +
+      "lStatePolicyH\003\022\035\n\023symbolic_checkpoint\030\010 " +
+      "\001(\010H\004\022\024\n\nwarm_start\030\t \001(\010H\005B\027\n\025optional_" +
+      "dataset_nameB\030\n\026optional_deterministicB\020" +
+      "\n\016optional_slackB \n\036optional_external_st" +
+      "ate_policyB\036\n\034optional_symbolic_checkpoi" +
+      "ntB\025\n\023optional_warm_start*K\n\017AutoShardPo" +
+      "licy\022\010\n\004AUTO\020\000\022\010\n\004FILE\020\001\022\010\n\004DATA\020\002\022\010\n\004HI" +
+      "NT\020\003\022\020\n\003OFF\020\377\377\377\377\377\377\377\377\377\001*J\n\023ExternalStateP" +
+      "olicy\022\017\n\013POLICY_WARN\020\000\022\021\n\rPOLICY_IGNORE\020" +
+      "\001\022\017\n\013POLICY_FAIL\020\002Bs\n\031org.tensorflow.pro" +
+      "to.dataZVgithub.com/tensorflow/tensorflo" +
+      "w/tensorflow/go/core/framework/dataset_o" +
+      "ptions_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -9136,7 +10162,7 @@ public final class DatasetOptions {
     internal_static_tensorflow_data_AutotuneOptions_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_AutotuneOptions_descriptor,
-        new java.lang.String[] { "Enabled", "CpuBudget", "RamBudget", "AutotuneAlgorithm", "OptionalEnabled", "OptionalCpuBudget", "OptionalRamBudget", "OptionalAutotuneAlgorithm", });
+        new java.lang.String[] { "Enabled", "CpuBudget", "RamBudget", "AutotuneAlgorithm", "InitialParallelism", "OptionalEnabled", "OptionalCpuBudget", "OptionalRamBudget", "OptionalAutotuneAlgorithm", "OptionalInitialParallelism", });
     internal_static_tensorflow_data_CardinalityOptions_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_tensorflow_data_CardinalityOptions_fieldAccessorTable = new
@@ -9155,18 +10181,24 @@ public final class DatasetOptions {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_OptimizationOptions_descriptor,
         new java.lang.String[] { "ApplyDefaultOptimizations", "FilterFusion", "MapAndBatchFusion", "MapAndFilterFusion", "MapFusion", "MapParallelization", "NoopElimination", "ParallelBatch", "ShuffleAndRepeatFusion", "FilterParallelization", "InjectPrefetch", "SeqInterleavePrefetch", "OptionalApplyDefaultOptimizations", "OptionalFilterFusion", "OptionalMapAndBatchFusion", "OptionalMapAndFilterFusion", "OptionalMapFusion", "OptionalMapParallelization", "OptionalNoopElimination", "OptionalParallelBatch", "OptionalShuffleAndRepeatFusion", "OptionalFilterParallelization", "OptionalInjectPrefetch", "OptionalSeqInterleavePrefetch", });
-    internal_static_tensorflow_data_ThreadingOptions_descriptor =
+    internal_static_tensorflow_data_ServiceOptions_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_tensorflow_data_ServiceOptions_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tensorflow_data_ServiceOptions_descriptor,
+        new java.lang.String[] { "Pinned", "OptionalPinned", });
+    internal_static_tensorflow_data_ThreadingOptions_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_tensorflow_data_ThreadingOptions_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_ThreadingOptions_descriptor,
         new java.lang.String[] { "MaxIntraOpParallelism", "PrivateThreadpoolSize", "OptionalMaxIntraOpParallelism", "OptionalPrivateThreadpoolSize", });
     internal_static_tensorflow_data_Options_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_tensorflow_data_Options_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_Options_descriptor,
-        new java.lang.String[] { "DatasetName", "FrameworkType", "Deterministic", "AutotuneOptions", "DistributeOptions", "OptimizationOptions", "Slack", "ThreadingOptions", "ExternalStatePolicy", "SymbolicCheckpoint", "WarmStart", "OptionalDatasetName", "OptionalDeterministic", "OptionalSlack", "OptionalExternalStatePolicy", "OptionalSymbolicCheckpoint", "OptionalWarmStart", });
+        new java.lang.String[] { "DatasetName", "FrameworkType", "Deterministic", "AutotuneOptions", "DistributeOptions", "OptimizationOptions", "ServiceOptions", "Slack", "ThreadingOptions", "ExternalStatePolicy", "SymbolicCheckpoint", "WarmStart", "OptionalDatasetName", "OptionalDeterministic", "OptionalSlack", "OptionalExternalStatePolicy", "OptionalSymbolicCheckpoint", "OptionalWarmStart", });
     org.tensorflow.proto.data.model.Model.getDescriptor();
   }
 

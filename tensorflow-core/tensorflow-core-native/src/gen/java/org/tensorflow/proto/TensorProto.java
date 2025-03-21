@@ -66,6 +66,10 @@ private static final long serialVersionUID = 0L;
   public static final int DTYPE_FIELD_NUMBER = 1;
   private int dtype_;
   /**
+   * <pre>
+   * Data type of the tensor.
+   * </pre>
+   *
    * <code>.tensorflow.DataType dtype = 1;</code>
    * @return The enum numeric value on the wire for dtype.
    */
@@ -73,6 +77,10 @@ private static final long serialVersionUID = 0L;
     return dtype_;
   }
   /**
+   * <pre>
+   * Data type of the tensor.
+   * </pre>
+   *
    * <code>.tensorflow.DataType dtype = 1;</code>
    * @return The dtype.
    */
@@ -1929,6 +1937,10 @@ private static final long serialVersionUID = 0L;
 
     private int dtype_ = 0;
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return The enum numeric value on the wire for dtype.
      */
@@ -1936,6 +1948,10 @@ private static final long serialVersionUID = 0L;
       return dtype_;
     }
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @param value The enum numeric value on the wire for dtype to set.
      * @return This builder for chaining.
@@ -1947,6 +1963,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return The dtype.
      */
@@ -1957,6 +1977,10 @@ private static final long serialVersionUID = 0L;
       return result == null ? org.tensorflow.proto.DataType.UNRECOGNIZED : result;
     }
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @param value The dtype to set.
      * @return This builder for chaining.
@@ -1971,6 +1995,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * Data type of the tensor.
+     * </pre>
+     *
      * <code>.tensorflow.DataType dtype = 1;</code>
      * @return This builder for chaining.
      */
