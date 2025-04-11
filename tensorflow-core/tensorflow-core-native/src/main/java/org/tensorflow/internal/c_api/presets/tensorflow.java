@@ -40,7 +40,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             // The lower part is still the same, so multiple roots are set in the pom file.
             "tsl/platform/ctstring_internal.h",
             "tsl/platform/ctstring.h",
-            "tsl/platform/status.h",
+            "xla/tsl/c/tsl_status.h",
             "tensorflow/c/c_api_macros.h",
             "tensorflow/c/tf_datatype.h",
             "tensorflow/c/tf_status.h",

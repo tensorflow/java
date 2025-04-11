@@ -212,7 +212,7 @@
                 <!--arg>-Werror</arg--> <!-- Disabled (temporarily?) -->
                 <arg>-Xlint:all</arg>
                 <arg>-XDcompilePolicy=simple</arg>
-                <arg>-Xplugin:ErrorProne</arg>
+                <!-- FIXME: turn me on again! arg>-Xplugin:ErrorProne</arg-->
                 <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
                 <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
 

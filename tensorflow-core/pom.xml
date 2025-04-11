@@ -59,7 +59,7 @@
     <javacpp.platform.macosx-arm64.extension>macosx-arm64${javacpp.platform.extension}</javacpp.platform.macosx-arm64.extension>
     <javacpp.platform.macosx-x86_64.extension>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
     <javacpp.platform.windows-x86_64.extension>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
-    <javacpp.version>1.5.10</javacpp.version>
+    <javacpp.version>1.5.11</javacpp.version>
   </properties>
 
   <profiles>
