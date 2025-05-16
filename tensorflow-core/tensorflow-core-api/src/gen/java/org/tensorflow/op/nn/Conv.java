@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * Computes a N-D convolution given (N+1+batch_dims)-D {@code input} and (N+2)-D {@code filter} tensors.
  * General function for computing a N-D convolution. It is required that
  * {@code 1 <= N <= 3}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Conv.OP_NAME,

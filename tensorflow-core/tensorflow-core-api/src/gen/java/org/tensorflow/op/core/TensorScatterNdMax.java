@@ -50,8 +50,6 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * </blockquote>
  * <p>Refer to {@code tf.tensor_scatter_nd_update} for more details.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TensorScatterNdMax.OP_NAME,
@@ -79,6 +77,7 @@ public final class TensorScatterNdMax<T extends TType> extends RawOp implements 
    * @param tensor Tensor to update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterMax} output and operands
    * @return a new instance of TensorScatterNdMax
    */
@@ -86,12 +85,29 @@ public final class TensorScatterNdMax<T extends TType> extends RawOp implements 
       describeByClass = true
   )
   public static <T extends TType> TensorScatterNdMax<T> create(Scope scope, Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
+      Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorScatterNdMax");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.badIndicesPolicy != null) {
+          opBuilder.setAttr("bad_indices_policy", opts.badIndicesPolicy);
+        }
+      }
+    }
     return new TensorScatterNdMax<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the badIndicesPolicy option.
+   *
+   * @param badIndicesPolicy the badIndicesPolicy option
+   * @return this Options instance.
+   */
+  public static Options badIndicesPolicy(String badIndicesPolicy) {
+    return new Options().badIndicesPolicy(badIndicesPolicy);
   }
 
   /**
@@ -106,6 +122,27 @@ public final class TensorScatterNdMax<T extends TType> extends RawOp implements 
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorScatterNdMax}
+   */
+  public static class Options {
+    private String badIndicesPolicy;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the badIndicesPolicy option.
+     *
+     * @param badIndicesPolicy the badIndicesPolicy option
+     * @return this Options instance.
+     */
+    public Options badIndicesPolicy(String badIndicesPolicy) {
+      this.badIndicesPolicy = badIndicesPolicy;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -137,14 +174,20 @@ public final class TensorScatterNdMax<T extends TType> extends RawOp implements 
      */
     public final DataType Tindices;
 
+    /**
+     * The badIndicesPolicy attribute
+     */
+    public final String badIndicesPolicy;
+
     public Inputs(GraphOperation op) {
-      super(new TensorScatterNdMax<>(op), op, Arrays.asList("T", "Tindices"));
+      super(new TensorScatterNdMax<>(op), op, Arrays.asList("T", "Tindices", "bad_indices_policy"));
       int inputIndex = 0;
       tensor = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
       updates = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       Tindices = op.attributes().getAttrType("Tindices");
+      badIndicesPolicy = op.attributes().getAttrString("bad_indices_policy");
     }
   }
 }

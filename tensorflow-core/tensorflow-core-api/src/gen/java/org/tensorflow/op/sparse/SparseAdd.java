@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * {@code thresh == 0} (default) means everything is kept and actual thresholding happens
  * only for a positive value.
  * <p>In the following shapes, {@code nnz} is the count after taking {@code thresh} into account.
- *
- * @param <T> data type for {@code sum_values} output
  */
 @OpMetadata(
     opType = SparseAdd.OP_NAME,

@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * $$prox_v = var$$
  * $$prox_v -= lr * grad * (1 / sqrt(accum))$$
  * $$var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}$$
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = SparseApplyProximalAdagrad.OP_NAME,

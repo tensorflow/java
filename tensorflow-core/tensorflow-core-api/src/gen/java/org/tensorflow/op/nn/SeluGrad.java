@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients for the scaled exponential linear (Selu) operation.
- *
- * @param <T> data type for {@code backprops} output
  */
 @OpMetadata(
     opType = SeluGrad.OP_NAME,

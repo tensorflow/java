@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>Read
  *  <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
  * for an explanation of segments.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseSegmentMeanWithNumSegments.OP_NAME,

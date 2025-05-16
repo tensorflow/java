@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Computes numerical negative value element-wise.
  * I.e., \(y = -x\).
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Neg.OP_NAME,

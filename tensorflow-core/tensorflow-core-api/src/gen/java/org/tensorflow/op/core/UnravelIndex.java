@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>{@literal @}compatibility(numpy)<br>
  * Equivalent to np.unravel_index
  * <br>{@literal @}end_compatibility
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = UnravelIndex.OP_NAME,

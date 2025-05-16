@@ -39,10 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
  * value is the number of unique indexes in &quot;indices&quot;. Also returns vector
  * &quot;sorted_unique_indices&quot; containing the corresponding indexes from &quot;indices&quot;.
- *
- * @param <T> data type for {@code output} output
- *
- * @param <U> data type for {@code sorted_unique_indices} output
  */
 @OpMetadata(
     opType = SparseSegmentSqrtNGrad.OP_NAME,

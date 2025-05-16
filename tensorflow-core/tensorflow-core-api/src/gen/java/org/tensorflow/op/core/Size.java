@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * # 't' is [[[1, 1,, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]]
  * size(t) ==&gt; 12
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Size.OP_NAME,

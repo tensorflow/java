@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TType;
  * {@code fft_length / 2 + 1} for the inner-most dimension) is smaller than the
  * corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
  * the dimension is padded with zeros.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Irfft2d.OP_NAME,

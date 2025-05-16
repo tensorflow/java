@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The BatchMatrixSolveLs operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchMatrixSolveLs.OP_NAME,

@@ -59,6 +59,7 @@ import org.tensorflow.op.data.GeneratorDataset;
 import org.tensorflow.op.data.GroupByReducerDataset;
 import org.tensorflow.op.data.GroupByWindowDataset;
 import org.tensorflow.op.data.IgnoreErrorsDataset;
+import org.tensorflow.op.data.IndexFlatMapDataset;
 import org.tensorflow.op.data.InitializeTableFromDataset;
 import org.tensorflow.op.data.InterleaveDataset;
 import org.tensorflow.op.data.Iterator;
@@ -820,6 +821,28 @@ public final class DataOps {
   }
 
   /**
+   * The IndexFlatMapDataset operation
+   *
+   * @param inputDataset The inputDataset value
+   * @param mapFuncOtherArgs The mapFuncOtherArgs value
+   * @param indexMapFuncOtherArgs The indexMapFuncOtherArgs value
+   * @param outputCardinality The outputCardinality value
+   * @param mapFunc The value of the mapFunc attribute
+   * @param indexMapFunc The value of the indexMapFunc attribute
+   * @param outputTypes The value of the outputTypes attribute
+   * @param outputShapes The value of the outputShapes attribute
+   * @param options carries optional attribute values
+   * @return a new instance of IndexFlatMapDataset
+   */
+  public IndexFlatMapDataset indexFlatMapDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> mapFuncOtherArgs, Iterable<Operand<?>> indexMapFuncOtherArgs,
+      Operand<TInt64> outputCardinality, ConcreteFunction mapFunc, ConcreteFunction indexMapFunc,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      IndexFlatMapDataset.Options... options) {
+    return IndexFlatMapDataset.create(scope, inputDataset, mapFuncOtherArgs, indexMapFuncOtherArgs, outputCardinality, mapFunc, indexMapFunc, outputTypes, outputShapes, options);
+  }
+
+  /**
    * The InitializeTableFromDataset operation
    *
    * @param tableHandle The tableHandle value
@@ -987,7 +1010,6 @@ public final class DataOps {
   /**
    * Computes rectified linear gradients for a LeakyRelu operation.
    *
-   * @param <T> data type for {@code backprops} output
    * @param gradients The backpropagated gradients to the corresponding LeakyRelu operation.
    * @param features The features passed as input to the corresponding LeakyRelu operation,
    *  OR the outputs of that operation (both work equivalently).

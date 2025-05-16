@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Returns shape of tensors.
  * This operation returns N 1-D integer tensors representing shape of {@code input[i]s}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = ShapeN.OP_NAME,

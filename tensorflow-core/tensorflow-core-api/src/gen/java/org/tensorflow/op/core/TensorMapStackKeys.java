@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * Returns a Tensor stack of all keys in a tensor map.
  * input_handle: the input map
  * keys: the returned Tensor of all keys in the map
- *
- * @param <T> data type for {@code keys} output
  */
 @OpMetadata(
     opType = TensorMapStackKeys.OP_NAME,

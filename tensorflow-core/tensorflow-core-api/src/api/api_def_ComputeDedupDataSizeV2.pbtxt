@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "ComputeDedupDataSizeV2"
+  endpoint {
+    name: "tpu.ComputeDedupDataSize"
+  }
+}

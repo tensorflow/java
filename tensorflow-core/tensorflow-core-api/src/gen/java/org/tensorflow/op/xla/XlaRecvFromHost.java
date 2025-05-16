@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * Toutput: element type for output.
  * shape: shape for output.
  * key: A unique identifier for this region used to match up host transfers.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = XlaRecvFromHost.OP_NAME,

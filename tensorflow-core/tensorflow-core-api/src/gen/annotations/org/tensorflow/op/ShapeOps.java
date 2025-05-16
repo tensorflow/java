@@ -388,7 +388,8 @@ public final class ShapeOps {
    *  shape.
    *
    * @param shape the TensorFlow shape
-   * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
+   * @param n the number of leading dimensions to get, must be less than or equal to the shape's
+   *      numDimensions()
    * @return a 1-dimensional operand with the dimensions matching the first n dimensions of the
    *      shape
    */
@@ -401,7 +402,8 @@ public final class ShapeOps {
    *  shape.
    *
    * @param shape the TensorFlow shape
-   * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
+   * @param n the number of leading dimensions to get, must be less than or equal to the shape's
+   *      numDimensions()
    * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional operand with the dimensions matching * the first n dimensions of the
@@ -416,7 +418,8 @@ public final class ShapeOps {
    *  shape.
    *
    * @param shape the TensorFlow shape
-   * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
+   * @param n the number of leading dimensions to get, must be less than or equal to the shape's
+   *      numDimensions()
    * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of the
    *      shape
    */
@@ -429,7 +432,8 @@ public final class ShapeOps {
    *  shape.
    *
    * @param shape the TensorFlow shape
-   * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
+   * @param n the number of leading dimensions to get, must be less than or equal to the shape's
+   *      numDimensions()
    * @param type the shape datatype.
    * @param <U> the shape datatype.
    * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of the

@@ -111,8 +111,6 @@ import org.tensorflow.types.family.TType;
  *     [0.0, 0.0, 0.0]  // one_hot(-1)
  *   ]
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = OneHot.OP_NAME,

@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The FresnelSin operation
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = FresnelSin.OP_NAME,

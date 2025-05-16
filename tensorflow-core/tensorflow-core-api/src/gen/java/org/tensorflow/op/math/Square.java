@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Computes square of x element-wise.
  * I.e., \(y = x * x = x^2\).
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Square.OP_NAME,

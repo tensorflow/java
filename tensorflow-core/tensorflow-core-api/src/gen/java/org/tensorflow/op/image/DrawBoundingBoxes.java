@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TNumber;
  * box is {@code [0.1, 0.2, 0.5, 0.9]}, the upper-left and bottom-right coordinates of
  * the bounding box will be {@code (40, 10)} to {@code (100, 50)} (in (x,y) coordinates).
  * <p>Parts of the bounding box may fall outside the image.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DrawBoundingBoxes.OP_NAME,

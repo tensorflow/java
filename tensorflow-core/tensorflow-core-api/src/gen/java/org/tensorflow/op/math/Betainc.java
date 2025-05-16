@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>\(B(x; a, b) = \int_0^x t^{a-1} (1 - t)^{b-1} dt\)
  * <p>is the incomplete beta function and \(B(a, b)\) is the <em>complete</em>
  * beta function.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Betainc.OP_NAME,

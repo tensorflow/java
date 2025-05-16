@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * The shape of the elements of the given list, as a tensor.
  * input_handle: the list
  * element_shape: the shape of elements of the list
- *
- * @param <T> data type for {@code element_shape} output
  */
 @OpMetadata(
     opType = TensorListElementShape.OP_NAME,

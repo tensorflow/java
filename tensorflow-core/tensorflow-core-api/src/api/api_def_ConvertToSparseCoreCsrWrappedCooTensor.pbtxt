@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "ConvertToSparseCoreCsrWrappedCooTensor"
+  visibility: VISIBLE
+  endpoint {
+    name: "sparse.ConvertToSparseCoreCsrWrappedCooTensor"
+  }
+}

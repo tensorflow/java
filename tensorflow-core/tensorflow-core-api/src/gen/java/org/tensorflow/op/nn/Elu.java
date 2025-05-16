@@ -55,8 +55,6 @@ import org.tensorflow.types.family.TNumber;
  * </blockquote>
  * <p>See  <a href="http://arxiv.org/abs/1511.07289">Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
  * </a>
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = Elu.OP_NAME,

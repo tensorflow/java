@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TNumber;
  * floating point type is used instead.
  * <p>By setting the {@code reverse} kwarg to {@code True}, the cumulative log-sum-exp is performed in the
  * opposite direction.
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = CumulativeLogsumexp.OP_NAME,

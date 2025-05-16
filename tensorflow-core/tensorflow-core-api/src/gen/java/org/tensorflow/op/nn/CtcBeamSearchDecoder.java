@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * the first of these is emitted.  That is, when the top path is &quot;A B B B B&quot;,
  * &quot;A B&quot; is returned if merge_repeated = True but &quot;A B B B B&quot; is
  * returned if merge_repeated = False.
- *
- * @param <T> data type for {@code log_probability} output
  */
 @OpMetadata(
     opType = CtcBeamSearchDecoder.OP_NAME,

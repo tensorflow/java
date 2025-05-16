@@ -163,6 +163,12 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
         if (opts.lowPriorityMaxEnqueuedBatches != null) {
           opBuilder.setAttr("low_priority_max_enqueued_batches", opts.lowPriorityMaxEnqueuedBatches);
         }
+        if (opts.mixedPriorityPolicy != null) {
+          opBuilder.setAttr("mixed_priority_policy", opts.mixedPriorityPolicy);
+        }
+        if (opts.batchPaddingPolicy != null) {
+          opBuilder.setAttr("batch_padding_policy", opts.batchPaddingPolicy);
+        }
         if (opts.enableLargeBatchSplitting != null) {
           opBuilder.setAttr("enable_large_batch_splitting", opts.enableLargeBatchSplitting);
         }
@@ -292,6 +298,26 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
   }
 
   /**
+   * Sets the mixedPriorityPolicy option.
+   *
+   * @param mixedPriorityPolicy the mixedPriorityPolicy option
+   * @return this Options instance.
+   */
+  public static Options mixedPriorityPolicy(String mixedPriorityPolicy) {
+    return new Options().mixedPriorityPolicy(mixedPriorityPolicy);
+  }
+
+  /**
+   * Sets the batchPaddingPolicy option.
+   *
+   * @param batchPaddingPolicy the batchPaddingPolicy option
+   * @return this Options instance.
+   */
+  public static Options batchPaddingPolicy(String batchPaddingPolicy) {
+    return new Options().batchPaddingPolicy(batchPaddingPolicy);
+  }
+
+  /**
    * Sets the enableLargeBatchSplitting option.
    *
    * @param enableLargeBatchSplitting input with a large size (i.e., larger than the largest value of
@@ -338,6 +364,10 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     private List<Long> lowPriorityAllowedBatchSizes;
 
     private Long lowPriorityMaxEnqueuedBatches;
+
+    private String mixedPriorityPolicy;
+
+    private String batchPaddingPolicy;
 
     private Boolean enableLargeBatchSplitting;
 
@@ -476,6 +506,28 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     }
 
     /**
+     * Sets the mixedPriorityPolicy option.
+     *
+     * @param mixedPriorityPolicy the mixedPriorityPolicy option
+     * @return this Options instance.
+     */
+    public Options mixedPriorityPolicy(String mixedPriorityPolicy) {
+      this.mixedPriorityPolicy = mixedPriorityPolicy;
+      return this;
+    }
+
+    /**
+     * Sets the batchPaddingPolicy option.
+     *
+     * @param batchPaddingPolicy the batchPaddingPolicy option
+     * @return this Options instance.
+     */
+    public Options batchPaddingPolicy(String batchPaddingPolicy) {
+      this.batchPaddingPolicy = batchPaddingPolicy;
+      return this;
+    }
+
+    /**
      * Sets the enableLargeBatchSplitting option.
      *
      * @param enableLargeBatchSplitting input with a large size (i.e., larger than the largest value of
@@ -572,6 +624,16 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     public final long lowPriorityMaxEnqueuedBatches;
 
     /**
+     * The mixedPriorityPolicy attribute
+     */
+    public final String mixedPriorityPolicy;
+
+    /**
+     * The batchPaddingPolicy attribute
+     */
+    public final String batchPaddingPolicy;
+
+    /**
      * the types of tensors to be batched.
      */
     public final DataType[] Tin;
@@ -593,7 +655,7 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
     public final boolean enableLargeBatchSplitting;
 
     public Inputs(GraphOperation op) {
-      super(new BatchFunction(op), op, Arrays.asList("num_batch_threads", "max_batch_size", "batch_timeout_micros", "max_enqueued_batches", "allowed_batch_sizes", "container", "shared_name", "batching_queue", "low_priority_max_batch_size", "low_priority_batch_timeout_micros", "low_priority_allowed_batch_sizes", "low_priority_max_enqueued_batches", "Tin", "Tcaptured", "Tout", "enable_large_batch_splitting"));
+      super(new BatchFunction(op), op, Arrays.asList("num_batch_threads", "max_batch_size", "batch_timeout_micros", "max_enqueued_batches", "allowed_batch_sizes", "container", "shared_name", "batching_queue", "low_priority_max_batch_size", "low_priority_batch_timeout_micros", "low_priority_allowed_batch_sizes", "low_priority_max_enqueued_batches", "mixed_priority_policy", "batch_padding_policy", "Tin", "Tcaptured", "Tout", "enable_large_batch_splitting"));
       int inputIndex = 0;
       int inTensorsLength = op.inputListLength("in_tensors");
       inTensors = Arrays.asList((Operand<?>[]) op.inputList(inputIndex, inTensorsLength));
@@ -613,6 +675,8 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
       lowPriorityBatchTimeoutMicros = op.attributes().getAttrInt("low_priority_batch_timeout_micros");
       lowPriorityAllowedBatchSizes = op.attributes().getAttrIntList("low_priority_allowed_batch_sizes");
       lowPriorityMaxEnqueuedBatches = op.attributes().getAttrInt("low_priority_max_enqueued_batches");
+      mixedPriorityPolicy = op.attributes().getAttrString("mixed_priority_policy");
+      batchPaddingPolicy = op.attributes().getAttrString("batch_padding_policy");
       Tin = op.attributes().getAttrTypeList("Tin");
       Tcaptured = op.attributes().getAttrTypeList("Tcaptured");
       Tout = op.attributes().getAttrTypeList("Tout");

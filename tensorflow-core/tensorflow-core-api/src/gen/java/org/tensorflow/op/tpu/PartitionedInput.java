@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op that groups a list of partitioned inputs together. Supports ND sharding.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = PartitionedInput.OP_NAME,

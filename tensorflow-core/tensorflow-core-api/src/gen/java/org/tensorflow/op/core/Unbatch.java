@@ -53,8 +53,6 @@ import org.tensorflow.types.family.TType;
  * shared_name: Instances of Unbatch with the same container and shared_name are
  * assumed to possibly belong to the same batch. If left empty, the op name will
  * be used as the shared name.
- *
- * @param <T> data type for {@code unbatched_tensor} output
  */
 @OpMetadata(
     opType = Unbatch.OP_NAME,

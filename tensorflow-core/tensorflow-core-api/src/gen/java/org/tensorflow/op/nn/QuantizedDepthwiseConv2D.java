@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes quantized depthwise Conv2D.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedDepthwiseConv2D.OP_NAME,

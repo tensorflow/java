@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Pop the element at the top of the stack.
- *
- * @param <T> data type for {@code elem} output
  */
 @OpMetadata(
     opType = StackPop.OP_NAME,

@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * If {@code x} and {@code y} are reals, this will return the floating-point division.
  * <p><em>NOTE</em>: {@code Div} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = RealDiv.OP_NAME,

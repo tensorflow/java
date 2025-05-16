@@ -77,6 +77,7 @@ import org.tensorflow.op.core.BroadcastGradientArgs;
 import org.tensorflow.op.core.BroadcastTo;
 import org.tensorflow.op.core.Bucketize;
 import org.tensorflow.op.core.Case;
+import org.tensorflow.op.core.CheckPinned;
 import org.tensorflow.op.core.ClipByValue;
 import org.tensorflow.op.core.CompositeTensorVariantFromComponents;
 import org.tensorflow.op.core.CompositeTensorVariantToComponents;
@@ -407,9 +408,9 @@ public final class Ops {
 
   public final CollectiveOps collective;
 
-  public final AudioOps audio;
-
   public final DistributeOps distribute;
+
+  public final AudioOps audio;
 
   public final SignalOps signal;
 
@@ -419,9 +420,9 @@ public final class Ops {
 
   public final SummaryOps summary;
 
-  public final ImageOps image;
-
   public final RaggedOps ragged;
+
+  public final ImageOps image;
 
   public final ShapeOps shape;
 
@@ -450,14 +451,14 @@ public final class Ops {
     bitwise = new BitwiseOps(this);
     debugging = new DebuggingOps(this);
     collective = new CollectiveOps(this);
-    audio = new AudioOps(this);
     distribute = new DistributeOps(this);
+    audio = new AudioOps(this);
     signal = new SignalOps(this);
     train = new TrainOps(this);
     quantization = new QuantizationOps(this);
     summary = new SummaryOps(this);
-    image = new ImageOps(this);
     ragged = new RaggedOps(this);
+    image = new ImageOps(this);
     shape = new ShapeOps(this);
     io = new IoOps(this);
     dtypes = new DtypesOps(this);
@@ -618,7 +619,6 @@ public final class Ops {
    *  See https://arxiv.org/abs/2206.14286 for the algorithm details.
    *  This op is only optimized on TPU currently.
    *
-   * @param <T> data type for {@code values} output
    * @param input Array to search. Must be at least 1-D of the floating type
    * @param k Specifies the number of min/max-k.
    * @param options carries optional attribute values
@@ -732,7 +732,6 @@ public final class Ops {
    *  This operation outputs &quot;ref&quot; after the assignment is done.
    *  This makes it easier to chain operations that need to use the reset value.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node. May be uninitialized.
    * @param value The value to be assigned to the variable.
    * @param options carries optional attribute values
@@ -749,7 +748,6 @@ public final class Ops {
    *  This operation outputs &quot;ref&quot; after the update is done.
    *  This makes it easier to chain operations that need to use the reset value.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param value The value to be added to the variable.
    * @param options carries optional attribute values
@@ -780,7 +778,6 @@ public final class Ops {
    *  This operation outputs &quot;ref&quot; after the update is done.
    *  This makes it easier to chain operations that need to use the reset value.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param value The value to be subtracted to the variable.
    * @param options carries optional attribute values
@@ -1027,7 +1024,6 @@ public final class Ops {
    *  dimension are moved in spatial blocks to the {@code height} and {@code width} dimensions,
    *  followed by cropping along the {@code height} and {@code width} dimensions.
    *
-   * @param <T> data type for {@code output} output
    * @param input 4-D tensor with shape
    *  {@code [batch*block_size*block_size, height_pad/block_size, width_pad/block_size, depth]}. Note that the batch size of the input tensor must be divisible by
    *  {@code block_size * block_size}.
@@ -1055,7 +1051,6 @@ public final class Ops {
    *  optionally cropped according to {@code crops} to produce the output.  This is the
    *  reverse of SpaceToBatch.  See below for a precise description.
    *
-   * @param <T> data type for {@code output} output
    * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
    *  where spatial_shape has M dimensions.
    * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
@@ -1221,7 +1216,6 @@ public final class Ops {
    *  buffer is made on BE machines when types are of different sizes in order to get
    *  the same casting results as on LE machines.
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param type The value of the type attribute
    * @param <U> data type for {@code Bitcast} output and operands
@@ -1292,7 +1286,6 @@ public final class Ops {
    *  Given {@code s0} and {@code s1}, tensors that represent shapes, compute {@code r0}, the
    *  broadcasted shape. {@code s0}, {@code s1} and {@code r0} are all integer vectors.
    *
-   * @param <T> data type for {@code r0} output
    * @param s0 The s0 value
    * @param s1 The s1 value
    * @param <T> data type for {@code BroadcastArgs} output and operands
@@ -1307,7 +1300,6 @@ public final class Ops {
    * Return the reduction indices for computing gradients of s0 op s1 with broadcast.
    *  This is typically used by gradient computations for a broadcasting operation.
    *
-   * @param <T> data type for {@code r0} output
    * @param s0 The s0 value
    * @param s1 The s1 value
    * @param <T> data type for {@code BroadcastGradientArgs} output and operands
@@ -1357,7 +1349,6 @@ public final class Ops {
    *  shape. (In a graph context, {@code broadcast_to} might be fused to
    *  subsequent operation and then be optimized away, however.)
    *
-   * @param <T> data type for {@code output} output
    * @param input A Tensor to broadcast.
    * @param shape An 1-D {@code int} Tensor. The shape of the desired output.
    * @param <T> data type for {@code BroadcastTo} output and operands
@@ -1452,13 +1443,28 @@ public final class Ops {
   }
 
   /**
+   * Checks whether a tensor is located in host memory pinned for GPU.
+   *  When run:
+   *  <ul>
+   *  <li>Reports an {@code InvalidArgument} error if {@code tensor} is not in pinned memory.</li>
+   *  <li>Reports a {@code FailedPrecondition} error if not built with CUDA.</li>
+   *  </ul>
+   *
+   * @param tensor The tensor value
+   * @param <T> data type for {@code CheckPinned} output and operands
+   * @return a new instance of CheckPinned
+   */
+  public <T extends TType> CheckPinned<T> checkPinned(Operand<T> tensor) {
+    return CheckPinned.create(scope, tensor);
+  }
+
+  /**
    * Clips tensor values to a specified min and max.
    *  Given a tensor {@code t}, this operation returns a tensor of the same type and
    *  shape as {@code t} with its values clipped to {@code clip_value_min} and {@code clip_value_max}.
    *  Any values less than {@code clip_value_min} are set to {@code clip_value_min}. Any values
    *  greater than {@code clip_value_max} are set to {@code clip_value_max}.
    *
-   * @param <T> data type for {@code output} output
    * @param t A {@code Tensor}.
    * @param clipValueMin A 0-D (scalar) {@code Tensor}, or a {@code Tensor} with the same shape
    *  as {@code t}. The minimum value to clip by.
@@ -1508,7 +1514,6 @@ public final class Ops {
   /**
    * Concatenates tensors along one dimension.
    *
-   * @param <T> data type for {@code output} output
    * @param values List of {@code N} Tensors to concatenate. Their ranks and types must match,
    *  and their sizes must match in all dimensions except {@code concat_dim}.
    * @param axis 0-D.  The dimension along which to concatenate.  Must be in the
@@ -1531,14 +1536,13 @@ public final class Ops {
    *  y = [2, 3, 7]
    *  z = [2, 9, 7]
    *  offsets = concat_offset(1, [x, y, z])
-   *  [list(off.numpy()) for off in offsets]
+   *  [[a.item() for a in list(off.numpy())] for off in offsets]
    *  [[0, 0, 0], [0, 2, 0], [0, 5, 0]]
    *  </blockquote>
    *  </blockquote>
    *  </blockquote>
    *  <p>This is typically used by gradient computations for a concat operation.
    *
-   * @param <T> data type for {@code offset} output
    * @param concatDim The dimension along which to concatenate.
    * @param shape The {@code N} int32 or int64 vectors representing shape of tensors being concatenated.
    * @param <T> data type for {@code ConcatOffset} output and operands
@@ -2262,11 +2266,7 @@ public final class Ops {
 
   /**
    * Create a constant by making an immutable copy of {@code tensor}. {@code tensor} may be closed
-   *  afterwards without issue.
-   *
-   *  <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
-   *  other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope,
-   *  FloatNdArray)}}.
+   *  afterward without issue.
    *
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
@@ -2318,7 +2318,6 @@ public final class Ops {
   /**
    * The CopyToMesh operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param mesh The value of the mesh attribute
    * @param <T> data type for {@code CopyToMesh} output and operands
@@ -2331,7 +2330,6 @@ public final class Ops {
   /**
    * The CopyToMeshGrad operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param forwardInput The forwardInput value
    * @param <T> data type for {@code CopyToMeshGrad} output and operands
@@ -2345,7 +2343,6 @@ public final class Ops {
   /**
    * Increments 'ref' until it reaches 'limit'.
    *
-   * @param <T> data type for {@code output} output
    * @param ref Should be from a scalar {@code Variable} node.
    * @param limit If incrementing ref would bring it above limit, instead generates an
    *  'OutOfRange' error.
@@ -2440,7 +2437,6 @@ public final class Ops {
   /**
    * Makes a copy of {@code x}.
    *
-   * @param <T> data type for {@code y} output
    * @param x The source tensor of type {@code T}.
    * @param <T> data type for {@code DeepCopy} output and operands
    * @return a new instance of DeepCopy
@@ -2482,7 +2478,6 @@ public final class Ops {
    *  using control dependencies.
    *  <p>Outputs the final value of the tensor pointed to by 'ref'.
    *
-   * @param <T> data type for {@code value} output
    * @param ref A reference to the temporary variable tensor.
    * @param varName Name of the temporary variable, usually the name of the matching
    *  'TemporaryVariable' op.
@@ -2560,7 +2555,6 @@ public final class Ops {
    *  </li>
    *  </ul>
    *
-   * @param <T> data type for {@code outputs} output
    * @param data The data value
    * @param partitions Any shape.  Indices in the range {@code [0, num_partitions)}.
    * @param numPartitions The number of partitions to output.
@@ -2628,7 +2622,6 @@ public final class Ops {
    *  <img style="width:100%" src="https://www.tensorflow.org/images/DynamicStitch.png" alt>
    *  </div>
    *
-   * @param <T> data type for {@code merged} output
    * @param indices The indices value
    * @param data The data value
    * @param <T> data type for {@code DynamicStitch} output and operands
@@ -2672,7 +2665,6 @@ public final class Ops {
    * Creates a tensor with the given shape.
    *  <p>This operation creates a tensor of {@code shape} and {@code dtype}.
    *
-   * @param <T> data type for {@code output} output
    * @param shape 1-D. Represents the shape of the output tensor.
    * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
@@ -2778,7 +2770,6 @@ public final class Ops {
    *  Raises an error if the input tensor's shape does not match the specified shape.
    *  Returns the input tensor otherwise.
    *
-   * @param <T> data type for {@code output} output
    * @param input A tensor, whose shape is to be validated.
    * @param shape The expected (possibly partially specified) shape of the input tensor.
    * @param <T> data type for {@code EnsureShape} output and operands
@@ -2796,7 +2787,6 @@ public final class Ops {
    *  it may be changed in the child frame. At most {@code parallel_iterations} iterations
    *  are run in parallel in the child frame.
    *
-   * @param <T> data type for {@code output} output
    * @param data The tensor to be made available to the child frame.
    * @param frameName The name of the child frame.
    * @param options carries optional attribute values
@@ -2812,7 +2802,6 @@ public final class Ops {
    * Exits the current frame to its parent frame.
    *  Exit makes its input {@code data} available to the parent frame.
    *
-   * @param <T> data type for {@code output} output
    * @param data The tensor to be made available to the parent frame.
    * @param <T> data type for {@code Exit} output and operands
    * @return a new instance of Exit
@@ -2847,7 +2836,6 @@ public final class Ops {
    *  <p>This operation is related to {@code squeeze()}, which removes dimensions of
    *  size 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param axis 0-D (scalar). Specifies the dimension index at which to
    *  expand the shape of {@code input}. Must be in the range
@@ -2863,7 +2851,6 @@ public final class Ops {
   /**
    * Extract {@code patches} from {@code input} and put them in the {@code "depth"} output dimension. 3D extension of {@code extract_image_patches}.
    *
-   * @param <T> data type for {@code patches} output
    * @param input 5-D Tensor with shape {@code [batch, in_planes, in_rows, in_cols, depth]}.
    * @param ksizes The size of the sliding window for each dimension of {@code input}.
    * @param strides 1-D of length 5. How far the centers of two consecutive patches are in
@@ -2888,7 +2875,6 @@ public final class Ops {
    *  function input) or guaranteed not to be used (e.g. if mirroring an
    *  intermediate output needed for the gradient computation of the other branch).
    *
-   * @param <T> data type for {@code output} output
    * @param dtype The type of the output.
    * @param shape <pre>
    *  The purported shape of the output. This is only used for shape inference;
@@ -2934,7 +2920,6 @@ public final class Ops {
    *  based on other runtime Tensors, unlike {@code tf.constant}.</li>
    *  </ul>
    *
-   * @param <U> data type for {@code output} output
    * @param dims 1-D. Represents the shape of the output tensor.
    * @param value 0-D (scalar). Value to fill the returned tensor.
    *  <p>{@literal @}compatibility(numpy)<br>
@@ -3028,9 +3013,11 @@ public final class Ops {
    *  <p>Note that on CPU, if an out of bound index is found, an error is returned.
    *  On GPU, if an out of bound index is found, a 0 is stored in the
    *  corresponding output value.
+   *  <p>Note that on TPU, if any dimension of {@code params} is of size 0 then the output will
+   *  be the expected shape filled with zeros. On CPU and GPU an error will be
+   *  returned.
    *  <p>See also {@code tf.batch_gather} and {@code tf.gather_nd}.
    *
-   * @param <T> data type for {@code output} output
    * @param params The tensor from which to gather values. Must be at least rank
    *  {@code axis + 1}.
    * @param indices Index tensor. Must be in range {@code [0, params.shape[axis])}.
@@ -3068,9 +3055,17 @@ public final class Ops {
    *  <pre>
    *  indices.shape[:-1] + params.shape[indices.shape[-1]:]
    *  </pre>
-   *  <p>Note that on CPU, if an out of bound index is found, an error is returned.
-   *  On GPU, if an out of bound index is found, a 0 is stored in the
-   *  corresponding output value.
+   *  <p>If {@code indices} contains any out-of-bound indices, depending on
+   *  {@code bad_indices_policy}, the op will either return an error or ignore the
+   *  out-of-bound indices. {@code bad_indices_policy} can be one of the following values:
+   *  <ol>
+   *  <li>&quot;&quot; or &quot;DEFAULT&quot;: raises on CPU and ignore on GPU. This is because
+   *  historically on CPU and GPU we handle errors in different ways, and for
+   *  backward compatibility we keep the default behavior.</li>
+   *  <li>&quot;ERROR&quot;: raises error; GPU does not support this value.</li>
+   *  <li>&quot;IGNORE&quot;: ignore error and set the corresponding output to 0;
+   *  supported on both CPU and GPU.</li>
+   *  </ol>
    *  <p>Some examples below.
    *  <p>Simple indexing into a matrix:
    *  <pre>
@@ -3137,15 +3132,15 @@ public final class Ops {
    *  </pre>
    *  <p>See also {@code tf.gather} and {@code tf.batch_gather}.
    *
-   * @param <T> data type for {@code output} output
    * @param params The tensor from which to gather values.
    * @param indices Index tensor.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code GatherNd} output and operands
    * @return a new instance of GatherNd
    */
   public <T extends TType> GatherNd<T> gatherNd(Operand<T> params,
-      Operand<? extends TNumber> indices) {
-    return GatherNd.create(scope, params, indices);
+      Operand<? extends TNumber> indices, GatherNd.Options... options) {
+    return GatherNd.create(scope, params, indices, options);
   }
 
   /**
@@ -3185,7 +3180,6 @@ public final class Ops {
   /**
    * Get the value of the tensor specified by its handle.
    *
-   * @param <T> data type for {@code value} output
    * @param handle The handle for a tensor stored in the session state.
    * @param dtype The type of the output value.
    * @param <T> data type for {@code GetSessionTensor} output and operands
@@ -3250,7 +3244,6 @@ public final class Ops {
    *  as input.
    *  <p>Returns the input tensor without modification.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code GuaranteeConst} output and operands
    * @return a new instance of GuaranteeConst
@@ -3294,7 +3287,6 @@ public final class Ops {
    *    sess.run(hist) =&gt; [2, 1, 1, 0, 2]
    *  </pre>
    *
-   * @param <U> data type for {@code out} output
    * @param values Numeric {@code Tensor}.
    * @param valueRange Shape [2] {@code Tensor} of same {@code dtype} as {@code values}.
    *  values &lt;= value_range[0] will be mapped to hist[0],
@@ -3325,7 +3317,6 @@ public final class Ops {
    *    sess.run(hist) =&gt; [2, 1, 1, 0, 2]
    *  </pre>
    *
-   * @param <U> data type for {@code out} output
    * @param values Numeric {@code Tensor}.
    * @param valueRange Shape [2] {@code Tensor} of same {@code dtype} as {@code values}.
    *  values &lt;= value_range[0] will be mapped to hist[0],
@@ -3344,7 +3335,6 @@ public final class Ops {
   /**
    * Returns a constant tensor on the host. Only for writing C++ tests.
    *
-   * @param <T> data type for {@code output} output
    * @param value Attr {@code value} is the tensor to return.
    * @param dtype The value of the dtype attribute
    * @param <T> data type for {@code HostConst} output and operands
@@ -3357,7 +3347,6 @@ public final class Ops {
   /**
    * Return a tensor with the same shape and contents as the input tensor or value.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code Identity} output and operands
    * @return a new instance of Identity
@@ -3425,7 +3414,6 @@ public final class Ops {
    * Returns immutable tensor from memory region.
    *  The current implementation memmaps the tensor from a file.
    *
-   * @param <T> data type for {@code tensor} output
    * @param dtype Type of the returned tensor.
    * @param shape Shape of the returned tensor.
    * @param memoryRegionName Name of readonly memory region used by the tensor, see
@@ -3485,7 +3473,6 @@ public final class Ops {
    *  Computes y = x; y[i, :] += v; return y.
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
    * @param x A {@code Tensor} of type T.
    * @param i A vector. Indices into the left-most dimension of {@code x}.
    * @param v A {@code Tensor} of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
@@ -3503,7 +3490,6 @@ public final class Ops {
    *  Computes y = x; y[i, :] -= v; return y.
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
    * @param x A {@code Tensor} of type T.
    * @param i A vector. Indices into the left-most dimension of {@code x}.
    * @param v A {@code Tensor} of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
@@ -3520,7 +3506,6 @@ public final class Ops {
    *  <p>Originally this function is mutative however for compilation we make this
    *  operation create / operate on a copy of {@code x}.
    *
-   * @param <T> data type for {@code y} output
    * @param x A tensor of type {@code T}.
    * @param i A vector. Indices into the left-most dimension of {@code x}.
    * @param v A {@code Tensor} of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
@@ -3578,7 +3563,6 @@ public final class Ops {
    *  tf.linspace(10.0, 12.0, 3, name=&quot;linspace&quot;) =&gt; [ 10.0  11.0  12.0]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param start 0-D tensor. First entry in the range.
    * @param stop 0-D tensor. Last entry in the range.
    * @param num 0-D tensor. Number of values to generate.
@@ -3593,8 +3577,6 @@ public final class Ops {
   /**
    * Outputs all keys and values in the table.
    *
-   * @param <T> data type for {@code keys} output
-   * @param <U> data type for {@code values} output
    * @param tableHandle Handle to the table.
    * @param Tkeys The value of the Tkeys attribute
    * @param Tvalues The value of the Tvalues attribute
@@ -3614,7 +3596,6 @@ public final class Ops {
    *  <p>The scalar {@code default_value} is the value output for keys not present in the
    *  table. It must also be of the same type as the table values.
    *
-   * @param <U> data type for {@code values} output
    * @param tableHandle Handle to the table.
    * @param keys Any shape.  Keys to look up.
    * @param defaultValue The defaultValue value
@@ -3708,7 +3689,6 @@ public final class Ops {
    *  <p>result == [[1, 2, 2],
    *  [0, 1, 5]]
    *
-   * @param <U> data type for {@code output} output
    * @param sortedInputs 2-D Tensor where each row is ordered.
    * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
    *  the values that will be searched for in {@code sorted_search_values}.
@@ -3736,7 +3716,6 @@ public final class Ops {
    *  <p>result == [[1, 2, 2],
    *  [0, 1, 5]]
    *
-   * @param <U> data type for {@code output} output
    * @param sortedInputs 2-D Tensor where each row is ordered.
    * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
    *  the values that will be searched for in {@code sorted_search_values}.
@@ -3901,7 +3880,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -3921,7 +3899,6 @@ public final class Ops {
    *  <p>{@code Merge} forwards the first tensor to become available to {@code output}, and sets
    *  {@code value_index} to its index in {@code inputs}.
    *
-   * @param <T> data type for {@code output} output
    * @param inputs The input tensors, exactly one of which will become available.
    * @param <T> data type for {@code Merge} output and operands
    * @return a new instance of Merge
@@ -3937,7 +3914,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -3974,7 +3950,6 @@ public final class Ops {
    *                        [5, 4, 4, 5, 6, 6, 5]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input tensor to be padded.
    * @param paddings A two-column matrix specifying the padding sizes. The number of
    *  rows must be the same as the rank of {@code input}.
@@ -4008,7 +3983,6 @@ public final class Ops {
    *                        [11, 28]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input tensor to be folded.
    * @param paddings A two-column matrix specifying the padding sizes. The number of
    *  rows must be the same as the rank of {@code input}.
@@ -4187,7 +4161,6 @@ public final class Ops {
    *  num_devices: The number of devices participating in this reduction.
    *  shared_name: Identifier that shared between ops of the same reduction.
    *
-   * @param <T> data type for {@code data} output
    * @deprecated use {@link org.tensorflow.op.distribute.NcclAllReduce} instead
    * @param input The input value
    * @param reduction The value of the reduction attribute
@@ -4211,7 +4184,6 @@ public final class Ops {
    *  output: The same as input.
    *  shape: The shape of the input tensor.
    *
-   * @param <T> data type for {@code output} output
    * @deprecated use {@link org.tensorflow.op.distribute.NcclBroadcast} instead
    * @param input The input value
    * @param shape The value of the shape attribute
@@ -4232,7 +4204,6 @@ public final class Ops {
    *  data: the value of the reduction across all {@code num_devices} devices.
    *  reduction: the reduction operation to perform.
    *
-   * @param <T> data type for {@code data} output
    * @deprecated use {@link org.tensorflow.op.distribute.NcclReduce} instead
    * @param input The input value
    * @param reduction The value of the reduction attribute
@@ -4248,7 +4219,6 @@ public final class Ops {
   /**
    * Makes its input available to the next iteration.
    *
-   * @param <T> data type for {@code output} output
    * @param data The tensor to be made available to the next iteration.
    * @param <T> data type for {@code NextIteration} output and operands
    * @return a new instance of NextIteration
@@ -4343,7 +4313,6 @@ public final class Ops {
    *    ]
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param indices A tensor of indices.
    * @param depth A scalar defining the depth of the one hot dimension.
    * @param onValue A scalar defining the value to fill in output when {@code indices[j] = i}.
@@ -4372,7 +4341,6 @@ public final class Ops {
   /**
    * Returns a tensor of ones with the same shape and type as x.
    *
-   * @param <T> data type for {@code y} output
    * @param x a tensor of type T.
    * @param <T> data type for {@code OnesLike} output and operands
    * @return a new instance of OnesLike
@@ -4506,7 +4474,6 @@ public final class Ops {
    *                        [0, 0, 0, 0, 0, 0]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param paddings The paddings value
    * @param constantValues The constantValues value
@@ -4534,7 +4501,6 @@ public final class Ops {
    *  will copy pieces of the input into the output as they become available, in
    *  some situations this can provide a performance benefit.
    *
-   * @param <T> data type for {@code output} output
    * @param values Tensors to be concatenated. All must have size 1 in the first dimension
    *  and same shape.
    * @param shape the final shape of the result; should be equal to the shapes of any input
@@ -4602,7 +4568,6 @@ public final class Ops {
    *  <img style="width:100%" src="https://www.tensorflow.org/images/DynamicStitch.png" alt>
    *  </div>
    *
-   * @param <T> data type for {@code merged} output
    * @param indices The indices value
    * @param data The data value
    * @param <T> data type for {@code ParallelDynamicStitch} output and operands
@@ -4641,7 +4606,6 @@ public final class Ops {
    *  intended as a way to represent a value that will always be fed, and to
    *  provide attrs that enable the fed value to be checked at runtime.
    *
-   * @param <T> data type for {@code output} output
    * @param dtype The type of elements in the tensor.
    * @param options carries optional attribute values
    * @param <T> data type for {@code Placeholder} output and operands
@@ -4655,7 +4619,6 @@ public final class Ops {
   /**
    * A placeholder op that passes through {@code input} when its output is not fed.
    *
-   * @param <T> data type for {@code output} output
    * @param input The default value to produce when {@code output} is not fed.
    * @param shape The (possibly partial) shape of the tensor.
    * @param <T> data type for {@code PlaceholderWithDefault} output and operands
@@ -4685,7 +4648,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -4701,7 +4663,6 @@ public final class Ops {
   /**
    * Reshapes a quantized tensor as per the Reshape op.
    *
-   * @param <T> data type for {@code output} output
    * @param tensor The tensor value
    * @param shape Defines the shape of the output tensor.
    * @param inputMin The minimum value of the input.
@@ -4721,7 +4682,6 @@ public final class Ops {
    *  first dimension must match.
    *  <p>The outputs are deterministic.
    *
-   * @param <T> data type for {@code output} output
    * @param index A scalar tensor or a vector of dtype {@code dtype}. The index (or indices) to be shuffled. Must be within [0, max_index].
    * @param seed A tensor of dtype {@code Tseed} and shape [3] or [n, 3]. The random seed.
    * @param maxIndex A scalar tensor or vector of dtype {@code dtype}. The upper bound(s) of the interval (inclusive).
@@ -4746,7 +4706,6 @@ public final class Ops {
    *  tf.range(start, limit, delta) ==&gt; [3, 6, 9, 12, 15]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param start 0-D (scalar). First entry in the sequence.
    * @param limit 0-D (scalar). Upper limit of sequence, exclusive.
    * @param delta 0-D (scalar). Optional. Default is 1. Number that increments {@code start}.
@@ -4785,7 +4744,6 @@ public final class Ops {
    *  influenced by any of the writes which depend directly or indirectly on this
    *  operation.
    *
-   * @param <T> data type for {@code value} output
    * @param resource handle to the resource in which to store the variable.
    * @param dtype the dtype of the value.
    * @param <T> data type for {@code ReadVariableOp} output and operands
@@ -4799,7 +4757,6 @@ public final class Ops {
   /**
    * Receives the named tensor from send_device on recv_device.
    *
-   * @param <T> data type for {@code tensor} output
    * @param tensorType The value of the tensorType attribute
    * @param tensorName The name of the tensor to receive.
    * @param sendDevice The name of the device sending the tensor.
@@ -4857,7 +4814,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -4877,7 +4833,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -4897,7 +4852,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -4917,7 +4871,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -4937,7 +4890,6 @@ public final class Ops {
    *  it may be changed in the child frame. At most {@code parallel_iterations} iterations
    *  are run in parallel in the child frame.
    *
-   * @param <T> data type for {@code output} output
    * @param data The tensor to be made available to the child frame.
    * @param frameName The name of the child frame.
    * @param options carries optional attribute values
@@ -4953,7 +4905,6 @@ public final class Ops {
    * Exits the current frame to its parent frame.
    *  Exit makes its input {@code data} available to the parent frame.
    *
-   * @param <T> data type for {@code output} output
    * @param data The tensor to be made available to the parent frame.
    * @param <T> data type for {@code RefExit} output and operands
    * @return a new instance of RefExit
@@ -4965,7 +4916,6 @@ public final class Ops {
   /**
    * Return the same ref tensor as the input ref tensor.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code RefIdentity} output and operands
    * @return a new instance of RefIdentity
@@ -4981,7 +4931,6 @@ public final class Ops {
    *  <p>{@code Merge} forwards the first tensor for become available to {@code output}, and sets
    *  {@code value_index} to its index in {@code inputs}.
    *
-   * @param <T> data type for {@code output} output
    * @param inputs The input tensors, exactly one of which will become available.
    * @param <T> data type for {@code RefMerge} output and operands
    * @return a new instance of RefMerge
@@ -4993,7 +4942,6 @@ public final class Ops {
   /**
    * Makes its input available to the next iteration.
    *
-   * @param <T> data type for {@code output} output
    * @param data The tensor to be made available to the next iteration.
    * @param <T> data type for {@code RefNextIteration} output and operands
    * @return a new instance of RefNextIteration
@@ -5005,7 +4953,6 @@ public final class Ops {
   /**
    * Forwards the {@code index}th element of {@code inputs} to {@code output}.
    *
-   * @param <T> data type for {@code output} output
    * @param index A scalar that determines the input that gets selected.
    * @param inputs A list of ref tensors, one of which will be forwarded to {@code output}.
    * @param <T> data type for {@code RefSelect} output and operands
@@ -5022,7 +4969,6 @@ public final class Ops {
    *  the data goes to {@code output_false}.
    *  <p>See also {@code Switch} and {@code Merge}.
    *
-   * @param <T> data type for {@code output_false} output
    * @param data The ref tensor to be forwarded to the appropriate output.
    * @param pred A scalar that specifies which output port will receive data.
    * @param <T> data type for {@code RefSwitch} output and operands
@@ -5035,7 +4981,6 @@ public final class Ops {
   /**
    * The Relayout operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param layout The value of the layout attribute
    * @param <T> data type for {@code Relayout} output and operands
@@ -5048,7 +4993,6 @@ public final class Ops {
   /**
    * The RelayoutLike operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param layoutInput The layoutInput value
    * @param <T> data type for {@code RelayoutLike} output and operands
@@ -5130,7 +5074,6 @@ public final class Ops {
    *  reshape(t, []) ==&gt; 7
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param tensor The tensor value
    * @param shape Defines the shape of the output tensor.
    * @param <T> data type for {@code Reshape} output and operands
@@ -5143,7 +5086,6 @@ public final class Ops {
   /**
    * Increments variable pointed to by 'resource' until it reaches 'limit'.
    *
-   * @param <T> data type for {@code output} output
    * @param resource Should be from a scalar {@code Variable} node.
    * @param limit If incrementing ref would bring it above limit, instead generates an
    *  'OutOfRange' error.
@@ -5171,7 +5113,6 @@ public final class Ops {
    *      output[i, ..., j, :, ... :] = params[indices[i, ..., j], :, ..., :]
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param resource The resource value
    * @param indices The indices value
    * @param dtype The value of the dtype attribute
@@ -5187,7 +5128,6 @@ public final class Ops {
   /**
    * The ResourceGatherNd operation
    *
-   * @param <U> data type for {@code output} output
    * @param resource The resource value
    * @param indices The indices value
    * @param dtype The value of the dtype attribute
@@ -5633,7 +5573,6 @@ public final class Ops {
    *                          [12, 13, 14, 15]]]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param tensor Up to 8-D.
    * @param axis 1-D. The indices of the dimensions to reverse. Must be in the range
    *  {@code [-rank(tensor), rank(tensor))}.
@@ -5695,7 +5634,6 @@ public final class Ops {
    *  output[2:, :, 3, :, ...] = input[2:, :, 3, :, ...]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input to reverse.
    * @param seqLengths 1-D with length {@code input.dims(batch_dim)} and
    *  {@code max(seq_lengths) <= input.dims(seq_dim)}
@@ -5730,7 +5668,6 @@ public final class Ops {
    *  roll(t, shift=[2, -3], axis=[1, 1]) ==&gt; [[1, 2, 3, 4, 0], [6, 7, 8, 9, 5]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param shift Dimension must be 0-D or 1-D. {@code shift[i]} specifies the number of places by which
    *  elements are shifted positively (towards larger indices) along the dimension
@@ -5770,7 +5707,6 @@ public final class Ops {
    *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
    *  </div>
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of updated values to add to {@code ref}.
@@ -5802,7 +5738,6 @@ public final class Ops {
    *  the same location, their contributions divide.
    *  <p>Requires {@code updates.shape = indices.shape + ref.shape[1:]} or {@code updates.shape = []}.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of values that {@code ref} is divided by.
@@ -5837,7 +5772,6 @@ public final class Ops {
    *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
    *  </div>
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of updated values to reduce into {@code ref}.
@@ -5872,7 +5806,6 @@ public final class Ops {
    *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
    *  </div>
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of updated values to reduce into {@code ref}.
@@ -5904,7 +5837,6 @@ public final class Ops {
    *  the same location, their contributions multiply.
    *  <p>Requires {@code updates.shape = indices.shape + ref.shape[1:]} or {@code updates.shape = []}.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of updated values to multiply to {@code ref}.
@@ -5990,20 +5922,28 @@ public final class Ops {
    *   [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
    *   [[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]]]
    *  </pre>
-   *  <p>Note that on CPU, if an out of bound index is found, an error is returned.
-   *  On GPU, if an out of bound index is found, the index is ignored.
+   *  <p>If {@code indices} contains any out-of-bound indices, depending on
+   *  {@code bad_indices_policy}, the op will either return an error or ignore the
+   *  out-of-bound indices. {@code bad_indices_policy} can be one of the following values:
+   *  <ol>
+   *  <li>&quot;&quot; or &quot;DEFAULT&quot;: raises on CPU and ignore on GPU. This is because
+   *  historically on CPU and GPU we handle errors in different ways, and for
+   *  backward compatibility we keep the default behavior.</li>
+   *  <li>&quot;ERROR&quot;: raises error; GPU does not support this value.</li>
+   *  <li>&quot;IGNORE&quot;: ignore the bad indices; supported on both CPU and GPU.</li>
+   *  </ol>
    *
-   * @param <U> data type for {@code output} output
    * @param indices Tensor of indices.
    * @param updates Values to scatter into the output tensor.
    * @param shape 1-D. The shape of the output tensor.
+   * @param options carries optional attribute values
    * @param <U> data type for {@code ScatterNd} output and operands
    * @param <T> data type for {@code ScatterNd} output and operands
    * @return a new instance of ScatterNd
    */
   public <U extends TType, T extends TNumber> ScatterNd<U> scatterNd(Operand<T> indices,
-      Operand<U> updates, Operand<T> shape) {
-    return ScatterNd.create(scope, indices, updates, shape);
+      Operand<U> updates, Operand<T> shape, ScatterNd.Options... options) {
+    return ScatterNd.create(scope, indices, updates, shape, options);
   }
 
   /**
@@ -6035,7 +5975,6 @@ public final class Ops {
    *  <p>See {@code tf.scatter_nd} for more details about how to make updates to
    *  slices.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref A mutable Tensor. Should be from a Variable node.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    *  A tensor of indices into ref.
@@ -6053,7 +5992,6 @@ public final class Ops {
   /**
    * Computes element-wise maximum.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref A mutable Tensor. Should be from a Variable node.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    *  A tensor of indices into ref.
@@ -6071,7 +6009,6 @@ public final class Ops {
   /**
    * Computes element-wise minimum.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref A mutable Tensor. Should be from a Variable node.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    *  A tensor of indices into ref.
@@ -6116,18 +6053,19 @@ public final class Ops {
    *  </pre>
    *  <p>See {@code tf.scatter_nd} for more details about how to make updates to slices.
    *
-   * @param <T> data type for {@code output} output
    * @param input A Tensor.
    * @param indices A Tensor. Must be one of the following types: {@code int32}, {@code int64}.
    *  A tensor of indices into {@code input}.
    * @param updates A Tensor. Must have the same type as ref. A tensor of updated values
    *  to add to {@code input}.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code ScatterNdNonAliasingAdd} output and operands
    * @return a new instance of ScatterNdNonAliasingAdd
    */
   public <T extends TType> ScatterNdNonAliasingAdd<T> scatterNdNonAliasingAdd(Operand<T> input,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
-    return ScatterNdNonAliasingAdd.create(scope, input, indices, updates);
+      Operand<? extends TNumber> indices, Operand<T> updates,
+      ScatterNdNonAliasingAdd.Options... options) {
+    return ScatterNdNonAliasingAdd.create(scope, input, indices, updates, options);
   }
 
   /**
@@ -6160,7 +6098,6 @@ public final class Ops {
    *  <p>See {@code tf.scatter_nd} for more details about how to make updates to
    *  slices.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref A mutable Tensor. Should be from a Variable node.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    *  A tensor of indices into ref.
@@ -6204,7 +6141,6 @@ public final class Ops {
    *  slices.
    *  <p>See also {@code tf.scatter_update} and {@code tf.batch_scatter_update}.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref A mutable Tensor. Should be from a Variable node.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    *  A tensor of indices into ref.
@@ -6240,7 +6176,6 @@ public final class Ops {
    *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterSub.png" alt>
    *  </div>
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of updated values to subtract from {@code ref}.
@@ -6277,7 +6212,6 @@ public final class Ops {
    *  </div>
    *  <p>See also {@code tf.batch_scatter_update} and {@code tf.scatter_nd_update}.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref Should be from a {@code Variable} node.
    * @param indices A tensor of indices into the first dimension of {@code ref}.
    * @param updates A tensor of updated values to store in {@code ref}.
@@ -6293,7 +6227,6 @@ public final class Ops {
   /**
    * The SelectV2 operation
    *
-   * @param <T> data type for {@code output} output
    * @param condition The condition value
    * @param t The t value
    * @param e The e value
@@ -6339,8 +6272,6 @@ public final class Ops {
    *  idx ==&gt; [1, 3, 5]
    *  </pre>
    *
-   * @param <T> data type for {@code out} output
-   * @param <U> data type for {@code idx} output
    * @param x 1-D. Values to keep.
    * @param y 1-D. Values to remove.
    * @param <T> data type for {@code ListDiff} output and operands
@@ -6369,8 +6300,6 @@ public final class Ops {
    *  idx ==&gt; [1, 3, 5]
    *  </pre>
    *
-   * @param <T> data type for {@code out} output
-   * @param <U> data type for {@code idx} output
    * @param x 1-D. Values to keep.
    * @param y 1-D. Values to remove.
    * @param outIdx The value of the outIdx attribute
@@ -6412,7 +6341,6 @@ public final class Ops {
    *  shape(t) ==&gt; [2, 2, 3]
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @return a new instance of Shape, with default output types
    */
@@ -6429,7 +6357,6 @@ public final class Ops {
    *  shape(t) ==&gt; [2, 2, 3]
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param outType The value of the outType attribute
    * @param <U> data type for {@code Shape} output and operands
@@ -6444,7 +6371,6 @@ public final class Ops {
    * Returns shape of tensors.
    *  This operation returns N 1-D integer tensors representing shape of {@code input[i]s}.
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @return a new instance of ShapeN, with default output types
    */
@@ -6456,7 +6382,6 @@ public final class Ops {
    * Returns shape of tensors.
    *  This operation returns N 1-D integer tensors representing shape of {@code input[i]s}.
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param outType The value of the outType attribute
    * @param <U> data type for {@code ShapeN} output and operands
@@ -6477,7 +6402,6 @@ public final class Ops {
    *  size(t) ==&gt; 12
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @return a new instance of Size, with default output types
    */
@@ -6495,7 +6419,6 @@ public final class Ops {
    *  size(t) ==&gt; 12
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param outType The value of the outType attribute
    * @param <U> data type for {@code Size} output and operands
@@ -6525,7 +6448,6 @@ public final class Ops {
    *  <p><em>Requirements</em>:
    *  0 &lt;= begin[i] &lt;= begin[i] + size[i] &lt;= Di  for i in [0, n)
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param begin begin[i] specifies the offset into the 'i'th dimension of
    *  'input' to slice from.
@@ -6545,7 +6467,6 @@ public final class Ops {
   /**
    * Returns a copy of the input tensor.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code Snapshot} output and operands
    * @return a new instance of Snapshot
@@ -6653,7 +6574,6 @@ public final class Ops {
    *  <p>Among others, this operation is useful for reducing atrous convolution into
    *  regular convolution.
    *
-   * @param <T> data type for {@code output} output
    * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
    *  where spatial_shape has {@code M} dimensions.
    * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
@@ -6672,7 +6592,6 @@ public final class Ops {
   /**
    * Splits a tensor into {@code num_split} tensors along one dimension.
    *
-   * @param <T> data type for {@code output} output
    * @param axis 0-D.  The dimension along which to split.  Must be in the range
    *  {@code [-rank(value), rank(value))}.
    * @param value The tensor to split.
@@ -6688,7 +6607,6 @@ public final class Ops {
   /**
    * Splits a tensor into {@code num_split} tensors along one dimension.
    *
-   * @param <T> data type for {@code output} output
    * @param value The tensor to split.
    * @param sizeSplits list containing the sizes of each output tensor along the split
    *  dimension. Must sum to the dimension of value along split_dim.
@@ -6721,7 +6639,6 @@ public final class Ops {
    *  shape(squeeze(t, [2, 4])) ==&gt; [1, 2, 3, 1]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The {@code input} to squeeze.
    * @param options carries optional attribute values
    * @param <T> data type for {@code Squeeze} output and operands
@@ -6749,7 +6666,6 @@ public final class Ops {
    *  </pre>
    *  <p>This is the opposite of {@code unpack}.
    *
-   * @param <T> data type for {@code output} output
    * @param values Must be of same shape and type.
    * @param options carries optional attribute values
    * @param <T> data type for {@code Pack} output and operands
@@ -6787,7 +6703,6 @@ public final class Ops {
   /**
    * Pop the element at the top of the stack.
    *
-   * @param <T> data type for {@code elem} output
    * @param handle The handle to a stack.
    * @param elemType The type of the elem that is popped.
    * @param <T> data type for {@code StackPopV2} output and operands
@@ -6801,7 +6716,6 @@ public final class Ops {
   /**
    * Push an element onto the stack.
    *
-   * @param <T> data type for {@code output} output
    * @param handle The handle to a stack.
    * @param elem The tensor to be pushed onto the stack.
    * @param options carries optional attribute values
@@ -7083,7 +6997,6 @@ public final class Ops {
    *  The values are cast with a deterministic pseudo-random tensor from a uniform distribution generated from user given key, counter, algorithm. Values will saturate if out of the specified integer type range, and will become zero if inputs are NaN.
    *  <p>The outputs are a deterministic function of {@code input}, {@code key}, {@code counter}, {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param input The operand to stochastically cast to int.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -7151,7 +7064,6 @@ public final class Ops {
    *  example generation process.</li>
    *  </ul>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code StopGradient} output and operands
    * @return a new instance of StopGradient
@@ -7169,16 +7081,17 @@ public final class Ops {
    *  equal to `n`, but this need not be the case. Each range specification entry can be one of the
    *  following:
    *
-   *  <p>- An ellipsis (...) using {@link Indices#ellipsis()}. Ellipses are used to imply zero or
-   *  more dimensions of full-dimension selection. For example, {@code stridedSlice(foo,
-   *  Indices.ellipsis()} is the identity slice.
+   *  <p>- An ellipsis (...) using {@link org.tensorflow.ndarray.index.Indices#ellipsis()}. Ellipses
+   *  are used to imply zero or more dimensions of full-dimension selection. For example, {@code
+   *  stridedSlice(foo, Indices.ellipsis()} is the identity slice.
    *
-   *  <p>- A new axis using {@link Indices#newAxis()}. This is used to insert a new shape=1
-   *  dimension. For example, `{@code stridedSlice(foo, Indices.newAxis())} where {@code foo} is
-   *  shape {@code (3, 4)} produces a {@code (1, 3, 4)} tensor.
+   *  <p>- A new axis using {@link org.tensorflow.ndarray.index.Indices#newAxis()}. This is used to
+   *  insert a new shape=1 dimension. For example, `{@code stridedSlice(foo, Indices.newAxis())}
+   *  where {@code foo} is shape {@code (3, 4)} produces a {@code (1, 3, 4)} tensor.
    *
-   *  <p>- A range {@code begin:end:stride} using {@link Indices#slice(Long, Long, long)}
-   *  Index.slice()} or {@link Indices#all()}. This is used to specify how much to choose from a
+   *  <p>- A range {@code begin:end:stride} using {@link
+   *  org.tensorflow.ndarray.index.Indices#slice(Long, Long, long)} Index.slice()} or {@link
+   *  org.tensorflow.ndarray.index.Indices#all()}. This is used to specify how much to choose from a
    *  given dimension. {@code stride} can be any integer but 0. {@code begin} is an integer which
    *  represents the index of the first value to select while {@code end} represents the index of the
    *  last value to select (exclusive). Begin and end can be null, in which case the index begins or
@@ -7195,10 +7108,11 @@ public final class Ops {
    *  elements). For example {@code foo = [1,2,3,4]; stridedSlice(foo, Indices.slice(-2, null, -1)}
    *  is {@code [4,3]}.
    *
-   *  <p>- A single index using {@link Indices#at(long)}. This is used to keep only elements that
-   *  have a given index. For example ({@code stridedSlice(foo, Indices.at(2))} on a shape {@code
-   *  (5,6)} tensor produces a shape {@code (6,)} tensor. The dimension can be kept with size one
-   *  using {@link Indices#at(long, boolean)}.
+   *  <p>- A single index using {@link org.tensorflow.ndarray.index.Indices#at(long)}. This is used
+   *  to keep only elements that have a given index. For example ({@code stridedSlice(foo,
+   *  Indices.at(2))} on a shape {@code (5,6)} tensor produces a shape {@code (6,)} tensor. The
+   *  dimension can be kept with size one using {@link org.tensorflow.ndarray.index.Indices#at(long,
+   *  boolean)}.
    *
    *  <p>These semantics generally follow NumPy's indexing semantics, which can be found here: <a
    *  href="https://numpy.org/doc/stable/reference/arrays.indexing.html">https://numpy.org/doc/stable/reference/arrays.indexing.html</a>
@@ -7206,9 +7120,9 @@ public final class Ops {
    *  <p><i>Requirements</i>: `0 != strides[i] for i in [0, m)` Only one ellipsis.
    *
    * @param <T> data type for {@code output()} output
-   * @param indices The indices to slice. See {@link Indices}.
+   * @param indices The indices to slice. See {@link org.tensorflow.ndarray.index.Indices}.
    * @return a new instance of StridedSlice
-   * @see Indices
+   * @see org.tensorflow.ndarray.index.Indices
    */
   public <T extends TType> StridedSlice<T> stridedSlice(Operand<T> input, Index... indices) {
     return StridedSliceHelper.stridedSlice(scope, input, indices);
@@ -7314,7 +7228,6 @@ public final class Ops {
    *  {@code 0 != strides[i] for i in [0, m)}
    *  {@code ellipsis_mask must be a power of two (only one ellipsis)}
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param begin {@code begin[k]} specifies the offset into the {@code k}th range specification.
    *  The exact dimension this corresponds to will be determined by context.
@@ -7351,9 +7264,10 @@ public final class Ops {
    * @param <T> data type for {@code outputRef()} output
    * @param ref the tensor to assign to.
    * @param value the value to assign.
-   * @param indices The indices to slice. See {@link Indices}.
+   * @param indices The indices to slice. See {@link org.tensorflow.ndarray.index.Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
+   * @see org.tensorflow.op.Ops#stridedSlice(org.tensorflow.Operand,
+   *      org.tensorflow.ndarray.index.Index...)
    */
   public <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Operand<T> ref,
       Operand<T> value, Index... indices) {
@@ -7368,7 +7282,6 @@ public final class Ops {
    *  <p>NOTE this op currently does not support broadcasting and so {@code value}'s
    *  shape must be exactly the shape produced by the slice of {@code ref}.
    *
-   * @param <T> data type for {@code output_ref} output
    * @param ref The ref value
    * @param begin The begin value
    * @param end The end value
@@ -7395,7 +7308,6 @@ public final class Ops {
    *  {@code dy} is the input gradient to be propagated and {@code shape} is the
    *  shape of {@code StridedSlice}'s {@code input}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape value
    * @param begin The begin value
    * @param end The end value
@@ -7419,7 +7331,6 @@ public final class Ops {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -7438,7 +7349,6 @@ public final class Ops {
    *  the data goes to {@code output_false}.
    *  <p>See also {@code RefSwitch} and {@code Merge}.
    *
-   * @param <T> data type for {@code output_false} output
    * @param data The tensor to be forwarded to the appropriate output.
    * @param pred A scalar that specifies which output port will receive data.
    * @param <T> data type for {@code Switch} output and operands
@@ -7473,7 +7383,6 @@ public final class Ops {
    *  var = state_ops.assign_add(var, [[6.0, 7.0]])
    *  final = state_ops._destroy_temporary_variable(var, var_name=var_name)
    *
-   * @param <T> data type for {@code ref} output
    * @param shape The shape of the variable tensor.
    * @param dtype The type of elements in the variable tensor.
    * @param options carries optional attribute values
@@ -7524,7 +7433,6 @@ public final class Ops {
    *  </pre>
    *  <p>All elements must have the same shape (excepting the first dimension).
    *
-   * @param <T> data type for {@code value} output
    * @param handle The handle to a TensorArray.
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @param dtype The type of the elem that is returned.
@@ -7541,7 +7449,6 @@ public final class Ops {
    * Gather specific elements from the TensorArray into output {@code value}.
    *  All elements selected by {@code indices} must have the same shape.
    *
-   * @param <T> data type for {@code value} output
    * @param handle The handle to a TensorArray.
    * @param indices The locations in the TensorArray from which to read tensor elements.
    * @param flowIn A float scalar that enforces proper chaining of operations.
@@ -7622,7 +7529,6 @@ public final class Ops {
   /**
    * The TensorArrayPack operation
    *
-   * @param <T> data type for {@code value} output
    * @param handle The handle value
    * @param flowIn The flowIn value
    * @param dtype The value of the dtype attribute
@@ -7638,7 +7544,6 @@ public final class Ops {
   /**
    * Read an element from the TensorArray into output {@code value}.
    *
-   * @param <T> data type for {@code value} output
    * @param handle The handle to a TensorArray.
    * @param index The index value
    * @param flowIn A float scalar that enforces proper chaining of operations.
@@ -7750,7 +7655,6 @@ public final class Ops {
    *  tensor: The concated result.
    *  lengths: Output tensor containing sizes of the 0th dimension of tensors in the list, used for computing the gradient.
    *
-   * @param <U> data type for {@code tensor} output
    * @param inputHandle The inputHandle value
    * @param elementShape The elementShape value
    * @param leadingDims The leadingDims value
@@ -7783,7 +7687,6 @@ public final class Ops {
    *  input_handle: the list
    *  element_shape: the shape of elements of the list
    *
-   * @param <T> data type for {@code element_shape} output
    * @param inputHandle The inputHandle value
    * @param shapeType The value of the shapeType attribute
    * @param <T> data type for {@code TensorListElementShape} output and operands
@@ -7817,7 +7720,6 @@ public final class Ops {
    *  indices: The indices used to index into the list.
    *  values: The tensor.
    *
-   * @param <T> data type for {@code values} output
    * @param inputHandle The inputHandle value
    * @param indices The indices value
    * @param elementShape The elementShape value
@@ -7837,7 +7739,6 @@ public final class Ops {
    *  index: the position in the list from which an element will be retrieved
    *  item: the element at that position
    *
-   * @param <T> data type for {@code item} output
    * @param inputHandle The inputHandle value
    * @param index The index value
    * @param elementShape The elementShape value
@@ -7871,7 +7772,6 @@ public final class Ops {
    *  element_dtype: the type of elements in the list
    *  element_shape: the shape of the output tensor
    *
-   * @param <T> data type for {@code tensor} output
    * @param inputHandle The inputHandle value
    * @param elementShape The elementShape value
    * @param elementDtype The value of the elementDtype attribute
@@ -8033,7 +7933,6 @@ public final class Ops {
    *  tensor: the gathered result
    *  num_elements: optional. If not -1, the number of elements in the list.
    *
-   * @param <T> data type for {@code tensor} output
    * @param inputHandle The inputHandle value
    * @param elementShape The elementShape value
    * @param elementDtype The value of the elementDtype attribute
@@ -8101,7 +8000,6 @@ public final class Ops {
    *  key: the key to be looked up
    *  value: the value found from the given key
    *
-   * @param <U> data type for {@code value} output
    * @param inputHandle The inputHandle value
    * @param key The key value
    * @param valueDtype The value of the valueDtype attribute
@@ -8130,7 +8028,6 @@ public final class Ops {
    *  input_handle: the input map
    *  keys: the returned Tensor of all keys in the map
    *
-   * @param <T> data type for {@code keys} output
    * @param inputHandle The inputHandle value
    * @param keyDtype The value of the keyDtype attribute
    * @param <T> data type for {@code TensorMapStackKeys} output and operands
@@ -8201,19 +8098,28 @@ public final class Ops {
    *  </blockquote>
    *  </blockquote>
    *  </blockquote>
-   *  <p>Note: on CPU, if an out of bound index is found, an error is returned.
-   *  On GPU, if an out of bound index is found, the index is ignored.
+   *  <p>If {@code indices} contains any out-of-bound indices, depending on
+   *  {@code bad_indices_policy}, the op will either return an error or ignore the
+   *  out-of-bound indices. {@code bad_indices_policy} can be one of the following values:
+   *  <ol>
+   *  <li>&quot;&quot; or &quot;DEFAULT&quot;: raises on CPU and ignore on GPU. This is because
+   *  historically on CPU and GPU we handle errors in different ways, and for
+   *  backward compatibility we keep the default behavior.</li>
+   *  <li>&quot;ERROR&quot;: raises error; GPU does not support this value.</li>
+   *  <li>&quot;IGNORE&quot;: ignore the bad indices; supported on both CPU and GPU.</li>
+   *  </ol>
    *
-   * @param <T> data type for {@code output} output
    * @param tensor Tensor to copy/update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterAdd} output and operands
    * @return a new instance of TensorScatterNdAdd
    */
   public <T extends TType> TensorScatterNdAdd<T> tensorScatterNdAdd(Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
-    return TensorScatterNdAdd.create(scope, tensor, indices, updates);
+      Operand<? extends TNumber> indices, Operand<T> updates,
+      TensorScatterNdAdd.Options... options) {
+    return TensorScatterNdAdd.create(scope, tensor, indices, updates, options);
   }
 
   /**
@@ -8233,31 +8139,33 @@ public final class Ops {
    *  </blockquote>
    *  <p>Refer to {@code tf.tensor_scatter_nd_update} for more details.
    *
-   * @param <T> data type for {@code output} output
    * @param tensor Tensor to update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterMax} output and operands
    * @return a new instance of TensorScatterNdMax
    */
   public <T extends TType> TensorScatterNdMax<T> tensorScatterNdMax(Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
-    return TensorScatterNdMax.create(scope, tensor, indices, updates);
+      Operand<? extends TNumber> indices, Operand<T> updates,
+      TensorScatterNdMax.Options... options) {
+    return TensorScatterNdMax.create(scope, tensor, indices, updates, options);
   }
 
   /**
    * The TensorScatterMin operation
    *
-   * @param <T> data type for {@code output} output
    * @param tensor Tensor to update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterMin} output and operands
    * @return a new instance of TensorScatterNdMin
    */
   public <T extends TType> TensorScatterNdMin<T> tensorScatterNdMin(Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
-    return TensorScatterNdMin.create(scope, tensor, indices, updates);
+      Operand<? extends TNumber> indices, Operand<T> updates,
+      TensorScatterNdMin.Options... options) {
+    return TensorScatterNdMin.create(scope, tensor, indices, updates, options);
   }
 
   /**
@@ -8318,16 +8226,17 @@ public final class Ops {
    *  <p>Note that on CPU, if an out of bound index is found, an error is returned.
    *  On GPU, if an out of bound index is found, the index is ignored.
    *
-   * @param <T> data type for {@code output} output
    * @param tensor Tensor to copy/update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterSub} output and operands
    * @return a new instance of TensorScatterNdSub
    */
   public <T extends TType> TensorScatterNdSub<T> tensorScatterNdSub(Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
-    return TensorScatterNdSub.create(scope, tensor, indices, updates);
+      Operand<? extends TNumber> indices, Operand<T> updates,
+      TensorScatterNdSub.Options... options) {
+    return TensorScatterNdSub.create(scope, tensor, indices, updates, options);
   }
 
   /**
@@ -8338,7 +8247,6 @@ public final class Ops {
    *  scattered onto an existing tensor (as opposed to a zero-tensor). If the memory
    *  for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>If {@code indices} contains duplicates, then we pick the last update for the index.
-   *  <p>If an out of bound index is found on CPU, an error is returned.
    *  <p><strong>WARNING</strong>: There are some GPU specific semantics for this operation.
    *  <ul>
    *  <li>If an out of bound index is found, the index is ignored.</li>
@@ -8360,18 +8268,29 @@ public final class Ops {
    *  <pre>
    *  indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
    *  </pre>
+   *  <p>If {@code indices} contains any out-of-bound indices, depending on
+   *  {@code bad_indices_policy}, the op will either return an error or ignore the
+   *  out-of-bound indices. {@code bad_indices_policy} can be one of the following values:
+   *  <ol>
+   *  <li>&quot;&quot; or &quot;DEFAULT&quot;: raises on CPU and ignore on GPU. This is because
+   *  historically on CPU and GPU we handle errors in different ways, and for
+   *  backward compatibility we keep the default behavior.</li>
+   *  <li>&quot;ERROR&quot;: raises error; GPU does not support this value.</li>
+   *  <li>&quot;IGNORE&quot;: ignore the bad indices; supported on both CPU and GPU.</li>
+   *  </ol>
    *  <p>For usage examples see the python  tf.tensor_scatter_nd_update {@link org.tensorflow.op.Ops#tensorScatterNdUpdate}  function
    *
-   * @param <T> data type for {@code output} output
    * @param tensor Tensor to copy/update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterUpdate} output and operands
    * @return a new instance of TensorScatterNdUpdate
    */
   public <T extends TType> TensorScatterNdUpdate<T> tensorScatterNdUpdate(Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
-    return TensorScatterNdUpdate.create(scope, tensor, indices, updates);
+      Operand<? extends TNumber> indices, Operand<T> updates,
+      TensorScatterNdUpdate.Options... options) {
+    return TensorScatterNdUpdate.create(scope, tensor, indices, updates, options);
   }
 
   /**
@@ -8382,7 +8301,6 @@ public final class Ops {
    *  <p>NOTE this op currently does not support broadcasting and so {@code value}'s shape
    *  must be exactly the shape produced by the slice of {@code input}.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param begin The begin value
    * @param end The end value
@@ -8433,7 +8351,6 @@ public final class Ops {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param <T> data type for {@code output} output
    * @param input Can be of any rank.
    * @param multiples 1-D. Length must be the same as the number of dimensions in {@code input}
    * @param <T> data type for {@code Tile} output and operands
@@ -8522,7 +8439,6 @@ public final class Ops {
    *  assumed to possibly belong to the same batch. If left empty, the op name will
    *  be used as the shared name.
    *
-   * @param <T> data type for {@code unbatched_tensor} output
    * @param batchedTensor The batchedTensor value
    * @param batchIndex The batchIndex value
    * @param id The id value
@@ -8552,7 +8468,6 @@ public final class Ops {
    *  are assumed to possibly belong to the same batch. If left empty, the op name
    *  will be used as the shared name.
    *
-   * @param <T> data type for {@code batched_grad} output
    * @param originalInput The originalInput value
    * @param batchIndex The batchIndex value
    * @param grad The grad value
@@ -8573,7 +8488,6 @@ public final class Ops {
    *  If quantization_axis is -1 (per-tensor quantized), the entire operand is clipped using scalar min, max.
    *  Otherwise (per-channel quantized), the clipping is also done per-channel.
    *
-   * @param <T> data type for {@code output} output
    * @param operand Must be a Tensor of T.
    * @param min The min value(s) to clip operand. Must be a Tensor of T.
    *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (operand.dim_size(quantization_axis),) (per-axis quantization).
@@ -8635,8 +8549,6 @@ public final class Ops {
    *  idx ==&gt; [0, 1, 1]
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
-   * @param <V> data type for {@code idx} output
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    *  find the unique elements.
@@ -8686,8 +8598,6 @@ public final class Ops {
    *  idx ==&gt; [0, 1, 1]
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
-   * @param <V> data type for {@code idx} output
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    *  find the unique elements.
@@ -8744,8 +8654,6 @@ public final class Ops {
    *  count ==&gt; [1, 2]
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
-   * @param <V> data type for {@code idx} output
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    *  find the unique elements.
@@ -8800,8 +8708,6 @@ public final class Ops {
    *  count ==&gt; [1, 2]
    *  </pre>
    *
-   * @param <T> data type for {@code y} output
-   * @param <V> data type for {@code idx} output
    * @param x A {@code Tensor}.
    * @param axis A {@code Tensor} of type {@code int32} (default: None). The axis of the Tensor to
    *  find the unique elements.
@@ -8835,7 +8741,6 @@ public final class Ops {
    *  Equivalent to np.unravel_index
    *  <br>{@literal @}end_compatibility
    *
-   * @param <T> data type for {@code output} output
    * @param indices An 0-D or 1-D {@code int} Tensor whose elements are indices into the
    *  flattened version of an array of dimensions dims.
    * @param dims An 1-D {@code int} Tensor. The shape of the array to use for unraveling
@@ -8859,7 +8764,6 @@ public final class Ops {
    *  Etc.
    *  <p>This is the opposite of {@code pack}.
    *
-   * @param <T> data type for {@code output} output
    * @param value 1-D or higher, with {@code axis} dimension size equal to {@code num}.
    * @param num The value of the num attribute
    * @param options carries optional attribute values
@@ -8900,7 +8804,6 @@ public final class Ops {
    *  <p>result == [[1, 2, 4],
    *  [0, 2, 5]]
    *
-   * @param <U> data type for {@code output} output
    * @param sortedInputs 2-D Tensor where each row is ordered.
    * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
    *  the values that will be searched for in {@code sorted_search_values}.
@@ -8928,7 +8831,6 @@ public final class Ops {
    *  <p>result == [[1, 2, 4],
    *  [0, 2, 5]]
    *
-   * @param <U> data type for {@code output} output
    * @param sortedInputs 2-D Tensor where each row is ordered.
    * @param values 2-D Tensor with the same numbers of rows as {@code sorted_search_values}. Contains
    *  the values that will be searched for in {@code sorted_search_values}.
@@ -8988,7 +8890,6 @@ public final class Ops {
    *  TODO(zhifengc/mrry): Adds a pointer to a more detail document
    *  about sharing states in tensorflow.
    *
-   * @param <T> data type for {@code ref} output
    * @param shape The shape of the variable tensor.
    * @param dtype The type of elements in the variable tensor.
    * @param options carries optional attribute values
@@ -9009,7 +8910,6 @@ public final class Ops {
    *  shape(t) ==&gt; [2, 2, 3]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @return a new instance of VariableShape, with default output types
    */
@@ -9026,7 +8926,6 @@ public final class Ops {
    *  shape(t) ==&gt; [2, 2, 3]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param outType The value of the outType attribute
    * @param <T> data type for {@code VariableShape} output and operands
@@ -9147,7 +9046,6 @@ public final class Ops {
   /**
    * Returns a tensor of zeros with the same shape and type as x.
    *
-   * @param <T> data type for {@code y} output
    * @param x a tensor of type T.
    * @param <T> data type for {@code ZerosLike} output and operands
    * @return a new instance of ZerosLike

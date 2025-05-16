@@ -44,8 +44,6 @@ import org.tensorflow.types.family.TNumber;
  * # 'delta' is 3
  * tf.range(start, limit, delta) ==&gt; [3, 6, 9, 12, 15]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Range.OP_NAME,

@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the  <a href="https://en.wikipedia.org/wiki/Error_function">Gauss error function</a>  of {@code x} element-wise. In statistics, for non-negative values of $x$, the error function has the following interpretation: for a random variable $Y$ that is normally distributed with mean 0 and variance $1/\sqrt{2}$, $erf(x)$ is the probability that $Y$ falls in the range $[−x, x]$.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Erf.OP_NAME,

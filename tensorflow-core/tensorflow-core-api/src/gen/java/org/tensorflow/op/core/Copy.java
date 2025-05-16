@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * deep-copying. See the documentation of Debug* ops for more details.
  * <p>Unlike the CopyHost Op, this op does not have HostMemory constraint on its
  * input or output.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Copy.OP_NAME,

@@ -57,8 +57,6 @@ import org.tensorflow.types.family.TNumber;
  * compatible across GPUs. Please use CudnnRNNParamsWeights and
  * CudnnRNNParamsBiases to save and restore them in a way that is compatible
  * across different runs.
- *
- * @param <T> data type for {@code params_size} output
  */
 @OpMetadata(
     opType = CudnnRnnParamsSize.OP_NAME,

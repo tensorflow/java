@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- *
- * @param <U> data type for {@code y} output
  */
 @OpMetadata(
     opType = ComplexAbs.OP_NAME,

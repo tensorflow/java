@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Inverse fast Fourier transform.
  * Computes the inverse 1-dimensional discrete Fourier transform over the
  * inner-most dimension of {@code input}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Ifft.OP_NAME,

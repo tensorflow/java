@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * {@code is_constant} is true, {@code output} is a constant in the child frame; otherwise
  * it may be changed in the child frame. At most {@code parallel_iterations} iterations
  * are run in parallel in the child frame.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RefEnter.OP_NAME,

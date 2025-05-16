@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Converts a (possibly batched) CSRSparesMatrix to a SparseTensor.
- *
- * @param <T> data type for {@code values} output
  */
 @OpMetadata(
     opType = CSRSparseMatrixToSparseTensor.OP_NAME,

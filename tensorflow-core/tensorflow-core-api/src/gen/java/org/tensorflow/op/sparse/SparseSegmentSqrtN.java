@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Computes the sum along sparse segments of a tensor divided by the sqrt of N.
  * N is the size of the segment being reduced.
  * <p>See {@code tf.sparse.segment_sum} for usage examples.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseSegmentSqrtN.OP_NAME,

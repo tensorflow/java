@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * </pre>
  * <p>The above computation has a replicated input of two replicas.
  *
- * @param <T> data type for {@code output} output
- *
  * @deprecated use {@link org.tensorflow.op.tpu.ReplicatedInput} instead
  */
 @OpMetadata(

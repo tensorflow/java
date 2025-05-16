@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Returns the element-wise min of two SparseTensors.
  * Assumes the two SparseTensors have the same shape, i.e., no broadcasting.
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseSparseMinimum.OP_NAME,

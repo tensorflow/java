@@ -103,8 +103,6 @@ import org.tensorflow.types.family.TType;
  *       [[9, 10, 11, 12],
  *        [13, 14, 15, 16]]]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SpaceToDepth.OP_NAME,

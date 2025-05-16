@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * <p>That is for rows we have grad for, we update var and accum as follows:
  * <p>$$accum = accum * momentum + grad$$
  * $$var -= lr * accum$$
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = SparseApplyMomentum.OP_NAME,

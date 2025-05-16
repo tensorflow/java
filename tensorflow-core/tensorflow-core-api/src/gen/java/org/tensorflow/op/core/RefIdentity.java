@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Return the same ref tensor as the input ref tensor.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RefIdentity.OP_NAME,

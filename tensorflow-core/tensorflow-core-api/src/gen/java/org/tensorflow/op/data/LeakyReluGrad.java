@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear gradients for a LeakyRelu operation.
- *
- * @param <T> data type for {@code backprops} output
  */
 @OpMetadata(
     opType = LeakyReluGrad.OP_NAME,

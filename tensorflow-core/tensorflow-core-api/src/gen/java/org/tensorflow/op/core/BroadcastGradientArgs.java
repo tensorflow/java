@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Return the reduction indices for computing gradients of s0 op s1 with broadcast.
  * This is typically used by gradient computations for a broadcasting operation.
- *
- * @param <T> data type for {@code r0} output
  */
 @OpMetadata(
     opType = BroadcastGradientArgs.OP_NAME,

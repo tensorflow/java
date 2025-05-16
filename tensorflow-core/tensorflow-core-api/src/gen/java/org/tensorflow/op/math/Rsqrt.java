@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Computes reciprocal of square root of x element-wise.
  * I.e., \(y = 1 / \sqrt{x}\).
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Rsqrt.OP_NAME,

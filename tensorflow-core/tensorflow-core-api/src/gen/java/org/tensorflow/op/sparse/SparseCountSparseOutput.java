@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Performs sparse-output bin counting for a sparse tensor input.
  * Counts the number of times each value occurs in the input.
- *
- * @param <U> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseCountSparseOutput.OP_NAME,

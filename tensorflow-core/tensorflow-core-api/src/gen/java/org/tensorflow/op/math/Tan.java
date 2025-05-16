@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant([-float(&quot;inf&quot;), -9, -0.5, 1, 1.2, 200, 10000, float(&quot;inf&quot;)])
  * tf.math.tan(x) ==&gt; [nan 0.45231566 -0.5463025 1.5574077 2.572152 -1.7925274 0.32097113 nan]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Tan.OP_NAME,

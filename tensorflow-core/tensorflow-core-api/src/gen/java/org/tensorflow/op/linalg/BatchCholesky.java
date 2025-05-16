@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The BatchCholesky operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchCholesky.OP_NAME,

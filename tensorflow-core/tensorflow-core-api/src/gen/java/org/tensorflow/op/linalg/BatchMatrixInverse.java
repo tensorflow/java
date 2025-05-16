@@ -35,8 +35,10 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The BatchMatrixInverse operation
- *
- * @param <T> data type for {@code output} output
+ * DEPRECATED: This operation is deprecated and will be removed in a future version.
+ * Use tf.linalg.inv instead.
+ * <p>Computes the inverse of one or more square invertible matrices or their
+ * adjoints (conjugate transposes).
  */
 @OpMetadata(
     opType = BatchMatrixInverse.OP_NAME,

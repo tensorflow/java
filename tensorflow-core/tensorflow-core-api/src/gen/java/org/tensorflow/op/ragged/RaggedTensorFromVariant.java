@@ -50,10 +50,6 @@ import org.tensorflow.types.family.TType;
  * values of the decoded {@code RaggedTensor}. If {@code input_ragged_rank} is -1, then it is
  * inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}. See
  * {@code RaggedTensorToVariant} for the corresponding encoding logic.
- *
- * @param <T> data type for {@code output_nested_splits} output
- *
- * @param <U> data type for {@code output_dense_values} output
  */
 @OpMetadata(
     opType = RaggedTensorFromVariant.OP_NAME,

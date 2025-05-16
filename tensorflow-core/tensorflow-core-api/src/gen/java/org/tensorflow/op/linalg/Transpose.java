@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * Shuffle dimensions of x according to a permutation.
  * The output {@code y} has the same rank as {@code x}. The shapes of {@code x} and {@code y} satisfy:
  * {@code y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]}
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Transpose.OP_NAME,

@@ -29,7 +29,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -45,14 +44,11 @@ import org.tensorflow.types.family.TType;
     opType = XlaRecvTPUEmbeddingDeduplicationData.OP_NAME,
     inputsClass = XlaRecvTPUEmbeddingDeduplicationData.Inputs.class
 )
-@Operator(
-    group = "xla"
-)
 public final class XlaRecvTPUEmbeddingDeduplicationData extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaRecvTPUEmbeddingDeduplicationData";
+  public static final String OP_NAME = "XlaRecvTPUEmbeddingDeduplicationDataV2";
 
   private Output<? extends TType> output;
 
@@ -64,18 +60,25 @@ public final class XlaRecvTPUEmbeddingDeduplicationData extends RawOp implements
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaRecvTPUEmbeddingDeduplicationData operation.
+   * Factory method to create a class wrapping a new XlaRecvTPUEmbeddingDeduplicationDataV2 operation.
    *
    * @param scope current scope
    * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @param embeddingPartitions Serialized EmbeddingPartitionsProto proto.
+   * @param hbmBuffersConfig Serialized HbmBuffersConfig proto.
+   * @param tpuTopology Serialized TpuTopologyArgsProto proto.
    * @return a new instance of XlaRecvTPUEmbeddingDeduplicationData
    */
   @Endpoint(
       describeByClass = true
   )
-  public static XlaRecvTPUEmbeddingDeduplicationData create(Scope scope, String config) {
+  public static XlaRecvTPUEmbeddingDeduplicationData create(Scope scope, String config,
+      String embeddingPartitions, String hbmBuffersConfig, String tpuTopology) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaRecvTPUEmbeddingDeduplicationData");
     opBuilder.setAttr("config", config);
+    opBuilder.setAttr("embedding_partitions", embeddingPartitions);
+    opBuilder.setAttr("hbm_buffers_config", hbmBuffersConfig);
+    opBuilder.setAttr("tpu_topology", tpuTopology);
     return new XlaRecvTPUEmbeddingDeduplicationData(opBuilder.build());
   }
 
@@ -103,10 +106,28 @@ public final class XlaRecvTPUEmbeddingDeduplicationData extends RawOp implements
      */
     public final String config;
 
+    /**
+     * Serialized EmbeddingPartitionsProto proto.
+     */
+    public final String embeddingPartitions;
+
+    /**
+     * Serialized HbmBuffersConfig proto.
+     */
+    public final String hbmBuffersConfig;
+
+    /**
+     * Serialized TpuTopologyArgsProto proto.
+     */
+    public final String tpuTopology;
+
     public Inputs(GraphOperation op) {
-      super(new XlaRecvTPUEmbeddingDeduplicationData(op), op, Arrays.asList("config"));
+      super(new XlaRecvTPUEmbeddingDeduplicationData(op), op, Arrays.asList("config", "embedding_partitions", "hbm_buffers_config", "tpu_topology"));
       int inputIndex = 0;
       config = op.attributes().getAttrString("config");
+      embeddingPartitions = op.attributes().getAttrString("embedding_partitions");
+      hbmBuffersConfig = op.attributes().getAttrString("hbm_buffers_config");
+      tpuTopology = op.attributes().getAttrString("tpu_topology");
     }
   }
 }

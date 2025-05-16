@@ -76,8 +76,6 @@ import org.tensorflow.types.family.TType;
  *                         [16, 17, 18, 19],
  *                         [12, 13, 14, 15]]]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Reverse.OP_NAME,

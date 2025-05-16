@@ -73,8 +73,6 @@ import org.tensorflow.types.family.TNumber;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SegmentMin.OP_NAME,

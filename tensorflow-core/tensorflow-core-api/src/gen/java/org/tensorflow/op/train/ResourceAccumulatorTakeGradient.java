@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * aggregated more than num_required gradients, it returns the average of
  * the accumulated gradients.  Also automatically increments the recorded
  * global_step in the accumulator by 1, and resets the aggregate to 0.
- *
- * @param <T> data type for {@code average} output
  */
 @OpMetadata(
     opType = ResourceAccumulatorTakeGradient.OP_NAME,

@@ -47,14 +47,12 @@ import org.tensorflow.types.family.TNumber;
  * y = [2, 3, 7]
  * z = [2, 9, 7]
  * offsets = concat_offset(1, [x, y, z])
- * [list(off.numpy()) for off in offsets]
+ * [[a.item() for a in list(off.numpy())] for off in offsets]
  * [[0, 0, 0], [0, 2, 0], [0, 5, 0]]
  * </blockquote>
  * </blockquote>
  * </blockquote>
  * <p>This is typically used by gradient computations for a concat operation.
- *
- * @param <T> data type for {@code offset} output
  */
 @OpMetadata(
     opType = ConcatOffset.OP_NAME,

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Returns x * y element-wise. Returns zero if y is zero, even if x if infinite or NaN.
  * <em>NOTE</em>: {@code math.MulNoNan} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = MulNoNan.OP_NAME,

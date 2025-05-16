@@ -63,8 +63,6 @@ import org.tensorflow.types.family.TNumber;
  * </ol>
  * <p>For more details on fractional max pooling, see this paper:
  *  <a href="http://arxiv.org/abs/1412.6071">Benjamin Graham, Fractional Max-Pooling</a>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FractionalMaxPool.OP_NAME,

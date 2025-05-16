@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * average of the accumulated gradients.  Also automatically increments
  * the recorded global_step in the accumulator by 1, and resets the
  * aggregate to 0.
- *
- * @param <T> data type for {@code values} output
  */
 @OpMetadata(
     opType = SparseAccumulatorTakeGradient.OP_NAME,

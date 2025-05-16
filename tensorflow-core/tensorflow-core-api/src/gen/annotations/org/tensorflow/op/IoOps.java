@@ -160,7 +160,6 @@ public final class IoOps {
   /**
    * Reinterpret the bytes of a string as a vector of numbers.
    *
-   * @param <T> data type for {@code output} output
    * @param inputBytes Tensor of string to be decoded.
    * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
    *  of the size of the output type.
@@ -177,7 +176,6 @@ public final class IoOps {
   /**
    * Reinterpret the bytes of a string as a vector of numbers.
    *
-   * @param <T> data type for {@code output} output
    * @param bytes All the elements must have the same length.
    * @param outType The value of the outType attribute
    * @param options carries optional attribute values
@@ -231,7 +229,6 @@ public final class IoOps {
    *  shape = [2 50]
    *  </pre>
    *
-   * @param <T> data type for {@code sparse_values} output
    * @param serializedSparse 2-D, The {@code N} serialized {@code SparseTensor} objects.
    *  Must have 3 columns.
    * @param dtype The {@code dtype} of the serialized {@code SparseTensor} objects.
@@ -581,7 +578,6 @@ public final class IoOps {
   /**
    * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
    *
-   * @param <T> data type for {@code output} output
    * @param serialized A scalar string containing a serialized TensorProto proto.
    * @param outType The type of the serialized tensor.  The provided type must match the
    *  type of the serialized tensor and no implicit conversion will take place.
@@ -883,7 +879,6 @@ public final class IoOps {
    *  rank {@code R-1}.
    *  <p>The minibatch size {@code N} is extracted from {@code sparse_shape[0]}.
    *
-   * @param <U> data type for {@code serialized_sparse} output
    * @param sparseIndices 2-D.  The {@code indices} of the minibatch {@code SparseTensor}.
    * @param sparseValues 1-D.  The {@code values} of the minibatch {@code SparseTensor}.
    * @param sparseShape 1-D.  The {@code shape} of the minibatch {@code SparseTensor}.
@@ -903,7 +898,6 @@ public final class IoOps {
    *  rank {@code R-1}.
    *  <p>The minibatch size {@code N} is extracted from {@code sparse_shape[0]}.
    *
-   * @param <U> data type for {@code serialized_sparse} output
    * @param sparseIndices 2-D.  The {@code indices} of the minibatch {@code SparseTensor}.
    * @param sparseValues 1-D.  The {@code values} of the minibatch {@code SparseTensor}.
    * @param sparseShape 1-D.  The {@code shape} of the minibatch {@code SparseTensor}.
@@ -920,7 +914,6 @@ public final class IoOps {
   /**
    * Serialize a {@code SparseTensor} into a {@code [3]} {@code Tensor} object.
    *
-   * @param <U> data type for {@code serialized_sparse} output
    * @param sparseIndices 2-D.  The {@code indices} of the {@code SparseTensor}.
    * @param sparseValues 1-D.  The {@code values} of the {@code SparseTensor}.
    * @param sparseShape 1-D.  The {@code shape} of the {@code SparseTensor}.
@@ -934,7 +927,6 @@ public final class IoOps {
   /**
    * Serialize a {@code SparseTensor} into a {@code [3]} {@code Tensor} object.
    *
-   * @param <U> data type for {@code serialized_sparse} output
    * @param sparseIndices 2-D.  The {@code indices} of the {@code SparseTensor}.
    * @param sparseValues 1-D.  The {@code values} of the {@code SparseTensor}.
    * @param sparseShape 1-D.  The {@code shape} of the {@code SparseTensor}.

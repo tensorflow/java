@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradient of the FractionalMaxPool function.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FractionalMaxPoolGrad.OP_NAME,

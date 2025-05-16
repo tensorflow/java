@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes second-order gradients of the maxpooling function.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MaxPoolGradGradWithArgmax.OP_NAME,

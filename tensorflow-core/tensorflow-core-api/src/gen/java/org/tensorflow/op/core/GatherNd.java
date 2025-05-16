@@ -57,9 +57,17 @@ import org.tensorflow.types.family.TType;
  * <pre>
  * indices.shape[:-1] + params.shape[indices.shape[-1]:]
  * </pre>
- * <p>Note that on CPU, if an out of bound index is found, an error is returned.
- * On GPU, if an out of bound index is found, a 0 is stored in the
- * corresponding output value.
+ * <p>If {@code indices} contains any out-of-bound indices, depending on
+ * {@code bad_indices_policy}, the op will either return an error or ignore the
+ * out-of-bound indices. {@code bad_indices_policy} can be one of the following values:
+ * <ol>
+ * <li>&quot;&quot; or &quot;DEFAULT&quot;: raises on CPU and ignore on GPU. This is because
+ * historically on CPU and GPU we handle errors in different ways, and for
+ * backward compatibility we keep the default behavior.</li>
+ * <li>&quot;ERROR&quot;: raises error; GPU does not support this value.</li>
+ * <li>&quot;IGNORE&quot;: ignore error and set the corresponding output to 0;
+ * supported on both CPU and GPU.</li>
+ * </ol>
  * <p>Some examples below.
  * <p>Simple indexing into a matrix:
  * <pre>
@@ -125,8 +133,6 @@ import org.tensorflow.types.family.TType;
  *     output = [['b0', 'b1'], ['d0', 'c1']]
  * </pre>
  * <p>See also {@code tf.gather} and {@code tf.batch_gather}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = GatherNd.OP_NAME,
@@ -153,6 +159,7 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
    * @param scope current scope
    * @param params The tensor from which to gather values.
    * @param indices Index tensor.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code GatherNd} output and operands
    * @return a new instance of GatherNd
    */
@@ -160,11 +167,28 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> GatherNd<T> create(Scope scope, Operand<T> params,
-      Operand<? extends TNumber> indices) {
+      Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GatherNd");
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.badIndicesPolicy != null) {
+          opBuilder.setAttr("bad_indices_policy", opts.badIndicesPolicy);
+        }
+      }
+    }
     return new GatherNd<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the badIndicesPolicy option.
+   *
+   * @param badIndicesPolicy the badIndicesPolicy option
+   * @return this Options instance.
+   */
+  public static Options badIndicesPolicy(String badIndicesPolicy) {
+    return new Options().badIndicesPolicy(badIndicesPolicy);
   }
 
   /**
@@ -180,6 +204,27 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.GatherNd}
+   */
+  public static class Options {
+    private String badIndicesPolicy;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the badIndicesPolicy option.
+     *
+     * @param badIndicesPolicy the badIndicesPolicy option
+     * @return this Options instance.
+     */
+    public Options badIndicesPolicy(String badIndicesPolicy) {
+      this.badIndicesPolicy = badIndicesPolicy;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -206,13 +251,19 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
      */
     public final DataType Tindices;
 
+    /**
+     * The badIndicesPolicy attribute
+     */
+    public final String badIndicesPolicy;
+
     public Inputs(GraphOperation op) {
-      super(new GatherNd<>(op), op, Arrays.asList("Tparams", "Tindices"));
+      super(new GatherNd<>(op), op, Arrays.asList("Tparams", "Tindices", "bad_indices_policy"));
       int inputIndex = 0;
       params = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
       Tparams = op.attributes().getAttrType("Tparams");
       Tindices = op.attributes().getAttrType("Tindices");
+      badIndicesPolicy = op.attributes().getAttrString("bad_indices_policy");
     }
   }
 }

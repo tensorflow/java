@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The RaggedFillEmptyRows operation
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = RaggedFillEmptyRows.OP_NAME,

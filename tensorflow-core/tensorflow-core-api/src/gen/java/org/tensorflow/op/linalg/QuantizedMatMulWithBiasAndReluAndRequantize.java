@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TNumber;
  * multiplication result. The bias size must match inner dimension of {@code b}.  Then do
  * relu activation to get non-negative result. Then do requantize operation to get
  * final uint8 result.
- *
- * @param <W> data type for {@code out} output
  */
 @OpMetadata(
     opType = QuantizedMatMulWithBiasAndReluAndRequantize.OP_NAME,

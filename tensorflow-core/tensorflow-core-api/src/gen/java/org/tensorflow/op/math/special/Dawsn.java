@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The Dawsn operation
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Dawsn.OP_NAME,

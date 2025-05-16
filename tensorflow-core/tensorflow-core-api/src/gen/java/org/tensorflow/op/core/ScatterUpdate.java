@@ -57,8 +57,6 @@ import org.tensorflow.types.family.TType;
  * <img style="width:100%" src="https://www.tensorflow.org/images/ScatterUpdate.png" alt>
  * </div>
  * <p>See also {@code tf.batch_scatter_update} and {@code tf.scatter_nd_update}.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterUpdate.OP_NAME,

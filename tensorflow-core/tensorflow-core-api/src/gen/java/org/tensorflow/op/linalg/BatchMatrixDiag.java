@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The BatchMatrixDiag operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchMatrixDiag.OP_NAME,

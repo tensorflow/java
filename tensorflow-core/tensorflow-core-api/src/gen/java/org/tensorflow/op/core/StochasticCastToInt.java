@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * Stochastically cast a given tensor from floats to ints.
  * The values are cast with a deterministic pseudo-random tensor from a uniform distribution generated from user given key, counter, algorithm. Values will saturate if out of the specified integer type range, and will become zero if inputs are NaN.
  * <p>The outputs are a deterministic function of {@code input}, {@code key}, {@code counter}, {@code alg}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StochasticCastToInt.OP_NAME,

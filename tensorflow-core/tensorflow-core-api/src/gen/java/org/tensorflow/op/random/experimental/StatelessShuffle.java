@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  *  [5, 6]]        [3, 4]]
  * </pre>
  * <p>The outputs are a deterministic function of {@code value}, {@code key}, {@code counter} and {@code alg}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessShuffle.OP_NAME,

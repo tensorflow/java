@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * That is for rows we have grad for, we update var as follows:
  * $$prox_v = var - alpha * grad$$
  * $$var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}$$
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = SparseApplyProximalGradientDescent.OP_NAME,

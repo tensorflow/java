@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * <p>For example, suppose there are 4 TPU instances: {@code [A, B, C, D]}. Passing
  * source_target_pairs={@code [[0,1],[1,2],[2,3],[3,0]]} gets the outputs:
  * {@code [D, A, B, C]}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CollectivePermute.OP_NAME,

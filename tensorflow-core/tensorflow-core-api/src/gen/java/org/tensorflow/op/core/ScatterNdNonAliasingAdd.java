@@ -63,8 +63,6 @@ import org.tensorflow.types.family.TType;
  * [1, 13, 3, 14, 14, 6, 7, 20]
  * </pre>
  * <p>See {@code tf.scatter_nd} for more details about how to make updates to slices.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ScatterNdNonAliasingAdd.OP_NAME,
@@ -94,6 +92,7 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
    * A tensor of indices into {@code input}.
    * @param updates A Tensor. Must have the same type as ref. A tensor of updated values
    * to add to {@code input}.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code ScatterNdNonAliasingAdd} output and operands
    * @return a new instance of ScatterNdNonAliasingAdd
    */
@@ -101,12 +100,29 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
       describeByClass = true
   )
   public static <T extends TType> ScatterNdNonAliasingAdd<T> create(Scope scope, Operand<T> input,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
+      Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ScatterNdNonAliasingAdd");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.badIndicesPolicy != null) {
+          opBuilder.setAttr("bad_indices_policy", opts.badIndicesPolicy);
+        }
+      }
+    }
     return new ScatterNdNonAliasingAdd<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the badIndicesPolicy option.
+   *
+   * @param badIndicesPolicy the badIndicesPolicy option
+   * @return this Options instance.
+   */
+  public static Options badIndicesPolicy(String badIndicesPolicy) {
+    return new Options().badIndicesPolicy(badIndicesPolicy);
   }
 
   /**
@@ -122,6 +138,27 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.ScatterNdNonAliasingAdd}
+   */
+  public static class Options {
+    private String badIndicesPolicy;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the badIndicesPolicy option.
+     *
+     * @param badIndicesPolicy the badIndicesPolicy option
+     * @return this Options instance.
+     */
+    public Options badIndicesPolicy(String badIndicesPolicy) {
+      this.badIndicesPolicy = badIndicesPolicy;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -155,14 +192,20 @@ public final class ScatterNdNonAliasingAdd<T extends TType> extends RawOp implem
      */
     public final DataType Tindices;
 
+    /**
+     * The badIndicesPolicy attribute
+     */
+    public final String badIndicesPolicy;
+
     public Inputs(GraphOperation op) {
-      super(new ScatterNdNonAliasingAdd<>(op), op, Arrays.asList("T", "Tindices"));
+      super(new ScatterNdNonAliasingAdd<>(op), op, Arrays.asList("T", "Tindices", "bad_indices_policy"));
       int inputIndex = 0;
       input = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
       updates = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       Tindices = op.attributes().getAttrType("Tindices");
+      badIndicesPolicy = op.attributes().getAttrString("bad_indices_policy");
     }
   }
 }

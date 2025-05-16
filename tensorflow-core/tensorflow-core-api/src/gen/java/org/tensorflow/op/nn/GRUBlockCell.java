@@ -73,8 +73,6 @@ import org.tensorflow.types.family.TNumber;
  *
  * h = (1-u) \circ c + u \circ h_prev
  * </pre>
- *
- * @param <T> data type for {@code r} output
  */
 @OpMetadata(
     opType = GRUBlockCell.OP_NAME,

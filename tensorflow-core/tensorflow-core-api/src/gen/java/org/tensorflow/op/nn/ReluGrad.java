@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear gradients for a Relu operation.
- *
- * @param <T> data type for {@code backprops} output
  */
 @OpMetadata(
     opType = ReluGrad.OP_NAME,

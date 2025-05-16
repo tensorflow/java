@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softplus gradients for a softplus operation.
- *
- * @param <T> data type for {@code backprops} output
  */
 @OpMetadata(
     opType = SoftplusGrad.OP_NAME,

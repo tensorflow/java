@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * Quantized Batch normalization.
  * This op is deprecated and will be removed in the future. Prefer
  * {@code tf.nn.batch_normalization}.
- *
- * @param <U> data type for {@code result} output
  */
 @OpMetadata(
     opType = QuantizedBatchNormWithGlobalNormalization.OP_NAME,

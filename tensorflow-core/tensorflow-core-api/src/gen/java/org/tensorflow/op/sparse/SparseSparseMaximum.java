@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Returns the element-wise max of two SparseTensors.
  * Assumes the two SparseTensors have the same shape, i.e., no broadcasting.
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseSparseMaximum.OP_NAME,

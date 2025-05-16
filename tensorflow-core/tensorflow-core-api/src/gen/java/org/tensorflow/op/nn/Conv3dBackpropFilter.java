@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradients of 3-D convolution with respect to the filter.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Conv3dBackpropFilter.OP_NAME,

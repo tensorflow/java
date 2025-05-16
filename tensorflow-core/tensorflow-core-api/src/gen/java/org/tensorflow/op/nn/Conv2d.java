@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TNumber;
  * </pre>
  * <p>Must have {@code strides[0] = strides[3] = 1}.  For the most common case of the same
  * horizontal and vertices strides, {@code strides = [1, stride, stride, 1]}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Conv2d.OP_NAME,

@@ -66,8 +66,6 @@ import org.tensorflow.types.family.TType;
  * [[8, 0],
  *  [0, 0]]
  * </pre>
- *
- * @param <T> data type for {@code outputs} output
  */
 @OpMetadata(
     opType = SplitND.OP_NAME,
@@ -98,11 +96,6 @@ public final class SplitND<T extends TType> extends RawOp implements Iterable<Op
    *
    * @param scope current scope
    * @param input Input tensor to split across all dimensions.
-   * }
-   * out_arg {
-   * name: &quot;outputs&quot;
-   * description: &lt;&lt;END
-   * Output slices based on input and num_splits defined, in row-major order.
    * @param N The value of the N attribute
    * @param numSplits Number of ways to split per dimension. Shape dimensions must be evenly
    * divisible.
@@ -161,7 +154,7 @@ public final class SplitND<T extends TType> extends RawOp implements Iterable<Op
 
   /**
    * Gets outputs.
-   *
+   * Output slices based on input and num_splits defined, in row-major order.
    * @return outputs.
    */
   public List<Output<T>> outputs() {
@@ -214,11 +207,6 @@ public final class SplitND<T extends TType> extends RawOp implements Iterable<Op
   public static class Inputs<T extends TType> extends RawOpInputs<SplitND<T>> {
     /**
      * Input tensor to split across all dimensions.
-     * }
-     * out_arg {
-     * name: &quot;outputs&quot;
-     * description: &lt;&lt;END
-     * Output slices based on input and num_splits defined, in row-major order.
      */
     public final Operand<T> input;
 

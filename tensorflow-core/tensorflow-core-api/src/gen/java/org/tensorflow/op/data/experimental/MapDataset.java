@@ -98,6 +98,9 @@ public final class MapDataset extends RawOp implements Operand<TType> {
         if (opts.preserveCardinality != null) {
           opBuilder.setAttr("preserve_cardinality", opts.preserveCardinality);
         }
+        if (opts.forceSynchronous != null) {
+          opBuilder.setAttr("force_synchronous", opts.forceSynchronous);
+        }
       }
     }
     return new MapDataset(opBuilder.build());
@@ -124,6 +127,16 @@ public final class MapDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the forceSynchronous option.
+   *
+   * @param forceSynchronous the forceSynchronous option
+   * @return this Options instance.
+   */
+  public static Options forceSynchronous(Boolean forceSynchronous) {
+    return new Options().forceSynchronous(forceSynchronous);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -145,6 +158,8 @@ public final class MapDataset extends RawOp implements Operand<TType> {
     private Boolean useInterOpParallelism;
 
     private Boolean preserveCardinality;
+
+    private Boolean forceSynchronous;
 
     private Options() {
     }
@@ -168,6 +183,17 @@ public final class MapDataset extends RawOp implements Operand<TType> {
      */
     public Options preserveCardinality(Boolean preserveCardinality) {
       this.preserveCardinality = preserveCardinality;
+      return this;
+    }
+
+    /**
+     * Sets the forceSynchronous option.
+     *
+     * @param forceSynchronous the forceSynchronous option
+     * @return this Options instance.
+     */
+    public Options forceSynchronous(Boolean forceSynchronous) {
+      this.forceSynchronous = forceSynchronous;
       return this;
     }
   }
@@ -211,8 +237,13 @@ public final class MapDataset extends RawOp implements Operand<TType> {
      */
     public final boolean preserveCardinality;
 
+    /**
+     * The forceSynchronous attribute
+     */
+    public final boolean forceSynchronous;
+
     public Inputs(GraphOperation op) {
-      super(new MapDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "preserve_cardinality"));
+      super(new MapDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "preserve_cardinality", "force_synchronous"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int otherArgumentsLength = op.inputListLength("other_arguments");
@@ -223,6 +254,7 @@ public final class MapDataset extends RawOp implements Operand<TType> {
       outputShapes = op.attributes().getAttrShapeList("output_shapes");
       useInterOpParallelism = op.attributes().getAttrBool("use_inter_op_parallelism");
       preserveCardinality = op.attributes().getAttrBool("preserve_cardinality");
+      forceSynchronous = op.attributes().getAttrBool("force_synchronous");
     }
   }
 }

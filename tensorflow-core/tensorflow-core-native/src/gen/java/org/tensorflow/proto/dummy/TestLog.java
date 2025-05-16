@@ -31,9 +31,9 @@ public final class TestLog {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          org.tensorflow.util.testlog.TestLogProtos.getDescriptor(),
+          org.tensorflow.proto.TestLogProtos.getDescriptor(),
         });
-    org.tensorflow.util.testlog.TestLogProtos.getDescriptor();
+    org.tensorflow.proto.TestLogProtos.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Forwards the {@code index}th element of {@code inputs} to {@code output}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RefSelect.OP_NAME,

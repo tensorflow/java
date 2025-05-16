@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The BatchSelfAdjointEigV2 operation
- *
- * @param <T> data type for {@code e} output
  */
 @OpMetadata(
     opType = BatchSelfAdjointEig.OP_NAME,

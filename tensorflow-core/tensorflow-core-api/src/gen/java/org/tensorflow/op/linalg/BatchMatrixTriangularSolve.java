@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The BatchMatrixTriangularSolve operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchMatrixTriangularSolve.OP_NAME,

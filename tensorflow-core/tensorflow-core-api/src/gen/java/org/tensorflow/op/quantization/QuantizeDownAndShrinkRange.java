@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TNumber;
  * input values that only uses a small fraction of the possible range. By feeding
  * that output into this operator, we can reduce it from 32 bits down to 8 with
  * minimal loss of accuracy.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizeDownAndShrinkRange.OP_NAME,

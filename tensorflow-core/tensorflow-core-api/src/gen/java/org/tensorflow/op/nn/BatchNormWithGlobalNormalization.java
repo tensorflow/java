@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Batch normalization.
  * This op is deprecated. Prefer {@code tf.nn.batch_normalization}.
- *
- * @param <T> data type for {@code result} output
  */
 @OpMetadata(
     opType = BatchNormWithGlobalNormalization.OP_NAME,

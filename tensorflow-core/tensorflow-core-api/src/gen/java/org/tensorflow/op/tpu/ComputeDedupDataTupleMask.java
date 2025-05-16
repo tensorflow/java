@@ -29,7 +29,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
@@ -42,14 +41,11 @@ import org.tensorflow.types.TInt32;
     opType = ComputeDedupDataTupleMask.OP_NAME,
     inputsClass = ComputeDedupDataTupleMask.Inputs.class
 )
-@Operator(
-    group = "tpu"
-)
 public final class ComputeDedupDataTupleMask extends RawOp implements Operand<TInt32> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "ComputeDedupDataTupleMask";
+  public static final String OP_NAME = "ComputeDedupDataTupleMaskV2";
 
   private Output<TInt32> outputShape;
 
@@ -60,18 +56,25 @@ public final class ComputeDedupDataTupleMask extends RawOp implements Operand<TI
   }
 
   /**
-   * Factory method to create a class wrapping a new ComputeDedupDataTupleMask operation.
+   * Factory method to create a class wrapping a new ComputeDedupDataTupleMaskV2 operation.
    *
    * @param scope current scope
    * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @param embeddingPartitions Serialized EmbeddingPartitionsProto proto.
+   * @param hbmBuffersConfig Serialized HbmBuffersConfig proto.
+   * @param tpuTopology Serialized TpuTopologyArgsProto proto.
    * @return a new instance of ComputeDedupDataTupleMask
    */
   @Endpoint(
       describeByClass = true
   )
-  public static ComputeDedupDataTupleMask create(Scope scope, String config) {
+  public static ComputeDedupDataTupleMask create(Scope scope, String config,
+      String embeddingPartitions, String hbmBuffersConfig, String tpuTopology) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ComputeDedupDataTupleMask");
     opBuilder.setAttr("config", config);
+    opBuilder.setAttr("embedding_partitions", embeddingPartitions);
+    opBuilder.setAttr("hbm_buffers_config", hbmBuffersConfig);
+    opBuilder.setAttr("tpu_topology", tpuTopology);
     return new ComputeDedupDataTupleMask(opBuilder.build());
   }
 
@@ -103,10 +106,28 @@ public final class ComputeDedupDataTupleMask extends RawOp implements Operand<TI
      */
     public final String config;
 
+    /**
+     * Serialized EmbeddingPartitionsProto proto.
+     */
+    public final String embeddingPartitions;
+
+    /**
+     * Serialized HbmBuffersConfig proto.
+     */
+    public final String hbmBuffersConfig;
+
+    /**
+     * Serialized TpuTopologyArgsProto proto.
+     */
+    public final String tpuTopology;
+
     public Inputs(GraphOperation op) {
-      super(new ComputeDedupDataTupleMask(op), op, Arrays.asList("config"));
+      super(new ComputeDedupDataTupleMask(op), op, Arrays.asList("config", "embedding_partitions", "hbm_buffers_config", "tpu_topology"));
       int inputIndex = 0;
       config = op.attributes().getAttrString("config");
+      embeddingPartitions = op.attributes().getAttrString("embedding_partitions");
+      hbmBuffersConfig = op.attributes().getAttrString("hbm_buffers_config");
+      tpuTopology = op.attributes().getAttrString("tpu_topology");
     }
   }
 }

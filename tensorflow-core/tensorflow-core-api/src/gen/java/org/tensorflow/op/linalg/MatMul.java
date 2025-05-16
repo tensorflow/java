@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * true).
  * <p><em>Note</em>: The default kernel implementation for MatMul on GPUs uses
  * cublas.
- *
- * @param <T> data type for {@code product} output
  */
 @OpMetadata(
     opType = MatMul.OP_NAME,

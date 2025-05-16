@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The CopyToMesh operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CopyToMesh.OP_NAME,

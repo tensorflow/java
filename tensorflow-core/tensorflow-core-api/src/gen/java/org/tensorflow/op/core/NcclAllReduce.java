@@ -46,8 +46,6 @@ import org.tensorflow.types.family.TNumber;
  * num_devices: The number of devices participating in this reduction.
  * shared_name: Identifier that shared between ops of the same reduction.
  *
- * @param <T> data type for {@code data} output
- *
  * @deprecated use {@link org.tensorflow.op.distribute.NcclAllReduce} instead
  */
 @OpMetadata(

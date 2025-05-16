@@ -107,6 +107,9 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
         if (opts.preserveCardinality != null) {
           opBuilder.setAttr("preserve_cardinality", opts.preserveCardinality);
         }
+        if (opts.useUnboundedThreadpool != null) {
+          opBuilder.setAttr("use_unbounded_threadpool", opts.useUnboundedThreadpool);
+        }
         if (opts.metadata != null) {
           opBuilder.setAttr("metadata", opts.metadata);
         }
@@ -146,6 +149,16 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the useUnboundedThreadpool option.
+   *
+   * @param useUnboundedThreadpool the useUnboundedThreadpool option
+   * @return this Options instance.
+   */
+  public static Options useUnboundedThreadpool(Boolean useUnboundedThreadpool) {
+    return new Options().useUnboundedThreadpool(useUnboundedThreadpool);
+  }
+
+  /**
    * Sets the metadata option.
    *
    * @param metadata the metadata option
@@ -179,6 +192,8 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
     private String deterministic;
 
     private Boolean preserveCardinality;
+
+    private Boolean useUnboundedThreadpool;
 
     private String metadata;
 
@@ -215,6 +230,17 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
      */
     public Options preserveCardinality(Boolean preserveCardinality) {
       this.preserveCardinality = preserveCardinality;
+      return this;
+    }
+
+    /**
+     * Sets the useUnboundedThreadpool option.
+     *
+     * @param useUnboundedThreadpool the useUnboundedThreadpool option
+     * @return this Options instance.
+     */
+    public Options useUnboundedThreadpool(Boolean useUnboundedThreadpool) {
+      this.useUnboundedThreadpool = useUnboundedThreadpool;
       return this;
     }
 
@@ -281,12 +307,17 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
     public final boolean preserveCardinality;
 
     /**
+     * The useUnboundedThreadpool attribute
+     */
+    public final boolean useUnboundedThreadpool;
+
+    /**
      * The metadata attribute
      */
     public final String metadata;
 
     public Inputs(GraphOperation op) {
-      super(new ParallelMapDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "deterministic", "preserve_cardinality", "metadata"));
+      super(new ParallelMapDataset(op), op, Arrays.asList("Targuments", "output_types", "output_shapes", "use_inter_op_parallelism", "deterministic", "preserve_cardinality", "use_unbounded_threadpool", "metadata"));
       int inputIndex = 0;
       inputDataset = (Operand<? extends TType>) op.input(inputIndex++);
       int otherArgumentsLength = op.inputListLength("other_arguments");
@@ -299,6 +330,7 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
       useInterOpParallelism = op.attributes().getAttrBool("use_inter_op_parallelism");
       deterministic = op.attributes().getAttrString("deterministic");
       preserveCardinality = op.attributes().getAttrBool("preserve_cardinality");
+      useUnboundedThreadpool = op.attributes().getAttrBool("use_unbounded_threadpool");
       metadata = op.attributes().getAttrString("metadata");
     }
   }

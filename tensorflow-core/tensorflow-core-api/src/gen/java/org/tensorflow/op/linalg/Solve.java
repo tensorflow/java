@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * satisfies {@code matrix[..., :, :] * output[..., :, :] = rhs[..., :, :]}.
  * If {@code adjoint} is {@code True} then each output matrix satisfies
  * {@code adjoint(matrix[..., :, :]) * output[..., :, :] = rhs[..., :, :]}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Solve.OP_NAME,

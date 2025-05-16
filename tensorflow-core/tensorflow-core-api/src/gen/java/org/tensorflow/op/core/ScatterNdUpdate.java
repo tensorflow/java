@@ -62,8 +62,6 @@ import org.tensorflow.types.family.TType;
  * <p>See {@code tf.scatter_nd} for more details about how to make updates to
  * slices.
  * <p>See also {@code tf.scatter_update} and {@code tf.batch_scatter_update}.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterNdUpdate.OP_NAME,
@@ -111,6 +109,9 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
         if (opts.useLocking != null) {
           opBuilder.setAttr("use_locking", opts.useLocking);
         }
+        if (opts.badIndicesPolicy != null) {
+          opBuilder.setAttr("bad_indices_policy", opts.badIndicesPolicy);
+        }
       }
     }
     return new ScatterNdUpdate<>(opBuilder.build());
@@ -126,6 +127,16 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
+  }
+
+  /**
+   * Sets the badIndicesPolicy option.
+   *
+   * @param badIndicesPolicy the badIndicesPolicy option
+   * @return this Options instance.
+   */
+  public static Options badIndicesPolicy(String badIndicesPolicy) {
+    return new Options().badIndicesPolicy(badIndicesPolicy);
   }
 
   /**
@@ -149,6 +160,8 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
   public static class Options {
     private Boolean useLocking;
 
+    private String badIndicesPolicy;
+
     private Options() {
     }
 
@@ -162,6 +175,17 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
      */
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the badIndicesPolicy option.
+     *
+     * @param badIndicesPolicy the badIndicesPolicy option
+     * @return this Options instance.
+     */
+    public Options badIndicesPolicy(String badIndicesPolicy) {
+      this.badIndicesPolicy = badIndicesPolicy;
       return this;
     }
   }
@@ -204,8 +228,13 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
      */
     public final boolean useLocking;
 
+    /**
+     * The badIndicesPolicy attribute
+     */
+    public final String badIndicesPolicy;
+
     public Inputs(GraphOperation op) {
-      super(new ScatterNdUpdate<>(op), op, Arrays.asList("T", "Tindices", "use_locking"));
+      super(new ScatterNdUpdate<>(op), op, Arrays.asList("T", "Tindices", "use_locking", "bad_indices_policy"));
       int inputIndex = 0;
       ref = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
@@ -213,6 +242,7 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
       T = op.attributes().getAttrType("T");
       Tindices = op.attributes().getAttrType("Tindices");
       useLocking = op.attributes().getAttrBool("use_locking");
+      badIndicesPolicy = op.attributes().getAttrString("bad_indices_policy");
     }
   }
 }

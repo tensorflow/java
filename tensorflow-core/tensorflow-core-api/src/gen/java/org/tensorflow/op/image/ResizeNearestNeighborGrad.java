@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of nearest neighbor interpolation.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ResizeNearestNeighborGrad.OP_NAME,

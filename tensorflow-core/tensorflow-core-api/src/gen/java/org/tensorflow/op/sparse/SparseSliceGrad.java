@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * This op takes in the upstream gradient w.r.t. non-empty values of
  * the sliced {@code SparseTensor}, and outputs the gradients w.r.t.
  * the non-empty values of input {@code SparseTensor}.
- *
- * @param <T> data type for {@code val_grad} output
  */
 @OpMetadata(
     opType = SparseSliceGrad.OP_NAME,

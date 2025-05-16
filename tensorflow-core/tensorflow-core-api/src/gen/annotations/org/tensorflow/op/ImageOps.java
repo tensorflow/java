@@ -93,7 +93,6 @@ public final class ImageOps {
    *  channel and then adjusts each component of each pixel to
    *  {@code (x - mean) * contrast_factor + mean}.
    *
-   * @param <T> data type for {@code output} output
    * @param images Images to adjust.  At least 3-D.
    * @param contrastFactor A float multiplier for adjusting contrast.
    * @param <T> data type for {@code AdjustContrastv2} output and operands
@@ -112,7 +111,6 @@ public final class ImageOps {
    *  colors are first mapped into HSV. A delta is then applied all the hue values,
    *  and then remapped back to RGB colorspace.
    *
-   * @param <T> data type for {@code output} output
    * @param images Images to adjust.  At least 3-D.
    * @param delta A float delta to add to the hue.
    * @param <T> data type for {@code AdjustHue} output and operands
@@ -130,7 +128,6 @@ public final class ImageOps {
    *  colors are first mapped into HSV. A scale is then applied all the saturation
    *  values, and then remapped back to RGB colorspace.
    *
-   * @param <T> data type for {@code output} output
    * @param images Images to adjust.  At least 3-D.
    * @param scale A float scale to add to the saturation.
    * @param <T> data type for {@code AdjustSaturation} output and operands
@@ -250,7 +247,6 @@ public final class ImageOps {
   /**
    * Computes the gradient of the crop_and_resize op wrt the input image tensor.
    *
-   * @param <T> data type for {@code output} output
    * @param grads A 4-D tensor of shape {@code [num_boxes, crop_height, crop_width, depth]}.
    * @param boxes A 2-D tensor of shape {@code [num_boxes, 4]}. The {@code i}-th row of the tensor
    *  specifies the coordinates of a box in the {@code box_ind[i]} image and is specified
@@ -357,7 +353,6 @@ public final class ImageOps {
    *  first frame that does not occupy the entire canvas, it uses the previous
    *  frame to fill the unoccupied areas.
    *
-   * @param <T> data type for {@code image} output
    * @param contents 0-D. The encoded image bytes.
    * @param options carries optional attribute values
    * @return a new instance of DecodeImage, with default output types
@@ -384,7 +379,6 @@ public final class ImageOps {
    *  first frame that does not occupy the entire canvas, it uses the previous
    *  frame to fill the unoccupied areas.
    *
-   * @param <T> data type for {@code image} output
    * @param contents 0-D. The encoded image bytes.
    * @param dtype The desired DType of the returned Tensor.
    * @param options carries optional attribute values
@@ -438,7 +432,6 @@ public final class ImageOps {
    *  <p>This op also supports decoding JPEGs and non-animated GIFs since the interface
    *  is the same, though it is cleaner to use {@code tf.io.decode_image}.
    *
-   * @param <T> data type for {@code image} output
    * @param contents 0-D.  The PNG-encoded image.
    * @param options carries optional attribute values
    * @return a new instance of DecodePng, with default output types
@@ -463,7 +456,6 @@ public final class ImageOps {
    *  <p>This op also supports decoding JPEGs and non-animated GIFs since the interface
    *  is the same, though it is cleaner to use {@code tf.io.decode_image}.
    *
-   * @param <T> data type for {@code image} output
    * @param contents 0-D.  The PNG-encoded image.
    * @param dtype The value of the dtype attribute
    * @param options carries optional attribute values
@@ -487,7 +479,6 @@ public final class ImageOps {
    *  the bounding box will be {@code (40, 10)} to {@code (100, 50)} (in (x,y) coordinates).
    *  <p>Parts of the bounding box may fall outside the image.
    *
-   * @param <T> data type for {@code output} output
    * @param images 4-D with shape {@code [batch, height, width, depth]}. A batch of images.
    * @param boxes 3-D with shape {@code [batch, num_bounding_boxes, 4]} containing bounding
    *  boxes.
@@ -602,7 +593,6 @@ public final class ImageOps {
   /**
    * Extract {@code patches} from {@code images} and put them in the &quot;depth&quot; output dimension.
    *
-   * @param <T> data type for {@code patches} output
    * @param images 4-D Tensor with shape {@code [batch, in_rows, in_cols, depth]}.
    * @param ksizes The size of the sliding window for each dimension of {@code images}.
    * @param strides How far the centers of two consecutive patches are in
@@ -626,7 +616,6 @@ public final class ImageOps {
    * Extract the shape information of a JPEG-encoded image.
    *  This op only parses the image header, so it is much faster than DecodeJpeg.
    *
-   * @param <T> data type for {@code image_shape} output
    * @param contents 0-D. The JPEG-encoded image.
    * @return a new instance of ExtractJpegShape, with default output types
    */
@@ -638,7 +627,6 @@ public final class ImageOps {
    * Extract the shape information of a JPEG-encoded image.
    *  This op only parses the image header, so it is much faster than DecodeJpeg.
    *
-   * @param <T> data type for {@code image_shape} output
    * @param contents 0-D. The JPEG-encoded image.
    * @param outputType (Optional) The output type of the operation (int32 or int64).
    *  Defaults to int32.
@@ -691,7 +679,6 @@ public final class ImageOps {
    *  are in {@code [0,1]}.
    *  <p>See {@code rgb_to_hsv} for a description of the HSV encoding.
    *
-   * @param <T> data type for {@code output} output
    * @param images 1-D or higher rank. HSV data to convert. Last dimension must be size 3.
    * @param <T> data type for {@code HSVToRGB} output and operands
    * @return a new instance of HsvToRgb
@@ -708,7 +695,6 @@ public final class ImageOps {
    *  {@code k = c0 x + c1 y + 1}. If the transformed point lays outside of the input
    *  image, the output pixel is set to 0.
    *
-   * @param <T> data type for {@code transformed_images} output
    * @param images 4-D with shape {@code [batch, height, width, channels]}.
    * @param transforms 2-D Tensor, {@code [batch, 8]} or {@code [1, 8]} matrix, where each row corresponds to a 3 x 3
    *  projective transformation matrix, with the last entry assumed to be 1. If there
@@ -733,7 +719,6 @@ public final class ImageOps {
    *  {@code k = c0 x + c1 y + 1}. If the transformed point lays outside of the input
    *  image, the output pixel is set to fill_value.
    *
-   * @param <T> data type for {@code transformed_images} output
    * @param images 4-D with shape {@code [batch, height, width, channels]}.
    * @param transforms 2-D Tensor, {@code [batch, 8]} or {@code [1, 8]} matrix, where each row corresponds to a 3 x 3
    *  projective transformation matrix, with the last entry assumed to be 1. If there
@@ -794,7 +779,6 @@ public final class ImageOps {
    *  To enable this Soft-NMS mode, set the {@code soft_nms_sigma} parameter to be
    *  larger than 0.
    *
-   * @param <T> data type for {@code selected_scores} output
    * @param boxes A 2-D float tensor of shape {@code [num_boxes, 4]}.
    * @param scores A 1-D float tensor of shape {@code [num_boxes]} representing a single
    *  score corresponding to each box (each row of boxes).
@@ -854,7 +838,6 @@ public final class ImageOps {
    * Resize quantized {@code images} to {@code size} using quantized bilinear interpolation.
    *  Input images and output images must be quantized types.
    *
-   * @param <T> data type for {@code resized_images} output
    * @param images 4-D with shape {@code [batch, height, width, channels]}.
    * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
@@ -878,7 +861,6 @@ public final class ImageOps {
    *  rectangle from that location.  The random location is picked so the cropped
    *  area will fit inside the original image.
    *
-   * @param <T> data type for {@code output} output
    * @param image 3-D of shape {@code [height, width, channels]}.
    * @param sizeOutput 1-D of length 2 containing: {@code crop_height}, {@code crop_width}..
    * @param options carries optional attribute values
@@ -931,7 +913,6 @@ public final class ImageOps {
   /**
    * Computes the gradient of bicubic interpolation.
    *
-   * @param <T> data type for {@code output} output
    * @param grads 4-D with shape {@code [batch, height, width, channels]}.
    * @param originalImage 4-D with shape {@code [batch, orig_height, orig_width, channels]},
    *  The image tensor that was resized.
@@ -962,7 +943,6 @@ public final class ImageOps {
   /**
    * Computes the gradient of bilinear interpolation.
    *
-   * @param <T> data type for {@code output} output
    * @param grads 4-D with shape {@code [batch, height, width, channels]}.
    * @param originalImage 4-D with shape {@code [batch, orig_height, orig_width, channels]},
    *  The image tensor that was resized.
@@ -978,7 +958,6 @@ public final class ImageOps {
   /**
    * Resize {@code images} to {@code size} using nearest neighbor interpolation.
    *
-   * @param <T> data type for {@code resized_images} output
    * @param images 4-D with shape {@code [batch, height, width, channels]}.
    * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
@@ -994,7 +973,6 @@ public final class ImageOps {
   /**
    * Computes the gradient of nearest neighbor interpolation.
    *
-   * @param <T> data type for {@code output} output
    * @param grads 4-D with shape {@code [batch, height, width, channels]}.
    * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code orig_height, orig_width}. The
    *  original input size.
@@ -1031,7 +1009,6 @@ public final class ImageOps {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param <T> data type for {@code output} output
    * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.
    * @param <T> data type for {@code RGBToHSV} output and operands
    * @return a new instance of RgbToHsv
@@ -1076,7 +1053,6 @@ public final class ImageOps {
    *  bounding box covering the whole image. If {@code use_image_if_no_bounding_boxes} is
    *  false and no bounding boxes are supplied, an error is raised.
    *
-   * @param <T> data type for {@code begin} output
    * @param imageSize 1-D, containing {@code [height, width, channels]}.
    * @param boundingBoxes 3-D with shape {@code [batch, N, 4]} describing the N bounding boxes
    *  associated with the image.
@@ -1113,7 +1089,6 @@ public final class ImageOps {
   /**
    * The ScaleAndTranslateGrad operation
    *
-   * @param <T> data type for {@code output} output
    * @param grads The grads value
    * @param originalImage The originalImage value
    * @param scale The scale value
@@ -1189,7 +1164,6 @@ public final class ImageOps {
    *  bounding box covering the whole image. If {@code use_image_if_no_bounding_boxes} is
    *  false and no bounding boxes are supplied, an error is raised.
    *
-   * @param <T> data type for {@code begin} output
    * @param imageSize 1-D, containing {@code [height, width, channels]}.
    * @param boundingBoxes 3-D with shape {@code [batch, N, 4]} describing the N bounding boxes
    *  associated with the image.

@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Exits the current frame to its parent frame.
  * Exit makes its input {@code data} available to the parent frame.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Exit.OP_NAME,

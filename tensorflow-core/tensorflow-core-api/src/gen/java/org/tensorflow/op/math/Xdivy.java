@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns 0 if x == 0, and x / y otherwise, elementwise.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Xdivy.OP_NAME,

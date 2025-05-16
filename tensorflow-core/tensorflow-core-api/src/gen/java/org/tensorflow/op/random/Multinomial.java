@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Draws samples from a multinomial distribution.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Multinomial.OP_NAME,

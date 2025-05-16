@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradients of convolution with respect to the input.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Conv2dBackpropInput.OP_NAME,

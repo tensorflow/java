@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 /**
  * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
  * outputs outside the XLA computation. Supports ND sharding.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = PartitionedOutput.OP_NAME,

@@ -203,7 +203,6 @@ public final class RandomOps {
   /**
    * Draws samples from a multinomial distribution.
    *
-   * @param <U> data type for {@code output} output
    * @param logits 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
    *  represents the unnormalized log probabilities for all classes.
    * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
@@ -218,7 +217,6 @@ public final class RandomOps {
   /**
    * Draws samples from a multinomial distribution.
    *
-   * @param <U> data type for {@code output} output
    * @param logits 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
    *  represents the unnormalized log probabilities for all classes.
    * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
@@ -236,7 +234,6 @@ public final class RandomOps {
    * Non-deterministically generates some integers.
    *  This op may use some OS-provided source of non-determinism (e.g. an RNG), so each execution will give different results.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @return a new instance of NonDeterministicInts, with default output types
    */
@@ -248,7 +245,6 @@ public final class RandomOps {
    * Non-deterministically generates some integers.
    *  This op may use some OS-provided source of non-determinism (e.g. an RNG), so each execution will give different results.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
    * @param <U> data type for {@code NonDeterministicInts} output and operands
@@ -264,7 +260,6 @@ public final class RandomOps {
    *  scalar which applies to the entire output, or a vector of length shape[0] which
    *  stores the parameters for each batch.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor. Batches are indexed by the 0th dimension.
    * @param means The mean parameter of each batch.
    * @param stdevs The standard deviation parameter of each batch. Must be greater than 0.
@@ -287,7 +282,6 @@ public final class RandomOps {
    *  transformation-rejection from pairs of uniform and normal random variables.
    *  See http://dl.acm.org/citation.cfm?id=358414
    *
-   * @param <U> data type for {@code output} output
    * @param shape 1-D integer tensor. Shape of independent samples to draw from each
    *  distribution described by the shape parameters given in alpha.
    * @param alpha A tensor in which each scalar is a &quot;shape&quot; parameter describing the
@@ -304,7 +298,6 @@ public final class RandomOps {
   /**
    * Computes the derivative of a Gamma random sample w.r.t. {@code alpha}.
    *
-   * @param <T> data type for {@code output} output
    * @param alpha The alpha value
    * @param sample The sample value
    * @param <T> data type for {@code RandomGammaGrad} output and operands
@@ -326,7 +319,6 @@ public final class RandomOps {
    *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
    *  Programming, Volume 2. Addison Wesley
    *
-   * @param <V> data type for {@code output} output
    * @param shape 1-D integer tensor. Shape of independent samples to draw from each
    *  distribution described by the shape parameters given in rate.
    * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
@@ -350,7 +342,6 @@ public final class RandomOps {
    *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
    *  Programming, Volume 2. Addison Wesley
    *
-   * @param <V> data type for {@code output} output
    * @param shape 1-D integer tensor. Shape of independent samples to draw from each
    *  distribution described by the shape parameters given in rate.
    * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
@@ -376,7 +367,6 @@ public final class RandomOps {
    *   [5, 6]]        [3, 4]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param value The tensor to be shuffled.
    * @param options carries optional attribute values
    * @param <T> data type for {@code RandomShuffle} output and operands
@@ -391,7 +381,6 @@ public final class RandomOps {
    * Outputs random values from a normal distribution.
    *  The generated values will have mean 0 and standard deviation 1.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
    * @param options carries optional attribute values
@@ -408,7 +397,6 @@ public final class RandomOps {
    *  The generated values follow a uniform distribution in the range {@code [0, 1)}. The
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
    * @param options carries optional attribute values
@@ -429,7 +417,6 @@ public final class RandomOps {
    *  power of two.  The bias is small for values of {@code maxval - minval} significantly
    *  smaller than the range of the output (either {@code 2^32} or {@code 2^64}).
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param minval 0-D.  Inclusive lower bound on the generated integers.
    * @param maxval 0-D.  Exclusive upper bound on the generated integers.
@@ -491,7 +478,6 @@ public final class RandomOps {
   /**
    * The StatefulRandomBinomial operation
    *
-   * @param <V> data type for {@code output} output
    * @param resource The resource value
    * @param algorithm The algorithm value
    * @param shape The shape value
@@ -509,7 +495,6 @@ public final class RandomOps {
   /**
    * The StatefulRandomBinomial operation
    *
-   * @param <V> data type for {@code output} output
    * @param resource The resource value
    * @param algorithm The algorithm value
    * @param shape The shape value
@@ -530,7 +515,6 @@ public final class RandomOps {
    * Outputs random values from a normal distribution.
    *  The generated values will have mean 0 and standard deviation 1.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -545,7 +529,6 @@ public final class RandomOps {
    * Outputs random values from a normal distribution.
    *  The generated values will have mean 0 and standard deviation 1.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -565,7 +548,6 @@ public final class RandomOps {
    *  deviation 1, except that values whose magnitude is more than 2 standard
    *  deviations from the mean are dropped and re-picked.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -583,7 +565,6 @@ public final class RandomOps {
    *  deviation 1, except that values whose magnitude is more than 2 standard
    *  deviations from the mean are dropped and re-picked.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -602,7 +583,6 @@ public final class RandomOps {
    *  The generated values follow a uniform distribution in the range {@code [0, 1)}. The
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -618,7 +598,6 @@ public final class RandomOps {
    *  The generated values follow a uniform distribution in the range {@code [0, 1)}. The
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -635,7 +614,6 @@ public final class RandomOps {
    * Outputs random integers from a uniform distribution.
    *  The generated values are uniform integers covering the whole range of {@code dtype}.
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -658,7 +636,6 @@ public final class RandomOps {
    *  power of two.  The bias is small for values of {@code maxval - minval} significantly
    *  smaller than the range of the output (either {@code 2^32} or {@code 2^64}).
    *
-   * @param <U> data type for {@code output} output
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
@@ -676,7 +653,6 @@ public final class RandomOps {
   /**
    * Draws samples from a multinomial distribution.
    *
-   * @param <V> data type for {@code output} output
    * @param logits 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
    *  represents the unnormalized log probabilities for all classes.
    * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
@@ -691,7 +667,6 @@ public final class RandomOps {
   /**
    * Draws samples from a multinomial distribution.
    *
-   * @param <V> data type for {@code output} output
    * @param logits 2-D Tensor with shape {@code [batch_size, num_classes]}.  Each slice {@code [i, :]}
    *  represents the unnormalized log probabilities for all classes.
    * @param numSamples 0-D.  Number of independent samples to draw for each row slice.
@@ -709,7 +684,6 @@ public final class RandomOps {
   /**
    * The StatelessParameterizedTruncatedNormal operation
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param means The mean parameter of each batch.
@@ -731,7 +705,6 @@ public final class RandomOps {
    *  Outputs random values from a binomial distribution.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code seed}, {@code counts}, and {@code probs}.
    *
-   * @param <W> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param counts The counts of the binomial distribution. Must be broadcastable with {@code probs},
@@ -752,7 +725,6 @@ public final class RandomOps {
    *  Outputs random values from a binomial distribution.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code seed}, {@code counts}, and {@code probs}.
    *
-   * @param <W> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param counts The counts of the binomial distribution. Must be broadcastable with {@code probs},
@@ -775,7 +747,6 @@ public final class RandomOps {
    *  Outputs random values from a gamma distribution.
    *  <p>The outputs are a deterministic function of the inputs.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -830,7 +801,6 @@ public final class RandomOps {
    *  The generated values will have mean 0 and standard deviation 1.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomNormal, with default output types
@@ -845,7 +815,6 @@ public final class RandomOps {
    *  The generated values will have mean 0 and standard deviation 1.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param dtype The type of the output.
@@ -862,7 +831,6 @@ public final class RandomOps {
    *  The generated values will have mean 0 and standard deviation 1.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -879,7 +847,6 @@ public final class RandomOps {
    *  The generated values will have mean 0 and standard deviation 1.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -899,7 +866,6 @@ public final class RandomOps {
    *  Outputs random values from a Poisson distribution.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code seed}, and {@code lam}.
    *
-   * @param <W> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param lam The rate of the Poisson distribution. Shape must match the rightmost dimensions
@@ -920,7 +886,6 @@ public final class RandomOps {
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessRandomUniform, with default output types
@@ -936,7 +901,6 @@ public final class RandomOps {
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param dtype The type of the output.
@@ -953,7 +917,6 @@ public final class RandomOps {
    *  The generated values are uniform integers covering the whole range of {@code dtype}.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param dtype The type of the output.
@@ -970,7 +933,6 @@ public final class RandomOps {
    *  The generated values are uniform integers covering the whole range of {@code dtype}.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -990,7 +952,6 @@ public final class RandomOps {
    *  The generated values follow a uniform distribution in the range {@code [minval, maxval)}.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code seed}, {@code minval}, and {@code maxval}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param minval Minimum value (inclusive, scalar).
@@ -1009,7 +970,6 @@ public final class RandomOps {
    *  The generated values follow a uniform distribution in the range {@code [minval, maxval)}.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter}, {@code alg}, {@code minval} and {@code maxval}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -1031,7 +991,6 @@ public final class RandomOps {
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -1050,7 +1009,6 @@ public final class RandomOps {
    *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -1072,7 +1030,6 @@ public final class RandomOps {
    *  deviations from the mean are dropped and re-picked.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @return a new instance of StatelessTruncatedNormal, with default output types
@@ -1089,7 +1046,6 @@ public final class RandomOps {
    *  deviations from the mean are dropped and re-picked.
    *  <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
    *
-   * @param <V> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param dtype The type of the output.
@@ -1108,7 +1064,6 @@ public final class RandomOps {
    *  deviations from the mean are dropped and re-picked.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -1128,7 +1083,6 @@ public final class RandomOps {
    *  deviations from the mean are dropped and re-picked.
    *  <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
    * @param counter Initial counter for the counter-based RNG algorithm (shape uint64[2] or uint64[1] depending on the algorithm). If a larger vector is given, only the needed portion on the left (i.e. [:N]) will be used.
@@ -1176,7 +1130,6 @@ public final class RandomOps {
    *  deviation 1, except that values whose magnitude is more than 2 standard
    *  deviations from the mean are dropped and re-picked.
    *
-   * @param <U> data type for {@code output} output
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
    * @param options carries optional attribute values

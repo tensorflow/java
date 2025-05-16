@@ -44,8 +44,6 @@ import org.tensorflow.types.family.TType;
  * {@code SparseTensor} objects going into each row of {@code serialized_sparse} will have
  * rank {@code R-1}.
  * <p>The minibatch size {@code N} is extracted from {@code sparse_shape[0]}.
- *
- * @param <U> data type for {@code serialized_sparse} output
  */
 @OpMetadata(
     opType = SerializeManySparse.OP_NAME,

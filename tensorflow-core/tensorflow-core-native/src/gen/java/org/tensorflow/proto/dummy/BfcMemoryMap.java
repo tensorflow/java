@@ -33,9 +33,9 @@ public final class BfcMemoryMap {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          tensorflow.BfcMemoryMap.getDescriptor(),
+          org.tensorflow.proto.BfcMemoryMap.getDescriptor(),
         });
-    tensorflow.BfcMemoryMap.getDescriptor();
+    org.tensorflow.proto.BfcMemoryMap.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

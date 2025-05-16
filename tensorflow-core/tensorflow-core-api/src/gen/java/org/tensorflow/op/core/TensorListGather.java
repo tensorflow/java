@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * <p>input_handle: The input tensor list.
  * indices: The indices used to index into the list.
  * values: The tensor.
- *
- * @param <T> data type for {@code values} output
  */
 @OpMetadata(
     opType = TensorListGather.OP_NAME,

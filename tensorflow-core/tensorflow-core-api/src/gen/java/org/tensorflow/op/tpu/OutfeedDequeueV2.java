@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * Retrieves a single tensor from the computation outfeed. Device ordinal is a
  * tensor allowing dynamic outfeed.
  * This operation will block indefinitely until data is available.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = OutfeedDequeueV2.OP_NAME,

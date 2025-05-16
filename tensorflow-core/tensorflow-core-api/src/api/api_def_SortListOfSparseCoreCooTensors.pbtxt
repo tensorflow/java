@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "SortListOfSparseCoreCooTensors"
+  endpoint {
+    name: "sparse.SortListOfSparseCoreCooTensors"
+  }
+}

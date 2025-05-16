@@ -57,9 +57,10 @@ import org.tensorflow.types.family.TType;
  * <p>Note that on CPU, if an out of bound index is found, an error is returned.
  * On GPU, if an out of bound index is found, a 0 is stored in the
  * corresponding output value.
+ * <p>Note that on TPU, if any dimension of {@code params} is of size 0 then the output will
+ * be the expected shape filled with zeros. On CPU and GPU an error will be
+ * returned.
  * <p>See also {@code tf.batch_gather} and {@code tf.gather_nd}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Gather.OP_NAME,

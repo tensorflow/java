@@ -166,7 +166,6 @@ public final class TrainOps {
    *  the accumulated gradients.  Also automatically increments the recorded
    *  global_step in the accumulator by 1, and resets the aggregate to 0.
    *
-   * @param <T> data type for {@code average} output
    * @param handle The handle to an accumulator.
    * @param numRequired Number of gradients required before we return an aggregate.
    * @param dtype The data type of accumulated gradients. Needs to correspond to the type
@@ -185,7 +184,6 @@ public final class TrainOps {
    *  v_t &lt;- max(beta2 * v_{t-1}, abs(g))
    *  variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
    * @param v Should be from a Variable().
@@ -212,7 +210,6 @@ public final class TrainOps {
    *  update_accum = rho() * update_accum + (1 - rho()) * update.square();
    *  var -= update;
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param accumUpdate Should be from a Variable().
@@ -235,7 +232,6 @@ public final class TrainOps {
    *  accum += grad * grad
    *  var -= lr * grad * (1 / sqrt(accum))
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
@@ -252,7 +248,6 @@ public final class TrainOps {
   /**
    * Update '*var' according to the proximal adagrad scheme.
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param gradientAccumulator Should be from a Variable().
    * @param gradientSquaredAccumulator Should be from a Variable().
@@ -277,7 +272,6 @@ public final class TrainOps {
    *  accum += grad * grad
    *  var -= lr * grad * (1 / sqrt(accum))
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
@@ -299,7 +293,6 @@ public final class TrainOps {
    *  $$v_t := \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g^2$$
    *  $$\text{var} := \begin{cases} \text{var} - (m_t \beta_1 + g \cdot (1 - \beta_1))\cdot\text{lr}_t/(\sqrt{v_t} + \epsilon), &amp;\text{if use_nesterov}\\  \text{var} - m_t \cdot \text{lr}_t /(\sqrt{v_t} + \epsilon), &amp;\text{otherwise} \end{cases}$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
    * @param v Should be from a Variable().
@@ -326,7 +319,6 @@ public final class TrainOps {
    *  update &lt;- (alpha + sign_decay * sign(g) *sign(m)) * g
    *  variable &lt;- variable - lr_t * update
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
@@ -361,7 +353,6 @@ public final class TrainOps {
    *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
    *  var &lt;- var - mom
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param mg Should be from a Variable().
    * @param ms Should be from a Variable().
@@ -392,7 +383,6 @@ public final class TrainOps {
    *  var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
    *  accum = accum_new
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param linear Should be from a Variable().
@@ -415,7 +405,6 @@ public final class TrainOps {
   /**
    * Update '*var' by subtracting 'alpha' * 'delta' from it.
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param alpha Scaling factor. Must be a scalar.
    * @param delta The change.
@@ -434,7 +423,6 @@ public final class TrainOps {
    *  <p>accum = accum * momentum + grad
    *  var -= lr * accum
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
@@ -455,7 +443,6 @@ public final class TrainOps {
    *  update &lt;- exp(logbase * sign_decay * sign(g) * sign(m_t)) * g
    *  variable &lt;- variable - lr_t * update
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
@@ -479,7 +466,6 @@ public final class TrainOps {
    *  prox_v = var - lr * grad * (1 / sqrt(accum))
    *  var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
@@ -501,7 +487,6 @@ public final class TrainOps {
    *  prox_v = var - alpha * delta
    *  var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param alpha Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
@@ -528,7 +513,6 @@ public final class TrainOps {
    *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
    *  var &lt;- var - mom
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param ms Should be from a Variable().
    * @param mom Should be from a Variable().
@@ -570,7 +554,6 @@ public final class TrainOps {
    *  about broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
    *
-   * @param <V> data type for {@code output} output
    * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
    * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
    * @param Tout If not spcified, Tout is the same type to input type.
@@ -717,7 +700,6 @@ public final class TrainOps {
    *  op exists to prevent subtle bugs from silently returning unimplemented
    *  gradients in some corner cases.
    *
-   * @param <T> data type for {@code output} output
    * @param input any tensor.
    * @param options carries optional attribute values
    * @param <T> data type for {@code PreventGradient} output and operands
@@ -776,7 +758,6 @@ public final class TrainOps {
    *  the accumulated gradients.  Also automatically increments the recorded
    *  global_step in the accumulator by 1, and resets the aggregate to 0.
    *
-   * @param <T> data type for {@code average} output
    * @param handle The handle to an accumulator.
    * @param numRequired Number of gradients required before we return an aggregate.
    * @param dtype The data type of accumulated gradients. Needs to correspond to the type
@@ -1535,7 +1516,6 @@ public final class TrainOps {
    *  <p>The {@code shape_and_slice} input has the same format as the
    *  elements of the {@code shapes_and_slices} input of the {@code SaveSlices} op.
    *
-   * @param <T> data type for {@code tensor} output
    * @param filePattern Must have a single element. The pattern of the files from
    *  which we read the tensor.
    * @param tensorName Must have a single element. The name of the tensor to be
@@ -1687,7 +1667,6 @@ public final class TrainOps {
   /**
    * var: Should be from a Variable().
    *
-   * @param <T> data type for {@code out} output
    * @param var The var value
    * @param accum Should be from a Variable().
    * @param accumUpdate : Should be from a Variable().
@@ -1712,7 +1691,6 @@ public final class TrainOps {
    *  $$accum += grad * grad$$
    *  $$var -= lr * grad * (1 / sqrt(accum))$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
@@ -1732,7 +1710,6 @@ public final class TrainOps {
   /**
    * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param gradientAccumulator Should be from a Variable().
    * @param gradientSquaredAccumulator Should be from a Variable().
@@ -1769,7 +1746,6 @@ public final class TrainOps {
    *  $$mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
    *  $$var &lt;- var - mom$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param mg Should be from a Variable().
    * @param ms Should be from a Variable().
@@ -1802,7 +1778,6 @@ public final class TrainOps {
    *  var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
    *  accum = accum_new
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param linear Should be from a Variable().
@@ -1831,7 +1806,6 @@ public final class TrainOps {
    *  <p>$$accum = accum * momentum + grad$$
    *  $$var -= lr * accum$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
@@ -1856,7 +1830,6 @@ public final class TrainOps {
    *  $$prox_v -= lr * grad * (1 / sqrt(accum))$$
    *  $$var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
@@ -1880,7 +1853,6 @@ public final class TrainOps {
    *  $$prox_v = var - alpha * grad$$
    *  $$var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param alpha Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
@@ -1908,7 +1880,6 @@ public final class TrainOps {
    *  $$mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
    *  $$var &lt;- var - mom$$
    *
-   * @param <T> data type for {@code out} output
    * @param var Should be from a Variable().
    * @param ms Should be from a Variable().
    * @param mom Should be from a Variable().
@@ -1960,7 +1931,6 @@ public final class TrainOps {
    *  along each dimension, {@code train.TileGrad} takes in {@code multiples} and aggregates
    *  each repeated tile of {@code input} into {@code output}.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param multiples The multiples value
    * @param <T> data type for {@code TileGrad} output and operands

@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Receives the named tensor from send_device on recv_device.
- *
- * @param <T> data type for {@code tensor} output
  */
 @OpMetadata(
     opType = Recv.OP_NAME,

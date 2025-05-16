@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Splits a tensor into {@code num_split} tensors along one dimension.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Split.OP_NAME,

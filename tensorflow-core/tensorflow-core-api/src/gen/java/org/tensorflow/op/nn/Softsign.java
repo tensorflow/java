@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softsign: {@code features / (abs(features) + 1)}.
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = Softsign.OP_NAME,

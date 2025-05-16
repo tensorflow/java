@@ -29,7 +29,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -45,21 +44,18 @@ import org.tensorflow.types.family.TType;
     opType = XlaSendTPUEmbeddingGradients.OP_NAME,
     inputsClass = XlaSendTPUEmbeddingGradients.Inputs.class
 )
-@Operator(
-    group = "xla"
-)
 public final class XlaSendTPUEmbeddingGradients extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaSendTPUEmbeddingGradients";
+  public static final String OP_NAME = "XlaSendTPUEmbeddingGradientsV2";
 
   public XlaSendTPUEmbeddingGradients(Operation operation) {
     super(operation, OP_NAME);
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaSendTPUEmbeddingGradients operation.
+   * Factory method to create a class wrapping a new XlaSendTPUEmbeddingGradientsV2 operation.
    *
    * @param scope current scope
    * @param gradients A TensorList of gradients with which to update embedding tables.
@@ -74,6 +70,9 @@ public final class XlaSendTPUEmbeddingGradients extends RawOp {
    * contains indices (DT_UINT32) for embedding lookup on the TensorCore or
    * weights (DT_FLOAT) to apply to the output of the embedding lookup operation.
    * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @param embeddingPartitions Serialized EmbeddingPartitionsProto proto.
+   * @param hbmBuffersConfig Serialized HbmBuffersConfig proto.
+   * @param tpuTopology Serialized TpuTopologyArgsProto proto.
    * @param options carries optional attribute values
    * @return a new instance of XlaSendTPUEmbeddingGradients
    */
@@ -82,12 +81,16 @@ public final class XlaSendTPUEmbeddingGradients extends RawOp {
   )
   public static XlaSendTPUEmbeddingGradients create(Scope scope,
       Iterable<Operand<TFloat32>> gradients, Iterable<Operand<TFloat32>> learningRates,
-      Operand<? extends TType> deduplicationData, String config, Options... options) {
+      Operand<? extends TType> deduplicationData, String config, String embeddingPartitions,
+      String hbmBuffersConfig, String tpuTopology, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaSendTPUEmbeddingGradients");
     opBuilder.addInputList(Operands.asOutputs(gradients));
     opBuilder.addInputList(Operands.asOutputs(learningRates));
     opBuilder.addInput(deduplicationData.asOutput());
     opBuilder.setAttr("config", config);
+    opBuilder.setAttr("embedding_partitions", embeddingPartitions);
+    opBuilder.setAttr("hbm_buffers_config", hbmBuffersConfig);
+    opBuilder.setAttr("tpu_topology", tpuTopology);
     if (options != null) {
       for (Options opts : options) {
         if (opts.NumLearningRateTags != null) {
@@ -161,8 +164,23 @@ public final class XlaSendTPUEmbeddingGradients extends RawOp {
      */
     public final String config;
 
+    /**
+     * Serialized EmbeddingPartitionsProto proto.
+     */
+    public final String embeddingPartitions;
+
+    /**
+     * Serialized HbmBuffersConfig proto.
+     */
+    public final String hbmBuffersConfig;
+
+    /**
+     * Serialized TpuTopologyArgsProto proto.
+     */
+    public final String tpuTopology;
+
     public Inputs(GraphOperation op) {
-      super(new XlaSendTPUEmbeddingGradients(op), op, Arrays.asList("config"));
+      super(new XlaSendTPUEmbeddingGradients(op), op, Arrays.asList("config", "embedding_partitions", "hbm_buffers_config", "tpu_topology"));
       int inputIndex = 0;
       int gradientsLength = op.inputListLength("gradients");
       gradients = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, gradientsLength));
@@ -172,6 +190,9 @@ public final class XlaSendTPUEmbeddingGradients extends RawOp {
       inputIndex += learningRatesLength;
       deduplicationData = (Operand<? extends TType>) op.input(inputIndex++);
       config = op.attributes().getAttrString("config");
+      embeddingPartitions = op.attributes().getAttrString("embedding_partitions");
+      hbmBuffersConfig = op.attributes().getAttrString("hbm_buffers_config");
+      tpuTopology = op.attributes().getAttrString("tpu_topology");
     }
   }
 }

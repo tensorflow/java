@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Inverse 2D fast Fourier transform.
  * Computes the inverse 2-dimensional discrete Fourier transform over the
  * inner-most 2 dimensions of {@code input}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Ifft2d.OP_NAME,

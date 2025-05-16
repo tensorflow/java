@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * the value in {@code weights} at each index where the corresponding value in {@code arr} is
  * {@code i}.
  * <p>Values in {@code arr} outside of the range [0, size) are ignored.
- *
- * @param <T> data type for {@code bins} output
  */
 @OpMetadata(
     opType = Bincount.OP_NAME,

@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * Passing group_assignment={@code [[0,2,4,6],[1,3,5,7]]} sets {@code A, C, E, G} as group 0,
  * and {@code B, D, F, H} as group 1. Thus we get the outputs:
  * {@code [A+C+E+G, B+D+F+H, A+C+E+G, B+D+F+H, A+C+E+G, B+D+F+H, A+C+E+G, B+D+F+H]}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CrossReplicaSum.OP_NAME,

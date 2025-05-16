@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * valid output when run, so must either be removed (e.g. replaced with a
  * function input) or guaranteed not to be used (e.g. if mirroring an
  * intermediate output needed for the gradient computation of the other branch).
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FakeParam.OP_NAME,

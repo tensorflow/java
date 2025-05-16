@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaSparseDenseMatmulGradWithAdamAndStaticBufferSize"
+  endpoint {
+    name: "xla.XlaSparseDenseMatmulGradWithAdamAndStaticBufferSize"
+  }
+}

@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>Regardless of the value of merge_repeated, if the maximum index of a given
  * time and batch corresponds to the blank, index {@code (num_classes - 1)}, no new
  * element is emitted.
- *
- * @param <T> data type for {@code log_probability} output
  */
 @OpMetadata(
     opType = CtcGreedyDecoder.OP_NAME,

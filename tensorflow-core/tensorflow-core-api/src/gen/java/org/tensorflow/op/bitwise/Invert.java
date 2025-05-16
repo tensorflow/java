@@ -73,8 +73,6 @@ import org.tensorflow.types.family.TNumber;
  *     expected = tf.constant([dtype.max - x for x in inputs], dtype=tf.float32)
  *     tf.assert_equal(tf.cast(inverted, tf.float32), tf.cast(expected, tf.float32))
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Invert.OP_NAME,
