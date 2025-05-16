@@ -59,7 +59,7 @@ For example,
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -102,7 +102,7 @@ snapshots repository in your `pom.xml`.
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -119,7 +119,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0-rc.2'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0'
 }
 ```
 
@@ -165,7 +165,7 @@ add the TensorFlow dependency to the project's `pom.xml` file:
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow-core-platform</artifactId>
-            <version>1.0.0-rc.2</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>
