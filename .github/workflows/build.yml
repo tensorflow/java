@@ -137,30 +137,6 @@ jobs:
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
-  macosx-x86_64:
-    if: ${{ github.base_ref == 'r1.0' }}
-    runs-on: macos-13
-    needs: prepare
-    strategy:
-      matrix:
-        ext: [""]
-    steps:
-      - name: Configure Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-      - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Build project
-        run: |
-          clang --version
-          mvn -version
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
-        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   windows-x86_64:
     runs-on: windows-2019
     needs: prepare
@@ -209,7 +185,7 @@ jobs:
           if ERRORLEVEL 1 exit /b
   deploy:
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
-    needs: [linux-x86_64, macosx-x86_64, windows-x86_64, macosx-arm64, linux-arm64]
+    needs: [linux-x86_64, windows-x86_64, macosx-arm64, linux-arm64]
     runs-on: ubuntu-22.04
     steps:
       - name: Configure Java
