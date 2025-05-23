@@ -63,6 +63,9 @@ import org.bytedeco.javacpp.tools.InfoMapper;
           link = {"tensorflow_cc@.2", "tensorflow_framework@.2"},
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
       @Platform(
+          value = {"linux-arm64"},
+          link = {"tensorflow_cc@.2", "tensorflow_framework@.2", "omp-6196b3b5@.5"}),
+      @Platform(
           value = "windows",
           preload = {
             "api-ms-win-crt-locale-l1-1-0",
