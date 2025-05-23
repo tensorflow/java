@@ -57,6 +57,28 @@ import org.tensorflow.types.TFloat32;
  * </ul>
  * <p>This operation has a gradient and thus allows for training {@code min} and {@code max}
  * values.
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>constant_input = tf.constant([[1.2, -0.3, 0.7], [2.1, 0.5, -1.0]], dtype=tf.float32)
+ * <p>min_val = -0.5
+ * max_val = 0.8
+ * num_bits = 8
+ * narrow_range = False #False:for the quantization range [0; 2^num_bits - 1]
+ * <p>quantized_data = tf.quantization.fake_quant_with_min_max_vars(
+ * ...   inputs=constant_input, min=min_val, max=max_val, num_bits=num_bits, narrow_range=narrow_range
+ * ... )
+ * <p>print(&quot;Input:\n&quot;, constant_input.numpy())
+ * Input:
+ * [[ 1.2 -0.3  0.7]
+ * [ 2.1  0.5 -1. ]]
+ * print(&quot;Output:\n&quot;, quantized_data.numpy())
+ * Output:
+ * [[ 0.8003921 -0.3007843  0.6984313]
+ * [ 0.8003921  0.4996078 -0.4996078]]
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
 @OpMetadata(
     opType = FakeQuantWithMinMaxVars.OP_NAME,

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaSendTPUEmbeddingGradientsV2"
+  endpoint {
+    name: "xla.XlaSendTPUEmbeddingGradients"
+  }
+}

@@ -83,8 +83,6 @@ import org.tensorflow.types.family.TType;
  * shape as input_c.
  * params_backprop: The backprop to the params buffer in the forward pass. Has the
  * same shape as params.
- *
- * @param <T> data type for {@code input_backprop} output
  */
 @OpMetadata(
     opType = CudnnRNNBackprop.OP_NAME,

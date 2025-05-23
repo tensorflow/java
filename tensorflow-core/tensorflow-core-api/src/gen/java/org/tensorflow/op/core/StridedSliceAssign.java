@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TType;
  * {@code begin}, {@code end}, {@code strides}, etc. work exactly as in {@code StridedSlice}.
  * <p>NOTE this op currently does not support broadcasting and so {@code value}'s
  * shape must be exactly the shape produced by the slice of {@code ref}.
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = StridedSliceAssign.OP_NAME,

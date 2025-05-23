@@ -121,13 +121,12 @@ org.tensorflow.proto.TensorInfo defaultValue);
 
   /**
    * <pre>
-   * Extensible method_name information enabling third-party users to mark a
-   * SignatureDef as supporting a particular method. This enables producers and
-   * consumers of SignatureDefs, e.g. a model definition library and a serving
-   * library to have a clear hand-off regarding the semantics of a computation.
-   * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-   * method_name. This is commonly used to support multi-headed computation,
-   * where a single graph computation may return multiple results.
+   * Deprecated: TensorFlow 2 always sets this to a fixed value;
+   * open-source TF Serving stopped checking by default since release 2.4.
+   * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+   * supporting a particular method. Multiple SignatureDefs in a single
+   * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+   * computation).
    * </pre>
    *
    * <code>string method_name = 3;</code>
@@ -136,13 +135,12 @@ org.tensorflow.proto.TensorInfo defaultValue);
   java.lang.String getMethodName();
   /**
    * <pre>
-   * Extensible method_name information enabling third-party users to mark a
-   * SignatureDef as supporting a particular method. This enables producers and
-   * consumers of SignatureDefs, e.g. a model definition library and a serving
-   * library to have a clear hand-off regarding the semantics of a computation.
-   * Note that multiple SignatureDefs in a single MetaGraphDef may have the same
-   * method_name. This is commonly used to support multi-headed computation,
-   * where a single graph computation may return multiple results.
+   * Deprecated: TensorFlow 2 always sets this to a fixed value;
+   * open-source TF Serving stopped checking by default since release 2.4.
+   * In TensorFlow 1, the method_name enabled users to mark a SignatureDef as
+   * supporting a particular method. Multiple SignatureDefs in a single
+   * MetaGraphDef could have the same method_name (e.g., to support multi-headed
+   * computation).
    * </pre>
    *
    * <code>string method_name = 3;</code>

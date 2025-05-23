@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Serialize a {@code SparseTensor} into a {@code [3]} {@code Tensor} object.
- *
- * @param <U> data type for {@code serialized_sparse} output
  */
 @OpMetadata(
     opType = SerializeSparse.OP_NAME,

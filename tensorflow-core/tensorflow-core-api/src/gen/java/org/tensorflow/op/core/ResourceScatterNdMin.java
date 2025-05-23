@@ -77,6 +77,9 @@ public final class ResourceScatterNdMin extends RawOp {
         if (opts.useLocking != null) {
           opBuilder.setAttr("use_locking", opts.useLocking);
         }
+        if (opts.badIndicesPolicy != null) {
+          opBuilder.setAttr("bad_indices_policy", opts.badIndicesPolicy);
+        }
       }
     }
     return new ResourceScatterNdMin(opBuilder.build());
@@ -95,10 +98,22 @@ public final class ResourceScatterNdMin extends RawOp {
   }
 
   /**
+   * Sets the badIndicesPolicy option.
+   *
+   * @param badIndicesPolicy the badIndicesPolicy option
+   * @return this Options instance.
+   */
+  public static Options badIndicesPolicy(String badIndicesPolicy) {
+    return new Options().badIndicesPolicy(badIndicesPolicy);
+  }
+
+  /**
    * Optional attributes for {@link org.tensorflow.op.core.ResourceScatterNdMin}
    */
   public static class Options {
     private Boolean useLocking;
+
+    private String badIndicesPolicy;
 
     private Options() {
     }
@@ -113,6 +128,17 @@ public final class ResourceScatterNdMin extends RawOp {
      */
     public Options useLocking(Boolean useLocking) {
       this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the badIndicesPolicy option.
+     *
+     * @param badIndicesPolicy the badIndicesPolicy option
+     * @return this Options instance.
+     */
+    public Options badIndicesPolicy(String badIndicesPolicy) {
+      this.badIndicesPolicy = badIndicesPolicy;
       return this;
     }
   }
@@ -155,8 +181,13 @@ public final class ResourceScatterNdMin extends RawOp {
      */
     public final boolean useLocking;
 
+    /**
+     * The badIndicesPolicy attribute
+     */
+    public final String badIndicesPolicy;
+
     public Inputs(GraphOperation op) {
-      super(new ResourceScatterNdMin(op), op, Arrays.asList("T", "Tindices", "use_locking"));
+      super(new ResourceScatterNdMin(op), op, Arrays.asList("T", "Tindices", "use_locking", "bad_indices_policy"));
       int inputIndex = 0;
       ref = (Operand<? extends TType>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
@@ -164,6 +195,7 @@ public final class ResourceScatterNdMin extends RawOp {
       T = op.attributes().getAttrType("T");
       Tindices = op.attributes().getAttrType("Tindices");
       useLocking = op.attributes().getAttrBool("use_locking");
+      badIndicesPolicy = op.attributes().getAttrString("bad_indices_policy");
     }
   }
 }

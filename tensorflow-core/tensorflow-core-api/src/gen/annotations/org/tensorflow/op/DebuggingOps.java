@@ -43,7 +43,6 @@ public final class DebuggingOps {
    *  tensor. Unlike CheckNumerics (V1), CheckNumericsV2 distinguishes -Inf and +Inf
    *  in the errors it throws.
    *
-   * @param <T> data type for {@code output} output
    * @param tensor The tensor value
    * @param message Prefix of the error message.
    * @param <T> data type for {@code CheckNumericsV2} output and operands

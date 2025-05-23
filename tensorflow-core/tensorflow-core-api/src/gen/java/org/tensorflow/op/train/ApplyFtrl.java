@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
  * var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
  * accum = accum_new
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyFtrl.OP_NAME,

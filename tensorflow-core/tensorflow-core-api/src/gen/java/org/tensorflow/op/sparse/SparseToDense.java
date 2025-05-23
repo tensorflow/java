@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TType;
  * <p>Indices should be sorted in lexicographic order, and indices must not
  * contain any repeats. If {@code validate_indices} is true, these properties
  * are checked during execution.
- *
- * @param <U> data type for {@code dense} output
  */
 @OpMetadata(
     opType = SparseToDense.OP_NAME,

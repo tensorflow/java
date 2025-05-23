@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Computes the reverse mode backpropagated gradient of the Cholesky algorithm.
  * For an explanation see &quot;Differentiation of the Cholesky algorithm&quot; by
  * Iain Murray http://arxiv.org/abs/1602.07527.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CholeskyGrad.OP_NAME,

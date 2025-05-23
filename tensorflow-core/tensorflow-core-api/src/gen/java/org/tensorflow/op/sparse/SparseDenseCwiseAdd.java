@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * <p>By these rules, the result is a logical SparseTensor with exactly the same
  * indices and shape, but possibly with different non-zero values.  The output of
  * this Op is the resultant non-zero values.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseDenseCwiseAdd.OP_NAME,

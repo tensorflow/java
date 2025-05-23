@@ -66,8 +66,6 @@ import org.tensorflow.types.family.TType;
  *  [4, 5, 6],
  *  [8, 9, 10]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ConcatND.OP_NAME,
@@ -96,11 +94,6 @@ public final class ConcatND<T extends TType> extends RawOp implements Operand<T>
    * @param scope current scope
    * @param inputs Input tensor slices in row-major order to merge across all dimensions. All
    * inputs must have the same shape.
-   * }
-   * out_arg {
-   * name: &quot;output&quot;
-   * description: &lt;&lt;END
-   * Output tensor formed from merging input slices based on num_concats defined.
    * @param numConcats Number of ways to merge per dimension.
    * @param options carries optional attribute values
    * @param <T> data type for {@code XlaConcatND} output and operands
@@ -158,7 +151,7 @@ public final class ConcatND<T extends TType> extends RawOp implements Operand<T>
 
   /**
    * Gets output.
-   *
+   * Output tensor formed from merging input slices based on num_concats defined.
    * @return output.
    */
   public Output<T> output() {
@@ -213,11 +206,6 @@ public final class ConcatND<T extends TType> extends RawOp implements Operand<T>
     /**
      * Input tensor slices in row-major order to merge across all dimensions. All
      * inputs must have the same shape.
-     * }
-     * out_arg {
-     * name: &quot;output&quot;
-     * description: &lt;&lt;END
-     * Output tensor formed from merging input slices based on num_concats defined.
      */
     public final Iterable<Operand<T>> inputs;
 

@@ -5,23 +5,20 @@ DOWNLOAD_FOLDER="$1"
 
 case ${PLATFORM:-} in
   'linux-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/c6/d9/f2ff325194b8e8acb6b69f303c838b0486f41b8028ec42261f2eb037a031/tensorflow_cpu-2.16.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/aa/1d/032a9d40762895e51cad06f382135c14d16487a0ad9dcc65aae5bd89c968/tensorflow_cpu-2.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
     ;;
   'linux-x86_64-gpu')
-    WHEEL_URL='https://files.pythonhosted.org/packages/43/dd/8f03331107b76e63313d2089ddfbd13f15e51fb8ed73517cdd0ab3341928/tensorflow-2.16.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
-    ;;
-  'macosx-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/6d/69/9999c2d9e8a3b08dfcfc7e9259a05fb1da5f700936091d2eb4a7985c2776/tensorflow-2.16.2-cp311-cp311-macosx_10_15_x86_64.whl'
-    ;;
-  'macosx-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/9d/72/6f09443493b9df2fd8a9585c9af4d9453762906a8e5735a8a5efa6e3d1e3/tensorflow-2.16.2-cp311-cp311-macosx_12_0_arm64.whl'
-    ;;
-  'windows-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/46/87/c3e4e9fe7c630f38a6984afdd1d4ed531ef9c74dc66b86f46f6bdd89d608/tensorflow_intel-2.16.2-cp311-cp311-win_amd64.whl'
-    CLIB_URL='https://storage.googleapis.com/tensorflow/versions/2.16.2/libtensorflow-cpu-windows-x86_64.zip'
+    WHEEL_URL='https://files.pythonhosted.org/packages/84/76/c55967ac9968ddaede25a4dce37aba37e9030656f02c12676151ce1b6f22/tensorflow-2.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
     ;;
   'linux-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/b5/01/c03e98c8e97d151d9ce075fae210f838832eb53d8aa55669d384cb72925b/tensorflow-2.16.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/56/e4/55aaac2b15af4dad079e5af329a79d961e5206589d0e02b1e8da221472ed/tensorflow-2.18.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl'
+    ;;
+  'macosx-arm64')
+    WHEEL_URL='https://files.pythonhosted.org/packages/26/08/556c4159675c1a30e077ec2a942eeeb81b457cc35c247a5b4a59a1274f05/tensorflow-2.18.0-cp311-cp311-macosx_12_0_arm64.whl'
+    ;;
+  'windows-x86_64')
+    WHEEL_URL='https://files.pythonhosted.org/packages/76/ad/fa6c508a15ff79cb5409294c293388e0999b7d480f84b65e4287277434fe/tensorflow_intel-2.18.0-cp311-cp311-win_amd64.whl'
+    CLIB_URL='https://storage.googleapis.com/tensorflow/versions/2.18.0/libtensorflow-cpu-windows-x86_64.zip'
     ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"
@@ -55,7 +52,8 @@ if [[ "$PLATFORM" =~ "linux" ]]; then
   ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
   ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
   if [[ "$PLATFORM" == "linux-arm64" ]]; then
-    ln -fs libomp-e9212f90.so.5 libomp-e9212f90.so
+    cp ../tensorflow.libs/libomp-6196b3b5.so.5 libomp-6196b3b5.so.5
+    ln -fs libomp-6196b3b5.so.5 libomp-6196b3b5.so
   fi
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib

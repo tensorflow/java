@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The Ndtri operation
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Ndtri.OP_NAME,

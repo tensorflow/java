@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Computes the gradient for the inverse of {@code x} wrt its input.
  * Specifically, {@code grad = -dy * y*y}, where {@code y = 1/x}, and {@code dy}
  * is the corresponding input gradient.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = ReciprocalGrad.OP_NAME,

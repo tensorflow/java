@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * It accumulates all the values from out_backprop into the feature dimension.
  * For NHWC data format, the feature dimension is the last. For NCHW data format,
  * the feature dimension is the third-to-last.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BiasAddGrad.OP_NAME,

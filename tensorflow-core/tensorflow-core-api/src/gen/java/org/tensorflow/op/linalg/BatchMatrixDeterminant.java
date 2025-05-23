@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The BatchMatrixDeterminant operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BatchMatrixDeterminant.OP_NAME,

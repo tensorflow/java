@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes QuantizedConv2D per channel.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedConv2DPerChannel.OP_NAME,

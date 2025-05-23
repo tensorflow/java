@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * Performs 3D average pooling on the input.
  * Each entry in {@code output} is the mean of the corresponding size {@code ksize} window in
  * {@code value}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = AvgPool3d.OP_NAME,

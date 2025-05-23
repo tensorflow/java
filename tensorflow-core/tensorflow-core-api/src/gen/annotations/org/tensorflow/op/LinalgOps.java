@@ -127,7 +127,6 @@ public final class LinalgOps {
    *   tf.linalg.band_part(input, 0, 0) ==&gt; Diagonal.
    *  </pre>
    *
-   * @param <T> data type for {@code band} output
    * @param input Rank {@code k} tensor.
    * @param numLower 0-D tensor. Number of subdiagonals to keep. If negative, keep entire
    *  lower triangle.
@@ -145,7 +144,6 @@ public final class LinalgOps {
   /**
    * The BandedTriangularSolve operation
    *
-   * @param <T> data type for {@code output} output
    * @param matrix The matrix value
    * @param rhs The rhs value
    * @param options carries optional attribute values
@@ -160,7 +158,6 @@ public final class LinalgOps {
   /**
    * The BatchCholesky operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code BatchCholesky} output and operands
    * @return a new instance of BatchCholesky
@@ -172,7 +169,6 @@ public final class LinalgOps {
   /**
    * The BatchCholeskyGrad operation
    *
-   * @param <T> data type for {@code output} output
    * @param l The l value
    * @param grad The grad value
    * @param <T> data type for {@code BatchCholeskyGrad} output and operands
@@ -185,7 +181,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixBandPart operation
    *
-   * @param <T> data type for {@code band} output
    * @param input The input value
    * @param numLower The numLower value
    * @param numUpper The numUpper value
@@ -200,7 +195,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixDeterminant operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code BatchMatrixDeterminant} output and operands
    * @return a new instance of BatchMatrixDeterminant
@@ -212,7 +206,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixDiag operation
    *
-   * @param <T> data type for {@code output} output
    * @param diagonal The diagonal value
    * @param <T> data type for {@code BatchMatrixDiag} output and operands
    * @return a new instance of BatchMatrixDiag
@@ -224,7 +217,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixDiagPart operation
    *
-   * @param <T> data type for {@code diagonal} output
    * @param input The input value
    * @param <T> data type for {@code BatchMatrixDiagPart} output and operands
    * @return a new instance of BatchMatrixDiagPart
@@ -235,8 +227,11 @@ public final class LinalgOps {
 
   /**
    * The BatchMatrixInverse operation
+   *  DEPRECATED: This operation is deprecated and will be removed in a future version.
+   *  Use tf.linalg.inv instead.
+   *  <p>Computes the inverse of one or more square invertible matrices or their
+   *  adjoints (conjugate transposes).
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchMatrixInverse} output and operands
@@ -250,7 +245,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixSetDiag operation
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param diagonal The diagonal value
    * @param <T> data type for {@code BatchMatrixSetDiag} output and operands
@@ -264,7 +258,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixSolve operation
    *
-   * @param <T> data type for {@code output} output
    * @param matrix The matrix value
    * @param rhs The rhs value
    * @param options carries optional attribute values
@@ -279,7 +272,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixSolveLs operation
    *
-   * @param <T> data type for {@code output} output
    * @param matrix The matrix value
    * @param rhs The rhs value
    * @param l2Regularizer The l2Regularizer value
@@ -295,7 +287,6 @@ public final class LinalgOps {
   /**
    * The BatchMatrixTriangularSolve operation
    *
-   * @param <T> data type for {@code output} output
    * @param matrix The matrix value
    * @param rhs The rhs value
    * @param options carries optional attribute values
@@ -310,7 +301,6 @@ public final class LinalgOps {
   /**
    * The BatchSelfAdjointEigV2 operation
    *
-   * @param <T> data type for {@code e} output
    * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchSelfAdjointEigV2} output and operands
@@ -324,7 +314,6 @@ public final class LinalgOps {
   /**
    * The BatchSvd operation
    *
-   * @param <T> data type for {@code s} output
    * @param input The input value
    * @param options carries optional attribute values
    * @param <T> data type for {@code BatchSvd} output and operands
@@ -347,7 +336,6 @@ public final class LinalgOps {
    *  not for large batch dimensions when the submatrices are small. In this
    *  case it might be faster to use the CPU.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape is {@code [..., M, M]}.
    * @param <T> data type for {@code Cholesky} output and operands
    * @return a new instance of Cholesky
@@ -361,7 +349,6 @@ public final class LinalgOps {
    *  For an explanation see &quot;Differentiation of the Cholesky algorithm&quot; by
    *  Iain Murray http://arxiv.org/abs/1602.07527.
    *
-   * @param <T> data type for {@code output} output
    * @param l Output of batch Cholesky algorithm l = cholesky(A). Shape is {@code [..., M, M]}.
    *  Algorithm depends only on lower triangular part of the innermost matrices of
    *  this tensor.
@@ -381,7 +368,6 @@ public final class LinalgOps {
    *  {@code y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]}
    *  {@code y[i,j,k,...,s,t,u] == conj(x[perm[i], perm[j], perm[k],...,perm[s], perm[t], perm[u]])}
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param perm The perm value
    * @param <T> data type for {@code ConjugateTranspose} output and operands
@@ -398,7 +384,6 @@ public final class LinalgOps {
    *  or any shape where the innermost dimension is 3. In the latter case, each pair
    *  of corresponding 3-element vectors is cross-multiplied independently.
    *
-   * @param <T> data type for {@code product} output
    * @param a A tensor containing 3-element vectors.
    * @param b Another tensor, of same type and shape as {@code a}.
    * @param <T> data type for {@code Cross} output and operands
@@ -414,7 +399,6 @@ public final class LinalgOps {
    *  form square matrices. The output is a tensor containing the determinants
    *  for all input submatrices {@code [..., :, :]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape is {@code [..., M, M]}.
    * @param <T> data type for {@code MatrixDeterminant} output and operands
    * @return a new instance of Det
@@ -436,7 +420,6 @@ public final class LinalgOps {
    *  e = eig(a, compute_v=False)
    *  </pre>
    *
-   * @param <U> data type for {@code e} output
    * @param input {@code Tensor} input of shape {@code [N, N]}.
    * @param Tout The value of the Tout attribute
    * @param options carries optional attribute values
@@ -514,7 +497,6 @@ public final class LinalgOps {
    *  <br>{@literal @}end_compatibility</li>
    *  </ul>
    *
-   * @param <T> data type for {@code output} output
    * @param inputs List of 1 or 2 Tensors.
    * @param equation String describing the Einstein Summation operation; in the format of np.einsum.
    * @param <T> data type for {@code Einsum} output and operands
@@ -531,7 +513,6 @@ public final class LinalgOps {
    *  {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
    *  retained with length 1.
    *
-   * @param <T> data type for {@code output} output
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
    *  {@code [-rank(input), rank(input))}.
@@ -554,7 +535,6 @@ public final class LinalgOps {
    *  may detect the condition and raise an exception or it may simply return a
    *  garbage result.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape is {@code [..., M, M]}.
    * @param options carries optional attribute values
    * @param <T> data type for {@code MatrixInverse} output and operands
@@ -632,7 +612,6 @@ public final class LinalgOps {
    *  is the {@code LU} decomposition of the input and {@code P} is the corresponding
    *  permutation matrix.
    *
-   * @param <T> data type for {@code sign} output
    * @param input Shape is {@code [N, M, M]}.
    * @param <T> data type for {@code LogMatrixDeterminant} output and operands
    * @return a new instance of LogMatrixDeterminant
@@ -657,8 +636,6 @@ public final class LinalgOps {
    *  and {@code M-1}, inclusive. If P_mat denotes the permutation matrix corresponding to
    *  P, then the L, U and P satisfies P_mat * input = L * U.
    *
-   * @param <T> data type for {@code lu} output
-   * @param <U> data type for {@code p} output
    * @param input A tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions form matrices of
    *  size {@code [M, M]}.
    * @param <T> data type for {@code Lu} output and operands
@@ -684,8 +661,6 @@ public final class LinalgOps {
    *  and {@code M-1}, inclusive. If P_mat denotes the permutation matrix corresponding to
    *  P, then the L, U and P satisfies P_mat * input = L * U.
    *
-   * @param <T> data type for {@code lu} output
-   * @param <U> data type for {@code p} output
    * @param input A tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions form matrices of
    *  size {@code [M, M]}.
    * @param outputIdxType The value of the outputIdxType attribute
@@ -707,7 +682,6 @@ public final class LinalgOps {
    *  <p><em>Note</em>: The default kernel implementation for MatMul on GPUs uses
    *  cublas.
    *
-   * @param <T> data type for {@code product} output
    * @param a The a value
    * @param b The b value
    * @param options carries optional attribute values
@@ -801,7 +775,6 @@ public final class LinalgOps {
    *         [9, 2]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param diagonal Rank {@code r}, where {@code r >= 1}
    * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
    *  diagonal, and negative value means subdiagonals. {@code k} can be a single integer
@@ -886,7 +859,6 @@ public final class LinalgOps {
    *          [4, 3, 8]]]
    *  </pre>
    *
-   * @param <T> data type for {@code diagonal} output
    * @param input Rank {@code r} tensor where {@code r >= 2}.
    * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
    *  diagonal, and negative value means subdiagonals. {@code k} can be a single integer
@@ -995,7 +967,6 @@ public final class LinalgOps {
    *
    *  </pre>
    *
-   * @param <T> data type for {@code diagonal} output
    * @param input Rank {@code r} tensor where {@code r >= 2}.
    * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
    *  diagonal, and negative value means subdiagonals. {@code k} can be a single integer
@@ -1123,7 +1094,6 @@ public final class LinalgOps {
    *
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param diagonal Rank {@code r}, where {@code r >= 1}
    * @param k Diagonal offset(s). Positive value means superdiagonal, 0 refers to the main
    *  diagonal, and negative value means subdiagonals. {@code k} can be a single integer
@@ -1150,7 +1120,6 @@ public final class LinalgOps {
   /**
    * Deprecated, use python implementation tf.linalg.matrix_exponential.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param <T> data type for {@code MatrixExponential} output and operands
    * @return a new instance of MatrixExponential
@@ -1173,7 +1142,6 @@ public final class LinalgOps {
    *  form square matrices. The output is a tensor of the same shape as the input
    *  containing the exponential for all input submatrices {@code [..., :, :]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape is {@code [..., M, M]}.
    * @param <T> data type for {@code MatrixLogarithm} output and operands
    * @return a new instance of MatrixLogarithm
@@ -1281,7 +1249,6 @@ public final class LinalgOps {
    *
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param input Rank {@code r+1}, where {@code r >= 1}.
    * @param diagonal Rank {@code r} when {@code k} is an integer or {@code k[0] == k[1]}. Otherwise, it has rank {@code r+1}.
    *  {@code k >= 1}.
@@ -1331,7 +1298,6 @@ public final class LinalgOps {
    *  typically 6-7 times slower than the fast path. If {@code fast} is {@code False} then
    *  {@code l2_regularizer} is ignored.
    *
-   * @param <T> data type for {@code output} output
    * @param matrix Shape is {@code [..., M, N]}.
    * @param rhs Shape is {@code [..., M, K]}.
    * @param l2Regularizer Scalar tensor.
@@ -1362,7 +1328,6 @@ public final class LinalgOps {
    *  q_full, r_full = qr(a, full_matrices=True)
    *  </pre>
    *
-   * @param <T> data type for {@code q} output
    * @param input A tensor of shape {@code [..., M, N]} whose inner-most 2 dimensions
    *  form matrices of size {@code [M, N]}. Let {@code P} be the minimum of {@code M} and {@code N}.
    * @param options carries optional attribute values
@@ -1380,7 +1345,6 @@ public final class LinalgOps {
    *  outer dimension of {@code b} (after being transposed if {@code transposed_b} is
    *  non-zero).
    *
-   * @param <V> data type for {@code out} output
    * @param a Must be a two-dimensional tensor.
    * @param b Must be a two-dimensional tensor.
    * @param minA The float value that the lowest quantized {@code a} value represents.
@@ -1411,7 +1375,6 @@ public final class LinalgOps {
    *  non-zero). Then do broadcast add operation with bias values on the matrix
    *  multiplication result. The bias size must match inner dimension of {@code b}.
    *
-   * @param <W> data type for {@code out} output
    * @param a A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
    * @param b A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
    * @param bias A 1D bias tensor with size matching inner dimension of {@code b} (after being
@@ -1442,7 +1405,6 @@ public final class LinalgOps {
    *  multiplication result. The bias size must match inner dimension of {@code b}. Then do
    *  relu activation to get non-negative result.
    *
-   * @param <V> data type for {@code out} output
    * @param a A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
    * @param b A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
    * @param bias A 1D bias tensor with size matching with inner dimension of {@code b} (after being
@@ -1474,7 +1436,6 @@ public final class LinalgOps {
    *  relu activation to get non-negative result. Then do requantize operation to get
    *  final uint8 result.
    *
-   * @param <W> data type for {@code out} output
    * @param a A matrix to be multiplied. Must be a two-dimensional tensor of type {@code quint8}.
    * @param b A matrix to be multiplied and must be a two-dimensional tensor of type {@code qint8}.
    * @param bias A 1D bias tensor with size matching with inner dimension of {@code b} (after being
@@ -1512,7 +1473,6 @@ public final class LinalgOps {
    *  e = self_adjoint_eig(a, compute_v=False)
    *  </pre>
    *
-   * @param <T> data type for {@code e} output
    * @param input {@code Tensor} input of shape {@code [N, N]}.
    * @param options carries optional attribute values
    * @param <T> data type for {@code SelfAdjointEigV2} output and operands
@@ -1532,7 +1492,6 @@ public final class LinalgOps {
    *  If {@code adjoint} is {@code True} then each output matrix satisfies
    *  {@code adjoint(matrix[..., :, :]) * output[..., :, :] = rhs[..., :, :]}.
    *
-   * @param <T> data type for {@code output} output
    * @param matrix Shape is {@code [..., M, M]}.
    * @param rhs Shape is {@code [..., M, K]}.
    * @param options carries optional attribute values
@@ -1559,7 +1518,6 @@ public final class LinalgOps {
    *  form square matrices. The output is a tensor of the same shape as the input
    *  containing the matrix square root for all input submatrices {@code [..., :, :]}.
    *
-   * @param <T> data type for {@code output} output
    * @param input Shape is {@code [..., M, M]}.
    * @param <T> data type for {@code MatrixSquareRoot} output and operands
    * @return a new instance of Sqrtm
@@ -1581,7 +1539,6 @@ public final class LinalgOps {
    *  s, _, _ = svd(a, compute_uv=False)
    *  </pre>
    *
-   * @param <T> data type for {@code s} output
    * @param input A tensor of shape {@code [..., M, N]} whose inner-most 2 dimensions
    *  form matrices of size {@code [M, N]}. Let {@code P} be the minimum of {@code M} and {@code N}.
    * @param options carries optional attribute values
@@ -1608,7 +1565,6 @@ public final class LinalgOps {
    *                         [0, 0, 0, 4]]
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param diagonal Rank k tensor where k is at most 1.
    * @param <T> data type for {@code Diag} output and operands
    * @return a new instance of TensorDiag
@@ -1634,7 +1590,6 @@ public final class LinalgOps {
    *  tf.diag_part(input) ==&gt; [1, 2, 3, 4]
    *  </pre>
    *
-   * @param <T> data type for {@code diagonal} output
    * @param input Rank k tensor where k is even and not zero.
    * @param <T> data type for {@code DiagPart} output and operands
    * @return a new instance of TensorDiagPart
@@ -1648,7 +1603,6 @@ public final class LinalgOps {
    *  The output {@code y} has the same rank as {@code x}. The shapes of {@code x} and {@code y} satisfy:
    *  {@code y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]}
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param perm The perm value
    * @param <T> data type for {@code Transpose} output and operands
@@ -1703,7 +1657,6 @@ public final class LinalgOps {
    *  #        [1.9999999]], dtype=float32)&gt;
    *  </pre>
    *
-   * @param <T> data type for {@code output} output
    * @param matrix Shape is {@code [..., M, M]}.
    * @param rhs Shape is {@code [..., M, K]}.
    * @param options carries optional attribute values
@@ -1719,7 +1672,6 @@ public final class LinalgOps {
    * Calculate product with tridiagonal matrix.
    *  Calculates product of two matrices, where left matrix is a tridiagonal matrix.
    *
-   * @param <T> data type for {@code output} output
    * @param superdiag Tensor of shape {@code [..., 1, M]}, representing superdiagonals of
    *  tri-diagonal matrices to the left of multiplication. Last element is ignored.
    * @param maindiag Tensor of shape {@code [..., 1, M]}, representing main diagonals of tri-diagonal
@@ -1746,7 +1698,6 @@ public final class LinalgOps {
    *  library is used: https://docs.nvidia.com/cuda/cusparse/index.html#gtsv
    *  Partial pivoting is not yet supported by XLA backends.
    *
-   * @param <T> data type for {@code output} output
    * @param diagonals Tensor of shape {@code [..., 3, M]} whose innermost 2 dimensions represent the
    *  tridiagonal matrices with three rows being the superdiagonal, diagonals, and
    *  subdiagonals, in order. The last element of the superdiagonal and the first

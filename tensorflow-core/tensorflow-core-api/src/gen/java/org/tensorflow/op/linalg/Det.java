@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * The input is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
  * form square matrices. The output is a tensor containing the determinants
  * for all input submatrices {@code [..., :, :]}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Det.OP_NAME,

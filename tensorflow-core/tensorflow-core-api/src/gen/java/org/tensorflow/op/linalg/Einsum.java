@@ -99,8 +99,6 @@ import org.tensorflow.types.family.TType;
  * supported by {@code numpy.einsum}.
  * <br>{@literal @}end_compatibility</li>
  * </ul>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Einsum.OP_NAME,

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * Reads out the CSR components at batch {@code index}.
  * This op is meant only for debugging / testing, and its interface is not expected
  * to be stable.
- *
- * @param <T> data type for {@code values} output
  */
 @OpMetadata(
     opType = CSRSparseMatrixComponents.OP_NAME,

@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Outputs random values from a normal distribution. The parameters may each be a
  * scalar which applies to the entire output, or a vector of length shape[0] which
  * stores the parameters for each batch.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = ParameterizedTruncatedNormal.OP_NAME,

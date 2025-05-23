@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Computes sigmoid of {@code x} element-wise.
  * Specifically, {@code y = 1 / (1 + exp(-x))}.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Sigmoid.OP_NAME,

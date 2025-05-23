@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * Outputs a ref to the tensor state so it may be read or modified.
  * TODO(zhifengc/mrry): Adds a pointer to a more detail document
  * about sharing states in tensorflow.
- *
- * @param <T> data type for {@code ref} output
  */
 @OpMetadata(
     opType = Variable.OP_NAME,

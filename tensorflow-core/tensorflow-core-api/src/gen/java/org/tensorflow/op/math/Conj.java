@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * # tensor 'input' is [-2.25 + 4.75j, 3.25 + 5.75j]
  * tf.conj(input) ==&gt; [-2.25 - 4.75j, 3.25 - 5.75j]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Conj.OP_NAME,

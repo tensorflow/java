@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code (x', y') = ((a0 x + a1 y + a2) / k, (b0 x + b1 y + b2) / k)}, where
  * {@code k = c0 x + c1 y + 1}. If the transformed point lays outside of the input
  * image, the output pixel is set to fill_value.
- *
- * @param <T> data type for {@code transformed_images} output
  */
 @OpMetadata(
     opType = ImageProjectiveTransformV3.OP_NAME,

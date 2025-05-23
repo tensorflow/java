@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * $$m_t := \beta_1 \cdot m</em>{t-1} + (1 - \beta_1) \cdot g$$
  * $$v_t := \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g^2$$
  * $$\text{var} := \begin{cases} \text{var} - (m_t \beta_1 + g \cdot (1 - \beta_1))\cdot\text{lr}_t/(\sqrt{v_t} + \epsilon), &amp;\text{if use_nesterov}\\  \text{var} - m_t \cdot \text{lr}_t /(\sqrt{v_t} + \epsilon), &amp;\text{otherwise} \end{cases}$$
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyAdam.OP_NAME,

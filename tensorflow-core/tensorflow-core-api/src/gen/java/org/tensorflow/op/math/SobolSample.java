@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * Generates points from the Sobol sequence.
  * Creates a Sobol sequence with {@code num_results} samples. Each sample has dimension
  * {@code dim}. Skips the first {@code skip} samples.
- *
- * @param <T> data type for {@code samples} output
  */
 @OpMetadata(
     opType = SobolSample.OP_NAME,

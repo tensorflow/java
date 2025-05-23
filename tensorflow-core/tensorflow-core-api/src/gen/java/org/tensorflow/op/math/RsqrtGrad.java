@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Computes the gradient for the rsqrt of {@code x} wrt its input.
  * Specifically, {@code grad = dy * -0.5 * y^3}, where {@code y = rsqrt(x)}, and {@code dy}
  * is the corresponding input gradient.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = RsqrtGrad.OP_NAME,

@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softsign gradients for a softsign operation.
- *
- * @param <T> data type for {@code backprops} output
  */
 @OpMetadata(
     opType = SoftsignGrad.OP_NAME,

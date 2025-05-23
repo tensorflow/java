@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * var = state_ops.assign(var, [[4.0, 5.0]])
  * var = state_ops.assign_add(var, [[6.0, 7.0]])
  * final = state_ops._destroy_temporary_variable(var, var_name=var_name)
- *
- * @param <T> data type for {@code ref} output
  */
 @OpMetadata(
     opType = TemporaryVariable.OP_NAME,

@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * storage is proportional to the output size rather than the inputs size.
  * <p>Unlike the original {@code accumulate_n}, {@code accumulate_n_v2} is differentiable.
  * <p>Returns a {@code Tensor} of same shape and type as the elements of {@code inputs}.
- *
- * @param <T> data type for {@code sum} output
  */
 @OpMetadata(
     opType = AccumulateN.OP_NAME,

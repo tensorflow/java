@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TNumber;
  * match the outer dimension of {@code b} (after being transposed if {@code transposed_b} is
  * non-zero). Then do broadcast add operation with bias values on the matrix
  * multiplication result. The bias size must match inner dimension of {@code b}.
- *
- * @param <W> data type for {@code out} output
  */
 @OpMetadata(
     opType = QuantizedMatMulWithBias.OP_NAME,

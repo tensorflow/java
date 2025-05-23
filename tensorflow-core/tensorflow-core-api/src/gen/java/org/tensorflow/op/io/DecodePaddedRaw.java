@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DecodePaddedRaw.OP_NAME,

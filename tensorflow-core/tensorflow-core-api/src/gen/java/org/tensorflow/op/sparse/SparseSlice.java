@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TType;
  * [ d e  ]
  * [      ]
  * </pre>
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseSlice.OP_NAME,

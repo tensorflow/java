@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Return the shape of s0 op s1 with broadcast.
  * Given {@code s0} and {@code s1}, tensors that represent shapes, compute {@code r0}, the
  * broadcasted shape. {@code s0}, {@code s1} and {@code r0} are all integer vectors.
- *
- * @param <T> data type for {@code r0} output
  */
 @OpMetadata(
     opType = BroadcastDynamicShape.OP_NAME,

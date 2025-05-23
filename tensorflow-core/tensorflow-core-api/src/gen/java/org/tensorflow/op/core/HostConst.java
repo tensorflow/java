@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a constant tensor on the host. Only for writing C++ tests.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = HostConst.OP_NAME,

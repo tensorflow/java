@@ -39,10 +39,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Generates a feature cross from a list of tensors, and returns it as a
  * RaggedTensor.  See {@code tf.ragged.cross} for more details.
- *
- * @param <T> data type for {@code output_values} output
- *
- * @param <U> data type for {@code output_row_splits} output
  */
 @OpMetadata(
     opType = RaggedCross.OP_NAME,

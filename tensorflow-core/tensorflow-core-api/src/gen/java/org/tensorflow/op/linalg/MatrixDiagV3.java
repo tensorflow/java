@@ -144,8 +144,6 @@ import org.tensorflow.types.family.TType;
  *        [9, 2]]
  *
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MatrixDiagV3.OP_NAME,

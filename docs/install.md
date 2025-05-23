@@ -18,9 +18,12 @@ following platforms:
 
 *   Ubuntu 20.04 or higher; 64-bit, x86
 *   Ubuntu 22.04 or higher; 64-bit, arm
-*   macOS 12 or higher; 64-bit, x86
 *   macOS 14 or higher; 64-bit, arm
 *   Windows 10 or higher; 64-bit, x86
+
+TensorFlow Java 1.0 series and earlier releases also have binaries for:
+
+*   macOS 12 or higher; 64-bit, x86
 
 *Note: To use TensorFlow on Android, see
 [TensorFlow Lite](https://tensorflow.org/lite)*
@@ -59,7 +62,7 @@ For example,
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -102,7 +105,7 @@ snapshots repository in your `pom.xml`.
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -119,7 +122,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0-rc.2'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '1.0.0'
 }
 ```
 
@@ -165,7 +168,7 @@ add the TensorFlow dependency to the project's `pom.xml` file:
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow-core-platform</artifactId>
-            <version>1.0.0-rc.2</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

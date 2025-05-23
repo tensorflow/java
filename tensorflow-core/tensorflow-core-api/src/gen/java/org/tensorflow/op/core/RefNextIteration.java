@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Makes its input available to the next iteration.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RefNextIteration.OP_NAME,

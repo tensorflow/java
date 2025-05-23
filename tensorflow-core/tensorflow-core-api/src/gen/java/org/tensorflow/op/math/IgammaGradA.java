@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of {@code igamma(a, x)} wrt {@code a}.
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = IgammaGradA.OP_NAME,

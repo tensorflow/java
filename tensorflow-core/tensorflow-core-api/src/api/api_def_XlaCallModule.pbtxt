@@ -1,6 +1,6 @@
 op {
   graph_op_name: "XlaCallModule"
-  visibility: HIDDEN
+  visibility: VISIBLE
   endpoint {
     name: "xla.XlaCallModule"
   }

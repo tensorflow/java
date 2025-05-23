@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a tensor with the given shape.
  * <p>This operation creates a tensor of {@code shape} and {@code dtype}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Empty.OP_NAME,

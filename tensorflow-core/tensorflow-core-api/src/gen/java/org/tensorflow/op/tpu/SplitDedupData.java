@@ -41,10 +41,6 @@ import org.tensorflow.types.family.TType;
  * Deduplication data is an XLA tuple, which consists of integer and floating point
  * values. This op is to split these values into two groups for two types, and
  * construct each group as one tensor to return.
- *
- * @param <T> data type for {@code integer_tensor} output
- *
- * @param <U> data type for {@code float_tensor} output
  */
 @OpMetadata(
     opType = SplitDedupData.OP_NAME,

@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * deviation 1, except that values whose magnitude is more than 2 standard
  * deviations from the mean are dropped and re-picked.
  * <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessTruncatedNormalV2.OP_NAME,

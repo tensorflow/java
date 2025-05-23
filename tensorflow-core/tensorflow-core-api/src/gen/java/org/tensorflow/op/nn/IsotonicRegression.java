@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Solves a batch of isotonic regression problems.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = IsotonicRegression.OP_NAME,

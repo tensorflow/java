@@ -71,8 +71,6 @@ import org.tensorflow.types.family.TType;
  * <pre>
  * reverse_index_map[j] = out_j s.t. indices[j, :] == output_indices[out_j, :]
  * </pre>
- *
- * @param <T> data type for {@code output_values} output
  */
 @OpMetadata(
     opType = SparseFillEmptyRows.OP_NAME,

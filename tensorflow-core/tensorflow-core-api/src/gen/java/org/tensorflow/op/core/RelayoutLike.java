@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The RelayoutLike operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RelayoutLike.OP_NAME,

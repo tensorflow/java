@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TNumber;
  *   variables.global_variables_initializer().run()
  *   sess.run(hist) =&gt; [2, 1, 1, 0, 2]
  * </pre>
- *
- * @param <U> data type for {@code out} output
  */
 @OpMetadata(
     opType = HistogramFixedWidth.OP_NAME,

@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * Calculates the CTC Loss (log probability) for each batch entry.  Also calculates
  * the gradient.  This class performs the softmax operation for you, so inputs
  * should be e.g. linear projections of outputs by an LSTM.
- *
- * @param <T> data type for {@code loss} output
  */
 @OpMetadata(
     opType = CtcLoss.OP_NAME,

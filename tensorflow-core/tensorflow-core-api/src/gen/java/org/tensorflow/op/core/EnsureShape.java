@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * Ensures that the tensor's shape matches the expected shape.
  * Raises an error if the input tensor's shape does not match the specified shape.
  * Returns the input tensor otherwise.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = EnsureShape.OP_NAME,

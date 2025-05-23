@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Returns the dimension index in the destination data format given the one in
  * the source data format.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = DataFormatDimMap.OP_NAME,

@@ -107,7 +107,6 @@ public final class QuantizationOps {
    *                                                      max_range / max_expected_T);
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
@@ -165,7 +164,6 @@ public final class QuantizationOps {
    *                                                      max_range / max_expected_T);
    *  </pre>
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
@@ -275,6 +273,28 @@ public final class QuantizationOps {
    *  </ul>
    *  <p>This operation has a gradient and thus allows for training {@code min} and {@code max}
    *  values.
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>constant_input = tf.constant([[1.2, -0.3, 0.7], [2.1, 0.5, -1.0]], dtype=tf.float32)
+   *  <p>min_val = -0.5
+   *  max_val = 0.8
+   *  num_bits = 8
+   *  narrow_range = False #False:for the quantization range [0; 2^num_bits - 1]
+   *  <p>quantized_data = tf.quantization.fake_quant_with_min_max_vars(
+   *  ...   inputs=constant_input, min=min_val, max=max_val, num_bits=num_bits, narrow_range=narrow_range
+   *  ... )
+   *  <p>print(&quot;Input:\n&quot;, constant_input.numpy())
+   *  Input:
+   *  [[ 1.2 -0.3  0.7]
+   *  [ 2.1  0.5 -1. ]]
+   *  print(&quot;Output:\n&quot;, quantized_data.numpy())
+   *  Output:
+   *  [[ 0.8003921 -0.3007843  0.6984313]
+   *  [ 0.8003921  0.4996078 -0.4996078]]
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
    * @param inputs The inputs value
    * @param min The min value
@@ -456,7 +476,6 @@ public final class QuantizationOps {
    *  The legacy default value for this is 0.01, but it is strongly suggested to
    *  set it to 0 for new uses.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param minRange The minimum value of the quantization range. This value may be adjusted by the
    *  op depending on other parameters. The adjusted value is written to {@code output_min}.
@@ -482,7 +501,6 @@ public final class QuantizationOps {
    *  This is almost identical to QuantizeAndDequantizeV2, except that num_bits is a
    *  tensor, so its value can change during training.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param inputMin The inputMin value
    * @param inputMax The inputMax value
@@ -502,7 +520,6 @@ public final class QuantizationOps {
    *  This is almost identical to QuantizeAndDequantizeV2, except that num_bits is a
    *  tensor, so its value can change during training.
    *
-   * @param <T> data type for {@code output} output
    * @param input The input value
    * @param inputMin The inputMin value
    * @param inputMax The inputMax value
@@ -522,7 +539,6 @@ public final class QuantizationOps {
    *  This is almost identical to QuantizeAndDequantizeV2, except that it returns a
    *  gradient of 1 for inputs that are within the quantization range, or 0 otherwise.
    *
-   * @param <T> data type for {@code output} output
    * @param input Tensor to quantize and then dequantize.
    * @param inputMin If {@code range_given == True}, this specifies the minimum input value that needs to
    *  be represented, otherwise it is determined from the min value of the {@code input}
@@ -544,7 +560,6 @@ public final class QuantizationOps {
    *  Returns a gradient of 1 for inputs that are within the quantization range,
    *  or 0 otherwise.
    *
-   * @param <T> data type for {@code input_backprop} output
    * @param gradients The gradients value
    * @param input The input value
    * @param inputMin The inputMin value
@@ -581,7 +596,6 @@ public final class QuantizationOps {
    *  that output into this operator, we can reduce it from 32 bits down to 8 with
    *  minimal loss of accuracy.
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param inputMin The float value that the minimum quantized input value represents.
    * @param inputMax The float value that the maximum quantized input value represents.
@@ -598,7 +612,6 @@ public final class QuantizationOps {
   /**
    * Concatenates quantized tensors along one dimension.
    *
-   * @param <T> data type for {@code output} output
    * @param concatDim 0-D.  The dimension along which to concatenate.  Must be in the
    *  range [0, rank(values)).
    * @param values The {@code N} Tensors to concatenate. Their ranks and types must match,
@@ -617,7 +630,6 @@ public final class QuantizationOps {
   /**
    * The QuantizedMatMulWithBiasAndDequantize operation
    *
-   * @param <W> data type for {@code out} output
    * @param a The a value
    * @param b The b value
    * @param bias The bias value
@@ -644,7 +656,6 @@ public final class QuantizationOps {
   /**
    * The QuantizedMatMulWithBiasAndRequantize operation
    *
-   * @param <W> data type for {@code out} output
    * @param a The a value
    * @param b The b value
    * @param bias The bias value
@@ -694,7 +705,6 @@ public final class QuantizationOps {
    *  {@code input_max} is 1.0f, and we are dealing with {@code quint16} quantized data, then a 0
    *  value in the 16-bit data should be interpreted as -1.0f, and a 65535 means 1.0f.
    *
-   * @param <U> data type for {@code output} output
    * @param input The input value
    * @param inputMin The float value that the minimum quantized input value represents.
    * @param inputMax The float value that the maximum quantized input value represents.
@@ -715,7 +725,6 @@ public final class QuantizationOps {
    *  Given quantized {@code input} which was quantized using {@code scales} and {@code zero_points}, performs dequantization using the formula:
    *  dequantized_data = (quantized_data - zero_point) * scale.
    *
-   * @param <U> data type for {@code output} output
    * @param input Must be a Tensor of Tin.
    * @param scales The float value(s) used as scale(s) when quantizing original data that input represents.
    *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).
@@ -746,7 +755,6 @@ public final class QuantizationOps {
    *  Given {@code input}, {@code scales} and {@code zero_points}, performs quantization using the formula:
    *  quantized_data = floor(input_data * (1.0f / scale) + 0.5f) + zero_point
    *
-   * @param <U> data type for {@code output} output
    * @param input Must be a Tensor of Tin.
    * @param scales The float value(s) to use as scale(s) to quantize {@code input}.
    *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).
@@ -780,7 +788,6 @@ public final class QuantizationOps {
    *  {@code output} is also quantized, using the same formula.
    *  If {@code rhs} is per-tensor quantized, {@code output} must be also per-tensor quantized.
    *
-   * @param <U> data type for {@code output} output
    * @param lhs Must be a 2D Tensor of Tin.
    * @param rhs Must be a 2D Tensor of Tin.
    * @param lhsScales The float value(s) used as scale when quantizing original data that lhs represents.
@@ -833,7 +840,6 @@ public final class QuantizationOps {
    *  {@code rhs} must be quantized Tensor, where its data value is quantized using the formula:
    *  quantized_data = clip(original_data / scale + zero_point, quantization_min_val, quantization_max_val).
    *
-   * @param <V> data type for {@code output} output
    * @param lhs Must be a 2D Tensor of Tlhs.
    * @param rhs Must be a 2D Tensor of Trhs.
    * @param rhsScales The float value(s) used as scale when quantizing original data that rhs represents.
@@ -873,7 +879,6 @@ public final class QuantizationOps {
    *  i.e. At least one among input_quantization_axis and output_quantization_axis must be -1, or two must be equal.</li>
    *  </ul>
    *
-   * @param <U> data type for {@code output} output
    * @param input Must be a Tensor of Tin.
    * @param inputScales The float value(s) used as scale(s) when quantizing original data that {@code input} represents.
    *  Must be a scalar Tensor if quantization_axis is -1 (per-tensor quantization), otherwise 1D Tensor of size (input.dim_size(quantization_axis),) (per-axis quantization).

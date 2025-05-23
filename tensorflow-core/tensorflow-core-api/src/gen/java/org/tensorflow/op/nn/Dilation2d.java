@@ -57,8 +57,6 @@ import org.tensorflow.types.family.TNumber;
  * kernel size and contains all zeros.
  * <p>Note on duality: The dilation of {@code input} by the {@code filter} is equal to the
  * negation of the erosion of {@code -input} by the reflected {@code filter}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Dilation2d.OP_NAME,

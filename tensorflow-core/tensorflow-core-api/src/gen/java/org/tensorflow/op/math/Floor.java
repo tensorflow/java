@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise largest integer not greater than x.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Floor.OP_NAME,

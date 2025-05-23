@@ -77,8 +77,6 @@ import org.tensorflow.types.family.TType;
  * #        [4.       ],
  * #        [1.9999999]], dtype=float32)&gt;
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = TriangularSolve.OP_NAME,

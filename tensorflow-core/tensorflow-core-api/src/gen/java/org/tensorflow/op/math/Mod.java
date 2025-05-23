@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * {@code tf.truncatediv(x, y) * y + truncate_mod(x, y) = x}.
  * <p><em>NOTE</em>: {@code math.Mod} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Mod.OP_NAME,

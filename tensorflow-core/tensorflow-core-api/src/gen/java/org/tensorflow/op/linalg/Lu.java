@@ -51,10 +51,6 @@ import org.tensorflow.types.family.TType;
  * <p>P represents a permutation matrix encoded as a list of indices each between {@code 0}
  * and {@code M-1}, inclusive. If P_mat denotes the permutation matrix corresponding to
  * P, then the L, U and P satisfies P_mat * input = L * U.
- *
- * @param <T> data type for {@code lu} output
- *
- * @param <U> data type for {@code p} output
  */
 @OpMetadata(
     opType = Lu.OP_NAME,

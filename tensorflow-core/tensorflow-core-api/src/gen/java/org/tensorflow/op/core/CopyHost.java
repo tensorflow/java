@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * gRPC gating status, the output will simply forward the input tensor without
  * deep-copying. See the documentation of Debug* ops for more details.
  * <p>Unlike the Copy Op, this op has HostMemory constraint on its input or output.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CopyHost.OP_NAME,

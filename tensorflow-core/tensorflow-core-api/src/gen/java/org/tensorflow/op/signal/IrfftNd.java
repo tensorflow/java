@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * is not given, the default shape(input) is used.
  * <p>Axes mean the dimensions to perform the transform on. Default is to perform on
  * all axes.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = IrfftNd.OP_NAME,

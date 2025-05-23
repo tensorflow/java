@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Adds {@code bias} to {@code value}.
  * This is a special case of {@code tf.add} where {@code bias} is restricted to be 1-D.
  * Broadcasting is supported, so {@code value} may have any number of dimensions.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BiasAdd.OP_NAME,

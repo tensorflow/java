@@ -51,8 +51,6 @@ import org.tensorflow.types.family.TType;
  * pack([x, y, z], axis=1) =&gt; [[1, 2, 3], [4, 5, 6]]
  * </pre>
  * <p>This is the opposite of {@code unpack}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = Stack.OP_NAME,

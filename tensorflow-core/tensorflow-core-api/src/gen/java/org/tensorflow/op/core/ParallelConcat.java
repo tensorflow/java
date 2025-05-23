@@ -50,8 +50,6 @@ import org.tensorflow.types.family.TType;
  * that the input shapes be known during graph construction.  Parallel concat
  * will copy pieces of the input into the output as they become available, in
  * some situations this can provide a performance benefit.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = ParallelConcat.OP_NAME,

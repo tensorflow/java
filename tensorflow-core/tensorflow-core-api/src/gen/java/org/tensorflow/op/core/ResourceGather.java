@@ -49,8 +49,6 @@ import org.tensorflow.types.family.TType;
  *     # Higher rank indices
  *     output[i, ..., j, :, ... :] = params[indices[i, ..., j], :, ..., :]
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = ResourceGather.OP_NAME,

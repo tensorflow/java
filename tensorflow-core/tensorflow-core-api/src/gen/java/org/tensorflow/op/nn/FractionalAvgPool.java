@@ -41,8 +41,6 @@ import org.tensorflow.types.family.TNumber;
  * region generation step. The only difference is that after pooling regions are
  * generated, a mean operation is performed instead of a max operation in each
  * pooling region.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = FractionalAvgPool.OP_NAME,

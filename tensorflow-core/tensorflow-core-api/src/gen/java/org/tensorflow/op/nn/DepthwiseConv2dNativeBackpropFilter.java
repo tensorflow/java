@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradients of depthwise convolution with respect to the filter.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DepthwiseConv2dNativeBackpropFilter.OP_NAME,

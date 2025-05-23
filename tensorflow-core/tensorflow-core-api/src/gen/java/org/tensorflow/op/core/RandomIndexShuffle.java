@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>If multiple inputs are vectors (matrix in case of seed) then the size of the
  * first dimension must match.
  * <p>The outputs are deterministic.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomIndexShuffle.OP_NAME,

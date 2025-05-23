@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * <p>Arguments are the same as StridedSliceGrad with the exception that
  * {@code dy} is the input gradient to be propagated and {@code shape} is the
  * shape of {@code StridedSlice}'s {@code input}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StridedSliceGrad.OP_NAME,

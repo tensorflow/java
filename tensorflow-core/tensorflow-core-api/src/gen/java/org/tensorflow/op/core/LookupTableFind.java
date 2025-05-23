@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * The output {@code values} is of the type of the table values.
  * <p>The scalar {@code default_value} is the value output for keys not present in the
  * table. It must also be of the same type as the table values.
- *
- * @param <U> data type for {@code values} output
  */
 @OpMetadata(
     opType = LookupTableFind.OP_NAME,

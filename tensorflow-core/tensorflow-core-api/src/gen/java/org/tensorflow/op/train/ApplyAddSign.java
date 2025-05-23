@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
  * update &lt;- (alpha + sign_decay * sign(g) *sign(m)) * g
  * variable &lt;- variable - lr_t * update
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyAddSign.OP_NAME,

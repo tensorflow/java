@@ -260,7 +260,6 @@ public final class StringsOps {
    *  strings and outputs a ragged tensor with 1 ragged dimension containing ngrams
    *  of that string, joined along the innermost axis.
    *
-   * @param <T> data type for {@code ngrams_splits} output
    * @param data The values tensor of the ragged string tensor to make ngrams out of. Must be a
    *  1D string tensor.
    * @param dataSplits The splits tensor of the ragged string tensor to make ngrams out of.
@@ -510,7 +509,6 @@ public final class StringsOps {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param <T> data type for {@code output} output
    * @param stringTensor The stringTensor value
    * @return a new instance of ToNumber, with default output types
    */
@@ -533,7 +531,6 @@ public final class StringsOps {
    *  </blockquote>
    *  </blockquote>
    *
-   * @param <T> data type for {@code output} output
    * @param stringTensor The stringTensor value
    * @param outType The numeric type to interpret each string in {@code string_tensor} as.
    * @param <T> data type for {@code StringToNumber} output and operands
@@ -559,7 +556,6 @@ public final class StringsOps {
    *  string (in row-major order).</li>
    *  </ul>
    *
-   * @param <T> data type for {@code row_splits} output
    * @param input The text to be decoded. Can have any shape. Note that the output is flattened
    *  to a vector of char values.
    * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
@@ -588,7 +584,6 @@ public final class StringsOps {
    *  string (in row-major order).</li>
    *  </ul>
    *
-   * @param <T> data type for {@code row_splits} output
    * @param input The text to be decoded. Can have any shape. Note that the output is flattened
    *  to a vector of char values.
    * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
@@ -623,7 +618,6 @@ public final class StringsOps {
    *  string (in row-major order).</li>
    *  </ul>
    *
-   * @param <T> data type for {@code row_splits} output
    * @param input The text to be decoded. Can have any shape. Note that the output is flattened
    *  to a vector of char values.
    * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported
@@ -656,7 +650,6 @@ public final class StringsOps {
    *  string (in row-major order).</li>
    *  </ul>
    *
-   * @param <T> data type for {@code row_splits} output
    * @param input The text to be decoded. Can have any shape. Note that the output is flattened
    *  to a vector of char values.
    * @param inputEncoding Text encoding of the input strings. This is any of the encodings supported

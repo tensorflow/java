@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * is not already set.
  * tensor: The concated result.
  * lengths: Output tensor containing sizes of the 0th dimension of tensors in the list, used for computing the gradient.
- *
- * @param <U> data type for {@code tensor} output
  */
 @OpMetadata(
     opType = TensorListConcat.OP_NAME,

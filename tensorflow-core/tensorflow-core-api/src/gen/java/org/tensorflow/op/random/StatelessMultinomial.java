@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Draws samples from a multinomial distribution.
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessMultinomial.OP_NAME,

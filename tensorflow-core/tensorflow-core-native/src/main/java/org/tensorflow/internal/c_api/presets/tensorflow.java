@@ -40,7 +40,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             // The lower part is still the same, so multiple roots are set in the pom file.
             "tsl/platform/ctstring_internal.h",
             "tsl/platform/ctstring.h",
-            "tsl/c/tsl_status.h",
+            "xla/tsl/c/tsl_status.h",
             "tensorflow/c/c_api_macros.h",
             "tensorflow/c/tf_datatype.h",
             "tensorflow/c/tf_status.h",
@@ -64,7 +64,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
           resource = {"LICENSE", "THIRD_PARTY_TF_JNI_LICENSES"}),
       @Platform(
           value = {"linux-arm64"},
-          link = {"tensorflow_cc@.2", "tensorflow_framework@.2", "omp-e9212f90@.5"}),
+          link = {"tensorflow_cc@.2", "tensorflow_framework@.2", "omp-6196b3b5@.5"}),
       @Platform(
           value = "windows",
           preload = {
@@ -203,8 +203,11 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         new Info("TSL_Status", "TSL_PayloadVisitor", "TF_PayloadVisitor", "TF_ForEachPayload")
             .skip());
 
-    // This C++-API dependent method appears somehow at the bottom of c/eager/c_api.h, skip it
+    // These C++-API dependent method appears somehow at the bottom of c/eager/c_api.h, skip it
     infoMap.put(new Info("TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)").skip());
+
+    // Skip C++ classes
+    infoMap.put(new Info("tsl::StatusGroup").skip());
   }
 
   @Override

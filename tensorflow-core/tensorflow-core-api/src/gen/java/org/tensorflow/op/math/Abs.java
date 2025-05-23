@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
  * Given a tensor {@code x}, this operation returns a tensor containing the absolute
  * value of each element in {@code x}. For example, if x is an input element and y is
  * an output element, this operation computes \(y = |x|\).
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Abs.OP_NAME,

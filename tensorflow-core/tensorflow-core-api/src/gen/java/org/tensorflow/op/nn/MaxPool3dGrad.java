@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of 3D max pooling function.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = MaxPool3dGrad.OP_NAME,

@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TNumber;
  * this op uses IFCO. So in order for the following snippet to be equivalent
  * all gate-related outputs should be reordered.
  * </pre>
- *
- * @param <T> data type for {@code i} output
  */
 @OpMetadata(
     opType = BlockLSTM.OP_NAME,

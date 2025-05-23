@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Get the value of the tensor specified by its handle.
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = GetSessionTensor.OP_NAME,

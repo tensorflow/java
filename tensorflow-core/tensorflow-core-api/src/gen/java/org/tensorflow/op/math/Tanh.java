@@ -49,8 +49,6 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Tanh.OP_NAME,

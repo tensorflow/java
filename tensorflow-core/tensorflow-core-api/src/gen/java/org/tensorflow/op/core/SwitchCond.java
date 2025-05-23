@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * If {@code pred} is true, the {@code data} input is forwarded to {@code output_true}. Otherwise,
  * the data goes to {@code output_false}.
  * <p>See also {@code RefSwitch} and {@code Merge}.
- *
- * @param <T> data type for {@code output_false} output
  */
 @OpMetadata(
     opType = SwitchCond.OP_NAME,

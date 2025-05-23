@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * e, v = self_adjoint_eig(a)
  * e = self_adjoint_eig(a, compute_v=False)
  * </pre>
- *
- * @param <T> data type for {@code e} output
  */
 @OpMetadata(
     opType = SelfAdjointEig.OP_NAME,

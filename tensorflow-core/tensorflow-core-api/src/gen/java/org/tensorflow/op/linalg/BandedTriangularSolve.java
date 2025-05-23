@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The BandedTriangularSolve operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = BandedTriangularSolve.OP_NAME,

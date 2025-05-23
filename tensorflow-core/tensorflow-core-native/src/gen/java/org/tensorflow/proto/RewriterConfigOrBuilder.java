@@ -305,8 +305,8 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
-   * Optimize data types for CUDA (default is OFF).
-   * This will try to use float16 on GPU which is faster.
+   * Optimize data types for CUDA/oneDNN (default is OFF).
+   * This will try to use float16 on GPU/CPU which is faster.
    * Note that this can change the numerical stability of the graph and may
    * require the use of loss scaling to maintain model convergence.
    * </pre>
@@ -317,8 +317,8 @@ public interface RewriterConfigOrBuilder extends
   int getAutoMixedPrecisionValue();
   /**
    * <pre>
-   * Optimize data types for CUDA (default is OFF).
-   * This will try to use float16 on GPU which is faster.
+   * Optimize data types for CUDA/oneDNN (default is OFF).
+   * This will try to use float16 on GPU/CPU which is faster.
    * Note that this can change the numerical stability of the graph and may
    * require the use of loss scaling to maintain model convergence.
    * </pre>

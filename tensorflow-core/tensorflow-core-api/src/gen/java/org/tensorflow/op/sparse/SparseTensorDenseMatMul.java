@@ -45,8 +45,6 @@ import org.tensorflow.types.family.TType;
  * if adjoint_a == true:
  * A should be sorted in order of increasing dimension 1 (i.e., &quot;column major&quot;
  * order instead of &quot;row major&quot; order).
- *
- * @param <U> data type for {@code product} output
  */
 @OpMetadata(
     opType = SparseTensorDenseMatMul.OP_NAME,

@@ -63,8 +63,6 @@ import org.tensorflow.types.family.TNumber;
  * bitwise_ops.left_shift(lhs, rhs)
  * # &lt;tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)&gt;
  * </pre>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = LeftShift.OP_NAME,

@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TType;
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
  * The generated values are uniform integers covering the whole range of {@code dtype}.
  * <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomUniformFullIntV2.OP_NAME,

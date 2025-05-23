@@ -37,10 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Batch normalization.
  * Note that the size of 4D Tensors are defined by either &quot;NHWC&quot; or &quot;NCHW&quot;.
  * The size of 1D Tensors matches the dimension C of the 4D Tensors.
- *
- * @param <T> data type for {@code y} output
- *
- * @param <U> data type for {@code batch_mean} output
  */
 @OpMetadata(
     opType = FusedBatchNorm.OP_NAME,

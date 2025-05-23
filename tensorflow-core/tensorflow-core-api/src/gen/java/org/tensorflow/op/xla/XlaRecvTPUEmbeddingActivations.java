@@ -31,7 +31,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -46,14 +45,11 @@ import org.tensorflow.types.family.TType;
     opType = XlaRecvTPUEmbeddingActivations.OP_NAME,
     inputsClass = XlaRecvTPUEmbeddingActivations.Inputs.class
 )
-@Operator(
-    group = "xla"
-)
 public final class XlaRecvTPUEmbeddingActivations extends RawOp implements Iterable<Operand<TFloat32>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaRecvTPUEmbeddingActivations";
+  public static final String OP_NAME = "XlaRecvTPUEmbeddingActivationsV2";
 
   private List<Output<TFloat32>> outputs;
 
@@ -67,7 +63,7 @@ public final class XlaRecvTPUEmbeddingActivations extends RawOp implements Itera
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaRecvTPUEmbeddingActivations operation.
+   * Factory method to create a class wrapping a new XlaRecvTPUEmbeddingActivationsV2 operation.
    *
    * @param scope current scope
    * @param deduplicationData A Tensor with type=DT_VARIANT containing the deduplication
@@ -80,17 +76,24 @@ public final class XlaRecvTPUEmbeddingActivations extends RawOp implements Itera
    * present in the tpu embedding config, it is equal to the number of features
    * otherwise equal to number of embedding tables in the model.
    * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @param embeddingPartitions Serialized EmbeddingPartitionsProto proto.
+   * @param hbmBuffersConfig Serialized HbmBuffersConfig proto.
+   * @param tpuTopology Serialized TpuTopologyArgsProto proto.
    * @return a new instance of XlaRecvTPUEmbeddingActivations
    */
   @Endpoint(
       describeByClass = true
   )
   public static XlaRecvTPUEmbeddingActivations create(Scope scope,
-      Operand<? extends TType> deduplicationData, Long numTables, String config) {
+      Operand<? extends TType> deduplicationData, Long numTables, String config,
+      String embeddingPartitions, String hbmBuffersConfig, String tpuTopology) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaRecvTPUEmbeddingActivations");
     opBuilder.addInput(deduplicationData.asOutput());
     opBuilder.setAttr("num_tables", numTables);
     opBuilder.setAttr("config", config);
+    opBuilder.setAttr("embedding_partitions", embeddingPartitions);
+    opBuilder.setAttr("hbm_buffers_config", hbmBuffersConfig);
+    opBuilder.setAttr("tpu_topology", tpuTopology);
     return new XlaRecvTPUEmbeddingActivations(opBuilder.build());
   }
 
@@ -129,11 +132,29 @@ public final class XlaRecvTPUEmbeddingActivations extends RawOp implements Itera
      */
     public final String config;
 
+    /**
+     * Serialized EmbeddingPartitionsProto proto.
+     */
+    public final String embeddingPartitions;
+
+    /**
+     * Serialized HbmBuffersConfig proto.
+     */
+    public final String hbmBuffersConfig;
+
+    /**
+     * Serialized TpuTopologyArgsProto proto.
+     */
+    public final String tpuTopology;
+
     public Inputs(GraphOperation op) {
-      super(new XlaRecvTPUEmbeddingActivations(op), op, Arrays.asList("config"));
+      super(new XlaRecvTPUEmbeddingActivations(op), op, Arrays.asList("config", "embedding_partitions", "hbm_buffers_config", "tpu_topology"));
       int inputIndex = 0;
       deduplicationData = (Operand<? extends TType>) op.input(inputIndex++);
       config = op.attributes().getAttrString("config");
+      embeddingPartitions = op.attributes().getAttrString("embedding_partitions");
+      hbmBuffersConfig = op.attributes().getAttrString("hbm_buffers_config");
+      tpuTopology = op.attributes().getAttrString("tpu_topology");
     }
   }
 }

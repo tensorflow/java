@@ -59,8 +59,6 @@ import org.tensorflow.types.family.TNumber;
  * #     [-1 -2 -3 -4]
  * #     [ 0  0  0  0]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = SparseSegmentSumWithNumSegments.OP_NAME,

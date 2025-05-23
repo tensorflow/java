@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * The QuantizedConv2DWithBiasSumAndRelu operation
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = QuantizedConv2DWithBiasSumAndRelu.OP_NAME,

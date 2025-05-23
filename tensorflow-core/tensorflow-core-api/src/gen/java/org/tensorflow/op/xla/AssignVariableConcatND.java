@@ -88,18 +88,8 @@ public final class AssignVariableConcatND extends RawOp {
    *
    * @param scope current scope
    * @param resource Resource variable for concatenated input tensors across all dimensions.
-   * }
-   * in_arg {
-   * name: &quot;inputs&quot;
-   * description: &lt;&lt;END
-   * Input tensor slices in row-major order to merge across all dimensions. All
+   * @param inputs Input tensor slices in row-major order to merge across all dimensions. All
    * inputs must have the same shape.
-   * }
-   * out_arg {
-   * name: &quot;output&quot;
-   * description: &lt;&lt;END
-   * Output tensor formed from merging input slices based on num_concats defined.
-   * @param inputs The inputs value
    * @param numConcats Number of ways to merge per dimension.
    * @param options carries optional attribute values
    * @return a new instance of AssignVariableConcatND
@@ -197,22 +187,12 @@ public final class AssignVariableConcatND extends RawOp {
   public static class Inputs extends RawOpInputs<AssignVariableConcatND> {
     /**
      * Resource variable for concatenated input tensors across all dimensions.
-     * }
-     * in_arg {
-     * name: &quot;inputs&quot;
-     * description: &lt;&lt;END
-     * Input tensor slices in row-major order to merge across all dimensions. All
-     * inputs must have the same shape.
-     * }
-     * out_arg {
-     * name: &quot;output&quot;
-     * description: &lt;&lt;END
-     * Output tensor formed from merging input slices based on num_concats defined.
      */
     public final Operand<? extends TType> resource;
 
     /**
-     * The inputs input
+     * Input tensor slices in row-major order to merge across all dimensions. All
+     * inputs must have the same shape.
      */
     public final Iterable<Operand<? extends TType>> inputs;
 

@@ -36,8 +36,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Convert a (possibly batched) CSRSparseMatrix to dense.
- *
- * @param <T> data type for {@code dense_output} output
  */
 @OpMetadata(
     opType = CSRSparseMatrixToDense.OP_NAME,

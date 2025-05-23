@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * # tensor 'input' is [-2.25 + 4.75j, 3.25 + 5.75j]
  * tf.real(input) ==&gt; [-2.25, 3.25]
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Real.OP_NAME,

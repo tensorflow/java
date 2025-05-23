@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  * tf.linspace(10.0, 12.0, 3, name=&quot;linspace&quot;) =&gt; [ 10.0  11.0  12.0]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = LinSpace.OP_NAME,

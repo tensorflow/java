@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear: {@code max(features, features * alpha)}.
- *
- * @param <T> data type for {@code activations} output
  */
 @OpMetadata(
     opType = LeakyRelu.OP_NAME,

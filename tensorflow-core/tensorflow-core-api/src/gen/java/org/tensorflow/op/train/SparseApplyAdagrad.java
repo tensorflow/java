@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * That is for rows we have grad for, we update var and accum as follows:
  * $$accum += grad * grad$$
  * $$var -= lr * grad * (1 / sqrt(accum))$$
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = SparseApplyAdagrad.OP_NAME,

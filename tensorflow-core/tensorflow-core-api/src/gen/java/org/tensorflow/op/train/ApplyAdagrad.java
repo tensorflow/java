@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * Update '*var' according to the adagrad scheme.
  * accum += grad * grad
  * var -= lr * grad * (1 / sqrt(accum))
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyAdagrad.OP_NAME,

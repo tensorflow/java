@@ -22,6 +22,7 @@ import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.Scope;
@@ -45,14 +46,21 @@ public final class FinalizeTPUEmbedding extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "FinalizeTPUEmbedding";
+  public static final String OP_NAME = "FinalizeTPUEmbeddingV2";
+
+  private Output<TString> embeddingPartitions;
+
+  private Output<TString> hbmBuffersConfig;
 
   public FinalizeTPUEmbedding(Operation operation) {
     super(operation, OP_NAME);
+    int outputIdx = 0;
+    embeddingPartitions = operation.output(outputIdx++);
+    hbmBuffersConfig = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new FinalizeTPUEmbedding operation.
+   * Factory method to create a class wrapping a new FinalizeTPUEmbeddingV2 operation.
    *
    * @param scope current scope
    * @param commonConfig A string-encoded common configuration proto containing metadata
@@ -71,6 +79,26 @@ public final class FinalizeTPUEmbedding extends RawOp {
     opBuilder.addInput(commonConfig.asOutput());
     opBuilder.addInput(memoryConfig.asOutput());
     return new FinalizeTPUEmbedding(opBuilder.build());
+  }
+
+  /**
+   * Gets embeddingPartitions.
+   * A string-encoded embedding partitions proto describing how embedding tables are
+   * partitioned along their feature and ID.
+   * @return embeddingPartitions.
+   */
+  public Output<TString> embeddingPartitions() {
+    return embeddingPartitions;
+  }
+
+  /**
+   * Gets hbmBuffersConfig.
+   * A string-encoded HBM buffers config proto specifies where HBM buffers are
+   * located.
+   * @return hbmBuffersConfig.
+   */
+  public Output<TString> hbmBuffersConfig() {
+    return hbmBuffersConfig;
   }
 
   @OpInputsMetadata(

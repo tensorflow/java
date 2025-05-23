@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * x = tf.constant([0, 0.5, 1, 4.5, -4, -5.6])
  * tf.math.lgamma(x) ==&gt; [inf, 0.5723649, 0., 2.4537368, inf, -4.6477685]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Lgamma.OP_NAME,

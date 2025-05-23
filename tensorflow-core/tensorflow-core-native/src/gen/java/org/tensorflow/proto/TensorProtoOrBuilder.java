@@ -8,11 +8,19 @@ public interface TensorProtoOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * Data type of the tensor.
+   * </pre>
+   *
    * <code>.tensorflow.DataType dtype = 1;</code>
    * @return The enum numeric value on the wire for dtype.
    */
   int getDtypeValue();
   /**
+   * <pre>
+   * Data type of the tensor.
+   * </pre>
+   *
    * <code>.tensorflow.DataType dtype = 1;</code>
    * @return The dtype.
    */

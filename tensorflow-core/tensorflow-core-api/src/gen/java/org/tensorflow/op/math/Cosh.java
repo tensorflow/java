@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant([-float(&quot;inf&quot;), -9, -0.5, 1, 1.2, 2, 10, float(&quot;inf&quot;)])
  * tf.math.cosh(x) ==&gt; [inf 4.0515420e+03 1.1276259e+00 1.5430807e+00 1.8106556e+00 3.7621956e+00 1.1013233e+04 inf]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Cosh.OP_NAME,

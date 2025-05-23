@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Mutually reduces multiple tensors of identical type and shape.
- *
- * @param <T> data type for {@code data} output
  */
 @OpMetadata(
     opType = CollectiveReduce.OP_NAME,

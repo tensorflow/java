@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the derivative of a Gamma random sample w.r.t. {@code alpha}.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomGammaGrad.OP_NAME,

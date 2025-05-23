@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * of features.  This label is considered to have probability 1.0 for the
  * given row.
  * <p>Inputs are the logits, not probabilities.
- *
- * @param <T> data type for {@code loss} output
  */
 @OpMetadata(
     opType = SparseSoftmaxCrossEntropyWithLogits.OP_NAME,

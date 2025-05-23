@@ -40,8 +40,6 @@ import org.tensorflow.types.family.TNumber;
  * Perform quantization on Tensor {@code input}.
  * Given {@code input}, {@code scales} and {@code zero_points}, performs quantization using the formula:
  * quantized_data = floor(input_data * (1.0f / scale) + 0.5f) + zero_point
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformQuantize.OP_NAME,

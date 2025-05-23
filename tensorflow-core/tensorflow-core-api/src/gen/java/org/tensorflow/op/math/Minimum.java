@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
  * Returns the min of x and y (i.e. x &lt; y ? x : y) element-wise.
  * <em>NOTE</em>: {@code math.Minimum} supports broadcasting. More about broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
- *
- * @param <T> data type for {@code z} output
  */
 @OpMetadata(
     opType = Minimum.OP_NAME,

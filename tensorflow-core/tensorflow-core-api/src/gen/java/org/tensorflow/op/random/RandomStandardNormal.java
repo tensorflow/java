@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Outputs random values from a normal distribution.
  * The generated values will have mean 0 and standard deviation 1.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomStandardNormal.OP_NAME,

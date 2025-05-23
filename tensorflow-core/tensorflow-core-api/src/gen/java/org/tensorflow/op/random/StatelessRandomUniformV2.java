@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * The generated values follow a uniform distribution in the range {@code [0, 1)}. The
  * lower bound 0 is included in the range, while the upper bound 1 is excluded.
  * <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter} and {@code alg}.
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatelessRandomUniformV2.OP_NAME,

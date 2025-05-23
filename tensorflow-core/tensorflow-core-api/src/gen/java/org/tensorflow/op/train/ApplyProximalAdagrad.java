@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * accum += grad * grad
  * prox_v = var - lr * grad * (1 / sqrt(accum))
  * var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyProximalAdagrad.OP_NAME,

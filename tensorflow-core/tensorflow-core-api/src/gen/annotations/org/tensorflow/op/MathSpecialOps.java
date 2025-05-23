@@ -51,7 +51,6 @@ public final class MathSpecialOps {
   /**
    * The BesselJ0 operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselJ0} output and operands
    * @return a new instance of BesselJ0
@@ -63,7 +62,6 @@ public final class MathSpecialOps {
   /**
    * The BesselJ1 operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselJ1} output and operands
    * @return a new instance of BesselJ1
@@ -75,7 +73,6 @@ public final class MathSpecialOps {
   /**
    * The BesselK0 operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselK0} output and operands
    * @return a new instance of BesselK0
@@ -87,7 +84,6 @@ public final class MathSpecialOps {
   /**
    * The BesselK0e operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselK0e} output and operands
    * @return a new instance of BesselK0e
@@ -99,7 +95,6 @@ public final class MathSpecialOps {
   /**
    * The BesselK1 operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselK1} output and operands
    * @return a new instance of BesselK1
@@ -111,7 +106,6 @@ public final class MathSpecialOps {
   /**
    * The BesselK1e operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselK1e} output and operands
    * @return a new instance of BesselK1e
@@ -123,7 +117,6 @@ public final class MathSpecialOps {
   /**
    * The BesselY0 operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselY0} output and operands
    * @return a new instance of BesselY0
@@ -135,7 +128,6 @@ public final class MathSpecialOps {
   /**
    * The BesselY1 operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code BesselY1} output and operands
    * @return a new instance of BesselY1
@@ -147,7 +139,6 @@ public final class MathSpecialOps {
   /**
    * The Dawsn operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code Dawsn} output and operands
    * @return a new instance of Dawsn
@@ -159,7 +150,6 @@ public final class MathSpecialOps {
   /**
    * The Expint operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code Expint} output and operands
    * @return a new instance of Expint
@@ -171,7 +161,6 @@ public final class MathSpecialOps {
   /**
    * The FresnelCos operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code FresnelCos} output and operands
    * @return a new instance of FresnelCos
@@ -183,7 +172,6 @@ public final class MathSpecialOps {
   /**
    * The FresnelSin operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code FresnelSin} output and operands
    * @return a new instance of FresnelSin
@@ -195,7 +183,6 @@ public final class MathSpecialOps {
   /**
    * The Spence operation
    *
-   * @param <T> data type for {@code y} output
    * @param x The x value
    * @param <T> data type for {@code Spence} output and operands
    * @return a new instance of Spence

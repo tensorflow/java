@@ -48,8 +48,6 @@ import org.tensorflow.types.family.TType;
  * # tensor `imag` is [4.75, 5.75]
  * tf.complex(real, imag) ==&gt; [[2.25 + 4.75j], [3.25 + 5.75j]]
  * </pre>
- *
- * @param <U> data type for {@code out} output
  */
 @OpMetadata(
     opType = Complex.OP_NAME,

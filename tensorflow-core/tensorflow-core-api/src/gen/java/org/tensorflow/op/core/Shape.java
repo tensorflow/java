@@ -44,8 +44,6 @@ import org.tensorflow.types.family.TType;
  * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
  * shape(t) ==&gt; [2, 2, 3]
  * </pre>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Shape.OP_NAME,

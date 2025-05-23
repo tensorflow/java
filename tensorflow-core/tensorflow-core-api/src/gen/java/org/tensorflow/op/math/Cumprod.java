@@ -56,8 +56,6 @@ import org.tensorflow.types.family.TType;
  * <pre>
  * tf.cumprod([a, b, c], exclusive=True, reverse=True)  # =&gt; [b * c, c, 1]
  * </pre>
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = Cumprod.OP_NAME,

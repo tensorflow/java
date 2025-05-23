@@ -39,8 +39,6 @@ import org.tensorflow.types.family.TType;
  * The output {@code y} has the same rank as {@code x}. The shapes of {@code x} and {@code y} satisfy:
  * {@code y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]}
  * {@code y[i,j,k,...,s,t,u] == conj(x[perm[i], perm[j], perm[k],...,perm[s], perm[t], perm[u]])}
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = ConjugateTranspose.OP_NAME,

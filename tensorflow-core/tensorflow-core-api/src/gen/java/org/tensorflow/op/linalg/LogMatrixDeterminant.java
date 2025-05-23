@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  * The {@code log_abs_determinant} is computed as {@code det(P)*sum(log(diag(LU)))} where {@code LU}
  * is the {@code LU} decomposition of the input and {@code P} is the corresponding
  * permutation matrix.
- *
- * @param <T> data type for {@code sign} output
  */
 @OpMetadata(
     opType = LogMatrixDeterminant.OP_NAME,

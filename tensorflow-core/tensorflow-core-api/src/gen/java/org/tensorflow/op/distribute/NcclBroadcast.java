@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TNumber;
  * <p>input: The input to the broadcast.
  * output: The same as input.
  * shape: The shape of the input tensor.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = NcclBroadcast.OP_NAME,

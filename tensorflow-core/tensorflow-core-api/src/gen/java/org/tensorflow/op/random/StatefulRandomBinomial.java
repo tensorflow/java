@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The StatefulRandomBinomial operation
- *
- * @param <V> data type for {@code output} output
  */
 @OpMetadata(
     opType = StatefulRandomBinomial.OP_NAME,

@@ -67,8 +67,6 @@ import org.tensorflow.types.family.TType;
  * [[8, 0],
  *  [0, 0]]
  * </pre>
- *
- * @param <T> data type for {@code outputs} output
  */
 @OpMetadata(
     opType = ReadVariableSplitND.OP_NAME,
@@ -99,11 +97,6 @@ public final class ReadVariableSplitND<T extends TType> extends RawOp implements
    *
    * @param scope current scope
    * @param resource Resource variable of input tensor to split across all dimensions.
-   * }
-   * out_arg {
-   * name: &quot;outputs&quot;
-   * description: &lt;&lt;END
-   * Output slices based on input and num_splits defined, in row-major order.
    * @param T The value of the T attribute
    * @param N The value of the N attribute
    * @param numSplits Number of ways to split per dimension. Shape dimensions must be evenly
@@ -165,7 +158,7 @@ public final class ReadVariableSplitND<T extends TType> extends RawOp implements
 
   /**
    * Gets outputs.
-   *
+   * Output slices based on input and num_splits defined, in row-major order.
    * @return outputs.
    */
   public List<Output<T>> outputs() {
@@ -218,11 +211,6 @@ public final class ReadVariableSplitND<T extends TType> extends RawOp implements
   public static class Inputs extends RawOpInputs<ReadVariableSplitND<?>> {
     /**
      * Resource variable of input tensor to split across all dimensions.
-     * }
-     * out_arg {
-     * name: &quot;outputs&quot;
-     * description: &lt;&lt;END
-     * Output slices based on input and num_splits defined, in row-major order.
      */
     public final Operand<? extends TType> resource;
 

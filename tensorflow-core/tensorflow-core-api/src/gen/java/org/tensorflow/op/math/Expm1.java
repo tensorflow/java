@@ -47,8 +47,6 @@ import org.tensorflow.types.family.TType;
  * x = tf.constant(1 + 1j)
  * tf.math.expm1(x) ==&gt; (0.46869393991588515+2.2873552871788423j)
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = Expm1.OP_NAME,

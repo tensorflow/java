@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor of ones with the same shape and type as x.
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = OnesLike.OP_NAME,

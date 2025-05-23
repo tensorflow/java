@@ -54,8 +54,6 @@ import org.tensorflow.types.family.TType;
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/ScatterSub.png" alt>
  * </div>
- *
- * @param <T> data type for {@code output_ref} output
  */
 @OpMetadata(
     opType = ScatterSub.OP_NAME,

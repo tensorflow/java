@@ -94,10 +94,16 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- * <p>Note: on CPU, if an out of bound index is found, an error is returned.
- * On GPU, if an out of bound index is found, the index is ignored.
- *
- * @param <T> data type for {@code output} output
+ * <p>If {@code indices} contains any out-of-bound indices, depending on
+ * {@code bad_indices_policy}, the op will either return an error or ignore the
+ * out-of-bound indices. {@code bad_indices_policy} can be one of the following values:
+ * <ol>
+ * <li>&quot;&quot; or &quot;DEFAULT&quot;: raises on CPU and ignore on GPU. This is because
+ * historically on CPU and GPU we handle errors in different ways, and for
+ * backward compatibility we keep the default behavior.</li>
+ * <li>&quot;ERROR&quot;: raises error; GPU does not support this value.</li>
+ * <li>&quot;IGNORE&quot;: ignore the bad indices; supported on both CPU and GPU.</li>
+ * </ol>
  */
 @OpMetadata(
     opType = TensorScatterNdAdd.OP_NAME,
@@ -125,6 +131,7 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
    * @param tensor Tensor to copy/update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param options carries optional attribute values
    * @param <T> data type for {@code TensorScatterAdd} output and operands
    * @return a new instance of TensorScatterNdAdd
    */
@@ -132,12 +139,29 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
       describeByClass = true
   )
   public static <T extends TType> TensorScatterNdAdd<T> create(Scope scope, Operand<T> tensor,
-      Operand<? extends TNumber> indices, Operand<T> updates) {
+      Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorScatterNdAdd");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.badIndicesPolicy != null) {
+          opBuilder.setAttr("bad_indices_policy", opts.badIndicesPolicy);
+        }
+      }
+    }
     return new TensorScatterNdAdd<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the badIndicesPolicy option.
+   *
+   * @param badIndicesPolicy the badIndicesPolicy option
+   * @return this Options instance.
+   */
+  public static Options badIndicesPolicy(String badIndicesPolicy) {
+    return new Options().badIndicesPolicy(badIndicesPolicy);
   }
 
   /**
@@ -152,6 +176,27 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorScatterNdAdd}
+   */
+  public static class Options {
+    private String badIndicesPolicy;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the badIndicesPolicy option.
+     *
+     * @param badIndicesPolicy the badIndicesPolicy option
+     * @return this Options instance.
+     */
+    public Options badIndicesPolicy(String badIndicesPolicy) {
+      this.badIndicesPolicy = badIndicesPolicy;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -183,14 +228,20 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
      */
     public final DataType Tindices;
 
+    /**
+     * The badIndicesPolicy attribute
+     */
+    public final String badIndicesPolicy;
+
     public Inputs(GraphOperation op) {
-      super(new TensorScatterNdAdd<>(op), op, Arrays.asList("T", "Tindices"));
+      super(new TensorScatterNdAdd<>(op), op, Arrays.asList("T", "Tindices", "bad_indices_policy"));
       int inputIndex = 0;
       tensor = (Operand<T>) op.input(inputIndex++);
       indices = (Operand<? extends TNumber>) op.input(inputIndex++);
       updates = (Operand<T>) op.input(inputIndex++);
       T = op.attributes().getAttrType("T");
       Tindices = op.attributes().getAttrType("Tindices");
+      badIndicesPolicy = op.attributes().getAttrString("bad_indices_policy");
     }
   }
 }

@@ -67,8 +67,6 @@ import org.tensorflow.types.family.TType;
  * </blockquote>
  * </blockquote>
  * </blockquote>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = UnsortedSegmentSum.OP_NAME,

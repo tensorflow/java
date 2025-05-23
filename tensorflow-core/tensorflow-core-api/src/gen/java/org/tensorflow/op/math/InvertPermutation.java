@@ -46,8 +46,6 @@ import org.tensorflow.types.family.TNumber;
  * # tensor `x` is [3, 4, 0, 2, 1]
  * invert_permutation(x) ==&gt; [2, 4, 3, 0, 1]
  * </pre>
- *
- * @param <T> data type for {@code y} output
  */
 @OpMetadata(
     opType = InvertPermutation.OP_NAME,

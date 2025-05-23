@@ -78,8 +78,6 @@ import org.tensorflow.types.family.TType;
  * </ul>
  * </li>
  * </ul>
- *
- * @param <T> data type for {@code outputs} output
  */
 @OpMetadata(
     opType = DynamicPartition.OP_NAME,

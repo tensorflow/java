@@ -53,8 +53,6 @@ import org.tensorflow.types.family.TType;
  * <li>Because {@code tf.fill} evaluates at graph runtime, it supports dynamic shapes
  * based on other runtime Tensors, unlike {@code tf.constant}.</li>
  * </ul>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = Fill.OP_NAME,

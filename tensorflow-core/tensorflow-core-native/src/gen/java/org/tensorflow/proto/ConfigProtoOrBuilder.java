@@ -343,6 +343,33 @@ public interface ConfigProtoOrBuilder extends
 
   /**
    * <pre>
+   * Options that apply to pluggable devices.
+   * </pre>
+   *
+   * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+   * @return Whether the pluggableDeviceOptions field is set.
+   */
+  boolean hasPluggableDeviceOptions();
+  /**
+   * <pre>
+   * Options that apply to pluggable devices.
+   * </pre>
+   *
+   * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+   * @return The pluggableDeviceOptions.
+   */
+  org.tensorflow.proto.GPUOptions getPluggableDeviceOptions();
+  /**
+   * <pre>
+   * Options that apply to pluggable devices.
+   * </pre>
+   *
+   * <code>.tensorflow.GPUOptions pluggable_device_options = 18;</code>
+   */
+  org.tensorflow.proto.GPUOptionsOrBuilder getPluggableDeviceOptionsOrBuilder();
+
+  /**
+   * <pre>
    * Whether soft placement is allowed. If allow_soft_placement is true,
    * an op will be placed on CPU if
    *   1. there's no GPU implementation for the OP

@@ -69,7 +69,6 @@ public final class DtypesOps {
   /**
    * Cast x of type SrcT to y of DstT.
    *
-   * @param <U> data type for {@code y} output
    * @param x The x value
    * @param DstT The value of the DstT attribute
    * @param options carries optional attribute values
@@ -95,7 +94,6 @@ public final class DtypesOps {
    *  tf.complex(real, imag) ==&gt; [[2.25 + 4.75j], [3.25 + 5.75j]]
    *  </pre>
    *
-   * @param <U> data type for {@code out} output
    * @param real The real value
    * @param imag The imag value
    * @param Tout The value of the Tout attribute

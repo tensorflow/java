@@ -59,9 +59,11 @@ only binaries for the followings are being **supported and distributed** by this
 - `linux-x86_64`: Linux platforms on Intel/AMD chips
 - `linux-x86_64-gpu`: Linux platforms on Intel/AMD chips with Cuda GPU support
 - `linux-arm64`: Linux platforms on Arm chips
-- `macosx-x86_64`: MacOS X platforms on Intel/AMD chips
 - `macosx-arm64`: MacOS X platforms on Apple Silicon chips
 - `windows-x86_64`: Windows platforms on Intel/AMD chips
+
+Binaries for `macosx-x86_64` are available for TF-Java 1.0 series releases and earlier, they were dropped from
+TF-Java 1.1 and newer as they are no longer supported or released by Google.
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
 systems with no GPU support, you should add the following dependencies:
@@ -69,12 +71,12 @@ systems with no GPU support, you should add the following dependencies:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
 ```
@@ -85,24 +87,24 @@ native dependencies as follows:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>linux-x86_64-gpu</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>macosx-arm64</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
   <classifier>windows-x86_64</classifier>
 </dependency>
 ```
@@ -119,7 +121,7 @@ For Ubuntu 24.04, you can install them with the following command:
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
 required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
 
-- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-x86_64-arm64`, `macosx-arm64`, `macosx-x86_64` and `windows-x86_64`
+- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-x86_64-arm64`, `macosx-arm64` and `windows-x86_64`
 
 For example, to run TensorFlow Java on any CPU platform for which a binary is being distributed by this project, you can 
 simply add this dependency to your application:
@@ -127,7 +129,7 @@ simply add this dependency to your application:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>1.0.0-rc.2</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -157,7 +159,7 @@ to add Sonatype OSS repository in your pom.xml, like the following
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -179,7 +181,8 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 | 0.5.0                   | 2.10.1             | 11 |
 | 1.0.0-rc.1              | 2.16.1             | 11 |
 | 1.0.0-rc.2              | 2.16.2             | 11 |
-| 1.0.0-SNAPSHOT          | 2.16.2             | 11 |
+| 1.0.0                   | 2.16.2             | 11 |
+| 1.1.0-SNAPSHOT          | 2.18.0             | 11 |
 
 ## How to Contribute?
 

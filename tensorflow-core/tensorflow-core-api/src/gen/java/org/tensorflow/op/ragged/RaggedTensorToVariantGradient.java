@@ -42,8 +42,6 @@ import org.tensorflow.types.family.TType;
  * op, given the variant-encoded ragged gradients of the outputs, along with
  * the outer row-splits and the shape of the dense-values that were provided as
  * inputs to the RaggedTensorToVariant op.
- *
- * @param <U> data type for {@code dense_values_grad} output
  */
 @OpMetadata(
     opType = RaggedTensorToVariantGradient.OP_NAME,

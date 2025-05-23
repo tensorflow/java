@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Read an element from the TensorArray into output {@code value}.
- *
- * @param <T> data type for {@code value} output
  */
 @OpMetadata(
     opType = TensorArrayRead.OP_NAME,

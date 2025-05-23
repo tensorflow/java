@@ -82,7 +82,7 @@ To upgrade the version of TensorFlow that is embedded within TensorFlow Java, pl
 3. Update `urls`, `sha256` and `strip_prefix` fields of the `org_tensorflow` archive rule in Bazel [workspace](https://github.com/tensorflow/java/blob/master/tensorflow-core/tensorflow-core-native/WORKSPACE#L19)
 4. Extract the archive in a temporary folder
 5. Copy the content of `tensorflow-x.x.x/.bazelrc` file to `tensorflow-core/tensorflow-core-native/tensorflow.bazelrc` under TensorFlow Java source tree
-6. Copy the content of `tensorflow-x.x.x/WORKSPACE` after the "###### Copy content of..." notice if `tensorflow-core/tensorflow-core-native/WORKSPACE`, read notice for more details
+6. Copy the content of `tensorflow-x.x.x/WORKSPACE` after the "###### Copy content of..." notice to `tensorflow-core/tensorflow-core-native/WORKSPACE`, read notice for more details
 7. Copy the content of `tensorflow-x.x.x/.bazelversion` file to `tensorflow-core/tensorflow-core-native/.bazelversion`
 8. Validate that options in `tensorflow-core/tensorflow-core-native/.bazelrc` are still accurate or update them accordingly
 9. Update URLs of existing TensorFlow binaries in the `tensorflow-core/tensorflow-core-native/scripts/dist_download` script

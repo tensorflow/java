@@ -467,6 +467,43 @@ private static final long serialVersionUID = 0L;
      * @return The gpuSystemMemorySizeInMb.
      */
     int getGpuSystemMemorySizeInMb();
+
+    /**
+     * <pre>
+     * If true, save information needed for created a PjRt GPU client for
+     * creating a client with remote devices.
+     * </pre>
+     *
+     * <code>bool populate_pjrt_gpu_client_creation_info = 17;</code>
+     * @return The populatePjrtGpuClientCreationInfo.
+     */
+    boolean getPopulatePjrtGpuClientCreationInfo();
+
+    /**
+     * <pre>
+     * node_id for use when creating a PjRt GPU client with remote devices,
+     * which enumerates jobs*tasks from a ServerDef.
+     * </pre>
+     *
+     * <code>int32 node_id = 18;</code>
+     * @return The nodeId.
+     */
+    int getNodeId();
+
+    /**
+     * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+     * @return Whether the streamMergeOptions field is set.
+     */
+    boolean hasStreamMergeOptions();
+    /**
+     * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+     * @return The streamMergeOptions.
+     */
+    org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions getStreamMergeOptions();
+    /**
+     * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+     */
+    org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder getStreamMergeOptionsOrBuilder();
   }
   /**
    * Protobuf type {@code tensorflow.GPUOptions.Experimental}
@@ -1839,6 +1876,747 @@ private static final long serialVersionUID = 0L;
 
     }
 
+    public interface StreamMergeOptionsOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:tensorflow.GPUOptions.Experimental.StreamMergeOptions)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <pre>
+       * If true, the compute stream will be used for host_to_device copy as
+       * well. It's no longer necessary to record an event before the copy to
+       * let the copy stream wait for the compute stream to finish. There is
+       * also no need to wait for the copy to complete before executing the
+       * callback function.
+       * </pre>
+       *
+       * <code>bool merge_host_to_device_stream = 1;</code>
+       * @return The mergeHostToDeviceStream.
+       */
+      boolean getMergeHostToDeviceStream();
+
+      /**
+       * <pre>
+       * If true, the compute stream will be used for device_to_host copy as
+       * well. It's no longer necessary to record an event before the copy to
+       * let the copy stream wait for the compute stream to finish.
+       * </pre>
+       *
+       * <code>bool merge_device_to_host_stream = 2;</code>
+       * @return The mergeDeviceToHostStream.
+       */
+      boolean getMergeDeviceToHostStream();
+
+      /**
+       * <pre>
+       * If true, the compute stream will be used for device_to_device copy as
+       * well. It's no longer necessary to record an event before the copy to
+       * let the copy stream wait for the compute stream of the sending device
+       * to finish. There is also no need to wait for the compute stream of the
+       * receiving device to finish if the copy is within the same device.
+       * </pre>
+       *
+       * <code>bool merge_device_to_device_stream = 3;</code>
+       * @return The mergeDeviceToDeviceStream.
+       */
+      boolean getMergeDeviceToDeviceStream();
+    }
+    /**
+     * <pre>
+     * Whether to merge data transfer streams into the compute stream in the
+     * same stream group. Stream merging helps reduce the overhead caused by
+     * stream synchronization, especially when data transfers are frequent. For
+     * example, setting "merge_host_to_device_stream = true" will make the
+     * compute stream responsible for both computation and host to device memory
+     * copy.
+     * </pre>
+     *
+     * Protobuf type {@code tensorflow.GPUOptions.Experimental.StreamMergeOptions}
+     */
+    public static final class StreamMergeOptions extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:tensorflow.GPUOptions.Experimental.StreamMergeOptions)
+        StreamMergeOptionsOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use StreamMergeOptions.newBuilder() to construct.
+      private StreamMergeOptions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private StreamMergeOptions() {
+      }
+
+      @java.lang.Override
+      @SuppressWarnings({"unused"})
+      protected java.lang.Object newInstance(
+          UnusedPrivateParameter unused) {
+        return new StreamMergeOptions();
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.tensorflow.proto.ConfigProtos.internal_static_tensorflow_GPUOptions_Experimental_StreamMergeOptions_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.tensorflow.proto.ConfigProtos.internal_static_tensorflow_GPUOptions_Experimental_StreamMergeOptions_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.class, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder.class);
+      }
+
+      public static final int MERGE_HOST_TO_DEVICE_STREAM_FIELD_NUMBER = 1;
+      private boolean mergeHostToDeviceStream_;
+      /**
+       * <pre>
+       * If true, the compute stream will be used for host_to_device copy as
+       * well. It's no longer necessary to record an event before the copy to
+       * let the copy stream wait for the compute stream to finish. There is
+       * also no need to wait for the copy to complete before executing the
+       * callback function.
+       * </pre>
+       *
+       * <code>bool merge_host_to_device_stream = 1;</code>
+       * @return The mergeHostToDeviceStream.
+       */
+      @java.lang.Override
+      public boolean getMergeHostToDeviceStream() {
+        return mergeHostToDeviceStream_;
+      }
+
+      public static final int MERGE_DEVICE_TO_HOST_STREAM_FIELD_NUMBER = 2;
+      private boolean mergeDeviceToHostStream_;
+      /**
+       * <pre>
+       * If true, the compute stream will be used for device_to_host copy as
+       * well. It's no longer necessary to record an event before the copy to
+       * let the copy stream wait for the compute stream to finish.
+       * </pre>
+       *
+       * <code>bool merge_device_to_host_stream = 2;</code>
+       * @return The mergeDeviceToHostStream.
+       */
+      @java.lang.Override
+      public boolean getMergeDeviceToHostStream() {
+        return mergeDeviceToHostStream_;
+      }
+
+      public static final int MERGE_DEVICE_TO_DEVICE_STREAM_FIELD_NUMBER = 3;
+      private boolean mergeDeviceToDeviceStream_;
+      /**
+       * <pre>
+       * If true, the compute stream will be used for device_to_device copy as
+       * well. It's no longer necessary to record an event before the copy to
+       * let the copy stream wait for the compute stream of the sending device
+       * to finish. There is also no need to wait for the compute stream of the
+       * receiving device to finish if the copy is within the same device.
+       * </pre>
+       *
+       * <code>bool merge_device_to_device_stream = 3;</code>
+       * @return The mergeDeviceToDeviceStream.
+       */
+      @java.lang.Override
+      public boolean getMergeDeviceToDeviceStream() {
+        return mergeDeviceToDeviceStream_;
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (mergeHostToDeviceStream_ != false) {
+          output.writeBool(1, mergeHostToDeviceStream_);
+        }
+        if (mergeDeviceToHostStream_ != false) {
+          output.writeBool(2, mergeDeviceToHostStream_);
+        }
+        if (mergeDeviceToDeviceStream_ != false) {
+          output.writeBool(3, mergeDeviceToDeviceStream_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (mergeHostToDeviceStream_ != false) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(1, mergeHostToDeviceStream_);
+        }
+        if (mergeDeviceToHostStream_ != false) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(2, mergeDeviceToHostStream_);
+        }
+        if (mergeDeviceToDeviceStream_ != false) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(3, mergeDeviceToDeviceStream_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions)) {
+          return super.equals(obj);
+        }
+        org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions other = (org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions) obj;
+
+        if (getMergeHostToDeviceStream()
+            != other.getMergeHostToDeviceStream()) return false;
+        if (getMergeDeviceToHostStream()
+            != other.getMergeDeviceToHostStream()) return false;
+        if (getMergeDeviceToDeviceStream()
+            != other.getMergeDeviceToDeviceStream()) return false;
+        if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+        return true;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + MERGE_HOST_TO_DEVICE_STREAM_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getMergeHostToDeviceStream());
+        hash = (37 * hash) + MERGE_DEVICE_TO_HOST_STREAM_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getMergeDeviceToHostStream());
+        hash = (37 * hash) + MERGE_DEVICE_TO_DEVICE_STREAM_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getMergeDeviceToDeviceStream());
+        hash = (29 * hash) + getUnknownFields().hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * <pre>
+       * Whether to merge data transfer streams into the compute stream in the
+       * same stream group. Stream merging helps reduce the overhead caused by
+       * stream synchronization, especially when data transfers are frequent. For
+       * example, setting "merge_host_to_device_stream = true" will make the
+       * compute stream responsible for both computation and host to device memory
+       * copy.
+       * </pre>
+       *
+       * Protobuf type {@code tensorflow.GPUOptions.Experimental.StreamMergeOptions}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:tensorflow.GPUOptions.Experimental.StreamMergeOptions)
+          org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return org.tensorflow.proto.ConfigProtos.internal_static_tensorflow_GPUOptions_Experimental_StreamMergeOptions_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return org.tensorflow.proto.ConfigProtos.internal_static_tensorflow_GPUOptions_Experimental_StreamMergeOptions_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.class, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder.class);
+        }
+
+        // Construct using org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.newBuilder()
+        private Builder() {
+
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          mergeHostToDeviceStream_ = false;
+
+          mergeDeviceToHostStream_ = false;
+
+          mergeDeviceToDeviceStream_ = false;
+
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return org.tensorflow.proto.ConfigProtos.internal_static_tensorflow_GPUOptions_Experimental_StreamMergeOptions_descriptor;
+        }
+
+        @java.lang.Override
+        public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions getDefaultInstanceForType() {
+          return org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions build() {
+          org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions buildPartial() {
+          org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions result = new org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions(this);
+          result.mergeHostToDeviceStream_ = mergeHostToDeviceStream_;
+          result.mergeDeviceToHostStream_ = mergeDeviceToHostStream_;
+          result.mergeDeviceToDeviceStream_ = mergeDeviceToDeviceStream_;
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions) {
+            return mergeFrom((org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions other) {
+          if (other == org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.getDefaultInstance()) return this;
+          if (other.getMergeHostToDeviceStream() != false) {
+            setMergeHostToDeviceStream(other.getMergeHostToDeviceStream());
+          }
+          if (other.getMergeDeviceToHostStream() != false) {
+            setMergeDeviceToHostStream(other.getMergeDeviceToHostStream());
+          }
+          if (other.getMergeDeviceToDeviceStream() != false) {
+            setMergeDeviceToDeviceStream(other.getMergeDeviceToDeviceStream());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
+          try {
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                case 8: {
+                  mergeHostToDeviceStream_ = input.readBool();
+
+                  break;
+                } // case 8
+                case 16: {
+                  mergeDeviceToHostStream_ = input.readBool();
+
+                  break;
+                } // case 16
+                case 24: {
+                  mergeDeviceToDeviceStream_ = input.readBool();
+
+                  break;
+                } // case 24
+                default: {
+                  if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                    done = true; // was an endgroup tag
+                  }
+                  break;
+                } // default:
+              } // switch (tag)
+            } // while (!done)
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.unwrapIOException();
+          } finally {
+            onChanged();
+          } // finally
+          return this;
+        }
+
+        private boolean mergeHostToDeviceStream_ ;
+        /**
+         * <pre>
+         * If true, the compute stream will be used for host_to_device copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream to finish. There is
+         * also no need to wait for the copy to complete before executing the
+         * callback function.
+         * </pre>
+         *
+         * <code>bool merge_host_to_device_stream = 1;</code>
+         * @return The mergeHostToDeviceStream.
+         */
+        @java.lang.Override
+        public boolean getMergeHostToDeviceStream() {
+          return mergeHostToDeviceStream_;
+        }
+        /**
+         * <pre>
+         * If true, the compute stream will be used for host_to_device copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream to finish. There is
+         * also no need to wait for the copy to complete before executing the
+         * callback function.
+         * </pre>
+         *
+         * <code>bool merge_host_to_device_stream = 1;</code>
+         * @param value The mergeHostToDeviceStream to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMergeHostToDeviceStream(boolean value) {
+          
+          mergeHostToDeviceStream_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * If true, the compute stream will be used for host_to_device copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream to finish. There is
+         * also no need to wait for the copy to complete before executing the
+         * callback function.
+         * </pre>
+         *
+         * <code>bool merge_host_to_device_stream = 1;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearMergeHostToDeviceStream() {
+          
+          mergeHostToDeviceStream_ = false;
+          onChanged();
+          return this;
+        }
+
+        private boolean mergeDeviceToHostStream_ ;
+        /**
+         * <pre>
+         * If true, the compute stream will be used for device_to_host copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream to finish.
+         * </pre>
+         *
+         * <code>bool merge_device_to_host_stream = 2;</code>
+         * @return The mergeDeviceToHostStream.
+         */
+        @java.lang.Override
+        public boolean getMergeDeviceToHostStream() {
+          return mergeDeviceToHostStream_;
+        }
+        /**
+         * <pre>
+         * If true, the compute stream will be used for device_to_host copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream to finish.
+         * </pre>
+         *
+         * <code>bool merge_device_to_host_stream = 2;</code>
+         * @param value The mergeDeviceToHostStream to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMergeDeviceToHostStream(boolean value) {
+          
+          mergeDeviceToHostStream_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * If true, the compute stream will be used for device_to_host copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream to finish.
+         * </pre>
+         *
+         * <code>bool merge_device_to_host_stream = 2;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearMergeDeviceToHostStream() {
+          
+          mergeDeviceToHostStream_ = false;
+          onChanged();
+          return this;
+        }
+
+        private boolean mergeDeviceToDeviceStream_ ;
+        /**
+         * <pre>
+         * If true, the compute stream will be used for device_to_device copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream of the sending device
+         * to finish. There is also no need to wait for the compute stream of the
+         * receiving device to finish if the copy is within the same device.
+         * </pre>
+         *
+         * <code>bool merge_device_to_device_stream = 3;</code>
+         * @return The mergeDeviceToDeviceStream.
+         */
+        @java.lang.Override
+        public boolean getMergeDeviceToDeviceStream() {
+          return mergeDeviceToDeviceStream_;
+        }
+        /**
+         * <pre>
+         * If true, the compute stream will be used for device_to_device copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream of the sending device
+         * to finish. There is also no need to wait for the compute stream of the
+         * receiving device to finish if the copy is within the same device.
+         * </pre>
+         *
+         * <code>bool merge_device_to_device_stream = 3;</code>
+         * @param value The mergeDeviceToDeviceStream to set.
+         * @return This builder for chaining.
+         */
+        public Builder setMergeDeviceToDeviceStream(boolean value) {
+          
+          mergeDeviceToDeviceStream_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <pre>
+         * If true, the compute stream will be used for device_to_device copy as
+         * well. It's no longer necessary to record an event before the copy to
+         * let the copy stream wait for the compute stream of the sending device
+         * to finish. There is also no need to wait for the compute stream of the
+         * receiving device to finish if the copy is within the same device.
+         * </pre>
+         *
+         * <code>bool merge_device_to_device_stream = 3;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearMergeDeviceToDeviceStream() {
+          
+          mergeDeviceToDeviceStream_ = false;
+          onChanged();
+          return this;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:tensorflow.GPUOptions.Experimental.StreamMergeOptions)
+      }
+
+      // @@protoc_insertion_point(class_scope:tensorflow.GPUOptions.Experimental.StreamMergeOptions)
+      private static final org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions();
+      }
+
+      public static org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<StreamMergeOptions>
+          PARSER = new com.google.protobuf.AbstractParser<StreamMergeOptions>() {
+        @java.lang.Override
+        public StreamMergeOptions parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          Builder builder = newBuilder();
+          try {
+            builder.mergeFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(builder.buildPartial());
+          } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(builder.buildPartial());
+          }
+          return builder.buildPartial();
+        }
+      };
+
+      public static com.google.protobuf.Parser<StreamMergeOptions> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<StreamMergeOptions> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
     public static final int VIRTUAL_DEVICES_FIELD_NUMBER = 1;
     private java.util.List<org.tensorflow.proto.GPUOptions.Experimental.VirtualDevices> virtualDevices_;
     /**
@@ -2365,6 +3143,64 @@ private static final long serialVersionUID = 0L;
       return gpuSystemMemorySizeInMb_;
     }
 
+    public static final int POPULATE_PJRT_GPU_CLIENT_CREATION_INFO_FIELD_NUMBER = 17;
+    private boolean populatePjrtGpuClientCreationInfo_;
+    /**
+     * <pre>
+     * If true, save information needed for created a PjRt GPU client for
+     * creating a client with remote devices.
+     * </pre>
+     *
+     * <code>bool populate_pjrt_gpu_client_creation_info = 17;</code>
+     * @return The populatePjrtGpuClientCreationInfo.
+     */
+    @java.lang.Override
+    public boolean getPopulatePjrtGpuClientCreationInfo() {
+      return populatePjrtGpuClientCreationInfo_;
+    }
+
+    public static final int NODE_ID_FIELD_NUMBER = 18;
+    private int nodeId_;
+    /**
+     * <pre>
+     * node_id for use when creating a PjRt GPU client with remote devices,
+     * which enumerates jobs*tasks from a ServerDef.
+     * </pre>
+     *
+     * <code>int32 node_id = 18;</code>
+     * @return The nodeId.
+     */
+    @java.lang.Override
+    public int getNodeId() {
+      return nodeId_;
+    }
+
+    public static final int STREAM_MERGE_OPTIONS_FIELD_NUMBER = 19;
+    private org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions streamMergeOptions_;
+    /**
+     * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+     * @return Whether the streamMergeOptions field is set.
+     */
+    @java.lang.Override
+    public boolean hasStreamMergeOptions() {
+      return streamMergeOptions_ != null;
+    }
+    /**
+     * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+     * @return The streamMergeOptions.
+     */
+    @java.lang.Override
+    public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions getStreamMergeOptions() {
+      return streamMergeOptions_ == null ? org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.getDefaultInstance() : streamMergeOptions_;
+    }
+    /**
+     * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+     */
+    @java.lang.Override
+    public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder getStreamMergeOptionsOrBuilder() {
+      return getStreamMergeOptions();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2423,6 +3259,15 @@ private static final long serialVersionUID = 0L;
       }
       if (gpuSystemMemorySizeInMb_ != 0) {
         output.writeInt32(16, gpuSystemMemorySizeInMb_);
+      }
+      if (populatePjrtGpuClientCreationInfo_ != false) {
+        output.writeBool(17, populatePjrtGpuClientCreationInfo_);
+      }
+      if (nodeId_ != 0) {
+        output.writeInt32(18, nodeId_);
+      }
+      if (streamMergeOptions_ != null) {
+        output.writeMessage(19, getStreamMergeOptions());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2492,6 +3337,18 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(16, gpuSystemMemorySizeInMb_);
       }
+      if (populatePjrtGpuClientCreationInfo_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(17, populatePjrtGpuClientCreationInfo_);
+      }
+      if (nodeId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(18, nodeId_);
+      }
+      if (streamMergeOptions_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(19, getStreamMergeOptions());
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2539,6 +3396,15 @@ private static final long serialVersionUID = 0L;
           != other.getGpuHostMemDisallowGrowth()) return false;
       if (getGpuSystemMemorySizeInMb()
           != other.getGpuSystemMemorySizeInMb()) return false;
+      if (getPopulatePjrtGpuClientCreationInfo()
+          != other.getPopulatePjrtGpuClientCreationInfo()) return false;
+      if (getNodeId()
+          != other.getNodeId()) return false;
+      if (hasStreamMergeOptions() != other.hasStreamMergeOptions()) return false;
+      if (hasStreamMergeOptions()) {
+        if (!getStreamMergeOptions()
+            .equals(other.getStreamMergeOptions())) return false;
+      }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -2589,6 +3455,15 @@ private static final long serialVersionUID = 0L;
           getGpuHostMemDisallowGrowth());
       hash = (37 * hash) + GPU_SYSTEM_MEMORY_SIZE_IN_MB_FIELD_NUMBER;
       hash = (53 * hash) + getGpuSystemMemorySizeInMb();
+      hash = (37 * hash) + POPULATE_PJRT_GPU_CLIENT_CREATION_INFO_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getPopulatePjrtGpuClientCreationInfo());
+      hash = (37 * hash) + NODE_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getNodeId();
+      if (hasStreamMergeOptions()) {
+        hash = (37 * hash) + STREAM_MERGE_OPTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getStreamMergeOptions().hashCode();
+      }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2752,6 +3627,16 @@ private static final long serialVersionUID = 0L;
 
         gpuSystemMemorySizeInMb_ = 0;
 
+        populatePjrtGpuClientCreationInfo_ = false;
+
+        nodeId_ = 0;
+
+        if (streamMergeOptionsBuilder_ == null) {
+          streamMergeOptions_ = null;
+        } else {
+          streamMergeOptions_ = null;
+          streamMergeOptionsBuilder_ = null;
+        }
         return this;
       }
 
@@ -2802,6 +3687,13 @@ private static final long serialVersionUID = 0L;
         result.gpuHostMemLimitInMb_ = gpuHostMemLimitInMb_;
         result.gpuHostMemDisallowGrowth_ = gpuHostMemDisallowGrowth_;
         result.gpuSystemMemorySizeInMb_ = gpuSystemMemorySizeInMb_;
+        result.populatePjrtGpuClientCreationInfo_ = populatePjrtGpuClientCreationInfo_;
+        result.nodeId_ = nodeId_;
+        if (streamMergeOptionsBuilder_ == null) {
+          result.streamMergeOptions_ = streamMergeOptions_;
+        } else {
+          result.streamMergeOptions_ = streamMergeOptionsBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -2919,6 +3811,15 @@ private static final long serialVersionUID = 0L;
         if (other.getGpuSystemMemorySizeInMb() != 0) {
           setGpuSystemMemorySizeInMb(other.getGpuSystemMemorySizeInMb());
         }
+        if (other.getPopulatePjrtGpuClientCreationInfo() != false) {
+          setPopulatePjrtGpuClientCreationInfo(other.getPopulatePjrtGpuClientCreationInfo());
+        }
+        if (other.getNodeId() != 0) {
+          setNodeId(other.getNodeId());
+        }
+        if (other.hasStreamMergeOptions()) {
+          mergeStreamMergeOptions(other.getStreamMergeOptions());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -3028,6 +3929,23 @@ private static final long serialVersionUID = 0L;
 
                 break;
               } // case 128
+              case 136: {
+                populatePjrtGpuClientCreationInfo_ = input.readBool();
+
+                break;
+              } // case 136
+              case 144: {
+                nodeId_ = input.readInt32();
+
+                break;
+              } // case 144
+              case 154: {
+                input.readMessage(
+                    getStreamMergeOptionsFieldBuilder().getBuilder(),
+                    extensionRegistry);
+
+                break;
+              } // case 154
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -4782,6 +5700,217 @@ private static final long serialVersionUID = 0L;
         gpuSystemMemorySizeInMb_ = 0;
         onChanged();
         return this;
+      }
+
+      private boolean populatePjrtGpuClientCreationInfo_ ;
+      /**
+       * <pre>
+       * If true, save information needed for created a PjRt GPU client for
+       * creating a client with remote devices.
+       * </pre>
+       *
+       * <code>bool populate_pjrt_gpu_client_creation_info = 17;</code>
+       * @return The populatePjrtGpuClientCreationInfo.
+       */
+      @java.lang.Override
+      public boolean getPopulatePjrtGpuClientCreationInfo() {
+        return populatePjrtGpuClientCreationInfo_;
+      }
+      /**
+       * <pre>
+       * If true, save information needed for created a PjRt GPU client for
+       * creating a client with remote devices.
+       * </pre>
+       *
+       * <code>bool populate_pjrt_gpu_client_creation_info = 17;</code>
+       * @param value The populatePjrtGpuClientCreationInfo to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPopulatePjrtGpuClientCreationInfo(boolean value) {
+        
+        populatePjrtGpuClientCreationInfo_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * If true, save information needed for created a PjRt GPU client for
+       * creating a client with remote devices.
+       * </pre>
+       *
+       * <code>bool populate_pjrt_gpu_client_creation_info = 17;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPopulatePjrtGpuClientCreationInfo() {
+        
+        populatePjrtGpuClientCreationInfo_ = false;
+        onChanged();
+        return this;
+      }
+
+      private int nodeId_ ;
+      /**
+       * <pre>
+       * node_id for use when creating a PjRt GPU client with remote devices,
+       * which enumerates jobs*tasks from a ServerDef.
+       * </pre>
+       *
+       * <code>int32 node_id = 18;</code>
+       * @return The nodeId.
+       */
+      @java.lang.Override
+      public int getNodeId() {
+        return nodeId_;
+      }
+      /**
+       * <pre>
+       * node_id for use when creating a PjRt GPU client with remote devices,
+       * which enumerates jobs*tasks from a ServerDef.
+       * </pre>
+       *
+       * <code>int32 node_id = 18;</code>
+       * @param value The nodeId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNodeId(int value) {
+        
+        nodeId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * node_id for use when creating a PjRt GPU client with remote devices,
+       * which enumerates jobs*tasks from a ServerDef.
+       * </pre>
+       *
+       * <code>int32 node_id = 18;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearNodeId() {
+        
+        nodeId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions streamMergeOptions_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder> streamMergeOptionsBuilder_;
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       * @return Whether the streamMergeOptions field is set.
+       */
+      public boolean hasStreamMergeOptions() {
+        return streamMergeOptionsBuilder_ != null || streamMergeOptions_ != null;
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       * @return The streamMergeOptions.
+       */
+      public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions getStreamMergeOptions() {
+        if (streamMergeOptionsBuilder_ == null) {
+          return streamMergeOptions_ == null ? org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.getDefaultInstance() : streamMergeOptions_;
+        } else {
+          return streamMergeOptionsBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      public Builder setStreamMergeOptions(org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions value) {
+        if (streamMergeOptionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          streamMergeOptions_ = value;
+          onChanged();
+        } else {
+          streamMergeOptionsBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      public Builder setStreamMergeOptions(
+          org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder builderForValue) {
+        if (streamMergeOptionsBuilder_ == null) {
+          streamMergeOptions_ = builderForValue.build();
+          onChanged();
+        } else {
+          streamMergeOptionsBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      public Builder mergeStreamMergeOptions(org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions value) {
+        if (streamMergeOptionsBuilder_ == null) {
+          if (streamMergeOptions_ != null) {
+            streamMergeOptions_ =
+              org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.newBuilder(streamMergeOptions_).mergeFrom(value).buildPartial();
+          } else {
+            streamMergeOptions_ = value;
+          }
+          onChanged();
+        } else {
+          streamMergeOptionsBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      public Builder clearStreamMergeOptions() {
+        if (streamMergeOptionsBuilder_ == null) {
+          streamMergeOptions_ = null;
+          onChanged();
+        } else {
+          streamMergeOptions_ = null;
+          streamMergeOptionsBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder getStreamMergeOptionsBuilder() {
+        
+        onChanged();
+        return getStreamMergeOptionsFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      public org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder getStreamMergeOptionsOrBuilder() {
+        if (streamMergeOptionsBuilder_ != null) {
+          return streamMergeOptionsBuilder_.getMessageOrBuilder();
+        } else {
+          return streamMergeOptions_ == null ?
+              org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.getDefaultInstance() : streamMergeOptions_;
+        }
+      }
+      /**
+       * <code>.tensorflow.GPUOptions.Experimental.StreamMergeOptions stream_merge_options = 19;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder> 
+          getStreamMergeOptionsFieldBuilder() {
+        if (streamMergeOptionsBuilder_ == null) {
+          streamMergeOptionsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptions.Builder, org.tensorflow.proto.GPUOptions.Experimental.StreamMergeOptionsOrBuilder>(
+                  getStreamMergeOptions(),
+                  getParentForChildren(),
+                  isClean());
+          streamMergeOptions_ = null;
+        }
+        return streamMergeOptionsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(

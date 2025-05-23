@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The CopyToMeshGrad operation
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = CopyToMeshGrad.OP_NAME,

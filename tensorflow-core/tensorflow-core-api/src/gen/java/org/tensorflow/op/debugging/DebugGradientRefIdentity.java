@@ -37,8 +37,6 @@ import org.tensorflow.types.family.TType;
  * This op is hidden from public in Python. It is used by TensorFlow Debugger to
  * register gradient tensors for gradient debugging.
  * This op operates on reference-type tensors.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = DebugGradientRefIdentity.OP_NAME,

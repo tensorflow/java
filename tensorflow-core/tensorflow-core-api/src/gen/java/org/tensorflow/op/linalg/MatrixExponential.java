@@ -35,8 +35,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Deprecated, use python implementation tf.linalg.matrix_exponential.
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = MatrixExponential.OP_NAME,

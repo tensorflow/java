@@ -52,8 +52,6 @@ import org.tensorflow.types.family.TNumber;
  * <li>per-axis -&gt; per-axis where input_quantization_axis equals output_quantization_axis.
  * i.e. At least one among input_quantization_axis and output_quantization_axis must be -1, or two must be equal.</li>
  * </ul>
- *
- * @param <U> data type for {@code output} output
  */
 @OpMetadata(
     opType = UniformRequantize.OP_NAME,

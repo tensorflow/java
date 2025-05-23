@@ -38,8 +38,6 @@ import org.tensorflow.types.family.TType;
  * Set use_nesterov = True if you want to use Nesterov momentum.
  * <p>accum = accum * momentum + grad
  * var -= lr * accum
- *
- * @param <T> data type for {@code out} output
  */
 @OpMetadata(
     opType = ApplyMomentum.OP_NAME,

@@ -43,8 +43,6 @@ import org.tensorflow.types.family.TType;
  *  [3, 4],  ==&gt;   [1, 2],
  *  [5, 6]]        [3, 4]]
  * </pre>
- *
- * @param <T> data type for {@code output} output
  */
 @OpMetadata(
     opType = RandomShuffle.OP_NAME,
