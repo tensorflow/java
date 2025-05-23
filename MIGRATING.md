@@ -76,8 +76,9 @@ individually.
 
 ### Proto Definitions Moved
 
-Some proto definitions under `org.tensorflow.proto` have been moved to a different location under the same package. You will need to reimport these
-proto bindings to match the new location. Your IDE should easily be able to do this for you.
+Some proto definitions under `org.tensorflow.proto` have been moved to a different location under the same (`org.tensorflow.proto`) package.
+Certain classes have moved packages, for example, `org.tensorflow.proto.example.Feature` to `org.tensorflow.proto.Feature`.
+You will need to reimport these proto bindings to match the new location. Your IDE should easily be able to do this for you.
 
 ## Migrating to 0.3.0
 
