@@ -18,9 +18,12 @@ following platforms:
 
 *   Ubuntu 20.04 or higher; 64-bit, x86
 *   Ubuntu 22.04 or higher; 64-bit, arm
-*   macOS 12 or higher; 64-bit, x86
 *   macOS 14 or higher; 64-bit, arm
 *   Windows 10 or higher; 64-bit, x86
+
+TensorFlow Java 1.0 series and earlier releases also have binaries for:
+
+*   macOS 12 or higher; 64-bit, x86
 
 *Note: To use TensorFlow on Android, see
 [TensorFlow Lite](https://tensorflow.org/lite)*

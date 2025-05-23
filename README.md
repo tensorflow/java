@@ -59,9 +59,11 @@ only binaries for the followings are being **supported and distributed** by this
 - `linux-x86_64`: Linux platforms on Intel/AMD chips
 - `linux-x86_64-gpu`: Linux platforms on Intel/AMD chips with Cuda GPU support
 - `linux-arm64`: Linux platforms on Arm chips
-- `macosx-x86_64`: MacOS X platforms on Intel/AMD chips
 - `macosx-arm64`: MacOS X platforms on Apple Silicon chips
 - `windows-x86_64`: Windows platforms on Intel/AMD chips
+
+Binaries for `macosx-x86_64` are available for TF-Java 1.0 series releases and earlier, they were dropped from
+TF-Java 1.1 and newer as they are no longer supported or released by Google.
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
 systems with no GPU support, you should add the following dependencies:
@@ -119,7 +121,7 @@ For Ubuntu 24.04, you can install them with the following command:
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
 required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
 
-- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-x86_64-arm64`, `macosx-arm64`, `macosx-x86_64` and `windows-x86_64`
+- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-x86_64-arm64`, `macosx-arm64` and `windows-x86_64`
 
 For example, to run TensorFlow Java on any CPU platform for which a binary is being distributed by this project, you can 
 simply add this dependency to your application:
