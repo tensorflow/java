@@ -34,21 +34,4 @@ void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {
 TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g) { return NULL; }
 void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation) {}
 
-// Provide stub for missing TFE_GetServerDef symbol on Windows.
-#include "tensorflow/c/c_api.h"
-#include "tensorflow/c/c_api_experimental.h"
-extern "C" TF_Buffer* TFE_GetServerDef(const char* text_proto, TF_Status* status) {
-    if (status != nullptr) {
-        TF_SetStatus(status, TF_UNIMPLEMENTED,
-                     "TFE_GetServerDef is not supported on Windows build of libtensorflow.");
-    }
-    TF_Buffer* buf = static_cast<TF_Buffer*>(malloc(sizeof(TF_Buffer)));
-    if (buf != nullptr) {
-        buf->data = nullptr;
-        buf->length = 0;
-        buf->data_deallocator = nullptr;
-    }
-    return buf;
-}
-
 #endif // #indef _WIN32

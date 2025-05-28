@@ -1,4 +1,4 @@
-/* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2025 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,5 +29,10 @@ TF_CAPI_EXPORT extern TFJ_GraphId TFJ_GetGraphId(const TF_Graph* g);
 TF_CAPI_EXPORT extern void TFJ_UnmapOperationName(TF_Graph* g, TF_Operation* operation);
 
 #include "tfj_graph_impl.cc" // include CC file in its header to compile it with JavaCPP
+
+#ifdef _WIN32
+// Ensure the Windows-specific stub for TFE_GetServerDef is linked.
+#include "tfe_serverdef_stub.cc"
+#endif
 
 #endif  // TENSORFLOW_JAVA_GRAPH_H_
