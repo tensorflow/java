@@ -68,6 +68,11 @@ public class SavedModelBundleTest {
 
   @Test
   public void load() {
+    try (SavedModelBundle bundle = SavedModelBundle.load(SAVED_MODEL_PATH)) {
+      assertNotNull(bundle.session());
+      assertNotNull(bundle.graph());
+      assertNotNull(bundle.metaGraphDef());
+    }
     try (SavedModelBundle bundle = SavedModelBundle.load(SAVED_MODEL_PATH, "serve")) {
       assertNotNull(bundle.session());
       assertNotNull(bundle.graph());
