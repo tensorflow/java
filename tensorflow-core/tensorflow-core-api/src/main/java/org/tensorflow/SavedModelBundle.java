@@ -320,6 +320,25 @@ public class SavedModelBundle implements AutoCloseable {
    * <p>This method is a shorthand for:
    *
    * <pre>{@code
+   * SavedModelBundle.loader().load();
+   * }</pre>
+   *
+   * @param exportDir the directory path containing a saved model.
+   * @return a bundle containing the graph and associated session.
+   */
+  public static SavedModelBundle load(String exportDir) {
+    Loader loader = loader(exportDir);
+    return loader.load();
+  }
+
+  /**
+   * Load a saved model from an export directory. The model that is being loaded should be created
+   * using the <a href="https://www.tensorflow.org/api_docs/python/tf/saved_model">Saved Model
+   * API</a>.
+   *
+   * <p>This method is a shorthand for:
+   *
+   * <pre>{@code
    * SavedModelBundle.loader().withTags(tags).load();
    * }</pre>
    *
@@ -329,9 +348,7 @@ public class SavedModelBundle implements AutoCloseable {
    */
   public static SavedModelBundle load(String exportDir, String... tags) {
     Loader loader = loader(exportDir);
-    if (tags != null && tags.length > 0) {
-      loader.withTags(tags);
-    }
+    loader.withTags(tags);
     return loader.load();
   }
 
