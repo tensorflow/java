@@ -1,5 +1,5 @@
 /*
-Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019-2025 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -51,6 +51,11 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             "tensorflow/c/tf_tstring.h",
             "tensorflow/c/eager/c_api.h",
             "tensorflow/c/eager/c_api_experimental.h",
+            "tensorflow/c/c_api_experimental.h",
+
+            // Include the Windows-specific stub for TFE_GetServerDef to enable pluggable
+            // device support.
+            "tfe_serverdef_stub.h",
 
             // Following are C API extensions maintained within TF Java, see src/main/native.
             // Binding directly the C++ API with JavaCPP turned out to be too precarious between
