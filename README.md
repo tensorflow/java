@@ -44,17 +44,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md#building).
 ## Using Maven Artifacts
 
 There are two options for adding TensorFlow Java as a dependency to your Maven project: with individual dependencies 
-for each targeted platforms or with a single dependency that target them all.
+for each targeted platform or with a single dependency that targets them all.
 
 ### Individual dependencies
 
 With this option, you must first add a dependency to `tensorflow-core-api` and then one or multiple
 dependencies to `tensorflow-core-native` with a classifier targeting a specific platform. This option is preferred as 
-it minimize the size of your application by only including the TensorFlow builds you need, at the cost of being more 
+it minimizes the size of your application by only including the TensorFlow builds you need, at the cost of being more 
 restrictive. 
 
 While TensorFlow Java can be compiled for [multiple platforms](https://github.com/tensorflow/java/blob/master/tensorflow-core/pom.xml#L54),
-only binaries for the followings are being **supported and distributed** by this project:
+only binaries for the following are being **supported and distributed** by this project:
 
 - `linux-x86_64`: Linux platforms on Intel/AMD chips
 - `linux-x86_64-gpu`: Linux platforms on Intel/AMD chips with Cuda GPU support
@@ -79,6 +79,12 @@ systems with no GPU support, you should add the following dependencies:
   <version>1.0.0</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
+```
+Or Gradle:
+```groovy
+def tfVersion = '1.0.0'
+implementation "org.tensorflow:tensorflow-core-api:$tfVersion"
+implementation "org.tensorflow:tensorflow-core-native:$tfVersion:linux-x86_64"
 ```
 
 On the other hand, if you plan to deploy your JAR on more platforms, you need additional
@@ -108,13 +114,21 @@ native dependencies as follows:
   <classifier>windows-x86_64</classifier>
 </dependency>
 ```
+Or Gradle:
+```groovy
+def tfVersion = '1.0.0'
+implementation "org.tensorflow:tensorflow-core-api:$tfVersion"
+implementation "org.tensorflow:tensorflow-core-native:$tfVersion:linux-x86_64-gpu"
+implementation "org.tensorflow:tensorflow-core-native:$tfVersion:macosx-arm64"
+implementation "org.tensorflow:tensorflow-core-native:$tfVersion:windows-x86_64"
+```
 
 Only one dependency can be added per platform, meaning that you cannot add native dependencies to both `linux-x86_64` and 
 `linux-x86_64-gpu` within the same project.
 
 To use an NVIDIA GPU, you need to install the NVIDIA device driver, CUDA Toolkit, and cuDNN.
 For Ubuntu 24.04, you can install them with the following command:
-```sudo apt-get install -y nvidia-driver-550 nvidia-cuda-toolkit nvidia-cudnn```
+```sudo apt install -y nvidia-driver-550 nvidia-cuda-toolkit nvidia-cudnn```
 
 ### Single dependency
 
@@ -131,6 +145,10 @@ simply add this dependency to your application:
   <artifactId>tensorflow-core-platform</artifactId>
   <version>1.0.0</version>
 </dependency>
+```
+Or Gradle:
+```groovy
+implementation "org.tensorflow:tensorflow-core-platform:1.0.0"
 ```
 
 Be aware though that the builds of TensorFlow are quite voluminous and including too many native dependencies may
@@ -162,6 +180,20 @@ to add Sonatype OSS repository in your pom.xml, like the following
         <version>1.1.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
+```
+Or Gradle:
+```groovy
+repositories {
+  mavenCentral()
+  maven {
+    url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+  }
+}
+
+dependencies {
+    // Example of dependency, see section above for more options
+    implementation "org.tensorflow:tensorflow-core-platform:1.1.0-SNAPSHOT"
+}
 ```
 
 ## TensorFlow/Java Version Support
