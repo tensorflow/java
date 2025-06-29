@@ -177,7 +177,7 @@ to add Sonatype OSS repository in your pom.xml, like the following
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.2.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -192,7 +192,7 @@ repositories {
 
 dependencies {
     // Example of dependency, see section above for more options
-    implementation "org.tensorflow:tensorflow-core-platform:1.1.0-SNAPSHOT"
+    implementation "org.tensorflow:tensorflow-core-platform:1.2.0-SNAPSHOT"
 }
 ```
 
@@ -214,8 +214,8 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 | 1.0.0-rc.1              | 2.16.1             | 11 |
 | 1.0.0-rc.2              | 2.16.2             | 11 |
 | 1.0.0                   | 2.16.2             | 11 |
-| 1.1.0-SNAPSHOT          | 2.18.0             | 11 |
 | 1.1.0                   | 2.18.0             | 11 |
+| 1.2.0-SNAPSHOT          | 2.18.0             | 11 |
 
 ## How to Contribute?
 
