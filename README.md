@@ -82,7 +82,7 @@ systems with no GPU support, you should add the following dependencies:
 ```
 Or Gradle:
 ```groovy
-def tfVersion = '1.0.0'
+def tfVersion = '1.1.0'
 implementation "org.tensorflow:tensorflow-core-api:$tfVersion"
 implementation "org.tensorflow:tensorflow-core-native:$tfVersion:linux-x86_64"
 ```
@@ -116,7 +116,7 @@ native dependencies as follows:
 ```
 Or Gradle:
 ```groovy
-def tfVersion = '1.0.0'
+def tfVersion = '1.1.0'
 implementation "org.tensorflow:tensorflow-core-api:$tfVersion"
 implementation "org.tensorflow:tensorflow-core-native:$tfVersion:linux-x86_64-gpu"
 implementation "org.tensorflow:tensorflow-core-native:$tfVersion:macosx-arm64"
@@ -148,7 +148,7 @@ simply add this dependency to your application:
 ```
 Or Gradle:
 ```groovy
-implementation "org.tensorflow:tensorflow-core-platform:1.0.0"
+implementation "org.tensorflow:tensorflow-core-platform:1.1.0"
 ```
 
 Be aware though that the builds of TensorFlow are quite voluminous and including too many native dependencies may
@@ -160,7 +160,7 @@ the conventions established on this page:
 ### Snapshots
 
 Snapshots of TensorFlow Java artifacts are automatically distributed after each update in the code. To use them, you need
-to add Sonatype OSS repository in your pom.xml, like the following
+to add Sonatype OSS repository in your `pom.xml`, like the following
 
 ```xml
 <repositories>
@@ -201,21 +201,21 @@ dependencies {
 This table shows the mapping between TensorFlow, TensorFlow Java and minimum supported Java versions.
 
 | TensorFlow Java Version | TensorFlow Version | Minimum Java Version |
-|-------------------------|--------------------| --------------- |
-| 0.2.0                   | 2.3.1              | 8 |
-| 0.3.0                   | 2.4.1              | 8 |
-| 0.3.1                   | 2.4.1              | 8 |
-| 0.3.2                   | 2.4.1              | 8 |
-| 0.3.3                   | 2.4.1              | 8 |
-| 0.4.0                   | 2.7.0              | 8 |
-| 0.4.1                   | 2.7.1              | 8 |
-| 0.4.2                   | 2.7.4              | 8 |
-| 0.5.0                   | 2.10.1             | 11 |
-| 1.0.0-rc.1              | 2.16.1             | 11 |
-| 1.0.0-rc.2              | 2.16.2             | 11 |
-| 1.0.0                   | 2.16.2             | 11 |
-| 1.1.0                   | 2.18.0             | 11 |
-| 1.2.0-SNAPSHOT          | 2.18.0             | 11 |
+|-------------------------|--------------------|----------------------|
+| 0.2.0                   | 2.3.1              | 8                    |
+| 0.3.0                   | 2.4.1              | 8                    |
+| 0.3.1                   | 2.4.1              | 8                    |
+| 0.3.2                   | 2.4.1              | 8                    |
+| 0.3.3                   | 2.4.1              | 8                    |
+| 0.4.0                   | 2.7.0              | 8                    |
+| 0.4.1                   | 2.7.1              | 8                    |
+| 0.4.2                   | 2.7.4              | 8                    |
+| 0.5.0                   | 2.10.1             | 11                   |
+| 1.0.0-rc.1              | 2.16.1             | 11                   |
+| 1.0.0-rc.2              | 2.16.2             | 11                   |
+| 1.0.0                   | 2.16.2             | 11                   |
+| 1.1.0                   | 2.18.0             | 11                   |
+| 1.2.0-SNAPSHOT          | 2.18.0             | 11                   |
 
 ## How to Contribute?
 
