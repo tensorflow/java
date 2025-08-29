@@ -28,15 +28,17 @@ import java.lang.annotation.Target;
  * <p>It is mandatory for the annotated method to be public, static and to take as its first
  * parameter an instance of {@link org.tensorflow.op.Scope}. For example:
  *
- * <pre>{@code
- * @Operator
+ * <pre>
+ * {@code
+ * {@literal @}Operator
  * public class MyOp implements Op {
- *     @Endpoint
+ *     {@literal @}Endpoint
  *     public static MyOp create(Scope scope, Operand<?> input) {
  *       ...
  *     }
  * }
- * }</pre>
+ * }
+ * </pre>
  *
  * In addition, two endpoints of the same class cannot have the same signature, or the annotation
  * processor will fail to generate the {@code Ops} classes.
