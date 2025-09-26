@@ -299,7 +299,6 @@ public class LossesHelper {
    *
    * @param tf the TensorFlow Ops
    * @param losses <code>Operand</code> whose elements contain individual loss measurements.
-   * @param numElements The number of measurable elements in <code>losses</code>.
    * @param <T> the data type of the losses
    * @return A scalar representing the mean of <code>losses</code>. If <code>numElements</code> is
    *     zero, then zero is returned.

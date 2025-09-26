@@ -40,10 +40,9 @@ import org.tensorflow.ndarray.impl.buffer.Validator;
  * <p>The values are stored as an array of {@link TF_TString}, internally wrapped with {@code
  * tensorflow::tstring}, which is essentially a portable version of {@code std::string}.
  *
- * <p>The data of the buffer must be initialized only once, by calling {@link #init(NdArray,
- * Function)}, and the buffer must have been allocated with enough space (use {@link
- * #computeSize(NdArray, Function)} priory to know exactly how many bytes are required to store the
- * data).
+ * <p>The data of the buffer must be initialized only once, by calling {@link #init}, and the buffer
+ * must have been allocated with enough space (use {@link #computeSize} priory to know exactly how
+ * many bytes are required to store the data).
  *
  * <p>After its data has been initialized, the buffer is read-only as it is not possible to change
  * safely a value without reinitializing the whole data.
@@ -66,7 +65,7 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
    *
    * <p>While it is not enforced programmatically, it is mandatory that this method is called only
    * once after the creation of the buffer. The buffer must have been allocated according to the
-   * same set of data, calling {@link #computeSize(NdArray, Function)} priory to make sure there is
+   * same set of data, calling {@link #computeSize} priory to make sure there is
    * enough space to store it.
    *
    * @param byteSequenceProvider produces sequences of bytes to use as the tensor data
