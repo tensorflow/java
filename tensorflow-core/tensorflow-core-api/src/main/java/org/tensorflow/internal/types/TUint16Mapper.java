@@ -29,7 +29,7 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint16;
 
 /**
- * Maps memory of {@link org.tensorflow.proto.DataType#DT_Uint16} tensors to a n-dimensional data
+ * Maps memory of {@link org.tensorflow.proto.DataType#DT_UINT16} tensors to a n-dimensional data
  * space.
  */
 public final class TUint16Mapper extends TensorMapper<TUint16> {
