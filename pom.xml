@@ -49,7 +49,7 @@
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
-    <spotless.version>2.43.0</spotless.version>
+    <spotless.version>2.46.1</spotless.version>
   </properties>
 
   <repositories>

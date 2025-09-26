@@ -138,7 +138,7 @@ jobs:
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   windows-x86_64:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: prepare
     strategy:
        matrix:
@@ -161,7 +161,7 @@ jobs:
       - name: Build project
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
           set "PATH=C:\msys64\usr\bin;%PATH%"
           echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
           mkdir C:\tmp
