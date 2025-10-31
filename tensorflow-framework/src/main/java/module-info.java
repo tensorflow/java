@@ -17,8 +17,8 @@ limitations under the License.
 
 /** Higher level TensorFlow framework containing model definition and training operations. */
 module tensorflow.framework {
-  requires tensorflow;
-  requires org.tensorflow.ndarray;
+  requires transitive tensorflow;
+  requires transitive org.tensorflow.ndarray;
 
   exports org.tensorflow.framework.activations;
   exports org.tensorflow.framework.constraints;

@@ -221,30 +221,6 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.6.0</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <additionalJOptions>
-                <additionalJOption>-Xmaxerrs</additionalJOption>
-                <additionalJOption>65536</additionalJOption>
-                <additionalJOption>-Xmaxwarns</additionalJOption>
-                <additionalJOption>65536</additionalJOption>
-              </additionalJOptions>
-              <failOnError>false</failOnError>
-              <minmemory>256m</minmemory>
-              <maxmemory>2048m</maxmemory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>

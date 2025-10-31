@@ -547,25 +547,36 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.12.0</version>
+      <configuration>
+          <overview>./docs/overview.md</overview>
+          <!--<includeDependencySources>true</includeDependencySources>-->
+          <bottom>Copyright 2015, 2025 The TensorFlow Authors. All Rights Reserved.</bottom>
+          <additionalJOptions>
+              <additionalJOption>-Xmaxerrs</additionalJOption>
+              <additionalJOption>65536</additionalJOption>
+              <additionalJOption>-Xmaxwarns</additionalJOption>
+              <additionalJOption>65536</additionalJOption>
+          </additionalJOptions>
+          <failOnError>false</failOnError>
+          <minmemory>256m</minmemory>
+          <maxmemory>2048m</maxmemory>
+          <links>
+              <link>https://protobuf.dev/reference/java/api-docs</link>
+              <link>https://bytedeco.org/javacpp/apidocs</link>
+          </links>
+      </configuration>
         <executions>
             <execution>
                 <id>javadoc-site</id>
                 <goals>
                     <goal>javadoc</goal>
                 </goals>
-                <configuration>
-                    <includeDependencySources>true</includeDependencySources>
-                </configuration>
             </execution>
           <execution>
             <id>attach-javadocs</id>
             <goals>
               <goal>jar</goal>
             </goals>
-            <configuration>
-              <quiet>true</quiet>
-                <includeDependencySources>true</includeDependencySources>
-            </configuration>
           </execution>
         </executions>
       </plugin>

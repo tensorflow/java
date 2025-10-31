@@ -21,11 +21,11 @@ limitations under the License.
  */
 module tensorflow.generator {
   requires tensorflow.nativelib;
-  requires java.compiler;
+  requires transitive java.compiler;
   requires com.github.javaparser.core;
   requires com.google.protobuf;
   requires com.google.common;
-  requires com.squareup.javapoet;
+  requires transitive com.squareup.javapoet;
   requires org.commonmark;
   requires spring.core;
 
