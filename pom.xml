@@ -546,8 +546,17 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.12.0</version>
         <executions>
+            <execution>
+                <id>javadoc-site</id>
+                <goals>
+                    <goal>javadoc</goal>
+                </goals>
+                <configuration>
+                    <includeDependencySources>true</includeDependencySources>
+                </configuration>
+            </execution>
           <execution>
             <id>attach-javadocs</id>
             <goals>
@@ -555,6 +564,7 @@
             </goals>
             <configuration>
               <quiet>true</quiet>
+                <includeDependencySources>true</includeDependencySources>
             </configuration>
           </execution>
         </executions>
