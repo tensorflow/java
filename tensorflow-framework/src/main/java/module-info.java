@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
+
+/** Higher level TensorFlow framework containing model definition and training operations. */
 module tensorflow.framework {
   requires tensorflow;
   requires org.tensorflow.ndarray;

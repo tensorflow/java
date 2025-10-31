@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
+
+/** Native interop with the TensorFlow C API. */
 module tensorflow.nativelib {
   requires transitive org.bytedeco.javacpp;
   requires transitive com.google.protobuf;
