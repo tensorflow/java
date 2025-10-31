@@ -23,13 +23,11 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_GetData
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_GetSize;
 
 import java.nio.ReadOnlyBufferException;
-import java.util.function.Function;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_TString;
-import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
 import org.tensorflow.ndarray.impl.buffer.Validator;
@@ -65,8 +63,8 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
    *
    * <p>While it is not enforced programmatically, it is mandatory that this method is called only
    * once after the creation of the buffer. The buffer must have been allocated according to the
-   * same set of data, calling {@link #computeSize} priory to make sure there is
-   * enough space to store it.
+   * same set of data, calling {@link #computeSize} priory to make sure there is enough space to
+   * store it.
    *
    * @param byteSequenceProvider produces sequences of bytes to use as the tensor data
    */
