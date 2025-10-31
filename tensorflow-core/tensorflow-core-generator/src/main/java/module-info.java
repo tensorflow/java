@@ -14,13 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
+
+/**
+ * Code to generate the Java side implementations of TensorFlow's ops based on the TensorFlow op
+ * definition files.
+ */
 module tensorflow.generator {
   requires tensorflow.nativelib;
-  requires java.compiler;
+  requires transitive java.compiler;
   requires com.github.javaparser.core;
   requires com.google.protobuf;
   requires com.google.common;
-  requires com.squareup.javapoet;
+  requires transitive com.squareup.javapoet;
   requires org.commonmark;
   requires spring.core;
 

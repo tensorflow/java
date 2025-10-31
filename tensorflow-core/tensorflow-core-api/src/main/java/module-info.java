@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================
 */
+
+/** Core module implementing the TensorFlow Java API and operator definitions. */
 module tensorflow {
   requires transitive org.tensorflow.ndarray;
   requires transitive tensorflow.nativelib;
