@@ -1,0 +1,206 @@
+name: CI build
+on:
+  push:
+    branches:
+      - master
+      - staging
+      - r[0-9]+.*
+  pull_request:
+    branches:
+      - master
+      - r[0-9]+.*
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+env:
+  STAGING_PROFILE_ID: 46f80d0729c92d
+  DEPLOY_SNAPSHOT: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }}
+  DEPLOY_RELEASE: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/r') }}
+jobs:
+  check-format:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          gcc --version
+          mvn -version
+          mvn clean install -Pjdk17 -B -U -e -Dlint.skip=true -Dmaven.test.skip=true
+      - name: Run format checks
+        run: |
+          mvn spotless:check -Pjdk17 -B -U -e
+  prepare:
+    runs-on: ubuntu-22.04
+    outputs:
+      repositoryUrl: ${{ steps.repository.outputs.repositoryUrl }}
+    steps:
+      - name: Create staging repository
+        if: env.DEPLOY_RELEASE == 'true'
+        id: staging
+        run: |
+          echo "Creating staging repository with profile $STAGING_PROFILE_ID"
+          echo "<promoteRequest><data><description>Releasing TF Java - created by CI build</description></data></promoteRequest>" > request.xml
+          curl -X POST -d @request.xml -s -o response.xml -u ${{ secrets.CI_DEPLOY_USERNAME }}:${{ secrets.CI_DEPLOY_PASSWORD }} -H "Content-Type:application/xml" \
+              https://oss.sonatype.org/service/local/staging/profiles/$STAGING_PROFILE_ID/start
+          export STAGING_REPOSITORY_ID=`awk -F'[<>]' '/stagedRepositoryId/{print $3}' response.xml`
+          echo "Staging repository created: $STAGING_REPOSITORY_ID"
+          echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Extract distribution repository URL
+        id: repository
+        run: |
+          if [[ "${{ env.DEPLOY_RELEASE }}" = "true" ]]; then
+            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.repository.url}" -DstagingRepositoryId=${{ steps.staging.outputs.stagingRepositoryId }}`
+          else
+            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.snapshotRepository.url}"`
+          fi
+          echo "Repository URL: $REPOSITORY_URL"
+          echo "::set-output name=repositoryUrl::$REPOSITORY_URL"
+  linux-arm64:
+    runs-on: ubuntu-2204-arm64-2c
+    needs: prepare
+    strategy:
+      matrix:
+        ext: [""]
+    steps:
+      - name: Install environment
+        run: |
+          sudo apt update
+          sudo apt install -y curl wget unzip tar git gcc g++
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          architecture: 'aarch64'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          gcc --version
+          mvn -version
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Deploy native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+  linux-x86_64:
+    runs-on: ubuntu-22.04
+    needs: prepare
+    strategy:
+      matrix:
+        ext: ["", -gpu]
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          gcc --version
+          mvn -version
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Deploy native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+  macosx-arm64:
+    runs-on: macos-14
+    needs: prepare
+    strategy:
+      matrix:
+        ext: [""]
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          architecture: 'arm64'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          clang --version
+          mvn -version
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Deploy native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+  windows-x86_64:
+    runs-on: windows-2019
+    needs: prepare
+    strategy:
+       matrix:
+         ext: [""] #, -gpu]
+    steps:
+      - name: Install environment
+        shell: cmd
+        run: |
+          set "PATH=C:\msys64\usr\bin;%PATH%"
+          python -m pip install numpy six
+          set "EXT=${{ matrix.ext }}"
+          echo %JAVA_HOME%
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
+          set "PATH=C:\msys64\usr\bin;%PATH%"
+          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
+          mkdir C:\tmp
+          set "TEST_TMPDIR=C:\tmp"
+          set "TMPDIR=C:\tmp"
+          set "TEMP=C:\tmp"
+          set "TMP=C:\tmp"      
+          bash --version
+          git --version
+          cl
+          call mvn -version
+          echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
+          set "SKIP_EXPORT=true"
+          call mvn clean install -pl "!tensorflow-framework" -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+          if ERRORLEVEL 1 exit /b
+      - name: Deploy native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        shell: cmd
+        run: |
+          call mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+          if ERRORLEVEL 1 exit /b
+  deploy:
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
+    needs: [linux-x86_64, windows-x86_64, macosx-arm64, linux-arm64]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Build project
+        run: |
+          java -version
+          mvn -version
+          mvn clean install -B -U -e -Pdeploying
+      - name: Deploy snapshot artifacts
+        run: |
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn deploy -Pdeploying -B -e -Dmaven.test.skip=true
