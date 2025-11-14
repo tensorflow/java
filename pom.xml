@@ -561,6 +561,7 @@
           <minmemory>256m</minmemory>
           <maxmemory>2048m</maxmemory>
           <links>
+              <link>https://tensorflow.github.io/java/javadoc-ndarray/v1.0.0/</link>
               <link>https://protobuf.dev/reference/java/api-docs</link>
               <link>https://bytedeco.org/javacpp/apidocs</link>
           </links>
