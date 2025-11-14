@@ -55,12 +55,6 @@
       <version>${project.version}</version>
       <classifier>macosx-arm64</classifier>
     </dependency>
-    <dependency>
-      <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-core-native</artifactId>
-      <version>${project.version}</version>
-      <classifier>windows-x86_64</classifier>
-    </dependency>
   </dependencies>
 
   <build>
@@ -73,7 +67,7 @@
             <configuration>
               <archive>
                 <manifestEntries>
-                  <Class-Path>tensorflow-core-api.jar tensorflow-core-native.jar tensorflow-core-native-linux-x86_64.jar tensorflow-core-native-macosx-arm64.jar tensorflow-core-native-windows-x86_64.jar tensorflow-core-native-linux-arm64.jar</Class-Path>
+                  <Class-Path>tensorflow-core-api.jar tensorflow-core-native.jar tensorflow-core-native-linux-x86_64.jar tensorflow-core-native-macosx-arm64.jar tensorflow-core-native-linux-arm64.jar</Class-Path>
                   <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
                 </manifestEntries>
               </archive>

@@ -139,55 +139,9 @@ jobs:
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
-  windows-x86_64:
-    runs-on: windows-2022
-    needs: prepare
-    strategy:
-       matrix:
-         ext: [""] #, -gpu]
-    steps:
-      - name: Install environment
-        shell: cmd
-        run: |
-          set "PATH=C:\msys64\usr\bin;%PATH%"
-          python -m pip install numpy six
-          set "EXT=${{ matrix.ext }}"
-          echo %JAVA_HOME%
-      - name: Configure Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Build project
-        shell: cmd
-        run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          set "PATH=C:\msys64\usr\bin;%PATH%"
-          echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
-          mkdir C:\tmp
-          set "TEST_TMPDIR=C:\tmp"
-          set "TMPDIR=C:\tmp"
-          set "TEMP=C:\tmp"
-          set "TMP=C:\tmp"      
-          bash --version
-          git --version
-          cl
-          call mvn -version
-          echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
-          set "SKIP_EXPORT=true"
-          call mvn clean install -pl "!tensorflow-framework" -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-          if ERRORLEVEL 1 exit /b
-      - name: Deploy native artifact
-        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        shell: cmd
-        run: |
-          call mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
-          if ERRORLEVEL 1 exit /b
   deploy:
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
-    needs: [linux-x86_64, windows-x86_64, macosx-arm64, linux-arm64]
+    needs: [linux-x86_64, macosx-arm64, linux-arm64]
     runs-on: ubuntu-22.04
     steps:
       - name: Configure Java
