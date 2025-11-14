@@ -5,20 +5,16 @@ DOWNLOAD_FOLDER="$1"
 
 case ${PLATFORM:-} in
   'linux-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/aa/1d/032a9d40762895e51cad06f382135c14d16487a0ad9dcc65aae5bd89c968/tensorflow_cpu-2.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/1a/9e/594164db23e3e262da1a0e8983258811eff56e5af6b7b6da5eccccb8d4c7/tensorflow_cpu-2.20.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
     ;;
   'linux-x86_64-gpu')
-    WHEEL_URL='https://files.pythonhosted.org/packages/84/76/c55967ac9968ddaede25a4dce37aba37e9030656f02c12676151ce1b6f22/tensorflow-2.18.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/43/fb/8be8547c128613d82a2b006004026d86ed0bd672e913029a98153af4ffab/tensorflow-2.20.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
     ;;
   'linux-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/56/e4/55aaac2b15af4dad079e5af329a79d961e5206589d0e02b1e8da221472ed/tensorflow-2.18.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/ea/4c/c1aa90c5cc92e9f7f9c78421e121ef25bae7d378f8d1d4cbad46c6308836/tensorflow-2.20.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl'
     ;;
   'macosx-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/26/08/556c4159675c1a30e077ec2a942eeeb81b457cc35c247a5b4a59a1274f05/tensorflow-2.18.0-cp311-cp311-macosx_12_0_arm64.whl'
-    ;;
-  'windows-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/76/ad/fa6c508a15ff79cb5409294c293388e0999b7d480f84b65e4287277434fe/tensorflow_intel-2.18.0-cp311-cp311-win_amd64.whl'
-    CLIB_URL='https://storage.googleapis.com/tensorflow/versions/2.18.0/libtensorflow-cpu-windows-x86_64.zip'
+    WHEEL_URL='https://files.pythonhosted.org/packages/04/82/af283f402f8d1e9315644a331a5f0f326264c5d1de08262f3de5a5ade422/tensorflow-2.20.0-cp313-cp313-macosx_12_0_arm64.whl'
     ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"
@@ -58,9 +54,5 @@ if [[ "$PLATFORM" =~ "linux" ]]; then
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
-elif [[ "$PLATFORM" =~ "windows" ]]; then
-  # FIXME Looks like tsl headers are only present under the tensorflow folder for the windows build
-  # (while it is also available at the root of the include folder for other platforms)
-  cd include && ln -fs tensorflow/tsl tsl && cd -
 fi
 ls -l .

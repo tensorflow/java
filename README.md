@@ -60,7 +60,7 @@ only binaries for the following are being **supported and distributed** by this 
 - `linux-x86_64-gpu`: Linux platforms on Intel/AMD chips with Cuda GPU support
 - `linux-arm64`: Linux platforms on Arm chips
 - `macosx-arm64`: MacOS X platforms on Apple Silicon chips
-- `windows-x86_64`: Windows platforms on Intel/AMD chips
+- `windows-x86_64`: Windows platforms on Intel/AMD chips (v1.1.0 and earlier)
 
 Binaries for `macosx-x86_64` are available for TF-Java 1.0 series releases and earlier, they were dropped from
 TF-Java 1.1 and newer as they are no longer supported or released by Google.

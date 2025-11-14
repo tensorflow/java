@@ -123,12 +123,6 @@
                       <groupId>${project.groupId}</groupId>
                       <artifactId>${project.artifactId}</artifactId>
                       <version>${project.version}</version>
-                      <classifier>${javacpp.platform.windows-x86_64}</classifier>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>${project.artifactId}</artifactId>
-                      <version>${project.version}</version>
                       <classifier>${javacpp.platform.linux-arm64}</classifier>
                     </artifactItem>
                   </artifactItems>
@@ -160,10 +154,6 @@
                     <artifact>
                       <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.macosx-arm64}.jar</file>
                       <classifier>${javacpp.platform.macosx-arm64}</classifier>
-                    </artifact>
-                    <artifact>
-                      <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.windows-x86_64}.jar</file>
-                      <classifier>${javacpp.platform.windows-x86_64}</classifier>
                     </artifact>
                     <artifact>
                       <file>${project.build.directory}/${project.artifactId}-${project.version}-${javacpp.platform.linux-arm64}.jar</file>
