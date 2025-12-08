@@ -64,3 +64,6 @@ gradleBuild
 # Deployment Files
 settings.xml
 pom.xml.asc
+
+# Docs
+docs/docs/apidocs/
