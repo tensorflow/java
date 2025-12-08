@@ -25,8 +25,7 @@ TensorFlow Java 1.0 series and earlier releases also have binaries for:
 
 *   macOS 12 or higher; 64-bit, x86
 
-*Note: To use TensorFlow on Android, see
-[TensorFlow LiteRT](https://tensorflow.org/lite)*
+*Note: To use TensorFlow on Android, see [LiteRT](https://tensorflow.org/lite)*
 
 ## Versions
 
