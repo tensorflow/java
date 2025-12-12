@@ -1,4 +1,10 @@
 #!/bin/bash
+
+######################################################################################################################
+# IMPORTANT: Files in legacy_tools are no longer used to generate the TensorFlow-Java API docs as there are unfixed issues
+# when using DocLava outside of the Google environment. We are keeping these for reference in case they are useful later.
+######################################################################################################################
+
 set -ex
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home # Or change to any JDK 11 home path

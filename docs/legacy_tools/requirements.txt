@@ -1,0 +1,8 @@
+######################################################################################################################
+# IMPORTANT: Files in legacy_tools are no longer used to generate the TensorFlow-Java API docs as there are unfixed issues
+# when using DocLava outside of the Google environment. We are keeping these for reference in case they are useful later.
+######################################################################################################################
+
+GitPython
+requests
+tensorflow-docs

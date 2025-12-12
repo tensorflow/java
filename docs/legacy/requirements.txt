@@ -1,3 +1,0 @@
-GitPython
-requests
-tensorflow-docs

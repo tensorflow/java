@@ -13,6 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+
+######################################################################################################################
+# IMPORTANT: Files in legacy_tools are no longer used to generate the TensorFlow-Java API docs as there are unfixed issues
+# when using DocLava outside of the Google environment. We are keeping these for reference in case they are useful later.
+######################################################################################################################
+
+
 """Generate TensorFlow Java reference docs for TensorFlow.org."""
 from __future__ import absolute_import
 from __future__ import division
