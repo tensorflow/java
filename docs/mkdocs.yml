@@ -1,0 +1,97 @@
+site_name: ''
+site_url: https://tensorflow.org
+repo_url: https://github.com/tensorflow/java
+site_description: Documentation of TensorFlow Java API and tools.
+copyright: "&copy; TensorFlow Authors 2025"
+
+theme:
+  name: material
+  logo: assets/tensorflow.svg
+  features:
+    - navigation.indexes
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - toc.follow
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home:
+      - index.md
+  - Install:
+      - install.md
+  - References:
+      - apidocs/index.html
+
+#markdown_extensions:
+#  - admonition
+#  - pymdownx.snippets
+#  - pymdownx.superfences
+#  - pymdownx.details
+#  - pymdownx.superfences
+#  - attr_list
+#  - md_in_html
+#  - toc
+#  - pymdownx.tabbed:
+#      alternate_style: true
+
+#plugins:
+#  - search
+#  - glightbox
+#  - include-markdown
+#  - include_dir_to_nav
+#  - mkdocs-jupyter:
+#      execute: false
+#      include_source: true
+#  - mkdocstrings:
+#      default_handler: python
+#      handlers:
+#        python:
+#          load_external_modules: false
+#          options:
+#            docstring_options:
+#              ignore_init_summary: true
+#            docstring_style: google
+#            members_order: source
+#            merge_init_into_class: true
+#            parameter_headings: true
+#            separate_signature: true
+#            show_if_no_docstring: true
+#            show_root_full_path: true
+#            show_root_heading: false
+#            show_source: true
+#            show_symbol_type_heading: true
+#            show_symbol_type_toc: true
+#            signature_crossrefs: true
+#
+#extra:
+#  generator: false
+#  social:
+#    - icon: fontawesome/brands/slack
+#      link: https://expediagroup.enterprise.slack.com/archives/C08RD5SBRLH
+#      name: "#ask-genai-platform"

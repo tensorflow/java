@@ -1,4 +1,10 @@
 #!/bin/bash
+
+######################################################################################################################
+# IMPORTANT: Files in legacy_tools are no longer used to generate the TensorFlow-Java API docs as there are unfixed issues
+# when using DocLava outside of the Google environment. We are keeping these for reference in case they are useful later.
+######################################################################################################################
+
 set -ex
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home # Or change to any JDK 11 home path
@@ -11,12 +17,13 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home # O
 #   $ sudo apt install doclava-aosp #v 6.0.1+r55-1+build1
 #
 # https://unix.stackexchange.com/questions/594841/how-do-i-assign-a-value-to-a-bash-variable-iff-that-variable-is-null-unassigned
-DOCLAVA_JAR=${DOCLAVA_JAR:-'lib/doclava.jar'} # Build lib locally
+DOCLAVA_JAR=${DOCLAVA_JAR:-'tools/lib/doclava.jar'} # Build lib locally
+
 
 # Install java clear silver templates with:
 #
 #   $ sudo apt install libjsilver-aosp-java #v 6.0.1+r55-1+build1
-JSILVER_JAR=${JSILVER_JAR:-'lib/jsilver.jar'} # Build lib locally
+JSILVER_JAR=${JSILVER_JAR:-'tools/lib/jsilver.jar'} # Build lib locally
 
 
 ######### DELETE OUTPUT_DIR #################
@@ -56,16 +63,15 @@ for pkg in "${packages[@]}"; do
   SUBPACKAGES+=" -subpackages ${pkg}"
 done
 ( # Capture the return code. it may be non-zero for minor errors.
-  javadoc \
+  /Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/javadoc \
   -sourcepath "${SOURCE_PATH}" \
   -docletpath "${DOCLAVA_JAR}:${JSILVER_JAR}" \
   -doclet com.google.doclava.Doclava \
-  -d "${OUTPUT_DIR}" \
   -toroot "${SITE_PATH}"/ \
   -yaml _toc.yaml \
   -templatedir "${TEMPLATES}" \
   -public \
-  -devsite \
+  -d "${OUTPUT_DIR}" \
   ${FEDERATED_PARAMS} \
   ${SUBPACKAGES}
 )
