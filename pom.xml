@@ -550,7 +550,7 @@
       <configuration>
           <overview>./docs/overview.md</overview>
           <!--<includeDependencySources>true</includeDependencySources>-->
-          <bottom>Copyright 2015, 2025 The TensorFlow Authors. All Rights Reserved.</bottom>
+          <bottom>Copyright 2015, 2025 The TensorFlow Authors. All Rights Reserved. <![CDATA[<a href="http://tensorflow.github.io/java/index.html">TensorFlow-Java Main Documentation<a>]]></bottom>
           <additionalJOptions>
               <additionalJOption>-Xmaxerrs</additionalJOption>
               <additionalJOption>65536</additionalJOption>
