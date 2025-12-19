@@ -26,6 +26,8 @@ jobs:
           java-version: '17'
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Build project
         run: |
           gcc --version
