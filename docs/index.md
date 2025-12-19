@@ -1,14 +1,5 @@
 # TensorFlow for Java
 
-<table class="tfo-notebook-buttons" align="left">
-    <td>
-    <a target="_blank" href="https://www.tensorflow.org/jvm"><img src="https://www.tensorflow.org/images/tf_logo_32px.png" />View on TensorFlow.org</a>
-  </td>
-  <td>
-    <a target="_blank" href="https://github.com/tensorflow/java"><img src="https://www.tensorflow.org/images/GitHub-Mark-32px.png" />View GitHub repository</a>
-  </td>
-</table>
-
 TensorFlow Java can run on any JVM for building, training and running machine learning models. It comes with 
 a series of utilities and frameworks that help achieve most of the tasks common to data scientists 
 and developers working in this domain. Java and other JVM languages, such as Scala or Kotlin, are 
@@ -26,21 +17,19 @@ migrated from Bazel to Maven, which is more familiar for most Java developers.
 
 The following describes the layout of the repository and its different artifacts:
 
-* [tensorflow-core](https://github.com/tensorflow/java/tree/master/tensorflow-core)
-  * All artifacts that build up the core language bindings of TensorFlow for Java
-  * Intended audience: projects that provide their own APIs or frameworks on top of 
-    TensorFlow and just want a thin layer to access the TensorFlow runtime from the JVM 
+### [tensorflow-core](https://github.com/tensorflow/java/tree/master/tensorflow-core)
+  * **Intended audience**: developers who wants to deploy a TensorFlow model on a JVM for inference. Also for projects
+    that provide their own APIs or frameworks on top of TensorFlow and just want a thin layer to access the TensorFlow runtime from the JVM.
+  * All artifacts that make up the core language bindings of TensorFlow for Java.
 
-* [tensorflow-framework](https://github.com/tensorflow/java/tree/master/tensorflow-framework)
-  * Primary API for building and training neural networks with TensorFlow
-  * Intended audience: neural network developers
+### [tensorflow-framework](https://github.com/tensorflow/java/tree/master/tensorflow-framework)
+  * **Intended audience**: neural network developers.
+  * Primary API for building and training neural networks with TensorFlow.
 
-* [ndarray](https://github.com/tensorflow/java-ndarray)
-  * Generic utility library for n-dimensional data I/O operations
-  * Used by TensorFlow but does not depend on TensorFlow
-  * Intended audience: any developer who needs a Java n-dimensional array implementation, whether or not they
-    use it with TensorFlow
-
+### [ndarray](https://github.com/tensorflow/java-ndarray)
+  * **Intended audience**: any developer who needs a Java n-dimensional array implementation, whether or not they use it with TensorFlow.
+  * Generic utility library for n-dimensional data I/O operations.
+  * Used by TensorFlow but does not depend on TensorFlow.
 
 ## Communication
 
