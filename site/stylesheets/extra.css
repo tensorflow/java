@@ -1,0 +1,14 @@
+:root  > * {
+    /*--md-primary-fg-color:        #EE782F;*/
+    /*--md-primary-fg-color--light: #455960;*/
+    /*--md-primary-fg-color--dark:  #90030C;*/
+}
+
+.md-typeset h1, .md-typeset h2 {
+    font-weight: 800;
+    letter-spacing: -.01em;
+}
+
+.md-sidebar--primary {
+    display: none;
+}
