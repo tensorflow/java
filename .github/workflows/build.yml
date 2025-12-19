@@ -20,12 +20,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Configure Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
           java-version: '17'
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Build project
         run: |
           gcc --version
@@ -51,7 +53,7 @@ jobs:
           echo "Staging repository created: $STAGING_REPOSITORY_ID"
           echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: Extract distribution repository URL
         id: repository
         run: |
@@ -74,13 +76,13 @@ jobs:
           sudo apt update
           sudo apt install -y curl wget unzip tar git gcc g++
       - name: Configure Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
           architecture: 'aarch64'
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: Build project
         run: |
           gcc --version
@@ -98,12 +100,12 @@ jobs:
         ext: ["", -gpu]
     steps:
       - name: Configure Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
           java-version: '11'
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: Build project
         run: |
           gcc --version
@@ -121,13 +123,13 @@ jobs:
         ext: [""]
     steps:
       - name: Configure Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
           architecture: 'arm64'
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: Build project
         run: |
           clang --version
@@ -152,12 +154,12 @@ jobs:
           set "EXT=${{ matrix.ext }}"
           echo %JAVA_HOME%
       - name: Configure Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
           java-version: '11'
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: Build project
         shell: cmd
         run: |
@@ -189,12 +191,12 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Configure Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
           java-version: '11'
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
       - name: Build project
         run: |
           java -version
