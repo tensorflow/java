@@ -32,10 +32,10 @@ import org.tensorflow.op.math.LogicalAnd;
 import org.tensorflow.op.math.LogicalNot;
 import org.tensorflow.op.math.LogicalOr;
 
-class TBoolTest {
+public class TBoolTest {
 
   @Test
-  void createScalar() {
+  public void createScalar() {
     TBool tensorT = TBool.scalarOf(true);
     assertNotNull(tensorT);
     assertEquals(Shape.scalar(), tensorT.shape());
@@ -48,7 +48,7 @@ class TBoolTest {
   }
 
   @Test
-  void createVector() {
+  public void createVector() {
     TBool tensor = TBool.vectorOf(true, false);
     assertNotNull(tensor);
     assertEquals(Shape.of(2), tensor.shape());
@@ -57,7 +57,7 @@ class TBoolTest {
   }
 
   @Test
-  void createCopy() {
+  public void createCopy() {
     NdArray<Boolean> bools =
         NdArrays.ofObjects(Boolean.class, Shape.of(2, 2))
             .setObject(true, 0, 0)
@@ -73,7 +73,7 @@ class TBoolTest {
   }
 
   @Test
-  void initializeTensorsWithBools() {
+  public void initializeTensorsWithBools() {
     // Allocate a tensor of booleans of the shape (2, 3, 2)
     TBool tensor = TBool.tensorOf(Shape.of(2, 3, 2));
 
@@ -111,7 +111,7 @@ class TBoolTest {
   }
 
   @Test
-  void setAndCompute() {
+  public void setAndCompute() {
     NdArray<Boolean> heapData =
         NdArrays.ofBooleans(Shape.of(4))
             .setObject(true, 0)
