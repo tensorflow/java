@@ -67,9 +67,7 @@ public class TBoolTest {
 
     TBool tensor = TBool.tensorOf(bools);
     assertNotNull(tensor);
-    bools
-        .scalars()
-        .forEachIndexed((idx, s) -> assertEquals(s.getObject(), tensor.getObject(idx)));
+    bools.scalars().forEachIndexed((idx, s) -> assertEquals(s.getObject(), tensor.getObject(idx)));
   }
 
   @Test
@@ -155,5 +153,4 @@ public class TBoolTest {
       }
     }
   }
-
 }
