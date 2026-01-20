@@ -20,9 +20,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionToFunct
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +90,7 @@ class NativeFunction {
                   }
                 });
       }
-      dependencies = Collections.unmodifiableList(new ArrayList<>(deps));
+      dependencies = List.copyOf(deps);
     }
 
     return dependencies;
