@@ -8,8 +8,10 @@ Kotlin, are frequently used in large and small enterprises all over the world,
 which makes TensorFlow Java a strategic choice for adopting machine learning at
 a large scale.
 
-Caution: The TensorFlow Java API is *not* covered by the TensorFlow
-[API stability guarantees](https://www.tensorflow.org/guide/versions).
+Note: Starting from version 1.0.0, the TensorFlow Java project follows the
+[TensorFlow API stability guarantees](https://www.tensorflow.org/guide/versions#api_stability).
+However, as these bindings are downstream of the TensorFlow C API, users should
+be aware that stability is subject to the evolution of the upstream TensorFlow core.
 
 ## Requirements
 
