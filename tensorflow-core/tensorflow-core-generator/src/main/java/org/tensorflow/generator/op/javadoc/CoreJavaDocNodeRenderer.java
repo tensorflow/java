@@ -281,7 +281,7 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
   @Override
   public void visit(ThematicBreak thematicBreak) {
     writer.line();
-    writer.tag("hr", getAttrs(thematicBreak, "hr"), true);
+    writer.tag("hr", getAttrs(thematicBreak, "hr"), false);
     writer.line();
   }
 
