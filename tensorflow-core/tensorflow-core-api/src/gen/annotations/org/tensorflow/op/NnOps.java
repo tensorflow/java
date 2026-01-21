@@ -3126,7 +3126,7 @@ public final class NnOps {
    * @return a new instance of TopK, with default output types
    */
   public <T extends TNumber> TopK<T, TInt32> topK(Operand<T> input, Operand<? extends TNumber> k,
-      TopK.Options[] options) {
+      TopK.Options... options) {
     return TopK.create(scope, input, k, options);
   }
 

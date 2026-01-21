@@ -105,7 +105,7 @@ final class ClassGenerator {
 
   /**
    * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has
-   * not been ran.
+   * not been run.
    */
   private TypeSpec optionsClass = null;
 
@@ -748,6 +748,10 @@ final class ClassGenerator {
         body.add("$T.class", defaultTypes.get(attr));
       } else {
         factoryBuilder.addParameter(param);
+        // Checking if the parameter being added is the variadic options or not
+        if (param.name.equals("options")) {
+          factoryBuilder.varargs();
+        }
         factoryBuilder.addJavadoc("\n@param $L $L", param.name, paramTags.get(param.name));
         typeVars.addAll(new ResolvedType(param.type).findGenerics());
         body.add("$L", param.name);
