@@ -118,7 +118,7 @@ public final class TopK<T extends TNumber, V extends TNumber> extends RawOp {
       describeByClass = true
   )
   public static <T extends TNumber> TopK<T, TInt32> create(Scope scope, Operand<T> input,
-      Operand<? extends TNumber> k, Options[] options) {
+      Operand<? extends TNumber> k, Options... options) {
     return create(scope, input, k, TInt32.class, options);
   }
 
