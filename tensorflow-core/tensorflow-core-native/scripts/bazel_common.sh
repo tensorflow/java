@@ -2,7 +2,6 @@
 set -eu
 
 # Set generic Bazel build options
-export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 export BAZEL_VC="${VCINSTALLDIR:-}"
 if [[ -d $BAZEL_VC ]]; then
     export BUILD_FLAGS="--output_user_root=$(cygpath -w $TMP) build"
