@@ -16,7 +16,7 @@ fi
 if [[ "${PLATFORM:-}" == macosx-arm64 ]]; then
   BUILD_FLAGS="$BUILD_FLAGS --config=macos_arm64"
 fi
-BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_BIN_PATH" --output_filter=DONT_MATCH_ANYTHING --verbose_failures --distinct_host_configuration=true"
+BUILD_FLAGS="$BUILD_FLAGS --experimental_repo_remote_exec --python_path="$PYTHON_BIN_PATH" --output_filter=DONT_MATCH_ANYTHING --verbose_failures"
 
 export BAZEL_BIN=$(pwd -P)/bazel-bin
 export TENSORFLOW_BIN=$BAZEL_BIN/external/org_tensorflow/tensorflow
