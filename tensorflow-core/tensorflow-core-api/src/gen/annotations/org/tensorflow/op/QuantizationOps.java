@@ -114,7 +114,7 @@ public final class QuantizationOps {
    * @return a new instance of Dequantize, with default output types
    */
   public Dequantize<TFloat32> dequantize(Operand<? extends TNumber> input,
-      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Dequantize.Options[] options) {
+      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Dequantize.Options... options) {
     return Dequantize.create(scope, input, minRange, maxRange, options);
   }
 

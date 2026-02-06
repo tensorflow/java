@@ -30,8 +30,10 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * The XlaSparseDenseMatmulWithCsrInput operation
@@ -43,13 +45,13 @@ import org.tensorflow.types.TInt32;
 @Operator(
     group = "xla"
 )
-public final class XlaSparseDenseMatmulWithCsrInput extends RawOp implements Operand<TFloat32> {
+public final class XlaSparseDenseMatmulWithCsrInput<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "XlaSparseDenseMatmulWithCsrInput";
 
-  private Output<TFloat32> activations;
+  private Output<T> activations;
 
   public XlaSparseDenseMatmulWithCsrInput(Operation operation) {
     super(operation, OP_NAME);
@@ -72,17 +74,19 @@ public final class XlaSparseDenseMatmulWithCsrInput extends RawOp implements Ope
    * @param quantizationConfigHigh The value of the quantizationConfigHigh attribute
    * @param quantizationConfigNumBuckets The value of the quantizationConfigNumBuckets attribute
    * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code XlaSparseDenseMatmulWithCsrInput} output and operands
    * @return a new instance of XlaSparseDenseMatmulWithCsrInput
    */
   @Endpoint(
       describeByClass = true
   )
-  public static XlaSparseDenseMatmulWithCsrInput create(Scope scope, Operand<TInt32> rowPointers,
-      Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
-      Operand<TFloat32> sortedGains, Operand<TFloat32> embeddingTable,
+  public static <T extends TNumber> XlaSparseDenseMatmulWithCsrInput<T> create(Scope scope,
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TFloat32> sortedGains, Operand<T> embeddingTable,
       Operand<TInt32> numMinibatchesPerPhysicalSparseCore, Long inputSize,
       Float quantizationConfigLow, Float quantizationConfigHigh, Long quantizationConfigNumBuckets,
-      String tableName) {
+      String tableName, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaSparseDenseMatmulWithCsrInput");
     opBuilder.addInput(rowPointers.asOutput());
     opBuilder.addInput(sortedSampleIds.asOutput());
@@ -95,7 +99,24 @@ public final class XlaSparseDenseMatmulWithCsrInput extends RawOp implements Ope
     opBuilder.setAttr("quantization_config_high", quantizationConfigHigh);
     opBuilder.setAttr("quantization_config_num_buckets", quantizationConfigNumBuckets);
     opBuilder.setAttr("table_name", tableName);
-    return new XlaSparseDenseMatmulWithCsrInput(opBuilder.build());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.numSparsecoresPerDevice != null) {
+          opBuilder.setAttr("num_sparsecores_per_device", opts.numSparsecoresPerDevice);
+        }
+      }
+    }
+    return new XlaSparseDenseMatmulWithCsrInput<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the numSparsecoresPerDevice option.
+   *
+   * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+   * @return this Options instance.
+   */
+  public static Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+    return new Options().numSparsecoresPerDevice(numSparsecoresPerDevice);
   }
 
   /**
@@ -103,19 +124,40 @@ public final class XlaSparseDenseMatmulWithCsrInput extends RawOp implements Ope
    *
    * @return activations.
    */
-  public Output<TFloat32> activations() {
+  public Output<T> activations() {
     return activations;
   }
 
   @Override
-  public Output<TFloat32> asOutput() {
+  public Output<T> asOutput() {
     return activations;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.xla.XlaSparseDenseMatmulWithCsrInput}
+   */
+  public static class Options {
+    private Long numSparsecoresPerDevice;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the numSparsecoresPerDevice option.
+     *
+     * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+     * @return this Options instance.
+     */
+    public Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+      this.numSparsecoresPerDevice = numSparsecoresPerDevice;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
       outputsClass = XlaSparseDenseMatmulWithCsrInput.class
   )
-  public static class Inputs extends RawOpInputs<XlaSparseDenseMatmulWithCsrInput> {
+  public static class Inputs<T extends TNumber> extends RawOpInputs<XlaSparseDenseMatmulWithCsrInput<T>> {
     /**
      * The rowPointers input
      */
@@ -139,7 +181,7 @@ public final class XlaSparseDenseMatmulWithCsrInput extends RawOp implements Ope
     /**
      * The embeddingTable input
      */
-    public final Operand<TFloat32> embeddingTable;
+    public final Operand<T> embeddingTable;
 
     /**
      * The numMinibatchesPerPhysicalSparseCore input
@@ -171,20 +213,32 @@ public final class XlaSparseDenseMatmulWithCsrInput extends RawOp implements Ope
      */
     public final String tableName;
 
+    /**
+     * The numSparsecoresPerDevice attribute
+     */
+    public final long numSparsecoresPerDevice;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
     public Inputs(GraphOperation op) {
-      super(new XlaSparseDenseMatmulWithCsrInput(op), op, Arrays.asList("input_size", "quantization_config_low", "quantization_config_high", "quantization_config_num_buckets", "table_name"));
+      super(new XlaSparseDenseMatmulWithCsrInput<>(op), op, Arrays.asList("input_size", "quantization_config_low", "quantization_config_high", "quantization_config_num_buckets", "table_name", "num_sparsecores_per_device", "T"));
       int inputIndex = 0;
       rowPointers = (Operand<TInt32>) op.input(inputIndex++);
       sortedSampleIds = (Operand<TInt32>) op.input(inputIndex++);
       sortedTokenIds = (Operand<TInt32>) op.input(inputIndex++);
       sortedGains = (Operand<TFloat32>) op.input(inputIndex++);
-      embeddingTable = (Operand<TFloat32>) op.input(inputIndex++);
+      embeddingTable = (Operand<T>) op.input(inputIndex++);
       numMinibatchesPerPhysicalSparseCore = (Operand<TInt32>) op.input(inputIndex++);
       inputSize = op.attributes().getAttrInt("input_size");
       quantizationConfigLow = op.attributes().getAttrFloat("quantization_config_low");
       quantizationConfigHigh = op.attributes().getAttrFloat("quantization_config_high");
       quantizationConfigNumBuckets = op.attributes().getAttrInt("quantization_config_num_buckets");
       tableName = op.attributes().getAttrString("table_name");
+      numSparsecoresPerDevice = op.attributes().getAttrInt("num_sparsecores_per_device");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

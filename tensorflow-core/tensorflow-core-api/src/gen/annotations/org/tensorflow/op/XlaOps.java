@@ -28,12 +28,18 @@ import org.tensorflow.op.xla.SplitND;
 import org.tensorflow.op.xla.XlaHostCompute;
 import org.tensorflow.op.xla.XlaRecvFromHost;
 import org.tensorflow.op.xla.XlaSendToHost;
+import org.tensorflow.op.xla.XlaSparseActivationsUnstack;
 import org.tensorflow.op.xla.XlaSparseCoreAdagrad;
 import org.tensorflow.op.xla.XlaSparseCoreAdagradMomentum;
 import org.tensorflow.op.xla.XlaSparseCoreAdam;
 import org.tensorflow.op.xla.XlaSparseCoreFtrl;
 import org.tensorflow.op.xla.XlaSparseCoreSgd;
 import org.tensorflow.op.xla.XlaSparseDenseMatmul;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput;
+import org.tensorflow.op.xla.XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput;
 import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithAdagradAndCsrInput;
 import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithAdagradMomentumAndCsrInput;
 import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithAdamAndCsrInput;
@@ -42,6 +48,7 @@ import org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithSgdAndCsrInput;
 import org.tensorflow.op.xla.XlaSparseDenseMatmulWithCsrInput;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -293,6 +300,24 @@ public final class XlaOps {
   }
 
   /**
+   * The XlaSparseActivationsUnstack operation
+   *
+   * @param stackedActivations The stackedActivations value
+   * @param numTables The value of the numTables attribute
+   * @param sampleCounts The value of the sampleCounts attribute
+   * @param features The value of the features attribute
+   * @param interleaved The value of the interleaved attribute
+   * @param dtype The value of the dtype attribute
+   * @param <U> data type for {@code XlaSparseActivationsUnstack} output and operands
+   * @return a new instance of XlaSparseActivationsUnstack
+   */
+  public <U extends TType> XlaSparseActivationsUnstack<U> xlaSparseActivationsUnstack(
+      Operand<? extends TType> stackedActivations, Long numTables, List<Long> sampleCounts,
+      List<Long> features, Boolean interleaved, Class<U> dtype) {
+    return XlaSparseActivationsUnstack.create(scope, stackedActivations, numTables, sampleCounts, features, interleaved, dtype);
+  }
+
+  /**
    * The XlaSparseCoreAdagrad operation
    *
    * @param indices The indices value
@@ -416,6 +441,217 @@ public final class XlaOps {
       Operand<TFloat32> embeddingTable, Long maxIdsPerPartition, Long maxUniqueIdsPerPartition,
       Long inputSize) {
     return XlaSparseDenseMatmul.create(scope, rowIds, colIds, values, offsets, embeddingTable, maxIdsPerPartition, maxUniqueIdsPerPartition, inputSize);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedPosIds The sortedPosIds value
+   * @param sortedGains The sortedGains value
+   * @param weights The weights value
+   * @param preservedValencies The preservedValencies value
+   * @param preservedVectors The preservedVectors value
+   * @param preservedWeights The preservedWeights value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param combinerWeightsLearningRate The combinerWeightsLearningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param maxValency The value of the maxValency attribute
+   * @param numWeights The value of the numWeights attribute
+   * @param combinerTableVjpComputation The value of the combinerTableVjpComputation attribute
+   * @param combinerWeightsVjpComputation The value of the combinerWeightsVjpComputation attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput
+   */
+  public XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput xlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TInt32> sortedPosIds, Operand<TFloat32> sortedGains, Operand<TFloat32> weights,
+      Operand<TInt32> preservedValencies, Operand<TFloat32> preservedVectors,
+      Operand<TFloat32> preservedWeights, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> combinerWeightsLearningRate,
+      Operand<TFloat32> embeddingTable, Operand<TFloat32> accumulator, Long maxValency,
+      Long numWeights, ConcreteFunction combinerTableVjpComputation,
+      ConcreteFunction combinerWeightsVjpComputation, String tableName,
+      XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedPosIds, sortedGains, weights, preservedValencies, preservedVectors, preservedWeights, activationGradients, learningRate, combinerWeightsLearningRate, embeddingTable, accumulator, maxValency, numWeights, combinerTableVjpComputation, combinerWeightsVjpComputation, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedPosIds The sortedPosIds value
+   * @param sortedGains The sortedGains value
+   * @param weights The weights value
+   * @param preservedValencies The preservedValencies value
+   * @param preservedVectors The preservedVectors value
+   * @param preservedWeights The preservedWeights value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param combinerWeightsLearningRate The combinerWeightsLearningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param momenta The momenta value
+   * @param useNesterov The value of the useNesterov attribute
+   * @param exponent The value of the exponent attribute
+   * @param beta1 The value of the beta1 attribute
+   * @param beta2 The value of the beta2 attribute
+   * @param epsilon The value of the epsilon attribute
+   * @param maxValency The value of the maxValency attribute
+   * @param numWeights The value of the numWeights attribute
+   * @param combinerTableVjpComputation The value of the combinerTableVjpComputation attribute
+   * @param combinerWeightsVjpComputation The value of the combinerWeightsVjpComputation attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput
+   */
+  public XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput xlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TInt32> sortedPosIds, Operand<TFloat32> sortedGains, Operand<TFloat32> weights,
+      Operand<TInt32> preservedValencies, Operand<TFloat32> preservedVectors,
+      Operand<TFloat32> preservedWeights, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> combinerWeightsLearningRate,
+      Operand<TFloat32> embeddingTable, Operand<TFloat32> accumulator, Operand<TFloat32> momenta,
+      Boolean useNesterov, Float exponent, Float beta1, Float beta2, Float epsilon, Long maxValency,
+      Long numWeights, ConcreteFunction combinerTableVjpComputation,
+      ConcreteFunction combinerWeightsVjpComputation, String tableName,
+      XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdagradMomentumAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedPosIds, sortedGains, weights, preservedValencies, preservedVectors, preservedWeights, activationGradients, learningRate, combinerWeightsLearningRate, embeddingTable, accumulator, momenta, useNesterov, exponent, beta1, beta2, epsilon, maxValency, numWeights, combinerTableVjpComputation, combinerWeightsVjpComputation, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedPosIds The sortedPosIds value
+   * @param sortedGains The sortedGains value
+   * @param weights The weights value
+   * @param preservedValencies The preservedValencies value
+   * @param preservedVectors The preservedVectors value
+   * @param preservedWeights The preservedWeights value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param combinerWeightsLearningRate The combinerWeightsLearningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param momenta The momenta value
+   * @param velocity The velocity value
+   * @param useSumInsideSqrt The value of the useSumInsideSqrt attribute
+   * @param beta1 The value of the beta1 attribute
+   * @param beta2 The value of the beta2 attribute
+   * @param epsilon The value of the epsilon attribute
+   * @param maxValency The value of the maxValency attribute
+   * @param numWeights The value of the numWeights attribute
+   * @param combinerTableVjpComputation The value of the combinerTableVjpComputation attribute
+   * @param combinerWeightsVjpComputation The value of the combinerWeightsVjpComputation attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput
+   */
+  public XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput xlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TInt32> sortedPosIds, Operand<TFloat32> sortedGains, Operand<TFloat32> weights,
+      Operand<TInt32> preservedValencies, Operand<TFloat32> preservedVectors,
+      Operand<TFloat32> preservedWeights, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> combinerWeightsLearningRate,
+      Operand<TFloat32> embeddingTable, Operand<TFloat32> momenta, Operand<TFloat32> velocity,
+      Boolean useSumInsideSqrt, Float beta1, Float beta2, Float epsilon, Long maxValency,
+      Long numWeights, ConcreteFunction combinerTableVjpComputation,
+      ConcreteFunction combinerWeightsVjpComputation, String tableName,
+      XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulCustomCombinerOnTcGradWithAdamAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedPosIds, sortedGains, weights, preservedValencies, preservedVectors, preservedWeights, activationGradients, learningRate, combinerWeightsLearningRate, embeddingTable, momenta, velocity, useSumInsideSqrt, beta1, beta2, epsilon, maxValency, numWeights, combinerTableVjpComputation, combinerWeightsVjpComputation, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedPosIds The sortedPosIds value
+   * @param sortedGains The sortedGains value
+   * @param weights The weights value
+   * @param preservedValencies The preservedValencies value
+   * @param preservedVectors The preservedVectors value
+   * @param preservedWeights The preservedWeights value
+   * @param activationGradients The activationGradients value
+   * @param tables The tables value
+   * @param hyperparameters The hyperparameters value
+   * @param combinerWeightsLearningRate The combinerWeightsLearningRate value
+   * @param maxValency The value of the maxValency attribute
+   * @param numWeights The value of the numWeights attribute
+   * @param combinerTableVjpComputation The value of the combinerTableVjpComputation attribute
+   * @param combinerWeightsVjpComputation The value of the combinerWeightsVjpComputation attribute
+   * @param optimizerCustomComputation The value of the optimizerCustomComputation attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput
+   */
+  public XlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput xlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TInt32> sortedPosIds, Operand<TFloat32> sortedGains, Operand<TFloat32> weights,
+      Operand<TInt32> preservedValencies, Operand<TFloat32> preservedVectors,
+      Operand<TFloat32> preservedWeights, Operand<TFloat32> activationGradients,
+      Iterable<Operand<TFloat32>> tables, Iterable<Operand<TFloat32>> hyperparameters,
+      Operand<TFloat32> combinerWeightsLearningRate, Long maxValency, Long numWeights,
+      ConcreteFunction combinerTableVjpComputation, ConcreteFunction combinerWeightsVjpComputation,
+      ConcreteFunction optimizerCustomComputation, String tableName,
+      XlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput.Options... options) {
+    return XlaSparseDenseMatmulCustomCombinerOnTcGradWithCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedPosIds, sortedGains, weights, preservedValencies, preservedVectors, preservedWeights, activationGradients, tables, hyperparameters, combinerWeightsLearningRate, maxValency, numWeights, combinerTableVjpComputation, combinerWeightsVjpComputation, optimizerCustomComputation, tableName, options);
+  }
+
+  /**
+   * The XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput operation
+   *
+   * @param rowPointers The rowPointers value
+   * @param sortedSampleIds The sortedSampleIds value
+   * @param sortedTokenIds The sortedTokenIds value
+   * @param sortedPosIds The sortedPosIds value
+   * @param sortedGains The sortedGains value
+   * @param weights The weights value
+   * @param preservedValencies The preservedValencies value
+   * @param preservedVectors The preservedVectors value
+   * @param preservedWeights The preservedWeights value
+   * @param activationGradients The activationGradients value
+   * @param learningRate The learningRate value
+   * @param combinerWeightsLearningRate The combinerWeightsLearningRate value
+   * @param embeddingTable The embeddingTable value
+   * @param accumulator The accumulator value
+   * @param linear The linear value
+   * @param multiplyLinearByLearningRate The value of the multiplyLinearByLearningRate attribute
+   * @param beta The value of the beta attribute
+   * @param learningRatePower The value of the learningRatePower attribute
+   * @param l1RegularizationStrength The value of the l1RegularizationStrength attribute
+   * @param l2RegularizationStrength The value of the l2RegularizationStrength attribute
+   * @param maxValency The value of the maxValency attribute
+   * @param numWeights The value of the numWeights attribute
+   * @param combinerTableVjpComputation The value of the combinerTableVjpComputation attribute
+   * @param combinerWeightsVjpComputation The value of the combinerWeightsVjpComputation attribute
+   * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @return a new instance of XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput
+   */
+  public XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput xlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput(
+      Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
+      Operand<TInt32> sortedPosIds, Operand<TFloat32> sortedGains, Operand<TFloat32> weights,
+      Operand<TInt32> preservedValencies, Operand<TFloat32> preservedVectors,
+      Operand<TFloat32> preservedWeights, Operand<TFloat32> activationGradients,
+      Operand<TFloat32> learningRate, Operand<TFloat32> combinerWeightsLearningRate,
+      Operand<TFloat32> embeddingTable, Operand<TFloat32> accumulator, Operand<TFloat32> linear,
+      Boolean multiplyLinearByLearningRate, Float beta, Float learningRatePower,
+      Float l1RegularizationStrength, Float l2RegularizationStrength, Long maxValency,
+      Long numWeights, ConcreteFunction combinerTableVjpComputation,
+      ConcreteFunction combinerWeightsVjpComputation, String tableName,
+      XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput.Options... options) {
+    return XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedPosIds, sortedGains, weights, preservedValencies, preservedVectors, preservedWeights, activationGradients, learningRate, combinerWeightsLearningRate, embeddingTable, accumulator, linear, multiplyLinearByLearningRate, beta, learningRatePower, l1RegularizationStrength, l2RegularizationStrength, maxValency, numWeights, combinerTableVjpComputation, combinerWeightsVjpComputation, tableName, options);
   }
 
   /**
@@ -579,15 +815,17 @@ public final class XlaOps {
    * @param quantizationConfigHigh The value of the quantizationConfigHigh attribute
    * @param quantizationConfigNumBuckets The value of the quantizationConfigNumBuckets attribute
    * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code XlaSparseDenseMatmulWithCsrInput} output and operands
    * @return a new instance of XlaSparseDenseMatmulWithCsrInput
    */
-  public XlaSparseDenseMatmulWithCsrInput xlaSparseDenseMatmulWithCsrInput(
+  public <T extends TNumber> XlaSparseDenseMatmulWithCsrInput<T> xlaSparseDenseMatmulWithCsrInput(
       Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
-      Operand<TFloat32> sortedGains, Operand<TFloat32> embeddingTable,
+      Operand<TFloat32> sortedGains, Operand<T> embeddingTable,
       Operand<TInt32> numMinibatchesPerPhysicalSparseCore, Long inputSize,
       Float quantizationConfigLow, Float quantizationConfigHigh, Long quantizationConfigNumBuckets,
-      String tableName) {
-    return XlaSparseDenseMatmulWithCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, embeddingTable, numMinibatchesPerPhysicalSparseCore, inputSize, quantizationConfigLow, quantizationConfigHigh, quantizationConfigNumBuckets, tableName);
+      String tableName, XlaSparseDenseMatmulWithCsrInput.Options... options) {
+    return XlaSparseDenseMatmulWithCsrInput.create(scope, rowPointers, sortedSampleIds, sortedTokenIds, sortedGains, embeddingTable, numMinibatchesPerPhysicalSparseCore, inputSize, quantizationConfigLow, quantizationConfigHigh, quantizationConfigNumBuckets, tableName, options);
   }
 
   /**

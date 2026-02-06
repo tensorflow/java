@@ -33,8 +33,10 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.OpInputsMetadata;
 import org.tensorflow.op.annotation.OpMetadata;
+import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * The XlaSparseDenseMatmulGradWithCsrInput operation
@@ -43,20 +45,20 @@ import org.tensorflow.types.TInt32;
     opType = XlaSparseDenseMatmulGradWithCsrInput.OP_NAME,
     inputsClass = XlaSparseDenseMatmulGradWithCsrInput.Inputs.class
 )
-public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements Iterable<Operand<TFloat32>> {
+public final class XlaSparseDenseMatmulGradWithCsrInput<T extends TNumber> extends RawOp implements Iterable<Operand<T>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "XlaSparseDenseMatmulGradWithCsrInput";
 
-  private List<Output<TFloat32>> updatedTables;
+  private List<Output<T>> updatedTables;
 
   @SuppressWarnings("unchecked")
   public XlaSparseDenseMatmulGradWithCsrInput(Operation operation) {
     super(operation, OP_NAME);
     int outputIdx = 0;
     int updatedTablesLength = operation.outputListLength("updated_tables");
-    updatedTables = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, updatedTablesLength));
+    updatedTables = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, updatedTablesLength));
     outputIdx += updatedTablesLength;
   }
 
@@ -74,17 +76,19 @@ public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements
    * @param numMinibatchesPerPhysicalSparseCore The numMinibatchesPerPhysicalSparseCore value
    * @param customComputation The value of the customComputation attribute
    * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code XlaSparseDenseMatmulGradWithCsrInput} output and operands
    * @return a new instance of XlaSparseDenseMatmulGradWithCsrInput
    */
   @Endpoint(
       describeByClass = true
   )
-  public static XlaSparseDenseMatmulGradWithCsrInput create(Scope scope,
+  public static <T extends TNumber> XlaSparseDenseMatmulGradWithCsrInput<T> create(Scope scope,
       Operand<TInt32> rowPointers, Operand<TInt32> sortedSampleIds, Operand<TInt32> sortedTokenIds,
       Operand<TFloat32> sortedGains, Operand<TFloat32> activationGradients,
-      Iterable<Operand<TFloat32>> tables, Iterable<Operand<TFloat32>> hyperparameters,
+      Iterable<Operand<T>> tables, Iterable<Operand<TFloat32>> hyperparameters,
       Operand<TInt32> numMinibatchesPerPhysicalSparseCore, ConcreteFunction customComputation,
-      String tableName) {
+      String tableName, Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaSparseDenseMatmulGradWithCsrInput");
     opBuilder.addInput(rowPointers.asOutput());
     opBuilder.addInput(sortedSampleIds.asOutput());
@@ -96,7 +100,24 @@ public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements
     opBuilder.addInput(numMinibatchesPerPhysicalSparseCore.asOutput());
     opBuilder.setAttr("custom_computation", customComputation);
     opBuilder.setAttr("table_name", tableName);
-    return new XlaSparseDenseMatmulGradWithCsrInput(opBuilder.build());
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.numSparsecoresPerDevice != null) {
+          opBuilder.setAttr("num_sparsecores_per_device", opts.numSparsecoresPerDevice);
+        }
+      }
+    }
+    return new XlaSparseDenseMatmulGradWithCsrInput<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the numSparsecoresPerDevice option.
+   *
+   * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+   * @return this Options instance.
+   */
+  public static Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+    return new Options().numSparsecoresPerDevice(numSparsecoresPerDevice);
   }
 
   /**
@@ -104,20 +125,41 @@ public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements
    *
    * @return updatedTables.
    */
-  public List<Output<TFloat32>> updatedTables() {
+  public List<Output<T>> updatedTables() {
     return updatedTables;
   }
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TFloat32>> iterator() {
+  public Iterator<Operand<T>> iterator() {
     return (Iterator) updatedTables.iterator();
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.xla.XlaSparseDenseMatmulGradWithCsrInput}
+   */
+  public static class Options {
+    private Long numSparsecoresPerDevice;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the numSparsecoresPerDevice option.
+     *
+     * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+     * @return this Options instance.
+     */
+    public Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+      this.numSparsecoresPerDevice = numSparsecoresPerDevice;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
       outputsClass = XlaSparseDenseMatmulGradWithCsrInput.class
   )
-  public static class Inputs extends RawOpInputs<XlaSparseDenseMatmulGradWithCsrInput> {
+  public static class Inputs<T extends TNumber> extends RawOpInputs<XlaSparseDenseMatmulGradWithCsrInput<T>> {
     /**
      * The rowPointers input
      */
@@ -146,7 +188,7 @@ public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements
     /**
      * The tables input
      */
-    public final Iterable<Operand<TFloat32>> tables;
+    public final Iterable<Operand<T>> tables;
 
     /**
      * The hyperparameters input
@@ -163,8 +205,18 @@ public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements
      */
     public final String tableName;
 
+    /**
+     * The numSparsecoresPerDevice attribute
+     */
+    public final long numSparsecoresPerDevice;
+
+    /**
+     * The T attribute
+     */
+    public final DataType T;
+
     public Inputs(GraphOperation op) {
-      super(new XlaSparseDenseMatmulGradWithCsrInput(op), op, Arrays.asList("table_name"));
+      super(new XlaSparseDenseMatmulGradWithCsrInput<>(op), op, Arrays.asList("table_name", "num_sparsecores_per_device", "T"));
       int inputIndex = 0;
       rowPointers = (Operand<TInt32>) op.input(inputIndex++);
       sortedSampleIds = (Operand<TInt32>) op.input(inputIndex++);
@@ -172,13 +224,15 @@ public final class XlaSparseDenseMatmulGradWithCsrInput extends RawOp implements
       sortedGains = (Operand<TFloat32>) op.input(inputIndex++);
       activationGradients = (Operand<TFloat32>) op.input(inputIndex++);
       int tablesLength = op.inputListLength("tables");
-      tables = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, tablesLength));
+      tables = Arrays.asList((Operand<T>[]) op.inputList(inputIndex, tablesLength));
       inputIndex += tablesLength;
       int hyperparametersLength = op.inputListLength("hyperparameters");
       hyperparameters = Arrays.asList((Operand<TFloat32>[]) op.inputList(inputIndex, hyperparametersLength));
       inputIndex += hyperparametersLength;
       numMinibatchesPerPhysicalSparseCore = (Operand<TInt32>) op.input(inputIndex++);
       tableName = op.attributes().getAttrString("table_name");
+      numSparsecoresPerDevice = op.attributes().getAttrInt("num_sparsecores_per_device");
+      T = op.attributes().getAttrType("T");
     }
   }
 }

@@ -118,7 +118,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
       describeByClass = true
   )
   public static RandomPoisson<TInt64> create(Scope scope, Operand<? extends TNumber> shape,
-      Operand<? extends TNumber> rate, Options[] options) {
+      Operand<? extends TNumber> rate, Options... options) {
     return create(scope, shape, rate, TInt64.class, options);
   }
 

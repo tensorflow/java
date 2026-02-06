@@ -44,7 +44,7 @@ public final class DtypesOps {
    * Converts each entry in the given tensor to strings.
    *  Supports many numeric types and boolean.
    *  <p>For Unicode, see the
-   *  [https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode text)
+   *  [https://www.tensorflow.org/text/guide/unicode](Working with Unicode text)
    *  tutorial.
    *  <p>Examples:
    *  <blockquote>

@@ -37,17 +37,18 @@ import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
- * Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+ * Function for decode_bmp, decode_gif, decode_jpeg, decode_webp, and decode_png.
+ * Detects whether an image is a BMP, GIF, JPEG, WebP, or PNG, and performs the
  * appropriate operation to convert the input bytes string into a Tensor of type
  * dtype.
- * <p><em>NOTE</em>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
- * opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
- * [height, width, num_channels]. Make sure to take this into account when
- * constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
- * PNG files. Alternately, set the expand_animations argument of this function to
- * False, in which case the op will return 3-dimensional tensors and will truncate
- * animated GIF files to the first frame.
+ * <p><em>NOTE</em>: decode_gif and decode_webp return a 4-D
+ * array [num_frames, height, width, 3], as opposed to decode_bmp,
+ * decode_jpeg, and decode_png, which always return 3-D arrays [height,
+ * width, num_channels]. Make sure to take this into account when
+ * constructing your graph if you are intermixing animated files with
+ * BMP, JPEG, and/or PNG files. Alternately, set the expand_animations
+ * argument of this function to False, in which case the op will return
+ * 3-dimensional tensors and will truncate animations to the first frame.
  * <p><em>NOTE</em>: If the first frame of an animated GIF does not occupy the entire
  * canvas (maximum frame width x maximum frame height), then it fills the
  * unoccupied areas (in the first frame) with zeros (black). For frames after the
@@ -118,7 +119,7 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
       describeByClass = true
   )
   public static DecodeImage<TUint8> create(Scope scope, Operand<TString> contents,
-      Options[] options) {
+      Options... options) {
     return create(scope, contents, TUint8.class, options);
   }
 
@@ -135,10 +136,11 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
   /**
    * Sets the expandAnimations option.
    *
-   * @param expandAnimations Controls the output shape of the returned op. If True, the returned op will
-   * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
-   * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
-   * tensor for all file types and will truncate animated GIFs to the first frame.
+   * @param expandAnimations Controls the output shape of the returned op. If True, the returned op
+   * will produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D
+   * tensor for all GIFs and WebP images, whether animated or not. If,
+   * False, the returned op will produce a 3-D tensor for all file types
+   * and will truncate animated images to the first frame.
    * @return this Options instance.
    */
   public static Options expandAnimations(Boolean expandAnimations) {
@@ -185,10 +187,11 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
     /**
      * Sets the expandAnimations option.
      *
-     * @param expandAnimations Controls the output shape of the returned op. If True, the returned op will
-     * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
-     * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
-     * tensor for all file types and will truncate animated GIFs to the first frame.
+     * @param expandAnimations Controls the output shape of the returned op. If True, the returned op
+     * will produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D
+     * tensor for all GIFs and WebP images, whether animated or not. If,
+     * False, the returned op will produce a 3-D tensor for all file types
+     * and will truncate animated images to the first frame.
      * @return this Options instance.
      */
     public Options expandAnimations(Boolean expandAnimations) {
@@ -217,10 +220,11 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
     public final DataType dtype;
 
     /**
-     * Controls the output shape of the returned op. If True, the returned op will
-     * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
-     * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
-     * tensor for all file types and will truncate animated GIFs to the first frame.
+     * Controls the output shape of the returned op. If True, the returned op
+     * will produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D
+     * tensor for all GIFs and WebP images, whether animated or not. If,
+     * False, the returned op will produce a 3-D tensor for all file types
+     * and will truncate animated images to the first frame.
      */
     public final boolean expandAnimations;
 

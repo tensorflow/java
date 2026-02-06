@@ -102,7 +102,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
       describeByClass = true
   )
   public static DebugNumericsSummary<TFloat32> create(Scope scope, Operand<? extends TType> input,
-      Options[] options) {
+      Options... options) {
     return create(scope, input, TFloat32.class, options);
   }
 

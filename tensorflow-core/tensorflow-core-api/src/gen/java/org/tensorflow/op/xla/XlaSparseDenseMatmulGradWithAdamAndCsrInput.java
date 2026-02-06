@@ -119,6 +119,9 @@ public final class XlaSparseDenseMatmulGradWithAdamAndCsrInput extends RawOp {
         if (opts.clipWeightMax != null) {
           opBuilder.setAttr("clip_weight_max", opts.clipWeightMax);
         }
+        if (opts.numSparsecoresPerDevice != null) {
+          opBuilder.setAttr("num_sparsecores_per_device", opts.numSparsecoresPerDevice);
+        }
       }
     }
     return new XlaSparseDenseMatmulGradWithAdamAndCsrInput(opBuilder.build());
@@ -142,6 +145,16 @@ public final class XlaSparseDenseMatmulGradWithAdamAndCsrInput extends RawOp {
    */
   public static Options clipWeightMax(Float clipWeightMax) {
     return new Options().clipWeightMax(clipWeightMax);
+  }
+
+  /**
+   * Sets the numSparsecoresPerDevice option.
+   *
+   * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+   * @return this Options instance.
+   */
+  public static Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+    return new Options().numSparsecoresPerDevice(numSparsecoresPerDevice);
   }
 
   /**
@@ -179,6 +192,8 @@ public final class XlaSparseDenseMatmulGradWithAdamAndCsrInput extends RawOp {
 
     private Float clipWeightMax;
 
+    private Long numSparsecoresPerDevice;
+
     private Options() {
     }
 
@@ -201,6 +216,17 @@ public final class XlaSparseDenseMatmulGradWithAdamAndCsrInput extends RawOp {
      */
     public Options clipWeightMax(Float clipWeightMax) {
       this.clipWeightMax = clipWeightMax;
+      return this;
+    }
+
+    /**
+     * Sets the numSparsecoresPerDevice option.
+     *
+     * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+     * @return this Options instance.
+     */
+    public Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+      this.numSparsecoresPerDevice = numSparsecoresPerDevice;
       return this;
     }
   }
@@ -294,8 +320,13 @@ public final class XlaSparseDenseMatmulGradWithAdamAndCsrInput extends RawOp {
      */
     public final String tableName;
 
+    /**
+     * The numSparsecoresPerDevice attribute
+     */
+    public final long numSparsecoresPerDevice;
+
     public Inputs(GraphOperation op) {
-      super(new XlaSparseDenseMatmulGradWithAdamAndCsrInput(op), op, Arrays.asList("use_sum_inside_sqrt", "beta1", "beta2", "epsilon", "clip_weight_min", "clip_weight_max", "table_name"));
+      super(new XlaSparseDenseMatmulGradWithAdamAndCsrInput(op), op, Arrays.asList("use_sum_inside_sqrt", "beta1", "beta2", "epsilon", "clip_weight_min", "clip_weight_max", "table_name", "num_sparsecores_per_device"));
       int inputIndex = 0;
       rowPointers = (Operand<TInt32>) op.input(inputIndex++);
       sortedSampleIds = (Operand<TInt32>) op.input(inputIndex++);
@@ -314,6 +345,7 @@ public final class XlaSparseDenseMatmulGradWithAdamAndCsrInput extends RawOp {
       clipWeightMin = op.attributes().getAttrFloat("clip_weight_min");
       clipWeightMax = op.attributes().getAttrFloat("clip_weight_max");
       tableName = op.attributes().getAttrString("table_name");
+      numSparsecoresPerDevice = op.attributes().getAttrInt("num_sparsecores_per_device");
     }
   }
 }

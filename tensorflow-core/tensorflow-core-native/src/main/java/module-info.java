@@ -35,7 +35,6 @@ module tensorflow.nativelib {
   exports org.tensorflow.proto.core;
   exports org.tensorflow.proto.core.platform;
   exports org.tensorflow.proto.profiler;
-  exports org.tensorflow.proto.profiler.empty;
   exports org.tensorflow.proto.distributed_runtime;
   exports org.tensorflow.proto.eager;
   exports org.tensorflow.proto.error;

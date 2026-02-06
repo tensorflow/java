@@ -133,7 +133,7 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
       describeByClass = true
   )
   public static <T extends TNumber> MaxPoolWithArgmax<T, TInt64> create(Scope scope,
-      Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options[] options) {
+      Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     return create(scope, input, ksize, strides, TInt64.class, padding, options);
   }
 

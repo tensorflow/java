@@ -2127,7 +2127,7 @@ public final class NnOps {
    * @return a new instance of MaxPoolWithArgmax, with default output types
    */
   public <T extends TNumber> MaxPoolWithArgmax<T, TInt64> maxPoolWithArgmax(Operand<T> input,
-      List<Long> ksize, List<Long> strides, String padding, MaxPoolWithArgmax.Options[] options) {
+      List<Long> ksize, List<Long> strides, String padding, MaxPoolWithArgmax.Options... options) {
     return MaxPoolWithArgmax.create(scope, input, ksize, strides, padding, options);
   }
 

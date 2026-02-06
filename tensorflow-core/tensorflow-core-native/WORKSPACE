@@ -94,6 +94,13 @@ load("@org_tensorflow//tensorflow:workspace2.bzl", "tf_workspace2")
 
 tf_workspace2()
 
+# Added to fix macOS compiler support on Tahoe?
+#http_archive(
+#    name = "build_bazel_apple_support",
+#    sha256 = "1ae6fcf983cff3edab717636f91ad0efff2e5ba75607fdddddfd6ad0dbdfaf10",
+#    urls = ["https://github.com/bazelbuild/apple_support/releases/download/1.24.5/apple_support.1.24.5.tar.gz"]
+#)
+
 load("@org_tensorflow//tensorflow:workspace1.bzl", "tf_workspace1")
 
 tf_workspace1()

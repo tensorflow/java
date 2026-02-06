@@ -156,7 +156,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
       describeByClass = true
   )
   public static Dequantize<TFloat32> create(Scope scope, Operand<? extends TNumber> input,
-      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options[] options) {
+      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
     return create(scope, input, minRange, maxRange, TFloat32.class, options);
   }
 

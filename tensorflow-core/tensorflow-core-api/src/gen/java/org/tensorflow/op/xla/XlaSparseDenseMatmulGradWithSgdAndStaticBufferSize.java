@@ -100,6 +100,9 @@ public final class XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize extends Ra
         if (opts.clipWeightMax != null) {
           opBuilder.setAttr("clip_weight_max", opts.clipWeightMax);
         }
+        if (opts.numSparsecoresPerDevice != null) {
+          opBuilder.setAttr("num_sparsecores_per_device", opts.numSparsecoresPerDevice);
+        }
       }
     }
     return new XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize(opBuilder.build());
@@ -126,6 +129,16 @@ public final class XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize extends Ra
   }
 
   /**
+   * Sets the numSparsecoresPerDevice option.
+   *
+   * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+   * @return this Options instance.
+   */
+  public static Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+    return new Options().numSparsecoresPerDevice(numSparsecoresPerDevice);
+  }
+
+  /**
    * Gets updatedEmbeddingTable.
    *
    * @return updatedEmbeddingTable.
@@ -146,6 +159,8 @@ public final class XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize extends Ra
     private Float clipWeightMin;
 
     private Float clipWeightMax;
+
+    private Long numSparsecoresPerDevice;
 
     private Options() {
     }
@@ -169,6 +184,17 @@ public final class XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize extends Ra
      */
     public Options clipWeightMax(Float clipWeightMax) {
       this.clipWeightMax = clipWeightMax;
+      return this;
+    }
+
+    /**
+     * Sets the numSparsecoresPerDevice option.
+     *
+     * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+     * @return this Options instance.
+     */
+    public Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+      this.numSparsecoresPerDevice = numSparsecoresPerDevice;
       return this;
     }
   }
@@ -242,8 +268,13 @@ public final class XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize extends Ra
      */
     public final String tableName;
 
+    /**
+     * The numSparsecoresPerDevice attribute
+     */
+    public final long numSparsecoresPerDevice;
+
     public Inputs(GraphOperation op) {
-      super(new XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize(op), op, Arrays.asList("clip_weight_min", "clip_weight_max", "max_ids_per_sparse_core", "max_unique_ids_per_sparse_core", "table_name"));
+      super(new XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize(op), op, Arrays.asList("clip_weight_min", "clip_weight_max", "max_ids_per_sparse_core", "max_unique_ids_per_sparse_core", "table_name", "num_sparsecores_per_device"));
       int inputIndex = 0;
       rowPointers = (Operand<TInt32>) op.input(inputIndex++);
       sortedSampleIds = (Operand<TInt32>) op.input(inputIndex++);
@@ -258,6 +289,7 @@ public final class XlaSparseDenseMatmulGradWithSgdAndStaticBufferSize extends Ra
       maxIdsPerSparseCore = op.attributes().getAttrInt("max_ids_per_sparse_core");
       maxUniqueIdsPerSparseCore = op.attributes().getAttrInt("max_unique_ids_per_sparse_core");
       tableName = op.attributes().getAttrString("table_name");
+      numSparsecoresPerDevice = op.attributes().getAttrInt("num_sparsecores_per_device");
     }
   }
 }

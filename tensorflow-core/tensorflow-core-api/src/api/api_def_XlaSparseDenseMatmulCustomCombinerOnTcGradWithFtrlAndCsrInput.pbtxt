@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput"
+  visibility: VISIBLE
+  endpoint {
+    name: "xla.XlaSparseDenseMatmulCustomCombinerOnTcGradWithFtrlAndCsrInput"
+  }
+}

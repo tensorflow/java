@@ -116,6 +116,9 @@ public final class TPUReplicateMetadata extends RawOp {
         if (opts.useSpmdForXlaPartitioning != null) {
           opBuilder.setAttr("use_spmd_for_xla_partitioning", opts.useSpmdForXlaPartitioning);
         }
+        if (opts.useShardyPartitioner != null) {
+          opBuilder.setAttr("use_shardy_partitioner", opts.useShardyPartitioner);
+        }
         if (opts.tpuCompileOptionsProto != null) {
           opBuilder.setAttr("tpu_compile_options_proto", opts.tpuCompileOptionsProto);
         }
@@ -265,6 +268,16 @@ public final class TPUReplicateMetadata extends RawOp {
   }
 
   /**
+   * Sets the useShardyPartitioner option.
+   *
+   * @param useShardyPartitioner the useShardyPartitioner option
+   * @return this Options instance.
+   */
+  public static Options useShardyPartitioner(Boolean useShardyPartitioner) {
+    return new Options().useShardyPartitioner(useShardyPartitioner);
+  }
+
+  /**
    * Sets the tpuCompileOptionsProto option.
    *
    * @param tpuCompileOptionsProto the tpuCompileOptionsProto option
@@ -297,6 +310,8 @@ public final class TPUReplicateMetadata extends RawOp {
     private Boolean allowSoftPlacement;
 
     private Boolean useSpmdForXlaPartitioning;
+
+    private Boolean useShardyPartitioner;
 
     private String tpuCompileOptionsProto;
 
@@ -458,6 +473,17 @@ public final class TPUReplicateMetadata extends RawOp {
     }
 
     /**
+     * Sets the useShardyPartitioner option.
+     *
+     * @param useShardyPartitioner the useShardyPartitioner option
+     * @return this Options instance.
+     */
+    public Options useShardyPartitioner(Boolean useShardyPartitioner) {
+      this.useShardyPartitioner = useShardyPartitioner;
+      return this;
+    }
+
+    /**
      * Sets the tpuCompileOptionsProto option.
      *
      * @param tpuCompileOptionsProto the tpuCompileOptionsProto option
@@ -529,12 +555,17 @@ public final class TPUReplicateMetadata extends RawOp {
     public final boolean useSpmdForXlaPartitioning;
 
     /**
+     * The useShardyPartitioner attribute
+     */
+    public final boolean useShardyPartitioner;
+
+    /**
      * The tpuCompileOptionsProto attribute
      */
     public final String tpuCompileOptionsProto;
 
     public Inputs(GraphOperation op) {
-      super(new TPUReplicateMetadata(op), op, Arrays.asList("num_replicas", "num_cores_per_replica", "topology", "use_tpu", "device_assignment", "computation_shape", "host_compute_core", "padding_map", "step_marker_location", "allow_soft_placement", "use_spmd_for_xla_partitioning", "tpu_compile_options_proto"));
+      super(new TPUReplicateMetadata(op), op, Arrays.asList("num_replicas", "num_cores_per_replica", "topology", "use_tpu", "device_assignment", "computation_shape", "host_compute_core", "padding_map", "step_marker_location", "allow_soft_placement", "use_spmd_for_xla_partitioning", "use_shardy_partitioner", "tpu_compile_options_proto"));
       int inputIndex = 0;
       numReplicas = op.attributes().getAttrInt("num_replicas");
       numCoresPerReplica = op.attributes().getAttrInt("num_cores_per_replica");
@@ -547,6 +578,7 @@ public final class TPUReplicateMetadata extends RawOp {
       stepMarkerLocation = op.attributes().getAttrString("step_marker_location");
       allowSoftPlacement = op.attributes().getAttrBool("allow_soft_placement");
       useSpmdForXlaPartitioning = op.attributes().getAttrBool("use_spmd_for_xla_partitioning");
+      useShardyPartitioner = op.attributes().getAttrBool("use_shardy_partitioner");
       tpuCompileOptionsProto = op.attributes().getAttrString("tpu_compile_options_proto");
     }
   }

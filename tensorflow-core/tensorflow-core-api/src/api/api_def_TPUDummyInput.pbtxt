@@ -1,0 +1,7 @@
+op {
+  graph_op_name: "TPUDummyInput"
+  visibility: HIDDEN
+  endpoint {
+    name: "tpu.TPUDummyInput"
+  }
+}

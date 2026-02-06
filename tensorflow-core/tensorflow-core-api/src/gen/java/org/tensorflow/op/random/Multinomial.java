@@ -109,7 +109,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
       describeByClass = true
   )
   public static Multinomial<TInt64> create(Scope scope, Operand<? extends TNumber> logits,
-      Operand<TInt32> numSamples, Options[] options) {
+      Operand<TInt32> numSamples, Options... options) {
     return create(scope, logits, numSamples, TInt64.class, options);
   }
 

@@ -210,7 +210,7 @@ public final class RandomOps {
    * @return a new instance of Multinomial, with default output types
    */
   public Multinomial<TInt64> multinomial(Operand<? extends TNumber> logits,
-      Operand<TInt32> numSamples, Multinomial.Options[] options) {
+      Operand<TInt32> numSamples, Multinomial.Options... options) {
     return Multinomial.create(scope, logits, numSamples, options);
   }
 
@@ -327,7 +327,7 @@ public final class RandomOps {
    * @return a new instance of RandomPoisson, with default output types
    */
   public RandomPoisson<TInt64> randomPoisson(Operand<? extends TNumber> shape,
-      Operand<? extends TNumber> rate, RandomPoisson.Options[] options) {
+      Operand<? extends TNumber> rate, RandomPoisson.Options... options) {
     return RandomPoisson.create(scope, shape, rate, options);
   }
 

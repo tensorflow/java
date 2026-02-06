@@ -70,6 +70,7 @@ public final class XlaSparseDenseMatmulWithStaticBufferSize extends RawOp implem
    * @param maxIdsPerSparseCore The value of the maxIdsPerSparseCore attribute
    * @param maxUniqueIdsPerSparseCore The value of the maxUniqueIdsPerSparseCore attribute
    * @param tableName The value of the tableName attribute
+   * @param options carries optional attribute values
    * @return a new instance of XlaSparseDenseMatmulWithStaticBufferSize
    */
   @Endpoint(
@@ -80,7 +81,8 @@ public final class XlaSparseDenseMatmulWithStaticBufferSize extends RawOp implem
       Operand<TFloat32> sortedGains, Operand<TFloat32> embeddingTable,
       Operand<TInt32> numMinibatchesPerPhysicalSparseCore, Long inputSize,
       Float quantizationConfigLow, Float quantizationConfigHigh, Long quantizationConfigNumBuckets,
-      Long maxIdsPerSparseCore, Long maxUniqueIdsPerSparseCore, String tableName) {
+      Long maxIdsPerSparseCore, Long maxUniqueIdsPerSparseCore, String tableName,
+      Options... options) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaSparseDenseMatmulWithStaticBufferSize");
     opBuilder.addInput(rowPointers.asOutput());
     opBuilder.addInput(sortedSampleIds.asOutput());
@@ -95,7 +97,24 @@ public final class XlaSparseDenseMatmulWithStaticBufferSize extends RawOp implem
     opBuilder.setAttr("max_ids_per_sparse_core", maxIdsPerSparseCore);
     opBuilder.setAttr("max_unique_ids_per_sparse_core", maxUniqueIdsPerSparseCore);
     opBuilder.setAttr("table_name", tableName);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.numSparsecoresPerDevice != null) {
+          opBuilder.setAttr("num_sparsecores_per_device", opts.numSparsecoresPerDevice);
+        }
+      }
+    }
     return new XlaSparseDenseMatmulWithStaticBufferSize(opBuilder.build());
+  }
+
+  /**
+   * Sets the numSparsecoresPerDevice option.
+   *
+   * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+   * @return this Options instance.
+   */
+  public static Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+    return new Options().numSparsecoresPerDevice(numSparsecoresPerDevice);
   }
 
   /**
@@ -110,6 +129,27 @@ public final class XlaSparseDenseMatmulWithStaticBufferSize extends RawOp implem
   @Override
   public Output<TFloat32> asOutput() {
     return activations;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.xla.XlaSparseDenseMatmulWithStaticBufferSize}
+   */
+  public static class Options {
+    private Long numSparsecoresPerDevice;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the numSparsecoresPerDevice option.
+     *
+     * @param numSparsecoresPerDevice the numSparsecoresPerDevice option
+     * @return this Options instance.
+     */
+    public Options numSparsecoresPerDevice(Long numSparsecoresPerDevice) {
+      this.numSparsecoresPerDevice = numSparsecoresPerDevice;
+      return this;
+    }
   }
 
   @OpInputsMetadata(
@@ -181,8 +221,13 @@ public final class XlaSparseDenseMatmulWithStaticBufferSize extends RawOp implem
      */
     public final String tableName;
 
+    /**
+     * The numSparsecoresPerDevice attribute
+     */
+    public final long numSparsecoresPerDevice;
+
     public Inputs(GraphOperation op) {
-      super(new XlaSparseDenseMatmulWithStaticBufferSize(op), op, Arrays.asList("input_size", "quantization_config_low", "quantization_config_high", "quantization_config_num_buckets", "max_ids_per_sparse_core", "max_unique_ids_per_sparse_core", "table_name"));
+      super(new XlaSparseDenseMatmulWithStaticBufferSize(op), op, Arrays.asList("input_size", "quantization_config_low", "quantization_config_high", "quantization_config_num_buckets", "max_ids_per_sparse_core", "max_unique_ids_per_sparse_core", "table_name", "num_sparsecores_per_device"));
       int inputIndex = 0;
       rowPointers = (Operand<TInt32>) op.input(inputIndex++);
       sortedSampleIds = (Operand<TInt32>) op.input(inputIndex++);
@@ -197,6 +242,7 @@ public final class XlaSparseDenseMatmulWithStaticBufferSize extends RawOp implem
       maxIdsPerSparseCore = op.attributes().getAttrInt("max_ids_per_sparse_core");
       maxUniqueIdsPerSparseCore = op.attributes().getAttrInt("max_unique_ids_per_sparse_core");
       tableName = op.attributes().getAttrString("table_name");
+      numSparsecoresPerDevice = op.attributes().getAttrInt("num_sparsecores_per_device");
     }
   }
 }

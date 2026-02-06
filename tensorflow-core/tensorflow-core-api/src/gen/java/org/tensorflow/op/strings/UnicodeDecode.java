@@ -130,7 +130,7 @@ public final class UnicodeDecode<T extends TNumber> extends RawOp {
       describeByClass = true
   )
   public static UnicodeDecode<TInt64> create(Scope scope, Operand<TString> input,
-      String inputEncoding, Options[] options) {
+      String inputEncoding, Options... options) {
     return create(scope, input, inputEncoding, TInt64.class, options);
   }
 

@@ -32,6 +32,7 @@ import org.tensorflow.op.image.DecodeGif;
 import org.tensorflow.op.image.DecodeImage;
 import org.tensorflow.op.image.DecodeJpeg;
 import org.tensorflow.op.image.DecodePng;
+import org.tensorflow.op.image.DecodeWebP;
 import org.tensorflow.op.image.DrawBoundingBoxes;
 import org.tensorflow.op.image.EncodeJpeg;
 import org.tensorflow.op.image.EncodeJpegVariableQuality;
@@ -336,17 +337,18 @@ public final class ImageOps {
   }
 
   /**
-   * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
-   *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+   * Function for decode_bmp, decode_gif, decode_jpeg, decode_webp, and decode_png.
+   *  Detects whether an image is a BMP, GIF, JPEG, WebP, or PNG, and performs the
    *  appropriate operation to convert the input bytes string into a Tensor of type
    *  dtype.
-   *  <p><em>NOTE</em>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
-   *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
-   *  [height, width, num_channels]. Make sure to take this into account when
-   *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
-   *  PNG files. Alternately, set the expand_animations argument of this function to
-   *  False, in which case the op will return 3-dimensional tensors and will truncate
-   *  animated GIF files to the first frame.
+   *  <p><em>NOTE</em>: decode_gif and decode_webp return a 4-D
+   *  array [num_frames, height, width, 3], as opposed to decode_bmp,
+   *  decode_jpeg, and decode_png, which always return 3-D arrays [height,
+   *  width, num_channels]. Make sure to take this into account when
+   *  constructing your graph if you are intermixing animated files with
+   *  BMP, JPEG, and/or PNG files. Alternately, set the expand_animations
+   *  argument of this function to False, in which case the op will return
+   *  3-dimensional tensors and will truncate animations to the first frame.
    *  <p><em>NOTE</em>: If the first frame of an animated GIF does not occupy the entire
    *  canvas (maximum frame width x maximum frame height), then it fills the
    *  unoccupied areas (in the first frame) with zeros (black). For frames after the
@@ -357,22 +359,24 @@ public final class ImageOps {
    * @param options carries optional attribute values
    * @return a new instance of DecodeImage, with default output types
    */
-  public DecodeImage<TUint8> decodeImage(Operand<TString> contents, DecodeImage.Options[] options) {
+  public DecodeImage<TUint8> decodeImage(Operand<TString> contents,
+      DecodeImage.Options... options) {
     return DecodeImage.create(scope, contents, options);
   }
 
   /**
-   * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
-   *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+   * Function for decode_bmp, decode_gif, decode_jpeg, decode_webp, and decode_png.
+   *  Detects whether an image is a BMP, GIF, JPEG, WebP, or PNG, and performs the
    *  appropriate operation to convert the input bytes string into a Tensor of type
    *  dtype.
-   *  <p><em>NOTE</em>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
-   *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
-   *  [height, width, num_channels]. Make sure to take this into account when
-   *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
-   *  PNG files. Alternately, set the expand_animations argument of this function to
-   *  False, in which case the op will return 3-dimensional tensors and will truncate
-   *  animated GIF files to the first frame.
+   *  <p><em>NOTE</em>: decode_gif and decode_webp return a 4-D
+   *  array [num_frames, height, width, 3], as opposed to decode_bmp,
+   *  decode_jpeg, and decode_png, which always return 3-D arrays [height,
+   *  width, num_channels]. Make sure to take this into account when
+   *  constructing your graph if you are intermixing animated files with
+   *  BMP, JPEG, and/or PNG files. Alternately, set the expand_animations
+   *  argument of this function to False, in which case the op will return
+   *  3-dimensional tensors and will truncate animations to the first frame.
    *  <p><em>NOTE</em>: If the first frame of an animated GIF does not occupy the entire
    *  canvas (maximum frame width x maximum frame height), then it fills the
    *  unoccupied areas (in the first frame) with zeros (black). For frames after the
@@ -436,7 +440,7 @@ public final class ImageOps {
    * @param options carries optional attribute values
    * @return a new instance of DecodePng, with default output types
    */
-  public DecodePng<TUint8> decodePng(Operand<TString> contents, DecodePng.Options[] options) {
+  public DecodePng<TUint8> decodePng(Operand<TString> contents, DecodePng.Options... options) {
     return DecodePng.create(scope, contents, options);
   }
 
@@ -465,6 +469,51 @@ public final class ImageOps {
   public <T extends TNumber> DecodePng<T> decodePng(Operand<TString> contents, Class<T> dtype,
       DecodePng.Options... options) {
     return DecodePng.create(scope, contents, dtype, options);
+  }
+
+  /**
+   * Decode a WebP-encoded image to a uint8 tensor.
+   *  The attr {@code channels} indicates the desired number of color channels for the
+   *  decoded image.
+   *  <p>Accepted values are:
+   *  <ul>
+   *  <li>0: Use the number of channels in the WebP-encoded image.</li>
+   *  <li>3: output an RGB image.</li>
+   *  <li>4: output an RGBA image.</li>
+   *  </ul>
+   *  <p>The number of channels must currently match that of the underlying file.
+   *  For WebP animations, only 4-channel RGBA is supported.
+   *
+   * @param contents 0-D.  The WebP-encoded image.
+   * @param options carries optional attribute values
+   * @return a new instance of DecodeWebP, with default output types
+   */
+  public DecodeWebP<TUint8> decodeWebP(Operand<TString> contents, DecodeWebP.Options... options) {
+    return DecodeWebP.create(scope, contents, options);
+  }
+
+  /**
+   * Decode a WebP-encoded image to a uint8 tensor.
+   *  The attr {@code channels} indicates the desired number of color channels for the
+   *  decoded image.
+   *  <p>Accepted values are:
+   *  <ul>
+   *  <li>0: Use the number of channels in the WebP-encoded image.</li>
+   *  <li>3: output an RGB image.</li>
+   *  <li>4: output an RGBA image.</li>
+   *  </ul>
+   *  <p>The number of channels must currently match that of the underlying file.
+   *  For WebP animations, only 4-channel RGBA is supported.
+   *
+   * @param contents 0-D.  The WebP-encoded image.
+   * @param dtype The value of the dtype attribute
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DecodeWebP} output and operands
+   * @return a new instance of DecodeWebP
+   */
+  public <T extends TNumber> DecodeWebP<T> decodeWebP(Operand<TString> contents, Class<T> dtype,
+      DecodeWebP.Options... options) {
+    return DecodeWebP.create(scope, contents, dtype, options);
   }
 
   /**

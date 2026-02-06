@@ -113,7 +113,7 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents,
-      Options[] options) {
+      Options... options) {
     return create(scope, contents, TUint8.class, options);
   }
 

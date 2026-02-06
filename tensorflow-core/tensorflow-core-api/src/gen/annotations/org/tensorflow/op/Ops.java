@@ -420,9 +420,9 @@ public final class Ops {
 
   public final SummaryOps summary;
 
-  public final ImageOps image;
-
   public final RaggedOps ragged;
+
+  public final ImageOps image;
 
   public final ShapeOps shape;
 
@@ -457,8 +457,8 @@ public final class Ops {
     train = new TrainOps(this);
     quantization = new QuantizationOps(this);
     summary = new SummaryOps(this);
-    image = new ImageOps(this);
     ragged = new RaggedOps(this);
+    image = new ImageOps(this);
     shape = new ShapeOps(this);
     io = new IoOps(this);
     dtypes = new DtypesOps(this);

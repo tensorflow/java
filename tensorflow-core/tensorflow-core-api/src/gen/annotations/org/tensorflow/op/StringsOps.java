@@ -564,7 +564,7 @@ public final class StringsOps {
    * @return a new instance of UnicodeDecode, with default output types
    */
   public UnicodeDecode<TInt64> unicodeDecode(Operand<TString> input, String inputEncoding,
-      UnicodeDecode.Options[] options) {
+      UnicodeDecode.Options... options) {
     return UnicodeDecode.create(scope, input, inputEncoding, options);
   }
 
@@ -626,7 +626,7 @@ public final class StringsOps {
    * @return a new instance of UnicodeDecodeWithOffsets, with default output types
    */
   public UnicodeDecodeWithOffsets<TInt64> unicodeDecodeWithOffsets(Operand<TString> input,
-      String inputEncoding, UnicodeDecodeWithOffsets.Options[] options) {
+      String inputEncoding, UnicodeDecodeWithOffsets.Options... options) {
     return UnicodeDecodeWithOffsets.create(scope, input, inputEncoding, options);
   }
 
