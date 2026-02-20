@@ -11,9 +11,7 @@ on:
       - r[0-9]+.*
     types: [opened, reopened, synchronize, labeled, unlabeled]
 env:
-  STAGING_PROFILE_ID: 46f80d0729c92d
-  DEPLOY_SNAPSHOT: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }}
-  DEPLOY_RELEASE: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/r') }}
+  DEPLOY: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/r')) }}
 jobs:
   check-format:
     if: github.event_name == 'pull_request'
@@ -36,37 +34,8 @@ jobs:
       - name: Run format checks
         run: |
           mvn spotless:check -Pjdk17 -B -U -e
-  prepare:
-    runs-on: ubuntu-22.04
-    outputs:
-      repositoryUrl: ${{ steps.repository.outputs.repositoryUrl }}
-    steps:
-      - name: Create staging repository
-        if: env.DEPLOY_RELEASE == 'true'
-        id: staging
-        run: |
-          echo "Creating staging repository with profile $STAGING_PROFILE_ID"
-          echo "<promoteRequest><data><description>Releasing TF Java - created by CI build</description></data></promoteRequest>" > request.xml
-          curl -X POST -d @request.xml -s -o response.xml -u ${{ secrets.CI_DEPLOY_USERNAME }}:${{ secrets.CI_DEPLOY_PASSWORD }} -H "Content-Type:application/xml" \
-              https://ossrh-staging-api.central.sonatype.com/service/local/staging/profiles/$STAGING_PROFILE_ID/start
-          export STAGING_REPOSITORY_ID=`awk -F'[<>]' '/stagedRepositoryId/{print $3}' response.xml`
-          echo "Staging repository created: $STAGING_REPOSITORY_ID"
-          echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Extract distribution repository URL
-        id: repository
-        run: |
-          if [[ "${{ env.DEPLOY_RELEASE }}" = "true" ]]; then
-            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.repository.url}" -DstagingRepositoryId=${{ steps.staging.outputs.stagingRepositoryId }}`
-          else
-            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.snapshotRepository.url}"`
-          fi
-          echo "Repository URL: $REPOSITORY_URL"
-          echo "::set-output name=repositoryUrl::$REPOSITORY_URL"
   linux-arm64:
     runs-on: ubuntu-2204-arm64-2c
-    needs: prepare
     strategy:
       matrix:
         ext: [""]
@@ -89,12 +58,18 @@ jobs:
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
-        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+      - name: Build native artifact
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Upload native artifact
+        if: env.DEPLOY == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-artifact-${{ github.job }}${{ matrix.ext }}
+          path: tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-*-${{ github.job }}*.jar
+          if-no-files-found: error
+          retention-days: 1
   linux-x86_64:
     runs-on: ubuntu-22.04
-    needs: prepare
     strategy:
       matrix:
         ext: ["", -gpu]
@@ -112,12 +87,18 @@ jobs:
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
-        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+      - name: Build native artifact
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Upload native artifact
+        if: env.DEPLOY == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-artifact-${{ github.job }}${{ matrix.ext }}
+          path: tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-*-${{ github.job }}*.jar
+          if-no-files-found: error
+          retention-days: 1
   macosx-arm64:
     runs-on: macos-14
-    needs: prepare
     strategy:
       matrix:
         ext: [""]
@@ -136,11 +117,18 @@ jobs:
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
-        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+      - name: Build native artifact
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Upload native artifact
+        if: env.DEPLOY == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-artifact-${{ github.job }}${{ matrix.ext }}
+          path: tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-*-${{ github.job }}*.jar
+          if-no-files-found: error
+          retention-days: 1
   deploy:
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [linux-x86_64, macosx-arm64, linux-arm64]
     runs-on: ubuntu-22.04
     steps:
@@ -149,14 +137,60 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
+          server-id: central
+          server-username: MAVEN_USERNAME # env variable for username in deploy
+          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # Handled as an env variable name reference
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Build project
+      - name: Download native artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: native-artifact-*
+          path: tensorflow-core/tensorflow-core-native/target
+          merge-multiple: true
+      - name: Build and Deploy snapshot artifacts
+        env:
+          MAVEN_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.CI_DEPLOY_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         run: |
           java -version
           mvn -version
-          mvn clean install -B -U -e -Pdeploying
-      - name: Deploy snapshot artifacts
+          mvn deploy -Pdeploying -B -e
+  release:
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/r') }}
+    needs: [linux-x86_64, macosx-arm64, linux-arm64]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          server-id: central
+          server-username: MAVEN_USERNAME # env variable for username in deploy
+          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # Handled as an env variable name reference
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Download native artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: native-artifact-*
+          path: tensorflow-core/tensorflow-core-native/target
+          merge-multiple: true
+      - name: Build and Deploy release artifacts
+        env:
+          MAVEN_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.CI_DEPLOY_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         run: |
-          echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn deploy -Pdeploying -B -e -Dmaven.test.skip=true
+          java -version
+          mvn -version
+          mvn deploy -Pdeploying -Preleasing -B -e
+          
