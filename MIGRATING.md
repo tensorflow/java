@@ -1,9 +1,10 @@
 # Migrating Between TensorFlow Java Releases
 
-TensorFlow Java is still in an alpha stage, therefore is subject to contain breaking changes between the different releases. This guide explain in detail
-how to migrate your code from a previous version to a new one that includes some changes that are not backward compatible.
+This guide explains in detail how to migrate your code from a pre-1.0 release to a 1.0 or newer release. Post 1.0
+releases have API stability as much as possible, though upstream TensorFlow does remove ops from time to time and
+consequently those ops will be removed from TensorFlow-Java
 
-## Migrating to 1.0.0
+## Migrating to 1.0.0 or newer
 
 TensorFlow-Java 1.0.0 requires Java 11 or later.
 

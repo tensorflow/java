@@ -26,7 +26,7 @@ The following describes the layout of the repository and its different artifacts
   * **Intended audience**: neural network developers.
   * Primary API for building and training neural networks with TensorFlow.
 
-### [ndarray](https://github.com/tensorflow/java-ndarray)
+### [tensorflow-ndarray](https://github.com/tensorflow/java/tree/master/tensorflow-ndarray)
   * **Intended audience**: any developer who needs a Java n-dimensional array implementation, whether or not they use it with TensorFlow.
   * Generic utility library for n-dimensional data I/O operations.
   * Used by TensorFlow but does not depend on TensorFlow.
