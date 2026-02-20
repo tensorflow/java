@@ -7,7 +7,7 @@
 
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-java</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.0</version>
   <packaging>pom</packaging>
 
   <name>TensorFlow Java Parent</name>
@@ -155,12 +155,54 @@
       <properties>
         <gpg.skip>false</gpg.skip>
       </properties>
-      <repositories>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.12.0</version>
+            <configuration>
+              <overview>./docs/overview.md</overview>
+              <!--<includeDependencySources>true</includeDependencySources>-->
+              <bottom>Copyright 2015, 2026 The TensorFlow Authors. All Rights Reserved.</bottom>
+              <additionalJOptions>
+                <additionalJOption>-Xmaxerrs</additionalJOption>
+                <additionalJOption>65536</additionalJOption>
+                <additionalJOption>-Xmaxwarns</additionalJOption>
+                <additionalJOption>65536</additionalJOption>
+              </additionalJOptions>
+              <doclint>none</doclint>
+              <failOnError>false</failOnError>
+              <minmemory>256m</minmemory>
+              <maxmemory>2048m</maxmemory>
+              <links>
+                <link>https://protobuf.dev/reference/java/api-docs</link>
+                <link>https://bytedeco.org/javacpp/apidocs</link>
+              </links>
+              <quiet>true</quiet>
+            </configuration>
+            <executions>
+              <execution>
+                <id>javadoc-site</id>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <!--repositories>
         <repository>
-          <id>ossrh-staging</id>
-          <name>OSSRH Sonatype Staging</name>
+          <id>central-staging</id>
+          <name>Maven Central Staging</name>
           <url>
-            https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
+            https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
           </url>
           <releases>
             <enabled>true</enabled>
@@ -169,7 +211,7 @@
             <enabled>false</enabled>
           </snapshots>
         </repository>
-      </repositories>
+      </repositories-->
     </profile>
 
     <profile>
@@ -508,7 +550,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.8</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -519,10 +561,7 @@
           </execution>
         </executions>
         <configuration>
-          <gpgArguments>
-            <arg>--pinentry-mode</arg>
-            <arg>loopback</arg>
-          </gpgArguments>
+          <signer>bc</signer>
         </configuration>
       </plugin>
       <plugin>
@@ -543,7 +582,7 @@
       <configuration>
           <overview>./docs/overview.md</overview>
           <!--<includeDependencySources>true</includeDependencySources>-->
-          <bottom>Copyright 2015, 2025 The TensorFlow Authors. All Rights Reserved. <![CDATA[<a href="http://tensorflow.github.io/java/index.html">TensorFlow-Java Main Documentation<a>]]></bottom>
+          <bottom>Copyright 2015, 2026 The TensorFlow Authors. All Rights Reserved.</bottom>
           <additionalJOptions>
               <additionalJOption>-Xmaxerrs</additionalJOption>
               <additionalJOption>65536</additionalJOption>
@@ -554,7 +593,6 @@
           <minmemory>256m</minmemory>
           <maxmemory>2048m</maxmemory>
           <links>
-              <link>https://tensorflow.github.io/java/javadoc-ndarray/v1.0.0/</link>
               <link>https://protobuf.dev/reference/java/api-docs</link>
               <link>https://bytedeco.org/javacpp/apidocs</link>
           </links>
@@ -599,17 +637,10 @@
           </java>
         </configuration>
       </plugin>
-      <!--FIXME: Enable this plugin again, and delete the distribution management section, 
-      once we find out how to deploy single native files in a staging repository by using it
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.9.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <publishingServerId>central</publishingServerId>
-        </configuration>
-      </plugin-->
+      </plugin>
     </plugins>
 
     <pluginManagement>
@@ -628,6 +659,15 @@
               <include>**/*Test.java</include>
             </includes>
             <useModulePath>false</useModulePath>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.11.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
           </configuration>
         </plugin>
       </plugins>
