@@ -193,7 +193,7 @@ Some things of note:
    ```
 2. In your local copy, checkout the master branch and increase the next snapshot version.
    ```
-   mvn versions:set -DnewVersion=1.1.0-SNAPSHOT
+   mvn versions:set -DnewVersion=1.3.0-SNAPSHOT
    ```
 3. Update the TensorFlow Java version to reflect the new snapshot at the following locations:
     - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L104
