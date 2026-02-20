@@ -28,7 +28,8 @@ The following describes the layout of the repository and its different artifacts
   * Intended audience: neural network developers
   * For more information: [tensorflow-framework/README.md](tensorflow-framework/README.md)
 
-*Note: The NdArray Library module has now its own [repository](https://github.com/tensorflow/java-ndarray) and has been moved out of TensorFlow Java.*
+* `tensorflow-ndarray`
+  * API for creating and manipulating n-dimensional arrays, can be used independently from TensorFlow.
 
 ## Communication
 
@@ -60,10 +61,11 @@ only binaries for the following are being **supported and distributed** by this 
 - `linux-x86_64-gpu`: Linux platforms on Intel/AMD chips with Cuda GPU support
 - `linux-arm64`: Linux platforms on Arm chips
 - `macosx-arm64`: MacOS X platforms on Apple Silicon chips
-- `windows-x86_64`: Windows platforms on Intel/AMD chips (v1.1.0 and earlier)
 
 Binaries for `macosx-x86_64` are available for TF-Java 1.0 series releases and earlier, they were dropped from
-TF-Java 1.1 and newer as they are no longer supported or released by Google.
+TF-Java 1.1 and newer as they are no longer supported or released by Google. Binaries for `windows-x86_64` are available
+for TF-Java 1.1 and earlier, they were dropped for the 1.2 release and newer as the native binaries are no longer supported or
+released by Google.
 
 For example, for building a JAR that uses TensorFlow and is targeted to be deployed only on Linux
 systems with no GPU support, you should add the following dependencies:
@@ -71,18 +73,18 @@ systems with no GPU support, you should add the following dependencies:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <classifier>linux-x86_64</classifier>
 </dependency>
 ```
 Or Gradle:
 ```groovy
-def tfVersion = '1.1.0'
+def tfVersion = '1.2.0'
 implementation "org.tensorflow:tensorflow-core-api:$tfVersion"
 implementation "org.tensorflow:tensorflow-core-native:$tfVersion:linux-x86_64"
 ```
@@ -93,34 +95,33 @@ native dependencies as follows:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-api</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
+  <classifier>linux-arm64</classifier>
+</dependency>
+<dependency>
+  <groupId>org.tensorflow</groupId>
+  <artifactId>tensorflow-core-native</artifactId>
+  <version>1.2.0</version>
   <classifier>linux-x86_64-gpu</classifier>
 </dependency>
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-native</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <classifier>macosx-arm64</classifier>
-</dependency>
-<dependency>
-  <groupId>org.tensorflow</groupId>
-  <artifactId>tensorflow-core-native</artifactId>
-  <version>1.1.0</version>
-  <classifier>windows-x86_64</classifier>
 </dependency>
 ```
 Or Gradle:
 ```groovy
-def tfVersion = '1.1.0'
+def tfVersion = '1.2.0'
 implementation "org.tensorflow:tensorflow-core-api:$tfVersion"
 implementation "org.tensorflow:tensorflow-core-native:$tfVersion:linux-x86_64-gpu"
 implementation "org.tensorflow:tensorflow-core-native:$tfVersion:macosx-arm64"
-implementation "org.tensorflow:tensorflow-core-native:$tfVersion:windows-x86_64"
 ```
 
 Only one dependency can be added per platform, meaning that you cannot add native dependencies to both `linux-x86_64` and 
@@ -135,7 +136,7 @@ For Ubuntu 24.04, you can install them with the following command:
 In some cases, it might be preferable to add a single dependency that includes transitively all the artifacts 
 required to run TensorFlow Java on any [supported platforms](README.md#individual-dependencies)
 
-- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-x86_64-arm64`, `macosx-arm64` and `windows-x86_64`
+- `tensorflow-core-platform`: Includes `tensorflow-core-api`, plus native artifacts for `linux-x86_64`, `linux-arm64`, and `macosx-arm64`
 
 For example, to run TensorFlow Java on any CPU platform for which a binary is being distributed by this project, you can 
 simply add this dependency to your application:
@@ -143,12 +144,12 @@ simply add this dependency to your application:
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 Or Gradle:
 ```groovy
-implementation "org.tensorflow:tensorflow-core-platform:1.1.0"
+implementation "org.tensorflow:tensorflow-core-platform:1.2.0"
 ```
 
 Be aware though that the builds of TensorFlow are quite voluminous and including too many native dependencies may
@@ -177,7 +178,7 @@ to add Sonatype OSS repository in your `pom.xml`, like the following
     <dependency>
         <groupId>org.tensorflow</groupId>
         <artifactId>tensorflow-core-platform</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.3.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 ```
@@ -192,9 +193,23 @@ repositories {
 
 dependencies {
     // Example of dependency, see section above for more options
-    implementation "org.tensorflow:tensorflow-core-platform:1.2.0-SNAPSHOT"
+    implementation "org.tensorflow:tensorflow-core-platform:1.3.0-SNAPSHOT"
 }
 ```
+
+## TensorFlow native libraries
+
+TensorFlow-Java is built on top of the native TensorFlow library, and uses [JavaCPP](https://github.com/bytedeco/javacpp)
+to call that library which in turn uses the Java Native Interface (JNI). In [Java 24 and newer](https://openjdk.org/jeps/472) 
+uses of JNI trigger a warning of the form:
+```
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by org.bytedeco.javacpp.Loader in an unnamed module (file:/.../.m2/repository/org/bytedeco/javacpp/1.5.12/javacpp-1.5.12.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+```
+This is expected, and adding the `--enable-native-access=ALL-UNNAMED` flag to enable JNI will suppress it. In a future
+Java version this warning may be turned into an error and the flag will be required to use TensorFlow-Java.
 
 ## TensorFlow/Java Version Support
 
@@ -215,7 +230,8 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 | 1.0.0-rc.2              | 2.16.2             | 11                   |
 | 1.0.0                   | 2.16.2             | 11                   |
 | 1.1.0                   | 2.18.0             | 11                   |
-| 1.2.0-SNAPSHOT          | 2.20.0             | 11                   |
+| 1.2.0                   | 2.20.0             | 11                   |
+| 1.3.0-SNAPSHOT          | 2.20.0             | 11                   |
 
 ## How to Contribute?
 

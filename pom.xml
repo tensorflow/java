@@ -7,7 +7,7 @@
 
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-java</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.0</version>
   <packaging>pom</packaging>
 
   <name>TensorFlow Java Parent</name>
@@ -550,7 +550,7 @@
       <configuration>
           <overview>./docs/overview.md</overview>
           <!--<includeDependencySources>true</includeDependencySources>-->
-          <bottom>Copyright 2015, 2025 The TensorFlow Authors. All Rights Reserved.</bottom>
+          <bottom>Copyright 2015, 2026 The TensorFlow Authors. All Rights Reserved.</bottom>
           <additionalJOptions>
               <additionalJOption>-Xmaxerrs</additionalJOption>
               <additionalJOption>65536</additionalJOption>
@@ -561,7 +561,6 @@
           <minmemory>256m</minmemory>
           <maxmemory>2048m</maxmemory>
           <links>
-              <link>https://tensorflow.github.io/java/javadoc-ndarray/v1.0.0/</link>
               <link>https://protobuf.dev/reference/java/api-docs</link>
               <link>https://bytedeco.org/javacpp/apidocs</link>
           </links>
