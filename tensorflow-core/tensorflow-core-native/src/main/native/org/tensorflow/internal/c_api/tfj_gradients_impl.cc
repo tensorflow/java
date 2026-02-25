@@ -19,10 +19,10 @@ limitations under the License.
 #include <stdlib.h>
 
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "tfj_graph.h"
+#include "tfj_scope.h"
 #include "tsl/platform/errors.h"
 #include "tensorflow/c/c_api.h"
 #include "tensorflow/c/tf_status.h"
@@ -33,7 +33,8 @@ namespace tensorflow {
         using namespace tsl;
         using namespace std;
 
-        unordered_map<string, TFJ_GradFuncAdapter> g_grad_func_adapters;
+        // Single Java-side dispatcher entry point (no native per-op map).
+        static TFJ_GradFuncAdapter g_dispatch_adapter = NULL;
 
         /// This method can be used to cast a pointer to/from a C struct that contains only that pointer. It is a bit
         ///
@@ -53,14 +54,10 @@ namespace tensorflow {
                               vector<Output>* grad_outputs)
         {
             const string& op_type = op.node()->type_string();
-            auto found_adapter = g_grad_func_adapters.find(op_type);
-            if (found_adapter == g_grad_func_adapters.end()) {
-                return errors::NotFound("No gradient adapter found for operation ", op_type);
-            }
 
-            TFJ_GradFuncAdapter adapter = found_adapter->second;
+            TFJ_GradFuncAdapter adapter = g_dispatch_adapter;
             if (adapter == NULL) {
-                return errors::Unknown("Null Java gradient adapter for operation ", op_type);
+                return errors::Unknown("Null Java dispatch gradient adapter for operation ", op_type);
             }
 
             int num_inputs = grad_inputs.size();
@@ -81,9 +78,13 @@ namespace tensorflow {
 
             TF_Output* outputs = NULL;
             LOG(INFO) << "Calling Java gradient function for operation of type " << op_type;
+
+            // IMPORTANT: TFJ_Scope is a wrapper struct (see tfj_scope_impl.cc). Do not cast Scope* to TFJ_Scope*.
+            TFJ_Scope tfj_scope{scope};
+
             int num_outputs = adapter(
                 static_cast<TFJ_GraphId>(scope.graph()),
-                struct_cast<TFJ_Scope>(const_cast<Scope*>(&scope)),
+                &tfj_scope,
                 struct_cast<TF_Operation>(op.node()),
                 inputs,
                 num_inputs,
@@ -142,16 +143,21 @@ bool TFJ_RegisterCustomGradient(const char* op_type, TFJ_GradFuncAdapter grad_fu
         return false;
     }
 
+    // Only a single native function pointer is used: it must always be the same dispatch adapter.
+    if (g_dispatch_adapter == NULL) {
+        g_dispatch_adapter = grad_func_adapter;
+    } else if (g_dispatch_adapter != grad_func_adapter) {
+        LOG(ERROR) << "Refusing to register a different Java dispatch gradient adapter";
+        return false;
+    }
+
     if (TFJ_HasGradient(op_type)) { // Check if gradient already exists otherwise the JVM might abort/crash
         LOG(WARNING) << "Tried to register Java gradient function for operation " << op_type
                      << ", which has already a registered function";
         return false;
     }
-    bool registered = GradOpRegistry::Global()->Register(op_type, CustomGradFunc);
-    if (registered) {
-        g_grad_func_adapters.insert({op_type, grad_func_adapter});
-    }
-    return registered;
+
+    return GradOpRegistry::Global()->Register(op_type, CustomGradFunc);
 }
 
 #else // #ifndef _WIN32
