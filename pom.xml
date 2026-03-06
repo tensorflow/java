@@ -31,7 +31,6 @@
   </scm>
 
   <modules>
-    <module>tensorflow-ndarray</module>
     <module>tensorflow-core</module>
     <module>tensorflow-framework</module>
   </modules>
