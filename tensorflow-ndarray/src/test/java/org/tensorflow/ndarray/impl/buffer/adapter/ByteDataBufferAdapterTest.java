@@ -12,16 +12,17 @@ public class ByteDataBufferAdapterTest extends ByteDataBufferTestBase {
     return LAYOUT.applyTo(DataBuffers.ofShorts(size * LAYOUT.scale()));
   }
 
-  private static ByteDataLayout<ShortDataBuffer> LAYOUT = new ByteDataLayout<ShortDataBuffer>() {
+  private static ByteDataLayout<ShortDataBuffer> LAYOUT =
+      new ByteDataLayout<ShortDataBuffer>() {
 
-    @Override
-    public void writeByte(ShortDataBuffer buffer, byte value, long index) {
-      buffer.setShort(value, index);
-    }
+        @Override
+        public void writeByte(ShortDataBuffer buffer, byte value, long index) {
+          buffer.setShort(value, index);
+        }
 
-    @Override
-    public byte readByte(ShortDataBuffer buffer, long index) {
-      return (byte)buffer.getShort(index);
-    }
-  };
+        @Override
+        public byte readByte(ShortDataBuffer buffer, long index) {
+          return (byte) buffer.getShort(index);
+        }
+      };
 }

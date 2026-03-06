@@ -18,10 +18,10 @@
 package org.tensorflow.ndarray.impl.buffer.raw;
 
 import java.util.Arrays;
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataStorageVisitor;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 final class BooleanRawDataBuffer extends AbstractRawDataBuffer<Boolean, BooleanDataBuffer>
     implements BooleanDataBuffer {
@@ -62,38 +62,40 @@ final class BooleanRawDataBuffer extends AbstractRawDataBuffer<Boolean, BooleanD
   @Override
   public BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    return dst.accept(new DataStorageVisitor<BooleanDataBuffer>() {
+    return dst.accept(
+        new DataStorageVisitor<BooleanDataBuffer>() {
 
-      @Override
-      public BooleanDataBuffer visit(boolean[] array, int offset, int length) {
-        memory.copyTo(UnsafeMemoryHandle.fromArray(array, offset, length), size);
-        return BooleanRawDataBuffer.this;
-      }
-
-      @Override
-      public BooleanDataBuffer visit(long address, long length, long scale) {
-        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
-        return BooleanRawDataBuffer.this;
-      }
-
-      @Override
-      public BooleanDataBuffer fallback() {
-        if (dst instanceof BooleanDataBuffer) {
-          BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
-          for (long idx = 0L; idx < size; ++idx) {
-            booleanDst.setBoolean(getBoolean(idx), idx);
+          @Override
+          public BooleanDataBuffer visit(boolean[] array, int offset, int length) {
+            memory.copyTo(UnsafeMemoryHandle.fromArray(array, offset, length), size);
+            return BooleanRawDataBuffer.this;
           }
-          return BooleanRawDataBuffer.this;
-        }
-        return slowCopyTo(dst, size);
-      }
-    });
+
+          @Override
+          public BooleanDataBuffer visit(long address, long length, long scale) {
+            memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+            return BooleanRawDataBuffer.this;
+          }
+
+          @Override
+          public BooleanDataBuffer fallback() {
+            if (dst instanceof BooleanDataBuffer) {
+              BooleanDataBuffer booleanDst = (BooleanDataBuffer) dst;
+              for (long idx = 0L; idx < size; ++idx) {
+                booleanDst.setBoolean(getBoolean(idx), idx);
+              }
+              return BooleanRawDataBuffer.this;
+            }
+            return slowCopyTo(dst, size);
+          }
+        });
   }
 
   @Override
   public <R> R accept(DataStorageVisitor<R> visitor) {
     if (memory.isArray()) {
-      return visitor.visit((boolean[])memory.object, memory.arrayOffset(boolean[].class), (int)memory.size());
+      return visitor.visit(
+          (boolean[]) memory.object, memory.arrayOffset(boolean[].class), (int) memory.size());
     }
     return visitor.visit(memory.byteOffset, memory.byteSize, memory.scale);
   }
@@ -106,33 +108,34 @@ final class BooleanRawDataBuffer extends AbstractRawDataBuffer<Boolean, BooleanD
     if (!(obj instanceof BooleanDataBuffer)) {
       return super.equals(obj);
     }
-    BooleanDataBuffer other = (BooleanDataBuffer)obj;
+    BooleanDataBuffer other = (BooleanDataBuffer) obj;
     if (size() != other.size()) {
       return false;
     }
-    return other.accept(new DataStorageVisitor<Boolean>() {
+    return other.accept(
+        new DataStorageVisitor<Boolean>() {
 
-      @Override
-      public Boolean visit(boolean[] array, int offset, int length) {
-        if (memory.isArray() && memory.arrayOffset(boolean[].class) == 0 && offset == 0) {
-          boolean[] thisArray = memory.array();
-          if (thisArray.length == array.length) {
-            return Arrays.equals(thisArray, array);
+          @Override
+          public Boolean visit(boolean[] array, int offset, int length) {
+            if (memory.isArray() && memory.arrayOffset(boolean[].class) == 0 && offset == 0) {
+              boolean[] thisArray = memory.array();
+              if (thisArray.length == array.length) {
+                return Arrays.equals(thisArray, array);
+              }
+            }
+            return fallback();
           }
-        }
-        return fallback();
-      }
 
-      @Override
-      public Boolean fallback() {
-        for (long idx = 0L; idx < size(); ++idx) {
-          if (other.getBoolean(idx) != getBoolean(idx)) {
-            return false;
+          @Override
+          public Boolean fallback() {
+            for (long idx = 0L; idx < size(); ++idx) {
+              if (other.getBoolean(idx) != getBoolean(idx)) {
+                return false;
+              }
+            }
+            return true;
           }
-        }
-        return true;
-      }
-    });
+        });
   }
 
   @Override

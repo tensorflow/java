@@ -26,7 +26,7 @@ import org.tensorflow.ndarray.impl.buffer.adapter.DataBufferAdapterFactory;
  * @param <S> type of buffer this layout can be applied to
  * @see DataLayout
  */
-public interface LongDataLayout<S extends DataBuffer<?>>  extends DataLayout<S, Long> {
+public interface LongDataLayout<S extends DataBuffer<?>> extends DataLayout<S, Long> {
 
   @Override
   default LongDataBuffer applyTo(S buffer) {

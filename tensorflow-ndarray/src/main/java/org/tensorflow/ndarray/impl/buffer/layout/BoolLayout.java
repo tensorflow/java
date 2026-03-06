@@ -20,9 +20,7 @@ package org.tensorflow.ndarray.impl.buffer.layout;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.BooleanDataLayout;
 
-/**
- * Data layout that converts booleans from/to bytes.
- */
+/** Data layout that converts booleans from/to bytes. */
 public final class BoolLayout implements BooleanDataLayout<ByteDataBuffer> {
 
   @Override
@@ -37,7 +35,7 @@ public final class BoolLayout implements BooleanDataLayout<ByteDataBuffer> {
 
   // Visible for testing
   static byte booleanToByte(boolean b) {
-    return (byte)(b ? 0x1 : 0x0);
+    return (byte) (b ? 0x1 : 0x0);
   }
 
   // Visible for testing

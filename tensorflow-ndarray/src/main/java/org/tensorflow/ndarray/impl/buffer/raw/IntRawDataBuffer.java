@@ -18,10 +18,10 @@
 package org.tensorflow.ndarray.impl.buffer.raw;
 
 import java.nio.IntBuffer;
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataStorageVisitor;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffer>
     implements IntDataBuffer {
@@ -62,38 +62,41 @@ final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffe
   @Override
   public IntDataBuffer copyTo(DataBuffer<Integer> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    return dst.accept(new DataStorageVisitor<IntDataBuffer>() {
+    return dst.accept(
+        new DataStorageVisitor<IntDataBuffer>() {
 
-      @Override
-      public IntDataBuffer visit(IntBuffer buffer) {
-        if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
-        } else if (memory.isArray()) {
-          buffer.put(memory.toArrayIntBuffer());
-        } else {
-          slowCopyTo(dst, size);
-        }
-        return IntRawDataBuffer.this;
-      }
-
-      @Override
-      public IntDataBuffer visit(long address, long length, long scale) {
-        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
-        return IntRawDataBuffer.this;
-      }
-
-      @Override
-      public IntDataBuffer fallback() {
-        if (dst instanceof IntDataBuffer) {
-          IntDataBuffer intDst = (IntDataBuffer)dst;
-          for (long idx = 0L; idx < size; ++idx) {
-            intDst.setInt(getInt(idx), idx);
+          @Override
+          public IntDataBuffer visit(IntBuffer buffer) {
+            if (buffer.hasArray()) {
+              memory.copyTo(
+                  UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()),
+                  size);
+            } else if (memory.isArray()) {
+              buffer.put(memory.toArrayIntBuffer());
+            } else {
+              slowCopyTo(dst, size);
+            }
+            return IntRawDataBuffer.this;
           }
-          return IntRawDataBuffer.this;
-        }
-        return slowCopyTo(dst, size);
-      }
-    });
+
+          @Override
+          public IntDataBuffer visit(long address, long length, long scale) {
+            memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+            return IntRawDataBuffer.this;
+          }
+
+          @Override
+          public IntDataBuffer fallback() {
+            if (dst instanceof IntDataBuffer) {
+              IntDataBuffer intDst = (IntDataBuffer) dst;
+              for (long idx = 0L; idx < size; ++idx) {
+                intDst.setInt(getInt(idx), idx);
+              }
+              return IntRawDataBuffer.this;
+            }
+            return slowCopyTo(dst, size);
+          }
+        });
   }
 
   @Override
@@ -112,30 +115,31 @@ final class IntRawDataBuffer extends AbstractRawDataBuffer<Integer, IntDataBuffe
     if (!(obj instanceof IntDataBuffer)) {
       return super.equals(obj);
     }
-    IntDataBuffer other = (IntDataBuffer)obj;
+    IntDataBuffer other = (IntDataBuffer) obj;
     if (size() != other.size()) {
       return false;
     }
-    return other.accept(new DataStorageVisitor<Boolean>() {
+    return other.accept(
+        new DataStorageVisitor<Boolean>() {
 
-      @Override
-      public Boolean visit(IntBuffer buffer) {
-        if (memory.isArray()) {
-          return buffer.equals(memory.toArrayIntBuffer());
-        }
-        return fallback();
-      }
-
-      @Override
-      public Boolean fallback() {
-        for (long idx = 0L; idx < size(); ++idx) {
-          if (other.getInt(idx) != getInt(idx)) {
-            return false;
+          @Override
+          public Boolean visit(IntBuffer buffer) {
+            if (memory.isArray()) {
+              return buffer.equals(memory.toArrayIntBuffer());
+            }
+            return fallback();
           }
-        }
-        return true;
-      }
-    });
+
+          @Override
+          public Boolean fallback() {
+            for (long idx = 0L; idx < size(); ++idx) {
+              if (other.getInt(idx) != getInt(idx)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
   }
 
   @Override

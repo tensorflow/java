@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import java.nio.ReadOnlyBufferException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -26,12 +31,6 @@ import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.impl.sparse.slice.IntSparseSlice;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * sparse array for the int data type
@@ -107,6 +106,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
   IntSparseNdArray(IntDataBuffer dataBuffer, DimensionalSpace dimensions) {
     this(dataBuffer, 0, dimensions);
   }
+
   /**
    * Creates a IntSparseNdArray
    *
@@ -227,6 +227,7 @@ public class IntSparseNdArray extends AbstractSparseNdArray<Integer, IntNdArray>
   public static IntSparseNdArray create(Shape shape) {
     return new IntSparseNdArray(DimensionalSpace.create(shape));
   }
+
   /**
    * Creates a new empty IntSparseNdArray from a data buffer
    *

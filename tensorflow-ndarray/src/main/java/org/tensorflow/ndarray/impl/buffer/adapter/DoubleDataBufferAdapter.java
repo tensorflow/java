@@ -17,13 +17,13 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DoubleDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Double, DoubleDataBuffer>
-    implements DoubleDataBuffer {
+class DoubleDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Double, DoubleDataBuffer> implements DoubleDataBuffer {
 
   @Override
   public double getDouble(long index) {
@@ -60,7 +60,7 @@ class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffe
   public DoubleDataBuffer copyTo(DataBuffer<Double> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof DoubleDataBuffer) {
-      DoubleDataBuffer doubleDst = (DoubleDataBuffer)dst;
+      DoubleDataBuffer doubleDst = (DoubleDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         doubleDst.setDouble(getDouble(idx), idx);
       }
@@ -72,19 +72,20 @@ class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffe
   @Override
   @SuppressWarnings("unchecked")
   public DoubleDataBuffer offset(long index) {
-    return new DoubleDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new DoubleDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DoubleDataBuffer narrow(long size) {
-    return new DoubleDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new DoubleDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DoubleDataBuffer slice(long index, long size) {
-    return new DoubleDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new DoubleDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -95,7 +96,7 @@ class DoubleDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffe
     if (!(obj instanceof DoubleDataBuffer)) {
       return super.equals(obj);
     }
-    DoubleDataBuffer other = (DoubleDataBuffer)obj;
+    DoubleDataBuffer other = (DoubleDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

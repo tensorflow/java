@@ -29,17 +29,18 @@ public class ShortDataBufferAdapterTest extends ShortDataBufferTestBase {
     return LAYOUT.applyTo(DataBuffers.ofBytes(size * LAYOUT.scale()));
   }
 
-  private static ShortDataLayout<ByteDataBuffer> LAYOUT = new ShortDataLayout<ByteDataBuffer>() {
+  private static ShortDataLayout<ByteDataBuffer> LAYOUT =
+      new ShortDataLayout<ByteDataBuffer>() {
 
-    @Override
-    public void writeShort(ByteDataBuffer buffer, short value, long index) {
-      buffer.setByte((byte)(((value & 0x8000) >> 8) | (value & 0x7F)), index);
-    }
+        @Override
+        public void writeShort(ByteDataBuffer buffer, short value, long index) {
+          buffer.setByte((byte) (((value & 0x8000) >> 8) | (value & 0x7F)), index);
+        }
 
-    @Override
-    public short readShort(ByteDataBuffer buffer, long index) {
-      int b = buffer.getByte(index);
-      return (short)(((b & 0x80) << 8) | (b & 0x7F));
-    }
-  };
+        @Override
+        public short readShort(ByteDataBuffer buffer, long index) {
+          int b = buffer.getByte(index);
+          return (short) (((b & 0x80) << 8) | (b & 0x7F));
+        }
+      };
 }

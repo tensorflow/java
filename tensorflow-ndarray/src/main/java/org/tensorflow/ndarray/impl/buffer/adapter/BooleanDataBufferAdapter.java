@@ -17,13 +17,13 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.BooleanDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Boolean, BooleanDataBuffer>
-    implements BooleanDataBuffer {
+class BooleanDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Boolean, BooleanDataBuffer> implements BooleanDataBuffer {
 
   @Override
   public boolean getBoolean(long index) {
@@ -60,7 +60,7 @@ class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuff
   public BooleanDataBuffer copyTo(DataBuffer<Boolean> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof BooleanDataBuffer) {
-      BooleanDataBuffer booleanDst = (BooleanDataBuffer)dst;
+      BooleanDataBuffer booleanDst = (BooleanDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         booleanDst.setBoolean(getBoolean(idx), idx);
       }
@@ -72,19 +72,20 @@ class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuff
   @Override
   @SuppressWarnings("unchecked")
   public BooleanDataBuffer offset(long index) {
-    return new BooleanDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new BooleanDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public BooleanDataBuffer narrow(long size) {
-    return new BooleanDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new BooleanDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public BooleanDataBuffer slice(long index, long size) {
-    return new BooleanDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new BooleanDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -95,7 +96,7 @@ class BooleanDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuff
     if (!(obj instanceof BooleanDataBuffer)) {
       return super.equals(obj);
     }
-    BooleanDataBuffer other = (BooleanDataBuffer)obj;
+    BooleanDataBuffer other = (BooleanDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

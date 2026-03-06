@@ -134,11 +134,11 @@ public interface DataStorageVisitor<R> {
   }
 
   /**
-   * Fallback method called if the visitor implementation does not support the type of backing storage
-   * for a given {@link DataBuffer}
+   * Fallback method called if the visitor implementation does not support the type of backing
+   * storage for a given {@link DataBuffer}
    *
-   * <p>The implementor of this interface must override the {@code visit} methods for type of storage
-   * it supports. If {@link DataBuffer#accept(DataStorageVisitor)} is called on a buffer
+   * <p>The implementor of this interface must override the {@code visit} methods for type of
+   * storage it supports. If {@link DataBuffer#accept(DataStorageVisitor)} is called on a buffer
    * using a different type of storage, the invocation will fallback to this method.
    *
    * @return any value

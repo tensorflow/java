@@ -21,9 +21,7 @@ import java.nio.charset.Charset;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 
-/**
- * Data layout that converts a String to/from a sequence of bytes applying a given charset.
- */
+/** Data layout that converts a String to/from a sequence of bytes applying a given charset. */
 public final class StringLayout implements DataLayout<DataBuffer<byte[]>, String> {
 
   public static StringLayout of(Charset charset) {

@@ -1,31 +1,28 @@
 /*
- Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray;
 
+import java.util.stream.DoubleStream;
+import java.util.stream.StreamSupport;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.index.Index;
 
-import java.util.stream.DoubleStream;
-import java.util.stream.StreamSupport;
-
-/**
- * An {@link NdArray} of doubles.
- */
+/** An {@link NdArray} of doubles. */
 public interface DoubleNdArray extends NdArray<Double> {
 
   /**
@@ -33,19 +30,22 @@ public interface DoubleNdArray extends NdArray<Double> {
    *
    * <p>To access the scalar element, the number of coordinates provided must be equal to the number
    * of dimensions of this array (i.e. its rank). For example:
-   * <pre>{@code
-   *  DoubleNdArray matrix = NdArrays.ofDoubles(shape(2, 2));  // matrix rank = 2
-   *  matrix.getDouble(0, 1);  // succeeds, returns 0.0
-   *  matrix.getDouble(0);  // throws IllegalRankException
    *
-   *  DoubleNdArray scalar = matrix.get(0, 1);  // scalar rank = 0
-   *  scalar.getDouble();  // succeeds, returns 0.0
+   * <pre>{@code
+   * DoubleNdArray matrix = NdArrays.ofDoubles(shape(2, 2));  // matrix rank = 2
+   * matrix.getDouble(0, 1);  // succeeds, returns 0.0
+   * matrix.getDouble(0);  // throws IllegalRankException
+   *
+   * DoubleNdArray scalar = matrix.get(0, 1);  // scalar rank = 0
+   * scalar.getDouble();  // succeeds, returns 0.0
    * }</pre>
    *
    * @param coordinates coordinates of the scalar to resolve
    * @return value of that scalar
-   * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their respective dimension
-   * @throws IllegalRankException if number of coordinates is not sufficient to access a scalar element
+   * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their
+   *     respective dimension
+   * @throws IllegalRankException if number of coordinates is not sufficient to access a scalar
+   *     element
    */
   double getDouble(long... coordinates);
 
@@ -54,33 +54,37 @@ public interface DoubleNdArray extends NdArray<Double> {
    *
    * <p>To access the scalar element, the number of coordinates provided must be equal to the number
    * of dimensions of this array (i.e. its rank). For example:
-   * <pre>{@code
-   *  DoubleNdArray matrix = NdArrays.ofDoubles(shape(2, 2));  // matrix rank = 2
-   *  matrix.setDouble(10.0, 0, 1);  // succeeds
-   *  matrix.setDouble(10.0, 0);  // throws IllegalRankException
    *
-   *  DoubleNdArray scalar = matrix.get(0, 1);  // scalar rank = 0
-   *  scalar.setDouble(10.0);  // succeeds
+   * <pre>{@code
+   * DoubleNdArray matrix = NdArrays.ofDoubles(shape(2, 2));  // matrix rank = 2
+   * matrix.setDouble(10.0, 0, 1);  // succeeds
+   * matrix.setDouble(10.0, 0);  // throws IllegalRankException
+   *
+   * DoubleNdArray scalar = matrix.get(0, 1);  // scalar rank = 0
+   * scalar.setDouble(10.0);  // succeeds
    * }</pre>
    *
    * @param value value to assign
    * @param coordinates coordinates of the scalar to assign
    * @return this array
-   * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their respective dimension
-   * @throws IllegalRankException if number of coordinates is not sufficient to access a scalar element
+   * @throws IndexOutOfBoundsException if some coordinates are outside the limits of their
+   *     respective dimension
+   * @throws IllegalRankException if number of coordinates is not sufficient to access a scalar
+   *     element
    */
   DoubleNdArray setDouble(double value, long... coordinates);
 
   /**
    * Retrieve all scalar values of this array as a stream of doubles.
    *
-   * <p>For {@code rank() > 1} arrays, all vectors of the last dimension are collated so that the scalar values are
-   * returned in sequential order.</p>
+   * <p>For {@code rank() > 1} arrays, all vectors of the last dimension are collated so that the
+   * scalar values are returned in sequential order.
    *
    * @return scalar values as a stream
    */
   default DoubleStream streamOfDoubles() {
-    return StreamSupport.stream(scalars().spliterator(), false).mapToDouble(DoubleNdArray::getDouble);
+    return StreamSupport.stream(scalars().spliterator(), false)
+        .mapToDouble(DoubleNdArray::getDouble);
   }
 
   @Override

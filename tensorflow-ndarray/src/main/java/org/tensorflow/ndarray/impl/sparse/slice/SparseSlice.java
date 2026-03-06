@@ -14,6 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse.slice;
 
+import java.nio.ReadOnlyBufferException;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArraySequence;
 import org.tensorflow.ndarray.Shape;
@@ -24,8 +25,6 @@ import org.tensorflow.ndarray.impl.sequence.SingleElementSequence;
 import org.tensorflow.ndarray.impl.sequence.SlicingElementSequence;
 import org.tensorflow.ndarray.impl.sparse.AbstractSparseNdArray;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
 
 /**
  * A sparse window is a view into an AbstractSparseNdArray. It is used internally by the slice

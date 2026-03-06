@@ -1,6 +1,5 @@
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
@@ -10,9 +9,10 @@ import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.ByteDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Byte, ByteDataBuffer>
-    implements ByteDataBuffer {
+class ByteDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Byte, ByteDataBuffer> implements ByteDataBuffer {
 
   @Override
   public byte getByte(long index) {
@@ -49,7 +49,7 @@ class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   public ByteDataBuffer copyTo(DataBuffer<Byte> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof ByteDataBuffer) {
-      ByteDataBuffer byteDst = (ByteDataBuffer)dst;
+      ByteDataBuffer byteDst = (ByteDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         byteDst.setByte(getByte(idx), idx);
       }
@@ -91,19 +91,20 @@ class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   @Override
   @SuppressWarnings("unchecked")
   public ByteDataBuffer offset(long index) {
-    return new ByteDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new ByteDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public ByteDataBuffer narrow(long size) {
-    return new ByteDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new ByteDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public ByteDataBuffer slice(long index, long size) {
-    return new ByteDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new ByteDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -114,7 +115,7 @@ class ByteDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
     if (!(obj instanceof ByteDataBuffer)) {
       return super.equals(obj);
     }
-    ByteDataBuffer other = (ByteDataBuffer)obj;
+    ByteDataBuffer other = (ByteDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

@@ -36,7 +36,8 @@ public final class SlicingElementSequence<T, U extends NdArray<T>> implements Nd
     this(ndArray, dimensionIdx, ndArray.dimensions().from(dimensionIdx + 1));
   }
 
-  public SlicingElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx, DimensionalSpace elementDimensions) {
+  public SlicingElementSequence(
+      AbstractNdArray<T, U> ndArray, int dimensionIdx, DimensionalSpace elementDimensions) {
     this.ndArray = ndArray;
     this.dimensionIdx = dimensionIdx;
     this.elementDimensions = elementDimensions;
@@ -61,9 +62,10 @@ public final class SlicingElementSequence<T, U extends NdArray<T>> implements Nd
 
   @Override
   public void forEachIndexed(BiConsumer<long[], U> consumer) {
-    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx).forEachIndexed((long[] coords, long position) ->
-        consumer.accept(coords, ndArray.slice(position, elementDimensions))
-    );
+    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx)
+        .forEachIndexed(
+            (long[] coords, long position) ->
+                consumer.accept(coords, ndArray.slice(position, elementDimensions)));
   }
 
   @Override

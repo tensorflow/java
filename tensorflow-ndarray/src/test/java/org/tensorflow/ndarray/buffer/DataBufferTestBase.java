@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray.buffer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,9 +26,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import org.junit.jupiter.api.Test;
-import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.buffer.DataBufferWindow;
-import org.tensorflow.ndarray.buffer.DataBuffers;
 
 public abstract class DataBufferTestBase<T> {
 
@@ -77,7 +74,7 @@ public abstract class DataBufferTestBase<T> {
       subBuffer.getObject(2);
       fail();
     } catch (IndexOutOfBoundsException e) {
-      //as expected
+      // as expected
     }
     try {
       buffer.slice(2, 12);
@@ -196,21 +193,12 @@ public abstract class DataBufferTestBase<T> {
 
   @Test
   public void equalWithObjectBuffer() {
-    DataBuffer<T> buffer1 = allocate(2)
-        .setObject(valueOf(0L), 0)
-        .setObject(valueOf(1L), 1);
-    DataBuffer<T> buffer2 = allocate(2)
-        .setObject(valueOf(0L), 0)
-        .setObject(valueOf(1L), 1);
-    DataBuffer<T> buffer3 = allocate(2)
-        .setObject(valueOf(1L), 0)
-        .setObject(valueOf(0L), 1);
-    DataBuffer<T> buffer4 = allocate(1)
-        .setObject(valueOf(0L), 0);
-    DataBuffer<T> buffer5 = allocate(3)
-        .setObject(valueOf(0L), 0)
-        .setObject(valueOf(1L), 1)
-        .setObject(valueOf(2L), 2);
+    DataBuffer<T> buffer1 = allocate(2).setObject(valueOf(0L), 0).setObject(valueOf(1L), 1);
+    DataBuffer<T> buffer2 = allocate(2).setObject(valueOf(0L), 0).setObject(valueOf(1L), 1);
+    DataBuffer<T> buffer3 = allocate(2).setObject(valueOf(1L), 0).setObject(valueOf(0L), 1);
+    DataBuffer<T> buffer4 = allocate(1).setObject(valueOf(0L), 0);
+    DataBuffer<T> buffer5 =
+        allocate(3).setObject(valueOf(0L), 0).setObject(valueOf(1L), 1).setObject(valueOf(2L), 2);
 
     assertTrue(buffer1.equals(buffer2));
     assertTrue(buffer2.equals(buffer1));
@@ -237,7 +225,7 @@ public abstract class DataBufferTestBase<T> {
     try {
       bufferWindow = buffer.window(4);
     } catch (UnsupportedOperationException e) {
-      return;  // skip test if this buffer does not support windows
+      return; // skip test if this buffer does not support windows
     }
     assertEquals(0, bufferWindow.offset());
     assertEquals(4, bufferWindow.size());

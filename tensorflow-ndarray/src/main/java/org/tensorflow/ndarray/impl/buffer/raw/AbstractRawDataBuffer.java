@@ -17,10 +17,10 @@
 
 package org.tensorflow.ndarray.impl.buffer.raw;
 
-import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBufferWindow;
+import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 @SuppressWarnings("unchecked")
 abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends AbstractDataBuffer<T> {
@@ -37,37 +37,37 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
   public B read(Object dst, int dstLength) {
     Validator.readArgs(this, dstLength, 0, dstLength);
     memory.copyTo(UnsafeMemoryHandle.fromArray(dst, dstLength), dstLength);
-    return (B)this;
+    return (B) this;
   }
 
   public B read(Object dst, int dstLength, int offset, int length) {
     Validator.readArgs(this, dstLength, offset, length);
     memory.copyTo(UnsafeMemoryHandle.fromArray(dst, dstLength).offset(offset), length);
-    return (B)this;
+    return (B) this;
   }
 
   public B write(Object src, int srcLength) {
     Validator.writeArgs(this, srcLength, 0, srcLength);
     UnsafeMemoryHandle.fromArray(src, srcLength).copyTo(memory, srcLength);
-    return (B)this;
+    return (B) this;
   }
 
   public B write(Object src, int srcLength, int offset, int length) {
     Validator.writeArgs(this, srcLength, offset, length);
     UnsafeMemoryHandle.fromArray(src, srcLength).offset(offset).copyTo(memory, length);
-    return (B)this;
+    return (B) this;
   }
 
   @Override
   public B copyTo(DataBuffer<T> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof AbstractRawDataBuffer) {
-      AbstractRawDataBuffer<?, ?> unsafeDst = (AbstractRawDataBuffer<?, ?>)dst;
+      AbstractRawDataBuffer<?, ?> unsafeDst = (AbstractRawDataBuffer<?, ?>) dst;
       memory.copyTo(unsafeDst.memory, size);
     } else {
       super.copyTo(dst, size);
     }
-    return (B)this;
+    return (B) this;
   }
 
   @Override
@@ -79,7 +79,7 @@ abstract class AbstractRawDataBuffer<T, B extends DataBuffer<T>> extends Abstrac
   @Override
   public DataBufferWindow<B> window(long size) {
     B windowBuffer = instantiate(memory.slice(0, size));
-    return new RawDataBufferWindow<>((AbstractRawDataBuffer<?, B>)windowBuffer, size());
+    return new RawDataBufferWindow<>((AbstractRawDataBuffer<?, B>) windowBuffer, size());
   }
 
   protected final UnsafeMemoryHandle memory;

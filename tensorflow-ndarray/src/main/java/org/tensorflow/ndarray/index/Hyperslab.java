@@ -20,20 +20,18 @@ import org.tensorflow.ndarray.impl.dimension.Dimension;
 
 /**
  * A hyperslab is a rectangular pattern defined by four arrays.
- * 
- * The {@code start} defines the origin of the hyperslab in the original coordinates.
- * The {@code stride} is the number of elements to increment between selected elements.
- * A stride of '1' is every element, a stride of '2' is every second element, etc.
- * The default stride is 1.
- * The {@code count} is the number of elements in the hyperslab selection.
- * When the stride is 1, the selection is a hyper rectangle with a corner at {@code start}
- * and size {@code count[0]} by {@code count[1]} by ...
- * When stride is greater than one, the hyperslab bounded by start and the corners 
- * defined by {@code stride[n] * count[n]}.
- * The {@code block} is a count on the number of repetitions of the hyperslab. 
- * The default block size is '1', which is one hyperslab. A block of 2 would be 
- * two hyperslabs in that dimension, with the second starting at {@code start[n]+ (count[n] * stride[n]) + 1}.
- * 
+ *
+ * <p>The {@code start} defines the origin of the hyperslab in the original coordinates. The {@code
+ * stride} is the number of elements to increment between selected elements. A stride of '1' is
+ * every element, a stride of '2' is every second element, etc. The default stride is 1. The {@code
+ * count} is the number of elements in the hyperslab selection. When the stride is 1, the selection
+ * is a hyper rectangle with a corner at {@code start} and size {@code count[0]} by {@code count[1]}
+ * by ... When stride is greater than one, the hyperslab bounded by start and the corners defined by
+ * {@code stride[n] * count[n]}. The {@code block} is a count on the number of repetitions of the
+ * hyperslab. The default block size is '1', which is one hyperslab. A block of 2 would be two
+ * hyperslabs in that dimension, with the second starting at {@code start[n]+ (count[n] * stride[n])
+ * + 1}.
+ *
  * @see https://portal.hdfgroup.org/display/HDF5/Reading+From+or+Writing+To+a+Subset+of+a+Dataset
  * @see https://portal.hdfgroup.org/display/HDF5/H5S_SELECT_HYPERSLAB
  * @see https://support.hdfgroup.org/HDF5/doc1.6/UG/12_Dataspaces.html

@@ -18,11 +18,10 @@
 package org.tensorflow.ndarray.impl.buffer.raw;
 
 import java.nio.FloatBuffer;
-
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataStorageVisitor;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 final class FloatRawDataBuffer extends AbstractRawDataBuffer<Float, FloatDataBuffer>
     implements FloatDataBuffer {
@@ -63,38 +62,41 @@ final class FloatRawDataBuffer extends AbstractRawDataBuffer<Float, FloatDataBuf
   @Override
   public FloatDataBuffer copyTo(DataBuffer<Float> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    return dst.accept(new DataStorageVisitor<FloatDataBuffer>() {
+    return dst.accept(
+        new DataStorageVisitor<FloatDataBuffer>() {
 
-      @Override
-      public FloatDataBuffer visit(FloatBuffer buffer) {
-        if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
-        } else if (memory.isArray()) {
-          buffer.put(memory.toArrayFloatBuffer());
-        } else {
-          slowCopyTo(dst, size);
-        }
-        return FloatRawDataBuffer.this;
-      }
-
-      @Override
-      public FloatDataBuffer visit(long address, long length, long scale) {
-        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
-        return FloatRawDataBuffer.this;
-      }
-
-      @Override
-      public FloatDataBuffer fallback() {
-        if (dst instanceof FloatDataBuffer) {
-          FloatDataBuffer floatDst = (FloatDataBuffer)dst;
-          for (long idx = 0L; idx < size; ++idx) {
-            floatDst.setFloat(getFloat(idx), idx);
+          @Override
+          public FloatDataBuffer visit(FloatBuffer buffer) {
+            if (buffer.hasArray()) {
+              memory.copyTo(
+                  UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()),
+                  size);
+            } else if (memory.isArray()) {
+              buffer.put(memory.toArrayFloatBuffer());
+            } else {
+              slowCopyTo(dst, size);
+            }
+            return FloatRawDataBuffer.this;
           }
-          return FloatRawDataBuffer.this;
-        }
-        return slowCopyTo(dst, size);
-      }
-    });
+
+          @Override
+          public FloatDataBuffer visit(long address, long length, long scale) {
+            memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+            return FloatRawDataBuffer.this;
+          }
+
+          @Override
+          public FloatDataBuffer fallback() {
+            if (dst instanceof FloatDataBuffer) {
+              FloatDataBuffer floatDst = (FloatDataBuffer) dst;
+              for (long idx = 0L; idx < size; ++idx) {
+                floatDst.setFloat(getFloat(idx), idx);
+              }
+              return FloatRawDataBuffer.this;
+            }
+            return slowCopyTo(dst, size);
+          }
+        });
   }
 
   @Override
@@ -113,30 +115,31 @@ final class FloatRawDataBuffer extends AbstractRawDataBuffer<Float, FloatDataBuf
     if (!(obj instanceof FloatDataBuffer)) {
       return super.equals(obj);
     }
-    FloatDataBuffer other = (FloatDataBuffer)obj;
+    FloatDataBuffer other = (FloatDataBuffer) obj;
     if (size() != other.size()) {
       return false;
     }
-    return other.accept(new DataStorageVisitor<Boolean>() {
+    return other.accept(
+        new DataStorageVisitor<Boolean>() {
 
-      @Override
-      public Boolean visit(FloatBuffer buffer) {
-        if (memory.isArray()) {
-          return buffer.equals(memory.toArrayFloatBuffer());
-        }
-        return fallback();
-      }
-
-      @Override
-      public Boolean fallback() {
-        for (long idx = 0L; idx < size(); ++idx) {
-          if (other.getFloat(idx) != getFloat(idx)) {
-            return false;
+          @Override
+          public Boolean visit(FloatBuffer buffer) {
+            if (memory.isArray()) {
+              return buffer.equals(memory.toArrayFloatBuffer());
+            }
+            return fallback();
           }
-        }
-        return true;
-      }
-    });
+
+          @Override
+          public Boolean fallback() {
+            for (long idx = 0L; idx < size(); ++idx) {
+              if (other.getFloat(idx) != getFloat(idx)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
   }
 
   @Override

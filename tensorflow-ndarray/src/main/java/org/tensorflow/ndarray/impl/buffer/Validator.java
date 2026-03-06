@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray.impl.buffer;
 
 import java.nio.BufferOverflowException;
@@ -28,7 +28,8 @@ public class Validator {
       throw new IllegalArgumentException("Size must be non-negative");
     }
     if (size > maxSize) {
-      throw new IllegalArgumentException("Buffer size must be no greater than maximum size allowed (" + maxSize + ")");
+      throw new IllegalArgumentException(
+          "Buffer size must be no greater than maximum size allowed (" + maxSize + ")");
     }
   }
 
@@ -99,7 +100,8 @@ public class Validator {
       throw new IllegalArgumentException("Size must be non-negative");
     }
     if (size > buffer.size()) {
-      throw new IllegalArgumentException("Cannot narrow a buffer of size " + buffer.size() + " to " + size);
+      throw new IllegalArgumentException(
+          "Cannot narrow a buffer of size " + buffer.size() + " to " + size);
     }
   }
 
@@ -126,7 +128,8 @@ public class Validator {
       throw new IndexOutOfBoundsException("Length must be non-negative");
     }
     if (length > arrayLength - offset) {
-      throw new IndexOutOfBoundsException("Length must be no larger than array length minus the offset");
+      throw new IndexOutOfBoundsException(
+          "Length must be no larger than array length minus the offset");
     }
   }
 }

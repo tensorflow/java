@@ -17,13 +17,13 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.IntDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Integer, IntDataBuffer>
-    implements IntDataBuffer {
+class IntDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Integer, IntDataBuffer> implements IntDataBuffer {
 
   @Override
   public int getInt(long index) {
@@ -60,7 +60,7 @@ class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAd
   public IntDataBuffer copyTo(DataBuffer<Integer> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof IntDataBuffer) {
-      IntDataBuffer intDst = (IntDataBuffer)dst;
+      IntDataBuffer intDst = (IntDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         intDst.setInt(getInt(idx), idx);
       }
@@ -72,19 +72,20 @@ class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAd
   @Override
   @SuppressWarnings("unchecked")
   public IntDataBuffer offset(long index) {
-    return new IntDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new IntDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public IntDataBuffer narrow(long size) {
-    return new IntDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new IntDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public IntDataBuffer slice(long index, long size) {
-    return new IntDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new IntDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -95,7 +96,7 @@ class IntDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAd
     if (!(obj instanceof IntDataBuffer)) {
       return super.equals(obj);
     }
-    IntDataBuffer other = (IntDataBuffer)obj;
+    IntDataBuffer other = (IntDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

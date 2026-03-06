@@ -1,26 +1,26 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray.buffer;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.BitSet;
@@ -40,7 +40,7 @@ public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boole
   @Test
   public void writeAndReadFromArray() {
     BooleanDataBuffer buffer = allocate(10L);
-    boolean[] values = new boolean[]{true, false, false, true, false};
+    boolean[] values = new boolean[] {true, false, false, true, false};
 
     buffer.write(values);
     assertTrue(buffer.getObject(0));
@@ -68,15 +68,13 @@ public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boole
 
   @Test
   public void equalWithBitSetBuffer() {
-    BitSet bitSet1 = BitSet.valueOf(new byte[] { 0x01, 0x01 });
+    BitSet bitSet1 = BitSet.valueOf(new byte[] {0x01, 0x01});
     BooleanDataBuffer bitSet1Buffer = MiscDataBufferFactory.create(bitSet1, 12, true);
 
-    BitSet bitSet2 = BitSet.valueOf(new byte[] { 0x11, 0x01 });
+    BitSet bitSet2 = BitSet.valueOf(new byte[] {0x11, 0x01});
     BooleanDataBuffer bitSet2Buffer = MiscDataBufferFactory.create(bitSet2, 12, true);
 
-    BooleanDataBuffer buffer = allocate(12)
-        .setBoolean(true, 0)
-        .setBoolean(true, 8);
+    BooleanDataBuffer buffer = allocate(12).setBoolean(true, 0).setBoolean(true, 8);
 
     assertTrue(bitSet1Buffer.equals(buffer));
     assertTrue(buffer.equals(bitSet1Buffer));
@@ -89,15 +87,13 @@ public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boole
 
   @Test
   public void equalWithBooleanArrayBuffer() {
-    boolean[] array1 = new boolean[] { false, false, false, true, true, false };
+    boolean[] array1 = new boolean[] {false, false, false, true, true, false};
     BooleanDataBuffer array1Buffer = MiscDataBufferFactory.create(array1, true);
 
-    boolean[] array2 = new boolean[] { false, false, false, true, true, true };
+    boolean[] array2 = new boolean[] {false, false, false, true, true, true};
     BooleanDataBuffer array2Buffer = MiscDataBufferFactory.create(array2, true);
 
-    BooleanDataBuffer buffer = allocate(6)
-        .setBoolean(true, 3)
-        .setBoolean(true, 4);
+    BooleanDataBuffer buffer = allocate(6).setBoolean(true, 3).setBoolean(true, 4);
 
     assertTrue(array1Buffer.equals(buffer));
     assertTrue(buffer.equals(array1Buffer));
@@ -110,15 +106,13 @@ public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boole
 
   @Test
   public void equalWithBooleanObjectBuffer() {
-    Boolean[] array1 = new Boolean[] { false, false, false, true, true, false };
+    Boolean[] array1 = new Boolean[] {false, false, false, true, true, false};
     DataBuffer<Boolean> array1Buffer = MiscDataBufferFactory.create(array1, true);
 
-    boolean[] array2 = new boolean[] { false, false, false, true, true, true };
+    boolean[] array2 = new boolean[] {false, false, false, true, true, true};
     DataBuffer<Boolean> array2Buffer = MiscDataBufferFactory.create(array2, true);
 
-    BooleanDataBuffer buffer = allocate(6)
-        .setBoolean(true, 3)
-        .setBoolean(true, 4);
+    BooleanDataBuffer buffer = allocate(6).setBoolean(true, 3).setBoolean(true, 4);
 
     assertTrue(array1Buffer.equals(buffer));
     assertTrue(buffer.equals(array1Buffer));
@@ -131,10 +125,8 @@ public abstract class BooleanDataBufferTestBase extends DataBufferTestBase<Boole
 
   @Test
   public void notEqualWithOtherTypes() {
-    BooleanDataBuffer buffer = allocate(2)
-        .setBoolean(false, 0)
-        .setBoolean(true, 1);
-    ByteDataBuffer byteBuffer = DataBuffers.of((byte)0, (byte)1);
+    BooleanDataBuffer buffer = allocate(2).setBoolean(false, 0).setBoolean(true, 1);
+    ByteDataBuffer byteBuffer = DataBuffers.of((byte) 0, (byte) 1);
 
     assertFalse(buffer.equals(byteBuffer));
     assertFalse(byteBuffer.equals(buffer));

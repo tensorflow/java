@@ -19,7 +19,8 @@ package org.tensorflow.ndarray.impl.sequence;
 
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 
-class IndexedSequentialPositionIterator extends SequentialPositionIterator implements IndexedPositionIterator {
+class IndexedSequentialPositionIterator extends SequentialPositionIterator
+    implements IndexedPositionIterator {
 
   @Override
   public void forEachIndexed(CoordsLongConsumer consumer) {
@@ -43,7 +44,8 @@ class IndexedSequentialPositionIterator extends SequentialPositionIterator imple
     super(dimensions, dimensionIdx);
     this.shape = dimensions.shape().asArray();
     this.coords = new long[dimensionIdx + 1];
-    //this.coordsIncrementor = new CoordinatesIncrementor(dimensions.shape().asArray(), dimensionIdx);
+    // this.coordsIncrementor = new CoordinatesIncrementor(dimensions.shape().asArray(),
+    // dimensionIdx);
   }
 
   private final long[] shape;

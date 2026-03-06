@@ -17,7 +17,6 @@
 
 package org.tensorflow.ndarray.impl.buffer.raw;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
@@ -25,10 +24,9 @@ import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-/**
- * Factory of raw data buffers
- */
+/** Factory of raw data buffers */
 public class RawDataBufferFactory {
 
   public static boolean canBeUsed() {
@@ -86,7 +84,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new BooleanRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Byte.BYTES), readOnly);
+    return new BooleanRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Byte.BYTES), readOnly);
   }
 
   protected static ByteDataBuffer mapNativeBytes(long address, long size, boolean readOnly) {
@@ -94,7 +93,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new ByteRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Byte.BYTES), readOnly);
+    return new ByteRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Byte.BYTES), readOnly);
   }
 
   protected static DoubleDataBuffer mapNativeDoubles(long address, long size, boolean readOnly) {
@@ -102,7 +102,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new DoubleRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Double.BYTES), readOnly);
+    return new DoubleRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Double.BYTES), readOnly);
   }
 
   protected static FloatDataBuffer mapNativeFloats(long address, long size, boolean readOnly) {
@@ -110,7 +111,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new FloatRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Float.BYTES), readOnly);
+    return new FloatRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Float.BYTES), readOnly);
   }
 
   protected static IntDataBuffer mapNativeInts(long address, long size, boolean readOnly) {
@@ -118,7 +120,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new IntRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Integer.BYTES), readOnly);
+    return new IntRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Integer.BYTES), readOnly);
   }
 
   protected static LongDataBuffer mapNativeLongs(long address, long size, boolean readOnly) {
@@ -126,7 +129,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new LongRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Long.BYTES), readOnly);
+    return new LongRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Long.BYTES), readOnly);
   }
 
   protected static ShortDataBuffer mapNativeShorts(long address, long size, boolean readOnly) {
@@ -134,7 +138,8 @@ public class RawDataBufferFactory {
       throw new IllegalStateException("Raw data buffers are not available");
     }
     Validator.createArgs(size, MAX_64BITS);
-    return new ShortRawDataBuffer(UnsafeMemoryHandle.fromAddress(address, size, Short.BYTES), readOnly);
+    return new ShortRawDataBuffer(
+        UnsafeMemoryHandle.fromAddress(address, size, Short.BYTES), readOnly);
   }
 
   /*

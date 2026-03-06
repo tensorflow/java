@@ -23,10 +23,12 @@ import org.tensorflow.ndarray.buffer.DataBufferWindow;
 /**
  * A sequence of elements of an N-dimensional array.
  *
- * <p>An {@code NdArraySequence} is used to traverse an {@code NdArray} in a given dimension
- * and visit each of its elements.  For example, given a {@code n x m} matrix on the {@code [x, y]} axes,
+ * <p>An {@code NdArraySequence} is used to traverse an {@code NdArray} in a given dimension and
+ * visit each of its elements. For example, given a {@code n x m} matrix on the {@code [x, y]} axes,
  * elements are iterated in the following order:
- * <p>x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>, x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
+ *
+ * <p>x<sub>0</sub>y<sub>0</sub>, x<sub>0</sub>y<sub>1</sub>, ..., x<sub>0</sub>y<sub>m-1</sub>,
+ * x<sub>1</sub>y<sub>0</sub>, x<sub>1</sub>y<sub>1</sub>, ..., x<sub>n-1</sub>y<sub>m-1</sub>
  *
  * @param <T> data type of the array being iterated
  */
@@ -35,8 +37,8 @@ public interface NdArraySequence<T extends NdArray<?>> extends Iterable<T> {
   /**
    * Visit each elements of this iteration and their respective coordinates.
    *
-   * <p><i>Important: the consumer method should not keep a reference to the coordinates
-   * as they might be mutable and reused during the iteration to improve performance.</i>
+   * <p><i>Important: the consumer method should not keep a reference to the coordinates as they
+   * might be mutable and reused during the iteration to improve performance.</i>
    *
    * @param consumer method to invoke for each elements
    */
@@ -45,19 +47,21 @@ public interface NdArraySequence<T extends NdArray<?>> extends Iterable<T> {
   /**
    * Returns each element as a new slice.
    *
-   * <p>Unlike conventional Java collections, elements of a {@code NdArraySequence} are transient, i.e. new {@code NdArray}
-   * instances are allocated for each iteration. To improve performance, the same instance can be recycled to view
-   * all elements of this sequence, using a {@link DataBufferWindow}.
+   * <p>Unlike conventional Java collections, elements of a {@code NdArraySequence} are transient,
+   * i.e. new {@code NdArray} instances are allocated for each iteration. To improve performance,
+   * the same instance can be recycled to view all elements of this sequence, using a {@link
+   * DataBufferWindow}.
    *
-   * <p>In some cases though, it might be preferable to disable such optimizations to ensure that each element returned is a
-   * new slice of the original array. For example, if one or more elements visited must live beyond the scope of the sequence
-   * iteration, {@code asSlices()} makes sure that all elements returned by the sequence are unique instances.
+   * <p>In some cases though, it might be preferable to disable such optimizations to ensure that
+   * each element returned is a new slice of the original array. For example, if one or more
+   * elements visited must live beyond the scope of the sequence iteration, {@code asSlices()} makes
+   * sure that all elements returned by the sequence are unique instances.
    *
    * <pre>{@code
-   *     final List<IntNdArray> vectors = new ArrayList<>();
-   *     IntNdArray matrix = NdArrays.ofInts(Shape.of(6, 6));
-   *     ndArray.elements(0).forEach(e -> vectors::add);  // Not safe, as `e` might always be the same recycled instance
-   *     ndArray.elements(0).asSlices().forEach(e -> vectors::add);  // Safe, each `e` is a distinct NdArray instance
+   * final List<IntNdArray> vectors = new ArrayList<>();
+   * IntNdArray matrix = NdArrays.ofInts(Shape.of(6, 6));
+   * ndArray.elements(0).forEach(e -> vectors::add);  // Not safe, as `e` might always be the same recycled instance
+   * ndArray.elements(0).asSlices().forEach(e -> vectors::add);  // Safe, each `e` is a distinct NdArray instance
    * }</pre>
    *
    * @return a sequence that returns each elements iterated as a new slice

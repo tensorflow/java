@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -23,13 +29,6 @@ import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.impl.sparse.slice.ObjectSparseSlice;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * sparse array for the any data type
@@ -269,6 +268,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
     src.copyTo(buffer);
     return new SparseNdArray<>(type, buffer, DimensionalSpace.create(src.shape()));
   }
+
   /**
    * Creates a new SparseNdArray from a NdArray
    *
@@ -360,6 +360,7 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
     setValues((U) NdArrays.vectorOfObjects(valuesArray));
     return this;
   }
+
   /**
    * Converts the sparse array to a dense array
    *
@@ -396,8 +397,9 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
   }
 
   /**
-   * A String showing the type, default value, number of elements and
-   * the dense shape of this sparse ndarray.
+   * A String showing the type, default value, number of elements and the dense shape of this sparse
+   * ndarray.
+   *
    * @return A string containing the type, default value, number of elements and shape.
    */
   @Override
@@ -412,7 +414,15 @@ public class SparseNdArray<T, U extends NdArray<T>> extends AbstractSparseNdArra
     } else {
       strDefault = "'" + defaultVal + "'";
     }
-    return this.getClass().getSimpleName() + "(type="+type.getSimpleName()+", defaultValue=" + strDefault
-            + ", numElements=" + numElements + ", shape=" + this.shape() + ")";
+    return this.getClass().getSimpleName()
+        + "(type="
+        + type.getSimpleName()
+        + ", defaultValue="
+        + strDefault
+        + ", numElements="
+        + numElements
+        + ", shape="
+        + this.shape()
+        + ")";
   }
 }

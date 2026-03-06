@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import java.nio.ReadOnlyBufferException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -26,12 +31,6 @@ import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.impl.sparse.slice.ShortSparseSlice;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * sparse array for the short data type

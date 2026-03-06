@@ -35,27 +35,29 @@ public class DoubleDataBufferAdapterTest extends DoubleDataBufferTestBase {
     return super.maxSize() / 3;
   }
 
-  private static DoubleDataLayout<ByteDataBuffer> LAYOUT = new DoubleDataLayout<ByteDataBuffer>() {
+  private static DoubleDataLayout<ByteDataBuffer> LAYOUT =
+      new DoubleDataLayout<ByteDataBuffer>() {
 
-    @Override
-    public void writeDouble(ByteDataBuffer buffer, double value, long index) {
-      long bits = Double.doubleToLongBits(value);
-      buffer.setByte((byte)((bits >> 56) & 0xFF), index);
-      buffer.setByte((byte)((bits >> 48) & 0xFF), index + 1);
-      buffer.setByte((byte)((bits >> 40) & 0xFF), index + 2);
-    }
+        @Override
+        public void writeDouble(ByteDataBuffer buffer, double value, long index) {
+          long bits = Double.doubleToLongBits(value);
+          buffer.setByte((byte) ((bits >> 56) & 0xFF), index);
+          buffer.setByte((byte) ((bits >> 48) & 0xFF), index + 1);
+          buffer.setByte((byte) ((bits >> 40) & 0xFF), index + 2);
+        }
 
-    @Override
-    public double readDouble(ByteDataBuffer buffer, long index) {
-      long byte7 = buffer.getByte(index);
-      long byte6 = buffer.getByte(index + 1);
-      long byte5 = buffer.getByte(index + 2);
-      return Double.longBitsToDouble(((byte7 & 0xFF) << 56) | ((byte6 & 0xFF) << 48) | ((byte5 & 0xFF) << 40));
-    }
+        @Override
+        public double readDouble(ByteDataBuffer buffer, long index) {
+          long byte7 = buffer.getByte(index);
+          long byte6 = buffer.getByte(index + 1);
+          long byte5 = buffer.getByte(index + 2);
+          return Double.longBitsToDouble(
+              ((byte7 & 0xFF) << 56) | ((byte6 & 0xFF) << 48) | ((byte5 & 0xFF) << 40));
+        }
 
-    @Override
-    public int scale() {
-      return 3;
-    }
-  };
+        @Override
+        public int scale() {
+          return 3;
+        }
+      };
 }

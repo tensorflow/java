@@ -24,15 +24,15 @@ import org.tensorflow.ndarray.impl.buffer.adapter.DataBufferAdapterFactory;
  *
  * <p>{@code DataLayout} instances are used to define a custom format for storing and reading data
  * of a {@link DataBuffer}. They provide a segregation layer between the type of data stored in the
- * buffer (the <i>buffer</i> type) and the type of data manipulated by the end user (the
- * <i>user</i> type).
+ * buffer (the <i>buffer</i> type) and the type of data manipulated by the end user (the <i>user</i>
+ * type).
  *
- * <p>Since the conversion methods are invoked for every value that is written or read, working
- * with data layouts may have a negative impact on the performances so using primitive types directly
+ * <p>Since the conversion methods are invoked for every value that is written or read, working with
+ * data layouts may have a negative impact on the performances so using primitive types directly
  * should be preferred whenever possible.
  *
- * <p>It is also recommended to implement immutable data layouts so they can be reapplied to multiple
- * buffers without reallocating a new instance for each of them. For example:
+ * <p>It is also recommended to implement immutable data layouts so they can be reapplied to
+ * multiple buffers without reallocating a new instance for each of them. For example:
  *
  * <pre>
  * class BigIntegerBufferAllocator {
@@ -80,12 +80,14 @@ public interface DataLayout<S extends DataBuffer<?>, T> {
    * <p>It is the responsibility of the implementors of this interface to write the converted value
    * to the given buffer before this call returns, using the most appropriate method. For example,
    * for a layout converting a {@code BigInteger} to a single {@code long},
+   *
    * <pre>
    * &#64;Override
    * public void writeObject(LongDataBuffer buffer, BigInteger value, long index) {
    *   buffer.setLong(value.longValue(), index);
    * }
    * </pre>
+   *
    * If a single user value scales over more than one buffer values, {@code index} indicates the
    * starting position of the sequence to be written to the buffer.
    *
@@ -102,12 +104,14 @@ public interface DataLayout<S extends DataBuffer<?>, T> {
    * <p>It is the responsibility of the implementors of this interface to read the value to be
    * converted from the given buffer, using the most appropriate method. For example, for a layout
    * that converting a single {@code long} to a {@code BigInteger},
+   *
    * <pre>
    * &#64;Override
    * public BigInteger readObject(LongDataBuffer buffer, long index) {
    *   return BigInteger.valueOf(buffer.getLong(index));
    * }
    * </pre>
+   *
    * If a single user value scales over more than one buffer values, {@code index} indicates the
    * starting position of the sequence to be read from the buffer.
    *
@@ -118,10 +122,11 @@ public interface DataLayout<S extends DataBuffer<?>, T> {
   T readObject(S buffer, long index);
 
   /**
-   * Indicates the number of buffer values are required to represent a single user value, default is 1.
+   * Indicates the number of buffer values are required to represent a single user value, default is
+   * 1.
    *
-   * <p>Scale must be positive and must be an integer, meaning that a single buffer value in a buffer cannot
-   * be used to represent more than one user value.
+   * <p>Scale must be positive and must be an integer, meaning that a single buffer value in a
+   * buffer cannot be used to represent more than one user value.
    */
   default int scale() {
     return 1;

@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import java.nio.ReadOnlyBufferException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -26,12 +31,6 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.impl.sparse.slice.DoubleSparseSlice;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A sparse array for the double data type
@@ -107,6 +106,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
   DoubleSparseNdArray(DoubleDataBuffer dataBuffer, DimensionalSpace dimensions) {
     this(dataBuffer, 0d, dimensions);
   }
+
   /**
    * Creates a DoubleSparseNdArray
    *
@@ -260,6 +260,7 @@ public class DoubleSparseNdArray extends AbstractSparseNdArray<Double, DoubleNdA
     src.copyTo(buffer);
     return new DoubleSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
+
   /**
    * Creates a new DoubleSparseNdArray from a DoubleNdArray
    *

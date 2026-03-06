@@ -18,7 +18,6 @@
 package org.tensorflow.ndarray.impl.buffer.raw;
 
 import java.nio.ByteBuffer;
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
@@ -28,6 +27,7 @@ import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 final class ByteRawDataBuffer extends AbstractRawDataBuffer<Byte, ByteDataBuffer>
     implements ByteDataBuffer {
@@ -68,38 +68,41 @@ final class ByteRawDataBuffer extends AbstractRawDataBuffer<Byte, ByteDataBuffer
   @Override
   public ByteDataBuffer copyTo(DataBuffer<Byte> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    return dst.accept(new DataStorageVisitor<ByteDataBuffer>() {
+    return dst.accept(
+        new DataStorageVisitor<ByteDataBuffer>() {
 
-      @Override
-      public ByteDataBuffer visit(ByteBuffer buffer) {
-        if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
-        } else if (memory.isArray()) {
-          buffer.put(memory.toArrayByteBuffer());
-        } else {
-          slowCopyTo(dst, size);
-        }
-        return ByteRawDataBuffer.this;
-      }
-
-      @Override
-      public ByteDataBuffer visit(long address, long length, long scale) {
-        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
-        return ByteRawDataBuffer.this;
-      }
-
-      @Override
-      public ByteDataBuffer fallback() {
-        if (dst instanceof ByteDataBuffer) {
-          ByteDataBuffer byteDst = (ByteDataBuffer)dst;
-          for (long idx = 0L; idx < size; ++idx) {
-            byteDst.setByte(getByte(idx), idx);
+          @Override
+          public ByteDataBuffer visit(ByteBuffer buffer) {
+            if (buffer.hasArray()) {
+              memory.copyTo(
+                  UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()),
+                  size);
+            } else if (memory.isArray()) {
+              buffer.put(memory.toArrayByteBuffer());
+            } else {
+              slowCopyTo(dst, size);
+            }
+            return ByteRawDataBuffer.this;
           }
-          return ByteRawDataBuffer.this;
-        }
-        return slowCopyTo(dst, size);
-      }
-    });
+
+          @Override
+          public ByteDataBuffer visit(long address, long length, long scale) {
+            memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+            return ByteRawDataBuffer.this;
+          }
+
+          @Override
+          public ByteDataBuffer fallback() {
+            if (dst instanceof ByteDataBuffer) {
+              ByteDataBuffer byteDst = (ByteDataBuffer) dst;
+              for (long idx = 0L; idx < size; ++idx) {
+                byteDst.setByte(getByte(idx), idx);
+              }
+              return ByteRawDataBuffer.this;
+            }
+            return slowCopyTo(dst, size);
+          }
+        });
   }
 
   @Override
@@ -148,30 +151,31 @@ final class ByteRawDataBuffer extends AbstractRawDataBuffer<Byte, ByteDataBuffer
     if (!(obj instanceof ByteDataBuffer)) {
       return super.equals(obj);
     }
-    ByteDataBuffer other = (ByteDataBuffer)obj;
+    ByteDataBuffer other = (ByteDataBuffer) obj;
     if (size() != other.size()) {
       return false;
     }
-    return other.accept(new DataStorageVisitor<Boolean>() {
+    return other.accept(
+        new DataStorageVisitor<Boolean>() {
 
-      @Override
-      public Boolean visit(ByteBuffer buffer) {
-        if (memory.isArray()) {
-          return buffer.equals(memory.toArrayByteBuffer());
-        }
-        return fallback();
-      }
-
-      @Override
-      public Boolean fallback() {
-        for (long idx = 0L; idx < size(); ++idx) {
-          if (other.getByte(idx) != getByte(idx)) {
-            return false;
+          @Override
+          public Boolean visit(ByteBuffer buffer) {
+            if (memory.isArray()) {
+              return buffer.equals(memory.toArrayByteBuffer());
+            }
+            return fallback();
           }
-        }
-        return true;
-      }
-    });
+
+          @Override
+          public Boolean fallback() {
+            for (long idx = 0L; idx < size(); ++idx) {
+              if (other.getByte(idx) != getByte(idx)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
   }
 
   @Override

@@ -17,13 +17,13 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.FloatDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Float, FloatDataBuffer>
-    implements FloatDataBuffer {
+class FloatDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Float, FloatDataBuffer> implements FloatDataBuffer {
 
   @Override
   public float getFloat(long index) {
@@ -60,7 +60,7 @@ class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   public FloatDataBuffer copyTo(DataBuffer<Float> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof FloatDataBuffer) {
-      FloatDataBuffer floatDst = (FloatDataBuffer)dst;
+      FloatDataBuffer floatDst = (FloatDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         floatDst.setFloat(getFloat(idx), idx);
       }
@@ -72,19 +72,20 @@ class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   @Override
   @SuppressWarnings("unchecked")
   public FloatDataBuffer offset(long index) {
-    return new FloatDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new FloatDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public FloatDataBuffer narrow(long size) {
-    return new FloatDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new FloatDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public FloatDataBuffer slice(long index, long size) {
-    return new FloatDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new FloatDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -95,7 +96,7 @@ class FloatDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
     if (!(obj instanceof FloatDataBuffer)) {
       return super.equals(obj);
     }
-    FloatDataBuffer other = (FloatDataBuffer)obj;
+    FloatDataBuffer other = (FloatDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

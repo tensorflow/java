@@ -53,18 +53,19 @@ public final class SingleElementSequence<T, U extends NdArray<T>> implements NdA
       }
 
       @SuppressWarnings("unchecked")
-      private U element = (U)ndArray;
+      private U element = (U) ndArray;
     };
   }
 
   @Override
   public NdArraySequence<U> asSlices() {
-    return this;  // no need to slice, as there are only one element
+    return this; // no need to slice, as there are only one element
   }
 
   @Override
   public void forEachIndexed(BiConsumer<long[], U> consumer) {
-    throw new IllegalRankException("Single element has no coordinates to iterate on, use forEach()");
+    throw new IllegalRankException(
+        "Single element has no coordinates to iterate on, use forEach()");
   }
 
   private final AbstractNdArray<T, U> ndArray;

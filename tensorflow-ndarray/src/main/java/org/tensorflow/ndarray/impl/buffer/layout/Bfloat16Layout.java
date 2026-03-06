@@ -44,11 +44,11 @@ public final class Bfloat16Layout implements FloatDataLayout<ShortDataBuffer> {
 
   // VisibleForTesting
   static short float32to16(float f32) {
-    return (short)(Float.floatToIntBits(f32) >>> 16);
+    return (short) (Float.floatToIntBits(f32) >>> 16);
   }
 
   // Visible for testing
   static float float16to32(short i16) {
-    return Float.intBitsToFloat((int)i16 << 16);
+    return Float.intBitsToFloat((int) i16 << 16);
   }
 }

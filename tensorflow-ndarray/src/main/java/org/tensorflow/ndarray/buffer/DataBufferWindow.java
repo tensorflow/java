@@ -28,50 +28,45 @@ package org.tensorflow.ndarray.buffer;
  */
 public interface DataBufferWindow<B extends DataBuffer<?>> {
 
-  /**
-   * Returns the current offset of this window in the original buffer.
-   */
+  /** Returns the current offset of this window in the original buffer. */
   long offset();
 
-  /**
-   * Returns the size of this buffer window.
-   */
+  /** Returns the size of this buffer window. */
   long size();
 
   /**
    * Moves the window at the given position in the original buffer.
    *
    * <p>The size of the window remains the same and its offset is set to {@code index}, so that
-   * accessing the value of {@link #buffer()} at index {@code x} will return the value at
-   * {@code index + x} in the original buffer.
+   * accessing the value of {@link #buffer()} at index {@code x} will return the value at {@code
+   * index + x} in the original buffer.
    *
    * @param index new offset for this window
    * @return this instance
-   * @throws IndexOutOfBoundsException if the window cannot be slid because it goes beyond
-   *                                   the original buffer limits
+   * @throws IndexOutOfBoundsException if the window cannot be slid because it goes beyond the
+   *     original buffer limits
    */
   DataBufferWindow<B> slideTo(long index);
 
   /**
    * Moves the window of {@code step} elements in the original buffer.
    *
-   * <p>The size of the window remains the same and its offset is set to {@code offset() + step}.
-   * If {@code step} is positive, then the window will slide forward. If it is negative, it will
-   * slide backward.
+   * <p>The size of the window remains the same and its offset is set to {@code offset() + step}. If
+   * {@code step} is positive, then the window will slide forward. If it is negative, it will slide
+   * backward.
    *
    * @param step value to add to the current offset of this window
    * @return this instance
-   * @throws IndexOutOfBoundsException if the window cannot be slid because it goes beyond
-   *                                   the original buffer limits
+   * @throws IndexOutOfBoundsException if the window cannot be slid because it goes beyond the
+   *     original buffer limits
    */
   DataBufferWindow<B> slide(long step);
 
   /**
    * Returns the buffer backing this window.
    *
-   * <p>Each window instance has it's own buffer providing a view onto the original
-   * {@link DataBuffer}. The buffers are mutated when the window slides to different offsets.
-   * For example:
+   * <p>Each window instance has it's own buffer providing a view onto the original {@link
+   * DataBuffer}. The buffers are mutated when the window slides to different offsets. For example:
    *
    * <pre>{@code
    * IntDataBuffer buffer = DataBuffers.of(0, 1, 2, 3);

@@ -21,24 +21,26 @@ import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
 
 @SuppressWarnings("unchecked")
-class DataBufferAdapter<S extends DataBuffer<?>, T> extends AbstractDataBufferAdapter<S, T, DataBuffer<T>> {
+class DataBufferAdapter<S extends DataBuffer<?>, T>
+    extends AbstractDataBufferAdapter<S, T, DataBuffer<T>> {
 
   @Override
   @SuppressWarnings("unchecked")
   public DataBuffer<T> offset(long index) {
-    return new DataBufferAdapter<>((S)buffer().offset(index * layout().scale()), layout());
+    return new DataBufferAdapter<>((S) buffer().offset(index * layout().scale()), layout());
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DataBuffer<T> narrow(long size) {
-    return new DataBufferAdapter<>((S)buffer().narrow(size * layout().scale()), layout());
+    return new DataBufferAdapter<>((S) buffer().narrow(size * layout().scale()), layout());
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public DataBuffer<T> slice(long index, long size) {
-    return new DataBufferAdapter<>((S)buffer().slice(index * layout().scale(), size * layout().scale()), layout());
+    return new DataBufferAdapter<>(
+        (S) buffer().slice(index * layout().scale(), size * layout().scale()), layout());
   }
 
   DataBufferAdapter(S buffer, DataLayout<S, T> layout) {

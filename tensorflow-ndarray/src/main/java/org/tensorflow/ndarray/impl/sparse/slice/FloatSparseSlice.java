@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse.slice;
 
+import java.nio.ReadOnlyBufferException;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -24,10 +27,6 @@ import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.impl.dimension.RelativeDimensionalSpace;
 import org.tensorflow.ndarray.impl.sparse.AbstractSparseNdArray;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class FloatSparseSlice extends SparseSlice<Float, FloatNdArray> implements FloatNdArray {
 

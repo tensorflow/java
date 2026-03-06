@@ -37,9 +37,9 @@ import org.tensorflow.ndarray.buffer.layout.ShortDataLayout;
 /**
  * Factory of data buffer adapters.
  *
- * <p>Data buffer adapters are used to apply a {@link DataLayout} to a buffer. Conceptually, they act
- * as a proxy that intercept each I/O call and perform the required type conversions after/before
- * delegating the task to the underlying buffer.
+ * <p>Data buffer adapters are used to apply a {@link DataLayout} to a buffer. Conceptually, they
+ * act as a proxy that intercept each I/O call and perform the required type conversions
+ * after/before delegating the task to the underlying buffer.
  */
 public class DataBufferAdapterFactory {
 
@@ -51,7 +51,8 @@ public class DataBufferAdapterFactory {
    * @param <S> the type of the buffer
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>> ByteDataBuffer create(S buffer, ByteDataLayout<S> layout) {
+  public static <S extends DataBuffer<?>> ByteDataBuffer create(
+      S buffer, ByteDataLayout<S> layout) {
     return new ByteDataBufferAdapter<>(buffer, layout);
   }
 
@@ -63,7 +64,8 @@ public class DataBufferAdapterFactory {
    * @param <S> the type of the buffer
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>> BooleanDataBuffer create(S buffer, BooleanDataLayout<S> layout) {
+  public static <S extends DataBuffer<?>> BooleanDataBuffer create(
+      S buffer, BooleanDataLayout<S> layout) {
     return new BooleanDataBufferAdapter<>(buffer, layout);
   }
 
@@ -75,7 +77,8 @@ public class DataBufferAdapterFactory {
    * @param <S> the type of the buffer
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>> DoubleDataBuffer create(S buffer, DoubleDataLayout<S> layout) {
+  public static <S extends DataBuffer<?>> DoubleDataBuffer create(
+      S buffer, DoubleDataLayout<S> layout) {
     return new DoubleDataBufferAdapter<>(buffer, layout);
   }
 
@@ -87,7 +90,8 @@ public class DataBufferAdapterFactory {
    * @param <S> the type of the buffer
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>> FloatDataBuffer create(S buffer, FloatDataLayout<S> layout) {
+  public static <S extends DataBuffer<?>> FloatDataBuffer create(
+      S buffer, FloatDataLayout<S> layout) {
     return new FloatDataBufferAdapter<>(buffer, layout);
   }
 
@@ -111,7 +115,8 @@ public class DataBufferAdapterFactory {
    * @param <S> the type of the buffer
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>> LongDataBuffer create(S buffer, LongDataLayout<S> layout) {
+  public static <S extends DataBuffer<?>> LongDataBuffer create(
+      S buffer, LongDataLayout<S> layout) {
     return new LongDataBufferAdapter<>(buffer, layout);
   }
 
@@ -123,7 +128,8 @@ public class DataBufferAdapterFactory {
    * @param <S> the type of the buffer
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>> ShortDataBuffer create(S buffer, ShortDataLayout<S> layout) {
+  public static <S extends DataBuffer<?>> ShortDataBuffer create(
+      S buffer, ShortDataLayout<S> layout) {
     return new ShortDataBufferAdapter<>(buffer, layout);
   }
 
@@ -136,7 +142,8 @@ public class DataBufferAdapterFactory {
    * @param <T> the type of data returned by the layout
    * @return buffer adapter
    */
-  public static <S extends DataBuffer<?>, T> DataBuffer<T> create(S buffer, DataLayout<S, T> layout) {
+  public static <S extends DataBuffer<?>, T> DataBuffer<T> create(
+      S buffer, DataLayout<S, T> layout) {
     return new DataBufferAdapter<>(buffer, layout);
   }
 }

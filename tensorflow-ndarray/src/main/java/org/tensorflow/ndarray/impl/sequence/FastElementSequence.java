@@ -19,7 +19,6 @@ package org.tensorflow.ndarray.impl.sequence;
 
 import java.util.Iterator;
 import java.util.function.BiConsumer;
-
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArraySequence;
 import org.tensorflow.ndarray.buffer.DataBufferWindow;
@@ -33,7 +32,11 @@ import org.tensorflow.ndarray.impl.AbstractNdArray;
  */
 public final class FastElementSequence<T, U extends NdArray<T>> implements NdArraySequence<U> {
 
-  public FastElementSequence(AbstractNdArray<T, U> ndArray, int dimensionIdx, U element, DataBufferWindow<?> elementWindow) {
+  public FastElementSequence(
+      AbstractNdArray<T, U> ndArray,
+      int dimensionIdx,
+      U element,
+      DataBufferWindow<?> elementWindow) {
     this.ndArray = ndArray;
     this.dimensionIdx = dimensionIdx;
     this.element = element;
@@ -47,10 +50,12 @@ public final class FastElementSequence<T, U extends NdArray<T>> implements NdArr
 
   @Override
   public void forEachIndexed(BiConsumer<long[], U> consumer) {
-    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx).forEachIndexed((long[] coords, long position) -> {
-      elementWindow.slideTo(position);
-      consumer.accept(coords, element);
-    });
+    PositionIterator.createIndexed(ndArray.dimensions(), dimensionIdx)
+        .forEachIndexed(
+            (long[] coords, long position) -> {
+              elementWindow.slideTo(position);
+              consumer.accept(coords, element);
+            });
   }
 
   @Override
@@ -60,18 +65,19 @@ public final class FastElementSequence<T, U extends NdArray<T>> implements NdArr
 
   private class SequenceIterator implements Iterator<U> {
 
-      @Override
-      public boolean hasNext() {
-        return positionIterator.hasNext();
-      }
+    @Override
+    public boolean hasNext() {
+      return positionIterator.hasNext();
+    }
 
-      @Override
-      public U next() {
-        elementWindow.slideTo(positionIterator.nextLong());
-        return element;
-      }
+    @Override
+    public U next() {
+      elementWindow.slideTo(positionIterator.nextLong());
+      return element;
+    }
 
-      private final PositionIterator positionIterator = PositionIterator.create(ndArray.dimensions(), dimensionIdx);
+    private final PositionIterator positionIterator =
+        PositionIterator.create(ndArray.dimensions(), dimensionIdx);
   }
 
   private final AbstractNdArray<T, U> ndArray;

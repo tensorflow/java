@@ -18,10 +18,10 @@
 package org.tensorflow.ndarray.impl.buffer.raw;
 
 import java.nio.LongBuffer;
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataStorageVisitor;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 final class LongRawDataBuffer extends AbstractRawDataBuffer<Long, LongDataBuffer>
     implements LongDataBuffer {
@@ -62,38 +62,41 @@ final class LongRawDataBuffer extends AbstractRawDataBuffer<Long, LongDataBuffer
   @Override
   public LongDataBuffer copyTo(DataBuffer<Long> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    return dst.accept(new DataStorageVisitor<LongDataBuffer>() {
+    return dst.accept(
+        new DataStorageVisitor<LongDataBuffer>() {
 
-      @Override
-      public LongDataBuffer visit(LongBuffer buffer) {
-        if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
-        } else if (memory.isArray()) {
-          buffer.put(memory.toArrayLongBuffer());
-        } else {
-          slowCopyTo(dst, size);
-        }
-        return LongRawDataBuffer.this;
-      }
-
-      @Override
-      public LongDataBuffer visit(long address, long length, long scale) {
-        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
-        return LongRawDataBuffer.this;
-      }
-
-      @Override
-      public LongDataBuffer fallback() {
-        if (dst instanceof LongDataBuffer) {
-          LongDataBuffer longDst = (LongDataBuffer)dst;
-          for (long idx = 0L; idx < size; ++idx) {
-            longDst.setLong(getLong(idx), idx);
+          @Override
+          public LongDataBuffer visit(LongBuffer buffer) {
+            if (buffer.hasArray()) {
+              memory.copyTo(
+                  UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()),
+                  size);
+            } else if (memory.isArray()) {
+              buffer.put(memory.toArrayLongBuffer());
+            } else {
+              slowCopyTo(dst, size);
+            }
+            return LongRawDataBuffer.this;
           }
-          return LongRawDataBuffer.this;
-        }
-        return slowCopyTo(dst, size);
-      }
-    });
+
+          @Override
+          public LongDataBuffer visit(long address, long length, long scale) {
+            memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+            return LongRawDataBuffer.this;
+          }
+
+          @Override
+          public LongDataBuffer fallback() {
+            if (dst instanceof LongDataBuffer) {
+              LongDataBuffer longDst = (LongDataBuffer) dst;
+              for (long idx = 0L; idx < size; ++idx) {
+                longDst.setLong(getLong(idx), idx);
+              }
+              return LongRawDataBuffer.this;
+            }
+            return slowCopyTo(dst, size);
+          }
+        });
   }
 
   @Override
@@ -112,30 +115,31 @@ final class LongRawDataBuffer extends AbstractRawDataBuffer<Long, LongDataBuffer
     if (!(obj instanceof LongDataBuffer)) {
       return super.equals(obj);
     }
-    LongDataBuffer other = (LongDataBuffer)obj;
+    LongDataBuffer other = (LongDataBuffer) obj;
     if (size() != other.size()) {
       return false;
     }
-    return other.accept(new DataStorageVisitor<Boolean>() {
+    return other.accept(
+        new DataStorageVisitor<Boolean>() {
 
-      @Override
-      public Boolean visit(LongBuffer buffer) {
-        if (memory.isArray()) {
-          return buffer.equals(memory.toArrayLongBuffer());
-        }
-        return fallback();
-      }
-
-      @Override
-      public Boolean fallback() {
-        for (long idx = 0L; idx < size(); ++idx) {
-          if (other.getLong(idx) != getLong(idx)) {
-            return false;
+          @Override
+          public Boolean visit(LongBuffer buffer) {
+            if (memory.isArray()) {
+              return buffer.equals(memory.toArrayLongBuffer());
+            }
+            return fallback();
           }
-        }
-        return true;
-      }
-    });
+
+          @Override
+          public Boolean fallback() {
+            for (long idx = 0L; idx < size(); ++idx) {
+              if (other.getLong(idx) != getLong(idx)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
   }
 
   @Override

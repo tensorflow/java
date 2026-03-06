@@ -17,13 +17,14 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.DataLayout;
+import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 @SuppressWarnings("unchecked")
-abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends DataBuffer<T>> extends AbstractDataBuffer<T> {
+abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends DataBuffer<T>>
+    extends AbstractDataBuffer<T> {
 
   @Override
   public long size() {
@@ -45,7 +46,7 @@ abstract class AbstractDataBufferAdapter<S extends DataBuffer<?>, T, U extends D
   public U setObject(T value, long index) {
     Validator.setArgs(this, index);
     layout.writeObject(buffer, value, index * layout.scale());
-    return (U)this;
+    return (U) this;
   }
 
   AbstractDataBufferAdapter(S buffer, DataLayout<S, T> layout) {

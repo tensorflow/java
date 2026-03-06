@@ -119,7 +119,7 @@ public final class Shape {
    * @deprecated Renamed to {@link #get(int)}.
    */
   @Deprecated
-  public long size(int i){
+  public long size(int i) {
     return get(i);
   }
 

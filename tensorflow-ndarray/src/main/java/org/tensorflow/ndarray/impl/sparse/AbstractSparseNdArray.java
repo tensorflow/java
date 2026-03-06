@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import java.nio.ReadOnlyBufferException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.LongStream;
 import org.tensorflow.ndarray.IllegalRankException;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -29,12 +34,6 @@ import org.tensorflow.ndarray.impl.dimension.RelativeDimensionalSpace;
 import org.tensorflow.ndarray.impl.sequence.SingleElementSequence;
 import org.tensorflow.ndarray.impl.sequence.SlicingElementSequence;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.LongStream;
 
 /**
  * Abstract base class for sparse array.
@@ -214,7 +213,8 @@ public abstract class AbstractSparseNdArray<T, U extends NdArray<T>> extends Abs
 
   @Override
   public U withShape(Shape shape) {
-    throw new UnsupportedOperationException("Sparse NdArrays cannot be viewed with a different shape");
+    throw new UnsupportedOperationException(
+        "Sparse NdArrays cannot be viewed with a different shape");
   }
 
   /** {@inheritDoc} */
@@ -408,8 +408,9 @@ public abstract class AbstractSparseNdArray<T, U extends NdArray<T>> extends Abs
   }
 
   /**
-   * A String showing the type, default value, number of elements and
-   * the dense shape of this sparse ndarray.
+   * A String showing the type, default value, number of elements and the dense shape of this sparse
+   * ndarray.
+   *
    * @return A string containing the type, default value, number of elements and shape.
    */
   @Override
@@ -423,8 +424,14 @@ public abstract class AbstractSparseNdArray<T, U extends NdArray<T>> extends Abs
     } else {
       strDefault = "'" + defaultValue + "'";
     }
-    return this.getClass().getSimpleName() + "(defaultValue=" + strDefault
-            + ", numElements=" + numElements + ", shape=" + this.shape() + ")";
+    return this.getClass().getSimpleName()
+        + "(defaultValue="
+        + strDefault
+        + ", numElements="
+        + numElements
+        + ", shape="
+        + this.shape()
+        + ")";
   }
 
   /**

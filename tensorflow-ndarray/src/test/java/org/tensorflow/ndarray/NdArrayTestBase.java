@@ -1,19 +1,19 @@
 /*
- Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019-2023 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +32,6 @@ import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.index.Indices;
@@ -95,11 +94,12 @@ public abstract class NdArrayTestBase<T> {
       // as expected
     }
 
-    NdArray<T> matrix2 = allocate(Shape.of(3, 2))
-        .set(vectorOfObjects(valueOf(1L), valueOf(2L)), 0)
-        .set(vectorOfObjects(valueOf(3L), valueOf(4L)), 1)
-        .setObject(valueOf(5L), 2, 0)
-        .setObject(valueOf(6L), 2, 1);
+    NdArray<T> matrix2 =
+        allocate(Shape.of(3, 2))
+            .set(vectorOfObjects(valueOf(1L), valueOf(2L)), 0)
+            .set(vectorOfObjects(valueOf(3L), valueOf(4L)), 1)
+            .setObject(valueOf(5L), 2, 0)
+            .setObject(valueOf(6L), 2, 1);
 
     assertEquals(valueOf(1L), matrix2.getObject(0, 0));
     assertEquals(valueOf(2L), matrix2.getObject(0, 1));
@@ -113,18 +113,25 @@ public abstract class NdArrayTestBase<T> {
   public void iterateElements() {
     NdArray<T> matrix3d = allocate(Shape.of(5, 4, 5));
 
-    matrix3d.scalars().forEachIndexed((coords, scalar) -> {
-      scalar.setObject(valueOf(coords[2]));
-    });
+    matrix3d
+        .scalars()
+        .forEachIndexed(
+            (coords, scalar) -> {
+              scalar.setObject(valueOf(coords[2]));
+            });
 
     assertEquals(valueOf(0L), matrix3d.getObject(0, 0, 0));
     assertEquals(valueOf(1L), matrix3d.getObject(0, 0, 1));
     assertEquals(valueOf(4L), matrix3d.getObject(0, 0, 4));
     assertEquals(valueOf(2L), matrix3d.getObject(0, 1, 2));
 
-    matrix3d.elements(1).forEach(vector -> {
-      vector.set(vectorOfObjects(valueOf(5L), valueOf(6L), valueOf(7L), valueOf(8L), valueOf(9L)));
-    });
+    matrix3d
+        .elements(1)
+        .forEach(
+            vector -> {
+              vector.set(
+                  vectorOfObjects(valueOf(5L), valueOf(6L), valueOf(7L), valueOf(8L), valueOf(9L)));
+            });
 
     assertEquals(valueOf(5L), matrix3d.getObject(0, 0, 0));
     assertEquals(valueOf(6L), matrix3d.getObject(0, 0, 1));
@@ -320,9 +327,8 @@ public abstract class NdArrayTestBase<T> {
     NdArray<T> array4 = allocate(Shape.of(1, 2, 2));
 
     @SuppressWarnings("unchecked")
-    T[][][] values = (T[][][]) (new Object[][][]{
-        {{valueOf(0L), valueOf(1L)}, {valueOf(2L), valueOf(0L)}}
-    });
+    T[][][] values =
+        (T[][][]) (new Object[][][] {{{valueOf(0L), valueOf(1L)}, {valueOf(2L), valueOf(0L)}}});
 
     StdArrays.copyTo(values[0], array1);
     StdArrays.copyTo(values[0], array2);
@@ -353,11 +359,18 @@ public abstract class NdArrayTestBase<T> {
     NdArray<T> slice = originalTensor.slice(Indices.all(), Indices.sliceFrom(1));
     assertEquals(Shape.of(2, 2), slice.shape());
 
-    slice.elements(0).forEachIndexed((eCoord, e) -> {
-      e.scalars().forEachIndexed((sCoord, s) -> {
-        assertEquals(valueOf((eCoord[0] * originalTensor.shape().get(1)) + sCoord[0] + 1), s.getObject());
-      });
-    });
+    slice
+        .elements(0)
+        .forEachIndexed(
+            (eCoord, e) -> {
+              e.scalars()
+                  .forEachIndexed(
+                      (sCoord, s) -> {
+                        assertEquals(
+                            valueOf((eCoord[0] * originalTensor.shape().get(1)) + sCoord[0] + 1),
+                            s.getObject());
+                      });
+            });
   }
 
   @Test
@@ -374,7 +387,8 @@ public abstract class NdArrayTestBase<T> {
     vector.setObject(valueOf(4L), 3);
     vector.setObject(valueOf(5L), 4);
     values = vector.streamOfObjects().collect(Collectors.toList());
-    assertIterableEquals(List.of(valueOf(1L), valueOf(2L), valueOf(3L), valueOf(4L), valueOf(5L)), values);
+    assertIterableEquals(
+        List.of(valueOf(1L), valueOf(2L), valueOf(3L), valueOf(4L), valueOf(5L)), values);
 
     NdArray<T> matrix = allocate(Shape.of(2, 2));
     matrix.setObject(valueOf(1L), 0, 0);

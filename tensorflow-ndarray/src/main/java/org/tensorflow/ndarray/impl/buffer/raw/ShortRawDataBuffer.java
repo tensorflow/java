@@ -18,10 +18,10 @@
 package org.tensorflow.ndarray.impl.buffer.raw;
 
 import java.nio.ShortBuffer;
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataStorageVisitor;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
 final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuffer>
     implements ShortDataBuffer {
@@ -62,38 +62,41 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
   @Override
   public ShortDataBuffer copyTo(DataBuffer<Short> dst, long size) {
     Validator.copyToArgs(this, dst, size);
-    return dst.accept(new DataStorageVisitor<ShortDataBuffer>() {
+    return dst.accept(
+        new DataStorageVisitor<ShortDataBuffer>() {
 
-      @Override
-      public ShortDataBuffer visit(ShortBuffer buffer) {
-        if (buffer.hasArray()) {
-          memory.copyTo(UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()), size);
-        } else if (memory.isArray()) {
-          buffer.put(memory.toArrayShortBuffer());
-        } else {
-          slowCopyTo(dst, size);
-        }
-        return ShortRawDataBuffer.this;
-      }
-
-      @Override
-      public ShortDataBuffer visit(long address, long length, long scale) {
-        memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
-        return ShortRawDataBuffer.this;
-      }
-
-      @Override
-      public ShortDataBuffer fallback() {
-        if (dst instanceof ShortDataBuffer) {
-          ShortDataBuffer shortDst = (ShortDataBuffer)dst;
-          for (long idx = 0L; idx < size; ++idx) {
-            shortDst.setShort(getShort(idx), idx);
+          @Override
+          public ShortDataBuffer visit(ShortBuffer buffer) {
+            if (buffer.hasArray()) {
+              memory.copyTo(
+                  UnsafeMemoryHandle.fromArray(buffer.array(), buffer.position(), buffer.limit()),
+                  size);
+            } else if (memory.isArray()) {
+              buffer.put(memory.toArrayShortBuffer());
+            } else {
+              slowCopyTo(dst, size);
+            }
+            return ShortRawDataBuffer.this;
           }
-          return ShortRawDataBuffer.this;
-        }
-        return slowCopyTo(dst, size);
-      }
-    });
+
+          @Override
+          public ShortDataBuffer visit(long address, long length, long scale) {
+            memory.copyTo(UnsafeMemoryHandle.fromAddress(address, length, scale), size);
+            return ShortRawDataBuffer.this;
+          }
+
+          @Override
+          public ShortDataBuffer fallback() {
+            if (dst instanceof ShortDataBuffer) {
+              ShortDataBuffer shortDst = (ShortDataBuffer) dst;
+              for (long idx = 0L; idx < size; ++idx) {
+                shortDst.setShort(getShort(idx), idx);
+              }
+              return ShortRawDataBuffer.this;
+            }
+            return slowCopyTo(dst, size);
+          }
+        });
   }
 
   @Override
@@ -112,30 +115,31 @@ final class ShortRawDataBuffer extends AbstractRawDataBuffer<Short, ShortDataBuf
     if (!(obj instanceof ShortDataBuffer)) {
       return super.equals(obj);
     }
-    ShortDataBuffer other = (ShortDataBuffer)obj;
+    ShortDataBuffer other = (ShortDataBuffer) obj;
     if (size() != other.size()) {
       return false;
     }
-    return other.accept(new DataStorageVisitor<Boolean>() {
+    return other.accept(
+        new DataStorageVisitor<Boolean>() {
 
-      @Override
-      public Boolean visit(ShortBuffer buffer) {
-        if (memory.isArray()) {
-          return buffer.equals(memory.toArrayShortBuffer());
-        }
-        return fallback();
-      }
-
-      @Override
-      public Boolean fallback() {
-        for (long idx = 0L; idx < size(); ++idx) {
-          if (other.getShort(idx) != getShort(idx)) {
-            return false;
+          @Override
+          public Boolean visit(ShortBuffer buffer) {
+            if (memory.isArray()) {
+              return buffer.equals(memory.toArrayShortBuffer());
+            }
+            return fallback();
           }
-        }
-        return true;
-      }
-    });
+
+          @Override
+          public Boolean fallback() {
+            for (long idx = 0L; idx < size(); ++idx) {
+              if (other.getShort(idx) != getShort(idx)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        });
   }
 
   @Override

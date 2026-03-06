@@ -70,10 +70,12 @@ public class StdArraysTest {
   public void matrices() {
     IntNdArray matrix = NdArrays.ofInts(Shape.of(2, 2));
 
-    StdArrays.copyTo(new int[][] {
-        {1, 2},
-        {3, 4}
-    }, matrix);
+    StdArrays.copyTo(
+        new int[][] {
+          {1, 2},
+          {3, 4}
+        },
+        matrix);
     assertEquals(1, matrix.getInt(0, 0));
     assertEquals(2, matrix.getInt(0, 1));
     assertEquals(3, matrix.getInt(1, 0));
@@ -105,9 +107,9 @@ public class StdArraysTest {
 
     array = new int[3][3];
     StdArrays.copyFrom(matrix, array);
-    assertArrayEquals(new int[] { 1, 2, 0 }, array[0]);
-    assertArrayEquals(new int[] { 3, 4, 0 }, array[1]);
-    assertArrayEquals(new int[] { 0, 0, 0 }, array[2]);
+    assertArrayEquals(new int[] {1, 2, 0}, array[0]);
+    assertArrayEquals(new int[] {3, 4, 0}, array[1]);
+    assertArrayEquals(new int[] {0, 0, 0}, array[2]);
 
     try {
       StdArrays.copyFrom(matrix, new int[1][2]);
@@ -167,10 +169,12 @@ public class StdArraysTest {
   public void cannotInitDenseMatrixWithRaggedArray() {
     IntNdArray matrix = NdArrays.ofInts(Shape.of(2, 2));
     try {
-      StdArrays.copyTo(new int[][]{
-          {1, 2},
-          {3}
-      }, matrix);
+      StdArrays.copyTo(
+          new int[][] {
+            {1, 2},
+            {3}
+          },
+          matrix);
       fail();
     } catch (IllegalArgumentException e) {
       // as expected
@@ -179,27 +183,23 @@ public class StdArraysTest {
 
   @Test
   public void computeShapeDense3DMatrix() {
-    Shape shape = StdArrays.shapeOf(new int[][][] {
-        {
-            {1, 2, 3}, {4, 5, 6}
-        },
-        {
-            {1, 2, 3}, {4, 5, 6}
-        }
-    });
+    Shape shape =
+        StdArrays.shapeOf(
+            new int[][][] {
+              {{1, 2, 3}, {4, 5, 6}},
+              {{1, 2, 3}, {4, 5, 6}}
+            });
     assertArrayEquals(new long[] {2, 2, 3}, shape.asArray());
   }
 
   @Test
   public void shapeOfRagged3DMatrix() {
-    Shape shape = StdArrays.shapeOf(new int[][][] {
-        {
-            {1, 2, 3}, {4, 5, 6}, {7, 8, 9}
-        },
-        {
-            {1, 2, 3}, {4, 5, 6}
-        }
-    });
+    Shape shape =
+        StdArrays.shapeOf(
+            new int[][][] {
+              {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
+              {{1, 2, 3}, {4, 5, 6}}
+            });
     assertArrayEquals(new long[] {2, Shape.UNKNOWN_SIZE, 3}, shape.asArray());
   }
 

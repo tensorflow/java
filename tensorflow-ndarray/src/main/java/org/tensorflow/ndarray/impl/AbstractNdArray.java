@@ -16,13 +16,12 @@ limitations under the License.
 */
 package org.tensorflow.ndarray.impl;
 
+import java.util.Iterator;
+import java.util.Objects;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArraySequence;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
-
-import java.util.Iterator;
-import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractNdArray<T, U extends NdArray<T>> implements NdArray<T> {

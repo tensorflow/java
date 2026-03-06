@@ -17,13 +17,13 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.LongDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Long, LongDataBuffer>
-    implements LongDataBuffer {
+class LongDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Long, LongDataBuffer> implements LongDataBuffer {
 
   @Override
   public long getLong(long index) {
@@ -60,7 +60,7 @@ class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   public LongDataBuffer copyTo(DataBuffer<Long> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof LongDataBuffer) {
-      LongDataBuffer longDst = (LongDataBuffer)dst;
+      LongDataBuffer longDst = (LongDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         longDst.setLong(getLong(idx), idx);
       }
@@ -72,19 +72,20 @@ class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
   @Override
   @SuppressWarnings("unchecked")
   public LongDataBuffer offset(long index) {
-    return new LongDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new LongDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public LongDataBuffer narrow(long size) {
-    return new LongDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new LongDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public LongDataBuffer slice(long index, long size) {
-    return new LongDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new LongDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -95,7 +96,7 @@ class LongDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferA
     if (!(obj instanceof LongDataBuffer)) {
       return super.equals(obj);
     }
-    LongDataBuffer other = (LongDataBuffer)obj;
+    LongDataBuffer other = (LongDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

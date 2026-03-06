@@ -11,7 +11,7 @@ final class RawDataBufferWindow<B extends DataBuffer<?>> extends AbstractDataBuf
   }
 
   <R extends AbstractRawDataBuffer<?, B>> RawDataBufferWindow(R windowBuffer, long bufferLimit) {
-    super((B)windowBuffer, bufferLimit);
+    super((B) windowBuffer, bufferLimit);
     this.windowMemory = windowBuffer.memory;
   }
 

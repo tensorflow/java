@@ -17,13 +17,13 @@
 
 package org.tensorflow.ndarray.impl.buffer.adapter;
 
-import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 import org.tensorflow.ndarray.buffer.layout.ShortDataLayout;
+import org.tensorflow.ndarray.impl.buffer.Validator;
 
-class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBufferAdapter<S, Short, ShortDataBuffer>
-    implements ShortDataBuffer {
+class ShortDataBufferAdapter<S extends DataBuffer<?>>
+    extends AbstractDataBufferAdapter<S, Short, ShortDataBuffer> implements ShortDataBuffer {
 
   @Override
   public short getShort(long index) {
@@ -60,7 +60,7 @@ class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   public ShortDataBuffer copyTo(DataBuffer<Short> dst, long size) {
     Validator.copyToArgs(this, dst, size);
     if (dst instanceof ShortDataBuffer) {
-      ShortDataBuffer shortDst = (ShortDataBuffer)dst;
+      ShortDataBuffer shortDst = (ShortDataBuffer) dst;
       for (long idx = 0L; idx < size; ++idx) {
         shortDst.setShort(getShort(idx), idx);
       }
@@ -72,19 +72,20 @@ class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
   @Override
   @SuppressWarnings("unchecked")
   public ShortDataBuffer offset(long index) {
-    return new ShortDataBufferAdapter<>((S)buffer().offset(index * layout.scale()), layout);
+    return new ShortDataBufferAdapter<>((S) buffer().offset(index * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public ShortDataBuffer narrow(long size) {
-    return new ShortDataBufferAdapter<>((S)buffer().narrow(size * layout.scale()), layout);
+    return new ShortDataBufferAdapter<>((S) buffer().narrow(size * layout.scale()), layout);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public ShortDataBuffer slice(long index, long size) {
-    return new ShortDataBufferAdapter<>((S)buffer().slice(index * layout.scale(), size * layout.scale()), layout);
+    return new ShortDataBufferAdapter<>(
+        (S) buffer().slice(index * layout.scale(), size * layout.scale()), layout);
   }
 
   @Override
@@ -95,7 +96,7 @@ class ShortDataBufferAdapter<S extends DataBuffer<?>> extends AbstractDataBuffer
     if (!(obj instanceof ShortDataBuffer)) {
       return super.equals(obj);
     }
-    ShortDataBuffer other = (ShortDataBuffer)obj;
+    ShortDataBuffer other = (ShortDataBuffer) obj;
     if (other.size() != size()) {
       return false;
     }

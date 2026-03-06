@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 
 package org.tensorflow.ndarray.impl.dimension;
 
@@ -79,14 +79,16 @@ public class DimensionalSpace {
           initialOffset = offset;
         } else {
           long reducedSize = dimensions[dimIdx - 1].elementSize();
-          newDimensions[newDimIdx - 1] = new ReducedDimension(newDimensions[newDimIdx - 1], offset, reducedSize);
+          newDimensions[newDimIdx - 1] =
+              new ReducedDimension(newDimensions[newDimIdx - 1], offset, reducedSize);
           segmentationIdx = newDimIdx - 1;
         }
 
       } else if (indices[indexIdx].isNewAxis()) {
         long newSize;
         if (dimIdx == 0) {
-          // includes everything.  Should really include future reduction (at()) but that doesn't seem to cause issues
+          // includes everything.  Should really include future reduction (at()) but that doesn't
+          // seem to cause issues
           //   elsewhere
           newSize = dimensions[0].numElements() * dimensions[0].elementSize();
         } else {
@@ -136,7 +138,8 @@ public class DimensionalSpace {
         segmentationIdx = newDimIdx;
       }
     }
-    return new RelativeDimensionalSpace(Arrays.copyOf(newDimensions, newDimIdx), segmentationIdx, initialOffset);
+    return new RelativeDimensionalSpace(
+        Arrays.copyOf(newDimensions, newDimIdx), segmentationIdx, initialOffset);
   }
 
   public DimensionalSpace from(int dimensionStart) {
@@ -166,7 +169,9 @@ public class DimensionalSpace {
   }
 
   public long physicalSize() {
-    return dimensions.length > 0 ? dimensions[0].physicalSize() : 1;  // dimensions.length == 0 for scalars
+    return dimensions.length > 0
+        ? dimensions[0].physicalSize()
+        : 1; // dimensions.length == 0 for scalars
   }
 
   public Dimension get(int i) {
@@ -189,9 +194,7 @@ public class DimensionalSpace {
     return position;
   }
 
-  /**
-   * Succinct description of the shape meant for debugging.
-   */
+  /** Succinct description of the shape meant for debugging. */
   @Override
   public String toString() {
     return Arrays.toString(dimensions);

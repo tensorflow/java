@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.impl.sparse.BooleanSparseNdArray;
 import org.tensorflow.ndarray.impl.sparse.ByteSparseNdArray;
@@ -22,11 +27,6 @@ import org.tensorflow.ndarray.impl.sparse.FloatSparseNdArray;
 import org.tensorflow.ndarray.impl.sparse.IntSparseNdArray;
 import org.tensorflow.ndarray.impl.sparse.LongSparseNdArray;
 import org.tensorflow.ndarray.impl.sparse.ShortSparseNdArray;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SparseNdArrayTest {
   long[][] indicesArray = {{0, 0}, {1, 2}, {2, 3}};
@@ -59,8 +59,7 @@ public class SparseNdArrayTest {
   @Test
   public void testByte() {
     ByteSparseNdArray instance =
-        NdArrays.sparseOf(
-            indices, NdArrays.vectorOf((byte) 1, (byte) 18, (byte) 0xff), shape);
+        NdArrays.sparseOf(indices, NdArrays.vectorOf((byte) 1, (byte) 18, (byte) 0xff), shape);
     assertEquals(6, instance.getIndices().size());
     assertEquals(3, instance.getValues().size());
     assertEquals((byte) 1, instance.getByte(0, 0));
@@ -125,8 +124,7 @@ public class SparseNdArrayTest {
 
   @Test
   public void testInt() {
-    IntSparseNdArray instance =
-        NdArrays.sparseOf(indices, NdArrays.vectorOf(1, 18, 256), shape);
+    IntSparseNdArray instance = NdArrays.sparseOf(indices, NdArrays.vectorOf(1, 18, 256), shape);
     assertEquals(6, instance.getIndices().size());
     assertEquals(3, instance.getValues().size());
     assertEquals(1, instance.getInt(0, 0));
@@ -170,8 +168,7 @@ public class SparseNdArrayTest {
   @Test
   public void testShort() {
     ShortSparseNdArray instance =
-        NdArrays.sparseOf(
-            indices, NdArrays.vectorOf((short) 1, (short) 18, (short) 0xff00), shape);
+        NdArrays.sparseOf(indices, NdArrays.vectorOf((short) 1, (short) 18, (short) 0xff00), shape);
     assertEquals(6, instance.getIndices().size());
     assertEquals(3, instance.getValues().size());
     assertEquals((short) 1, instance.getShort(0, 0));
@@ -193,6 +190,7 @@ public class SparseNdArrayTest {
   @Test
   public void withShape() {
     NdArray<?> sparseArray = NdArrays.sparseOf(indices, NdArrays.vectorOf(1, 2, 3), shape);
-    assertThrows(UnsupportedOperationException.class, () -> sparseArray.withShape(shape.prepend(1)));
+    assertThrows(
+        UnsupportedOperationException.class, () -> sparseArray.withShape(shape.prepend(1)));
   }
 }

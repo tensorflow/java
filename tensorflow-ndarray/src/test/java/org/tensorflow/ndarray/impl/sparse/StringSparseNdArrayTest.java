@@ -14,6 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.LongNdArray;
@@ -25,14 +32,6 @@ import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.index.Indices;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StringSparseNdArrayTest {
   long[][] indicesArray = {{0, 0}, {1, 2}};
@@ -343,10 +342,15 @@ public class StringSparseNdArrayTest {
   @Test
   public void testToString() {
     SparseNdArray<String, NdArray<String>> instance =
-            new SparseNdArray<>(String.class, indices, values, DimensionalSpace.create(shape));
-    Assertions.assertEquals("SparseNdArray(type=String, defaultValue=<null>, numElements=2, shape=[3, 4])",instance.toString());
-    instance = new SparseNdArray<>(
-                    String.class, indices, values, "a default", DimensionalSpace.create(shape));
-    Assertions.assertEquals("SparseNdArray(type=String, defaultValue='a default', numElements=2, shape=[3, 4])",instance.toString());
+        new SparseNdArray<>(String.class, indices, values, DimensionalSpace.create(shape));
+    Assertions.assertEquals(
+        "SparseNdArray(type=String, defaultValue=<null>, numElements=2, shape=[3, 4])",
+        instance.toString());
+    instance =
+        new SparseNdArray<>(
+            String.class, indices, values, "a default", DimensionalSpace.create(shape));
+    Assertions.assertEquals(
+        "SparseNdArray(type=String, defaultValue='a default', numElements=2, shape=[3, 4])",
+        instance.toString());
   }
 }

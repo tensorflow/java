@@ -27,16 +27,16 @@ public class BoolLayoutTest {
 
   @Test
   public void booleanToByteTest() {
-    assertEquals((byte)1, BoolLayout.booleanToByte(true));
-    assertEquals((byte)0, BoolLayout.booleanToByte(false));
+    assertEquals((byte) 1, BoolLayout.booleanToByte(true));
+    assertEquals((byte) 0, BoolLayout.booleanToByte(false));
   }
 
   @Test
   public void byteToBooleanTest() {
-    assertTrue(BoolLayout.byteToBoolean((byte)1));
-    assertTrue(BoolLayout.byteToBoolean((byte)127));
-    assertTrue(BoolLayout.byteToBoolean((byte)-128));
-    assertTrue(BoolLayout.byteToBoolean((byte)255));
-    assertFalse(BoolLayout.byteToBoolean((byte)0));
+    assertTrue(BoolLayout.byteToBoolean((byte) 1));
+    assertTrue(BoolLayout.byteToBoolean((byte) 127));
+    assertTrue(BoolLayout.byteToBoolean((byte) -128));
+    assertTrue(BoolLayout.byteToBoolean((byte) 255));
+    assertFalse(BoolLayout.byteToBoolean((byte) 0));
   }
 }

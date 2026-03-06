@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.ndarray.impl.sparse;
 
+import java.nio.ReadOnlyBufferException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -26,12 +31,6 @@ import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.impl.sparse.slice.BooleanSparseSlice;
 import org.tensorflow.ndarray.index.Index;
-
-import java.nio.ReadOnlyBufferException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * sparse array for the boolean data type
@@ -269,6 +268,7 @@ public class BooleanSparseNdArray extends AbstractSparseNdArray<Boolean, Boolean
     src.copyTo(buffer);
     return new BooleanSparseNdArray(buffer, DimensionalSpace.create(src.shape()));
   }
+
   /**
    * Creates a new BooleanSparseNdArray from a BooleanNdArray
    *

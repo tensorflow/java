@@ -3,7 +3,8 @@ package org.tensorflow.ndarray.impl.buffer;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBufferWindow;
 
-public abstract class AbstractDataBufferWindow<B extends DataBuffer<?>> implements DataBufferWindow<B> {
+public abstract class AbstractDataBufferWindow<B extends DataBuffer<?>>
+    implements DataBufferWindow<B> {
 
   @Override
   public final long offset() {

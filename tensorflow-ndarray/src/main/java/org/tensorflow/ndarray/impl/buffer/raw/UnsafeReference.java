@@ -50,13 +50,19 @@ final class UnsafeReference {
         checkMethod(clazz, "putDouble", Object.class, long.class, double.class);
         checkMethod(clazz, "getBoolean", Object.class, long.class);
         checkMethod(clazz, "putBoolean", Object.class, long.class, boolean.class);
-        checkMethod(clazz, "copyMemory", Object.class, long.class, Object.class, long.class, long.class);
+        checkMethod(
+            clazz, "copyMemory", Object.class, long.class, Object.class, long.class, long.class);
         checkMethod(clazz, "arrayBaseOffset", Class.class);
         checkMethod(clazz, "arrayIndexScale", Class.class);
 
         unsafe = (Unsafe) instance;
       }
-    } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | SecurityException | IllegalAccessException | ClassCastException ex) {
+    } catch (ClassNotFoundException
+        | NoSuchMethodException
+        | NoSuchFieldException
+        | SecurityException
+        | IllegalAccessException
+        | ClassCastException ex) {
       // Do nothing, keep unsafe as null
     }
     UNSAFE = unsafe;
@@ -65,10 +71,13 @@ final class UnsafeReference {
   /**
    * Validate that this Unsafe instance exposes this method
    *
-   * ErrorProne does not like that we do nothing with the returned method... but there is nothing to do with it, so disable the check
+   * <p>ErrorProne does not like that we do nothing with the returned method... but there is nothing
+   * to do with it, so disable the check
    */
   @SuppressWarnings("ReturnValueIgnored")
-  private static void checkMethod(Class<?> unsafeClass, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
+  private static void checkMethod(
+      Class<?> unsafeClass, String methodName, Class<?>... parameterTypes)
+      throws NoSuchMethodException {
     unsafeClass.getDeclaredMethod(methodName, parameterTypes);
   }
 }

@@ -63,27 +63,34 @@ final class DataTransfer {
     dstBuf.setShort(srcBuf.getShort(srcIdx), dstIdx);
   }
 
-  static void ofBoolean(BooleanDataBuffer srcBuf, long srcIdx, BooleanDataBuffer dstBuf, long dstIdx) {
+  static void ofBoolean(
+      BooleanDataBuffer srcBuf, long srcIdx, BooleanDataBuffer dstBuf, long dstIdx) {
     dstBuf.setBoolean(srcBuf.getBoolean(srcIdx), dstIdx);
   }
 
-  static <T, B extends DataBuffer<T>> void execute(B srcBuffer, DimensionalSpace srcDimensions, B dstBuffer, DimensionalSpace dstDimensions, OfValue<B> valueTransfer) {
+  static <T, B extends DataBuffer<T>> void execute(
+      B srcBuffer,
+      DimensionalSpace srcDimensions,
+      B dstBuffer,
+      DimensionalSpace dstDimensions,
+      OfValue<B> valueTransfer) {
     if (srcDimensions.isSegmented() || dstDimensions.isSegmented()) {
-      int segmentationIdx = Math.max(srcDimensions.segmentationIdx(), dstDimensions.segmentationIdx());
+      int segmentationIdx =
+          Math.max(srcDimensions.segmentationIdx(), dstDimensions.segmentationIdx());
       copyByElement(
           srcBuffer,
           PositionIterator.create(srcDimensions, segmentationIdx),
           dstBuffer,
           PositionIterator.create(dstDimensions, segmentationIdx),
           srcDimensions.get(segmentationIdx).elementSize(),
-          valueTransfer
-      );
+          valueTransfer);
     } else {
       srcBuffer.copyTo(dstBuffer, srcDimensions.physicalSize());
     }
   }
 
-  static <T, B extends DataBuffer<T>> void execute(B srcBuffer, B dstBuffer, DimensionalSpace dstDimensions, OfValue<B> valueTransfer) {
+  static <T, B extends DataBuffer<T>> void execute(
+      B srcBuffer, B dstBuffer, DimensionalSpace dstDimensions, OfValue<B> valueTransfer) {
     if (dstDimensions.isSegmented()) {
       long elementSize = dstDimensions.get(dstDimensions.segmentationIdx()).elementSize();
       copyByElement(
@@ -92,14 +99,14 @@ final class DataTransfer {
           dstBuffer,
           PositionIterator.create(dstDimensions, dstDimensions.segmentationIdx()),
           elementSize,
-          valueTransfer
-      );
+          valueTransfer);
     } else {
       srcBuffer.copyTo(dstBuffer, dstDimensions.physicalSize());
     }
   }
 
-  static <T, B extends DataBuffer<T>> void execute(B srcBuffer, DimensionalSpace srcDimensions, B dstBuffer, OfValue<B> valueTransfer) {
+  static <T, B extends DataBuffer<T>> void execute(
+      B srcBuffer, DimensionalSpace srcDimensions, B dstBuffer, OfValue<B> valueTransfer) {
     if (srcDimensions.isSegmented()) {
       long elementSize = srcDimensions.get(srcDimensions.segmentationIdx()).elementSize();
       copyByElement(
@@ -108,8 +115,7 @@ final class DataTransfer {
           dstBuffer,
           PositionIterator.sequence(elementSize, dstBuffer.size()),
           elementSize,
-          valueTransfer
-      );
+          valueTransfer);
     } else {
       srcBuffer.copyTo(dstBuffer, srcDimensions.physicalSize());
     }
@@ -121,15 +127,16 @@ final class DataTransfer {
       B dstBuffer,
       PositionIterator dstIterator,
       long elementSize,
-      OfValue<B> valueTransfer
-  ) {
+      OfValue<B> valueTransfer) {
     if (elementSize == 1) {
       while (srcIterator.hasNext()) {
         valueTransfer.copy(srcBuffer, srcIterator.nextLong(), dstBuffer, dstIterator.nextLong());
       }
     } else {
       while (srcIterator.hasNext()) {
-        srcBuffer.offset(srcIterator.nextLong()).copyTo(dstBuffer.offset(dstIterator.nextLong()), elementSize);
+        srcBuffer
+            .offset(srcIterator.nextLong())
+            .copyTo(dstBuffer.offset(dstIterator.nextLong()), elementSize);
       }
     }
   }

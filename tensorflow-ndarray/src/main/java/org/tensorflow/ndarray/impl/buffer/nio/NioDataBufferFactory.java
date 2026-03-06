@@ -30,9 +30,7 @@ import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.buffer.ShortDataBuffer;
 
-/**
- * Factory of JDK NIO-based data buffers
- */
+/** Factory of JDK NIO-based data buffers */
 public class NioDataBufferFactory {
 
   public static ByteDataBuffer create(ByteBuffer buffer) {

@@ -35,18 +35,19 @@ public class FloatDataBufferAdapterTest extends FloatDataBufferTestBase {
     return super.maxSize() / 2;
   }
 
-  private static FloatDataLayout<ShortDataBuffer> LAYOUT = new FloatDataLayout<ShortDataBuffer>() {
+  private static FloatDataLayout<ShortDataBuffer> LAYOUT =
+      new FloatDataLayout<ShortDataBuffer>() {
 
-    @Override
-    public void writeFloat(ShortDataBuffer buffer, float value, long index) {
-      int bits = Float.floatToIntBits(value);
-      buffer.setShort((short)(bits >> 16), index);
-    }
+        @Override
+        public void writeFloat(ShortDataBuffer buffer, float value, long index) {
+          int bits = Float.floatToIntBits(value);
+          buffer.setShort((short) (bits >> 16), index);
+        }
 
-    @Override
-    public float readFloat(ShortDataBuffer buffer, long index) {
-      int i = buffer.getShort(index);
-      return Float.intBitsToFloat(i << 16);
-    }
-  };
+        @Override
+        public float readFloat(ShortDataBuffer buffer, long index) {
+          int i = buffer.getShort(index);
+          return Float.intBitsToFloat(i << 16);
+        }
+      };
 }

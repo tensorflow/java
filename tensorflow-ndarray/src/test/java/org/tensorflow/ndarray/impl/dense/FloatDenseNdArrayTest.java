@@ -16,6 +16,9 @@ limitations under the License.
 */
 package org.tensorflow.ndarray.impl.dense;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.FloatNdArrayTestBase;
@@ -25,10 +28,6 @@ import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.index.Indices;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FloatDenseNdArrayTest extends FloatNdArrayTestBase {
 

@@ -111,9 +111,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D ByteNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the byte sparse array.
    */
@@ -129,9 +129,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non default values.
    * @param values A 1-D ByteNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
    * @param defaultValue Scalar value to set for indices not specified in 'indices'
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the byte sparse array.
@@ -204,9 +204,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D LongNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18L, 3L]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18L}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3L}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18L, 3L]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18L}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3L}.
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the long sparse array.
    */
@@ -222,9 +222,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D LongNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18L, 3L]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18L}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3L}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18L, 3L]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18L}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3L}.
    * @param defaultValue Scalar value to set for indices not specified in 'indices'
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the long sparse array.
@@ -390,9 +390,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D ShortNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the short sparse array.
    */
@@ -408,9 +408,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D ShortNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18, 3]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3}.
    * @param defaultValue Scalar value to set for indices not specified in 'indices'
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the short sparse array.
@@ -483,9 +483,10 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D FloatNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18f}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3.8f}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse NdArray has
+   *     a value of {@code 18f}, and element {@code [2,4,0]} of the NdArray has a value of {@code
+   *     3.8f}.
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the float sparse array.
    */
@@ -501,9 +502,10 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D FloatNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18f}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3.8f}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18f, 3.8f]} specifies that element {@code [1,3,1]} of the sparse NdArray has
+   *     a value of {@code 18f}, and element {@code [2,4,0]} of the NdArray has a value of {@code
+   *     3.8f}.
    * @param defaultValue Scalar value to set for indices not specified in 'indices'
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the float sparse array.
@@ -576,9 +578,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D DoubleNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18, 3.8]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3.8}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18, 3.8]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3.8}.
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the float sparse array.
    */
@@ -595,9 +597,9 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D DoubleNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[18, 3.8]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value of
-   *     {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3.8}.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[18, 3.8]} specifies that element {@code [1,3,1]} of the sparse NdArray has a
+   *     value of {@code 18}, and element {@code [2,4,0]} of the NdArray has a value of {@code 3.8}.
    * @param defaultValue Scalar value to set for indices not specified in 'indices'
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the float sparse array.
@@ -671,10 +673,10 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D BooleanNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[true, true]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value
-   *     of true, and element {@code [2,4,0]} of the NdArray has a value of true. All other values are
-   *     false.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[true, true]} specifies that element {@code [1,3,1]} of the sparse NdArray
+   *     has a value of true, and element {@code [2,4,0]} of the NdArray has a value of true. All
+   *     other values are false.
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the float sparse array.
    */
@@ -691,10 +693,10 @@ public final class NdArrays {
    *     For example, {@code indices=[[1,3,1], [2,4,0]]} specifies that the elements with indexes of
    *     {@code [1,3,1]} and {@code [2,4,0]} have non-default values.
    * @param values A 1-D BooleanNdArray of shape {@code [N]}, which supplies the values for each
-   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter {@code
-   *     values=[true, true]} specifies that element {@code [1,3,1]} of the sparse NdArray has a value
-   *     of true, and element {@code [2,4,0]} of the NdArray has a value of true. All other values are
-   *     false.
+   *     element in indices. For example, given {@code indices=[[1,3,1], [2,4,0]]}, the parameter
+   *     {@code values=[true, true]} specifies that element {@code [1,3,1]} of the sparse NdArray
+   *     has a value of true, and element {@code [2,4,0]} of the NdArray has a value of true. All
+   *     other values are false.
    * @param defaultValue Scalar value to set for indices not specified in 'indices'
    * @param shape the shape of the dense array represented by this sparse array.
    * @return the float sparse array.

@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray.buffer;
 
 import java.lang.reflect.Array;
@@ -30,9 +30,7 @@ import org.tensorflow.ndarray.impl.buffer.misc.MiscDataBufferFactory;
 import org.tensorflow.ndarray.impl.buffer.nio.NioDataBufferFactory;
 import org.tensorflow.ndarray.impl.buffer.raw.RawDataBufferFactory;
 
-/**
- * Helper class for creating {@code DataBuffer} instances.
- */
+/** Helper class for creating {@code DataBuffer} instances. */
 public final class DataBuffers {
 
   /**
@@ -44,9 +42,9 @@ public final class DataBuffers {
   public static ByteDataBuffer ofBytes(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new byte[(int)size], false);
+      return RawDataBufferFactory.create(new byte[(int) size], false);
     }
-    return NioDataBufferFactory.create(ByteBuffer.allocate((int)size));
+    return NioDataBufferFactory.create(ByteBuffer.allocate((int) size));
   }
 
   /**
@@ -58,9 +56,9 @@ public final class DataBuffers {
   public static LongDataBuffer ofLongs(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new long[(int)size], false);
+      return RawDataBufferFactory.create(new long[(int) size], false);
     }
-    return NioDataBufferFactory.create(LongBuffer.allocate((int)size));
+    return NioDataBufferFactory.create(LongBuffer.allocate((int) size));
   }
 
   /**
@@ -72,9 +70,9 @@ public final class DataBuffers {
   public static IntDataBuffer ofInts(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new int[(int)size], false);
+      return RawDataBufferFactory.create(new int[(int) size], false);
     }
-    return NioDataBufferFactory.create(IntBuffer.allocate((int)size));
+    return NioDataBufferFactory.create(IntBuffer.allocate((int) size));
   }
 
   /**
@@ -86,9 +84,9 @@ public final class DataBuffers {
   public static ShortDataBuffer ofShorts(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new short[(int)size], false);
+      return RawDataBufferFactory.create(new short[(int) size], false);
     }
-    return NioDataBufferFactory.create(ShortBuffer.allocate((int)size));
+    return NioDataBufferFactory.create(ShortBuffer.allocate((int) size));
   }
 
   /**
@@ -100,9 +98,9 @@ public final class DataBuffers {
   public static DoubleDataBuffer ofDoubles(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new double[(int)size], false);
+      return RawDataBufferFactory.create(new double[(int) size], false);
     }
-    return NioDataBufferFactory.create(DoubleBuffer.allocate((int)size));
+    return NioDataBufferFactory.create(DoubleBuffer.allocate((int) size));
   }
 
   /**
@@ -114,9 +112,9 @@ public final class DataBuffers {
   public static FloatDataBuffer ofFloats(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new float[(int)size], false);
+      return RawDataBufferFactory.create(new float[(int) size], false);
     }
-    return NioDataBufferFactory.create(FloatBuffer.allocate((int)size));
+    return NioDataBufferFactory.create(FloatBuffer.allocate((int) size));
   }
 
   /**
@@ -128,9 +126,9 @@ public final class DataBuffers {
   public static BooleanDataBuffer ofBooleans(long size) {
     Validator.createArgs(size, MAX_32BITS);
     if (RawDataBufferFactory.canBeUsed()) {
-      return RawDataBufferFactory.create(new boolean[(int)size], false);
+      return RawDataBufferFactory.create(new boolean[(int) size], false);
     }
-    return MiscDataBufferFactory.create(new BitSet((int)size), size, false);
+    return MiscDataBufferFactory.create(new BitSet((int) size), size, false);
   }
 
   /**
@@ -145,7 +143,7 @@ public final class DataBuffers {
   public static <T> DataBuffer<T> ofObjects(Class<T> type, long size) {
     Validator.createArgs(size, MAX_32BITS);
     @SuppressWarnings("unchecked")
-    T[] array = (T[])Array.newInstance(type, (int)size);
+    T[] array = (T[]) Array.newInstance(type, (int) size);
     return MiscDataBufferFactory.create(array, false);
   }
 
@@ -153,7 +151,8 @@ public final class DataBuffers {
    * Create a buffer from an array of floats into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(float[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(float[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values float values
    * @return a new buffer
@@ -166,7 +165,8 @@ public final class DataBuffers {
    * Create a buffer from an array of bytes into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(byte[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(byte[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values byte values
    * @return a new buffer
@@ -179,7 +179,8 @@ public final class DataBuffers {
    * Create a buffer from an array of longs into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(long[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(long[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values long values
    * @return a new buffer
@@ -192,7 +193,8 @@ public final class DataBuffers {
    * Create a buffer from an array of ints into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(int[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(int[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values int values
    * @return a new buffer
@@ -205,7 +207,8 @@ public final class DataBuffers {
    * Create a buffer from an array of shorts into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(short[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(short[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values short values
    * @return a new buffer
@@ -218,7 +221,8 @@ public final class DataBuffers {
    * Create a buffer from an array of doubles into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(double[], boolean, boolean) of(array, false, false}}
+   * array, which is equivalent to call {@link #of(double[], boolean, boolean) of(array, false,
+   * false}}
    *
    * @param values double values
    * @return a new buffer
@@ -231,7 +235,8 @@ public final class DataBuffers {
    * Create a buffer from an array of booleans into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(boolean[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(boolean[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values booleans values
    * @return a new buffer
@@ -244,7 +249,8 @@ public final class DataBuffers {
    * Create a buffer from an array of objects into a data buffer.
    *
    * <p>The returned buffer allows read and write operations and share the memory of the source
-   * array, which is equivalent to call {@link #of(Object[], boolean, boolean) of(values, false, false}}
+   * array, which is equivalent to call {@link #of(Object[], boolean, boolean) of(values, false,
+   * false}}
    *
    * @param values objects values
    * @param <T> data type

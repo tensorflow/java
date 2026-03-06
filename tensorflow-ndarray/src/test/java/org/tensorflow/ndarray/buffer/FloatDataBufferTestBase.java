@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray.buffer;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -42,7 +42,7 @@ public abstract class FloatDataBufferTestBase extends DataBufferTestBase<Float> 
   @Test
   public void writeAndReadFromArray() {
     FloatDataBuffer buffer = allocate(10L);
-    float[] oneToFive = new float[]{ 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
+    float[] oneToFive = new float[] {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
 
     buffer.write(oneToFive);
     assertEquals(2.0f, buffer.getFloat(1), 0.0f);
@@ -70,12 +70,12 @@ public abstract class FloatDataBufferTestBase extends DataBufferTestBase<Float> 
 
   @Test
   public void equalWithFloatNioBuffer() {
-    FloatDataBuffer nioBuffer1 = NioDataBufferFactory.create(FloatBuffer.wrap(new float[] { 1.0f, 16.0f }));
-    FloatDataBuffer nioBuffer2 = NioDataBufferFactory.create(FloatBuffer.wrap(new float[] { 1.0f, 25.0f }));
+    FloatDataBuffer nioBuffer1 =
+        NioDataBufferFactory.create(FloatBuffer.wrap(new float[] {1.0f, 16.0f}));
+    FloatDataBuffer nioBuffer2 =
+        NioDataBufferFactory.create(FloatBuffer.wrap(new float[] {1.0f, 25.0f}));
 
-    FloatDataBuffer buffer = allocate(2)
-        .setFloat(1.0f, 0)
-        .setFloat(16.0f, 1);
+    FloatDataBuffer buffer = allocate(2).setFloat(1.0f, 0).setFloat(16.0f, 1);
 
     assertTrue(nioBuffer1.equals(buffer));
     assertTrue(buffer.equals(nioBuffer1));
@@ -88,12 +88,10 @@ public abstract class FloatDataBufferTestBase extends DataBufferTestBase<Float> 
 
   @Test
   public void equalWithFloatRawBuffer() {
-    FloatDataBuffer rawBuffer1 = RawDataBufferFactory.create(new float[] { 1.0f, 16.0f }, true);
-    FloatDataBuffer rawBuffer2 = RawDataBufferFactory.create(new float[] { 1.0f, 25.0f }, true);
+    FloatDataBuffer rawBuffer1 = RawDataBufferFactory.create(new float[] {1.0f, 16.0f}, true);
+    FloatDataBuffer rawBuffer2 = RawDataBufferFactory.create(new float[] {1.0f, 25.0f}, true);
 
-    FloatDataBuffer buffer = allocate(2)
-        .setFloat(1.0f, 0)
-        .setFloat(16.0f, 1);
+    FloatDataBuffer buffer = allocate(2).setFloat(1.0f, 0).setFloat(16.0f, 1);
 
     assertTrue(rawBuffer1.equals(buffer));
     assertTrue(buffer.equals(rawBuffer1));
@@ -106,12 +104,10 @@ public abstract class FloatDataBufferTestBase extends DataBufferTestBase<Float> 
 
   @Test
   public void equalWithFloatObjectBuffer() {
-    DataBuffer<Float> objBuffer1 = MiscDataBufferFactory.create(new Float[] { 1.0f, 16.0f }, true);
-    DataBuffer<Float> objBuffer2 = MiscDataBufferFactory.create(new Float[] { 1.0f, 25.0f }, true);
+    DataBuffer<Float> objBuffer1 = MiscDataBufferFactory.create(new Float[] {1.0f, 16.0f}, true);
+    DataBuffer<Float> objBuffer2 = MiscDataBufferFactory.create(new Float[] {1.0f, 25.0f}, true);
 
-    FloatDataBuffer buffer = allocate(2)
-        .setFloat(1.0f, 0)
-        .setFloat(16.0f, 1);
+    FloatDataBuffer buffer = allocate(2).setFloat(1.0f, 0).setFloat(16.0f, 1);
 
     assertTrue(objBuffer1.equals(buffer));
     assertTrue(buffer.equals(objBuffer1));
@@ -124,9 +120,7 @@ public abstract class FloatDataBufferTestBase extends DataBufferTestBase<Float> 
 
   @Test
   public void notEqualWithOtherTypes() {
-    FloatDataBuffer buffer = allocate(2)
-        .setFloat(1.0f, 0)
-        .setFloat(16.0f, 1);
+    FloatDataBuffer buffer = allocate(2).setFloat(1.0f, 0).setFloat(16.0f, 1);
     DoubleDataBuffer doubleBuffer = DataBuffers.of(1.0, 16.0);
 
     assertFalse(buffer.equals(doubleBuffer));

@@ -35,17 +35,18 @@ public class IntDataBufferAdapterTest extends IntDataBufferTestBase {
     return super.maxSize() / 2;
   }
 
-  private static IntDataLayout<ShortDataBuffer> LAYOUT = new IntDataLayout<ShortDataBuffer>() {
+  private static IntDataLayout<ShortDataBuffer> LAYOUT =
+      new IntDataLayout<ShortDataBuffer>() {
 
-    @Override
-    public void writeInt(ShortDataBuffer buffer, int value, long index) {
-      buffer.setShort((short)(((value & 0x80000000) >> 16) | (value & 0x7FFF)), index);
-    }
+        @Override
+        public void writeInt(ShortDataBuffer buffer, int value, long index) {
+          buffer.setShort((short) (((value & 0x80000000) >> 16) | (value & 0x7FFF)), index);
+        }
 
-    @Override
-    public int readInt(ShortDataBuffer buffer, long index) {
-      int i = buffer.getShort(index);
-      return ((i & 0x8000) << 16) | ((i & 0x7FFF));
-    }
-  };
+        @Override
+        public int readInt(ShortDataBuffer buffer, long index) {
+          int i = buffer.getShort(index);
+          return ((i & 0x8000) << 16) | ((i & 0x7FFF));
+        }
+      };
 }

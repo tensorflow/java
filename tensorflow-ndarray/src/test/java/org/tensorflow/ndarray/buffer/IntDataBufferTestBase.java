@@ -1,19 +1,19 @@
 /*
- Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+Copyright 2019 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.ndarray.buffer;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -42,7 +42,7 @@ public abstract class IntDataBufferTestBase extends DataBufferTestBase<Integer> 
   @Test
   public void writeAndReadFromArray() {
     IntDataBuffer buffer = allocate(10L);
-    int[] oneToFive = new int[]{ 1, 2, 3, 4, 5 };
+    int[] oneToFive = new int[] {1, 2, 3, 4, 5};
 
     buffer.write(oneToFive);
     assertEquals(2, buffer.getInt(1));
@@ -70,12 +70,10 @@ public abstract class IntDataBufferTestBase extends DataBufferTestBase<Integer> 
 
   @Test
   public void equalWithIntNioBuffer() {
-    IntDataBuffer nioBuffer1 = NioDataBufferFactory.create(IntBuffer.wrap(new int[] { 1, 16 }));
-    IntDataBuffer nioBuffer2 = NioDataBufferFactory.create(IntBuffer.wrap(new int[] { 1, 25 }));
+    IntDataBuffer nioBuffer1 = NioDataBufferFactory.create(IntBuffer.wrap(new int[] {1, 16}));
+    IntDataBuffer nioBuffer2 = NioDataBufferFactory.create(IntBuffer.wrap(new int[] {1, 25}));
 
-    IntDataBuffer buffer = allocate(2)
-        .setInt(1, 0)
-        .setInt(16, 1);
+    IntDataBuffer buffer = allocate(2).setInt(1, 0).setInt(16, 1);
 
     assertTrue(nioBuffer1.equals(buffer));
     assertTrue(buffer.equals(nioBuffer1));
@@ -88,12 +86,10 @@ public abstract class IntDataBufferTestBase extends DataBufferTestBase<Integer> 
 
   @Test
   public void equalWithIntRawBuffer() {
-    IntDataBuffer rawBuffer1 = RawDataBufferFactory.create(new int[] { 1, 16 }, true);
-    IntDataBuffer rawBuffer2 = RawDataBufferFactory.create(new int[] { 1, 25 }, true);
+    IntDataBuffer rawBuffer1 = RawDataBufferFactory.create(new int[] {1, 16}, true);
+    IntDataBuffer rawBuffer2 = RawDataBufferFactory.create(new int[] {1, 25}, true);
 
-    IntDataBuffer buffer = allocate(2)
-        .setInt(1, 0)
-        .setInt(16, 1);
+    IntDataBuffer buffer = allocate(2).setInt(1, 0).setInt(16, 1);
 
     assertTrue(rawBuffer1.equals(buffer));
     assertTrue(buffer.equals(rawBuffer1));
@@ -106,12 +102,10 @@ public abstract class IntDataBufferTestBase extends DataBufferTestBase<Integer> 
 
   @Test
   public void equalWithIntObjectBuffer() {
-    DataBuffer<Integer> objBuffer1 = MiscDataBufferFactory.create(new Integer[] { 1, 16 }, true);
-    DataBuffer<Integer> objBuffer2 = MiscDataBufferFactory.create(new Integer[] { 1, 25 }, true);
+    DataBuffer<Integer> objBuffer1 = MiscDataBufferFactory.create(new Integer[] {1, 16}, true);
+    DataBuffer<Integer> objBuffer2 = MiscDataBufferFactory.create(new Integer[] {1, 25}, true);
 
-    IntDataBuffer buffer = allocate(2)
-        .setInt(1, 0)
-        .setInt(16, 1);
+    IntDataBuffer buffer = allocate(2).setInt(1, 0).setInt(16, 1);
 
     assertTrue(objBuffer1.equals(buffer));
     assertTrue(buffer.equals(objBuffer1));
@@ -124,9 +118,7 @@ public abstract class IntDataBufferTestBase extends DataBufferTestBase<Integer> 
 
   @Test
   public void notEqualWithOtherTypes() {
-    IntDataBuffer buffer = allocate(2)
-        .setInt(1, 0)
-        .setInt(16, 1);
+    IntDataBuffer buffer = allocate(2).setInt(1, 0).setInt(16, 1);
     LongDataBuffer longBuffer = DataBuffers.of(1L, 16L);
 
     assertFalse(buffer.equals(longBuffer));

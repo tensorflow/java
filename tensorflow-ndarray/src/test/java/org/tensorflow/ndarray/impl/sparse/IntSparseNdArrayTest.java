@@ -1,5 +1,13 @@
 package org.tensorflow.ndarray.impl.sparse;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.IntBuffer;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.LongNdArray;
@@ -12,15 +20,6 @@ import org.tensorflow.ndarray.impl.buffer.nio.NioDataBufferFactory;
 import org.tensorflow.ndarray.impl.buffer.raw.RawDataBufferFactory;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.index.Indices;
-
-import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IntSparseNdArrayTest {
   long[][] indicesArray = {{0, 0}, {1, 2}};

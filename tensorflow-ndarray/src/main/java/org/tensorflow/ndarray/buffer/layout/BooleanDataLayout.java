@@ -44,7 +44,8 @@ public interface BooleanDataLayout<S extends DataBuffer<?>> extends DataLayout<S
   void writeBoolean(S buffer, boolean value, long index);
 
   /**
-   * Reads {@code n = scale()} values from the buffer at the given index and return them as a boolean.
+   * Reads {@code n = scale()} values from the buffer at the given index and return them as a
+   * boolean.
    *
    * @param buffer the buffer to read from
    * @param index position of the buffer to read in the buffer

@@ -1,5 +1,13 @@
 package org.tensorflow.ndarray.impl.sparse;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.DoubleBuffer;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -13,15 +21,6 @@ import org.tensorflow.ndarray.impl.buffer.nio.NioDataBufferFactory;
 import org.tensorflow.ndarray.impl.buffer.raw.RawDataBufferFactory;
 import org.tensorflow.ndarray.impl.dimension.DimensionalSpace;
 import org.tensorflow.ndarray.index.Indices;
-
-import java.nio.DoubleBuffer;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DoubleSparseNdArrayTest {
   long[][] indicesArray = {{0, 0}, {1, 2}};
@@ -308,10 +307,12 @@ class DoubleSparseNdArrayTest {
   public void testToString() {
     DoubleNdArray ndArray = StdArrays.ndCopyOf(dense2DArray);
     DoubleSparseNdArray instance =
-            DoubleSparseNdArray.create(DimensionalSpace.create(ndArray.shape()));
+        DoubleSparseNdArray.create(DimensionalSpace.create(ndArray.shape()));
     instance.fromDense(ndArray);
-    Assertions.assertEquals("DoubleSparseNdArray(defaultValue=0.0, numElements=2, shape=[3, 4])",instance.toString());
+    Assertions.assertEquals(
+        "DoubleSparseNdArray(defaultValue=0.0, numElements=2, shape=[3, 4])", instance.toString());
     DoubleSparseNdArray empty = DoubleSparseNdArray.create(DimensionalSpace.create(Shape.of(5)));
-    Assertions.assertEquals("DoubleSparseNdArray(defaultValue=0.0, numElements=0, shape=[5])",empty.toString());
+    Assertions.assertEquals(
+        "DoubleSparseNdArray(defaultValue=0.0, numElements=0, shape=[5])", empty.toString());
   }
 }
