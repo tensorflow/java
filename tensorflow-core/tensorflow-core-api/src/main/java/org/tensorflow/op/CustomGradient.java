@@ -17,15 +17,9 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.List;
-import org.bytedeco.javacpp.PointerPointer;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.TensorFlow;
-import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
-import org.tensorflow.internal.c_api.TFJ_GraphId;
-import org.tensorflow.internal.c_api.TFJ_Scope;
-import org.tensorflow.internal.c_api.TF_Operation;
-import org.tensorflow.internal.c_api.TF_Output;
 
 /**
  * A custom gradient for ops of type {@link T}. Should be registered using {@link
@@ -53,40 +47,4 @@ public interface CustomGradient<T extends RawOpInputs> {
    * @return the gradients of the op's inputs.
    */
   List<Operand<?>> call(Ops tf, T op, List<Output<?>> gradInputs);
-
-  /**
-   * Create an adapter for the custom gradient so that it can be used by native code.
-   *
-   * <p>You should not be calling this yourself, use {@link TensorFlow#registerCustomGradient(Class,
-   * CustomGradient)}.
-   */
-  static <T extends RawOpInputs<?>> TFJ_GradFuncAdapter adapter(
-      CustomGradient<T> gradient, Class<T> opClass) {
-
-    final TypedGradientAdapter<T> impl = new TypedGradientAdapter<T>(gradient, opClass);
-
-    // IMPORTANT:
-    // Return a *direct* TFJ_GradFuncAdapter subclass, so JavaCPP reliably materializes a function
-    // pointer thunk for the native side. Some call paths may pass NULL if we return a deeper
-    // subclass.
-    return new TFJ_GradFuncAdapter() {
-      @Override
-      public int call(
-          TFJ_GraphId nativeGraphId,
-          TFJ_Scope nativeScope,
-          TF_Operation nativeOperation,
-          TF_Output nativeGradInputs,
-          int nativeGradInputsLength,
-          PointerPointer nativeGradOutputsPtr) {
-
-        return impl.call(
-            nativeGraphId,
-            nativeScope,
-            nativeOperation,
-            nativeGradInputs,
-            nativeGradInputsLength,
-            nativeGradOutputsPtr);
-      }
-    };
-  }
 }
