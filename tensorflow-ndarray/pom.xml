@@ -21,13 +21,13 @@
 
   <parent>
     <groupId>org.tensorflow</groupId>
-    <artifactId>tensorflow-java-ndarray</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <artifactId>tensorflow-java</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ndarray</artifactId>
+  <artifactId>tensorflow-ndarray</artifactId>
   <packaging>jar</packaging>
 
-  <name>NdArray Java Library</name>
+  <name>TensorFlow NdArray Library</name>
   <description>
     Utility library for N-dimensional data I/O operations in Java.
   </description>
@@ -62,8 +62,8 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -75,15 +75,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
           <argLine>-Xmx2G</argLine>
-          <includes>
-            <include>**/*Test.java</include>
-          </includes>
-          <useModulePath>false</useModulePath>
         </configuration>
       </plugin>
       <plugin>
