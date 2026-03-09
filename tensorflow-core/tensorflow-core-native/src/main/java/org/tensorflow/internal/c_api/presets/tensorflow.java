@@ -213,6 +213,19 @@ public class tensorflow implements LoadEnabled, InfoMapper {
 
     // Skip C++ classes
     infoMap.put(new Info("tsl::StatusGroup").skip());
+
+    // Force correct marshalling of TFJ_RegisterCustomGradient callback argument.
+    // Without an explicit cast, JavaCPP may pass a NULL function pointer for some FunctionPointer
+    // instances.
+    infoMap.put(
+        new Info("TFJ_RegisterCustomGradient")
+            .javaText(
+                "public static native @Cast(\"bool\") boolean TFJ_RegisterCustomGradient("
+                    + "@Cast(\"const char*\") BytePointer op_type, "
+                    + "@Cast(\"TFJ_GradFuncAdapter\") TFJ_GradFuncAdapter custom_gradient_adapter);\n"
+                    + "public static native @Cast(\"bool\") boolean TFJ_RegisterCustomGradient("
+                    + "@Cast(\"const char*\") String op_type, "
+                    + "@Cast(\"TFJ_GradFuncAdapter\") TFJ_GradFuncAdapter custom_gradient_adapter);\n"));
   }
 
   @Override

@@ -39,6 +39,7 @@ import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.CustomGradient;
+import org.tensorflow.op.GradientDispatch;
 import org.tensorflow.op.RawCustomGradient;
 import org.tensorflow.op.RawOpInputs;
 import org.tensorflow.op.annotation.OpInputsMetadata;
@@ -207,7 +208,10 @@ public final class TensorFlow {
     if (hasGradient(opType)) {
       return false;
     }
-    TFJ_GradFuncAdapter g = RawCustomGradient.adapter(gradient);
+
+    GradientDispatch.putRaw(opType, gradient);
+    TFJ_GradFuncAdapter g = GradientDispatch.adapter();
+
     if (!TFJ_RegisterCustomGradient(opType, g)) {
       return false;
     }
@@ -255,7 +259,10 @@ public final class TensorFlow {
     if (hasGradient(opType)) {
       return false;
     }
-    TFJ_GradFuncAdapter g = CustomGradient.adapter(gradient, inputClass);
+
+    GradientDispatch.putTyped(opType, gradient, inputClass);
+    TFJ_GradFuncAdapter g = GradientDispatch.adapter();
+
     if (!TFJ_RegisterCustomGradient(opType, g)) {
       return false;
     }

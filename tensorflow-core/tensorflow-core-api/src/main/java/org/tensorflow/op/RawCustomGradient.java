@@ -21,7 +21,6 @@ import org.tensorflow.GraphOperation;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.TensorFlow;
-import org.tensorflow.internal.c_api.TFJ_GradFuncAdapter;
 
 /**
  * A custom gradient for an op of unspecified type. Should be registered using {@link
@@ -46,14 +45,4 @@ public interface RawCustomGradient {
    * @return the gradients of the op's inputs.
    */
   List<Operand<?>> call(Ops tf, GraphOperation op, List<Output<?>> gradInputs);
-
-  /**
-   * Create an adapter for the custom gradient so that it can be used by native code.
-   *
-   * <p>You should not be calling this yourself, use {@link
-   * TensorFlow#registerCustomGradient(String, RawCustomGradient)}.
-   */
-  static TFJ_GradFuncAdapter adapter(RawCustomGradient gradient) {
-    return new RawGradientAdapter(gradient);
-  }
 }
