@@ -43,6 +43,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
@@ -396,8 +397,21 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
   }
 
+  /**
+   * Attaches a {@link ConcreteFunction} to this graph.
+   *
+   * <p>If a function with the same defined name has already been attached, this method returns
+   * immediately without re-registering it.
+   *
+   * <p>The function is also stored in an internal cache to speed up subsequent lookups performed by
+   * {@link #getFunction(String)} and {@link #getFunctionCached(String)}.
+   */
   @Override
   public void attachFunction(ConcreteFunction function) {
+    String name = function.getDefinedName();
+    if (functionCache.putIfAbsent(name, function) != null) {
+      return;
+    }
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
@@ -455,6 +469,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *     name
    */
   public ConcreteFunction getFunction(String key) {
+    ConcreteFunction cached = functionCache.get(key);
+    if (cached != null) {
+      return cached;
+    }
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       List<NativeFunction> funcs = getNativeFunctions(scope);
@@ -880,6 +898,44 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
   private int newInitializersMarker = -1;
+
+  /**
+   * Cache of {@link ConcreteFunction}s attached to this graph, indexed by their defined name.
+   *
+   * <p>This cache avoids repeatedly scanning the native function library when resolving functions
+   * during gradient construction or control-flow expansion.
+   *
+   * <p>The cache is populated lazily when {@link #attachFunction(ConcreteFunction)} is called and
+   * consulted first by {@link #getFunction(String)}.
+   *
+   * <p>A {@link ConcurrentHashMap} is used to allow concurrent reads during graph building without
+   * additional synchronization.
+   */
+  private final ConcurrentHashMap<String, ConcreteFunction> functionCache =
+      new ConcurrentHashMap<>();
+
+  /**
+   * Returns a cached {@link ConcreteFunction} whose name starts with the provided prefix.
+   *
+   * <p>This is a lightweight lookup helper used when the exact function name is not known but
+   * follows a deterministic prefix (for example functions generated for control-flow constructs or
+   * custom gradient expansions).
+   *
+   * <p>The search is performed only in the local cache and does not query the native TensorFlow
+   * function library.
+   *
+   * @param prefix function name prefix
+   * @return a cached {@link ConcreteFunction} whose name starts with {@code prefix}, or {@code
+   *     null} if none is found
+   */
+  public ConcreteFunction getFunctionCached(String prefix) {
+    for (Map.Entry<String, ConcreteFunction> e : functionCache.entrySet()) {
+      if (e.getKey().startsWith(prefix)) {
+        return e.getValue();
+      }
+    }
+    return null;
+  }
 
   /**
    * Use builders without locking. This should only be used during custom gradient building.
