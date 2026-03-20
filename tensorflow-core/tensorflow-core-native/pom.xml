@@ -582,7 +582,7 @@
             <configuration>
               <!-- 'url' property must be provided in command line -->
               <file>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</file>
-              <repositoryId>ossrh</repositoryId>
+              <repositoryId>central</repositoryId>
               <groupId>${project.groupId}</groupId>
               <artifactId>${project.artifactId}</artifactId>
               <classifier>${native.classifier}</classifier>
