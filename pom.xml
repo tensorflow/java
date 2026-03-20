@@ -81,6 +81,24 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <!--
+  Deploys to OSSRH/Maven central
+    We don't need to deploy to Bintray, as JCenter will eventually proxy artifacts upload in Maven
+    central. See Sonatype requirements at http://central.sonatype.org/pages/apache-maven.html
+  -->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>central</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>
+        https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
+      </url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -493,16 +511,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <!-- Deploy to Maven central -->
-      <plugin>
-        <groupId>org.sonatype.central</groupId>
-        <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.9.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <publishingServerId>central</publishingServerId>
-        </configuration>
       </plugin>
       <!-- GPG signed components: http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components -->
       <plugin>
