@@ -54,6 +54,16 @@ jobs:
           echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
       - name: Checkout repository
         uses: actions/checkout@v6
+      - name: Extract distribution repository URL
+        id: repository
+        run: |
+          if [[ "${{ env.DEPLOY_RELEASE }}" = "true" ]]; then
+            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.repository.url}" -DstagingRepositoryId=${{ steps.staging.outputs.stagingRepositoryId }}`
+          else
+            export REPOSITORY_URL=`mvn exec:exec -q -N -Dexec.executable='echo' -Dexec.args="\\${project.distributionManagement.snapshotRepository.url}"`
+          fi
+          echo "Repository URL: $REPOSITORY_URL"
+          echo "::set-output name=repositoryUrl::$REPOSITORY_URL"
   linux-arm64:
     runs-on: ubuntu-2204-arm64-2c
     needs: prepare
@@ -81,7 +91,7 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   linux-x86_64:
     runs-on: ubuntu-22.04
     needs: prepare
@@ -104,7 +114,7 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
   macosx-arm64:
     runs-on: macos-14
     needs: prepare
