@@ -219,7 +219,7 @@ public final class Quantize<T extends TNumber> extends RawOp {
   /**
    * Sets the roundMode option.
    *
-   * @param roundMode the roundMode option
+   * @param roundMode {@code round_mode='HALF_TO_EVEN'} only supported for mode 'SCALED'.
    * @return this Options instance.
    */
   public static Options roundMode(String roundMode) {
@@ -320,7 +320,7 @@ public final class Quantize<T extends TNumber> extends RawOp {
     /**
      * Sets the roundMode option.
      *
-     * @param roundMode the roundMode option
+     * @param roundMode {@code round_mode='HALF_TO_EVEN'} only supported for mode 'SCALED'.
      * @return this Options instance.
      */
     public Options roundMode(String roundMode) {
@@ -398,7 +398,7 @@ public final class Quantize<T extends TNumber> extends RawOp {
     public final String mode;
 
     /**
-     * The roundMode attribute
+     * {@code round_mode='HALF_TO_EVEN'} only supported for mode 'SCALED'.
      */
     public final String roundMode;
 

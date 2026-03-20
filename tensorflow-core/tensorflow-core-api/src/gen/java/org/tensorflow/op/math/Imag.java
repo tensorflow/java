@@ -74,7 +74,8 @@ public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
    *
    * @param scope current scope
    * @param input The input value
-   * @param Tout The value of the Tout attribute
+   * @param Tout Need to be {@code tf.float32} when the type of {@code x} is {@code tf.complex64}.
+   * Need to be {@code tf.float64} when the type of {@code x} is {@code tf.complex128}.
    * @param <U> data type for {@code Imag} output and operands
    * @return a new instance of Imag
    */
@@ -132,7 +133,8 @@ public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
     public final DataType T;
 
     /**
-     * The Tout attribute
+     * Need to be {@code tf.float32} when the type of {@code x} is {@code tf.complex64}.
+     * Need to be {@code tf.float64} when the type of {@code x} is {@code tf.complex128}.
      */
     public final DataType Tout;
 

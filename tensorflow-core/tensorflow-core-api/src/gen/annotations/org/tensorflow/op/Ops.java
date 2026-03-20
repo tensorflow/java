@@ -7743,12 +7743,12 @@ public final class Ops {
    * @param index The index value
    * @param elementShape The elementShape value
    * @param elementDtype The value of the elementDtype attribute
-   * @param <T> data type for {@code TensorListGetItem} output and operands
+   * @param <U> data type for {@code TensorListGetItem} output and operands
    * @return a new instance of TensorListGetItem
    */
-  public <T extends TType> TensorListGetItem<T> tensorListGetItem(
-      Operand<? extends TType> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape,
-      Class<T> elementDtype) {
+  public <U extends TType> TensorListGetItem<U> tensorListGetItem(
+      Operand<? extends TType> inputHandle, Operand<TInt32> index,
+      Operand<? extends TNumber> elementShape, Class<U> elementDtype) {
     return TensorListGetItem.create(scope, inputHandle, index, elementShape, elementDtype);
   }
 

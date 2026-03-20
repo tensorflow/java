@@ -79,7 +79,8 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    *
    * @param scope current scope
    * @param x The x value
-   * @param Tout The value of the Tout attribute
+   * @param Tout Need to be {@code tf.float32} when the type of {@code x} is {@code tf.complex64}.
+   * Need to be {@code tf.float64} when the type of {@code x} is {@code tf.complex128}.
    * @param <U> data type for {@code ComplexAbs} output and operands
    * @return a new instance of ComplexAbs
    */
@@ -137,7 +138,8 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
     public final DataType T;
 
     /**
-     * The Tout attribute
+     * Need to be {@code tf.float32} when the type of {@code x} is {@code tf.complex64}.
+     * Need to be {@code tf.float64} when the type of {@code x} is {@code tf.complex128}.
      */
     public final DataType Tout;
 

@@ -68,7 +68,15 @@ public final class IsotonicRegression<U extends TNumber> extends RawOp {
    *
    * @param scope current scope
    * @param input A (batch_size, dim)-tensor holding a batch of inputs.
-   * @param outputDtype Dtype of output.
+   * @param outputDtype Dtype of the output tensor.
+   * <p>Note on supported input-output type combinations:
+   * <ul>
+   * <li>For floating-point types, the output has the same dtype as the input.</li>
+   * <li>For 8-bit and 16-bit integer inputs, the output is a 32-bit float.</li>
+   * <li>For 32-bit and 64-bit integer inputs, the output is a 64-bit float.</li>
+   * </ul>
+   * <p>Using unsupported dtype pairs (for example, input=float64 with output=float32)
+   * will result in a &quot;Could not find device for node&quot; error.
    * @param <U> data type for {@code IsotonicRegression} output and operands
    * @return a new instance of IsotonicRegression
    */
@@ -130,7 +138,15 @@ public final class IsotonicRegression<U extends TNumber> extends RawOp {
     public final DataType T;
 
     /**
-     * Dtype of output.
+     * Dtype of the output tensor.
+     * <p>Note on supported input-output type combinations:
+     * <ul>
+     * <li>For floating-point types, the output has the same dtype as the input.</li>
+     * <li>For 8-bit and 16-bit integer inputs, the output is a 32-bit float.</li>
+     * <li>For 32-bit and 64-bit integer inputs, the output is a 64-bit float.</li>
+     * </ul>
+     * <p>Using unsupported dtype pairs (for example, input=float64 with output=float32)
+     * will result in a &quot;Could not find device for node&quot; error.
      */
     public final DataType outputDtype;
 

@@ -32,6 +32,7 @@ limitations under the License.
 // #define TENSORFLOW_TSL_PLATFORM_CTSTRING_INTERNAL_H_
 
 // #include <limits.h>
+// #include <stdbool.h>  // IWYU pragma: keep, provides bool
 // #include <stdint.h>
 // #include <stdlib.h>
 // #include <string.h>
@@ -75,6 +76,15 @@ public static final int  // NOLINT
   TF_TSTR_OFFSET = 0x02,
   TF_TSTR_VIEW = 0x03,
   TF_TSTR_TYPE_MASK = 0x03;
+// Targeting ../tstring_owner_ref_t.java
+
+
+// Targeting ../tstring_owner_unref_t.java
+
+
+// Targeting ../TStringOwnerCApi.java
+
+
 // Targeting ../TF_TString_Large.java
 
 
@@ -140,6 +150,13 @@ public static native void TF_TString_ReserveAmortized(TF_TString str,
 
 public static native @Cast("char*") BytePointer TF_TString_Resize(TF_TString str, @Cast("size_t") long new_size,
                                       @Cast("char") byte c);
+
+public static native void TF_TString_AssignViewWithOwner(TF_TString dst,
+                                                  @Cast("const char*") BytePointer src, @Cast("size_t") long size,
+                                                  TStringOwnerCApi owner_ref);
+public static native void TF_TString_AssignViewWithOwner(TF_TString dst,
+                                                  String src, @Cast("size_t") long size,
+                                                  TStringOwnerCApi owner_ref);
 
 public static native void TF_TString_AssignView(TF_TString dst, @Cast("const char*") BytePointer src,
                                          @Cast("size_t") long size);
@@ -247,6 +264,9 @@ limitations under the License.
 // `dst'.  Any mutations to `dst' via Append, AppendN, or GetMutableDataPointer,
 // will result in a copy into an owned SMALL or LARGE type, and will not modify
 // `src'.
+
+// Sets `dst' as an owning VIEW type to `src', taking shared ownership via
+// `owner_ref`. If `owner_ref` is null, behaves as TF_TString_AssignView.
 
 // Appends `src' onto `dst'.  If `dst' is a VIEW or OFFSET type, it will first
 // be converted to an owned LARGE or SMALL type.  `dst' should not point to
@@ -477,7 +497,8 @@ public static final int
   TF_INT4 = 29,
   TF_UINT4 = 30,
   TF_INT2 = 31,
-  TF_UINT2 = 32;
+  TF_UINT2 = 32,
+  TF_FLOAT4_E2M1FN = 33;  // 2 exponent bits, 1 mantissa bit, finite-only
 
 // TF_DataTypeSize returns the sizeof() for the underlying type corresponding
 // to the given TF_DataType enum value. Returns 0 for variable length types
@@ -5337,8 +5358,8 @@ public static native @Cast("bool") boolean TFJ_HasGradient(String op_type);
 /** Registers a gradient function for operations of type {@code op_type}.
  * 
  *  Returns true if the function has been registered successfully, false if operation failed or if gradient function is already registered to that {@code op_type}. */
-public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(@Cast("const char*") BytePointer op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
-public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(String op_type, TFJ_GradFuncAdapter custom_gradient_adapter);
+public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(@Cast("const char*") BytePointer op_type, @Cast("TFJ_GradFuncAdapter") TFJ_GradFuncAdapter custom_gradient_adapter);
+public static native @Cast("bool") boolean TFJ_RegisterCustomGradient(@Cast("const char*") String op_type, @Cast("TFJ_GradFuncAdapter") TFJ_GradFuncAdapter custom_gradient_adapter);
 
 // #include "tfj_gradients_impl.cc" // include CC file in its header to compile it with JavaCPP
 

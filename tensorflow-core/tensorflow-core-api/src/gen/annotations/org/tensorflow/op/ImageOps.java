@@ -337,10 +337,10 @@ public final class ImageOps {
   }
 
   /**
-   * Function for decode_bmp, decode_gif, decode_jpeg, decode_webp, and decode_png.
-   *  Detects whether an image is a BMP, GIF, JPEG, WebP, or PNG, and performs the
-   *  appropriate operation to convert the input bytes string into a Tensor of type
-   *  dtype.
+   * Function for decode_bmp, decode_gif, decode_jpeg, decode_jxl, decode_webp, and decode_png.
+   *  Detects whether an image is a BMP, GIF, JPEG, JPEG XL, WebP, or PNG, and
+   *  performs the appropriate operation to convert the input bytes string into a
+   *  Tensor of type dtype.
    *  <p><em>NOTE</em>: decode_gif and decode_webp return a 4-D
    *  array [num_frames, height, width, 3], as opposed to decode_bmp,
    *  decode_jpeg, and decode_png, which always return 3-D arrays [height,
@@ -365,10 +365,10 @@ public final class ImageOps {
   }
 
   /**
-   * Function for decode_bmp, decode_gif, decode_jpeg, decode_webp, and decode_png.
-   *  Detects whether an image is a BMP, GIF, JPEG, WebP, or PNG, and performs the
-   *  appropriate operation to convert the input bytes string into a Tensor of type
-   *  dtype.
+   * Function for decode_bmp, decode_gif, decode_jpeg, decode_jxl, decode_webp, and decode_png.
+   *  Detects whether an image is a BMP, GIF, JPEG, JPEG XL, WebP, or PNG, and
+   *  performs the appropriate operation to convert the input bytes string into a
+   *  Tensor of type dtype.
    *  <p><em>NOTE</em>: decode_gif and decode_webp return a 4-D
    *  array [num_frames, height, width, 3], as opposed to decode_bmp,
    *  decode_jpeg, and decode_png, which always return 3-D arrays [height,

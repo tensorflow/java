@@ -694,7 +694,6 @@ public final class DataExperimentalOps {
    * @param numThreads The number of threads in the thread pool.
    * @param displayName A human-readable name for the threads that may be visible in some
    *  visualizations.
-   *  threadpool.
    * @param options carries optional attribute values
    * @return a new instance of ThreadPoolHandle
    */

@@ -71,8 +71,10 @@ public final class QuantizeAndDequantizeV4Grad<T extends TNumber> extends RawOp 
    * @param scope current scope
    * @param gradients The gradients value
    * @param input The input value
-   * @param inputMin The inputMin value
-   * @param inputMax The inputMax value
+   * @param inputMin If {@code axis} is specified, the shape of the minimum input tensor
+   * must be rank 1.
+   * @param inputMax If {@code axis} is specified, the shape of the maximum input tensor
+   * must be rank 1.
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeAndDequantizeV4Grad} output and operands
    * @return a new instance of QuantizeAndDequantizeV4Grad
@@ -171,12 +173,14 @@ public final class QuantizeAndDequantizeV4Grad<T extends TNumber> extends RawOp 
     public final Operand<T> input;
 
     /**
-     * The inputMin input
+     * If {@code axis} is specified, the shape of the minimum input tensor
+     * must be rank 1.
      */
     public final Operand<T> inputMin;
 
     /**
-     * The inputMax input
+     * If {@code axis} is specified, the shape of the maximum input tensor
+     * must be rank 1.
      */
     public final Operand<T> inputMax;
 

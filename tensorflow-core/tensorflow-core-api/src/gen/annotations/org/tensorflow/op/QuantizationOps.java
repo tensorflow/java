@@ -562,8 +562,10 @@ public final class QuantizationOps {
    *
    * @param gradients The gradients value
    * @param input The input value
-   * @param inputMin The inputMin value
-   * @param inputMax The inputMax value
+   * @param inputMin If {@code axis} is specified, the shape of the minimum input tensor
+   *  must be rank 1.
+   * @param inputMax If {@code axis} is specified, the shape of the maximum input tensor
+   *  must be rank 1.
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeAndDequantizeV4Grad} output and operands
    * @return a new instance of QuantizeAndDequantizeV4Grad

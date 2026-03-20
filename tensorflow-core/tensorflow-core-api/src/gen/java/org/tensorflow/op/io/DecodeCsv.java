@@ -145,7 +145,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
   /**
    * Sets the selectCols option.
    *
-   * @param selectCols the selectCols option
+   * @param selectCols Optional sorted list of column indices to select. If specified,
+   * only this subset of columns will be parsed and returned.
+   * It only works on {@code records} except for {@code record_defaults}.
    * @return this Options instance.
    */
   public static Options selectCols(List<Long> selectCols) {
@@ -155,7 +157,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
   /**
    * Sets the selectCols option.
    *
-   * @param selectCols the selectCols option
+   * @param selectCols Optional sorted list of column indices to select. If specified,
+   * only this subset of columns will be parsed and returned.
+   * It only works on {@code records} except for {@code record_defaults}.
    * @return this Options instance.
    */
   public static Options selectCols(Long... selectCols) {
@@ -230,7 +234,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     /**
      * Sets the selectCols option.
      *
-     * @param selectCols the selectCols option
+     * @param selectCols Optional sorted list of column indices to select. If specified,
+     * only this subset of columns will be parsed and returned.
+     * It only works on {@code records} except for {@code record_defaults}.
      * @return this Options instance.
      */
     public Options selectCols(List<Long> selectCols) {
@@ -241,7 +247,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     /**
      * Sets the selectCols option.
      *
-     * @param selectCols the selectCols option
+     * @param selectCols Optional sorted list of column indices to select. If specified,
+     * only this subset of columns will be parsed and returned.
+     * It only works on {@code records} except for {@code record_defaults}.
      * @return this Options instance.
      */
     public Options selectCols(Long... selectCols) {
@@ -290,7 +298,9 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     public final String naValue;
 
     /**
-     * The selectCols attribute
+     * Optional sorted list of column indices to select. If specified,
+     * only this subset of columns will be parsed and returned.
+     * It only works on {@code records} except for {@code record_defaults}.
      */
     public final long[] selectCols;
 

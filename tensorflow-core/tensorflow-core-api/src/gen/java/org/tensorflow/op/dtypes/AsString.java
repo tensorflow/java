@@ -124,6 +124,7 @@ public final class AsString extends RawOp implements Operand<TString> {
    * Sets the scientific option.
    *
    * @param scientific Use scientific notation for floating point numbers.
+   * Can't be specified to {@code True} when {@code shortest} is set to {@code True}.
    * @return this Options instance.
    */
   public static Options scientific(Boolean scientific) {
@@ -135,6 +136,7 @@ public final class AsString extends RawOp implements Operand<TString> {
    *
    * @param shortest Use shortest representation (either scientific or standard) for
    * floating point numbers.
+   * Can't be specified to {@code True} when {@code scientific} is set to {@code True}.
    * @return this Options instance.
    */
   public static Options shortest(Boolean shortest) {
@@ -211,6 +213,7 @@ public final class AsString extends RawOp implements Operand<TString> {
      * Sets the scientific option.
      *
      * @param scientific Use scientific notation for floating point numbers.
+     * Can't be specified to {@code True} when {@code shortest} is set to {@code True}.
      * @return this Options instance.
      */
     public Options scientific(Boolean scientific) {
@@ -223,6 +226,7 @@ public final class AsString extends RawOp implements Operand<TString> {
      *
      * @param shortest Use shortest representation (either scientific or standard) for
      * floating point numbers.
+     * Can't be specified to {@code True} when {@code scientific} is set to {@code True}.
      * @return this Options instance.
      */
     public Options shortest(Boolean shortest) {
@@ -278,12 +282,14 @@ public final class AsString extends RawOp implements Operand<TString> {
 
     /**
      * Use scientific notation for floating point numbers.
+     * Can't be specified to {@code True} when {@code shortest} is set to {@code True}.
      */
     public final boolean scientific;
 
     /**
      * Use shortest representation (either scientific or standard) for
      * floating point numbers.
+     * Can't be specified to {@code True} when {@code scientific} is set to {@code True}.
      */
     public final boolean shortest;
 

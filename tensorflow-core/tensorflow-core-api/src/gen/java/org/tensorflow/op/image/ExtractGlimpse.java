@@ -145,6 +145,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
    *
    * @param uniformNoise indicates if the noise should be generated using a
    * uniform distribution or a Gaussian distribution.
+   * It should not be {@code True} when {@code noise} is not {@code uniform}.
    * @return this Options instance.
    */
   public static Options uniformNoise(Boolean uniformNoise) {
@@ -222,6 +223,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
      *
      * @param uniformNoise indicates if the noise should be generated using a
      * uniform distribution or a Gaussian distribution.
+     * It should not be {@code True} when {@code noise} is not {@code uniform}.
      * @return this Options instance.
      */
     public Options uniformNoise(Boolean uniformNoise) {
@@ -281,6 +283,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
     /**
      * indicates if the noise should be generated using a
      * uniform distribution or a Gaussian distribution.
+     * It should not be {@code True} when {@code noise} is not {@code uniform}.
      */
     public final boolean uniformNoise;
 

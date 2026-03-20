@@ -444,9 +444,10 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param input A float32 tensor.
+   * @param input A float32 or float64 tensor.
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
-   * @param Tcomplex The value of the Tcomplex attribute
+   * @param Tcomplex Should be {@code tf.complex64} when the type of {@code input} is {@code float32}.
+   *  Should be {@code tf.complex128} when the type of {@code input} is {@code float64}.
    * @param <U> data type for {@code RFFT} output and operands
    * @return a new instance of Rfft
    */
@@ -467,9 +468,10 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param input A float32 tensor.
+   * @param input A float32 or float64 tensor.
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
-   * @param Tcomplex The value of the Tcomplex attribute
+   * @param Tcomplex Should be {@code tf.complex64} when the type of {@code input} is {@code float32}.
+   *  Should be {@code tf.complex128} when the type of {@code input} is {@code float64}.
    * @param <U> data type for {@code RFFT2D} output and operands
    * @return a new instance of Rfft2d
    */
@@ -490,9 +492,10 @@ public final class SignalOps {
    *  corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
    *  the dimension is padded with zeros.
    *
-   * @param input A float32 tensor.
+   * @param input A float32 or float64 tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-   * @param Tcomplex The value of the Tcomplex attribute
+   * @param Tcomplex Should be {@code tf.complex64} when the type of {@code input} is {@code float32}.
+   *  Should be {@code tf.complex128} when the type of {@code input} is {@code float64}.
    * @param <U> data type for {@code RFFT3D} output and operands
    * @return a new instance of Rfft3d
    */
@@ -513,10 +516,11 @@ public final class SignalOps {
    *  <p>Axes mean the dimensions to perform the transform on. Default is to perform on
    *  all axes.
    *
-   * @param input A complex tensor.
+   * @param input A float32 or float64 tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @param Tcomplex The value of the Tcomplex attribute
+   * @param Tcomplex Should be {@code tf.complex64} when the type of {@code input} is {@code float32}.
+   *  Should be {@code tf.complex128} when the type of {@code input} is {@code float64}.
    * @param <U> data type for {@code RFFTND} output and operands
    * @return a new instance of RfftNd
    */
