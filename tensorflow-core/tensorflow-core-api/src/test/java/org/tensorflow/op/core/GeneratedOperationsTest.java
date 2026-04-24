@@ -25,6 +25,7 @@ import org.tensorflow.Session;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 public final class GeneratedOperationsTest {
@@ -77,6 +78,32 @@ public final class GeneratedOperationsTest {
       sess.runner().addTarget(initVariable).run();
       try (TInt32 result = (TInt32) sess.runner().fetch(x).run().get(0)) {
         assertEquals(3, result.getInt());
+      }
+    }
+  }
+
+  /**
+   * Test for basic unary math operations. Ensures that the JNI bridge correctly handles Square and
+   * Absolute value functions.
+   */
+  @Test
+  public void testUnaryMathOps() {
+    try (Graph g = new Graph();
+        Session sess = new Session(g)) {
+      Ops ops = Ops.create(g);
+
+      Operand<TFloat32> square = ops.math.square(ops.constant(4.0f));
+      @SuppressWarnings("unchecked")
+      TFloat32 squareRaw = (TFloat32) sess.runner().fetch(square).run().get(0);
+      try (TFloat32 result = squareRaw) {
+        assertEquals(16.0f, result.getFloat(), 0.0f);
+      }
+
+      Operand<TFloat32> abs = ops.math.abs(ops.constant(-5.5f));
+      @SuppressWarnings("unchecked")
+      TFloat32 absRaw = (TFloat32) sess.runner().fetch(abs).run().get(0);
+      try (TFloat32 result = absRaw) {
+        assertEquals(5.5f, result.getFloat(), 0.0f);
       }
     }
   }
