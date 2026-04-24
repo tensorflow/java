@@ -133,14 +133,14 @@ for temporary staging.
     <settings>
       <servers>
         <server>
-          <id>ossrh</id>
-          <username>${SONATYPE_USERNAME}</username>
-          <password>${SONATYPE_PASSWORD}</password>
+          <id>central</id>
+          <username>${USERNAME}</username>
+          <password>${PASSWORD}</password>
         </server>
         <server>
-          <id>ossrh-staging</id>
-          <username>${SONATYPE_USERNAME}</username>
-          <password>${SONATYPE_PASSWORD}</password>
+          <id>central-staging</id>
+          <username>${USERNAME}</username>
+          <password>${PASSWORD}</password>
         </server>
       </servers>
       <profiles>
@@ -178,9 +178,7 @@ for temporary staging.
 
 Some things of note:
     - For details, look at the [Sonatype guide](http://central.sonatype.org/pages/releasing-the-deployment.html).
-    - Syncing with [Maven Central](http://repo1.maven.org/maven2/org/tensorflow/)
-      can take 10 minutes to 2 hours (as per the [OSSRH
-      guide](http://central.sonatype.org/pages/ossrh-guide.html#releasing-to-central)).
+    - Syncing with [Maven Central](http://repo1.maven.org/maven2/org/tensorflow/) can take 10 minutes to 2 hours.
 
 ### Finishing a release
 
@@ -223,6 +221,4 @@ Some things of note:
 
 ## References
 
--   [Sonatype guide](http://central.sonatype.org/pages/ossrh-guide.html) for
-    hosting releases.
--   [Ticket that created the `org/tensorflow` configuration](https://issues.sonatype.org/browse/OSSRH-28072) on OSSRH.
+-   [Maven Central guide](https://central.sonatype.org/register/central-portal/) for hosting releases.
