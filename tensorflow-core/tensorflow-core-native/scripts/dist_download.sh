@@ -30,9 +30,6 @@ if [[ -n "$WHEEL_URL" ]]; then
     curl -L $WHEEL_URL --output 'tensorflow.whl'
   fi
   yes | unzip -q -u 'tensorflow.whl' # use 'yes' because for some reasons -u does not work on Windows
-  if [[ "$PLATFORM" == "linux-arm64" ]]; then
-    cp $DOWNLOAD_FOLDER/tensorflow.libs/*  $DOWNLOAD_FOLDER/tensorflow/
-  fi
 fi
 
 if [[ -n "$CLIB_URL" ]]; then
