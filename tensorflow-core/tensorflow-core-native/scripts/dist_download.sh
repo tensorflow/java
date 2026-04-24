@@ -47,10 +47,6 @@ cd tensorflow
 if [[ "$PLATFORM" =~ "linux" ]]; then
   ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
   ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
-  if [[ "$PLATFORM" == "linux-arm64" ]]; then
-    cp ../tensorflow.libs/libomp-f1025659.so.5 libomp-f1025659.so.5
-    ln -fs libomp-f1025659.so.5 libomp-f1025659.so
-  fi
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib
