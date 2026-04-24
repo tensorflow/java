@@ -29,4 +29,5 @@ public class TF_TString_View extends Pointer {
   // NOLINT
   public native @Cast("size_t") long size(); public native TF_TString_View size(long setter);
   public native @Cast("const char*") BytePointer ptr(); public native TF_TString_View ptr(BytePointer setter);
+  public native TStringOwnerCApi owner_ref(); public native TF_TString_View owner_ref(TStringOwnerCApi setter);
 }

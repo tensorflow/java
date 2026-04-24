@@ -85,7 +85,8 @@ public final class StatsAggregatorHandle extends RawOp implements Operand<TType>
   /**
    * Sets the container option.
    *
-   * @param container the container option
+   * @param container The name of {@code container} should start with {@code '.'} or {@code letter} or {@code digit},
+   * with ['-', '.', '/'] or {@code letter} or {@code digit} follows several times.
    * @return this Options instance.
    */
   public static Options container(String container) {
@@ -131,7 +132,8 @@ public final class StatsAggregatorHandle extends RawOp implements Operand<TType>
     /**
      * Sets the container option.
      *
-     * @param container the container option
+     * @param container The name of {@code container} should start with {@code '.'} or {@code letter} or {@code digit},
+     * with ['-', '.', '/'] or {@code letter} or {@code digit} follows several times.
      * @return this Options instance.
      */
     public Options container(String container) {
@@ -156,7 +158,8 @@ public final class StatsAggregatorHandle extends RawOp implements Operand<TType>
   )
   public static class Inputs extends RawOpInputs<StatsAggregatorHandle> {
     /**
-     * The container attribute
+     * The name of {@code container} should start with {@code '.'} or {@code letter} or {@code digit},
+     * with ['-', '.', '/'] or {@code letter} or {@code digit} follows several times.
      */
     public final String container;
 

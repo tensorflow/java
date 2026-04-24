@@ -33,6 +33,7 @@ import org.tensorflow.op.annotation.OpMetadata;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.proto.DataType;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -46,13 +47,13 @@ import org.tensorflow.types.family.TType;
     inputsClass = TensorListGetItem.Inputs.class
 )
 @Operator
-public final class TensorListGetItem<T extends TType> extends RawOp implements Operand<T> {
+public final class TensorListGetItem<U extends TType> extends RawOp implements Operand<U> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
   public static final String OP_NAME = "TensorListGetItem";
 
-  private Output<T> item;
+  private Output<U> item;
 
   public TensorListGetItem(Operation operation) {
     super(operation, OP_NAME);
@@ -68,15 +69,15 @@ public final class TensorListGetItem<T extends TType> extends RawOp implements O
    * @param index The index value
    * @param elementShape The elementShape value
    * @param elementDtype The value of the elementDtype attribute
-   * @param <T> data type for {@code TensorListGetItem} output and operands
+   * @param <U> data type for {@code TensorListGetItem} output and operands
    * @return a new instance of TensorListGetItem
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> TensorListGetItem<T> create(Scope scope,
-      Operand<? extends TType> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape,
-      Class<T> elementDtype) {
+  public static <U extends TType> TensorListGetItem<U> create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<TInt32> index,
+      Operand<? extends TNumber> elementShape, Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListGetItem");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
@@ -90,12 +91,12 @@ public final class TensorListGetItem<T extends TType> extends RawOp implements O
    *
    * @return item.
    */
-  public Output<T> item() {
+  public Output<U> item() {
     return item;
   }
 
   @Override
-  public Output<T> asOutput() {
+  public Output<U> asOutput() {
     return item;
   }
 
@@ -116,20 +117,26 @@ public final class TensorListGetItem<T extends TType> extends RawOp implements O
     /**
      * The elementShape input
      */
-    public final Operand<TInt32> elementShape;
+    public final Operand<? extends TNumber> elementShape;
 
     /**
      * The elementDtype attribute
      */
     public final DataType elementDtype;
 
+    /**
+     * The Tshape attribute
+     */
+    public final DataType Tshape;
+
     public Inputs(GraphOperation op) {
-      super(new TensorListGetItem<>(op), op, Arrays.asList("element_dtype"));
+      super(new TensorListGetItem<>(op), op, Arrays.asList("element_dtype", "Tshape"));
       int inputIndex = 0;
       inputHandle = (Operand<? extends TType>) op.input(inputIndex++);
       index = (Operand<TInt32>) op.input(inputIndex++);
-      elementShape = (Operand<TInt32>) op.input(inputIndex++);
+      elementShape = (Operand<? extends TNumber>) op.input(inputIndex++);
       elementDtype = op.attributes().getAttrType("element_dtype");
+      Tshape = op.attributes().getAttrType("Tshape");
     }
   }
 }

@@ -69,9 +69,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
    * @param scope current scope
    * @param input 1D or 2D int {@code Tensor}.
    * @param sizeOutput non-negative int scalar {@code Tensor}.
-   * @param weights is an int32, int64, float32, or float64 {@code Tensor} with the same
-   * shape as {@code arr}, or a length-0 {@code Tensor}, in which case it acts as all weights
-   * equal to 1.
+   * @param weights {@code Tensor} with the same shape as {@code arr}, or a length-0 {@code Tensor},
+   * in which case it acts as all weights equal to 1.
+   * Not supported by the GPU implementation of Bincount.
    * @param options carries optional attribute values
    * @param <U> data type for {@code DenseBincount} output and operands
    * @param <T> data type for {@code DenseBincount} output and operands
@@ -99,7 +99,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
   /**
    * Sets the binaryOutput option.
    *
-   * @param binaryOutput bool; Whether the kernel should count the appearance or number of occurrences.
+   * @param binaryOutput Whether the kernel should count the appearance or number of occurrences.
+   * Will raise {@code UnimplementedError} when {@code binary_output} is specified to {@code True}
+   * and the size of {@code weights} is not 0.
    * @return this Options instance.
    */
   public static Options binaryOutput(Boolean binaryOutput) {
@@ -133,7 +135,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
     /**
      * Sets the binaryOutput option.
      *
-     * @param binaryOutput bool; Whether the kernel should count the appearance or number of occurrences.
+     * @param binaryOutput Whether the kernel should count the appearance or number of occurrences.
+     * Will raise {@code UnimplementedError} when {@code binary_output} is specified to {@code True}
+     * and the size of {@code weights} is not 0.
      * @return this Options instance.
      */
     public Options binaryOutput(Boolean binaryOutput) {
@@ -157,9 +161,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
     public final Operand<T> sizeOutput;
 
     /**
-     * is an int32, int64, float32, or float64 {@code Tensor} with the same
-     * shape as {@code arr}, or a length-0 {@code Tensor}, in which case it acts as all weights
-     * equal to 1.
+     * {@code Tensor} with the same shape as {@code arr}, or a length-0 {@code Tensor},
+     * in which case it acts as all weights equal to 1.
+     * Not supported by the GPU implementation of Bincount.
      */
     public final Operand<U> weights;
 
@@ -174,7 +178,9 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
     public final DataType T;
 
     /**
-     * bool; Whether the kernel should count the appearance or number of occurrences.
+     * Whether the kernel should count the appearance or number of occurrences.
+     * Will raise {@code UnimplementedError} when {@code binary_output} is specified to {@code True}
+     * and the size of {@code weights} is not 0.
      */
     public final boolean binaryOutput;
 

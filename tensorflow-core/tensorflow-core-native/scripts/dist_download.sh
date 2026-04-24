@@ -5,16 +5,16 @@ DOWNLOAD_FOLDER="$1"
 
 case ${PLATFORM:-} in
   'linux-x86_64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/1a/9e/594164db23e3e262da1a0e8983258811eff56e5af6b7b6da5eccccb8d4c7/tensorflow_cpu-2.20.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/ac/21/48cd18bfd214042ecb7392e01e016d3dd60b4f1ef13f10954ab472cd3c13/tensorflow_cpu-2.21.0-cp313-cp313-manylinux_2_27_x86_64.whl'
     ;;
   'linux-x86_64-gpu')
-    WHEEL_URL='https://files.pythonhosted.org/packages/43/fb/8be8547c128613d82a2b006004026d86ed0bd672e913029a98153af4ffab/tensorflow-2.20.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/86/6c/10d075ffc09754c7f10e749ba3c9d46dd809fb007990c7f788128044180c/tensorflow-2.21.0-cp313-cp313-manylinux_2_27_x86_64.whl'
     ;;
   'linux-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/ea/4c/c1aa90c5cc92e9f7f9c78421e121ef25bae7d378f8d1d4cbad46c6308836/tensorflow-2.20.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/72/72/343b86b4c9bfe28e81f749439f908c1e26aeac73d9f12b8dcdb996eb8ecb/tensorflow-2.21.0-cp313-cp313-manylinux_2_27_aarch64.whl'
     ;;
   'macosx-arm64')
-    WHEEL_URL='https://files.pythonhosted.org/packages/04/82/af283f402f8d1e9315644a331a5f0f326264c5d1de08262f3de5a5ade422/tensorflow-2.20.0-cp313-cp313-macosx_12_0_arm64.whl'
+    WHEEL_URL='https://files.pythonhosted.org/packages/40/09/268b45a61be2bce136dabf3a3cd7099c8a984ae398198f71920b4c60c502/tensorflow-2.21.0-cp313-cp313-macosx_12_0_arm64.whl'
     ;;
   *)
     echo "TensorFlow distribution for ${PLATFORM} is not supported for download"
@@ -30,9 +30,6 @@ if [[ -n "$WHEEL_URL" ]]; then
     curl -L $WHEEL_URL --output 'tensorflow.whl'
   fi
   yes | unzip -q -u 'tensorflow.whl' # use 'yes' because for some reasons -u does not work on Windows
-  if [[ "$PLATFORM" == "linux-arm64" ]]; then
-    cp $DOWNLOAD_FOLDER/tensorflow.libs/*  $DOWNLOAD_FOLDER/tensorflow/
-  fi
 fi
 
 if [[ -n "$CLIB_URL" ]]; then
@@ -47,10 +44,6 @@ cd tensorflow
 if [[ "$PLATFORM" =~ "linux" ]]; then
   ln -fs libtensorflow_cc.so.2 libtensorflow_cc.so
   ln -fs libtensorflow_framework.so.2 libtensorflow_framework.so
-  if [[ "$PLATFORM" == "linux-arm64" ]]; then
-    cp ../tensorflow.libs/libomp-f1025659.so.5 libomp-f1025659.so.5
-    ln -fs libomp-f1025659.so.5 libomp-f1025659.so
-  fi
 elif [[ "$PLATFORM" =~ "macosx" ]]; then
   ln -fs libtensorflow_cc.2.dylib libtensorflow_cc.dylib
   ln -fs libtensorflow_framework.2.dylib libtensorflow_framework.dylib

@@ -37,10 +37,10 @@ import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Function for decode_bmp, decode_gif, decode_jpeg, decode_webp, and decode_png.
- * Detects whether an image is a BMP, GIF, JPEG, WebP, or PNG, and performs the
- * appropriate operation to convert the input bytes string into a Tensor of type
- * dtype.
+ * Function for decode_bmp, decode_gif, decode_jpeg, decode_jxl, decode_webp, and decode_png.
+ * Detects whether an image is a BMP, GIF, JPEG, JPEG XL, WebP, or PNG, and
+ * performs the appropriate operation to convert the input bytes string into a
+ * Tensor of type dtype.
  * <p><em>NOTE</em>: decode_gif and decode_webp return a 4-D
  * array [num_frames, height, width, 3], as opposed to decode_bmp,
  * decode_jpeg, and decode_png, which always return 3-D arrays [height,
@@ -137,8 +137,8 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
    * Sets the expandAnimations option.
    *
    * @param expandAnimations Controls the output shape of the returned op. If True, the returned op
-   * will produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D
-   * tensor for all GIFs and WebP images, whether animated or not. If,
+   * will produce a 3-D tensor for PNG, JPEG, JPEG XL, and BMP files; and a
+   * 4-D tensor for all GIFs and WebP images, whether animated or not. If,
    * False, the returned op will produce a 3-D tensor for all file types
    * and will truncate animated images to the first frame.
    * @return this Options instance.
@@ -188,8 +188,8 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
      * Sets the expandAnimations option.
      *
      * @param expandAnimations Controls the output shape of the returned op. If True, the returned op
-     * will produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D
-     * tensor for all GIFs and WebP images, whether animated or not. If,
+     * will produce a 3-D tensor for PNG, JPEG, JPEG XL, and BMP files; and a
+     * 4-D tensor for all GIFs and WebP images, whether animated or not. If,
      * False, the returned op will produce a 3-D tensor for all file types
      * and will truncate animated images to the first frame.
      * @return this Options instance.
@@ -221,8 +221,8 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
 
     /**
      * Controls the output shape of the returned op. If True, the returned op
-     * will produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D
-     * tensor for all GIFs and WebP images, whether animated or not. If,
+     * will produce a 3-D tensor for PNG, JPEG, JPEG XL, and BMP files; and a
+     * 4-D tensor for all GIFs and WebP images, whether animated or not. If,
      * False, the returned op will produce a 3-D tensor for all file types
      * and will truncate animated images to the first frame.
      */

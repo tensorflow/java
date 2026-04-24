@@ -668,7 +668,8 @@ public final class MathOps {
    *  </blockquote>
    *
    * @param x The x value
-   * @param Tout The value of the Tout attribute
+   * @param Tout Need to be {@code tf.float32} when the type of {@code x} is {@code tf.complex64}.
+   *  Need to be {@code tf.float64} when the type of {@code x} is {@code tf.complex128}.
    * @param <U> data type for {@code ComplexAbs} output and operands
    * @return a new instance of ComplexAbs
    */
@@ -850,9 +851,9 @@ public final class MathOps {
    *
    * @param input 1D or 2D int {@code Tensor}.
    * @param sizeOutput non-negative int scalar {@code Tensor}.
-   * @param weights is an int32, int64, float32, or float64 {@code Tensor} with the same
-   *  shape as {@code arr}, or a length-0 {@code Tensor}, in which case it acts as all weights
-   *  equal to 1.
+   * @param weights {@code Tensor} with the same shape as {@code arr}, or a length-0 {@code Tensor},
+   *  in which case it acts as all weights equal to 1.
+   *  Not supported by the GPU implementation of Bincount.
    * @param options carries optional attribute values
    * @param <U> data type for {@code DenseBincount} output and operands
    * @param <T> data type for {@code DenseBincount} output and operands
@@ -1196,7 +1197,8 @@ public final class MathOps {
    *  </pre>
    *
    * @param input The input value
-   * @param Tout The value of the Tout attribute
+   * @param Tout Need to be {@code tf.float32} when the type of {@code x} is {@code tf.complex64}.
+   *  Need to be {@code tf.float64} when the type of {@code x} is {@code tf.complex128}.
    * @param <U> data type for {@code Imag} output and operands
    * @return a new instance of Imag
    */

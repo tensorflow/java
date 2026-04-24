@@ -215,7 +215,7 @@ This table shows the mapping between TensorFlow, TensorFlow Java and minimum sup
 | 1.0.0-rc.2              | 2.16.2             | 11                   |
 | 1.0.0                   | 2.16.2             | 11                   |
 | 1.1.0                   | 2.18.0             | 11                   |
-| 1.2.0-SNAPSHOT          | 2.20.0             | 11                   |
+| 1.2.0-SNAPSHOT          | 2.21.0             | 11                   |
 
 ## How to Contribute?
 

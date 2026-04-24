@@ -42,7 +42,7 @@
     https://github.com/tensorflow/tensorflow/blob/master/tensorflow/workspace2.bzl
     (but for the currently used release, not master)
     -->
-    <protobuf.version>4.28.3</protobuf.version>
+    <protobuf.version>4.31.1</protobuf.version>
 
     <native.classifier>${javacpp.platform}${javacpp.platform.extension}</native.classifier>
     <javacpp.platform.extension></javacpp.platform.extension>

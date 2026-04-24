@@ -73,10 +73,11 @@ public final class RfftNd<U extends TType> extends RawOp implements Operand<U> {
    * Factory method to create a class wrapping a new RFFTND operation.
    *
    * @param scope current scope
-   * @param input A complex tensor.
+   * @param input A float32 or float64 tensor.
    * @param fftLength An int32 tensor. The FFT length for each dimension.
    * @param axes An int32 tensor with a same shape as fft_length. Axes to perform the transform.
-   * @param Tcomplex The value of the Tcomplex attribute
+   * @param Tcomplex Should be {@code tf.complex64} when the type of {@code input} is {@code float32}.
+   * Should be {@code tf.complex128} when the type of {@code input} is {@code float64}.
    * @param <U> data type for {@code RFFTND} output and operands
    * @return a new instance of RfftNd
    */
@@ -116,7 +117,7 @@ public final class RfftNd<U extends TType> extends RawOp implements Operand<U> {
   )
   public static class Inputs extends RawOpInputs<RfftNd<?>> {
     /**
-     * A complex tensor.
+     * A float32 or float64 tensor.
      */
     public final Operand<? extends TNumber> input;
 
@@ -136,7 +137,8 @@ public final class RfftNd<U extends TType> extends RawOp implements Operand<U> {
     public final DataType Treal;
 
     /**
-     * The Tcomplex attribute
+     * Should be {@code tf.complex64} when the type of {@code input} is {@code float32}.
+     * Should be {@code tf.complex128} when the type of {@code input} is {@code float64}.
      */
     public final DataType Tcomplex;
 

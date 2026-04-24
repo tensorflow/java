@@ -64,7 +64,6 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
    * @param numThreads The number of threads in the thread pool.
    * @param displayName A human-readable name for the threads that may be visible in some
    * visualizations.
-   * threadpool.
    * @param options carries optional attribute values
    * @return a new instance of ThreadPoolHandle
    */
@@ -106,7 +105,8 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
   /**
    * Sets the container option.
    *
-   * @param container the container option
+   * @param container The name of {@code container} should start with {@code '.'} or {@code letter} or {@code digit},
+   * with ['-', '.', '/'] or {@code letter} or {@code digit} follows several times.
    * @return this Options instance.
    */
   public static Options container(String container) {
@@ -125,8 +125,7 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
 
   /**
    * Gets handle.
-   * A resource that can be consumed by one or more ExperimentalThreadPoolDataset
-   * ops.
+   *
    * @return handle.
    */
   public Output<? extends TType> handle() {
@@ -167,7 +166,8 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
     /**
      * Sets the container option.
      *
-     * @param container the container option
+     * @param container The name of {@code container} should start with {@code '.'} or {@code letter} or {@code digit},
+     * with ['-', '.', '/'] or {@code letter} or {@code digit} follows several times.
      * @return this Options instance.
      */
     public Options container(String container) {
@@ -205,12 +205,12 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
     /**
      * A human-readable name for the threads that may be visible in some
      * visualizations.
-     * threadpool.
      */
     public final String displayName;
 
     /**
-     * The container attribute
+     * The name of {@code container} should start with {@code '.'} or {@code letter} or {@code digit},
+     * with ['-', '.', '/'] or {@code letter} or {@code digit} follows several times.
      */
     public final String container;
 

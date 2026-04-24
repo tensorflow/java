@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.nio.file.Paths;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.proto.OpList;
 
@@ -38,6 +39,7 @@ public class TensorFlowTest {
     assertNotNull(TensorFlow.registeredOpList());
   }
 
+  @Disabled // until a version of tensorflow-text that's compatible with v2.21.0
   @Test
   public void loadTFTextLibrary() {
     String libname =
