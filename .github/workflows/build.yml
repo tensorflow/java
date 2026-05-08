@@ -48,7 +48,7 @@ jobs:
           echo "Creating staging repository with profile $STAGING_PROFILE_ID"
           echo "<promoteRequest><data><description>Releasing TF Java - created by CI build</description></data></promoteRequest>" > request.xml
           curl -X POST -d @request.xml -s -o response.xml -u ${{ secrets.CI_DEPLOY_USERNAME }}:${{ secrets.CI_DEPLOY_PASSWORD }} -H "Content-Type:application/xml" \
-              https://oss.sonatype.org/service/local/staging/profiles/$STAGING_PROFILE_ID/start
+              https://ossrh-staging-api.central.sonatype.com/service/local/staging/profiles/$STAGING_PROFILE_ID/start
           export STAGING_REPOSITORY_ID=`awk -F'[<>]' '/stagedRepositoryId/{print $3}' response.xml`
           echo "Staging repository created: $STAGING_REPOSITORY_ID"
           echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
