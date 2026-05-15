@@ -2,7 +2,7 @@ site_name: ''
 site_url: https://tensorflow.org
 repo_url: https://github.com/tensorflow/java
 site_description: Documentation of TensorFlow Java API and tools.
-copyright: "&copy; TensorFlow Authors 2025"
+copyright: "&copy; TensorFlow Authors 2026"
 
 theme:
   name: material
