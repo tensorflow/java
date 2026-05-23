@@ -404,7 +404,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * immediately without re-registering it.
    *
    * <p>The function is also stored in an internal cache to speed up subsequent lookups performed by
-   * {@link #getFunction(String)} and {@link #getFunctionCached(String)}.
+   * {@link #getFunction(String)}.
    */
   @Override
   public void attachFunction(ConcreteFunction function) {
@@ -915,26 +915,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       new ConcurrentHashMap<>();
 
   /**
-   * Returns a cached {@link ConcreteFunction} whose name starts with the provided prefix.
+   * Returns a read-only view of the function names cached by this graph.
    *
-   * <p>This is a lightweight lookup helper used when the exact function name is not known but
-   * follows a deterministic prefix (for example functions generated for control-flow constructs or
-   * custom gradient expansions).
+   * <p>This exposes only the function names so callers can resolve ambiguous matches themselves
+   * before calling {@link #getFunction(String)} with an exact name.
    *
-   * <p>The search is performed only in the local cache and does not query the native TensorFlow
-   * function library.
-   *
-   * @param prefix function name prefix
-   * @return a cached {@link ConcreteFunction} whose name starts with {@code prefix}, or {@code
-   *     null} if none is found
+   * @return a read-only view of cached function names
    */
-  public ConcreteFunction getFunctionCached(String prefix) {
-    for (Map.Entry<String, ConcreteFunction> e : functionCache.entrySet()) {
-      if (e.getKey().startsWith(prefix)) {
-        return e.getValue();
-      }
-    }
-    return null;
+  public Set<String> functionNames() {
+    return Collections.unmodifiableSet(functionCache.keySet());
   }
 
   /**

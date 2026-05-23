@@ -144,6 +144,18 @@ public class IfGradientTest {
     return tf.reduceSum((Operand) v, axes);
   }
 
+  private static ConcreteFunction getSingleFunctionByPrefix(Graph graph, String prefix) {
+    List<String> matches =
+        graph.functionNames().stream()
+            .filter(name -> name.startsWith(prefix))
+            .collect(Collectors.toList());
+    if (matches.size() != 1) {
+      throw new IllegalStateException(
+          "Expected one cached function for prefix=" + prefix + ", found=" + matches);
+    }
+    return graph.getFunction(matches.get(0));
+  }
+
   @Test
   public void testStatefullIfGradient() {
     TensorFlow.registerCustomGradient(
@@ -199,8 +211,8 @@ public class IfGradientTest {
           final String thenPrefix = op.name() + "/then_grad"; // op has unique name
           final String elsePrefix = op.name() + "/else_grad";
 
-          ConcreteFunction thenGrad = op.env().getFunctionCached(thenPrefix);
-          ConcreteFunction elseGrad = op.env().getFunctionCached(elsePrefix);
+          ConcreteFunction thenGrad = getSingleFunctionByPrefix(op.env(), thenPrefix);
+          ConcreteFunction elseGrad = getSingleFunctionByPrefix(op.env(), elsePrefix);
 
           if (thenGrad == null || elseGrad == null) {
             throw new IllegalStateException("If grad functions not primed for op=" + op.name());
