@@ -1,3 +1,20 @@
+module:org.tensorflow.ndarray
+org.tensorflow
+org.tensorflow.ndarray
+org.tensorflow.ndarray.buffer
+org.tensorflow.ndarray.buffer.layout
+org.tensorflow.ndarray.impl.buffer
+org.tensorflow.ndarray.impl.buffer.adapter
+org.tensorflow.ndarray.impl.buffer.layout
+org.tensorflow.ndarray.impl.buffer.misc
+org.tensorflow.ndarray.impl.buffer.nio
+org.tensorflow.ndarray.impl.buffer.raw
+org.tensorflow.ndarray.impl.dense
+org.tensorflow.ndarray.impl.dimension
+org.tensorflow.ndarray.impl.sequence
+org.tensorflow.ndarray.impl.sparse
+org.tensorflow.ndarray.impl.sparse.slice
+org.tensorflow.ndarray.index
 module:tensorflow
 org.tensorflow
 org.tensorflow.op
@@ -72,4 +89,3 @@ org.tensorflow.proto.eager
 org.tensorflow.proto.error
 org.tensorflow.proto.error.dummy
 org.tensorflow.proto.profiler
-org.tensorflow.proto.profiler.empty

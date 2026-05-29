@@ -1,1 +1,1 @@
-moduleSearchIndex = [{"l":"tensorflow"},{"l":"tensorflow.framework"},{"l":"tensorflow.generator"},{"l":"tensorflow.nativelib"}];updateSearchResults();
+moduleSearchIndex = [{"l":"org.tensorflow.ndarray"},{"l":"tensorflow"},{"l":"tensorflow.framework"},{"l":"tensorflow.generator"},{"l":"tensorflow.nativelib"}];updateSearchResults();
