@@ -88,7 +88,7 @@
     </snapshotRepository>
     <repository>
       <id>central</id>
-      <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+      <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/orgtensorflow-${stagingRepositoryId}/</url>
     </repository>
   </distributionManagement>
 
@@ -157,10 +157,10 @@
       </properties>
       <repositories>
         <repository>
-          <id>ossrh-staging</id>
-          <name>OSSRH Sonatype Staging</name>
+          <id>central-staging</id>
+          <name>Maven Central Staging</name>
           <url>
-            https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
+            https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/orgtensorflow-${stagingRepositoryId}/
           </url>
           <releases>
             <enabled>true</enabled>
