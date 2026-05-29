@@ -30,6 +30,7 @@ public class AttributeMetadata {
 
   /** The size of the list if this attribute is a list, undefined otherwise. */
   public final long listSize;
+
   /**
    * The type of this attribute, or the type of the list values if it is a list.
    *

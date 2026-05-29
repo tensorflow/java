@@ -43,6 +43,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
@@ -396,8 +397,21 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return new GraphOperationBuilder(this, type, name, scope, dangerousGradientBuilder);
   }
 
+  /**
+   * Attaches a {@link ConcreteFunction} to this graph.
+   *
+   * <p>If a function with the same defined name has already been attached, this method returns
+   * immediately without re-registering it.
+   *
+   * <p>The function is also stored in an internal cache to speed up subsequent lookups performed by
+   * {@link #getFunction(String)}.
+   */
   @Override
   public void attachFunction(ConcreteFunction function) {
+    String name = function.getDefinedName();
+    if (functionCache.putIfAbsent(name, function) != null) {
+      return;
+    }
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
@@ -455,6 +469,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *     name
    */
   public ConcreteFunction getFunction(String key) {
+    ConcreteFunction cached = functionCache.get(key);
+    if (cached != null) {
+      return cached;
+    }
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       List<NativeFunction> funcs = getNativeFunctions(scope);
@@ -880,6 +898,33 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
   private int newInitializersMarker = -1;
+
+  /**
+   * Cache of {@link ConcreteFunction}s attached to this graph, indexed by their defined name.
+   *
+   * <p>This cache avoids repeatedly scanning the native function library when resolving functions
+   * during gradient construction or control-flow expansion.
+   *
+   * <p>The cache is populated lazily when {@link #attachFunction(ConcreteFunction)} is called and
+   * consulted first by {@link #getFunction(String)}.
+   *
+   * <p>A {@link ConcurrentHashMap} is used to allow concurrent reads during graph building without
+   * additional synchronization.
+   */
+  private final ConcurrentHashMap<String, ConcreteFunction> functionCache =
+      new ConcurrentHashMap<>();
+
+  /**
+   * Returns a read-only view of the function names cached by this graph.
+   *
+   * <p>This exposes only the function names so callers can resolve ambiguous matches themselves
+   * before calling {@link #getFunction(String)} with an exact name.
+   *
+   * @return a read-only view of cached function names
+   */
+  public Set<String> functionNames() {
+    return Collections.unmodifiableSet(functionCache.keySet());
+  }
 
   /**
    * Use builders without locking. This should only be used during custom gradient building.
