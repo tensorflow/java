@@ -350,7 +350,7 @@ public final class StringsOps {
    *  <p><em>NOTE</em>: {@code strings.Substr} supports broadcasting up to two dimensions. More about
    *  broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
-   *  <hr />
+   *  <hr>
    *  <p>Examples
    *  <p>Using scalar {@code pos} and {@code len}:
    *  <pre>
@@ -670,7 +670,7 @@ public final class StringsOps {
    *  Returns a vector of strings, where {@code output[i]} is constructed by encoding the
    *  Unicode codepoints in {@code input_values[input_splits[i]:input_splits[i+1]]}
    *  using {@code output_encoding}.
-   *  <hr />
+   *  <hr>
    *  <p>Example:
    *  <pre>
    *  input_values = [72, 101, 108, 108, 111, 87, 111, 114, 108, 100]
