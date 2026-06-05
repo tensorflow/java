@@ -91,7 +91,8 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+#        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
   linux-x86_64:
     runs-on: ubuntu-22.04
     needs: prepare
@@ -114,7 +115,8 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+        # run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
   macosx-arm64:
     runs-on: macos-14
     needs: prepare
@@ -138,7 +140,8 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Deploy native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+        # run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
   deploy:
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
     needs: [linux-x86_64, macosx-arm64, linux-arm64]

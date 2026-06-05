@@ -88,7 +88,7 @@
     </snapshotRepository>
     <repository>
       <id>central</id>
-      <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/orgtensorflow-${stagingRepositoryId}/</url>
+      <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
     </repository>
   </distributionManagement>
 
@@ -160,7 +160,7 @@
           <id>central-staging</id>
           <name>Maven Central Staging</name>
           <url>
-            https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/orgtensorflow-${stagingRepositoryId}/
+            https://ossrh-staging-api.central.sonatype.com/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
           </url>
           <releases>
             <enabled>true</enabled>
@@ -598,17 +598,16 @@
           </java>
         </configuration>
       </plugin>
-      <!--FIXME: Enable this plugin again, and delete the distribution management section, 
-      once we find out how to deploy single native files in a staging repository by using it
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.9.0</version>
+        <version>0.10.0</version>
         <extensions>true</extensions>
         <configuration>
           <publishingServerId>central</publishingServerId>
+          <ignorePublishedComponents>true</ignorePublishedComponents>
         </configuration>
-      </plugin-->
+      </plugin>
     </plugins>
 
     <pluginManagement>
