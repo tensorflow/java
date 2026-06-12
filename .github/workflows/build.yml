@@ -91,13 +91,13 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Build native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Upload native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: native-artifact-${{ github.job }}${{ matrix.ext }}
-          path: tensorflow-core/tensorflow-core-native/target/*.zip
+          path: tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-*-${{ github.job }}*.jar
           if-no-files-found: error
           retention-days: 1
   linux-x86_64:
@@ -122,13 +122,13 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Build native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Upload native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: native-artifact-${{ github.job }}${{ matrix.ext }}
-          path: tensorflow-core/tensorflow-core-native/target/*.zip
+          path: tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-*-${{ github.job }}*.jar
           if-no-files-found: error
           retention-days: 1
   macosx-arm64:
@@ -154,13 +154,13 @@ jobs:
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Build native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Upload native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: native-artifact-${{ github.job }}${{ matrix.ext }}
-          path: tensorflow-core/tensorflow-core-native/target/*.zip
+          path: tensorflow-core/tensorflow-core-native/target/tensorflow-core-native-*-${{ github.job }}*.jar
           if-no-files-found: error
           retention-days: 1
 
