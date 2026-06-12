@@ -89,10 +89,17 @@ jobs:
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
+      - name: Build native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-#        run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Upload native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-artifact-${{ github.job }}${{ matrix.ext }}
+          path: tensorflow-core/tensorflow-core-native/target/*.zip
+          if-no-files-found: error
+          retention-days: 1
   linux-x86_64:
     runs-on: ubuntu-22.04
     needs: prepare
@@ -113,10 +120,17 @@ jobs:
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
+      - name: Build native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        # run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Upload native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-artifact-${{ github.job }}${{ matrix.ext }}
+          path: tensorflow-core/tensorflow-core-native/target/*.zip
+          if-no-files-found: error
+          retention-days: 1
   macosx-arm64:
     runs-on: macos-14
     needs: prepare
@@ -138,10 +152,18 @@ jobs:
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
-      - name: Deploy native artifact
+      - name: Build native artifact
         if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
-        # run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy:deploy-file@native-only -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }} -Durl=${{ needs.prepare.outputs.repositoryUrl }}
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml deploy -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
+      - name: Upload native artifact
+        if: env.DEPLOY_RELEASE == 'true' || env.DEPLOY_SNAPSHOT == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-artifact-${{ github.job }}${{ matrix.ext }}
+          path: tensorflow-core/tensorflow-core-native/target/*.zip
+          if-no-files-found: error
+          retention-days: 1
+
   deploy:
     if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/staging') }} # DEPLOY_SNAPSHOT (releases should be signed and deployed manually from local machine)
     needs: [linux-x86_64, macosx-arm64, linux-arm64]
@@ -154,6 +176,12 @@ jobs:
           java-version: '11'
       - name: Checkout repository
         uses: actions/checkout@v6
+      - name: Download native artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: native-artifact-*
+          path: tensorflow-core/tensorflow-core-native/target
+          merge-multiple: true
       - name: Build project
         run: |
           java -version

@@ -85,51 +85,51 @@
       </properties>
       <build>
         <plugins>
-          <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.6.1</version>
-            <executions>
-              <execution>
-                <id>copy-native-artifacts</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
-                  <overWriteSnapshots>true</overWriteSnapshots>
-                  <overWriteReleases>true</overWriteReleases>
-                  <useBaseVersion>true</useBaseVersion>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>${project.artifactId}</artifactId>
-                      <version>${project.version}</version>
-                      <classifier>${javacpp.platform.linux-x86_64}</classifier>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>${project.artifactId}</artifactId>
-                      <version>${project.version}</version>
-                      <classifier>${javacpp.platform.linux-x86_64}-gpu</classifier>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>${project.artifactId}</artifactId>
-                      <version>${project.version}</version>
-                      <classifier>${javacpp.platform.macosx-arm64}</classifier>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>${project.groupId}</groupId>
-                      <artifactId>${project.artifactId}</artifactId>
-                      <version>${project.version}</version>
-                      <classifier>${javacpp.platform.linux-arm64}</classifier>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
+<!--          <plugin>-->
+<!--            <artifactId>maven-dependency-plugin</artifactId>-->
+<!--            <version>3.6.1</version>-->
+<!--            <executions>-->
+<!--              <execution>-->
+<!--                <id>copy-native-artifacts</id>-->
+<!--                <phase>validate</phase>-->
+<!--                <goals>-->
+<!--                  <goal>copy</goal>-->
+<!--                </goals>-->
+<!--                <configuration>-->
+<!--                  <outputDirectory>${project.build.directory}</outputDirectory>-->
+<!--                  <overWriteSnapshots>true</overWriteSnapshots>-->
+<!--                  <overWriteReleases>true</overWriteReleases>-->
+<!--                  <useBaseVersion>true</useBaseVersion>-->
+<!--                  <artifactItems>-->
+<!--                    <artifactItem>-->
+<!--                      <groupId>${project.groupId}</groupId>-->
+<!--                      <artifactId>${project.artifactId}</artifactId>-->
+<!--                      <version>${project.version}</version>-->
+<!--                      <classifier>${javacpp.platform.linux-x86_64}</classifier>-->
+<!--                    </artifactItem>-->
+<!--                    <artifactItem>-->
+<!--                      <groupId>${project.groupId}</groupId>-->
+<!--                      <artifactId>${project.artifactId}</artifactId>-->
+<!--                      <version>${project.version}</version>-->
+<!--                      <classifier>${javacpp.platform.linux-x86_64}-gpu</classifier>-->
+<!--                    </artifactItem>-->
+<!--                    <artifactItem>-->
+<!--                      <groupId>${project.groupId}</groupId>-->
+<!--                      <artifactId>${project.artifactId}</artifactId>-->
+<!--                      <version>${project.version}</version>-->
+<!--                      <classifier>${javacpp.platform.macosx-arm64}</classifier>-->
+<!--                    </artifactItem>-->
+<!--                    <artifactItem>-->
+<!--                      <groupId>${project.groupId}</groupId>-->
+<!--                      <artifactId>${project.artifactId}</artifactId>-->
+<!--                      <version>${project.version}</version>-->
+<!--                      <classifier>${javacpp.platform.linux-arm64}</classifier>-->
+<!--                    </artifactItem>-->
+<!--                  </artifactItems>-->
+<!--                </configuration>-->
+<!--              </execution>-->
+<!--            </executions>-->
+<!--          </plugin>-->
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
@@ -565,32 +565,41 @@
         </executions>
       </plugin>
 
+<!--      <plugin>-->
+<!--        <artifactId>maven-deploy-plugin</artifactId>-->
+<!--        <version>3.1.1</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            &lt;!&ndash;-->
+<!--              Deploy only native artifact-->
+<!--                This is used by the CI build to only deploy the native JAR artifact in the platform-specific runners.-->
+<!--                Other artifacts will be deployed in a second pass, when activating the `deploying` profile-->
+<!--            &ndash;&gt;-->
+<!--            <id>native-only</id>-->
+<!--            <goals>-->
+<!--              <goal>deploy-file</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              &lt;!&ndash; 'url' property must be provided in command line &ndash;&gt;-->
+<!--              <file>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</file>-->
+<!--              <repositoryId>central</repositoryId>-->
+<!--              <groupId>${project.groupId}</groupId>-->
+<!--              <artifactId>${project.artifactId}</artifactId>-->
+<!--              <classifier>${native.classifier}</classifier>-->
+<!--              <pomFile>pom.xml</pomFile>-->
+<!--              <generatePom>false</generatePom>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+
       <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>3.1.1</version>
-        <executions>
-          <execution>
-            <!--
-              Deploy only native artifact
-                This is used by the CI build to only deploy the native JAR artifact in the platform-specific runners.
-                Other artifacts will be deployed in a second pass, when activating the `deploying` profile
-            -->
-            <id>native-only</id>
-            <goals>
-              <goal>deploy-file</goal>
-            </goals>
-            <configuration>
-              <!-- 'url' property must be provided in command line -->
-              <file>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</file>
-              <repositoryId>central</repositoryId>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>${project.artifactId}</artifactId>
-              <classifier>${native.classifier}</classifier>
-              <pomFile>pom.xml</pomFile>
-              <generatePom>false</generatePom>
-            </configuration>
-          </execution>
-        </executions>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>true</skipPublishing>
+          <outputFilename>${project.artifactId}-${project.version}-${native.classifier}.zip</outputFilename>
+        </configuration>
       </plugin>
 
       <plugin>
