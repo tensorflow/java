@@ -601,12 +601,6 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.10.0</version>
-        <extensions>true</extensions>
-        <configuration>
-          <publishingServerId>central</publishingServerId>
-          <ignorePublishedComponents>true</ignorePublishedComponents>
-        </configuration>
       </plugin>
     </plugins>
 
@@ -626,6 +620,15 @@
               <include>**/*Test.java</include>
             </includes>
             <useModulePath>false</useModulePath>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.10.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
           </configuration>
         </plugin>
       </plugins>
