@@ -155,7 +155,7 @@
       <properties>
         <gpg.skip>false</gpg.skip>
       </properties>
-      <repositories>
+      <!--repositories>
         <repository>
           <id>central-staging</id>
           <name>Maven Central Staging</name>
@@ -169,7 +169,7 @@
             <enabled>false</enabled>
           </snapshots>
         </repository>
-      </repositories>
+      </repositories-->
     </profile>
 
     <profile>
