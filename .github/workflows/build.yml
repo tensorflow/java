@@ -179,5 +179,5 @@ jobs:
           java -version
           mvn -version
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn deploy -Pdeploying -Preleasing -B -e
+          mvn deploy -Pdeploying -Preleasing -B -e -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}
           
