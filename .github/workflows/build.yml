@@ -128,7 +128,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
   deploy:
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/r')) }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [linux-x86_64, macosx-arm64, linux-arm64]
     runs-on: ubuntu-22.04
     steps:
@@ -145,12 +145,39 @@ jobs:
           pattern: native-artifact-*
           path: tensorflow-core/tensorflow-core-native/target
           merge-multiple: true
-      - name: Build project
+      - name: Build and Deploy snapshot artifacts
         run: |
           java -version
           mvn -version
-          mvn clean install -B -U -e -Pdeploying
-      - name: Deploy snapshot artifacts
-        run: |
           echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          mvn deploy -Pdeploying -B -e -Dmaven.test.skip=true
+          mvn deploy -Pdeploying -B -e
+  release:
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/r') }}
+    needs: [linux-x86_64, macosx-arm64, linux-arm64]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Configure Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          server-id: central
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # Handled as an env variable name reference
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Download native artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: native-artifact-*
+          path: tensorflow-core/tensorflow-core-native/target
+          merge-multiple: true
+      - name: Build and Deploy release artifacts
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: |
+          java -version
+          mvn -version
+          echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          mvn clean deploy -Pdeploying -Preleasing -B -e
+          
