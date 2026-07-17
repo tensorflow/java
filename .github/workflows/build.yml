@@ -137,6 +137,11 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
+          server-id: central
+          server-username: MAVEN_USERNAME # env variable for username in deploy
+          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # Handled as an env variable name reference
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Download native artifacts
@@ -146,10 +151,14 @@ jobs:
           path: tensorflow-core/tensorflow-core-native/target
           merge-multiple: true
       - name: Build and Deploy snapshot artifacts
+        env:
+          MAVEN_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.CI_DEPLOY_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         run: |
           java -version
           mvn -version
-          echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn deploy -Pdeploying -B -e
   release:
     if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/r') }}
@@ -162,6 +171,8 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
           server-id: central
+          server-username: MAVEN_USERNAME # env variable for username in deploy
+          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # Handled as an env variable name reference
       - name: Checkout repository
@@ -174,6 +185,8 @@ jobs:
           merge-multiple: true
       - name: Build and Deploy release artifacts
         env:
+          MAVEN_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.CI_DEPLOY_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         run: |
