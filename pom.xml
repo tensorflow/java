@@ -155,6 +155,48 @@
       <properties>
         <gpg.skip>false</gpg.skip>
       </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.12.0</version>
+            <configuration>
+              <overview>./docs/overview.md</overview>
+              <!--<includeDependencySources>true</includeDependencySources>-->
+              <bottom>Copyright 2015, 2026 The TensorFlow Authors. All Rights Reserved. <![CDATA[<a href="http://tensorflow.github.io/java/index.html">TensorFlow-Java Main Documentation<a>]]></bottom>
+              <additionalJOptions>
+                <additionalJOption>-Xmaxerrs</additionalJOption>
+                <additionalJOption>65536</additionalJOption>
+                <additionalJOption>-Xmaxwarns</additionalJOption>
+                <additionalJOption>65536</additionalJOption>
+              </additionalJOptions>
+              <doclint>none</doclint>
+              <failOnError>false</failOnError>
+              <minmemory>256m</minmemory>
+              <maxmemory>2048m</maxmemory>
+              <links>
+                <link>https://protobuf.dev/reference/java/api-docs</link>
+                <link>https://bytedeco.org/javacpp/apidocs</link>
+              </links>
+              <quiet>true</quiet>
+            </configuration>
+            <executions>
+              <execution>
+                <id>javadoc-site</id>
+                <goals>
+                  <goal>javadoc</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
       <!--repositories>
         <repository>
           <id>central-staging</id>
