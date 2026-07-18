@@ -56,7 +56,6 @@ jobs:
         run: |
           gcc --version
           mvn -version
-          echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Build native artifact
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
@@ -85,7 +84,6 @@ jobs:
         run: |
           gcc --version
           mvn -version
-          echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Build native artifact
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
@@ -115,7 +113,6 @@ jobs:
         run: |
           clang --version
           mvn -version
-          echo "<settings><servers><server><id>central</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           mvn clean install -pl '!tensorflow-framework' -B -U -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
       - name: Build native artifact
         run: mvn -f tensorflow-core/tensorflow-core-native/pom.xml package -B -e -Djavacpp.platform=${{ github.job }} -Djavacpp.platform.extension=${{ matrix.ext }}
