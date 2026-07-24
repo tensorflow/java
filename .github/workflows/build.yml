@@ -137,8 +137,6 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # Handled as an env variable name reference
       - name: Checkout repository
         uses: actions/checkout@v6
       - name: Download native artifacts
@@ -151,8 +149,6 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.CI_DEPLOY_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         run: |
           java -version
           mvn -version

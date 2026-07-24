@@ -1,9 +1,9 @@
 # Releasing TensorFlow Java
 
 The
-[TensorFlow Java API](https://github.com/tensorflow/java) is available on Maven Central and JCenter
+[TensorFlow Java API](https://github.com/tensorflow/java) is available on Maven Central 
 through artifacts uploaded to
-[OSS Sonatype](https://oss.sonatype.org/content/repositories/releases/org/tensorflow/). This
+[Maven Central](https://central.sonatype.com/). This
 document describes the process of updating the release artifacts. It does _not_ describe how to use
 the artifacts, for which the reader is referred to the
 [TensorFlow for Java installation instructions](https://github.com/tensorflow/java/blob/master/README.md).
@@ -14,8 +14,7 @@ TensorFlow source (which is primarily in C++) is built using
 [bazel](https://bazel.build) and not [maven](https://maven.apache.org/). TensorFlow Java
 wraps over this native code and thus depends on platform (OS, architecture) specific native code.
 
-Hence, the process for building and uploading release artifacts is not a single
-`mvn deploy` command.
+Hence, the process for building and uploading release artifacts is not a single `mvn deploy` command.
 
 ## Release process overview
 
@@ -24,8 +23,8 @@ The process of releasing TensorFlow Java is split in two major steps:
 * Building and deploying all artifacts consolidated
 
 The first step is executed on different build servers, each responsible to build the native
-artifact for a specific architecture and platform. The second step is conducted locally in
-a [Docker](https://www.docker.com) container for a hermetic release process.
+artifact for a specific architecture and platform. The second step retrieves all native artifacts 
+built in the first step to consolidate them on a single server, and run a Maven `deploy` from there. 
 
 It is important to note that any change pushed to a release branch (i.e. a branch prefixed
 by `r`) will start a new release workflow. Therefore, these changes should always increment the
@@ -33,14 +32,21 @@ version number.
 
 ### Pre-requisites
 
--   `docker`
--   An account at [oss.sonatype.org](https://oss.sonatype.org/), that has
+-   An account at [Maven Central](https://central.sonatype.com/), that has
     permissions to update artifacts in the `org.tensorflow` group. If your
     account does not have permissions, then you'll need to ask someone who does
-    to [file a ticket](https://issues.sonatype.org/) to add to the permissions
-    ([sample ticket](https://issues.sonatype.org/browse/MVNCENTRAL-1637)).
--   A GPG signing key, required
-    [to sign the release artifacts](http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components).
+    to [file a ticket](mailto:central-support@sonatype.com) to add to the permissions.
+- 
+    Add your account username and token to the GitHub repository secrets as `CI_DEPLOY_USERNAME` and `CI_DEPLOY_PASSWORD` 
+    respectively.
+ 
+-   A [GPG signing key](http://central.sonatype.org/pages/apache-maven.html#gpg-signed-components) for signing the artifacts.
+ 
+    The public key must be registered with a key server supported by Maven Central (e.g. https://keyserver.ubuntu.com/) and
+    the private key + passphrase should be stored in the GitHub repository secrets as `MAVEN_GPG_PRIVATE_KEY` and 
+    `MAVEN_GPG_PASSPHRASE` respectively. See [GitHub documentation](https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven)
+    for more details.
+
 
 ### Preparing a release
 
@@ -60,10 +66,10 @@ version number.
     mvn versions:set -DnewVersion=1.0.0
     ```
 4.  Update the TensorFlow Java version to reflect the new release at the following locations:
-    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L61
-    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L167
+    - https://github.com/tensorflow/java/blob/master/docs/docs/install.md?plain=1#L69
+    - https://github.com/tensorflow/java/blob/master/docs/docs/install.md?plain=1#L175
     - https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts
-    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support
+    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-java-version-support
 
 5.  Commit the changes and push the new branch to the GitHub repository
     ```
@@ -91,10 +97,10 @@ version number.
     mvn versions:set -DnewVersion=1.0.1
     ```
 5.  Update the TensorFlow Java version to reflect the new release at the following locations:
-    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L61
-    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L167
+    - https://github.com/tensorflow/java/blob/master/docs/docs/install.md?plain=1#L69
+    - https://github.com/tensorflow/java/blob/master/docs/docs/install.md?plain=1#L175
     - https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts
-    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support
+    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-java-version-support
 
 6.  Commit the changes and push the branch to the GitHub repository
     ```
@@ -103,86 +109,33 @@ version number.
     git push
     ```
 
-### Building native artifacts
+### Performing the Release
 
-Any change pushed to a release branch will trigger a new release workflow. GitHub Actions builds the native artifacts 
-for all supported architures/platforms and deploy them temporarily on OSSRH for staging.
+#### Release Workflow
 
-There is no user action required for this step other than watching the progress of the GitHub
-Actions workflow and making sure that all steps have been completed successfully.
+Pushing on a release branch will trigger a GitHub Actions workflow that builds the native artifacts for all supported architectures/platforms 
+and deploys them temporarily as GitHub Workflow artifacts.
 
-#### Build native artifacts manually
+After this step, all native artifacts are retrieved and consolidated into the same target folder on single server in GitHub Action. 
+A final Maven `deploy` command on that server will take care of publishing all TensorFlow Java artifacts (include the native ones) to Maven 
+Central for staging.
 
-Some platforms cannot be build successfully on GitHub Actions, due to some limits to their resources
-(e.g. max 6 hours for a job). For this reasons, we need to build manually some of our artifacts on
-private servers. 
+#### Publishing Approval
 
-To do so, follow the same steps as the [CI build](https://github.com/tensorflow/java/blob/master/.github/workflows/ci.yml)
-for the same platform and make sure to checkout the release branch and to provide your Sonatype credentials
-for temporary staging.
+After all artifacts have been published, you should log to [Maven Central](https://central.sonatype.com/), go to `Publish -> Deployments`, 
+and either drop the staging repository (if something is wrong) or publish it (if everything looks good). If you drop it, you will need to 
+retrigger the [release CI](#release-workflow).
 
-### Performing the release
+### Finishing a Release
 
-1.  At the root of your TensorFlow Java copy, create a Maven settings.xml file with your OSSRH credentials and
-    your GPG key passphrase:
-    ```sh
-    SONATYPE_USERNAME="your_sonatype.org_username_here"
-    SONATYPE_PASSWORD="your_sonatype.org_password_here"
-    GPG_PASSPHRASE="your_gpg_passphrase_here"
-    cat > settings.xml <<EOF
-    <settings>
-      <servers>
-        <server>
-          <id>central</id>
-          <username>${USERNAME}</username>
-          <password>${PASSWORD}</password>
-        </server>
-        <server>
-          <id>central-staging</id>
-          <username>${USERNAME}</username>
-          <password>${PASSWORD}</password>
-        </server>
-      </servers>
-      <profiles>
-        <profile>
-          <activation>
-            <activeByDefault>true</activeByDefault>
-          </activation>
-          <properties>
-            <gpg.executable>gpg2</gpg.executable>
-            <gpg.passphrase>${GPG_PASSPHRASE}</gpg.passphrase>
-          </properties>
-        </profile>
-      <profiles>
-    </settings>
-    EOF
-    ```
-2.  Execute the `release.sh` script. This will deploy artifacts on OSS Sonatype. All native artifacts
-    previously temporarily staged by GitHub Actions will be fetched, signed and redeployed as well.
+#### Release Notes
 
-    The script takes in a parameter the sequence number of the staging repository created in OSSRH
-    by the GitHub Actions workflow. You can retrieve this ID by looking in the staging repositories
-    in OSSRH console directly, or check at the output of the step `Create Staging Repository` of the
-    `prepare` job in the workflow execution, where the ID is printed.
-    ```
-    # Staging repository created: orgtensorflow-1100
-    sh release.sh 1100
-    ```
-3.  If the script above succeeds then the artifacts would have been uploaded to
-    the private staging repository in Sonatype. After verifying the release, you should finalize or
-    abort the release. Visit https://oss.sonatype.org/#stagingRepositories, find the `orgtensorflow-*`
-    of your release and click `Close` and `Release` to finalize the release. You always have the option
-    to `Drop` it to abort and restart if something went wrong.
+Go to GitHub and automatically generate release notes for the new version by going to `Releases -> Draft a new release` 
+and selecting the tag for the release. You can edit the release notes as needed.
 
-4.  Go to GitHub and create a release tag on the release branch with a summary of what the version includes.
+#### Bumping Next Snapshot Version
 
-Some things of note:
-    - For details, look at the [Sonatype guide](http://central.sonatype.org/pages/releasing-the-deployment.html).
-    - Syncing with [Maven Central](http://repo1.maven.org/maven2/org/tensorflow/) can take 10 minutes to 2 hours.
-
-### Finishing a release
-
-#### Major or minor release
+##### After a Major or Minor Release
 
 1. Checkout the master branch and merge back changes from the released branch
    ```
@@ -194,9 +147,9 @@ Some things of note:
    mvn versions:set -DnewVersion=1.3.0-SNAPSHOT
    ```
 3. Update the TensorFlow Java version to reflect the new snapshot at the following locations:
-    - https://github.com/tensorflow/java/blob/master/docs/install.md?plain=1#L104
+    - https://github.com/tensorflow/java/blob/master/docs/docs/install.md?plain=1#L112
     - https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts
-    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support
+    - https://github.com/tensorflow/java/blob/master/README.md#tensorflow-java-version-support
 
 4. Commit your changes and push the master branch to the GitHub repository
    ```
@@ -205,7 +158,7 @@ Some things of note:
    git push
    ```
 
-#### Patch release
+##### After a Patch Release
 
 1. Checkout the master branch and merge back changes from the released branch
    ```
