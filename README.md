@@ -211,7 +211,7 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 This is expected, and adding the `--enable-native-access=ALL-UNNAMED` flag to enable JNI will suppress it. In a future
 Java version this warning may be turned into an error and the flag will be required to use TensorFlow-Java.
 
-## TensorFlow/Java Version Support
+## TensorFlow Java Version Support
 
 This table shows the mapping between TensorFlow, TensorFlow Java and minimum supported Java versions.
 
