@@ -31,19 +31,22 @@ import java.lang.annotation.Target;
  * {@link org.tensorflow.op.Scope} as its first argument. The processor then adds a convenience
  * method in the {@code Ops} class. For example:
  *
- * <pre>{@code
- * @Operator
+ * <pre>
+ * {@code
+ * {@literal @}Operator
  * public final class MyOp implements Op {
- *   @Endpoint
+ *   {@literal @}Endpoint
  *   public static MyOp create(Scope scope, Operand<?> operand) {
  *     ...
  *   }
  * }
- * }</pre>
+ * }
+ * </pre>
  *
  * <p>results in a method in the {@code Ops} class
  *
- * <pre>{@code
+ * <pre>
+ * {@code
  * import org.tensorflow.op.Ops;
  * ...
  * Ops ops = Ops.create(graph);
@@ -51,7 +54,8 @@ import java.lang.annotation.Target;
  * ops.myOp(operand);
  * // and has exactly the same effect as calling
  * // MyOp.create(ops.getScope(), operand);
- * }</pre>
+ * }
+ * </pre>
  */
 @Documented
 @Target(ElementType.TYPE)
@@ -64,36 +68,44 @@ public @interface Operator {
    * Ops} class. An annotated operator may optionally choose to place the method within a group. For
    * example:
    *
-   * <pre>{@code
-   * @Operator(group="math")
+   * <pre>
+   * {@code
+   * {@literal @}Operator(group="math")
    * public final class Add extends RawOp implements Operand {
    *   ...
    * }
-   * }</pre>
+   * }
+   * </pre>
    *
    * <p>results in the {@code add} method placed within a {@code math} group within the {@code Ops}
    * class.
    *
-   * <pre>{@code
+   * <pre>
+   * {@code
    * ops.math.add(...);
-   * }</pre>
+   * }
+   * </pre>
    *
    * <p>The operator can also be classified into subgroups of another group, following a semantic
    * similar to Java packages. For example:
    *
-   * <pre>{@code
-   * @Operator(group="data.experimental")
+   * <pre>
+   * {@code
+   * {@literal @}Operator(group="data.experimental")
    * public final class MyDataset extends RawOp implements Operand {
    *   ...
    * }
-   * }</pre>
+   * }
+   * </pre>
    *
    * <p>results in the {@code add} method placed within a {@code experimental} group within the
    * {@code DataOps} group class.
    *
-   * <pre>{@code
+   * <pre>
+   * {@code
    * ops.data.experimental.myDataset(...);
-   * }</pre>
+   * }
+   * </pre>
    *
    * <p>The group name must be a <a
    * href="https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html">valid Java package
@@ -107,20 +119,24 @@ public @interface Operator {
    * <p>By default, a processor derives the method name in the {@code Ops} class from the class name
    * of the operator. This attribute allow you to provide a different name instead. For example:
    *
-   * <pre>{@code
-   * @Operator(name="myOperation")
+   * <pre>
+   * {@code
+   * {@literal @}Operator(name="myOperation")
    * public final class MyRealOperation implements Operand {
    *   public static MyRealOperation create(...)
    * }
-   * }</pre>
+   * }
+   * </pre>
    *
    * <p>results in this method added to the {@code Ops} class
    *
-   * <pre>{@code
+   * <pre>
+   * {@code
    * ops.myOperation(...);
    * // and is the same as calling
    * // MyRealOperation.create(...)
-   * }</pre>
+   * }
+   * </pre>
    *
    * <p>The name must be a <a
    * href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.8">valid Java

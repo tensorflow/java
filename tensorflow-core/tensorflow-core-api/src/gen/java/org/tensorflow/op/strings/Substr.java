@@ -48,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * <p><em>NOTE</em>: {@code strings.Substr} supports broadcasting up to two dimensions. More about
  * broadcasting
  *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
- * <hr />
+ * <hr>
  * <p>Examples
  * <p>Using scalar {@code pos} and {@code len}:
  * <pre>
